@@ -52,144 +52,144 @@ const XPathExpression::TokenQueueSizeType   XPathExpression::s_opCodeMapLengthIn
 
 // This is an array which indicates which of the value defined by
 // XPathExpression::eOpCodes are node tests.
-static const bool	theNodeTestOpCodesArray[] =
+static const bool   theNodeTestOpCodesArray[] =
 {
-	false, false, true,  false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, true,  true,  true,  true,  true,  true,
-	true,  true,  true,  true,  true,  true,  true,  false, false, false, 
-	true,  true,  true
+    false, false, true,  false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false, false,
+    false, false, false, false, true,  true,  true,  true,  true,  true,
+    true,  true,  true,  true,  true,  true,  true,  false, false, false, 
+    true,  true,  true
 };
 
-static const unsigned int	theNodeTestOpCodesArraySize =
-		sizeof(theNodeTestOpCodesArray) / sizeof(theNodeTestOpCodesArray[0]);
+static const unsigned int   theNodeTestOpCodesArraySize =
+        sizeof(theNodeTestOpCodesArray) / sizeof(theNodeTestOpCodesArray[0]);
 
 
 // This is an array for all of the opcode defined by XPathExpression::eOpCodes.
 // It is offset by 3, because there opcode values are -3, -2, and -1.  So,
 // when getting the length of an opcode, we add three to get the correct index.
-static const int	theOpCodeLengthArray[] =
+static const int    theOpCodeLengthArray[] =
 {
-	1,
-	1,
-	1,
+    1,
+    1,
+    1,
 
-	0,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
+    0,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
 
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
 
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 3,
-	XPathExpression::s_opCodeMapLengthIndex + 3,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	1,
-	1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 3,
+    XPathExpression::s_opCodeMapLengthIndex + 3,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    1,
+    1,
 
-	1,
-	1,
-	1,
-	1,
-	1,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
 
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
 
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 2,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1,
-	XPathExpression::s_opCodeMapLengthIndex + 1
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 2,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1,
+    XPathExpression::s_opCodeMapLengthIndex + 1
 };
 
-static const int	theOpCodeLengthArraySize =
-		sizeof(theOpCodeLengthArray) / sizeof(theOpCodeLengthArray[0]);
+static const int    theOpCodeLengthArraySize =
+        sizeof(theOpCodeLengthArray) / sizeof(theOpCodeLengthArray[0]);
 
 
 
 inline int
-getOpCodeLength(int		theOpCode)
+getOpCodeLength(int     theOpCode)
 {
-	assert(theOpCodeLengthArraySize == XPathExpression::eOpCodeNextAvailable + 3);
+    assert(theOpCodeLengthArraySize == XPathExpression::eOpCodeNextAvailable + 3);
 
-	// Add 3 to get the correct index into the array...
-	theOpCode += 3;
+    // Add 3 to get the correct index into the array...
+    theOpCode += 3;
 
-	if (theOpCode < 0 || theOpCode >= theOpCodeLengthArraySize)
-	{
-		return 0;
-	}
-	else
-	{
-		return theOpCodeLengthArray[theOpCode];
-	}
+    if (theOpCode < 0 || theOpCode >= theOpCodeLengthArraySize)
+    {
+        return 0;
+    }
+    else
+    {
+        return theOpCodeLengthArray[theOpCode];
+    }
 }
 
 
 
-XPathExpression::XPathExpressionException::XPathExpressionException(const XalanDOMString&	theMessage,
+XPathExpression::XPathExpressionException::XPathExpressionException(const XalanDOMString&   theMessage,
                                                                     MemoryManagerType&      theManager) :
-	XalanXPathException(theMessage, theManager)
+    XalanXPathException(theMessage, theManager)
 {
 }
 
@@ -201,7 +201,7 @@ XPathExpression::XPathExpressionException::~XPathExpressionException()
 
 
 
-XPathExpression::InvalidOpCodeException::InvalidOpCodeException(OpCodeMapValueType	theOpCode,
+XPathExpression::InvalidOpCodeException::InvalidOpCodeException(OpCodeMapValueType  theOpCode,
                                                                 XalanDOMString&     theResult) :
 XPathExpressionException(FormatErrorMessage(theOpCode, theResult), theResult.getMemoryManager())
 {
@@ -216,24 +216,34 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 
 
 XalanDOMString&
-XPathExpression::InvalidOpCodeException::FormatErrorMessage(OpCodeMapValueType  theOpCode,
-                                                            XalanDOMString& theResult)
+XPathExpression::InvalidOpCodeException::FormatErrorMessage(
+            OpCodeMapValueType  theOpCode,
+            XalanDOMString&     theResult)
 {
-    XalanDOMString	theOpcode(theResult.getMemoryManager()); 
+    XalanDOMString  theOpcode(theResult.getMemoryManager()); 
 
-	LongToDOMString(theOpCode, theOpcode);
+    LongToDOMString(theOpCode, theOpcode);
 
-	return XalanMessageLoader::getMessage(XalanMessages::InvalidOpcodeWasDetected_1Param,theResult, theOpcode);
+    return XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::InvalidOpcodeWasDetected_1Param,
+                theOpcode);
 }
 
 
 
 XPathExpression::InvalidArgumentCountException::InvalidArgumentCountException(
-			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theExpectedCount,
-			OpCodeMapValueType	theSuppliedCount,
+            OpCodeMapValueType  theOpCode,
+            OpCodeMapValueType  theExpectedCount,
+            OpCodeMapValueType  theSuppliedCount,
             XalanDOMString&     theResult) :
-XPathExpressionException(FormatErrorMessage(theOpCode, theExpectedCount, theSuppliedCount, theResult), theResult.getMemoryManager())
+    XPathExpressionException(
+        FormatErrorMessage(
+            theOpCode,
+            theExpectedCount,
+            theSuppliedCount,
+            theResult),
+        theResult.getMemoryManager())
 {
 }
 
@@ -247,32 +257,41 @@ XPathExpression::InvalidArgumentCountException::~InvalidArgumentCountException()
 
 XalanDOMString&
 XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
-			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theExpectedCount,
-			OpCodeMapValueType	theSuppliedCount,
+            OpCodeMapValueType  theOpCode,
+            OpCodeMapValueType  theExpectedCount,
+            OpCodeMapValueType  theSuppliedCount,
             XalanDOMString&     theBuffer)
 {
-    XalanDOMString	theResult(theBuffer.getMemoryManager());
+    XalanDOMString  theResult(theBuffer.getMemoryManager());
 
-	LongToDOMString(theOpCode, theResult);
+    LongToDOMString(theOpCode, theResult);
 
-	XalanDOMString	theResult1(theBuffer.getMemoryManager());
-	LongToDOMString(theExpectedCount, theResult1);
+    XalanDOMString  theResult1(theBuffer.getMemoryManager());
+    LongToDOMString(theExpectedCount, theResult1);
 
-	XalanDOMString	theResult2(theBuffer.getMemoryManager());
-	LongToDOMString(theSuppliedCount, theResult2);
+    XalanDOMString  theResult2(theBuffer.getMemoryManager());
+    LongToDOMString(theSuppliedCount, theResult2);
 
 
-	return  XalanMessageLoader::getMessage(XalanMessages::InvalidNumberOfArgsWasDetected_3Param, theBuffer ,theResult1 , theResult2);
+    return XalanMessageLoader::getMessage(
+                theBuffer ,
+                XalanMessages::InvalidNumberOfArgsWasDetected_3Param,
+                theResult1,
+                theResult2);
 }
 
 
 
 XPathExpression::InvalidArgumentException::InvalidArgumentException(
-			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theValue,
+            OpCodeMapValueType  theOpCode,
+            OpCodeMapValueType  theValue,
             XalanDOMString&     theResult) :
-XPathExpressionException(FormatErrorMessage(theOpCode, theValue, theResult), theResult.getMemoryManager())
+    XPathExpressionException(
+        FormatErrorMessage(
+            theOpCode,
+            theValue,
+            theResult),
+        theResult.getMemoryManager())
 {
 }
 
@@ -286,43 +305,46 @@ XPathExpression::InvalidArgumentException::~InvalidArgumentException()
 
 XalanDOMString&
 XPathExpression::InvalidArgumentException::FormatErrorMessage(
-				OpCodeMapValueType	theOpCode,
-				OpCodeMapValueType	theValue,
+                OpCodeMapValueType  theOpCode,
+                OpCodeMapValueType  theValue,
                 XalanDOMString&     theBuffer)
 { 
-    XalanDOMString	theResult(theBuffer.getMemoryManager());
-	LongToDOMString(theValue, theResult);
+    XalanDOMString  theResult(theBuffer.getMemoryManager());
+    LongToDOMString(theValue, theResult);
 
-	
-	XalanDOMString	theResult1(theBuffer.getMemoryManager());
-	UnsignedLongToDOMString(theOpCode, theResult1);
+    
+    XalanDOMString  theResult1(theBuffer.getMemoryManager());
+    UnsignedLongToDOMString(theOpCode, theResult1);
 
-	return XalanMessageLoader::getMessage(XalanMessages::InvalidNumberOfArgsWasSupplied_2Param, theBuffer, theResult1) ;
+    return XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::InvalidNumberOfArgsWasSupplied_2Param,
+                theResult1) ;
 }
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XPathExpression::XPathExpression(MemoryManagerType& theManager) :
-	m_opMap(theManager),
-	m_lastOpCodeIndex(0),
-	m_tokenQueue(theManager),
-	m_currentPosition(0),
-	m_currentPattern(&s_emptyString),
+    m_opMap(theManager),
+    m_lastOpCodeIndex(0),
+    m_tokenQueue(theManager),
+    m_currentPosition(0),
+    m_currentPattern(&s_emptyString),
     m_numberLiteralValues(theManager)
 {
-	m_opMap.reserve(eDefaultOpMapSize);
-	m_tokenQueue.reserve(eDefaultTokenQueueSize);
+    m_opMap.reserve(eDefaultOpMapSize);
+    m_tokenQueue.reserve(eDefaultTokenQueueSize);
 }
 
 
 
 XPathExpression::~XPathExpression()
 {
-	reset();
+    reset();
 }
 
 
@@ -330,11 +352,11 @@ XPathExpression::~XPathExpression()
 void
 XPathExpression::reset()
 {
-	XALAN_USING_STD(fill);
-	XALAN_USING_STD(for_each);
+    XALAN_USING_STD(fill);
+    XALAN_USING_STD(for_each);
 
-	m_opMap.clear();
-	m_tokenQueue.clear();
+    m_opMap.clear();
+    m_tokenQueue.clear();
 }
 
 
@@ -342,12 +364,12 @@ XPathExpression::reset()
 void
 XPathExpression::shrink()
 {
-	if (m_opMap.capacity() > m_opMap.size())
-	{
+    if (m_opMap.capacity() > m_opMap.size())
+    {
         OpCodeMapType tmp(m_opMap, m_opMap.getMemoryManager());
 
-		tmp.swap(m_opMap);
-	}
+        tmp.swap(m_opMap);
+    }
 }
 
 
@@ -355,351 +377,352 @@ XPathExpression::shrink()
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
 
 XPathExpression::OpCodeMapValueType
-XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapPositionType     opPos,
-                                          MemoryManagerType&        theManager) const
+XPathExpression::getOpCodeLengthFromOpMap(
+            OpCodeMapPositionType     opPos,
+            MemoryManagerType&        theManager) const
 {
     assert(opPos - getInitialOpCodePosition() >= 0 &&
            opPos - getInitialOpCodePosition() < opCodeMapSize());
 
-    OpCodeMapValueType	theResult = 0;
+    OpCodeMapValueType  theResult = 0;
 
-	// Is there a valid opcode?
-	const int	theOpCodeLength = getOpCodeLength(*opPos);
+    // Is there a valid opcode?
+    const int   theOpCodeLength = getOpCodeLength(*opPos);
 
-	if (theOpCodeLength == 0)
-	{
+    if (theOpCodeLength == 0)
+    {
         XalanDOMString   theResult(theManager);
 
-		throw InvalidOpCodeException(-1, theResult);
-	}
-	else
-	{
-		// Does the Op code have a length > 1?
-		if (theOpCodeLength > 1)
-		{
-			// Yes, so get the length.
-			theResult = *(opPos + s_opCodeMapLengthIndex);
-		}
-	}
+        throw InvalidOpCodeException(-1, theResult);
+    }
+    else
+    {
+        // Does the Op code have a length > 1?
+        if (theOpCodeLength > 1)
+        {
+            // Yes, so get the length.
+            theResult = *(opPos + s_opCodeMapLengthIndex);
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 #endif
 
 XPathExpression::OpCodeMapValueType
+XPathExpression::getOpCodeLengthFromOpMap(
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
-XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapSizeType     theIndex,
-                                          MemoryManagerType&        theManager) const
+            OpCodeMapSizeType     theIndex,
 #else
-XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapPositionType     theIndex,
-                                          MemoryManagerType&        theManager) const
+            OpCodeMapPositionType theIndex,
 #endif
+            MemoryManagerType&    theManager) const
 {
-	OpCodeMapValueType	theResult = 0;
+    OpCodeMapValueType  theResult = 0;
 
-	if (theIndex >= opCodeMapSize())
-	{
+    if (theIndex >= opCodeMapSize())
+    {
         XalanDOMString   theResult(theManager);
 
-		throw InvalidOpCodeException(-1, theResult);
-	}
-	else
-	{
-		// Is there a valid opcode?
-		const int	theOpCodeLength = getOpCodeLength(m_opMap[theIndex]);
+        throw InvalidOpCodeException(-1, theResult);
+    }
+    else
+    {
+        // Is there a valid opcode?
+        const int   theOpCodeLength = getOpCodeLength(m_opMap[theIndex]);
 
-		if (theOpCodeLength == 0)
-		{
+        if (theOpCodeLength == 0)
+        {
             XalanDOMString   theResult(theManager);
 
-			throw InvalidOpCodeException(-1, theResult);
-		}
-		else
-		{
-			// Does the Op code have a length > 1?
-			if (theOpCodeLength > 1)
-			{
-				// Yes, so get the length.
-				theResult = m_opMap[theIndex + s_opCodeMapLengthIndex];
-			}
-		}
-	}
+            throw InvalidOpCodeException(-1, theResult);
+        }
+        else
+        {
+            // Does the Op code have a length > 1?
+            if (theOpCodeLength > 1)
+            {
+                // Yes, so get the length.
+                theResult = m_opMap[theIndex + s_opCodeMapLengthIndex];
+            }
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 void
 XPathExpression::setOpCodeArgs(
-			eOpCodes							theOpCode,
-			OpCodeMapSizeType					theIndex,
-			const OpCodeMapValueVectorType&		theArgs)
+            eOpCodes                            theOpCode,
+            OpCodeMapSizeType                   theIndex,
+            const OpCodeMapValueVectorType&     theArgs)
 {
-	// There must be at least enough space to hold the OpCode
-	// and the length indicator.
-	assert(opCodeMapSize() > theIndex + 1);
+    // There must be at least enough space to hold the OpCode
+    // and the length indicator.
+    assert(opCodeMapSize() > theIndex + 1);
 
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+    const int   theOpCodeLength = getOpCodeLength(theOpCode);
 
-	// Make sure it's a valid op code and that it
-	// matches the op code at supplied index.
-	if (theOpCodeLength == 0 ||
-		m_opMap[theIndex] != theOpCode)
-	{
+    // Make sure it's a valid op code and that it
+    // matches the op code at supplied index.
+    if (theOpCodeLength == 0 ||
+        m_opMap[theIndex] != theOpCode)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		const OpCodeMapValueType    theArgCount =
-				theOpCodeLength - 1 - s_opCodeMapLengthIndex;
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        const OpCodeMapValueType    theArgCount =
+                theOpCodeLength - 1 - s_opCodeMapLengthIndex;
 
         if (OpCodeMapValueVectorType::size_type(theArgCount) != theArgs.size())
-		{
+        {
             XalanDOMString   theResult( getMemoryManager() );
 
-			throw InvalidArgumentCountException(theOpCode,
-												theOpCodeLength,
-												theArgCount,
+            throw InvalidArgumentCountException(theOpCode,
+                                                theOpCodeLength,
+                                                theArgCount,
                                                 theResult);
-		}
-		else
-		{
-			assert(opCodeMapSize() > theIndex + theArgCount);
+        }
+        else
+        {
+            assert(opCodeMapSize() > theIndex + theArgCount);
 
-			for (OpCodeMapValueType	i = 0; i < theArgCount; ++i)
-			{
-				if (theArgs[i] < 0)
-				{
+            for (OpCodeMapValueType i = 0; i < theArgCount; ++i)
+            {
+                if (theArgs[i] < 0)
+                {
                     XalanDOMString   theResult( getMemoryManager() );
-					throw InvalidArgumentException(theOpCode,
-												   theArgs[i],
+                    throw InvalidArgumentException(theOpCode,
+                                                   theArgs[i],
                                                    theResult);
-				}
-				else
-				{
-					m_opMap[i + theIndex + s_opCodeMapLengthIndex + 1] =
-						theArgs[i];
-				}
-			}
-		}
-	}
+                }
+                else
+                {
+                    m_opMap[i + theIndex + s_opCodeMapLengthIndex + 1] =
+                        theArgs[i];
+                }
+            }
+        }
+    }
 }
 
 
 
 XPathExpression::OpCodeMapSizeType
-XPathExpression::appendOpCode(eOpCodes	theOpCode)
+XPathExpression::appendOpCode(eOpCodes  theOpCode)
 {
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+    const int   theOpCodeLength = getOpCodeLength(theOpCode);
 
-	if (theOpCodeLength == 0)
-	{
+    if (theOpCodeLength == 0)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		// Set the current index before pushing, by
-		// getting the length, which will be correct
-		// after the push.
-		m_lastOpCodeIndex = opCodeMapSize();
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        // Set the current index before pushing, by
+        // getting the length, which will be correct
+        // after the push.
+        m_lastOpCodeIndex = opCodeMapSize();
 
-		m_opMap.push_back(theOpCode);
+        m_opMap.push_back(theOpCode);
 
-		assert(s_opCodeMapLengthIndex == 1);
+        assert(s_opCodeMapLengthIndex == 1);
 
-		if (theOpCodeLength > 1)
-		{
-			m_opMap.push_back(theOpCodeLength);
+        if (theOpCodeLength > 1)
+        {
+            m_opMap.push_back(theOpCodeLength);
 
-			for (int i = 2; i < theOpCodeLength; ++i)
-			{
-				m_opMap.push_back(eENDOP);
-			}
-		}
+            for (int i = 2; i < theOpCodeLength; ++i)
+            {
+                m_opMap.push_back(eENDOP);
+            }
+        }
 
-		if (m_lastOpCodeIndex != 0)
-		{
-			m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
-		}
-	}
+        if (m_lastOpCodeIndex != 0)
+        {
+            m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
+        }
+    }
 
-	assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
+    assert(opCodeMapSize() == OpCodeMapSizeType(opCodeMapLength()));
 
-	return m_lastOpCodeIndex;
+    return m_lastOpCodeIndex;
 }
 
 
 
 void
 XPathExpression::replaceOpCode(
-			OpCodeMapSizeType	theIndex,
-			eOpCodes			theOldOpCode,
-			eOpCodes			theNewOpCode)
+            OpCodeMapSizeType   theIndex,
+            eOpCodes            theOldOpCode,
+            eOpCodes            theNewOpCode)
 {
-	if (theIndex >= opCodeMapSize() ||
-		m_opMap[theIndex] != theOldOpCode ||
-		getOpCodeLength(theOldOpCode) != getOpCodeLength(theNewOpCode))
-	{
+    if (theIndex >= opCodeMapSize() ||
+        m_opMap[theIndex] != theOldOpCode ||
+        getOpCodeLength(theOldOpCode) != getOpCodeLength(theNewOpCode))
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theNewOpCode, theResult);
-	}
-	else
-	{
-		m_opMap[theIndex] = theNewOpCode;
-	}
+        throw InvalidOpCodeException(theNewOpCode, theResult);
+    }
+    else
+    {
+        m_opMap[theIndex] = theNewOpCode;
+    }
 }
 
 
 
 XPathExpression::OpCodeMapValueType
 XPathExpression::insertOpCode(
-			eOpCodes			theOpCode,
-			OpCodeMapSizeType	theIndex)
+            eOpCodes            theOpCode,
+            OpCodeMapSizeType   theIndex)
 {
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+    const int   theOpCodeLength = getOpCodeLength(theOpCode);
 
-	if (theOpCodeLength == 0)
-	{
+    if (theOpCodeLength == 0)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		// Insert -1 for each element of the opcode.
-		m_opMap.insert(
-			m_opMap.begin() + theIndex,
-			OpCodeMapSizeType(theOpCodeLength),
-			-1);
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        // Insert -1 for each element of the opcode.
+        m_opMap.insert(
+            m_opMap.begin() + theIndex,
+            OpCodeMapSizeType(theOpCodeLength),
+            -1);
 
-		// Set the member that contains the last insert/appended
-		// index.
-		m_lastOpCodeIndex = theIndex;
+        // Set the member that contains the last insert/appended
+        // index.
+        m_lastOpCodeIndex = theIndex;
 
-		// Assign the opcode.
-		m_opMap[theIndex] = theOpCode;
+        // Assign the opcode.
+        m_opMap[theIndex] = theOpCode;
 
-		// Update the entire expression length.
-		m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
-	}
+        // Update the entire expression length.
+        m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
+    }
 
-	return theOpCodeLength;
+    return theOpCodeLength;
 }
 
 
 
 void
 XPathExpression::updateShiftedOpCodeLength(
-			OpCodeMapValueType	theOpCode,
+            OpCodeMapValueType  theOpCode,
 #if defined(NDEBUG)
-			OpCodeMapSizeType	/* theOriginalIndex */,
+            OpCodeMapSizeType   /* theOriginalIndex */,
 #else
-			OpCodeMapSizeType	theOriginalIndex,
+            OpCodeMapSizeType   theOriginalIndex,
 #endif
-			OpCodeMapSizeType	theNewIndex)
+            OpCodeMapSizeType   theNewIndex)
 {
-	// There must be some other expressions in
-	// the buffer...
-	assert(opCodeMapSize() > theNewIndex + 1);
+    // There must be some other expressions in
+    // the buffer...
+    assert(opCodeMapSize() > theNewIndex + 1);
 
-	assert(theNewIndex > theOriginalIndex);
+    assert(theNewIndex > theOriginalIndex);
 
-	const OpCodeMapValueType    theOpCodeLength = getOpCodeLength(theOpCode);
+    const OpCodeMapValueType    theOpCodeLength = getOpCodeLength(theOpCode);
 
-	// Make sure it's a valid op code and that it
-	// matches the op code at supplied index.
-	if (theOpCodeLength == 0 ||
-		m_opMap[theNewIndex] != theOpCode)
-	{
+    // Make sure it's a valid op code and that it
+    // matches the op code at supplied index.
+    if (theOpCodeLength == 0 ||
+        m_opMap[theNewIndex] != theOpCode)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		// Determine where the length position of the op code
-		// is.
-		const	OpCodeMapSizeType	theLengthIndex =
-						theNewIndex + s_opCodeMapLengthIndex;
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        // Determine where the length position of the op code
+        // is.
+        const   OpCodeMapSizeType   theLengthIndex =
+                        theNewIndex + s_opCodeMapLengthIndex;
 
-		// Too long, then throw an exception.
-		if (theLengthIndex >= opCodeMapSize())
-		{
+        // Too long, then throw an exception.
+        if (theLengthIndex >= opCodeMapSize())
+        {
             XalanDOMString   theResult( getMemoryManager() );
 
-			throw InvalidOpCodeException(theOpCode, theResult);
-		}
-		else
-		{
-			// Look ahead to where the new operand is.
-			const OpCodeMapSizeType		theNextOpCodePosition =
-						getNextOpCodePosition(theNewIndex);
+            throw InvalidOpCodeException(theOpCode, theResult);
+        }
+        else
+        {
+            // Look ahead to where the new operand is.
+            const OpCodeMapSizeType     theNextOpCodePosition =
+                        getNextOpCodePosition(theNewIndex);
 
-			// If it's there, then update our size by
-			// adding that size in.
-			if (theNextOpCodePosition < opCodeMapSize())
-			{
-				m_opMap[theLengthIndex] += getOpCodeLengthFromOpMap(theNextOpCodePosition, getMemoryManager());
-			}
-		}
-	}
+            // If it's there, then update our size by
+            // adding that size in.
+            if (theNextOpCodePosition < opCodeMapSize())
+            {
+                m_opMap[theLengthIndex] += getOpCodeLengthFromOpMap(theNextOpCodePosition, getMemoryManager());
+            }
+        }
+    }
 }
 
 
 
 void
 XPathExpression::updateOpCodeLength(
-			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theIndex)
+            OpCodeMapValueType  theOpCode,
+            OpCodeMapValueType  theIndex)
 {
-	// There must be some other expressions in
-	// the buffer...
-	assert(opCodeMapSize() > theIndex + 1);
+    // There must be some other expressions in
+    // the buffer...
+    assert(opCodeMapSize() > theIndex + 1);
 
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+    const int   theOpCodeLength = getOpCodeLength(theOpCode);
 
-	// Make sure it's a valid op code and that it
-	// matches the op code at supplied index.
-	if (theOpCodeLength == 0 ||
-		m_opMap[theIndex] != theOpCode)
-	{
+    // Make sure it's a valid op code and that it
+    // matches the op code at supplied index.
+    if (theOpCodeLength == 0 ||
+        m_opMap[theIndex] != theOpCode)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		// This presumes that the other opcodes
-		// have been appended to the expression,
-		// and that the specified op code's length
-		// needs to be set.  The size includes the
-		// normal length of the opcode, plus the
-		// length of its subexpressions.
-		m_opMap[theIndex + s_opCodeMapLengthIndex] =
-							opCodeMapLength() - theIndex;
-	}
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        // This presumes that the other opcodes
+        // have been appended to the expression,
+        // and that the specified op code's length
+        // needs to be set.  The size includes the
+        // normal length of the opcode, plus the
+        // length of its subexpressions.
+        m_opMap[theIndex + s_opCodeMapLengthIndex] =
+                            opCodeMapLength() - theIndex;
+    }
 }
 
 
 
 bool
-XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
+XPathExpression::isNodeTestOpCode(OpCodeMapValueType    theOpCode)
 {
-	if (theOpCode < theNodeTestOpCodesArraySize)
-	{
-		return theNodeTestOpCodesArray[theOpCode];
-	}
-	else
-	{
-		return false;
-	}
+    if (theOpCode < theNodeTestOpCodesArraySize)
+    {
+        return theNodeTestOpCodesArray[theOpCode];
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -707,221 +730,224 @@ XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
 void
 XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType  theIndex)
 {
-	// There must be some other expressions in
-	// the buffer...
-	assert(opCodeMapSize() > theIndex + 1);
+    // There must be some other expressions in
+    // the buffer...
+    assert(opCodeMapSize() > theIndex + 1);
 
-	const OpCodeMapValueType	theOpCode =
-						m_opMap[theIndex];
+    const OpCodeMapValueType    theOpCode =
+                        m_opMap[theIndex];
 
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+    const int   theOpCodeLength = getOpCodeLength(theOpCode);
 
-	// Make sure it's a valid op code and that it
-	// is a node test op code.
-	if (theOpCodeLength == 0 ||
-		isNodeTestOpCode(theOpCode) == false)
-	{
+    // Make sure it's a valid op code and that it
+    // is a node test op code.
+    if (theOpCodeLength == 0 ||
+        isNodeTestOpCode(theOpCode) == false)
+    {
         XalanDOMString   theResult( getMemoryManager() );
 
-		throw InvalidOpCodeException(theOpCode, theResult);
-	}
-	else
-	{
-		m_opMap[theIndex + s_opCodeMapLengthIndex + 1] =
-							opCodeMapLength() - theIndex;
-	}
+        throw InvalidOpCodeException(theOpCode, theResult);
+    }
+    else
+    {
+        m_opMap[theIndex + s_opCodeMapLengthIndex + 1] =
+                            opCodeMapLength() - theIndex;
+    }
 }
 
 
 
 void
 XPathExpression::dumpOpCodeMap(
-			PrintWriter&		thePrintWriter,
-			OpCodeMapSizeType	theStartPosition) const
+            PrintWriter&        thePrintWriter,
+            OpCodeMapSizeType   theStartPosition) const
 {
-	for (OpCodeMapSizeType	i = theStartPosition;
-				i < opCodeMapSize(); i++) 
-	{
-		thePrintWriter.print(" '");
-		thePrintWriter.print(m_opMap[i]);
-		thePrintWriter.print("'");
-	}
+    for (OpCodeMapSizeType  i = theStartPosition;
+                i < opCodeMapSize(); i++) 
+    {
+        thePrintWriter.print(" '");
+        thePrintWriter.print(m_opMap[i]);
+        thePrintWriter.print("'");
+    }
 }
 
 
 
 void
 XPathExpression::dumpOpCodeMap(
-			OstreamType&		theStream,
-			OpCodeMapSizeType	theStartPosition) const
+            OstreamType&        theStream,
+            OpCodeMapSizeType   theStartPosition) const
 {
-	for (OpCodeMapSizeType	i = theStartPosition;
-				i < opCodeMapSize(); i++) 
-	{
-		theStream << " '" << m_opMap[i] << "'";
-	}
+    for (OpCodeMapSizeType  i = theStartPosition;
+                i < opCodeMapSize(); i++) 
+    {
+        theStream << " '" << m_opMap[i] << "'";
+    }
 }
 
 
 
 void
 XPathExpression::dumpTokenQueue(
-			OstreamType&		theStream,
-			TokenQueueSizeType	theStartPosition) const
+            OstreamType&        theStream,
+            TokenQueueSizeType  theStartPosition) const
 {
-	for (TokenQueueSizeType	i = theStartPosition;
-				i < tokenQueueSize(); i++) 
-	{
-		assert(getToken(i) != 0);
+    for (TokenQueueSizeType i = theStartPosition;
+                i < tokenQueueSize(); i++) 
+    {
+        assert(getToken(i) != 0);
 
-		theStream << " '" << getToken(i)->str() << "'";
-	}
+        theStream << " '" << getToken(i)->str() << "'";
+    }
 }
 
 
 
 void
 XPathExpression::dumpTokenQueue(
-			PrintWriter&		thePrintWriter,
-			TokenQueueSizeType	theStartPosition) const
+            PrintWriter&        thePrintWriter,
+            TokenQueueSizeType  theStartPosition) const
 {
-	for (TokenQueueSizeType	i = theStartPosition;
-				i < tokenQueueSize(); i++) 
-	{
-		assert(getToken(i) != 0);
+    for (TokenQueueSizeType i = theStartPosition;
+                i < tokenQueueSize(); i++) 
+    {
+        assert(getToken(i) != 0);
 
-		if (i > 0)
-		{
-			thePrintWriter.print(" '");
-		}
-		else
-		{
-			thePrintWriter.print("'");
-		}
+        if (i > 0)
+        {
+            thePrintWriter.print(" '");
+        }
+        else
+        {
+            thePrintWriter.print("'");
+        }
 
-		thePrintWriter.print(getToken(i)->str());
-		thePrintWriter.print("'");
-	}
+        thePrintWriter.print(getToken(i)->str());
+        thePrintWriter.print("'");
+    }
 }
 
 
 
 void
-XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
+XPathExpression::dumpRemainingTokenQueue(PrintWriter&   thePrintWriter) const
 {
-    MemoryManagerType& theManager = (const_cast<XPathExpression*>(this))->getMemoryManager();
+    XalanDOMString  tmpString(thePrintWriter.getMemoryManager());
 
-    XalanDOMString tmpString(theManager);
+    thePrintWriter.print(
+        XalanMessageLoader::getMessage(
+            tmpString,
+            XalanMessages::RemainingTokens));
 
-	thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::RemainingTokens, tmpString));
-	thePrintWriter.print("(");
+    thePrintWriter.print("(");
 
-	dumpTokenQueue(thePrintWriter,
-				   m_currentPosition);
+    dumpTokenQueue(
+        thePrintWriter,
+        m_currentPosition);
 
-	thePrintWriter.print(")");
+    thePrintWriter.print(")");
 }
 
 
 
 void
-XPathExpression::dumpRemainingTokenQueue(OstreamType&	theStream) const
+XPathExpression::dumpRemainingTokenQueue(
+            OstreamType&    theStream,
+            MemoryManager&  theMemoryManager) const
 {
-    MemoryManagerType& theManager = (const_cast<XPathExpression*>(this))->getMemoryManager();
+    XalanDOMString  tmpString(theMemoryManager);
 
-    XalanDOMString tmpString(theManager);
+    theStream << XalanMessageLoader::getMessage(tmpString, XalanMessages::RemainingTokens)
+              << "(";
 
-	theStream << XalanMessageLoader::getMessage(XalanMessages::RemainingTokens, tmpString) << "(";
+    dumpTokenQueue(theStream,
+                   m_currentPosition);
 
-
-	dumpTokenQueue(theStream,
-				   m_currentPosition);
-
-	theStream << ")";
+    theStream << ")";
 }
 
 
 
 void
-XPathExpression::pushArgumentOnOpCodeMap(const XToken&	theXToken)
+XPathExpression::pushArgumentOnOpCodeMap(const XToken&  theXToken)
 {
-	assert(m_currentPosition != 0);
+    assert(m_currentPosition != 0);
 
-	const int	thePosition = m_currentPosition - 1;
+    const int   thePosition = m_currentPosition - 1;
 
-	assert(thePosition < tokenQueueSize());
+    assert(thePosition < tokenQueueSize());
 
-	// Set the entry in the token queue to the XObject.
-	m_tokenQueue[thePosition] = theXToken;
+    // Set the entry in the token queue to the XObject.
+    m_tokenQueue[thePosition] = theXToken;
 
-	// Push the index onto the op map.
-	m_opMap.push_back(thePosition);
+    // Push the index onto the op map.
+    m_opMap.push_back(thePosition);
 
-	// Update the op map length.
-	++m_opMap[s_opCodeMapLengthIndex];
+    // Update the op map length.
+    ++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
 
 void
-XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
+XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&  theToken)
 {
-	assert(m_currentPosition != 0);
+    assert(m_currentPosition != 0);
 
-	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+    const TokenQueueSizeType    thePosition = m_currentPosition - 1;
 
-	assert(thePosition < tokenQueueSize());
+    assert(thePosition < tokenQueueSize());
 
-	// Set the entry in the token queue to the XObject.
-	m_tokenQueue[thePosition].set(theToken, getMemoryManager());
+    // Set the entry in the token queue to the XObject.
+    m_tokenQueue[thePosition].set(theToken, getMemoryManager());
 
-	// Push the index onto the op map.
-	m_opMap.push_back(thePosition);
+    // Push the index onto the op map.
+    m_opMap.push_back(thePosition);
 
-	// Update the op map length.
-	++m_opMap[s_opCodeMapLengthIndex];
+    // Update the op map length.
+    ++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
 
 void
 XPathExpression::pushArgumentOnOpCodeMap(
-			double					theNumber,
-			const XalanDOMString&	theString)
+            double                  theNumber,
+            const XalanDOMString&   theString)
 {
-	assert(m_currentPosition != 0);
+    assert(m_currentPosition != 0);
 
-	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+    const TokenQueueSizeType    thePosition = m_currentPosition - 1;
 
-	assert(thePosition < tokenQueueSize());
+    assert(thePosition < tokenQueueSize());
 
-	// Set the entry in the token queue to the XObject.
-	m_tokenQueue[thePosition].set(theNumber, theString, getMemoryManager());
+    // Set the entry in the token queue to the XObject.
+    m_tokenQueue[thePosition].set(theNumber, theString, getMemoryManager());
 
-	// Push the index onto the op map.
-	m_opMap.push_back(thePosition);
+    // Push the index onto the op map.
+    m_opMap.push_back(thePosition);
 
-	// Update the op map length.
-	++m_opMap[s_opCodeMapLengthIndex];
+    // Update the op map length.
+    ++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
 
 void
-XPathExpression::pushNumberLiteralOnOpCodeMap(double	theNumber)
+XPathExpression::pushNumberLiteralOnOpCodeMap(double    theNumber)
 {
-	// Get the new index for the literal...
-	const OpCodeMapValueType	theIndex = OpCodeMapValueType(m_numberLiteralValues.size());
+    // Get the new index for the literal...
+    const OpCodeMapValueType    theIndex = OpCodeMapValueType(m_numberLiteralValues.size());
 
-	assert(NumberLiteralValueVectorType::size_type(theIndex) == m_numberLiteralValues.size());
+    assert(NumberLiteralValueVectorType::size_type(theIndex) == m_numberLiteralValues.size());
 
-	// Push the index onto the op map.
-	m_opMap.push_back(theIndex);
+    // Push the index onto the op map.
+    m_opMap.push_back(theIndex);
 
-	// Update the op map length.
-	++m_opMap[s_opCodeMapLengthIndex];
+    // Update the op map length.
+    ++m_opMap[s_opCodeMapLengthIndex];
 
-	m_numberLiteralValues.push_back(theNumber);
+    m_numberLiteralValues.push_back(theNumber);
 }
 
 
@@ -929,17 +955,17 @@ XPathExpression::pushNumberLiteralOnOpCodeMap(double	theNumber)
 void
 XPathExpression::pushCurrentTokenOnOpCodeMap()
 {
-	assert(m_currentPosition != 0);
+    assert(m_currentPosition != 0);
 
-	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+    const TokenQueueSizeType    thePosition = m_currentPosition - 1;
 
-	assert(thePosition < tokenQueueSize());
+    assert(thePosition < tokenQueueSize());
 
-	// Push the index onto the op map.
-	m_opMap.push_back(thePosition);
+    // Push the index onto the op map.
+    m_opMap.push_back(thePosition);
 
-	// Update the op map length.
-	++m_opMap[s_opCodeMapLengthIndex];
+    // Update the op map length.
+    ++m_opMap[s_opCodeMapLengthIndex];
 }
 
 

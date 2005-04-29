@@ -41,51 +41,58 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemForwardCompatible::ElemForwardCompatible(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet& 					stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			int 							lineNumber,
-			int 							columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE),
-	m_elementName(constructionContext.getPooledString(name))
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE),
+    m_elementName(constructionContext.getPooledString(name))
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if (!(isAttrOK(aname, atts, i, constructionContext) ||
-			processSpaceAttr(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult,
-							m_elementName.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+        if (isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false &&
+            processSpaceAttr(
+                m_elementName.c_str(),
+                aname, 
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                m_elementName.c_str(),
+                aname);
+        }
+    }
 }
+
+
 
 ElemForwardCompatible*
 ElemForwardCompatible::    create(
             MemoryManagerType&              theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber)
 {
     typedef ElemForwardCompatible ThisType;
 
@@ -105,10 +112,12 @@ ElemForwardCompatible::    create(
     return theResult;
 }
 
+
+
 const XalanDOMString&
 ElemForwardCompatible::getElementName() const
 {
-	return m_elementName;
+    return m_elementName;
 }
 
 
@@ -122,18 +131,18 @@ ElemForwardCompatible::~ElemForwardCompatible()
 const ElemTemplateElement*
 ElemForwardCompatible::startElement(StylesheetExecutionContext& executionContext) const
 {
-	return getFirstChildElemToExecute(executionContext);
+    return getFirstChildElemToExecute(executionContext);
 
 }
-	
+    
 
 
 bool
 ElemForwardCompatible::executeChildElement(
-			StylesheetExecutionContext& /*executionContext*/,
-			const ElemTemplateElement*  element) const
+            StylesheetExecutionContext& /*executionContext*/,
+            const ElemTemplateElement*  element) const
 {
-	return element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
+    return element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
 }
 #endif
 
@@ -141,17 +150,17 @@ ElemForwardCompatible::executeChildElement(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemForwardCompatible::execute(StylesheetExecutionContext&		executionContext) const
+ElemForwardCompatible::execute(StylesheetExecutionContext&      executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
-	{
-		if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
-		{
-			child->execute(executionContext);
-		}
-	}
+    for (const ElemTemplateElement* child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
+    {
+        if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
+        {
+            child->execute(executionContext);
+        }
+    }
 }
 #endif
 

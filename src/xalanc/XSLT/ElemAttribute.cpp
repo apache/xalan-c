@@ -43,64 +43,65 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemAttribute::ElemAttribute(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_ATTRIBUTE),
-	m_nameAVT(0),	
-	m_namespaceAVT(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_ATTRIBUTE),
+    m_nameAVT(0),   
+    m_namespaceAVT(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_nameAVT =
-				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
-		{
-			m_namespaceAVT =
-				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
-				 processSpaceAttr(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
+        if(equals(aname, Constants::ATTRNAME_NAME))
+        {
+            m_nameAVT =
+                constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
+        {
+            m_namespaceAVT =
+                constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false &&
+                processSpaceAttr(
+                    Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING.c_str(),
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param, 
-                            theResult, 
-							Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
-
-	if(0 == m_nameAVT)
-	{
+    if(0 == m_nameAVT)
+    {
         XalanDOMString  theResult(constructionContext.getMemoryManager());
 
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param, 
-                theResult,
-				Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_NAME),
-			0,
-			this);
-	} 
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param, 
+            Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_NAME);
+    } 
 }
 
 
@@ -114,206 +115,207 @@ ElemAttribute::~ElemAttribute()
 const XalanDOMString&
 ElemAttribute::getElementName() const
 {
-	return Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING;
 }
 
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemAttribute::startElement(StylesheetExecutionContext&	executionContext) const
+ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 {
-	assert(m_nameAVT != 0);
+    assert(m_nameAVT != 0);
 
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	XalanDOMString&		attrName = executionContext.getAndPushCachedString();
-	
-	m_nameAVT->evaluate(attrName, *this, executionContext);
+    XalanDOMString&     attrName = executionContext.getAndPushCachedString();
+    
+    m_nameAVT->evaluate(attrName, *this, executionContext);
 
-	if(XalanQName::isValidQName(attrName) == false)
-	{
-		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::AttributeNameNotValidQName_1Param, attrName),
-			executionContext.getCurrentNode(),
-			getLocator());
-		executionContext.pushProcessCurrentAttribute(false);
-	}
-	else
-	{
-		// save original attribute name
-		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrNameGuard(executionContext);
+    if(XalanQName::isValidQName(attrName) == false)
+    {
+        warn(
+            executionContext,
+            XalanMessages::AttributeNameNotValidQName_1Param, 
+            attrName);
 
-		XalanDOMString&		origAttrName = origAttrNameGuard.get();
+        executionContext.pushProcessCurrentAttribute(false);
+    }
+    else
+    {
+        // save original attribute name
+        StylesheetExecutionContext::GetAndReleaseCachedString   origAttrNameGuard(executionContext);
 
-		assign(origAttrName, attrName);
+        XalanDOMString&     origAttrName = origAttrNameGuard.get();
 
-		const XalanDOMString::size_type		origAttrNameLength = length(origAttrName);
+        assign(origAttrName, attrName);
 
-		XalanDOMString::size_type			indexOfNSSep = 0;
+        const XalanDOMString::size_type     origAttrNameLength = length(origAttrName);
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpaceGuard(executionContext);
+        XalanDOMString::size_type           indexOfNSSep = 0;
 
-		XalanDOMString&		attrNameSpace = attrNameSpaceGuard.get();
+        StylesheetExecutionContext::GetAndReleaseCachedString   attrNameSpaceGuard(executionContext);
 
-		if(0 != m_namespaceAVT)
-		{
-			m_namespaceAVT->evaluate(attrNameSpace, *this, executionContext);
+        XalanDOMString&     attrNameSpace = attrNameSpaceGuard.get();
 
-			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
+        if(0 != m_namespaceAVT)
+        {
+            m_namespaceAVT->evaluate(attrNameSpace, *this, executionContext);
 
-			if(isEmpty(attrNameSpace))
-			{
-				// If there's no namespace, but the attribute has a
-				// prefix, then we must strip the prefix off.
-				if (indexOfNSSep < origAttrNameLength)
-				{
-					substring(origAttrName, attrName, indexOfNSSep + 1);
-				}
+            indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-				// We set this to indicate that there is no prefix any
-				// longer.
-				indexOfNSSep = origAttrNameLength;
-			}
-			else
-			{
-				// See if the namespace already exists.  If it does, we'll get the
-				// prefix that was used when it was declared.
-				const XalanDOMString*  const	prefix =
-					executionContext.getResultPrefixForNamespace(attrNameSpace);
+            if(isEmpty(attrNameSpace))
+            {
+                // If there's no namespace, but the attribute has a
+                // prefix, then we must strip the prefix off.
+                if (indexOfNSSep < origAttrNameLength)
+                {
+                    substring(origAttrName, attrName, indexOfNSSep + 1);
+                }
 
-				// If there is already a prefix for the namespace, and it's length
-				// is not 0, and there is no prefix on the attribute name, or
-				// it's equal to the prefix on the attribute, then go ahead
-				// and use that prefix.
-				if(prefix != 0 &&
-				   length(*prefix) != 0 &&
-				   (indexOfNSSep == origAttrNameLength ||
-				    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
-				{
-					if(indexOfNSSep < origAttrNameLength)
-					{
-						reserve(
-							attrName,
-							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                // We set this to indicate that there is no prefix any
+                // longer.
+                indexOfNSSep = origAttrNameLength;
+            }
+            else
+            {
+                // See if the namespace already exists.  If it does, we'll get the
+                // prefix that was used when it was declared.
+                const XalanDOMString*  const    prefix =
+                    executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-						attrName.erase(0, indexOfNSSep + 1);
-					}
-					else
-					{
-						reserve(
-							attrName,
-							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
-					}
+                // If there is already a prefix for the namespace, and it's length
+                // is not 0, and there is no prefix on the attribute name, or
+                // it's equal to the prefix on the attribute, then go ahead
+                // and use that prefix.
+                if(prefix != 0 &&
+                   length(*prefix) != 0 &&
+                   (indexOfNSSep == origAttrNameLength ||
+                    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
+                {
+                    if(indexOfNSSep < origAttrNameLength)
+                    {
+                        reserve(
+                            attrName,
+                            length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
 
-					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(attrName, 0, *prefix);
-				}
-				else
-				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefixGuard(executionContext);
+                        attrName.erase(0, indexOfNSSep + 1);
+                    }
+                    else
+                    {
+                        reserve(
+                            attrName,
+                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                    }
 
-					XalanDOMString&		newPrefix = newPrefixGuard.get();
+                    insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+                    insert(attrName, 0, *prefix);
+                }
+                else
+                {
+                    StylesheetExecutionContext::GetAndReleaseCachedString   newPrefixGuard(executionContext);
 
-					// If the prefix on the QName is xmlns, we cannot use it.
-					const bool			fPrefixIsXMLNS =
-						startsWith(origAttrName, DOMServices::s_XMLNamespaceWithSeparator);
+                    XalanDOMString&     newPrefix = newPrefixGuard.get();
 
-					// If there's a prefix, and it's not xmlns, then use
-					// the prefix that's provided.
-					if(indexOfNSSep < origAttrNameLength &&
-					    fPrefixIsXMLNS == false)
-					{
-						substring(origAttrName, newPrefix, 0, indexOfNSSep);
+                    // If the prefix on the QName is xmlns, we cannot use it.
+                    const bool          fPrefixIsXMLNS =
+                        startsWith(origAttrName, DOMServices::s_XMLNamespaceWithSeparator);
 
-						// OK, make sure that the prefix provided maps to
-						// the same namespace as the one the user requested,
-						// and see if it's in use...
-						const XalanDOMString* const	theNamespace =
-							executionContext.getResultNamespaceForPrefix(newPrefix);
+                    // If there's a prefix, and it's not xmlns, then use
+                    // the prefix that's provided.
+                    if(indexOfNSSep < origAttrNameLength &&
+                        fPrefixIsXMLNS == false)
+                    {
+                        substring(origAttrName, newPrefix, 0, indexOfNSSep);
 
-						if (theNamespace != 0 &&
-							equals(*theNamespace, attrNameSpace) == false &&
-							executionContext.isPendingResultPrefix(newPrefix) == true)
-						{
-							// It doesn't, so we'll need to manufacture a
-							// prefix.
-							clear(newPrefix);
+                        // OK, make sure that the prefix provided maps to
+                        // the same namespace as the one the user requested,
+                        // and see if it's in use...
+                        const XalanDOMString* const theNamespace =
+                            executionContext.getResultNamespaceForPrefix(newPrefix);
 
-							// Strip the user-supplied prefix from the name...
-							substring(origAttrName, attrName, indexOfNSSep + 1);
-						}
-					}
+                        if (theNamespace != 0 &&
+                            equals(*theNamespace, attrNameSpace) == false &&
+                            executionContext.isPendingResultPrefix(newPrefix) == true)
+                        {
+                            // It doesn't, so we'll need to manufacture a
+                            // prefix.
+                            clear(newPrefix);
 
-					if (length(newPrefix) == 0)
-					{
-						// If there's a prefix, and it's xmlns, then strip it
-						// off...
-						if (fPrefixIsXMLNS == true)
-						{
-							attrName.erase(0, indexOfNSSep + 1);
-						}
+                            // Strip the user-supplied prefix from the name...
+                            substring(origAttrName, attrName, indexOfNSSep + 1);
+                        }
+                    }
 
-						// Get a new, unique namespace prefix...
-						executionContext.getUniqueNamespaceValue(newPrefix);
+                    if (length(newPrefix) == 0)
+                    {
+                        // If there's a prefix, and it's xmlns, then strip it
+                        // off...
+                        if (fPrefixIsXMLNS == true)
+                        {
+                            attrName.erase(0, indexOfNSSep + 1);
+                        }
 
-						// Reserve some space in the string.
-						reserve(
-							attrName,
-							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+                        // Get a new, unique namespace prefix...
+                        executionContext.getUniqueNamespaceValue(newPrefix);
 
-						insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-						insert(attrName, 0, newPrefix);
-					}
+                        // Reserve some space in the string.
+                        reserve(
+                            attrName,
+                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
 
-					// OK, now we have to generate a namespace declaration...
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+                        insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+                        insert(attrName, 0, newPrefix);
+                    }
 
-					XalanDOMString&		nsDecl = nsDeclGuard.get();
+                    // OK, now we have to generate a namespace declaration...
+                    StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
 
-					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
+                    XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                    reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 
-					append(nsDecl, newPrefix);
+                    assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
-					// Add the namespace declaration...
-					executionContext.addResultAttribute(nsDecl, attrNameSpace);
-				}
-			}
-		}
+                    append(nsDecl, newPrefix);
+
+                    // Add the namespace declaration...
+                    executionContext.addResultAttribute(nsDecl, attrNameSpace);
+                }
+            }
+        }
       // Note we are using original attribute name for these tests. 
-		else if(executionContext.isElementPending() == true &&
-				!equals(origAttrName, DOMServices::s_XMLNamespace))
-		{
-			// Don't try to create a namespace declaration for anything that
-			// starts with xml:
-			if (startsWith(origAttrName, DOMServices::s_XMLString) == true)
-			{
-				// This just fakes out the test below.  It would be better if
-				// we had a better way of testing this...
-				indexOfNSSep = origAttrNameLength;
-			}
-			else
-			{
-				// make sure that if a prefix is specified on the attribute name, it is valid
-				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
+        else if(executionContext.isElementPending() == true &&
+                !equals(origAttrName, DOMServices::s_XMLNamespace))
+        {
+            // Don't try to create a namespace declaration for anything that
+            // starts with xml:
+            if (startsWith(origAttrName, DOMServices::s_XMLString) == true)
+            {
+                // This just fakes out the test below.  It would be better if
+                // we had a better way of testing this...
+                indexOfNSSep = origAttrNameLength;
+            }
+            else
+            {
+                // make sure that if a prefix is specified on the attribute name, it is valid
+                indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-				if(indexOfNSSep < origAttrNameLength)
-				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsprefixGuard(executionContext);
+                if(indexOfNSSep < origAttrNameLength)
+                {
+                    StylesheetExecutionContext::GetAndReleaseCachedString   nsprefixGuard(executionContext);
 
-					XalanDOMString&		nsprefix = nsprefixGuard.get();
+                    XalanDOMString&     nsprefix = nsprefixGuard.get();
 
-					substring(origAttrName, nsprefix, 0, indexOfNSSep);
+                    substring(origAttrName, nsprefix, 0, indexOfNSSep);
 
-					const XalanDOMString* const		theNamespace =
-						getNamespaceForPrefix(nsprefix);
+                    const XalanDOMString* const     theNamespace =
+                        getNamespaceForPrefix(nsprefix);
 
-					if (theNamespace != 0)
-					{
-						assign(attrNameSpace, *theNamespace);
-					    const XalanDOMString* const     theResultNamespace =
+                    if (theNamespace != 0)
+                    {
+                        assign(attrNameSpace, *theNamespace);
+                        const XalanDOMString* const     theResultNamespace =
                             executionContext.getResultNamespaceForPrefix(nsprefix);
 
                         if (theResultNamespace != 0 &&
@@ -334,92 +336,87 @@ ElemAttribute::startElement(StylesheetExecutionContext&	executionContext) const
                             attrName.erase(0, indexOfNSSep);
                             attrName.insert(attrName.begin(), nsprefix.begin(), nsprefix.end());
                         }
-					}
+                    }
 
-					if (isEmpty(attrNameSpace))
-					{
-                        XalanDOMString  theResult(executionContext.getMemoryManager());
-						// Could not resolve prefix
-						executionContext.warn(
-							XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix , theResult),
-							executionContext.getCurrentNode(),
-							getLocator());
-					}
-					else
-					{
-						// Check to see if there's already a namespace declaration in scope...
-						const XalanDOMString* const		prefix =
-							executionContext.getResultPrefixForNamespace(attrNameSpace);
+                    if (isEmpty(attrNameSpace))
+                    {
+                        warn(
+                            executionContext,
+                            XalanMessages::PrefixIsNotDeclared_1Param,
+                            nsprefix);
+                    }
+                    else
+                    {
+                        // Check to see if there's already a namespace declaration in scope...
+                        const XalanDOMString* const     prefix =
+                            executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-						if (prefix == 0)
-						{
-							// We need to generate a namespace declaration...
-							StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+                        if (prefix == 0)
+                        {
+                            // We need to generate a namespace declaration...
+                            StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
 
-							XalanDOMString&		nsDecl = nsDeclGuard.get();
+                            XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-							reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
+                            reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
 
-							assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                            assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
-							append(nsDecl, nsprefix);
+                            append(nsDecl, nsprefix);
 
-							// Add the namespace declaration...
-							executionContext.addResultAttribute(nsDecl, attrNameSpace);
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-            XalanDOMString  theResult(executionContext.getMemoryManager());
+                            // Add the namespace declaration...
+                            executionContext.addResultAttribute(nsDecl, attrNameSpace);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            warn(
+                executionContext,
+                XalanMessages::AttributesCannotBeAdded);
+        }
 
-			executionContext.warn(
-				XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded, theResult),
-				executionContext.getCurrentNode(),
-				getLocator());
-		}
+        // If there was no namespace, or the namespace was resolved, process
+        // the result attribute.
+        
+        if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
+        {
+            executionContext.pushProcessCurrentAttribute(true);
+            executionContext.pushCopyTextNodesOnly(true);
+        
+            XalanDOMString& theResult = executionContext.getAndPushCachedString();
+                    
+            return beginChildrenToString(executionContext,theResult);
+                
+        } 
+        else
+        {
+            executionContext.pushProcessCurrentAttribute(false);
+        }
+    }
 
-		// If there was no namespace, or the namespace was resolved, process
-		// the result attribute.
-		
-		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
-		{
-			executionContext.pushProcessCurrentAttribute(true);
-			executionContext.pushCopyTextNodesOnly(true);
-		
-			XalanDOMString& theResult = executionContext.getAndPushCachedString();
-					
-			return beginChildrenToString(executionContext,theResult);
-				
-		} 
-		else
-		{
-			executionContext.pushProcessCurrentAttribute(false);
-		}
-	}
-
-	executionContext.getAndPopCachedString();
-	return 0;
+    executionContext.getAndPopCachedString();
+    return 0;
 }
 
 
 
 void
-ElemAttribute::endElement(StylesheetExecutionContext&		executionContext) const
+ElemAttribute::endElement(StylesheetExecutionContext&       executionContext) const
 {
-	if (executionContext.popProcessCurrentAttribute() == true)
-	{
-		endChildrenToString(executionContext);
+    if (executionContext.popProcessCurrentAttribute() == true)
+    {
+        endChildrenToString(executionContext);
 
-		XalanDOMString& theResult = executionContext.getAndPopCachedString();
-		XalanDOMString& attrName = executionContext.getAndPopCachedString();
+        XalanDOMString& theResult = executionContext.getAndPopCachedString();
+        XalanDOMString& attrName = executionContext.getAndPopCachedString();
 
-		executionContext.addResultAttribute(attrName,theResult);
+        executionContext.addResultAttribute(attrName,theResult);
 
-		executionContext.popCopyTextNodesOnly();
-	}
+        executionContext.popCopyTextNodesOnly();
+    }
 }
 #endif
 
@@ -427,201 +424,201 @@ ElemAttribute::endElement(StylesheetExecutionContext&		executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
+ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 {
-	assert(m_nameAVT != 0);
+    assert(m_nameAVT != 0);
 
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	StylesheetExecutionContext::GetAndReleaseCachedString	attrNameGuard(executionContext);
+    StylesheetExecutionContext::GetAndReleaseCachedString   attrNameGuard(executionContext);
 
-	XalanDOMString&		attrName = attrNameGuard.get();
+    XalanDOMString&     attrName = attrNameGuard.get();
 
-	m_nameAVT->evaluate(attrName, *this, executionContext);
+    m_nameAVT->evaluate(attrName, *this, executionContext);
 
-	if(XalanQName::isValidQName(attrName) == false)
-	{
-		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::AttributeNameNotValidQName_1Param, attrName),
-			executionContext.getCurrentNode(),
-			getLocator());
-	}
-	else
-	{
-		// save original attribute name
-		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrNameGuard(executionContext);
+    if(XalanQName::isValidQName(attrName) == false)
+    {
+        executionContext.warn(
+            XalanMessageLoader::getMessage(XalanMessages::AttributeNameNotValidQName_1Param, attrName),
+            executionContext.getCurrentNode(),
+            getLocator());
+    }
+    else
+    {
+        // save original attribute name
+        StylesheetExecutionContext::GetAndReleaseCachedString   origAttrNameGuard(executionContext);
 
-		XalanDOMString&		origAttrName = origAttrNameGuard.get();
+        XalanDOMString&     origAttrName = origAttrNameGuard.get();
 
-		assign(origAttrName, attrName);
+        assign(origAttrName, attrName);
 
-		const XalanDOMString::size_type		origAttrNameLength = length(origAttrName);
+        const XalanDOMString::size_type     origAttrNameLength = length(origAttrName);
 
-		XalanDOMString::size_type			indexOfNSSep = 0;
+        XalanDOMString::size_type           indexOfNSSep = 0;
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpaceGuard(executionContext);
+        StylesheetExecutionContext::GetAndReleaseCachedString   attrNameSpaceGuard(executionContext);
 
-		XalanDOMString&		attrNameSpace = attrNameSpaceGuard.get();
+        XalanDOMString&     attrNameSpace = attrNameSpaceGuard.get();
 
-		if(0 != m_namespaceAVT)
-		{
-			m_namespaceAVT->evaluate(attrNameSpace, *this, executionContext);
+        if(0 != m_namespaceAVT)
+        {
+            m_namespaceAVT->evaluate(attrNameSpace, *this, executionContext);
 
-			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
+            indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-			if(isEmpty(attrNameSpace))
-			{
-				// If there's no namespace, but the attribute has a
-				// prefix, then we must strip the prefix off.
-				if (indexOfNSSep < origAttrNameLength)
-				{
-					substring(origAttrName, attrName, indexOfNSSep + 1);
-				}
+            if(isEmpty(attrNameSpace))
+            {
+                // If there's no namespace, but the attribute has a
+                // prefix, then we must strip the prefix off.
+                if (indexOfNSSep < origAttrNameLength)
+                {
+                    substring(origAttrName, attrName, indexOfNSSep + 1);
+                }
 
-				// We set this to indicate that there is no prefix any
-				// longer.
-				indexOfNSSep = origAttrNameLength;
-			}
-			else
-			{
-				// See if the namespace already exists.  If it does, we'll get the
-				// prefix that was used when it was declared.
-				const XalanDOMString*  const	prefix =
-					executionContext.getResultPrefixForNamespace(attrNameSpace);
+                // We set this to indicate that there is no prefix any
+                // longer.
+                indexOfNSSep = origAttrNameLength;
+            }
+            else
+            {
+                // See if the namespace already exists.  If it does, we'll get the
+                // prefix that was used when it was declared.
+                const XalanDOMString*  const    prefix =
+                    executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-				// If there is already a prefix for the namespace, and it's length
-				// is not 0, and there is no prefix on the attribute name, or
-				// it's equal to the prefix on the attribute, then go ahead
-				// and use that prefix.
-				if(prefix != 0 &&
-				   length(*prefix) != 0 &&
-				   (indexOfNSSep == origAttrNameLength ||
-				    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
-				{
-					if(indexOfNSSep < origAttrNameLength)
-					{
-						reserve(
-							attrName,
-							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                // If there is already a prefix for the namespace, and it's length
+                // is not 0, and there is no prefix on the attribute name, or
+                // it's equal to the prefix on the attribute, then go ahead
+                // and use that prefix.
+                if(prefix != 0 &&
+                   length(*prefix) != 0 &&
+                   (indexOfNSSep == origAttrNameLength ||
+                    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
+                {
+                    if(indexOfNSSep < origAttrNameLength)
+                    {
+                        reserve(
+                            attrName,
+                            length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
 
-						attrName.erase(0, indexOfNSSep + 1);
-					}
-					else
-					{
-						reserve(
-							attrName,
-							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
-					}
+                        attrName.erase(0, indexOfNSSep + 1);
+                    }
+                    else
+                    {
+                        reserve(
+                            attrName,
+                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                    }
 
-					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(attrName, 0, *prefix);
-				}
-				else
-				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefixGuard(executionContext);
+                    insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+                    insert(attrName, 0, *prefix);
+                }
+                else
+                {
+                    StylesheetExecutionContext::GetAndReleaseCachedString   newPrefixGuard(executionContext);
 
-					XalanDOMString&		newPrefix = newPrefixGuard.get();
+                    XalanDOMString&     newPrefix = newPrefixGuard.get();
 
-					// If the prefix on the QName is xmlns, we cannot use it.
-					const bool			fPrefixIsXMLNS =
-						startsWith(origAttrName, DOMServices::s_XMLNamespaceWithSeparator);
+                    // If the prefix on the QName is xmlns, we cannot use it.
+                    const bool          fPrefixIsXMLNS =
+                        startsWith(origAttrName, DOMServices::s_XMLNamespaceWithSeparator);
 
-					// If there's a prefix, and it's not xmlns, then use
-					// the prefix that's provided.
-					if(indexOfNSSep < origAttrNameLength &&
-					    fPrefixIsXMLNS == false)
-					{
-						substring(origAttrName, newPrefix, 0, indexOfNSSep);
+                    // If there's a prefix, and it's not xmlns, then use
+                    // the prefix that's provided.
+                    if(indexOfNSSep < origAttrNameLength &&
+                        fPrefixIsXMLNS == false)
+                    {
+                        substring(origAttrName, newPrefix, 0, indexOfNSSep);
 
-						// OK, make sure that the prefix provided maps to
-						// the same namespace as the one the user requested,
-						// and see if it's in use...
-						const XalanDOMString* const	theNamespace =
-							executionContext.getResultNamespaceForPrefix(newPrefix);
+                        // OK, make sure that the prefix provided maps to
+                        // the same namespace as the one the user requested,
+                        // and see if it's in use...
+                        const XalanDOMString* const theNamespace =
+                            executionContext.getResultNamespaceForPrefix(newPrefix);
 
-						if (theNamespace != 0 &&
-							equals(*theNamespace, attrNameSpace) == false &&
-							executionContext.isPendingResultPrefix(newPrefix) == true)
-						{
-							// It doesn't, so we'll need to manufacture a
-							// prefix.
-							clear(newPrefix);
+                        if (theNamespace != 0 &&
+                            equals(*theNamespace, attrNameSpace) == false &&
+                            executionContext.isPendingResultPrefix(newPrefix) == true)
+                        {
+                            // It doesn't, so we'll need to manufacture a
+                            // prefix.
+                            clear(newPrefix);
 
-							// Strip the user-supplied prefix from the name...
-							substring(origAttrName, attrName, indexOfNSSep + 1);
-						}
-					}
+                            // Strip the user-supplied prefix from the name...
+                            substring(origAttrName, attrName, indexOfNSSep + 1);
+                        }
+                    }
 
-					if (length(newPrefix) == 0)
-					{
-						// If there's a prefix, and it's xmlns, then strip it
-						// off...
-						if (fPrefixIsXMLNS == true)
-						{
-							attrName.erase(0, indexOfNSSep + 1);
-						}
+                    if (length(newPrefix) == 0)
+                    {
+                        // If there's a prefix, and it's xmlns, then strip it
+                        // off...
+                        if (fPrefixIsXMLNS == true)
+                        {
+                            attrName.erase(0, indexOfNSSep + 1);
+                        }
 
-						// Get a new, unique namespace prefix...
-						executionContext.getUniqueNamespaceValue(newPrefix);
+                        // Get a new, unique namespace prefix...
+                        executionContext.getUniqueNamespaceValue(newPrefix);
 
-						// Reserve some space in the string.
-						reserve(
-							attrName,
-							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+                        // Reserve some space in the string.
+                        reserve(
+                            attrName,
+                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
 
-						insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-						insert(attrName, 0, newPrefix);
-					}
+                        insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+                        insert(attrName, 0, newPrefix);
+                    }
 
-					// OK, now we have to generate a namespace declaration...
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+                    // OK, now we have to generate a namespace declaration...
+                    StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
 
-					XalanDOMString&		nsDecl = nsDeclGuard.get();
+                    XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
+                    reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 
-					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                    assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
-					append(nsDecl, newPrefix);
+                    append(nsDecl, newPrefix);
 
-					// Add the namespace declaration...
-					executionContext.addResultAttribute(nsDecl, attrNameSpace);
-				}
-			}
-		}
+                    // Add the namespace declaration...
+                    executionContext.addResultAttribute(nsDecl, attrNameSpace);
+                }
+            }
+        }
       // Note we are using original attribute name for these tests. 
-		else if(executionContext.isElementPending() == true &&
-				!equals(origAttrName, DOMServices::s_XMLNamespace))
-		{
-			// Don't try to create a namespace declaration for anything that
-			// starts with xml:
-			if (startsWith(origAttrName, DOMServices::s_XMLString) == true)
-			{
-				// This just fakes out the test below.  It would be better if
-				// we had a better way of testing this...
-				indexOfNSSep = origAttrNameLength;
-			}
-			else
-			{
-				// make sure that if a prefix is specified on the attribute name, it is valid
-				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
+        else if(executionContext.isElementPending() == true &&
+                !equals(origAttrName, DOMServices::s_XMLNamespace))
+        {
+            // Don't try to create a namespace declaration for anything that
+            // starts with xml:
+            if (startsWith(origAttrName, DOMServices::s_XMLString) == true)
+            {
+                // This just fakes out the test below.  It would be better if
+                // we had a better way of testing this...
+                indexOfNSSep = origAttrNameLength;
+            }
+            else
+            {
+                // make sure that if a prefix is specified on the attribute name, it is valid
+                indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-				if(indexOfNSSep < origAttrNameLength)
-				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsprefixGuard(executionContext);
+                if(indexOfNSSep < origAttrNameLength)
+                {
+                    StylesheetExecutionContext::GetAndReleaseCachedString   nsprefixGuard(executionContext);
 
-					XalanDOMString&		nsprefix = nsprefixGuard.get();
+                    XalanDOMString&     nsprefix = nsprefixGuard.get();
 
-					substring(origAttrName, nsprefix, 0, indexOfNSSep);
+                    substring(origAttrName, nsprefix, 0, indexOfNSSep);
 
-					const XalanDOMString* const		theNamespace =
-						getNamespaceForPrefix(nsprefix);
+                    const XalanDOMString* const     theNamespace =
+                        getNamespaceForPrefix(nsprefix);
 
-					if (theNamespace != 0)
-					{
-						assign(attrNameSpace, *theNamespace);
+                    if (theNamespace != 0)
+                    {
+                        assign(attrNameSpace, *theNamespace);
 
-					    const XalanDOMString* const     theResultNamespace =
+                        const XalanDOMString* const     theResultNamespace =
                             executionContext.getResultNamespaceForPrefix(nsprefix);
 
                         if (theResultNamespace != 0 &&
@@ -642,96 +639,96 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
                             attrName.erase(0, indexOfNSSep);
                             attrName.insert(attrName.begin(), nsprefix.begin(), nsprefix.end());
                         }
-					}
+                    }
 
-					if (isEmpty(attrNameSpace))
-					{
-						// Could not resolve prefix
-						executionContext.warn(
-							XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix),
-							executionContext.getCurrentNode(),
-							getLocator());
-					}
-					else
-					{
-						// Check to see if there's already a namespace declaration in scope...
-						const XalanDOMString* const		prefix =
-							executionContext.getResultPrefixForNamespace(attrNameSpace);
+                    if (isEmpty(attrNameSpace))
+                    {
+                        // Could not resolve prefix
+                        executionContext.warn(
+                            XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix),
+                            executionContext.getCurrentNode(),
+                            getLocator());
+                    }
+                    else
+                    {
+                        // Check to see if there's already a namespace declaration in scope...
+                        const XalanDOMString* const     prefix =
+                            executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-						if (prefix == 0)
-						{
-							// We need to generate a namespace declaration...
-							StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+                        if (prefix == 0)
+                        {
+                            // We need to generate a namespace declaration...
+                            StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
 
-							XalanDOMString&		nsDecl = nsDeclGuard.get();
+                            XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-							reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
+                            reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
 
-							assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                            assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
-							append(nsDecl, nsprefix);
+                            append(nsDecl, nsprefix);
 
-							// Add the namespace declaration...
-							executionContext.addResultAttribute(nsDecl, attrNameSpace);
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			executionContext.warn(
-				XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded),
-				executionContext.getCurrentNode(),
-				getLocator());
-		}
+                            // Add the namespace declaration...
+                            executionContext.addResultAttribute(nsDecl, attrNameSpace);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            executionContext.warn(
+                XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded),
+                executionContext.getCurrentNode(),
+                getLocator());
+        }
 
-		// If there was no namespace, or the namespace was resolved, process
-		// the result attribute.
-		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
-		{
-			StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+        // If there was no namespace, or the namespace was resolved, process
+        // the result attribute.
+        if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
+        {
+            StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly  theSetAndRestore(executionContext, true);
 
-			childrenToResultAttribute(
-				executionContext,
-				attrName);
-		}
-	}
+            childrenToResultAttribute(
+                executionContext,
+                attrName);
+        }
+    }
 }
 #endif
 
 
 
 bool
-ElemAttribute::childTypeAllowed(int		xslToken) const
+ElemAttribute::childTypeAllowed(int     xslToken) const
 {
-	bool	fResult = false;
+    bool    fResult = false;
 
-	switch(xslToken)
-	{
-		// char-instructions 
-	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
-	case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
-	case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
-	case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
-	case StylesheetConstructionContext::ELEMNAME_COPY_OF:
-	case StylesheetConstructionContext::ELEMNAME_NUMBER:
-	case StylesheetConstructionContext::ELEMNAME_CHOOSE:
-	case StylesheetConstructionContext::ELEMNAME_IF:
-	case StylesheetConstructionContext::ELEMNAME_TEXT:
-	case StylesheetConstructionContext::ELEMNAME_COPY:
-	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
-	case StylesheetConstructionContext::ELEMNAME_MESSAGE:
-		fResult = true;
-		break;
+    switch(xslToken)
+    {
+        // char-instructions 
+    case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
+    case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
+    case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
+    case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+    case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+    case StylesheetConstructionContext::ELEMNAME_NUMBER:
+    case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+    case StylesheetConstructionContext::ELEMNAME_IF:
+    case StylesheetConstructionContext::ELEMNAME_TEXT:
+    case StylesheetConstructionContext::ELEMNAME_COPY:
+    case StylesheetConstructionContext::ELEMNAME_VARIABLE:
+    case StylesheetConstructionContext::ELEMNAME_MESSAGE:
+        fResult = true;
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 
-	return fResult;
+    return fResult;
 }
 
 

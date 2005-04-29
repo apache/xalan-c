@@ -44,14 +44,14 @@ FunctionElementAvailable::~FunctionElementAvailable()
 
 XObjectPtr
 FunctionElementAvailable::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const
 {
-	assert(arg1.null() == false);
+    assert(arg1.null() == false);
 
-	return executionContext.getXObjectFactory().createBoolean(
+    return executionContext.getXObjectFactory().createBoolean(
         executionContext.elementAvailable(arg1->str(), locator));
 }
 
@@ -64,7 +64,7 @@ FunctionElementAvailable*
 #endif
 FunctionElementAvailable::clone(MemoryManagerType& theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -72,9 +72,9 @@ FunctionElementAvailable::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionElementAvailable::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsOneArgument_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 "function-available()");
 }
 

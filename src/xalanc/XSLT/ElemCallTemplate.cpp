@@ -41,73 +41,63 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemCallTemplate::ElemCallTemplate(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE),
-	m_templateName(0),
-	m_template(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE),
+    m_templateName(0),
+    m_template(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_templateName = constructionContext.createXalanQName(
-					atts.getValue(i),
-					getStylesheet().getNamespaces(),
-					getLocator());
+        if(equals(aname, Constants::ATTRNAME_NAME))
+        {
+            m_templateName = constructionContext.createXalanQName(
+                    atts.getValue(i),
+                    getStylesheet().getNamespaces(),
+                    getLocator());
 
-			if (m_templateName->isValid() == false)
-			{
-                XalanDOMString  theResult(constructionContext.getMemoryManager());
+            if (m_templateName->isValid() == false)
+            {
+                error(
+                    constructionContext,
+                    XalanMessages::AttributeValueNotValidQName_2Param,
+                    Constants::ATTRNAME_NAME.c_str(),
+                    atts.getValue(i));
+            }
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-				constructionContext.error(
-						XalanMessageLoader::getMessage(
-							XalanMessages::AttributeValueNotValidQName_2Param,
-                            theResult,
-							Constants::ATTRNAME_NAME.c_str(),
-							atts.getValue(i)),
-						0,
-						this);
-			}
-		}
-		else if(!isAttrOK(aname, atts, i, constructionContext))
-		{   XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult,
-							Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
-
-	if (m_templateName == 0)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
-                theResult,
-				Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_NAME),
-			0,
-			this);
-	}
+    if (m_templateName == 0)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_NAME);
+    }
 }
 
 
@@ -121,75 +111,79 @@ ElemCallTemplate::~ElemCallTemplate()
 const XalanDOMString&
 ElemCallTemplate::getElementName() const
 {
-	return Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING;
 }
 
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemCallTemplate::startElement(StylesheetExecutionContext&		executionContext) const
+ElemCallTemplate::startElement(StylesheetExecutionContext&      executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	assert(m_template != 0);
+    assert(m_template != 0);
 
-	executionContext.pushInvoker(this);
+    executionContext.pushInvoker(this);
 
-	return getFirstChildElemToExecute(executionContext);
+    return getFirstChildElemToExecute(executionContext);
 }
 
 void
-ElemCallTemplate::endElement(StylesheetExecutionContext&		executionContext) const 
+ElemCallTemplate::endElement(StylesheetExecutionContext&        executionContext) const 
 {
-	executionContext.popContextMarker();
+    executionContext.popContextMarker();
 
-	executionContext.popInvoker();
+    executionContext.popInvoker();
 }
 
 
 
 const ElemTemplateElement*
 ElemCallTemplate::getNextChildElemToExecute(
-		StylesheetExecutionContext& executionContext,
-		const ElemTemplateElement* currentElem) const
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      currentElem) const
 {
-	if (currentElem == m_template)
-	{
-		return 0;
-	}
+    if (currentElem == m_template)
+    {
+        return 0;
+    }
 
-	const ElemTemplateElement* nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext,currentElem);
+    const ElemTemplateElement* const    nextElement =
+        ElemTemplateElement::getNextChildElemToExecute(executionContext,currentElem);
 
-	if (nextElement == 0)
-	{
-		executionContext.pushContextMarker();
-		executionContext.endParams();
-		
-		return m_template;
-	}
+    if (nextElement == 0)
+    {
+        executionContext.pushContextMarker();
+        executionContext.endParams();
+        
+        return m_template;
+    }
 
-	return nextElement;
+    return nextElement;
 }
 
 
 
 const ElemTemplateElement*
 ElemCallTemplate::getFirstChildElemToExecute(
-		StylesheetExecutionContext& executionContext) const
+        StylesheetExecutionContext& executionContext) const
 {
-	const ElemTemplateElement* firstElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+    const ElemTemplateElement* const    firstElement =
+        ElemTemplateElement::getFirstChildElemToExecute(executionContext);
 
-	if (firstElement != 0)
-	{
-		executionContext.beginParams();
-		return firstElement;
-	}
-	else
-	{
-		executionContext.pushContextMarker();
-		return m_template;
-	}
+    if (firstElement != 0)
+    {
+        executionContext.beginParams();
+
+        return firstElement;
+    }
+    else
+    {
+        executionContext.pushContextMarker();
+
+        return m_template;
+    }
 }
 #endif
 
@@ -198,57 +192,54 @@ ElemCallTemplate::getFirstChildElemToExecute(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
+ElemCallTemplate::execute(StylesheetExecutionContext&   executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	assert(m_template != 0);
+    assert(m_template != 0);
 
-	const StylesheetExecutionContext::ParamsPushPop		thePushPop(
-				executionContext,
-				*this);
+    const StylesheetExecutionContext::ParamsPushPop     thePushPop(
+                executionContext,
+                *this);
 
-	m_template->executeAsNamed(executionContext);
+    m_template->executeAsNamed(executionContext);
 }
 #endif
 
 
 void
 ElemCallTemplate::postConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler)
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler)
 {
-	assert(m_templateName != 0);
+    assert(m_templateName != 0);
 
-	m_template = getStylesheet().getStylesheetRoot().findNamedTemplate(*m_templateName);
+    m_template = getStylesheet().getStylesheetRoot().findNamedTemplate(*m_templateName);
 
-	if(m_template == 0)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
+    if(m_template == 0)
+    {
+        error(
+            constructionContext,
+            XalanMessages::CannotFindNamedTemplate);
+    }
 
-		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::CannotFindNamedTemplate, theResult),
-			0,
-			this);
-	}
-
-	// OK, now we can chain-up...
-	ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
+    // OK, now we can chain-up...
+    ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
 }
 
 
 
 bool
-ElemCallTemplate::childTypeAllowed(int	xslToken) const
+ElemCallTemplate::childTypeAllowed(int  xslToken) const
 {
-	if (xslToken == StylesheetConstructionContext::ELEMNAME_WITH_PARAM)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (xslToken == StylesheetConstructionContext::ELEMNAME_WITH_PARAM)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

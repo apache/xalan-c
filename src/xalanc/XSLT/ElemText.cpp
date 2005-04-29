@@ -41,45 +41,44 @@ XALAN_CPP_NAMESPACE_BEGIN
  * stack to signal that whitespace should be preserved.
  */
 ElemText::ElemText(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_TEXT)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_TEXT)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
-		{
-			disableOutputEscaping(
-				stylesheetTree.getYesOrNo(
-					aname,
-					atts.getValue(i),
-					constructionContext));
-		}
-		else if(!isAttrOK(aname, atts, i, constructionContext))
-		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theGuard.get(),
-							Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+        if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
+        {
+            disableOutputEscaping(
+                stylesheetTree.getYesOrNo(
+                    aname,
+                    atts.getValue(i),
+                    constructionContext));
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 }
 
 
@@ -93,15 +92,15 @@ ElemText::~ElemText()
 const XalanDOMString&
 ElemText::getElementName() const
 {
-	return Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING;
 }
 
 
 
 bool
-ElemText::childTypeAllowed(int	/* xslToken */) const
+ElemText::childTypeAllowed(int  /* xslToken */) const
 {
-	return false;
+    return false;
 }
 
 

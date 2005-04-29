@@ -39,6 +39,7 @@
 
 #include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
+#include "XPathFunctionTable.hpp"
 #include "XPathConstructionContext.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
@@ -49,34 +50,38 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType& theManager) :
-	m_token(theManager),
-	m_tokenChar(0),
-	m_xpath(0),
-	m_constructionContext(0),
-	m_expression(0),
-	m_prefixResolver(0),
-	m_requireLiterals(false),
-	m_isMatchPattern(false),
-	m_positionPredicateStack(theManager),
-	m_namespaces(theManager)
+XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType&   theManager) :
+    m_token(theManager),
+    m_tokenChar(0),
+    m_xpath(0),
+    m_constructionContext(0),
+    m_expression(0),
+    m_prefixResolver(0),
+    m_requireLiterals(false),
+    m_isMatchPattern(false),
+    m_positionPredicateStack(theManager),
+    m_namespaces(theManager)
 {
 }
+
+
+
 XPathProcessorImpl*
 XPathProcessorImpl::create(MemoryManagerType& theManager)
 {
-        typedef XPathProcessorImpl ThisType;
+    typedef XPathProcessorImpl ThisType;
         
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
+    ThisType* theResult = theGuard.get();
 
-        new (theResult) ThisType(theManager);
+    new (theResult) ThisType(theManager);
 
-        theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
+
 
 
 XPathProcessorImpl::~XPathProcessorImpl()
@@ -87,390 +92,379 @@ XPathProcessorImpl::~XPathProcessorImpl()
 
 void
 XPathProcessorImpl::initXPath(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const LocatorType*			locator)
+            XPath&                      pathObj,
+            XPathConstructionContext&   constructionContext,
+            const XalanDOMString&       expression,
+            const PrefixResolver&       resolver,
+            const LocatorType*          locator)
 {
-	m_isMatchPattern = false;
+    m_isMatchPattern = false;
 
-	m_requireLiterals = false;
+    m_requireLiterals = false;
 
-	m_xpath = &pathObj;
+    m_xpath = &pathObj;
 
-	m_constructionContext = &constructionContext;
+    m_constructionContext = &constructionContext;
 
-	m_expression = &m_xpath->getExpression();
+    m_expression = &m_xpath->getExpression();
 
-	m_prefixResolver = &resolver;
+    m_prefixResolver = &resolver;
 
-	m_locator = locator;
+    m_locator = locator;
 
-	m_expression->reset();
+    m_expression->reset();
 
-	tokenize(expression);
+    tokenize(expression);
 
-	m_expression->appendOpCode(XPathExpression::eOP_XPATH);
+    m_expression->appendOpCode(XPathExpression::eOP_XPATH);
 
-	nextToken();
+    nextToken();
 
-	Expr();
+    Expr();
 
-	if (length(m_token) != 0)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
+    if (length(m_token) != 0)
+    {
+        error(XalanMessages::ExtraIllegalTokens);
+    }
 
-		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens, theResult));
-	}
-
-	m_xpath = 0;
-	m_constructionContext = 0;
-	m_expression = 0;
-	m_prefixResolver = 0;
-	m_locator = 0;
-	m_positionPredicateStack.clear();
-	m_namespaces.clear();
+    m_xpath = 0;
+    m_constructionContext = 0;
+    m_expression = 0;
+    m_prefixResolver = 0;
+    m_locator = 0;
+    m_positionPredicateStack.clear();
+    m_namespaces.clear();
 }
 
 
 
 void
 XPathProcessorImpl::initMatchPattern(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const LocatorType*			locator)
+            XPath&                      pathObj,
+            XPathConstructionContext&   constructionContext,
+            const XalanDOMString&       expression,
+            const PrefixResolver&       resolver,
+            const LocatorType*          locator)
 {
-	m_isMatchPattern = true;
+    m_isMatchPattern = true;
 
-	m_xpath = &pathObj;
+    m_xpath = &pathObj;
 
-	m_constructionContext = &constructionContext;
+    m_constructionContext = &constructionContext;
 
-	m_expression = &m_xpath->getExpression();
+    m_expression = &m_xpath->getExpression();
 
-	m_prefixResolver = &resolver;
+    m_prefixResolver = &resolver;
 
-	m_locator = locator;
+    m_locator = locator;
 
-	m_expression->reset();
+    m_expression->reset();
 
-	tokenize(expression);
+    tokenize(expression);
 
-	m_expression->appendOpCode(XPathExpression::eOP_MATCHPATTERN);
+    m_expression->appendOpCode(XPathExpression::eOP_MATCHPATTERN);
 
-	nextToken();
+    nextToken();
 
-	Pattern();
+    Pattern();
 
-	if (length(m_token) != 0)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
+    if (length(m_token) != 0)
+    {
+        error(XalanMessages::ExtraIllegalTokens);
+    }
 
-		error(XalanMessageLoader::getMessage(XalanMessages::ExtraIllegalTokens, theResult));
-	}
+    // Terminate for safety.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    m_expression->shrink();
 
-	m_expression->shrink();
-
-	m_xpath = 0;
-	m_constructionContext = 0;
-	m_expression = 0;
-	m_prefixResolver = 0;
-	m_locator = 0;
-	m_positionPredicateStack.clear();
-	m_namespaces.clear();
+    m_xpath = 0;
+    m_constructionContext = 0;
+    m_expression = 0;
+    m_prefixResolver = 0;
+    m_locator = 0;
+    m_positionPredicateStack.clear();
+    m_namespaces.clear();
 }
 
 
 
 void
-XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
+XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
-	assert(m_constructionContext != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
+    assert(m_constructionContext != 0);
 
-	m_expression->setCurrentPattern(m_constructionContext->getPooledString(pat));
+    m_expression->setCurrentPattern(m_constructionContext->getPooledString(pat));
 
-	const int	nChars = length(pat);
+    const int   nChars = length(pat);
 
-	int 		startSubstring = -1;
-	int 		posOfNSSep = -1;
+    int         startSubstring = -1;
+    int         posOfNSSep = -1;
 
-	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+    const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
 
-	XalanDOMString&		theToken = theGuard.get();
+    XalanDOMString&     theToken = theGuard.get();
 
-	for(int i = 0; i < nChars; i++)
-	{
-		XalanDOMChar	c = charAt(pat, i);
+    for(int i = 0; i < nChars; i++)
+    {
+        XalanDOMChar    c = charAt(pat, i);
 
-		switch(c)
-		{
-		case XalanUnicode::charQuoteMark: 
-			{
-				if(startSubstring != -1)
-				{
-					if(-1 != posOfNSSep)
-					{	   
-						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
-					}
-					else
-					{
-						substring(pat, theToken, startSubstring, i);
+        switch(c)
+        {
+        case XalanUnicode::charQuoteMark: 
+            {
+                if(startSubstring != -1)
+                {
+                    if(-1 != posOfNSSep)
+                    {      
+                        posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
+                    }
+                    else
+                    {
+                        substring(pat, theToken, startSubstring, i);
 
-						addToTokenQueue(theToken);
-					}
-				}
+                        addToTokenQueue(theToken);
+                    }
+                }
 
-				startSubstring = i;
+                startSubstring = i;
 
-				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charQuoteMark; ++i);
+                for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charQuoteMark; ++i);
 
-				if(c == XalanUnicode::charQuoteMark && i < nChars)
-				{
-					substring(pat, theToken, startSubstring, i + 1);
+                if(c == XalanUnicode::charQuoteMark && i < nChars)
+                {
+                    substring(pat, theToken, startSubstring, i + 1);
 
-					addToTokenQueue(theToken);
+                    addToTokenQueue(theToken);
 
-					startSubstring = -1;
-				}
-				else
-				{
-                    XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+                    startSubstring = -1;
+                }
+                else
+                {
+                    error(XalanMessages::UnterminatedStringLiteral);
+                }
+            }
+            break;
 
-					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral, theResult));
-				}
-			}
-			break;
+        case XalanUnicode::charApostrophe:
+            {
+                if(startSubstring != -1)
+                {
+                    if(-1 != posOfNSSep)
+                    {    
+                        posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
+                    }
+                    else
+                    {
+                        substring(pat, theToken, startSubstring, i);
 
-		case XalanUnicode::charApostrophe:
-			{
-				if(startSubstring != -1)
-				{
-					if(-1 != posOfNSSep)
-					{	 
-						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
-					}
-					else
-					{
-						substring(pat, theToken, startSubstring, i);
+                        addToTokenQueue(theToken);
+                    }
+                }
 
-						addToTokenQueue(theToken);
-					}
-				}
+                startSubstring = i;
 
-				startSubstring = i;
+                for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charApostrophe; ++i);
 
-				for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charApostrophe; ++i);
+                if(c == XalanUnicode::charApostrophe && i < nChars)
+                {
+                    substring(pat, theToken, startSubstring, i + 1);
 
-				if(c == XalanUnicode::charApostrophe && i < nChars)
-				{
-					substring(pat, theToken, startSubstring, i + 1);
+                    addToTokenQueue(theToken);
 
-					addToTokenQueue(theToken);
+                    startSubstring = -1;
+                }
+                else
+                {
+                    error(XalanMessages::UnterminatedStringLiteral);
+                }
+            }
+            break;
+        
+        case XalanUnicode::charLF:
+        case XalanUnicode::charCR:
+        case XalanUnicode::charSpace:
+        case XalanUnicode::charHTab:
+            {
+                if(startSubstring != -1)
+                {
+                    if(-1 != posOfNSSep)
+                    {    
+                        posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
+                    }
+                    else
+                    {
+                        substring(pat, theToken, startSubstring, i);
 
-					startSubstring = -1;
-				}
-				else
-				{
-                    XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+                        addToTokenQueue(theToken);
+                    }
 
-					error(XalanMessageLoader::getMessage(XalanMessages::UnterminatedStringLiteral,theResult));
+                    startSubstring = -1;
+                }
+            }
+            break;
+        
+        case XalanUnicode::charHyphenMinus:
+            {
+                if(!(startSubstring == -1))
+                {
+                    break;
+                }
+            }
+            // fall-through on purpose
 
-				}
-			}
-			break;
-		
-		case XalanUnicode::charLF:
-		case XalanUnicode::charCR:
-		case XalanUnicode::charSpace:
-		case XalanUnicode::charHTab:
-			{
-				if(startSubstring != -1)
-				{
-					if(-1 != posOfNSSep)
-					{	 
-						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
-					}
-					else
-					{
-						substring(pat, theToken, startSubstring, i);
+        case XalanUnicode::charCommercialAt:
+        case XalanUnicode::charLeftParenthesis:
+        case XalanUnicode::charLeftSquareBracket:
+        case XalanUnicode::charRightParenthesis:
+        case XalanUnicode::charRightSquareBracket:
+        case XalanUnicode::charVerticalLine:
+        case XalanUnicode::charSolidus:
+        case XalanUnicode::charAsterisk:
+        case XalanUnicode::charPlusSign:
+        case XalanUnicode::charEqualsSign:
+        case XalanUnicode::charComma:
+        case XalanUnicode::charReverseSolidus: // Unused at the moment
+        case XalanUnicode::charCircumflexAccent: // Unused at the moment
+        case XalanUnicode::charExclamationMark: // Unused at the moment
+        case XalanUnicode::charDollarSign:
+        case XalanUnicode::charLessThanSign:
+        case XalanUnicode::charGreaterThanSign:
+            {
+                if(startSubstring != -1)
+                {
+                    if(-1 != posOfNSSep)
+                    {    
+                        posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
+                    }
+                    else
+                    {
+                        substring(pat, theToken, startSubstring, i);
 
-						addToTokenQueue(theToken);
-					}
+                        addToTokenQueue(theToken);
+                    }
 
-					startSubstring = -1;
-				}
-			}
-			break;
-		
-		case XalanUnicode::charHyphenMinus:
-			{
-				if(!(startSubstring == -1))
-				{
-					break;
-				}
-			}
-			// fall-through on purpose
+                    startSubstring = -1;
+                }
 
-		case XalanUnicode::charCommercialAt:
-		case XalanUnicode::charLeftParenthesis:
-		case XalanUnicode::charLeftSquareBracket:
-		case XalanUnicode::charRightParenthesis:
-		case XalanUnicode::charRightSquareBracket:
-		case XalanUnicode::charVerticalLine:
-		case XalanUnicode::charSolidus:
-		case XalanUnicode::charAsterisk:
-		case XalanUnicode::charPlusSign:
-		case XalanUnicode::charEqualsSign:
-		case XalanUnicode::charComma:
-		case XalanUnicode::charReverseSolidus: // Unused at the moment
-		case XalanUnicode::charCircumflexAccent: // Unused at the moment
-		case XalanUnicode::charExclamationMark: // Unused at the moment
-		case XalanUnicode::charDollarSign:
-		case XalanUnicode::charLessThanSign:
-		case XalanUnicode::charGreaterThanSign:
-			{
-				if(startSubstring != -1)
-				{
-					if(-1 != posOfNSSep)
-					{	 
-						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
-					}
-					else
-					{
-						substring(pat, theToken, startSubstring, i);
+                substring(pat, theToken, i, i + 1);
 
-						addToTokenQueue(theToken);
-					}
+                addToTokenQueue(theToken);
+            }       
+            break;
 
-					startSubstring = -1;
-				}
+        case XalanUnicode::charColon:
+            {
+                if(posOfNSSep == i - 1 && i > 0)
+                { 
+                    if(startSubstring != -1)
+                    {
+                        if (startSubstring < i - 1)
+                        {
+                            substring(pat, theToken, startSubstring, i - 1);
 
-				substring(pat, theToken, i, i + 1);
+                            addToTokenQueue(theToken);
+                        }
+                    }
 
-				addToTokenQueue(theToken);
-			}		
-			break;
+                    startSubstring = -1;
+                    posOfNSSep = -1;
 
-		case XalanUnicode::charColon:
-			{
-				if(posOfNSSep == i - 1 && i > 0)
-				{ 
-					if(startSubstring != -1)
-					{
-						if (startSubstring < i - 1)
-						{
-							substring(pat, theToken, startSubstring, i - 1);
+                    substring(pat, theToken, i - 1, i + 1);
 
-							addToTokenQueue(theToken);
-						}
-					}
+                    addToTokenQueue(theToken);
+                    break;
+                }
+                else
+                {
+                    posOfNSSep = i;
+                }
+            }
+            // fall through on purpose
 
-					startSubstring = -1;
-					posOfNSSep = -1;
+        
+        default:
+            {
+                if(-1 == startSubstring)
+                {
+                    startSubstring = i;
 
-					substring(pat, theToken, i - 1, i + 1);
+                    if (XalanXMLChar::isDigit(c) == true)
+                    {
+                        bool    gotFullStop = false;
 
-					addToTokenQueue(theToken);
-					break;
-				}
-				else
-				{
-					posOfNSSep = i;
-				}
-			}
-			// fall through on purpose
+                        while(i < nChars - 1)
+                        {
+                            ++i;
 
-		
-		default:
-			{
-				if(-1 == startSubstring)
-				{
-					startSubstring = i;
+                            const XalanDOMChar  currentChar = charAt(pat, i);
 
-					if (XalanXMLChar::isDigit(c) == true)
-					{
-						bool	gotFullStop = false;
+                            if (currentChar == XalanUnicode::charFullStop)
+                            {
+                                if (gotFullStop == false)
+                                {
+                                    gotFullStop = true;
+                                }
+                                else
+                                {
+                                    --i;
 
-						while(i < nChars - 1)
-						{
-							++i;
+                                    break;
+                                }
+                            }
+                            else if (XalanXMLChar::isDigit(currentChar) == false)
+                            {
+                                --i;
 
-							const XalanDOMChar	currentChar = charAt(pat, i);
+                                break;
+                            }
+                        }
 
-							if (currentChar == XalanUnicode::charFullStop)
-							{
-								if (gotFullStop == false)
-								{
-									gotFullStop = true;
-								}
-								else
-								{
-									--i;
+                        substring(pat, theToken, startSubstring, i + 1);
 
-									break;
-								}
-							}
-							else if (XalanXMLChar::isDigit(currentChar) == false)
-							{
-								--i;
+                        addToTokenQueue(theToken);
 
-								break;
-							}
-						}
+                        startSubstring = -1;
+                    }
+                }
+            }
+        }
+    }
 
-						substring(pat, theToken, startSubstring, i + 1);
+    if(startSubstring != -1)
+    {
+        if(-1 != posOfNSSep)
+        {    
+            posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, nChars);
+        }
+        else
+        {
+            substring(pat, theToken, startSubstring, nChars);
 
-						addToTokenQueue(theToken);
+            addToTokenQueue(theToken);
+        }
+    }
 
-						startSubstring = -1;
-					}
-				}
-			}
-		}
-	}
+    if (0 == m_expression->tokenQueueSize())
+    {
+        error(XalanMessages::EmptyExpression);
 
-	if(startSubstring != -1)
-	{
-		if(-1 != posOfNSSep)
-		{	 
-			posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, nChars);
-		}
-		else
-		{
-			substring(pat, theToken, startSubstring, nChars);
+    }
 
-			addToTokenQueue(theToken);
-		}
-	}
-
-	if (0 == m_expression->tokenQueueSize())
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::EmptyExpression, theResult));
-
-	}
-
-	m_expression->resetTokenPosition();
+    m_expression->resetTokenPosition();
 }
 
 
 
 void
-XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
+XPathProcessorImpl::addToTokenQueue(const XalanDOMString&   s) const
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	m_expression->pushToken(m_constructionContext->getPooledString(s));
+    m_expression->pushToken(m_constructionContext->getPooledString(s));
 }
 
 
@@ -478,196 +472,203 @@ XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
 void
 XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
-	assert(m_token.empty() == false);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
+    assert(m_token.empty() == false);
 
-	StringToStringMapType::const_iterator	i = m_namespaces.find(m_token);
-	assert(i != m_namespaces.end());
+    StringToStringMapType::const_iterator   i = m_namespaces.find(m_token);
+    assert(i != m_namespaces.end());
 
-	const XalanDOMString* const		theNamespaceURI = (*i).second;
-	assert(theNamespaceURI != 0 && theNamespaceURI->empty() == false);
+    const XalanDOMString* const     theNamespaceURI = (*i).second;
+    assert(theNamespaceURI != 0 && theNamespaceURI->empty() == false);
 
-	m_expression->replaceRelativeToken(
-			1,
+    m_expression->replaceRelativeToken(
+            1,
             XPathExpression::eRelativeBackward,
-			m_constructionContext->getPooledString(*theNamespaceURI));
+            m_constructionContext->getPooledString(*theNamespaceURI));
 }
 
 
 
 int
 XPathProcessorImpl::mapNSTokens(
-			const XalanDOMString&	pat,
-			int 					startSubstring,
-			int 					posOfNSSep,
-			int 					posOfScan)
+            const XalanDOMString&   pat,
+            int                     startSubstring,
+            int                     posOfNSSep,
+            int                     posOfScan)
 {
-	assert(m_prefixResolver != 0);
+    assert(m_prefixResolver != 0);
 
-	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+    const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
 
-	XalanDOMString& 	scratchString = theGuard.get();
+    XalanDOMString&     scratchString = theGuard.get();
 
-	// Get the prefix of the QName...
-	scratchString.assign(pat, startSubstring, posOfNSSep - startSubstring);
+    // Get the prefix of the QName...
+    scratchString.assign(pat, startSubstring, posOfNSSep - startSubstring);
 
-	if (XalanQName::isValidNCName(scratchString) == false)
-	{
-	
-		error(XalanMessageLoader::getMessage(XalanMessages::IsNotValidNCName_1Param,scratchString));
+    if (XalanQName::isValidNCName(scratchString) == false)
+    {
+        error(
+            XalanMessages::IsNotValidNCName_1Param,
+            scratchString);
 
-	}
+    }
 
-	const XalanDOMString* const		uName =
-				m_prefixResolver->getNamespaceForPrefix(scratchString);
+    const XalanDOMString* const     uName =
+                m_prefixResolver->getNamespaceForPrefix(scratchString);
 
-	if(uName == 0)
-	{
-		error(XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param, scratchString));
-	}
-	else if (length(*uName) == 0)
-	{
-		error(XalanMessageLoader::getMessage(XalanMessages::PrefixIsBoundToZeroLengthURI_1Param, scratchString));
-	}
-	else
-	{
-		m_namespaces[scratchString] = uName;
+    if(uName == 0)
+    {
+        error(
+            XalanMessages::PrefixIsNotDeclared_1Param,
+            scratchString);
+    }
+    else if (length(*uName) == 0)
+    {
+        error(
+            XalanMessages::PrefixIsBoundToZeroLengthURI_1Param,
+            scratchString);
+    }
+    else
+    {
+        m_namespaces[scratchString] = uName;
 
-		addToTokenQueue(scratchString);
+        addToTokenQueue(scratchString);
 
-		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
+        addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
-		// If there's no local part, then don't bother.  We need to check
-		// this because '*' tokenizes separately, which means "ns:*" tokenizes
-		// differently from "ns:foo".  In the first case, '*' will be tokenized
-		// _after_ this code, in the second 'ns:foo' will be split into tokens
-		// here...
-		if(posOfNSSep + 1 < posOfScan)
-		{
-			scratchString.assign(pat, posOfNSSep + 1, posOfScan - (posOfNSSep + 1));
+        // If there's no local part, then don't bother.  We need to check
+        // this because '*' tokenizes separately, which means "ns:*" tokenizes
+        // differently from "ns:foo".  In the first case, '*' will be tokenized
+        // _after_ this code, in the second 'ns:foo' will be split into tokens
+        // here...
+        if(posOfNSSep + 1 < posOfScan)
+        {
+            scratchString.assign(pat, posOfNSSep + 1, posOfScan - (posOfNSSep + 1));
 
-			assert(length(scratchString) > 0);
+            assert(length(scratchString) > 0);
 
-			if (XalanQName::isValidNCName(scratchString) == false)
-			{
-				error(XalanMessageLoader::getMessage(XalanMessages::NotValidNCName_1Param, scratchString));
-			}
-			else
-			{
-				addToTokenQueue(scratchString);
-			}
-		}
-	}
+            if (XalanQName::isValidNCName(scratchString) == false)
+            {
+                error(
+                    XalanMessages::NotValidNCName_1Param,
+                    scratchString);
+            }
+            else
+            {
+                addToTokenQueue(scratchString);
+            }
+        }
+    }
 
-	return -1;
+    return -1;
 }
 
 
 
 bool
-XPathProcessorImpl::tokenIs(const XalanDOMString&	s) const
+XPathProcessorImpl::tokenIs(const XalanDOMString&   s) const
 {
-	return equals(m_token, s);
+    return equals(m_token, s);
 }
 
 
 
 bool
-XPathProcessorImpl::tokenIs(const XalanDOMChar*		s) const
+XPathProcessorImpl::tokenIs(const XalanDOMChar*     s) const
 {
-	return equals(m_token, s);
+    return equals(m_token, s);
 }
 
 
 
 bool
-XPathProcessorImpl::tokenIs(XalanDOMChar	c) const
+XPathProcessorImpl::tokenIs(XalanDOMChar    c) const
 {
-	return m_tokenChar == c ? true : false;
-}
-
-
-
-bool
-XPathProcessorImpl::lookahead(
-			XalanDOMChar	c,
-			int 			n) const
-{
-	const XalanDOMString& 	tok =
-		getTokenRelative(n - 1);
-
-	if (length(tok) == 1 &&
-		charAt(tok, 0) == c)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    return m_tokenChar == c ? true : false;
 }
 
 
 
 bool
 XPathProcessorImpl::lookahead(
-			const XalanDOMChar* 	s,
-			int 					n) const
+            XalanDOMChar    c,
+            int             n) const
 {
-	assert(s != 0);
+    const XalanDOMString&   tok =
+        getTokenRelative(n - 1);
 
-	const XalanDOMString& 	tok =
-		getTokenRelative(n - 1);
-
-	return equals(tok, s);
+    if (length(tok) == 1 &&
+        charAt(tok, 0) == c)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 
 bool
 XPathProcessorImpl::lookahead(
-			const XalanDOMString&	s,
-			int						n) const
+            const XalanDOMChar*     s,
+            int                     n) const
 {
-	const XalanDOMString& 	tok =
-		getTokenRelative(n - 1);
+    assert(s != 0);
 
-	return equals(tok, s);
+    const XalanDOMString&   tok =
+        getTokenRelative(n - 1);
+
+    return equals(tok, s);
+}
+
+
+
+bool
+XPathProcessorImpl::lookahead(
+            const XalanDOMString&   s,
+            int                     n) const
+{
+    const XalanDOMString&   tok =
+        getTokenRelative(n - 1);
+
+    return equals(tok, s);
 }
 
 
 
 bool
 XPathProcessorImpl::lookbehind(
-			char	c,
-			int 	n) const
+            char    c,
+            int     n) const
 {
-	const XalanDOMString& 	tok =
-		getTokenRelative(-(n + 1));
+    const XalanDOMString&   tok =
+        getTokenRelative(-(n + 1));
 
-	if (length(tok) == 1 &&
-		charAt(tok, 0) == c)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (length(tok) == 1 &&
+        charAt(tok, 0) == c)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 
 bool
-XPathProcessorImpl::lookbehindHasToken(int	n) const
+XPathProcessorImpl::lookbehindHasToken(int  n) const
 {
-	const XalanDOMString& 	tok =
-		getTokenRelative(-(n + 1));
+    const XalanDOMString&   tok =
+        getTokenRelative(-(n + 1));
 
-	const XalanDOMChar 		c0 = length(tok) == 0 ? XalanUnicode::charVerticalLine : charAt(tok, 0);
+    const XalanDOMChar      c0 = length(tok) == 0 ? XalanUnicode::charVerticalLine : charAt(tok, 0);
 
-	return c0 == XalanUnicode::charVerticalLine ? false : true;
+    return c0 == XalanUnicode::charVerticalLine ? false : true;
 }
 
 
@@ -675,32 +676,32 @@ XPathProcessorImpl::lookbehindHasToken(int	n) const
 bool
 XPathProcessorImpl::nextToken()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const XObject* const	theNextToken =
-			m_expression->getNextToken();
+    const XObject* const    theNextToken =
+            m_expression->getNextToken();
 
-	if (theNextToken == 0)
-	{
-		clear(m_token);
-	}
-	else
-	{
-		m_token = theNextToken->str();
-	}
+    if (theNextToken == 0)
+    {
+        clear(m_token);
+    }
+    else
+    {
+        m_token = theNextToken->str();
+    }
 
-	if(length(m_token) > 0)
-	{
-		m_tokenChar = charAt(m_token, 0);
+    if(length(m_token) > 0)
+    {
+        m_tokenChar = charAt(m_token, 0);
 
         return true;
-	}
-	else
-	{
-		m_tokenChar = 0;
+    }
+    else
+    {
+        m_tokenChar = 0;
 
         return false;
-	}
+    }
 }
 
 
@@ -708,29 +709,29 @@ XPathProcessorImpl::nextToken()
 void
 XPathProcessorImpl::prevToken()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const XObject* const	thePreviousToken =
-			m_expression->getPreviousToken();
+    const XObject* const    thePreviousToken =
+            m_expression->getPreviousToken();
 
-	m_token = thePreviousToken == 0 ? s_emptyString : thePreviousToken->str();
+    m_token = thePreviousToken == 0 ? s_emptyString : thePreviousToken->str();
 
-	if(length(m_token) > 0)
-	{
-		m_tokenChar = charAt(m_token, 0);
-	}
-	else
-	{
-		m_tokenChar = 0;
-	}
+    if(length(m_token) > 0)
+    {
+        m_tokenChar = charAt(m_token, 0);
+    }
+    else
+    {
+        m_tokenChar = 0;
+    }
 }
 
 
 
 const XalanDOMString&
-XPathProcessorImpl::getTokenRelative(int	theOffset) const
+XPathProcessorImpl::getTokenRelative(int    theOffset) const
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
     const XObject*  theToken = 0;
 
@@ -749,99 +750,182 @@ XPathProcessorImpl::getTokenRelative(int	theOffset) const
                     XPathExpression::eRelativeForward);
     }
 
-	return theToken == 0 ? s_emptyString : theToken->str();
+    return theToken == 0 ? s_emptyString : theToken->str();
 }
 
 
 
 void
-XPathProcessorImpl::consumeExpected(XalanDOMChar	expected)
+XPathProcessorImpl::consumeExpected(XalanDOMChar    expected)
 {
-	if(tokenIs(expected) == true)
-	{
-		nextToken();
-	}
-	else
-	{
-		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
-
-		XalanDOMString&	theMsg = theGuard.get();
-
-        XalanMessageLoader::getMessage(XalanMessages::NotFoundWhatExpected_2Param, theMsg, XalanDOMString(&expected, m_constructionContext->getMemoryManager()), m_token);
-		error(theMsg);
-	}
+    if(tokenIs(expected) == true)
+    {
+        nextToken();
+    }
+    else
+    {
+        error(
+            XalanMessages::NotFoundWhatExpected_2Param,
+            expected,
+            m_token);
+    }
 }
 
 
 
+typedef XPathConstructionContext::GetCachedString   GetCachedString;
+
+
+
 void
-XPathProcessorImpl::error(const XalanDOMString&		msg) const
+XPathProcessorImpl::error(const XalanDOMString&     msg) const
 {
-	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+    assert(m_constructionContext != 0);
 
-	XalanDOMString& 	emsg = theGuard.get();
+    const GetCachedString   theGuard(*m_constructionContext);
 
-	if (m_expression == 0)
-	{
-		emsg = msg;
-	}
-	else
-	{
-		const XalanDOMString&	theCurrentPattern =
-				m_expression->getCurrentPattern();
+    XalanDOMString&     emsg = theGuard.get();
 
-		DOMStringPrintWriter	thePrintWriter(emsg);
+    if (m_expression == 0)
+    {
+        emsg = msg;
+    }
+    else
+    {
+        const XalanDOMString&   theCurrentPattern =
+                m_expression->getCurrentPattern();
 
-		thePrintWriter.print(msg);
+        DOMStringPrintWriter    thePrintWriter(emsg);
 
-		thePrintWriter.println();
+        thePrintWriter.print(msg);
 
-		if (length(theCurrentPattern) != 0)
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+        thePrintWriter.println();
 
-			if (m_isMatchPattern == true)
-			{
+        if (length(theCurrentPattern) != 0)
+        {
+            const GetCachedString   theGuard(*m_constructionContext);
 
-				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::PatternIs_1Param,theResult, theCurrentPattern));
-			}
-			else
-			{
-				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Param, theResult, theCurrentPattern));
-			}
+            XalanDOMString&     theResult = theGuard.get();
 
-		}
+            const XalanMessages::Codes  theCode =
+                            m_isMatchPattern == true ?
+                                XalanMessages::PatternIs_1Param :
+                                XalanMessages::ExpressionIs_1Param;
 
-		// Back up one token, since we've consumed one...
-		m_expression->getPreviousToken();
+            thePrintWriter.print(
+                XalanMessageLoader::getMessage(
+                    theResult,
+                    theCode,
+                    theCurrentPattern));
+        }
 
-		// Ask the expression to dump the remaining tokens...
-		m_expression->dumpRemainingTokenQueue(thePrintWriter);
-	}
+        // Back up one token, since we've consumed one...
+        m_expression->getPreviousToken();
 
-	if (m_locator != 0)
-	{
-		const XalanDOMChar* const	theSystemID =
-					m_locator->getSystemId();
+        // Ask the expression to dump the remaining tokens...
+        m_expression->dumpRemainingTokenQueue(thePrintWriter);
+    }
 
-		XalanDOMString	theURI(m_constructionContext->getMemoryManager());
+    if (m_locator != 0)
+    {
+        const XalanDOMChar* const   theSystemID =
+                    m_locator->getSystemId();
 
-		if (theSystemID != 0)
-		{
-			theURI = theSystemID;
-		}
+        const GetCachedString   theGuard(*m_constructionContext);
 
-		throw XPathParserException(
-					emsg,
-					theURI,
-					m_locator->getLineNumber(),
-					m_locator->getColumnNumber(),
+        XalanDOMString& theURI = theGuard.get();
+
+        if (theSystemID != 0)
+        {
+            theURI = theSystemID;
+        }
+
+        throw XPathParserException(
+                    emsg,
+                    theURI,
+                    m_locator->getLineNumber(),
+                    m_locator->getColumnNumber(),
                     m_constructionContext->getMemoryManager());
-	}
-	else
-	{
-		throw XPathParserException(emsg, m_constructionContext->getMemoryManager());
-	}
+    }
+    else
+    {
+        throw XPathParserException(
+                    emsg, 
+                    m_constructionContext->getMemoryManager());
+    }
+}
+
+
+
+void
+XPathProcessorImpl::error(XalanMessages::Codes  theCode) const
+{
+    assert(m_constructionContext != 0);
+
+    const GetCachedString   theGuard(*m_constructionContext);
+
+    error(
+            XalanMessageLoader::getMessage(
+                theGuard.get(),
+                theCode));
+}
+
+
+
+void
+XPathProcessorImpl::error(
+            XalanMessages::Codes    theCode,
+            const XalanDOMString&   theToken) const
+{
+    assert(m_constructionContext != 0);
+
+    const GetCachedString   theGuard(*m_constructionContext);
+
+    error(
+            XalanMessageLoader::getMessage(
+                theGuard.get(),
+                theCode,
+                theToken));
+}
+
+
+
+void
+XPathProcessorImpl::error(
+            XalanMessages::Codes    theCode,
+            const XalanDOMChar*     theToken) const
+{
+    assert(m_constructionContext != 0);
+
+    const GetCachedString   theGuard(*m_constructionContext);
+
+    error(
+            XalanMessageLoader::getMessage(
+                theGuard.get(),
+                theCode,
+                theToken));
+}
+
+
+
+void
+XPathProcessorImpl::error(
+            XalanMessages::Codes    theCode,
+            XalanDOMChar            theToken1,
+            const XalanDOMString&   theToken2) const
+{
+    assert(m_constructionContext != 0);
+
+    const GetCachedString   theGuard(*m_constructionContext);
+
+    XalanDOMString  theResult = theGuard.get();
+
+    error(
+            XalanMessageLoader::getMessage(
+                theResult,
+                theCode,
+                XalanDOMString(1, theToken1, theResult.getMemoryManager()),
+                theToken2));
 }
 
 
@@ -849,7 +933,7 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 void
 XPathProcessorImpl::Expr()
 {
-	OrExpr();
+    OrExpr();
 }
 
 
@@ -857,31 +941,29 @@ XPathProcessorImpl::Expr()
 void
 XPathProcessorImpl::OrExpr()
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	AndExpr();
+    AndExpr();
 
-	if(tokenIs(s_orString) == true)
-	{
-		if (nextToken() == false)
+    if(tokenIs(s_orString) == true)
+    {
+        if (nextToken() == false)
         {
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
+            error(XalanMessages::ExpectedToken);
         }
         else
         {
-		    m_expression->insertOpCode(
+            m_expression->insertOpCode(
                 XPathExpression::eOP_OR,
-				opPos);
+                opPos);
 
-		    OrExpr();
+            OrExpr();
 
-		    m_expression->updateOpCodeLength(
+            m_expression->updateOpCodeLength(
                 XPathExpression::eOP_OR,
-				opPos);
+                opPos);
         }
-	}
+    }
 }
 
 
@@ -889,360 +971,351 @@ XPathProcessorImpl::OrExpr()
 void
 XPathProcessorImpl::AndExpr() 
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	EqualityExpr();
+    EqualityExpr();
 
-	if(tokenIs(s_andString) == true)
-	{
-		if (nextToken() == false)
+    if(tokenIs(s_andString) == true)
+    {
+        if (nextToken() == false)
         {
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
+            error(XalanMessages::ExpectedToken);
         }
         else
         {
-		    m_expression->insertOpCode(
+            m_expression->insertOpCode(
                 XPathExpression::eOP_AND,
-				opPos);
+                opPos);
 
             AndExpr();
 
-		    m_expression->updateOpCodeLength(
+            m_expression->updateOpCodeLength(
                 XPathExpression::eOP_AND,
-				opPos);
+                opPos);
         }
-	}
+    }
 }
 
 
 
 int
-XPathProcessorImpl::EqualityExpr(int	opCodePos)
+XPathProcessorImpl::EqualityExpr(int    opCodePos)
 {
-	int 		theOpDisplacement = 0;
+    int         theOpDisplacement = 0;
 
-	const int	opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
+    const int   opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
 
-	RelationalExpr();
+    RelationalExpr();
 
-	XPathExpression::eOpCodes	theOpCode =
-			XPathExpression::eENDOP;
+    XPathExpression::eOpCodes   theOpCode =
+            XPathExpression::eENDOP;
 
     bool    foundToken = false;
 
-	if(tokenIs(XalanUnicode::charExclamationMark) && lookahead(XalanUnicode::charEqualsSign, 1))
-	{
-		nextToken();
+    if(tokenIs(XalanUnicode::charExclamationMark) &&
+       lookahead(XalanUnicode::charEqualsSign, 1))
+    {
+        nextToken();
 
         foundToken = nextToken();
 
-		theOpCode = XPathExpression::eOP_NOTEQUALS;
-	}
-	else if(tokenIs(XalanUnicode::charEqualsSign))
-	{
-		foundToken = nextToken();
+        theOpCode = XPathExpression::eOP_NOTEQUALS;
+    }
+    else if(tokenIs(XalanUnicode::charEqualsSign))
+    {
+        foundToken = nextToken();
 
-		theOpCode = XPathExpression::eOP_EQUALS;
-	}
+        theOpCode = XPathExpression::eOP_EQUALS;
+    }
 
-	if (theOpCode != XPathExpression::eENDOP)
-	{
+    if (theOpCode != XPathExpression::eENDOP)
+    {
         if (foundToken == false)
         {
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-            error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
+            error(XalanMessages::ExpectedToken);
         }
         else
         {
-		    // Save the number of bytes we inserted
-		    // into the map.
-		    const int	theLocalDisplacement =
-				    m_expression->insertOpCode(theOpCode,
-										       opPos);
+            // Save the number of bytes we inserted
+            // into the map.
+            const int   theLocalDisplacement =
+                    m_expression->insertOpCode(theOpCode,
+                                               opPos);
 
-		    // Update the length
-		    m_expression->updateOpCodeLength(theOpCode,
-										     opPos);
+            // Update the length
+            m_expression->updateOpCodeLength(theOpCode,
+                                             opPos);
 
-		    // Do the right term of the expression.
-		    theOpDisplacement += EqualityExpr(opPos);
+            // Do the right term of the expression.
+            theOpDisplacement += EqualityExpr(opPos);
 
-		    // If there's any displacement from the right
-		    // term, update the length for a shift. Otherwise,
-		    // just update the length.
-		    if (theOpDisplacement > 0)
-		    {
-			    m_expression->updateShiftedOpCodeLength(
+            // If there's any displacement from the right
+            // term, update the length for a shift. Otherwise,
+            // just update the length.
+            if (theOpDisplacement > 0)
+            {
+                m_expression->updateShiftedOpCodeLength(
                     theOpCode,
-					opPos,
-					opPos + theOpDisplacement);
-		    }
-		    else
-		    {
-			    m_expression->updateOpCodeLength(
+                    opPos,
+                    opPos + theOpDisplacement);
+            }
+            else
+            {
+                m_expression->updateOpCodeLength(
                     theOpCode,
-					opPos);
-		    }
+                    opPos);
+            }
 
-		    // Accumulate the displacement.
-		    theOpDisplacement += theLocalDisplacement;
+            // Accumulate the displacement.
+            theOpDisplacement += theLocalDisplacement;
         }
-	}
+    }
 
-	return theOpDisplacement;
+    return theOpDisplacement;
 }
 
 
 
 int
-XPathProcessorImpl::RelationalExpr(int	opCodePos)
+XPathProcessorImpl::RelationalExpr(int  opCodePos)
 {
-	int 		theOpDisplacement = 0;
+    int         theOpDisplacement = 0;
 
-	const int	opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
+    const int   opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
 
-	AdditiveExpr();
+    AdditiveExpr();
 
-	if(0 != length(m_token))
-	{
+    if(0 != length(m_token))
+    {
         bool    foundToken = false;
 
-		XPathExpression::eOpCodes	theOpCode =
-			XPathExpression::eENDOP;
+        XPathExpression::eOpCodes   theOpCode =
+            XPathExpression::eENDOP;
 
-		if(tokenIs(XalanUnicode::charLessThanSign) == true)
-		{
-			foundToken = nextToken();
+        if(tokenIs(XalanUnicode::charLessThanSign) == true)
+        {
+            foundToken = nextToken();
 
-			if(tokenIs(XalanUnicode::charEqualsSign) == true)
-			{
-				foundToken = nextToken();
+            if(tokenIs(XalanUnicode::charEqualsSign) == true)
+            {
+                foundToken = nextToken();
 
-				theOpCode = XPathExpression::eOP_LTE;
-			}
-			else
-			{
-				theOpCode = XPathExpression::eOP_LT;
-			}
-		}
-		else if(tokenIs(XalanUnicode::charGreaterThanSign) == true)
-		{
-			foundToken = nextToken();
+                theOpCode = XPathExpression::eOP_LTE;
+            }
+            else
+            {
+                theOpCode = XPathExpression::eOP_LT;
+            }
+        }
+        else if(tokenIs(XalanUnicode::charGreaterThanSign) == true)
+        {
+            foundToken = nextToken();
 
-			if(tokenIs(XalanUnicode::charEqualsSign) == true)
-			{
-				foundToken = nextToken();
+            if(tokenIs(XalanUnicode::charEqualsSign) == true)
+            {
+                foundToken = nextToken();
 
-				theOpCode = XPathExpression::eOP_GTE;
-			}
-			else
-			{
-				theOpCode = XPathExpression::eOP_GT;
-			}
-		}
+                theOpCode = XPathExpression::eOP_GTE;
+            }
+            else
+            {
+                theOpCode = XPathExpression::eOP_GT;
+            }
+        }
 
-		if (theOpCode != XPathExpression::eENDOP)
-		{
+        if (theOpCode != XPathExpression::eENDOP)
+        {
             if (foundToken == false)
             {
-                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
+                error(XalanMessages::ExpectedToken);
             }
             else
             {
                 // Save the number of bytes we inserted
-			    // into the map.
-			    const int	theLocalDisplacement =
-				    m_expression->insertOpCode(theOpCode,
-										       opPos);
+                // into the map.
+                const int   theLocalDisplacement =
+                    m_expression->insertOpCode(theOpCode,
+                                               opPos);
 
-			    // Update the length
-			    m_expression->updateOpCodeLength(theOpCode,
-											     opPos);
+                // Update the length
+                m_expression->updateOpCodeLength(theOpCode,
+                                                 opPos);
 
-			    // Do the right term of the expression.
-			    theOpDisplacement += RelationalExpr(opPos);
+                // Do the right term of the expression.
+                theOpDisplacement += RelationalExpr(opPos);
 
-			    // If there's any displacement from the right
-			    // term, update the length for a shift. Otherwise,
-			    // just update the length.
-			    if (theOpDisplacement > 0)
-			    {
-				    m_expression->updateShiftedOpCodeLength(
+                // If there's any displacement from the right
+                // term, update the length for a shift. Otherwise,
+                // just update the length.
+                if (theOpDisplacement > 0)
+                {
+                    m_expression->updateShiftedOpCodeLength(
                         theOpCode,
-						opPos,
-						opPos + theOpDisplacement);
-			    }
-			    else
-			    {
-				    m_expression->updateOpCodeLength(
+                        opPos,
+                        opPos + theOpDisplacement);
+                }
+                else
+                {
+                    m_expression->updateOpCodeLength(
                         theOpCode,
-						opPos);
-			    }
+                        opPos);
+                }
 
-			    // Accumulate the displacement.
-			    theOpDisplacement += theLocalDisplacement;
+                // Accumulate the displacement.
+                theOpDisplacement += theLocalDisplacement;
             }
-		}
-	}
+        }
+    }
 
-	return theOpDisplacement;
+    return theOpDisplacement;
 }
 
 
 
 int
-XPathProcessorImpl::AdditiveExpr(int	opCodePos)
+XPathProcessorImpl::AdditiveExpr(int    opCodePos)
 {
-	int 		theOpDisplacement = 0;
+    int         theOpDisplacement = 0;
 
-	const int	opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
+    const int   opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
 
-	MultiplicativeExpr();
+    MultiplicativeExpr();
 
-	if(0 != length(m_token))
-	{
-		XPathExpression::eOpCodes	theOpCode =
-			XPathExpression::eENDOP;
+    if(0 != length(m_token))
+    {
+        XPathExpression::eOpCodes   theOpCode =
+            XPathExpression::eENDOP;
 
-		if(tokenIs(XalanUnicode::charPlusSign) == true)
-		{
-			theOpCode = XPathExpression::eOP_PLUS;
-		}
-		else if(tokenIs(XalanUnicode::charHyphenMinus) == true)
-		{
-			theOpCode = XPathExpression::eOP_MINUS;
-		}
+        if(tokenIs(XalanUnicode::charPlusSign) == true)
+        {
+            theOpCode = XPathExpression::eOP_PLUS;
+        }
+        else if(tokenIs(XalanUnicode::charHyphenMinus) == true)
+        {
+            theOpCode = XPathExpression::eOP_MINUS;
+        }
 
-		if (theOpCode != XPathExpression::eENDOP)
-		{
-		    if (nextToken() == false)
-            {
-                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		        error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
-            }
-            else
-            {
-			    // Save the number of bytes we inserted
-			    // into the map.
-			    const int	theLocalDisplacement =
-				    m_expression->insertOpCode(theOpCode,
-										       opPos);
-
-			// Update the length
-			m_expression->updateOpCodeLength(theOpCode,
-											 opPos);
-
-			// Do the right term of the expression.
-			theOpDisplacement += AdditiveExpr(opPos);
-
-			    // If there's any displacement from the right
-			    // term, update the length for a shift. Otherwise,
-			    // just update the length.
-			    if (theOpDisplacement > 0)
-			    {
-				    m_expression->updateShiftedOpCodeLength(
-                        theOpCode,
-						opPos,
-						opPos + theOpDisplacement);
-			    }
-			    else
-			    {
-				    m_expression->updateOpCodeLength(
-                        theOpCode,
-						opPos);
-			    }
-
-			// Accumulate the displacement.
-			theOpDisplacement += theLocalDisplacement;
-		}
-	}
-	}
-
-	return theOpDisplacement;
-}
-
-
-
-int
-XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
-{
-	int 		theOpDisplacement = 0;
-
-	const int	opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
-
-	UnaryExpr();
-
-	if(0 != length(m_token))
-	{
-		XPathExpression::eOpCodes	theOpCode =
-			XPathExpression::eENDOP;
-
-		if(tokenIs(XalanUnicode::charAsterisk) == true)
-		{
-			theOpCode = XPathExpression::eOP_MULT;
-		}
-		else if(tokenIs(s_divString) == true)
-		{
-			theOpCode = XPathExpression::eOP_DIV;
-		}
-		else if(tokenIs(s_modString) == true)
-		{
-			theOpCode = XPathExpression::eOP_MOD;
-		}
-
-		if (theOpCode != XPathExpression::eENDOP)
-		{
+        if (theOpCode != XPathExpression::eENDOP)
+        {
             if (nextToken() == false)
             {
-                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken, theResult));
+                error(XalanMessages::ExpectedToken);
             }
             else
             {
-			    // Save the number of bytes we inserted
-			    // into the map.
-			    const int	theLocalDisplacement =
-				    m_expression->insertOpCode(theOpCode,
-										       opPos);
+                // Save the number of bytes we inserted
+                // into the map.
+                const int   theLocalDisplacement =
+                    m_expression->insertOpCode(theOpCode,
+                                               opPos);
 
-			    // Update the length
-			    m_expression->updateOpCodeLength(theOpCode,
-											     opPos);
+            // Update the length
+            m_expression->updateOpCodeLength(theOpCode,
+                                             opPos);
 
-			// Do the right term of the expression.
-			theOpDisplacement += MultiplicativeExpr(opPos);
+            // Do the right term of the expression.
+            theOpDisplacement += AdditiveExpr(opPos);
 
-			    // If there's any displacement from the right
-			    // term, update the length for a shift. Otherwise,
-			    // just update the length.
-			    if (theOpDisplacement > 0)
-			    {
-				    m_expression->updateShiftedOpCodeLength(
+                // If there's any displacement from the right
+                // term, update the length for a shift. Otherwise,
+                // just update the length.
+                if (theOpDisplacement > 0)
+                {
+                    m_expression->updateShiftedOpCodeLength(
                         theOpCode,
-						opPos,
-						opPos + theOpDisplacement);
-			    }
-			    else
-			    {
-				    m_expression->updateOpCodeLength(
+                        opPos,
+                        opPos + theOpDisplacement);
+                }
+                else
+                {
+                    m_expression->updateOpCodeLength(
                         theOpCode,
-						opPos);
-			    }
+                        opPos);
+                }
 
-			// Accumulate the displacement.
-			theOpDisplacement += theLocalDisplacement;
-		}
-	}
-	}
+            // Accumulate the displacement.
+            theOpDisplacement += theLocalDisplacement;
+        }
+    }
+    }
 
-	return theOpDisplacement;
+    return theOpDisplacement;
+}
+
+
+
+int
+XPathProcessorImpl::MultiplicativeExpr(int  opCodePos)
+{
+    int         theOpDisplacement = 0;
+
+    const int   opPos = opCodePos != -1 ? opCodePos : m_expression->opCodeMapLength();
+
+    UnaryExpr();
+
+    if(0 != length(m_token))
+    {
+        XPathExpression::eOpCodes   theOpCode =
+            XPathExpression::eENDOP;
+
+        if(tokenIs(XalanUnicode::charAsterisk) == true)
+        {
+            theOpCode = XPathExpression::eOP_MULT;
+        }
+        else if(tokenIs(s_divString) == true)
+        {
+            theOpCode = XPathExpression::eOP_DIV;
+        }
+        else if(tokenIs(s_modString) == true)
+        {
+            theOpCode = XPathExpression::eOP_MOD;
+        }
+
+        if (theOpCode != XPathExpression::eENDOP)
+        {
+            if (nextToken() == false)
+            {
+                error(XalanMessages::ExpectedToken);
+            }
+            else
+            {
+                // Save the number of bytes we inserted
+                // into the map.
+                const int   theLocalDisplacement =
+                    m_expression->insertOpCode(theOpCode,
+                                               opPos);
+
+                // Update the length
+                m_expression->updateOpCodeLength(theOpCode,
+                                                 opPos);
+
+            // Do the right term of the expression.
+            theOpDisplacement += MultiplicativeExpr(opPos);
+
+                // If there's any displacement from the right
+                // term, update the length for a shift. Otherwise,
+                // just update the length.
+                if (theOpDisplacement > 0)
+                {
+                    m_expression->updateShiftedOpCodeLength(
+                        theOpCode,
+                        opPos,
+                        opPos + theOpDisplacement);
+                }
+                else
+                {
+                    m_expression->updateOpCodeLength(
+                        theOpCode,
+                        opPos);
+                }
+
+            // Accumulate the displacement.
+            theOpDisplacement += theLocalDisplacement;
+        }
+    }
+    }
+
+    return theOpDisplacement;
 }
 
 
@@ -1250,27 +1323,27 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 void
 XPathProcessorImpl::UnaryExpr()
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	bool		isNeg = false;
+    bool        isNeg = false;
 
-	if(tokenIs(XalanUnicode::charHyphenMinus) == true)
-	{
-		nextToken();
+    if(tokenIs(XalanUnicode::charHyphenMinus) == true)
+    {
+        nextToken();
 
-		m_expression->insertOpCode(XPathExpression::eOP_NEG,
-								   opPos);
+        m_expression->insertOpCode(XPathExpression::eOP_NEG,
+                                   opPos);
 
-		isNeg = true;
-	}
+        isNeg = true;
+    }
 
-	UnionExpr();
+    UnionExpr();
 
-	if(isNeg == true)
-	{
-		m_expression->updateOpCodeLength(XPathExpression::eOP_NEG,
-										 opPos);
-	}
+    if(isNeg == true)
+    {
+        m_expression->updateOpCodeLength(XPathExpression::eOP_NEG,
+                                         opPos);
+    }
 }
   
 
@@ -1278,41 +1351,41 @@ XPathProcessorImpl::UnaryExpr()
 void
 XPathProcessorImpl::UnionExpr()
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	bool		continueOrLoop = true;
-	bool		foundUnion = false;
+    bool        continueOrLoop = true;
+    bool        foundUnion = false;
 
-	do 
-	{
-		PathExpr();
+    do 
+    {
+        PathExpr();
 
-		if(tokenIs(XalanUnicode::charVerticalLine) == true)
-		{
-			if(false == foundUnion)
-			{
-				foundUnion = true;
+        if(tokenIs(XalanUnicode::charVerticalLine) == true)
+        {
+            if(false == foundUnion)
+            {
+                foundUnion = true;
 
-				m_expression->insertOpCode(XPathExpression::eOP_UNION,
-										   opPos);
-			}
+                m_expression->insertOpCode(XPathExpression::eOP_UNION,
+                                           opPos);
+            }
 
-			nextToken();
-		}
-		else
-		{
-			if (foundUnion == true)
-			{
-				// Terminate for safety.
-				m_expression->appendOpCode(XPathExpression::eENDOP);
-			}
+            nextToken();
+        }
+        else
+        {
+            if (foundUnion == true)
+            {
+                // Terminate for safety.
+                m_expression->appendOpCode(XPathExpression::eENDOP);
+            }
 
-			break;
-		}
-	}
-	while(continueOrLoop == true);
+            break;
+        }
+    }
+    while(continueOrLoop == true);
 
-	m_expression->updateOpCodeLength(opPos);
+    m_expression->updateOpCodeLength(opPos);
 }
 
  
@@ -1320,28 +1393,28 @@ XPathProcessorImpl::UnionExpr()
 void
 XPathProcessorImpl::PathExpr()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	FilterExpr();
+    FilterExpr();
 
-	if(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		nextToken();
+    if(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        nextToken();
 
-		m_expression->insertOpCode(
+        m_expression->insertOpCode(
             XPathExpression::eOP_LOCATIONPATH,
-			opPos);
+            opPos);
 
-		RelativeLocationPath();
+        RelativeLocationPath();
 
-		m_expression->appendOpCode(XPathExpression::eENDOP);
+        m_expression->appendOpCode(XPathExpression::eENDOP);
 
-		m_expression->updateOpCodeLength(
+        m_expression->updateOpCodeLength(
             XPathExpression::eOP_LOCATIONPATH,
-			opPos);
-	}
+            opPos);
+    }
 }
 
 
@@ -1349,37 +1422,37 @@ XPathProcessorImpl::PathExpr()
 void
 XPathProcessorImpl::FilterExpr()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	//	const bool	isFunc = lookahead(XalanUnicode::charLeftParenthesis, 1);
+    //  const bool  isFunc = lookahead(XalanUnicode::charLeftParenthesis, 1);
 
-	PrimaryExpr();
+    PrimaryExpr();
 
-	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-	{
-		m_expression->insertOpCode(XPathExpression::eOP_LOCATIONPATH,
-								   opPos);
-	  
-		while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-		{
-			Predicate();
-		}
+    if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+    {
+        m_expression->insertOpCode(XPathExpression::eOP_LOCATIONPATH,
+                                   opPos);
+      
+        while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+        {
+            Predicate();
+        }
 
-		if(tokenIs(XalanUnicode::charSolidus) == true)
-		{
-			nextToken();
+        if(tokenIs(XalanUnicode::charSolidus) == true)
+        {
+            nextToken();
 
-			RelativeLocationPath();
-		}
+            RelativeLocationPath();
+        }
 
-		// Terminate for safety.
-		m_expression->appendOpCode(XPathExpression::eENDOP);
+        // Terminate for safety.
+        m_expression->appendOpCode(XPathExpression::eENDOP);
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
-										 opPos);
-	}
+        m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
+                                         opPos);
+    }
 }
   
 
@@ -1387,69 +1460,69 @@ XPathProcessorImpl::FilterExpr()
 void
 XPathProcessorImpl::PrimaryExpr()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	if(tokenIs(XalanUnicode::charApostrophe) == true ||
-	   tokenIs(XalanUnicode::charQuoteMark) == true)
-	{
-		m_expression->appendOpCode(XPathExpression::eOP_LITERAL);
+    if(tokenIs(XalanUnicode::charApostrophe) == true ||
+       tokenIs(XalanUnicode::charQuoteMark) == true)
+    {
+        m_expression->appendOpCode(XPathExpression::eOP_LITERAL);
 
-		Literal();
+        Literal();
 
-		m_expression->updateOpCodeLength(
+        m_expression->updateOpCodeLength(
             XPathExpression::eOP_LITERAL,
-			opPos);
-	}
-	else if(tokenIs(XalanUnicode::charDollarSign) == true)
-	{
-		nextToken(); // consume '$'
+            opPos);
+    }
+    else if(tokenIs(XalanUnicode::charDollarSign) == true)
+    {
+        nextToken(); // consume '$'
 
-		m_expression->appendOpCode(XPathExpression::eOP_VARIABLE);
+        m_expression->appendOpCode(XPathExpression::eOP_VARIABLE);
 
-		QName();
+        QName();
 
-		m_expression->updateOpCodeLength(
+        m_expression->updateOpCodeLength(
             XPathExpression::eOP_VARIABLE,
-			opPos);
-	}
-	else if(tokenIs(XalanUnicode::charLeftParenthesis) == true)
-	{
-		nextToken();
+            opPos);
+    }
+    else if(tokenIs(XalanUnicode::charLeftParenthesis) == true)
+    {
+        nextToken();
 
-		m_expression->appendOpCode(XPathExpression::eOP_GROUP);
+        m_expression->appendOpCode(XPathExpression::eOP_GROUP);
 
-		Expr();
+        Expr();
 
-		consumeExpected(XalanUnicode::charRightParenthesis);
+        consumeExpected(XalanUnicode::charRightParenthesis);
 
-		m_expression->updateOpCodeLength(
+        m_expression->updateOpCodeLength(
             XPathExpression::eOP_GROUP,
-			opPos);
-	}
-	else if((tokenIs(XalanUnicode::charFullStop) == true &&
-				length(m_token) > 1 &&
-				XalanXMLChar::isDigit(charAt(m_token, 1)) == true) ||
-				XalanXMLChar::isDigit(m_tokenChar) == true)
-	{
-		m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
+            opPos);
+    }
+    else if((tokenIs(XalanUnicode::charFullStop) == true &&
+                length(m_token) > 1 &&
+                XalanXMLChar::isDigit(charAt(m_token, 1)) == true) ||
+                XalanXMLChar::isDigit(m_tokenChar) == true)
+    {
+        m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
 
-		Number();
+        Number();
 
-		m_expression->updateOpCodeLength(
+        m_expression->updateOpCodeLength(
             XPathExpression::eOP_NUMBERLIT,
-			opPos);
-	}
-	else if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true ||
-			(lookahead(XalanUnicode::charColon, 1) == true && lookahead(XalanUnicode::charLeftParenthesis, 3) == true))
-	{
-		FunctionCall();
-	}
-	else
-	{
-		LocationPath();
-	}
+            opPos);
+    }
+    else if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true ||
+            (lookahead(XalanUnicode::charColon, 1) == true && lookahead(XalanUnicode::charLeftParenthesis, 3) == true))
+    {
+        FunctionCall();
+    }
+    else
+    {
+        LocationPath();
+    }
 }
 
 
@@ -1457,19 +1530,17 @@ XPathProcessorImpl::PrimaryExpr()
 void
 XPathProcessorImpl::Argument()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	if (m_requireLiterals == false ||
-		isCurrentLiteral() == true)
-	{
-		Expr();
-	}
-	else
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired, theResult));
-	}
+    if (m_requireLiterals == false ||
+        isCurrentLiteral() == true)
+    {
+        Expr();
+    }
+    else
+    {
+        error(XalanMessages::LiteralArgumentIsRequired);
+    }
 }
 
 
@@ -1477,39 +1548,35 @@ XPathProcessorImpl::Argument()
 int
 XPathProcessorImpl::FunctionCallArguments()
 {
-	int		argCount = 0;
+    int     argCount = 0;
 
-	consumeExpected(XalanUnicode::charLeftParenthesis);
+    consumeExpected(XalanUnicode::charLeftParenthesis);
 
-	while(tokenIs(XalanUnicode::charRightParenthesis) == false && isEmpty(m_token) == false)
-	{
-		if(tokenIs(XalanUnicode::charComma) == true)
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+    while(tokenIs(XalanUnicode::charRightParenthesis) == false && isEmpty(m_token) == false)
+    {
+        if(tokenIs(XalanUnicode::charComma) == true)
+        {
+            error(XalanMessages::NoPrecedingArgument);
+        }
 
-			error(XalanMessageLoader::getMessage(XalanMessages::NoPrecedingArgument, theResult));
-		}
+        Argument();
 
-		Argument();
+        ++argCount;
 
-		++argCount;
+        if(tokenIs(XalanUnicode::charRightParenthesis) == false)
+        {
+            consumeExpected(XalanUnicode::charComma);
 
-		if(tokenIs(XalanUnicode::charRightParenthesis) == false)
-		{
-			consumeExpected(XalanUnicode::charComma);
+            if(tokenIs(XalanUnicode::charRightParenthesis) == true)
+            {
+                error(XalanMessages::NoFollowingArgument);
+            }
+        }
+    }
 
-			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
-			{
-                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+    consumeExpected(XalanUnicode::charRightParenthesis);
 
-				error(XalanMessageLoader::getMessage(XalanMessages::NoFollowingArgument, theResult));
-			}
-		}
-	}
-
-	consumeExpected(XalanUnicode::charRightParenthesis);
-
-	return argCount;
+    return argCount;
 }
 
 
@@ -1517,158 +1584,160 @@ XPathProcessorImpl::FunctionCallArguments()
 void
 XPathProcessorImpl::FunctionCall()
 {
-	assert(m_expression != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	if(lookahead(XalanUnicode::charColon, 1) == true)
-	{
-		m_expression->appendOpCode(XPathExpression::eOP_EXTFUNCTION);
+    if(lookahead(XalanUnicode::charColon, 1) == true)
+    {
+        m_expression->appendOpCode(XPathExpression::eOP_EXTFUNCTION);
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0, m_constructionContext->getMemoryManager());
+        XPathExpression::OpCodeMapValueVectorType   theArgs(2, 0, m_constructionContext->getMemoryManager());
 
-		// Replace the token in the queue with the actual namespace URI...
-		replaceTokenWithNamespaceToken();
+        // Replace the token in the queue with the actual namespace URI...
+        replaceTokenWithNamespaceToken();
 
-		theArgs[0] = m_expression->getTokenPosition() - 1;
+        theArgs[0] = m_expression->getTokenPosition() - 1;
 
-		nextToken();
+        nextToken();
 
-		consumeExpected(XalanUnicode::charColon);
+        consumeExpected(XalanUnicode::charColon);
 
-		theArgs[1] = m_expression->getTokenPosition() - 1;
+        theArgs[1] = m_expression->getTokenPosition() - 1;
 
-		m_expression->setOpCodeArgs(XPathExpression::eOP_EXTFUNCTION,
-									opPos,
-									theArgs);
+        m_expression->setOpCodeArgs(XPathExpression::eOP_EXTFUNCTION,
+                                    opPos,
+                                    theArgs);
 
-		nextToken();
+        nextToken();
 
-		FunctionCallArguments();
-	}
-	else
-	{
-		if (isValidFunction(m_token) == false)
-		{
-			error(XalanMessageLoader::getMessage(XalanMessages::CouldNotFindFunction_1Param, m_token));
+        FunctionCallArguments();
+    }
+    else
+    {
+        if (isValidFunction(m_token) == false)
+        {
+            error(
+                XalanMessages::CouldNotFindFunction_1Param,
+                m_token);
 
-		}
+        }
 
-		const XPathExpression::eOpCodes		funcTok = getFunctionToken(m_token);
+        const XPathExpression::eOpCodes     funcTok = getFunctionToken(m_token);
 
-		switch(funcTok)
-		{
-		case XPathExpression::eNODETYPE_PI:
-		case XPathExpression::eNODETYPE_COMMENT:
-		case XPathExpression::eNODETYPE_TEXT:
-		case XPathExpression::eNODETYPE_NODE:
-			LocationPath();
-			// ************** Nasty return here!!! *********************** //
-			return;
-			break;
+        switch(funcTok)
+        {
+        case XPathExpression::eNODETYPE_PI:
+        case XPathExpression::eNODETYPE_COMMENT:
+        case XPathExpression::eNODETYPE_TEXT:
+        case XPathExpression::eNODETYPE_NODE:
+            LocationPath();
+            // ************** Nasty return here!!! *********************** //
+            return;
+            break;
 
-		case XPathExpression::eOP_FUNCTION_POSITION:
-			FunctionPosition();
-			break;
+        case XPathExpression::eOP_FUNCTION_POSITION:
+            FunctionPosition();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_LAST:
-			FunctionLast();
-			break;
+        case XPathExpression::eOP_FUNCTION_LAST:
+            FunctionLast();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_COUNT:
-			FunctionCount();
-			break;
+        case XPathExpression::eOP_FUNCTION_COUNT:
+            FunctionCount();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_NOT:
-			FunctionNot();
-			break;
+        case XPathExpression::eOP_FUNCTION_NOT:
+            FunctionNot();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_TRUE:
-			FunctionTrue();
-			break;
+        case XPathExpression::eOP_FUNCTION_TRUE:
+            FunctionTrue();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_FALSE:
-			FunctionFalse();
-			break;
+        case XPathExpression::eOP_FUNCTION_FALSE:
+            FunctionFalse();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_BOOLEAN:
-			FunctionBoolean();
-			break;
+        case XPathExpression::eOP_FUNCTION_BOOLEAN:
+            FunctionBoolean();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_NAME_0:
-			FunctionName(opPos);
-			break;
+        case XPathExpression::eOP_FUNCTION_NAME_0:
+            FunctionName(opPos);
+            break;
 
-		case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-			FunctionLocalName(opPos);
-			break;
+        case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+            FunctionLocalName(opPos);
+            break;
 
-		case XPathExpression::eOP_FUNCTION_NUMBER_0:
-			FunctionNumber(opPos);
-			break;
+        case XPathExpression::eOP_FUNCTION_NUMBER_0:
+            FunctionNumber(opPos);
+            break;
 
-		case XPathExpression::eOP_FUNCTION_FLOOR:
-			FunctionFloor();
-			break;
+        case XPathExpression::eOP_FUNCTION_FLOOR:
+            FunctionFloor();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_CEILING:
-			FunctionCeiling();
-			break;
+        case XPathExpression::eOP_FUNCTION_CEILING:
+            FunctionCeiling();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_ROUND:
-			FunctionRound();
-			break;
+        case XPathExpression::eOP_FUNCTION_ROUND:
+            FunctionRound();
+            break;
 
-		case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-			FunctionStringLength(opPos);
-			break;
+        case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+            FunctionStringLength(opPos);
+            break;
 
-		case XPathExpression::eOP_FUNCTION_SUM:
-			FunctionSum();
-			break;
+        case XPathExpression::eOP_FUNCTION_SUM:
+            FunctionSum();
+            break;
 
-		default:
-			{
-				// The position must be at least 1, since
-				// we've looked at a token.
-				assert(m_expression->getTokenPosition() > 0);
+        default:
+            {
+                // The position must be at least 1, since
+                // we've looked at a token.
+                assert(m_expression->getTokenPosition() > 0);
 
-				int		theFunctionID =
-					XPath::getFunctionTable().nameToID(m_token);
+                int     theFunctionID =
+                    XPath::getFunctionTable().nameToID(m_token);
 
-				if ((equals(m_token, s_positionString) == true ||
-					 equals(m_token, s_lastString) == true) &&
-					m_positionPredicateStack.empty() == false)
-				{
-					m_positionPredicateStack.back() = true;
-				}
+                if ((equals(m_token, s_positionString) == true ||
+                     equals(m_token, s_lastString) == true) &&
+                    m_positionPredicateStack.empty() == false)
+                {
+                    m_positionPredicateStack.back() = true;
+                }
 
-				XPathExpression::OpCodeMapValueVectorType	theArgs(2, 0, m_constructionContext->getMemoryManager());
-		
-				theArgs[0] = theFunctionID;
-				theArgs[1] = 0;
+                XPathExpression::OpCodeMapValueVectorType   theArgs(2, 0, m_constructionContext->getMemoryManager());
+        
+                theArgs[0] = theFunctionID;
+                theArgs[1] = 0;
 
-				m_expression->appendOpCode(
-						XPathExpression::eOP_FUNCTION,
-						theArgs);
+                m_expression->appendOpCode(
+                        XPathExpression::eOP_FUNCTION,
+                        theArgs);
 
-				nextToken();
+                nextToken();
 
-				// Get the arguments, and the argument count...
-				const int	argCount = FunctionCallArguments();
+                // Get the arguments, and the argument count...
+                const int   argCount = FunctionCallArguments();
 
-				assert(m_expression->getOpCodeMapValue(opPos + 3) == 0);
+                assert(m_expression->getOpCodeMapValue(opPos + 3) == 0);
 
-				// update the arg count in the op map...
-				m_expression->setOpCodeMapValue(opPos + 3, argCount);
-			}
-		}
-	}
+                // update the arg count in the op map...
+                m_expression->setOpCodeMapValue(opPos + 3, argCount);
+            }
+        }
+    }
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    // Terminate for safety.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	m_expression->updateOpCodeLength(opPos);
+    m_expression->updateOpCodeLength(opPos);
 }
 
 
@@ -1676,27 +1745,29 @@ XPathProcessorImpl::FunctionCall()
 void
 XPathProcessorImpl::FunctionPosition()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_POSITION);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_POSITION);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
+    if (argCount != 0)
+    {
         XalanDOMString  theResult(m_constructionContext->getMemoryManager());
 
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult, "position()"));
-	}
-	else
-	{
-		if (m_positionPredicateStack.empty() == false)
-		{
-			m_positionPredicateStack.back() = true;
-		}
-	}
+        error(
+            XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+            XPathFunctionTable::s_position);
+    }
+    else
+    {
+        if (m_positionPredicateStack.empty() == false)
+        {
+            m_positionPredicateStack.back() = true;
+        }
+    }
 }
 
 
@@ -1704,27 +1775,27 @@ XPathProcessorImpl::FunctionPosition()
 void
 XPathProcessorImpl::FunctionLast()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LAST);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LAST);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult , "last()"));
-	}
-	else
-	{
-		if (m_positionPredicateStack.empty() == false)
-		{
-			m_positionPredicateStack.back() = true;
-		}
-	}
+    if (argCount != 0)
+    {
+        error(
+            XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+            XPathFunctionTable::s_last);
+    }
+    else
+    {
+        if (m_positionPredicateStack.empty() == false)
+        {
+            m_positionPredicateStack.back() = true;
+        }
+    }
 }
 
 
@@ -1732,20 +1803,20 @@ XPathProcessorImpl::FunctionLast()
 void
 XPathProcessorImpl::FunctionCount()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_COUNT);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_COUNT);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult, "count()")); 
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_count);
+    }
 }
 
 
@@ -1753,21 +1824,20 @@ XPathProcessorImpl::FunctionCount()
 void
 XPathProcessorImpl::FunctionNot()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NOT);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NOT);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult ,"not()")); 
-
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_not);
+    }
 }
 
 
@@ -1775,20 +1845,20 @@ XPathProcessorImpl::FunctionNot()
 void
 XPathProcessorImpl::FunctionTrue()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_TRUE);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_TRUE);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult ,"true()"));
-	}
+    if (argCount != 0)
+    {
+        error(
+            XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+            XPathFunctionTable::s_true);
+    }
 }
 
 
@@ -1796,21 +1866,20 @@ XPathProcessorImpl::FunctionTrue()
 void
 XPathProcessorImpl::FunctionFalse()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FALSE);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FALSE);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult ,"false()")); 
-
-	}
+    if (argCount != 0)
+    {
+        error(
+            XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+            XPathFunctionTable::s_false);
+    }
 }
 
 
@@ -1818,113 +1887,113 @@ XPathProcessorImpl::FunctionFalse()
 void
 XPathProcessorImpl::FunctionBoolean()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_BOOLEAN);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_BOOLEAN);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"boolean()")); 
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_boolean);
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionName(int	opPos)
+XPathProcessorImpl::FunctionName(int    opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAME_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAME_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_NAME_0,
-				XPathExpression::eOP_FUNCTION_NAME_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"name()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_NAME_0,
+                XPathExpression::eOP_FUNCTION_NAME_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_name);
+        }
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionLocalName(int	opPos)
+XPathProcessorImpl::FunctionLocalName(int   opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LOCALNAME_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_LOCALNAME_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_LOCALNAME_0,
-				XPathExpression::eOP_FUNCTION_LOCALNAME_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"locale-name()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_LOCALNAME_0,
+                XPathExpression::eOP_FUNCTION_LOCALNAME_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_localName);
+        }
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionNumber(int	opPos)
+XPathProcessorImpl::FunctionNumber(int  opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NUMBER_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NUMBER_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_NUMBER_0,
-				XPathExpression::eOP_FUNCTION_NUMBER_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"number()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_NUMBER_0,
+                XPathExpression::eOP_FUNCTION_NUMBER_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_number);
+        }
+    }
 }
 
 
@@ -1932,21 +2001,20 @@ XPathProcessorImpl::FunctionNumber(int	opPos)
 void
 XPathProcessorImpl::FunctionFloor()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FLOOR);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_FLOOR);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"floor()")); 
-
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_floor);
+    }
 }
 
 
@@ -1954,20 +2022,20 @@ XPathProcessorImpl::FunctionFloor()
 void
 XPathProcessorImpl::FunctionCeiling()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_CEILING);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_CEILING);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"ceiling()")); 
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_ceiling);
+    }
 }
 
 
@@ -1975,51 +2043,51 @@ XPathProcessorImpl::FunctionCeiling()
 void
 XPathProcessorImpl::FunctionRound()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_ROUND);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_ROUND);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"round()")); 
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_round);
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionString(int	opPos)
+XPathProcessorImpl::FunctionString(int  opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRING_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRING_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_STRING_0,
-				XPathExpression::eOP_FUNCTION_STRING_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult ,"string()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_STRING_0,
+                XPathExpression::eOP_FUNCTION_STRING_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_string);
+        }
+    }
 }
 
 
@@ -2027,83 +2095,82 @@ XPathProcessorImpl::FunctionString(int	opPos)
 void
 XPathProcessorImpl::FunctionSum()
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_SUM);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_SUM);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 1)
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult, "sum()")); 
-
-	}
+    if (argCount != 1)
+    {
+        error(
+            XalanMessages::FunctionAcceptsOneArgument_1Param,
+            XPathFunctionTable::s_sum);
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionStringLength(int	opPos)
+XPathProcessorImpl::FunctionStringLength(int    opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRINGLENGTH_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_STRINGLENGTH_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_STRINGLENGTH_0,
-				XPathExpression::eOP_FUNCTION_STRINGLENGTH_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param,theResult, "string-length()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_STRINGLENGTH_0,
+                XPathExpression::eOP_FUNCTION_STRINGLENGTH_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_stringLength);
+        }
+    }
 }
 
 
 
 void
-XPathProcessorImpl::FunctionNamespaceURI(int	opPos)
+XPathProcessorImpl::FunctionNamespaceURI(int    opPos)
 {
-	m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAMESPACEURI_0);
+    m_expression->appendOpCode(XPathExpression::eOP_FUNCTION_NAMESPACEURI_0);
 
-	// Consume the name...
-	nextToken();
+    // Consume the name...
+    nextToken();
 
-	// Get the arguments, and the argument count...
-	const int	argCount = FunctionCallArguments();
+    // Get the arguments, and the argument count...
+    const int   argCount = FunctionCallArguments();
 
-	if (argCount != 0)
-	{
-		if (argCount == 1)
-		{
-			m_expression->replaceOpCode(
-				opPos,
-				XPathExpression::eOP_FUNCTION_NAMESPACEURI_0,
-				XPathExpression::eOP_FUNCTION_NAMESPACEURI_1);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-			error(XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "namespace-uri()")); 
-		}
-	}
+    if (argCount != 0)
+    {
+        if (argCount == 1)
+        {
+            m_expression->replaceOpCode(
+                opPos,
+                XPathExpression::eOP_FUNCTION_NAMESPACEURI_0,
+                XPathExpression::eOP_FUNCTION_NAMESPACEURI_1);
+        }
+        else
+        {
+            error(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                XPathFunctionTable::s_namespaceUri);
+        }
+    }
 }
 
 
@@ -2111,39 +2178,39 @@ XPathProcessorImpl::FunctionNamespaceURI(int	opPos)
 void
 XPathProcessorImpl::LocationPath()
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATH);
+    m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATH);
 
-	if(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		nextToken();
+    if(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        nextToken();
 
-		const int	newOpPos = m_expression->opCodeMapLength();
+        const int   newOpPos = m_expression->opCodeMapLength();
 
-		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
+        // Tell how long the step is without the predicate
+        const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4, m_constructionContext->getMemoryManager());
 
-		m_expression->appendOpCode(
-			XPathExpression::eFROM_ROOT,
-			theArgs);
+        m_expression->appendOpCode(
+            XPathExpression::eFROM_ROOT,
+            theArgs);
 
-		m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+        m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
 
-		// Tell how long the entire step is.
-		m_expression->updateOpCodeLength(newOpPos);
-	}
+        // Tell how long the entire step is.
+        m_expression->updateOpCodeLength(newOpPos);
+    }
 
-	if(length(m_token) != 0)
-	{
-		RelativeLocationPath();
-	}
+    if(length(m_token) != 0)
+    {
+        RelativeLocationPath();
+    }
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    // Terminate for safety.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
-									 opPos);
+    m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
+                                     opPos);
 }
 
 
@@ -2151,14 +2218,14 @@ XPathProcessorImpl::LocationPath()
 void
 XPathProcessorImpl::RelativeLocationPath()
 {
-	Step();
+    Step();
 
-	while(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		nextToken();
+    while(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        nextToken();
 
-		Step();
-	}
+        Step();
+    }
 }
   
 
@@ -2166,71 +2233,69 @@ XPathProcessorImpl::RelativeLocationPath()
 void
 XPathProcessorImpl::Step()
 {
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	if(tokenIs(s_dotString) == true)
-	{
-		nextToken();
+    if(tokenIs(s_dotString) == true)
+    {
+        nextToken();
 
-		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+        if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+        {
+            error(XalanMessages::IllegalSyntaxOfPredicatesSelf);
+        }
 
-			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesSelf, theResult));
-		}
+        const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4, m_constructionContext->getMemoryManager());
 
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
+        m_expression->appendOpCode(XPathExpression::eFROM_SELF,
+                                   theArgs);
 
-		m_expression->appendOpCode(XPathExpression::eFROM_SELF,
-								   theArgs);
+        m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 
-		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+        // Tell how long the entire step is.
+        m_expression->updateOpCodeLength(opPos);
+    }
+    else if(tokenIs(s_dotDotString) == true)
+    {
+        nextToken();
 
-		// Tell how long the entire step is.
-		m_expression->updateOpCodeLength(opPos);
-	}
-	else if(tokenIs(s_dotDotString) == true)
-	{
-		nextToken();
+        if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+        {
+            error(XalanMessages::IllegalSyntaxOfPredicatesParent);
+        }
 
-		if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+        // Tell how long the step is without the predicate
+        const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4,m_constructionContext->getMemoryManager());
 
-			error(XalanMessageLoader::getMessage(XalanMessages::IllegalSyntaxOfPredicatesParent, theResult));
-		}
+        m_expression->appendOpCode(XPathExpression::eFROM_PARENT,
+                                   theArgs);
 
-		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4,m_constructionContext->getMemoryManager());
+        m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 
-		m_expression->appendOpCode(XPathExpression::eFROM_PARENT,
-								   theArgs);
+        // Tell how long the entire step is.
+        m_expression->updateOpCodeLength(opPos);
+    }
+    else if (tokenIs(XalanUnicode::charAsterisk) ||
+             tokenIs(XalanUnicode::charCommercialAt) ||
+             tokenIs(XalanUnicode::charSolidus) ||
+             (tokenIs(XalanUnicode::charLowLine) ||
+              XalanXMLChar::isLetter(charAt(m_token, 0))))
+    {
+        Basis();
 
-		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+        while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+        {
+            Predicate();
+        }
 
-		// Tell how long the entire step is.
-		m_expression->updateOpCodeLength(opPos);
-	}
-	else if (tokenIs(XalanUnicode::charAsterisk) ||
-			 tokenIs(XalanUnicode::charCommercialAt) ||
-			 tokenIs(XalanUnicode::charSolidus) ||
-			 (tokenIs(XalanUnicode::charLowLine) ||
-			  XalanXMLChar::isLetter(charAt(m_token, 0))))
-	{
-		Basis();
-
-		while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-		{
-			Predicate();
-		}
-
-		// Tell how long the entire step is.
-		m_expression->updateOpCodeLength(opPos);
-	}
-	else if (tokenIs(XalanUnicode::charRightParenthesis) == false)
-	{
-		error(XalanMessageLoader::getMessage(XalanMessages::UnexpectedTokenFound_1Param, m_token)); 
-	}
+        // Tell how long the entire step is.
+        m_expression->updateOpCodeLength(opPos);
+    }
+    else if (tokenIs(XalanUnicode::charRightParenthesis) == false)
+    {
+        error(
+            XalanMessages::UnexpectedTokenFound_1Param,
+            m_token);
+    }
 }
 
 
@@ -2238,72 +2303,69 @@ XPathProcessorImpl::Step()
 void
 XPathProcessorImpl::Basis()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	XPathExpression::eOpCodes	axisType = XPathExpression::eENDOP;
+    XPathExpression::eOpCodes   axisType = XPathExpression::eENDOP;
 
-	// The next blocks guarantee that a FROM_XXX will be added.
-	if(lookahead(s_axisString, 1) == true)
-	{
-		axisType = AxisName();
+    // The next blocks guarantee that a FROM_XXX will be added.
+    if(lookahead(s_axisString, 1) == true)
+    {
+        axisType = AxisName();
 
-		nextToken();
-		nextToken();
-	}
-	else if(tokenIs(XalanUnicode::charCommercialAt) == true)
-	{
-		axisType = XPathExpression::eFROM_ATTRIBUTES;
+        nextToken();
+        nextToken();
+    }
+    else if(tokenIs(XalanUnicode::charCommercialAt) == true)
+    {
+        axisType = XPathExpression::eFROM_ATTRIBUTES;
 
-		m_expression->appendOpCode(XPathExpression::eFROM_ATTRIBUTES);
+        m_expression->appendOpCode(XPathExpression::eFROM_ATTRIBUTES);
 
-		nextToken();
-	}
-	else if(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		// Check the current token in the expression.  It's
-		// actually the next token in this context.
-		//
-		const XalanDOMString&	theNextToken = getTokenRelative(0);
+        nextToken();
+    }
+    else if(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        // Check the current token in the expression.  It's
+        // actually the next token in this context.
+        //
+        const XalanDOMString&   theNextToken = getTokenRelative(0);
 
-		if (isAxis(theNextToken) == false && isNodeTest(theNextToken) == false)
-		{
-			nextToken();
+        if (isAxis(theNextToken) == false && isNodeTest(theNextToken) == false)
+        {
+            nextToken();
 
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+            error(XalanMessages::ExpectedAxis); 
+        }
+        else
+        {
+            // Tell how long the step is without the predicate
+            const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4, m_constructionContext->getMemoryManager());
 
-			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedAxis, theResult)); 
+            m_expression->appendOpCode(XPathExpression::eFROM_DESCENDANTS_OR_SELF,
+                                       theArgs);
 
-		}
-		else
-		{
-			// Tell how long the step is without the predicate
-			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
+            m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 
-			m_expression->appendOpCode(XPathExpression::eFROM_DESCENDANTS_OR_SELF,
-									   theArgs);
+            // Tell how long the step is without the predicate
+            m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 
-			m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+            return; // make a quick exit...
+        }
+    }
+    else
+    {
+        axisType = XPathExpression::eFROM_CHILDREN;
 
-			// Tell how long the step is without the predicate
-			m_expression->updateOpCodeLengthAfterNodeTest(opPos);
+        m_expression->appendOpCode(XPathExpression::eFROM_CHILDREN);
+    }
 
-			return; // make a quick exit...
-		}
-	}
-	else
-	{
-		axisType = XPathExpression::eFROM_CHILDREN;
+    NodeTest();
 
-		m_expression->appendOpCode(XPathExpression::eFROM_CHILDREN);
-	}
-
-	NodeTest();
-
-	// Tell how long the step is without the predicate
-	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
+    // Tell how long the step is without the predicate
+    m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 }
 
 
@@ -2311,22 +2373,24 @@ XPathProcessorImpl::Basis()
 XPathExpression::eOpCodes
 XPathProcessorImpl::AxisName()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	const XPathExpression::eOpCodes		theOpCode =
-		getAxisToken(m_token);
+    const XPathExpression::eOpCodes     theOpCode =
+        getAxisToken(m_token);
 
-	if (theOpCode == XPathExpression::eENDOP)
-	{
-		error(XalanMessageLoader::getMessage(XalanMessages::IllegalAxisName_1Param,m_token)); 
-	}
-	else
-	{
-		m_expression->appendOpCode(theOpCode);
-	}
+    if (theOpCode == XPathExpression::eENDOP)
+    {
+        error(
+            XalanMessages::IllegalAxisName_1Param,
+            m_token); 
+    }
+    else
+    {
+        m_expression->appendOpCode(theOpCode);
+    }
 
-	return theOpCode;
+    return theOpCode;
 }
 
 
@@ -2334,87 +2398,85 @@ XPathProcessorImpl::AxisName()
 int
 XPathProcessorImpl::NodeTest()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	int		nodeTestPos = -1;
+    int     nodeTestPos = -1;
 
-	if (lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
-	{
-		const XPathExpression::eOpCodes		theOpCode = getNodeTypeToken(m_token);
+    if (lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
+    {
+        const XPathExpression::eOpCodes     theOpCode = getNodeTypeToken(m_token);
 
-		if (theOpCode == XPathExpression::eENDOP)
-		{
-			error(XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param, m_token)); 
+        if (theOpCode == XPathExpression::eENDOP)
+        {
+            error(
+                XalanMessages::UnknownNodeType_1Param,
+                m_token);
+        }
+        else
+        {
+            nextToken();
 
-		}
-		else
-		{
-			nextToken();
+            nodeTestPos = m_expression->appendOpCode(theOpCode);
 
-			nodeTestPos = m_expression->appendOpCode(theOpCode);
+            consumeExpected(XalanUnicode::charLeftParenthesis);
 
-			consumeExpected(XalanUnicode::charLeftParenthesis);
+            if(XPathExpression::eNODETYPE_PI == theOpCode)
+            {
+                if(tokenIs(XalanUnicode::charRightParenthesis) == false)
+                {
+                    Literal();
+                }
+            }
 
-			if(XPathExpression::eNODETYPE_PI == theOpCode)
-			{
-				if(tokenIs(XalanUnicode::charRightParenthesis) == false)
-				{
-					Literal();
-				}
-			}
+            consumeExpected(XalanUnicode::charRightParenthesis);
+        }
+    }
+    else
+    {
+        // Assume name of attribute or element.
+        m_expression->appendOpCode(XPathExpression::eNODENAME);
 
-			consumeExpected(XalanUnicode::charRightParenthesis);
-		}
-	}
-	else
-	{
-		// Assume name of attribute or element.
-		m_expression->appendOpCode(XPathExpression::eNODENAME);
+        if(lookahead(XalanUnicode::charColon, 1) == true)
+        {
+            if(tokenIs(XalanUnicode::charAsterisk) == true)
+            {
+                m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
+            }
+            else
+            {
+                // Replace the token in the queue with the actual namespace...
+                replaceTokenWithNamespaceToken();
 
-		if(lookahead(XalanUnicode::charColon, 1) == true)
-		{
-			if(tokenIs(XalanUnicode::charAsterisk) == true)
-			{
-				m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
-			}
-			else
-			{
-				// Replace the token in the queue with the actual namespace...
-				replaceTokenWithNamespaceToken();
+                m_expression->pushCurrentTokenOnOpCodeMap();
+            }
 
-				m_expression->pushCurrentTokenOnOpCodeMap();
-			}
+            nextToken();
 
-			nextToken();
+            consumeExpected(XalanUnicode::charColon);
+        }
+        else
+        {
+            m_expression->appendOpCode(XPathExpression::eEMPTY);
+        }
 
-			consumeExpected(XalanUnicode::charColon);
-		}
-		else
-		{
-			m_expression->appendOpCode(XPathExpression::eEMPTY);
-		}
+        if (tokenIs(XalanUnicode::charAsterisk) == true)
+        {
+            m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
+        }
+        else if (isNodeTest(m_token) == false)
+        {
+            error(XalanMessages::ExpectedNodeTest);
+        }
+        else
+        {
+            m_expression->pushCurrentTokenOnOpCodeMap();
+        }
 
-		if (tokenIs(XalanUnicode::charAsterisk) == true)
-		{
-			m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
-		}
-		else if (isNodeTest(m_token) == false)
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+        nextToken();
+    }
 
-			error(XalanMessageLoader::getMessage(XalanMessages::ExpectedNodeTest, theResult)); 
-
-		}
-		else
-		{
-			m_expression->pushCurrentTokenOnOpCodeMap();
-		}
-
-		nextToken();
-	}
-
-	return nodeTestPos;
+    return nodeTestPos;
 }
 
 
@@ -2422,14 +2484,14 @@ XPathProcessorImpl::NodeTest()
 void
 XPathProcessorImpl::Predicate()
 {
-	if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-	{
-		nextToken();
+    if(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+    {
+        nextToken();
 
-		PredicateExpr();		
+        PredicateExpr();        
 
-		consumeExpected(XalanUnicode::charRightSquareBracket);
-	}
+        consumeExpected(XalanUnicode::charRightSquareBracket);
+    }
 }
 
 
@@ -2437,34 +2499,34 @@ XPathProcessorImpl::Predicate()
 void
 XPathProcessorImpl::PredicateExpr()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	m_expression->appendOpCode(XPathExpression::eOP_PREDICATE);
+    m_expression->appendOpCode(XPathExpression::eOP_PREDICATE);
 
-	m_positionPredicateStack.push_back(false);
+    m_positionPredicateStack.push_back(false);
 
-	Expr();
+    Expr();
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    // Terminate for safety.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	m_expression->updateOpCodeLength(XPathExpression::eOP_PREDICATE,
-									 opPos);
+    m_expression->updateOpCodeLength(XPathExpression::eOP_PREDICATE,
+                                     opPos);
 
-	assert(m_positionPredicateStack.empty() == false);
+    assert(m_positionPredicateStack.empty() == false);
 
-	if (m_positionPredicateStack.back() == true)
-	{
-		m_expression->replaceOpCode(
-			opPos,
-			XPathExpression::eOP_PREDICATE,
-			XPathExpression::eOP_PREDICATE_WITH_POSITION);
-	}
+    if (m_positionPredicateStack.back() == true)
+    {
+        m_expression->replaceOpCode(
+            opPos,
+            XPathExpression::eOP_PREDICATE,
+            XPathExpression::eOP_PREDICATE_WITH_POSITION);
+    }
 
-	m_positionPredicateStack.pop_back();
+    m_positionPredicateStack.pop_back();
 }
 
 
@@ -2472,33 +2534,33 @@ XPathProcessorImpl::PredicateExpr()
 void
 XPathProcessorImpl::QName()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	// If there is no prefix, we have to fake things out...
-	if (lookahead(XalanUnicode::charColon, 1) == false)
-	{
-		m_expression->insertToken(s_emptyString);
+    // If there is no prefix, we have to fake things out...
+    if (lookahead(XalanUnicode::charColon, 1) == false)
+    {
+        m_expression->insertToken(s_emptyString);
 
-		m_expression->pushCurrentTokenOnOpCodeMap();
+        m_expression->pushCurrentTokenOnOpCodeMap();
 
-		nextToken();
-	}
-	else
-	{
-		// Replace the token in the queue with the actual namespace...
-		replaceTokenWithNamespaceToken();
+        nextToken();
+    }
+    else
+    {
+        // Replace the token in the queue with the actual namespace...
+        replaceTokenWithNamespaceToken();
 
-		m_expression->pushCurrentTokenOnOpCodeMap();
+        m_expression->pushCurrentTokenOnOpCodeMap();
 
-		nextToken();
+        nextToken();
 
-		consumeExpected(XalanUnicode::charColon);
-	}
+        consumeExpected(XalanUnicode::charColon);
+    }
 
-	m_expression->pushCurrentTokenOnOpCodeMap();
+    m_expression->pushCurrentTokenOnOpCodeMap();
 
-	nextToken();
+    nextToken();
 }
 
 
@@ -2506,12 +2568,12 @@ XPathProcessorImpl::QName()
 void
 XPathProcessorImpl::NCName()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	m_expression->pushCurrentTokenOnOpCodeMap();
+    m_expression->pushCurrentTokenOnOpCodeMap();
 
-	nextToken();
+    nextToken();
 }
 
 
@@ -2519,23 +2581,20 @@ XPathProcessorImpl::NCName()
 void
 XPathProcessorImpl::Literal()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	if(isCurrentLiteral() == true)
-	{
-		m_expression->pushArgumentOnOpCodeMap(
-			m_constructionContext->getPooledString(m_token.c_str() + 1, m_token.length() - 2));
+    if(isCurrentLiteral() == true)
+    {
+        m_expression->pushArgumentOnOpCodeMap(
+            m_constructionContext->getPooledString(m_token.c_str() + 1, m_token.length() - 2));
 
-		nextToken();
-	}
-	else
-	{
-        XalanDOMString  theResult(m_constructionContext->getMemoryManager());
-
-		error(XalanMessageLoader::getMessage(XalanMessages::LiteralArgumentIsRequired,theResult)); 
-
-	}
+        nextToken();
+    }
+    else
+    {
+        error(XalanMessages::LiteralArgumentIsRequired); 
+    }
 }
 
 
@@ -2543,25 +2602,25 @@ XPathProcessorImpl::Literal()
 void
 XPathProcessorImpl::Number()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	if(0 != length(m_token))
-	{
-		const double	num = DoubleSupport::toDouble(m_token, m_constructionContext->getMemoryManager());
+    if(0 != length(m_token))
+    {
+        const double    num = DoubleSupport::toDouble(m_token, m_constructionContext->getMemoryManager());
 
- 		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+        const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
  
- 		XalanDOMString& 	theStringValue = theGuard.get();
+        XalanDOMString&     theStringValue = theGuard.get();
  
-		DoubleToDOMString(num, theStringValue);
+        DoubleToDOMString(num, theStringValue);
 
-		m_expression->pushNumberLiteralOnOpCodeMap(num);
+        m_expression->pushNumberLiteralOnOpCodeMap(num);
 
-		m_expression->pushArgumentOnOpCodeMap(num, m_constructionContext->getPooledString(theStringValue));
+        m_expression->pushArgumentOnOpCodeMap(num, m_constructionContext->getPooledString(theStringValue));
 
-		nextToken();
-	}
+        nextToken();
+    }
 }
 
 
@@ -2569,19 +2628,19 @@ XPathProcessorImpl::Number()
 void
 XPathProcessorImpl::Pattern()
 {
-	while(true)
-	{
-		LocationPathPattern();
+    while(true)
+    {
+        LocationPathPattern();
 
-		if(tokenIs(XalanUnicode::charVerticalLine) == true)
-		{
-			nextToken();
-		}
-		else
-		{
-			break;
-		}
-	}
+        if(tokenIs(XalanUnicode::charVerticalLine) == true)
+        {
+            nextToken();
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
 
@@ -2589,82 +2648,83 @@ XPathProcessorImpl::Pattern()
 void
 XPathProcessorImpl::LocationPathPattern()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATHPATTERN);
+    m_expression->appendOpCode(XPathExpression::eOP_LOCATIONPATHPATTERN);
 
-	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true &&
-				(tokenIs(s_functionIDString) == true ||
-				 tokenIs(s_functionKeyString) == true))
-	{
-		IdKeyPattern();
+    if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true &&
+                (tokenIs(s_functionIDString) == true ||
+                 tokenIs(s_functionKeyString) == true))
+    {
+        IdKeyPattern();
 
-		if(tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
-		{
-			const int	newOpPos = m_expression->opCodeMapLength();
+        if(tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
+        {
+            const int   newOpPos = m_expression->opCodeMapLength();
 
-			// Tell how long the step is without the predicate
-			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
+            // Tell how long the step is without the predicate
+            const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4, m_constructionContext->getMemoryManager());
 
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL,
-									   theArgs);
+            m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL,
+                                       theArgs);
 
-			m_expression->updateOpCodeLength(newOpPos);
+            m_expression->updateOpCodeLength(newOpPos);
 
-			nextToken();
-		}
-	}
-	else if(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		const int	newOpPos = m_expression->opCodeMapLength();
+            nextToken();
+        }
+    }
+    else if(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        const int   newOpPos = m_expression->opCodeMapLength();
 
-		// Tell how long the step is without the predicate
-		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4, m_constructionContext->getMemoryManager());
+        // Tell how long the step is without the predicate
+        const XPathExpression::OpCodeMapValueVectorType     theArgs(1, 4, m_constructionContext->getMemoryManager());
 
-		if(lookahead(XalanUnicode::charSolidus, 1) == true)
-		{
-			m_expression->appendOpCode(
-				XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
-				theArgs);
+        if(lookahead(XalanUnicode::charSolidus, 1) == true)
+        {
+            m_expression->appendOpCode(
+                XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
+                theArgs);
 
-			m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+            m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 
-			nextToken();
-		}
-		else
-		{
-			m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
-									   theArgs);
+            nextToken();
+        }
+        else
+        {
+            m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
+                                       theArgs);
 
-			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
-		}
+            m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+        }
 
-		m_expression->updateOpCodeLength(newOpPos);
+        m_expression->updateOpCodeLength(newOpPos);
 
-		nextToken();
-	}
+        nextToken();
+    }
 
-	if(length(m_token) != 0)
-	{
-		if (!tokenIs(XalanUnicode::charVerticalLine) == true)
-		{
-			RelativePathPattern();
-		}
-		else if (lookahead(XalanUnicode::charVerticalLine, -1) == true)
-		{
-			error(XalanMessageLoader::getMessage(XalanMessages::UnexpectedTokenFound_1Param, m_token));
-	
-		}
-	}
+    if(length(m_token) != 0)
+    {
+        if (!tokenIs(XalanUnicode::charVerticalLine) == true)
+        {
+            RelativePathPattern();
+        }
+        else if (lookahead(XalanUnicode::charVerticalLine, -1) == true)
+        {
+            error(
+                XalanMessages::UnexpectedTokenFound_1Param,
+                m_token);
+        }
+    }
 
-	// Terminate for safety.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    // Terminate for safety.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATHPATTERN,
-									 opPos);
+    m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATHPATTERN,
+                                     opPos);
 }
 
 
@@ -2672,26 +2732,26 @@ XPathProcessorImpl::LocationPathPattern()
 void
 XPathProcessorImpl::IdKeyPattern()
 {
-	m_requireLiterals = true;
+    m_requireLiterals = true;
 
-	FunctionCall();
+    FunctionCall();
 
-	m_requireLiterals = false;
+    m_requireLiterals = false;
 }
 
 
 
 void
 XPathProcessorImpl::RelativePathPattern()
-{	 
-	StepPattern();
+{    
+    StepPattern();
 
-	while(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		nextToken();
+    while(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        nextToken();
 
-		StepPattern();
-	}
+        StepPattern();
+    }
 }
 
 
@@ -2699,7 +2759,7 @@ XPathProcessorImpl::RelativePathPattern()
 void
 XPathProcessorImpl::StepPattern()
 {
-	AbbreviatedNodeTestStep();
+    AbbreviatedNodeTestStep();
 }
 
 
@@ -2707,145 +2767,139 @@ XPathProcessorImpl::StepPattern()
 void
 XPathProcessorImpl::AbbreviatedNodeTestStep()
 {
-	assert(m_xpath != 0);
-	assert(m_expression != 0);
+    assert(m_xpath != 0);
+    assert(m_expression != 0);
 
-	const int	opPos = m_expression->opCodeMapLength();
+    const int   opPos = m_expression->opCodeMapLength();
 
-	int			matchTypePos = -1;
+    int         matchTypePos = -1;
 
-	XPathExpression::eOpCodes	axisType = XPathExpression::eENDOP;
+    XPathExpression::eOpCodes   axisType = XPathExpression::eENDOP;
 
-	// The next blocks guarantee that a MATCH_XXX will be added.
-	if(tokenIs(XalanUnicode::charCommercialAt) == true)
-	{
-		axisType = XPathExpression::eMATCH_ATTRIBUTE;
+    // The next blocks guarantee that a MATCH_XXX will be added.
+    if(tokenIs(XalanUnicode::charCommercialAt) == true)
+    {
+        axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-		m_expression->appendOpCode(axisType);
+        m_expression->appendOpCode(axisType);
 
-		nextToken();
-	}
-	else if(lookahead(s_axisString, 1) == true)
-	{
-		if(tokenIs(s_attributeString) == true)
-		{
-			axisType = XPathExpression::eMATCH_ATTRIBUTE;
+        nextToken();
+    }
+    else if(lookahead(s_axisString, 1) == true)
+    {
+        if(tokenIs(s_attributeString) == true)
+        {
+            axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-			m_expression->appendOpCode(axisType);
-		}
-		else if(tokenIs(s_childString) == true)
-		{
-			matchTypePos = m_expression->opCodeMapLength();
+            m_expression->appendOpCode(axisType);
+        }
+        else if(tokenIs(s_childString) == true)
+        {
+            matchTypePos = m_expression->opCodeMapLength();
 
-			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+            axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-			m_expression->appendOpCode(axisType);
-		}
-		else
-		{
-            XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+            m_expression->appendOpCode(axisType);
+        }
+        else
+        {
+            error(XalanMessages::OnlyChildAndAttributeAxesAreAllowed); 
+        }
 
-			error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed, theResult)); 
-		}
+        nextToken();
+        nextToken();
+    }
+    else if(tokenIs(XalanUnicode::charSolidus) == true)
+    {
+        if(lookahead(s_axisString, 2) == false)
+        {
+            matchTypePos = m_expression->opCodeMapLength();
 
-		nextToken();
-		nextToken();
-	}
-	else if(tokenIs(XalanUnicode::charSolidus) == true)
-	{
-		if(lookahead(s_axisString, 2) == false)
-		{
-			matchTypePos = m_expression->opCodeMapLength();
+            axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+            m_expression->appendOpCode(axisType);
+        }
+        else
+        {
+            nextToken();
 
-			m_expression->appendOpCode(axisType);
-		}
-		else
-		{
-			nextToken();
+            if(tokenIs(s_attributeString) == true)
+            {
+                axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-			if(tokenIs(s_attributeString) == true)
-			{
-				axisType = XPathExpression::eMATCH_ATTRIBUTE;
+                m_expression->appendOpCode(axisType);
+            }
+            else if(tokenIs(s_childString) == true)
+            {
+                matchTypePos = m_expression->opCodeMapLength();
 
-				m_expression->appendOpCode(axisType);
-			}
-			else if(tokenIs(s_childString) == true)
-			{
-				matchTypePos = m_expression->opCodeMapLength();
+                axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-				axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+                m_expression->appendOpCode(axisType);
+            }
+            else
+            {
+                error(XalanMessages::OnlyChildAndAttributeAxesAreAllowed); 
+            }
 
-				m_expression->appendOpCode(axisType);
-			}
-			else
-			{
-                XalanDOMString  theResult(m_constructionContext->getMemoryManager());
+            nextToken();
+        }
 
-				error(XalanMessageLoader::getMessage(XalanMessages::OnlyChildAndAttributeAxesAreAllowed, theResult)); 
+        nextToken();
+    }
+    else
+    {
+        if(tokenIs(XalanUnicode::charSolidus) == true)
+        {
+            nextToken();
+        }
 
-			}
+        matchTypePos = m_expression->opCodeMapLength();
 
-			nextToken();
+        axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-		}
-
-		nextToken();
-	}
-	else
-	{
-		if(tokenIs(XalanUnicode::charSolidus) == true)
-		{
-			nextToken();
-		}
-
-		matchTypePos = m_expression->opCodeMapLength();
-
-		axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
-
-		m_expression->appendOpCode(axisType);
-	}
+        m_expression->appendOpCode(axisType);
+    }
 
     // Make room for telling how long the step is without the predicate.
-	// This will be replaced by the right value.
-	m_expression->appendOpCode(XPathExpression::eENDOP);
+    // This will be replaced by the right value.
+    m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	NodeTest();
+    NodeTest();
 
-	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
+    m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 
-	while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
-	{
-		Predicate();
-	}
+    while(tokenIs(XalanUnicode::charLeftSquareBracket) == true)
+    {
+        Predicate();
+    }
 
-	if(matchTypePos > -1 && tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
-	{
-		assert(m_expression->opCodeMapLength() > matchTypePos);
+    if(matchTypePos > -1 && tokenIs(XalanUnicode::charSolidus) == true && lookahead(XalanUnicode::charSolidus, 1) == true)
+    {
+        assert(m_expression->opCodeMapLength() > matchTypePos);
 
-		m_expression->setOpCodeMapValue(matchTypePos, XPathExpression::eMATCH_ANY_ANCESTOR);
-	}
+        m_expression->setOpCodeMapValue(matchTypePos, XPathExpression::eMATCH_ANY_ANCESTOR);
+    }
 
-	m_expression->updateOpCodeLength(opPos);
+    m_expression->updateOpCodeLength(opPos);
 }
 
 
 
 bool
-XPathProcessorImpl::isValidFunction(const XalanDOMString&	key)
+XPathProcessorImpl::isValidFunction(const XalanDOMString&   key)
 {
-	bool	fResult = true;
+    bool    fResult = true;
 
-	if(XPath::isInstalledFunction(key) == false)
-	{
-		if (searchTable(s_functionTable, s_functionTableSize, key).m_opCode == XPathExpression::eENDOP)
-		{
-			fResult = false;
-		}
-	}
+    if(XPath::isInstalledFunction(key) == false)
+    {
+        if (searchTable(s_functionTable, s_functionTableSize, key).m_opCode == XPathExpression::eENDOP)
+        {
+            fResult = false;
+        }
+    }
 
-	return fResult;
+    return fResult;
 }
 
 
@@ -2853,559 +2907,557 @@ XPathProcessorImpl::isValidFunction(const XalanDOMString&	key)
 bool
 XPathProcessorImpl::isCurrentLiteral() const
 {
-	const int last = length(m_token) - 1;
+    const int last = length(m_token) - 1;
 
-	if (last <= 0)
-	{
-		return false;
-	}
-	else
-	{
-		assert(last > 0);
+    if (last <= 0)
+    {
+        return false;
+    }
+    else
+    {
+        const XalanDOMChar  c0 = m_tokenChar;
+        const XalanDOMChar  cX = charAt(m_token, last);
 
-		const XalanDOMChar 	c0 = m_tokenChar;
-		const XalanDOMChar 	cX = charAt(m_token, last);
-
-		if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
-		   (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
+           (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 
 
 bool
-XPathProcessorImpl::isAxis(const XalanDOMString&	theToken)
+XPathProcessorImpl::isAxis(const XalanDOMString&    theToken)
 {
-	const XalanDOMString::size_type		theLength = length(theToken);
+    const XalanDOMString::size_type     theLength = length(theToken);
 
-	if (theLength == 0)
-	{
-		return false;
-	}
-	else if (theLength == 1 &&
-			 charAt(theToken, 0) == XalanUnicode::charCommercialAt)
-	{
-		return true;
-	}
-	else if (equals(theToken, s_dotString) == true ||
-			 equals(theToken, s_dotDotString) == true)
-	{
-		return true;
-	}
-	else
-	{
-		const XPathExpression::eOpCodes		theOpCode =
-			getAxisToken(theToken);
+    if (theLength == 0)
+    {
+        return false;
+    }
+    else if (theLength == 1 &&
+             charAt(theToken, 0) == XalanUnicode::charCommercialAt)
+    {
+        return true;
+    }
+    else if (equals(theToken, s_dotString) == true ||
+             equals(theToken, s_dotDotString) == true)
+    {
+        return true;
+    }
+    else
+    {
+        const XPathExpression::eOpCodes     theOpCode =
+            getAxisToken(theToken);
 
-		if (theOpCode != XPathExpression::eENDOP)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        if (theOpCode != XPathExpression::eENDOP)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 
 
 bool
-XPathProcessorImpl::isNodeTest(const XalanDOMString&	theToken)
+XPathProcessorImpl::isNodeTest(const XalanDOMString&    theToken)
 {
-	const XalanDOMString::size_type		theLength = length(theToken);
+    const XalanDOMString::size_type     theLength = length(theToken);
 
-	if (theLength == 0)
-	{
-		return false;
-	}
-	else if (theLength == 1 &&
-			 charAt(theToken, 0) == XalanUnicode::charAsterisk)
-	{
-		return true;
-	}
-	else if (charAt(theToken, 0) == XalanUnicode::charLowLine ||
-			 XalanXMLChar::isLetter(charAt(theToken, 0)) == true)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (theLength == 0)
+    {
+        return false;
+    }
+    else if (theLength == 1 &&
+             charAt(theToken, 0) == XalanUnicode::charAsterisk)
+    {
+        return true;
+    }
+    else if (charAt(theToken, 0) == XalanUnicode::charLowLine ||
+             XalanXMLChar::isLetter(charAt(theToken, 0)) == true)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 
 const XPathProcessorImpl::TableEntry&
 XPathProcessorImpl::searchTable(
-		const TableEntry		theTable[],
-		size_type				theTableSize,
-		const XalanDOMString&	theString)
+        const TableEntry        theTable[],
+        size_type               theTableSize,
+        const XalanDOMString&   theString)
 {
-	const TableEntry*	theFirst = theTable;
-	const TableEntry*	theLast = &theTable[theTableSize - 1];
+    const TableEntry*   theFirst = theTable;
+    const TableEntry*   theLast = &theTable[theTableSize - 1];
 
-	while(theFirst <= theLast)
-	{
-		const TableEntry*	theCurrent = theFirst + (theLast - theFirst) / 2;
-		assert(theCurrent->m_string[0] != 0);
+    while(theFirst <= theLast)
+    {
+        const TableEntry*   theCurrent = theFirst + (theLast - theFirst) / 2;
+        assert(theCurrent->m_string[0] != 0);
 
-		const int	theResult = compare(c_wstr(theString), theCurrent->m_string);
+        const int   theResult = compare(c_wstr(theString), theCurrent->m_string);
 
-		if (theResult < 0)
-		{
-			theLast = theCurrent - 1;
-		}
-		else if (theResult > 0)
-		{
-			theFirst = theCurrent + 1;
-		}
-		else
-		{
-			return *theCurrent;
-		}
-	}
+        if (theResult < 0)
+        {
+            theLast = theCurrent - 1;
+        }
+        else if (theResult > 0)
+        {
+            theFirst = theCurrent + 1;
+        }
+        else
+        {
+            return *theCurrent;
+        }
+    }
 
-	return s_dummyEntry;
+    return s_dummyEntry;
 }
 
 
 
-const XalanDOMString	XPathProcessorImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XPathProcessorImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-const XalanDOMChar	XPathProcessorImpl::s_functionIDString[] =
+const XalanDOMChar  XPathProcessorImpl::s_functionIDString[] =
 {
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_d,
-	0
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_d,
+    0
 };
 
 // This shouldn't really be here, since it's not part of the XPath standard,
 // but rather a part ofthe XSLT standard.
-const XalanDOMChar	XPathProcessorImpl::s_functionKeyString[] =
+const XalanDOMChar  XPathProcessorImpl::s_functionKeyString[] =
 {
-	XalanUnicode::charLetter_k,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_y,
-	0
+    XalanUnicode::charLetter_k,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_y,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_orString[] =
+const XalanDOMChar  XPathProcessorImpl::s_orString[] =
 {
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	0
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_andString[] =
+const XalanDOMChar  XPathProcessorImpl::s_andString[] =
 {
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_d,
-	0
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_d,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_divString[] =
+const XalanDOMChar  XPathProcessorImpl::s_divString[] =
 {
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_v,
-	0
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_v,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_modString[] =
+const XalanDOMChar  XPathProcessorImpl::s_modString[] =
 {
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_d,
-	0
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_dotString[] =
+const XalanDOMChar  XPathProcessorImpl::s_dotString[] =
 {
-	XalanUnicode::charFullStop,
-	0
+    XalanUnicode::charFullStop,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_dotDotString[] =
+const XalanDOMChar  XPathProcessorImpl::s_dotDotString[] =
 {
-	XalanUnicode::charFullStop,
-	XalanUnicode::charFullStop,
-	0
+    XalanUnicode::charFullStop,
+    XalanUnicode::charFullStop,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_axisString[] =
+const XalanDOMChar  XPathProcessorImpl::s_axisString[] =
 {
-	XalanUnicode::charColon,
-	XalanUnicode::charColon,
-	0
+    XalanUnicode::charColon,
+    XalanUnicode::charColon,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_attributeString[] =
+const XalanDOMChar  XPathProcessorImpl::s_attributeString[] =
 {
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_childString[] =
+const XalanDOMChar  XPathProcessorImpl::s_childString[] =
 {
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_d,
-	0
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_d,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_lastString[] =
+const XalanDOMChar  XPathProcessorImpl::s_lastString[] =
 {
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_positionString[] =
+const XalanDOMChar  XPathProcessorImpl::s_positionString[] =
 {
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_asteriskString[] =
+const XalanDOMChar  XPathProcessorImpl::s_asteriskString[] =
 {
-	XalanUnicode::charAsterisk,
-	0
+    XalanUnicode::charAsterisk,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_commentString[] =
+const XalanDOMChar  XPathProcessorImpl::s_commentString[] =
 {
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_piString[] =
+const XalanDOMChar  XPathProcessorImpl::s_piString[] =
 {
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_nodeString[] =
+const XalanDOMChar  XPathProcessorImpl::s_nodeString[] =
 {
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    0
 };
 
-const XalanDOMChar	XPathProcessorImpl::s_textString[] =
+const XalanDOMChar  XPathProcessorImpl::s_textString[] =
 {
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_ancestorString[] =
+const XalanDOMChar      XPathProcessorImpl::s_ancestorString[] =
 {
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	0
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_ancestorOrSelfString[] =
+const XalanDOMChar      XPathProcessorImpl::s_ancestorOrSelfString[] =
 {
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_f,
-	0
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_f,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_descendantString[] =
+const XalanDOMChar      XPathProcessorImpl::s_descendantString[] =
 {
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_descendantOrSelfString[] =
+const XalanDOMChar      XPathProcessorImpl::s_descendantOrSelfString[] =
 {
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_f,
-	0
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_f,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_followingString[] =
+const XalanDOMChar      XPathProcessorImpl::s_followingString[] =
 {
-	XalanUnicode::charLetter_f,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_w,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	0
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_w,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_followingSiblingString[] =
+const XalanDOMChar      XPathProcessorImpl::s_followingSiblingString[] =
 {
-	XalanUnicode::charLetter_f,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_w,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	0
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_w,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_parentString[] =
+const XalanDOMChar      XPathProcessorImpl::s_parentString[] =
 {
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_precedingString[] =
+const XalanDOMChar      XPathProcessorImpl::s_precedingString[] =
 {
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	0
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_precedingSiblingString[] =
+const XalanDOMChar      XPathProcessorImpl::s_precedingSiblingString[] =
 {
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	0
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_selfString[] =
+const XalanDOMChar      XPathProcessorImpl::s_selfString[] =
 {
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_f,
-	0
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_f,
+    0
 };
 
-const XalanDOMChar		XPathProcessorImpl::s_namespaceString[] =
+const XalanDOMChar      XPathProcessorImpl::s_namespaceString[] =
 {
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
 
-const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_functionTable[] =
+const XPathProcessorImpl::TableEntry    XPathProcessorImpl::s_functionTable[] =
 {
-	{ XPathFunctionTable::s_not, XPathExpression::eOP_FUNCTION_NOT },
-	{ XPathFunctionTable::s_sum, XPathExpression::eOP_FUNCTION_SUM },
-	{ XPathProcessorImpl::s_lastString, XPathExpression::eOP_FUNCTION_LAST },
-	{ XPathFunctionTable::s_name, XPathExpression::eOP_FUNCTION_NAME_0 },
-	{ XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
-	{ XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
-	{ XPathFunctionTable::s_true, XPathExpression::eOP_FUNCTION_TRUE },
-	{ XPathFunctionTable::s_count, XPathExpression::eOP_FUNCTION_COUNT  },
-	{ XPathFunctionTable::s_false, XPathExpression::eOP_FUNCTION_FALSE },
-	{ XPathFunctionTable::s_floor, XPathExpression::eOP_FUNCTION_FLOOR },
-	{ XPathFunctionTable::s_round, XPathExpression::eOP_FUNCTION_ROUND },
-	{ XPathFunctionTable::s_number, XPathExpression::eOP_FUNCTION_NUMBER_0 },
-	{ XPathFunctionTable::s_boolean, XPathExpression::eOP_FUNCTION_BOOLEAN },
-	{ XPathFunctionTable::s_ceiling, XPathExpression::eOP_FUNCTION_CEILING },
-	{ XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
-	{ XPathProcessorImpl::s_positionString, XPathExpression::eOP_FUNCTION_POSITION },
-	{ XPathFunctionTable::s_localName, XPathExpression::eOP_FUNCTION_LOCALNAME_0 },
-	{ XPathFunctionTable::s_stringLength, XPathExpression::eOP_FUNCTION_STRINGLENGTH_0 },
-	{ XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
+    { XPathFunctionTable::s_not, XPathExpression::eOP_FUNCTION_NOT },
+    { XPathFunctionTable::s_sum, XPathExpression::eOP_FUNCTION_SUM },
+    { XPathProcessorImpl::s_lastString, XPathExpression::eOP_FUNCTION_LAST },
+    { XPathFunctionTable::s_name, XPathExpression::eOP_FUNCTION_NAME_0 },
+    { XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
+    { XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
+    { XPathFunctionTable::s_true, XPathExpression::eOP_FUNCTION_TRUE },
+    { XPathFunctionTable::s_count, XPathExpression::eOP_FUNCTION_COUNT  },
+    { XPathFunctionTable::s_false, XPathExpression::eOP_FUNCTION_FALSE },
+    { XPathFunctionTable::s_floor, XPathExpression::eOP_FUNCTION_FLOOR },
+    { XPathFunctionTable::s_round, XPathExpression::eOP_FUNCTION_ROUND },
+    { XPathFunctionTable::s_number, XPathExpression::eOP_FUNCTION_NUMBER_0 },
+    { XPathFunctionTable::s_boolean, XPathExpression::eOP_FUNCTION_BOOLEAN },
+    { XPathFunctionTable::s_ceiling, XPathExpression::eOP_FUNCTION_CEILING },
+    { XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
+    { XPathProcessorImpl::s_positionString, XPathExpression::eOP_FUNCTION_POSITION },
+    { XPathFunctionTable::s_localName, XPathExpression::eOP_FUNCTION_LOCALNAME_0 },
+    { XPathFunctionTable::s_stringLength, XPathExpression::eOP_FUNCTION_STRINGLENGTH_0 },
+    { XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
 };
 
-const XPathProcessorImpl::size_type		XPathProcessorImpl::s_functionTableSize =
-	sizeof(s_functionTable) / sizeof(s_functionTable[0]);
+const XPathProcessorImpl::size_type     XPathProcessorImpl::s_functionTableSize =
+    sizeof(s_functionTable) / sizeof(s_functionTable[0]);
 
 
 
-const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_nodeTypeTable[] =
+const XPathProcessorImpl::TableEntry    XPathProcessorImpl::s_nodeTypeTable[] =
 {
-	{ XPathProcessorImpl::s_asteriskString, XPathExpression::eNODETYPE_ANYELEMENT },
-	{ XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
-	{ XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
-	{ XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
-	{ XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
+    { XPathProcessorImpl::s_asteriskString, XPathExpression::eNODETYPE_ANYELEMENT },
+    { XPathProcessorImpl::s_nodeString, XPathExpression::eNODETYPE_NODE },
+    { XPathProcessorImpl::s_textString, XPathExpression::eNODETYPE_TEXT },
+    { XPathProcessorImpl::s_commentString, XPathExpression::eNODETYPE_COMMENT },
+    { XPathProcessorImpl::s_piString, XPathExpression::eNODETYPE_PI },
 };
 
-const XPathProcessorImpl::size_type		XPathProcessorImpl::s_nodeTypeTableSize =
-	sizeof(s_nodeTypeTable) / sizeof(s_nodeTypeTable[0]);
+const XPathProcessorImpl::size_type     XPathProcessorImpl::s_nodeTypeTableSize =
+    sizeof(s_nodeTypeTable) / sizeof(s_nodeTypeTable[0]);
 
 
 
-const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_axisTable[] =
+const XPathProcessorImpl::TableEntry    XPathProcessorImpl::s_axisTable[] =
 {
-	{ XPathProcessorImpl::s_selfString, XPathExpression::eFROM_SELF },
-	{ XPathProcessorImpl::s_childString, XPathExpression::eFROM_CHILDREN },
-	{ XPathProcessorImpl::s_parentString, XPathExpression::eFROM_PARENT },
-	{ XPathProcessorImpl::s_ancestorString, XPathExpression::eFROM_ANCESTORS },
-	{ XPathProcessorImpl::s_attributeString, XPathExpression::eFROM_ATTRIBUTES },
-	{ XPathProcessorImpl::s_followingString, XPathExpression::eFROM_FOLLOWING },
-	{ XPathProcessorImpl::s_namespaceString, XPathExpression::eFROM_NAMESPACE },
-	{ XPathProcessorImpl::s_precedingString, XPathExpression::eFROM_PRECEDING },
-	{ XPathProcessorImpl::s_descendantString, XPathExpression::eFROM_DESCENDANTS },
-	{ XPathProcessorImpl::s_ancestorOrSelfString, XPathExpression::eFROM_ANCESTORS_OR_SELF },
-	{ XPathProcessorImpl::s_followingSiblingString, XPathExpression::eFROM_FOLLOWING_SIBLINGS },
-	{ XPathProcessorImpl::s_precedingSiblingString, XPathExpression::eFROM_PRECEDING_SIBLINGS },
-	{ XPathProcessorImpl::s_descendantOrSelfString, XPathExpression::eFROM_DESCENDANTS_OR_SELF },
+    { XPathProcessorImpl::s_selfString, XPathExpression::eFROM_SELF },
+    { XPathProcessorImpl::s_childString, XPathExpression::eFROM_CHILDREN },
+    { XPathProcessorImpl::s_parentString, XPathExpression::eFROM_PARENT },
+    { XPathProcessorImpl::s_ancestorString, XPathExpression::eFROM_ANCESTORS },
+    { XPathProcessorImpl::s_attributeString, XPathExpression::eFROM_ATTRIBUTES },
+    { XPathProcessorImpl::s_followingString, XPathExpression::eFROM_FOLLOWING },
+    { XPathProcessorImpl::s_namespaceString, XPathExpression::eFROM_NAMESPACE },
+    { XPathProcessorImpl::s_precedingString, XPathExpression::eFROM_PRECEDING },
+    { XPathProcessorImpl::s_descendantString, XPathExpression::eFROM_DESCENDANTS },
+    { XPathProcessorImpl::s_ancestorOrSelfString, XPathExpression::eFROM_ANCESTORS_OR_SELF },
+    { XPathProcessorImpl::s_followingSiblingString, XPathExpression::eFROM_FOLLOWING_SIBLINGS },
+    { XPathProcessorImpl::s_precedingSiblingString, XPathExpression::eFROM_PRECEDING_SIBLINGS },
+    { XPathProcessorImpl::s_descendantOrSelfString, XPathExpression::eFROM_DESCENDANTS_OR_SELF },
 };
 
-const XPathProcessorImpl::size_type		XPathProcessorImpl::s_axisTableSize =
-	sizeof(s_axisTable) / sizeof(s_axisTable[0]);
+const XPathProcessorImpl::size_type     XPathProcessorImpl::s_axisTableSize =
+    sizeof(s_axisTable) / sizeof(s_axisTable[0]);
 
 
-const XPathProcessorImpl::TableEntry	XPathProcessorImpl::s_dummyEntry =
+const XPathProcessorImpl::TableEntry    XPathProcessorImpl::s_dummyEntry =
 {
-	0, XPathExpression::eENDOP
+    0, XPathExpression::eENDOP
 };
 
 

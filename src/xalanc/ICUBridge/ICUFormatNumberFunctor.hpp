@@ -45,17 +45,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef StylesheetExecutionContextDefault::FormatNumberFunctor FormatNumberFunctor;
 
 #if defined(XALAN_HAS_CPP_NAMESPACE)
-	typedef U_ICU_NAMESPACE::DecimalFormat	DecimalFormatType;
+    typedef U_ICU_NAMESPACE::DecimalFormat  DecimalFormatType;
 #else
-	typedef DecimalFormat					DecimalFormatType;
+    typedef DecimalFormat                   DecimalFormatType;
 #endif
 
 struct DecimalFormatCacheStruct
 {
     DecimalFormatCacheStruct(
         MemoryManagerType&                  theManager,
-        const XalanDecimalFormatSymbols&	theDFS,
-        DecimalFormatType*					theFormatter) :
+        const XalanDecimalFormatSymbols&    theDFS,
+        DecimalFormatType*                  theFormatter) :
 
         m_DFS(theDFS, theManager),
         m_formatter(theFormatter)
@@ -81,21 +81,21 @@ struct DecimalFormatCacheStruct
     }
 
     bool
-        operator==(const DecimalFormatCacheStruct&	theRHS) const
+        operator==(const DecimalFormatCacheStruct&  theRHS) const
     {
         return this == &theRHS;
     }
 #endif
 
-    XalanDecimalFormatSymbols	m_DFS;
+    XalanDecimalFormatSymbols   m_DFS;
 
-    DecimalFormatType *	m_formatter;
+    DecimalFormatType * m_formatter;
 
     struct DecimalFormatDeleteFunctor
     {
 
         void
-            operator()(DecimalFormatCacheStruct&	theStruct) const
+            operator()(DecimalFormatCacheStruct&    theStruct) const
         {
             delete theStruct.m_formatter;
         }
@@ -103,18 +103,18 @@ struct DecimalFormatCacheStruct
 
     struct DecimalFormatFindFunctor
     {
-        DecimalFormatFindFunctor(const XalanDecimalFormatSymbols*	theDFS) :
+        DecimalFormatFindFunctor(const XalanDecimalFormatSymbols*   theDFS) :
             m_DFS(theDFS)
             {
             }
 
         bool
-        operator()(DecimalFormatCacheStruct&	theStruct) const
+        operator()(DecimalFormatCacheStruct&    theStruct) const
         {
             return theStruct.m_DFS == (*m_DFS);
         }
 
-        const XalanDecimalFormatSymbols * const	m_DFS;
+        const XalanDecimalFormatSymbols * const m_DFS;
     };
 
 private:
@@ -133,84 +133,95 @@ class XALAN_ICUBRIDGE_EXPORT ICUFormatNumberFunctor : public FormatNumberFunctor
 {
 public:
 
-	ICUFormatNumberFunctor(MemoryManagerType& theManager);
+    ICUFormatNumberFunctor(MemoryManagerType& theManager);
 
-	static ICUFormatNumberFunctor*
+    static ICUFormatNumberFunctor*
     create(MemoryManagerType& theManager);
 
-	virtual
-	~ICUFormatNumberFunctor();
+    virtual
+    ~ICUFormatNumberFunctor();
 
-	virtual void
-		operator() (
-		XPathExecutionContext&				executionContext,
-		double								theNumber,
-		const XalanDOMString&				thePattern,
-		const XalanDecimalFormatSymbols*	theDFS,
-		XalanDOMString&						theResult,
-		const XalanNode*					context = 0,
-		const LocatorType*					locator = 0) const;
-	
+    virtual void
+    operator() (
+        XPathExecutionContext&              executionContext,
+        double                              theNumber,
+        const XalanDOMString&               thePattern,
+        const XalanDecimalFormatSymbols*    theDFS,
+        XalanDOMString&                     theResult,
+        const XalanNode*                    context = 0,
+        const LocatorType*                  locator = 0) const;
+    
+
+    class UnlocalizePatternFunctor
+    {
+    public:
+        UnlocalizePatternFunctor(const XalanDecimalFormatSymbols&   theDFS):
+            m_DFS(theDFS)
+        {
+        }
+
+        XalanDOMString&
+        operator()(const XalanDOMString&    thePattern, XalanDOMString& theResult) const;
+
+    private:
+        const XalanDecimalFormatSymbols& m_DFS;
+    };
+
+    typedef XalanList<DecimalFormatCacheStruct>         DecimalFormatCacheListType;
 
 
-	class UnlocalizePatternFunctor
-	{
-	public:
-		UnlocalizePatternFunctor(const XalanDecimalFormatSymbols&	theDFS):
-			m_DFS(theDFS)
-		{
-		}
-
-		XalanDOMString&
-		operator()(const XalanDOMString&	thePattern, XalanDOMString& theResult) const;
-
-	private:
-		const XalanDecimalFormatSymbols& m_DFS;
-	};
-
-	typedef XalanList<DecimalFormatCacheStruct>			DecimalFormatCacheListType;
-
-
-	DecimalFormatType * getCachedDecimalFormat(const XalanDecimalFormatSymbols &theDFS) const;
-
-	bool
-	doFormat(	
-		double								theNumber,
-		const XalanDOMString&				thePattern,
-		XalanDOMString&						theResult,
-		const XalanDecimalFormatSymbols*	theDFS = 0) const;
-
-	bool
-	doICUFormat(
-		double								theNumber,
-		const XalanDOMString&				thePattern,
-		XalanDOMString&						theResult,
-		DecimalFormatType*					theFormatter = 0) const;
-
-	void
-	cacheDecimalFormat(
-		DecimalFormatType*					theFormatter,
-		const XalanDecimalFormatSymbols&	theDFS) const;
-
-	DecimalFormat *
-	createDecimalFormat(
-		const XalanDecimalFormatSymbols&	theXalanDFS) const;
-
-	enum { eCacheMax = 10 };
-
-	DecimalFormatType * m_defaultDecimalFormat;
-	
-	mutable DecimalFormatCacheListType m_decimalFormatCache;
-
-	ICUFormatNumberFunctor&
-	operator=(const ICUFormatNumberFunctor&);
-
-	bool
-	operator==(const ICUFormatNumberFunctor&) const;
 private:
-    		 MemoryManagerType& m_memoryManager;
+
+    DecimalFormatType*
+    getCachedDecimalFormat(const XalanDecimalFormatSymbols &theDFS) const;
+
+    bool
+    doFormat(   
+        double                              theNumber,
+        const XalanDOMString&               thePattern,
+        XalanDOMString&                     theResult,
+        const XalanDecimalFormatSymbols*    theDFS = 0) const;
+
+    bool
+    doICUFormat(
+        double                              theNumber,
+        const XalanDOMString&               thePattern,
+        XalanDOMString&                     theResult,
+        DecimalFormatType*                  theFormatter = 0) const;
+
+    void
+    cacheDecimalFormat(
+        DecimalFormatType*                  theFormatter,
+        const XalanDecimalFormatSymbols&    theDFS) const;
+
+    DecimalFormat *
+    createDecimalFormat(
+        const XalanDecimalFormatSymbols&    theXalanDFS) const;
+
+    enum { eCacheMax = 10u };
+
+private:
+
+    // These are not implemented...
+    ICUFormatNumberFunctor&
+    operator=(const ICUFormatNumberFunctor&);
+
+    bool
+    operator==(const ICUFormatNumberFunctor&) const;
+
+
+    // Data members...
+    mutable DecimalFormatCacheListType  m_decimalFormatCache;
+
+    DecimalFormatType* const    m_defaultDecimalFormat;
+
+    MemoryManagerType&  m_memoryManager;
 };
+
+
 
 XALAN_CPP_NAMESPACE_END
 
-#endif	// FUNCTIONICUFORMATNUMBERFUNCTOR_HEADER_GUARD_1357924680
+
+
+#endif  // FUNCTIONICUFORMATNUMBERFUNCTOR_HEADER_GUARD_1357924680

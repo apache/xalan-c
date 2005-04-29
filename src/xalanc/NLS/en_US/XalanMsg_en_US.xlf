@@ -50,8 +50,8 @@
 </trans-unit>
 
 <trans-unit id="FunctionRequiresNonNullContextNode_1Param">
-		<source>The function '{0}' requires a non-null context node.</source>
-		<target>The function '{0}' requires a non-null context node.</target>
+		<source>Internal error: The function '{0}' requires a non-null context node.</source>
+		<target>Internal error: The function '{0}' requires a non-null context node.</target>
 </trans-unit>
 
 <trans-unit id="FunctionTakesTwoArguments_1Param">
@@ -79,44 +79,39 @@
 		<target>Cannot convert '{0}' to '{1}'.</target>
 </trans-unit>
 
-<trans-unit id="UnknownOpCode_1Param">
-		<source>'{0}' is an unknown op code.</source>
-		<target>'{0}' is an unknown op code.</target>
-</trans-unit>
-
 <trans-unit id="ExpressionDoesNotEvaluateToNodeSet">
 		<source>The expression does not evaluate to a node-set.</source>
 		<target>The expression does not evaluate to a node-set.</target>
 </trans-unit>
 
-<trans-unit id="UnknownAxis">
-		<source>Unknown axis in XPath expression.</source>
-		<target>Unknown axis in XPath expression.</target>
+<trans-unit id="UnknownAxis_1Param">
+		<source>Internal error: An unknown axis '{0}' was detected.</source>
+		<target>Internal error: An unknown axis '{0}' was detected.</target>
 </trans-unit>
 
 <trans-unit id="CannotEvaluateXPathExpressionAsMatchPattern">
-		<source>An XPath expression cannot be evaluated as match pattern.</source>
-		<target>An XPath expression cannot be evaluated as match pattern.</target>
+		<source>Internal error: An XPath expression cannot be evaluated as match pattern.</source>
+		<target>Internal error: An XPath expression cannot be evaluated as match pattern.</target>
 </trans-unit>
 
 <trans-unit id="ArgLengthNodeTestIsIncorrect_1Param">
-		<source>Argument length of '{0}' node test is incorrect.</source>
-		<target>Argument length of '{0}' node test is incorrect.</target>
+		<source>Internal error: The argument count of '{0}' was detected in a node test.</source>
+		<target>Internal error: The argument count of '{0}' was detected in a node test.</target>
 </trans-unit>
 
 <trans-unit id="InvalidOpcodeWasDetected_1Param">
-		<source>An invalid op code '{0}' was detected.</source>
-		<target>An invalid op code '{0}' was detected.</target>
+		<source>Internal error: An invalid op code '{0}' was detected.</source>
+		<target>Internal error: An invalid op code '{0}' was detected.</target>
 </trans-unit>
 
 <trans-unit id="InvalidNumberOfArgsWasDetected_3Param">
-		<source>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</source>
-		<target>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</target>
+		<source>Internal error: An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</source>
+		<target>Internal error: An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</target>
 </trans-unit>
 
 <trans-unit id="InvalidNumberOfArgsWasSupplied_2Param">
-		<source>An invalid argument of '{0}' was supplied for op code '{1}'.</source>
-		<target>An invalid argument of '{0}' was supplied for op code '{1}'.</target>
+		<source>Internal error: An invalid number of arguments '{0}' was supplied for op code '{1}'.</source>
+		<target>Internal error: An invalid number of arguments '{0}' was supplied for op code '{1}'.</target>
 </trans-unit>
 
 <trans-unit id="RemainingTokens">
@@ -162,6 +157,11 @@
 <trans-unit id="PrefixIsBoundToZeroLengthURI_1Param">
 		<source>The prefix '{0}' is bound to a zero-length URI.</source>
 		<target>The prefix '{0}' is bound to a zero-length URI.</target>
+</trans-unit>
+
+<trans-unit id="PrefixIsNotDeclared_1Param">
+		<source>The prefix '{0}' is not declared.</source>
+		<target>The prefix '{0}' is not declared.</target>
 </trans-unit>
 
 <trans-unit id="NotFoundWhatExpected_2Param">
@@ -239,11 +239,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The variable '{0}' is not bound.</target>
 </trans-unit>
 
-<trans-unit id="PrefixIsNotDeclared_1Param">
-		<source>The prefix '{0}' is not declared.</source>
-		<target>The prefix '{0}' is not declared.</target>
-</trans-unit>
-
 <trans-unit id="FunctionTakes2ArgsAtLeast_1Param">
 		<source>The function '{0}' requires two or more arguments.</source>
 		<target>The function '{0}' requires two or more arguments.</target>
@@ -289,11 +284,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The element {0} is an unknown XSLT element.</target>
 </trans-unit>
 
-<trans-unit id="IllegalTopLevelElement">
-		<source>Illegal top level element.</source>
-		<target>Illegal top level element.</target>
-</trans-unit>
-
 <trans-unit id="NameIs_1Param">
 		<source> name="{0}" </source>
 		<target> name="{0}" </target>
@@ -307,11 +297,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 <trans-unit id="CantCreateItemInResultTree">
 		<source>Cannot create an item in result tree.</source>
 		<target>Cannot create an item in result tree.</target>
-</trans-unit>
-
-<trans-unit id="PrefixMustResolveToNamespace_1Param">
-		<source>Prefix must resolve to a namespace: {0}.</source>
-		<target>Prefix must resolve to a namespace: {0}.</target>
 </trans-unit>
 
 <trans-unit id="LeftBraceCannotAppearWithinExpression">
@@ -351,9 +336,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The attribute '{0}' has a value '{1}' which is not a valid QName.</target>
 </trans-unit>
 
-<trans-unit id="TemplateMustHaveAttribute_2Param">
-		<source>'{0}' must have a '{1}' attribute.</source>
-		<target>'{0}' must have a '{1}' attribute.</target>
+<trans-unit id="ElementMustHaveAttribute_2Param">
+		<source>The element '{0}' must have a '{1}' attribute.</source>
+		<target>The element '{0}' must have a '{1}' attribute.</target>
 </trans-unit>
 
 <trans-unit id="CannotFindNamedTemplate">
@@ -361,7 +346,7 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The template name specified in the 'xsl:call-template' instruction was not found.</target>
 </trans-unit>
 
-<trans-unit id="ElementHasIllegalValue_3Param">
+<trans-unit id="ElementHasIllegalAttributeValue_3Param">
 		<source>The element '{0}' has an attribute '{1}' with an illegal value of '{2}'.</source>
 		<target>The element '{0}' has an attribute '{1}' with an illegal value of '{2}'.</target>
 </trans-unit>
@@ -381,17 +366,7 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The xsl:sort 'data-type' attribute evaluates to an unknown data-type. The data-type will be 'text'.</target>
 </trans-unit>
 
-<trans-unit id="UndeclaredNamespacePrefix_1Param">
-		<source>The namespace prefix '{0}' is not declared.</source>
-		<target>The namespace prefix '{0}' is not declared.</target>
-</trans-unit>
-
-<trans-unit id="AttributeHasIllegalValue_1Param">
-		<source> The attribute '{0}' has an illegal value.</source>
-		<target> The attribute '{0}' has an illegal value.</target>
-</trans-unit>
-
-<trans-unit id="Grouping_separatorValueMustSeOneCharacterLength">
+<trans-unit id="GroupingSeparatorValueMustBeOneCharacterLength">
 		<source>The grouping-separator value must be one character in length.</source>
 		<target>The grouping-separator value must be one character in length.</target>
 </trans-unit>
@@ -400,10 +375,10 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<source>The numbering format '{0}' is not yet supported.</source>
 		<target>The numbering format '{0}' is not yet supported.</target>
 </trans-unit>
-      		
-<trans-unit id="NameCanNotBe_1Param">
-		<source>A processing instruction name cannot be '{0}'.</source>
-		<target>A processing instruction name cannot be '{0}'.</target>
+
+<trans-unit id="PINameInvalid_1Param">
+		<source>The processing instruction name '{0}' is invalid.</source>
+		<target>The processing instruction name '{0}' is invalid.</target>
 </trans-unit>
 
 <trans-unit id="NameMustBeValidNCName">
@@ -411,19 +386,19 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>A processing instruction name must be a valid NCName.</target>
 </trans-unit>
 
-<trans-unit id="RequiresEitherNameOrMatchAttribute_1Param">
-		<source>'{0}' requires either a 'name' or 'match' attribute.</source>
-		<target>'{0}' requires either a 'name' or 'match' attribute.</target>
+<trans-unit id="ElementRequiresEitherNameOrMatchAttribute_1Param">
+		<source>The element '{0}' requires either a 'name' or 'match' attribute.</source>
+		<target>The element '{0}' requires either a 'name' or 'match' attribute.</target>
 </trans-unit>
 
-<trans-unit id="TemplateHasIllegalAttribute_2Param">
+<trans-unit id="ElementHasIllegalAttribute_2Param">
 		<source>'{0}' has an invalid '{1}' attribute.</source>
 		<target>'{0}' has an invalid '{1}' attribute.</target>
 </trans-unit>
 
-<trans-unit id="TemplateIsNotAllowedAtThisPosition_1Param">
-		<source>'{0}' is not allowed at this position in the stylesheet.</source>
-		<target>'{0}' is not allowed at this position in the stylesheet.</target>
+<trans-unit id="ElementIsNotAllowedAtThisPosition_1Param">
+		<source>The element '{0}' is not allowed at this position in the stylesheet.</source>
+		<target>The element '{0}' is not allowed at this position in the stylesheet.</target>
 </trans-unit>
 
 <trans-unit id="ElemVariableInstanceAddedToWrongStylesheet">
@@ -536,14 +511,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The variable '{0}' is not defined.</target>
 </trans-unit>
 
-<trans-unit id="CannotResolvePrefix_1Param">
-		<source>Could not resolve a prefix '{0}'.</source>
-		<target>Could not resolve a prefix '{0}'.</target>
-</trans-unit>
-
 <trans-unit id="IsNotAllowedInThisPosition_1Param">
-		<source>Element '{0}' is not allowed at this position in the stylesheet.</source>
-		<target>Element '{0}' is not allowed at this position in the stylesheet.</target>
+		<source>The element '{0}' is not allowed at this position in the stylesheet.</source>
+		<target>The element '{0}' is not allowed at this position in the stylesheet.</target>
 </trans-unit>
 
 <trans-unit id="NotParentedBy_2Param">
@@ -551,20 +521,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Element '{0}' not parented by '{1}'.</target>
 </trans-unit>
 
-<trans-unit id="Misplaced_1Param">
-		<source>Element {0} is misplaced.</source>
-		<target>Element {0} is misplaced.</target>
-</trans-unit>
-      		
 <trans-unit id="IsNotAllowedInsideTemplate_1Param">
-		<source>Appearance of {0} is not allowed inside a template.</source>
-		<target>Appearance of {0} is not allowed inside a template.</target>
-</trans-unit>
-       		
-       		
-<trans-unit id="IsNotAllowedInsideStylesheet_1Param">
-		<source>Element {0} is not allowed inside a stylesheet.</source>
-		<target>Element {0} is not allowed inside a stylesheet.</target>
+		<source>The element '{0}' is not allowed inside a template.</source>
+		<target>The element '{0}' is not allowed inside a template.</target>
 </trans-unit>
 
 <trans-unit id="StylesheetAttribDidNotSpecifyVersionAttrib">
@@ -617,9 +576,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>There is no valid result target </target>
 </trans-unit>
 
-<trans-unit id="HasAnUnknownMethod_2Param">
-		<source>Attribute {0} has an unknown method: {1}.</source>
-		<target>Attribute {0} has an unknown method: {1}.</target>
+<trans-unit id="OutputHasAnUnknownMethod_1Param">
+		<source>xsl:output has an unknown method '{1}'.</source>
+		<target>xsl:output has an unknown method '{1}'.</target>
 </trans-unit>
 
 <trans-unit id="UnsupportedXalanSpecificAttribute_1Param">
@@ -633,13 +592,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="TextAndColumnNumber_2Param">
-		<source>Line {0}, Column {0} ,</source>
-		<target>Line {0}, Column {0} ,</target>
-</trans-unit>
-
-<trans-unit id="CouldNotResolvePrefix">
-		<source>Warning: Could not resolve prefix</source>
-		<target>Warning: Could not resolve prefix</target>
+		<source>Line {0}, Column {0},</source>
+		<target>Line {0}, Column {0},</target>
 </trans-unit>
 
 <trans-unit id="MatchIs_1Param">
@@ -653,8 +607,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="AtFileLineColumn_3Param">
-		<source>Occurred at file {0} , line {1} , column {2}.</source>
-		<target>Occurred at file {0} , line {1} , column {2}.</target>
+		<source>Occurred at file {0}, line {1}, column {2}.</source>
+		<target>Occurred at file {0}, line {1}, column {2}.</target>
 </trans-unit>
 
 <trans-unit id="FatalError">
@@ -663,18 +617,18 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="FormatNumberFailed">
-		<source>The call to 'format-number' function failed.</source>
-		<target>The call to 'format-number' function failed.</target>
+		<source>The call to 'format-number()' failed.</source>
+		<target>The call to 'format-number()' failed.</target>
 </trans-unit>
 
-<trans-unit id="UnknownMatchOperation">
-		<source>Found unknown match operation!</source>
-		<target>Found unknown match operation!</target>
+<trans-unit id="UnknownMatchOpCode_1Param">
+		<source>Internal error: An invalid match op code '{0}' was detected.</source>
+		<target>Internal error: An invalid match op code '{0}' was detected.</target>
 </trans-unit>
 
 <trans-unit id="AtUnknownFileLineColumn_2Param">
-		<source>Occurred at unknown file , line {0} , column {1}.</source>
-		<target>Occurred at unknown file , line {0} , column {1}.</target>
+		<source>Occurred at unknown file, line {0}, column {1}.</source>
+		<target>Occurred at unknown file, line {0}, column {1}.</target>
 </trans-unit>
 
 <trans-unit id="EmptyNodeList">
@@ -742,9 +696,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Setup of {0} </target>
 </trans-unit>
 
-<trans-unit id="NodePointedByFragment">
-		<source>The Node pointed to by the fragment identifier was not an element: {0}.</source>
-		<target>The node pointed to by the fragment identifier was not an element: {0}.</target>
+<trans-unit id="NodePointedByFragment_1Param">
+		<source>The node pointed to by the fragment identifier '{0}' was not an Element.</source>
+		<target>The node pointed to by the fragment identifier '{0}' was not an Element.</target>
 </trans-unit>
 
 <trans-unit id="ParsingAndPreparing_1Param">
@@ -773,18 +727,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="ElementRequiresAttribute_2Param">
-		<source>The '{0}' element requires a '{1}' attribute.</source>
-		<target>The '{0}' element requires a '{1}' attribute.</target>
+		<source>'{0}' requires a '{1}' attribute.</source>
+		<target>'{0}' requires a '{1}' attribute.</target>
 </trans-unit>
 
 <trans-unit id="InputXSL">
 		<source>Input XSL</source>
 		<target>Input XSL</target>
-</trans-unit>
-
-<trans-unit id="UnmatchedBrace">
-		<source>An unmatched '}'</source>
-		<target>An unmatched '}'</target>
 </trans-unit>
 
 <trans-unit id="ConflictsFound">
@@ -798,13 +747,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="FunctionAcceptsTwoArguments_1Param">
-		<source>The {0} function accepts two arguments.</source>
-		<target>The {0} function accepts two arguments.</target>
+		<source>The function '{0}' accepts two arguments.</source>
+		<target>The function '{0}' accepts two arguments.</target>
 </trans-unit>
 
 <trans-unit id="NoPrefixResolverAvailable">
-		<source>No prefix resolver is available in the function 'evaluate'.</source>
-		<target>No prefix resolver is available in the function 'evaluate'.</target>
+		<source>No PrefixResolver is available in the function 'evaluate()'.</source>
+		<target>No PrefixResolver is available in the function 'evaluate()'.</target>
 </trans-unit>
 
 <trans-unit id="InvalidArgumentTypeFunction_1Param">
@@ -812,9 +761,14 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Invalid argument type in the function '{0}'.</target>
 </trans-unit>
 
-<trans-unit id="InvalidSurrogate_1Param">
-		<source>Invalid UTF-16 surrogate detected :{0}.</source>
-		<target>Invalid UTF-16 surrogate detected :{0}.</target>
+<trans-unit id="InvalidHighSurrogate_1Param">
+		<source>Invalid UTF-16 high surrogate detected: {0}.</source>
+		<target>Invalid UTF-16 high surrogate detected: {0}.</target>
+</trans-unit>
+
+<trans-unit id="InvalidSurrogatePair_2Param">
+		<source>Invalid UTF-16 surrogate pair detected: {0}:{0}.</source>
+		<target>Invalid UTF-16 surrogate pair detected: {0}:{0}.</target>
 </trans-unit>
 
 <trans-unit id="EXSLTFunctionAcceptsOneArgument_1Param">
@@ -987,18 +941,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="UnrepresentableCharacter_2Param">
-		<source>The character U+{0} cannot be represented in the encoding '{1}'.</source>
-		<target>The character U+{0} cannot be represented in the encoding '{1}'.</target>
+		<source>The Unicode character U+{0} cannot be represented in the encoding '{1}'.</source>
+		<target>The Unicode character U+{0} cannot be represented in the encoding '{1}'.</target>
 </trans-unit>
 
-<trans-unit id="InvalidUFT16Surrogate_2Param">
-		<source>Invalid UTF-16 surrogate detected: {0} {1}.</source>
-		<target>Invalid UTF-16 surrogate detected: {0} {1}.</target>
-</trans-unit>
-
-<trans-unit id="InvalidCharDetected_1Param">
-		<source>Invalid character detected {0}.</source>
-		<target>Invalid character detected {0}.</target>
+<trans-unit id="InvalidScalar_1Param">
+		<source>'{0}' is an invalid Unicode scalar value.</source>
+		<target>'{0}' is an invalid Unicode scalar value.</target>
 </trans-unit>
 
 <trans-unit id="PrefixOfLengthZeroDetected">
@@ -1011,22 +960,22 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Input XML</target>
 </trans-unit>
 
-<trans-unit id="XslSortMustBeAscendOrDescend">
+<trans-unit id="SortMustBeAscendOrDescend">
 		<source>The xsl:sort 'order' value must be 'ascending' or 'descending'.</source>
 		<target>The xsl:sort 'order' value must be 'ascending' or 'descending'.</target>
 </trans-unit>
 
-<trans-unit id="XslSortDataTypeMustBe">
+<trans-unit id="SortDataTypeMustBe">
 		<source>The xsl:sort attribute 'data-type' value must be 'text', 'number' or a prefixed name.</source>
 		<target>The xsl:sort attribute 'data-type' value must be 'text', 'number' or a prefixed name.</target>
 </trans-unit>
 
-<trans-unit id="XslSortHasUnlnownDataType">
+<trans-unit id="SortHasUnknownDataType">
 		<source>The xsl:sort element has an unknown value in an attribute 'data-type'.  The data-type will be 'text'</source>
 		<target>The xsl:sort element has an unknown value in an attribute 'data-type'.  The data-type will be 'text'</target>
 </trans-unit>
 
-<trans-unit id="XslSortCaseOrderMustBe">
+<trans-unit id="SortCaseOrderMustBe">
 		<source>The xsl:sort attribute 'case-order' value must be 'upper-first' or 'lower-first'.</source>
 		<target>The xsl:sort attribute 'case-order' value must be 'upper-first' or 'lower-first'.</target>
 </trans-unit>

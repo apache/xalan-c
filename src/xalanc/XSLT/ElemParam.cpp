@@ -35,17 +35,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemParam::ElemParam(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemVariable(constructionContext,
-				 stylesheetTree,
-				 atts,
-				 lineNumber,
-				 columnNumber,
-				 StylesheetConstructionContext::ELEMNAME_PARAM)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemVariable(constructionContext,
+                 stylesheetTree,
+                 atts,
+                 lineNumber,
+                 columnNumber,
+                 StylesheetConstructionContext::ELEMNAME_PARAM)
 {
 }
 
@@ -54,51 +54,51 @@ ElemParam::ElemParam(
 const XalanDOMString&
 ElemParam::getElementName() const
 {
-	return Constants::ELEMNAME_PARAM_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_PARAM_WITH_PREFIX_STRING;
 }
 
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemParam::startElement(StylesheetExecutionContext&		executionContext) const
+ElemParam::startElement(StylesheetExecutionContext&     executionContext) const
 {
-	assert(m_qname != 0);
+    assert(m_qname != 0);
 
-	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
+    const XObjectPtr    obj = executionContext.getParamVariable(*m_qname);
 
-	// If not found, evaluate as variable for default value
-	if (obj.null() == true)
-	{
-		return ElemVariable::startElement(executionContext);
-	}
-	else
-	{
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireTraceEvent(
-				TracerEvent(
-					executionContext,					
-					*this));
-		}
-	}
-	return 0;
+    // If not found, evaluate as variable for default value
+    if (obj.null() == true)
+    {
+        return ElemVariable::startElement(executionContext);
+    }
+    else
+    {
+        if(0 != executionContext.getTraceListeners())
+        {
+            executionContext.fireTraceEvent(
+                TracerEvent(
+                    executionContext,                   
+                    *this));
+        }
+    }
+    return 0;
 }
 
 
 
 void
-ElemParam::endElement(StylesheetExecutionContext&		executionContext) const
+ElemParam::endElement(StylesheetExecutionContext&       executionContext) const
 {
-	assert(m_qname != 0);
+    assert(m_qname != 0);
 
-	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
+    const XObjectPtr    obj = executionContext.getParamVariable(*m_qname);
 
-	// If not found, evaluate as variable for default value
-	if (obj.null() == true)
-	{
-		ElemVariable::endElement(executionContext);
-	}
+    // If not found, evaluate as variable for default value
+    if (obj.null() == true)
+    {
+        ElemVariable::endElement(executionContext);
+    }
 }
 #endif
 
@@ -106,26 +106,26 @@ ElemParam::endElement(StylesheetExecutionContext&		executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemParam::execute(StylesheetExecutionContext&		executionContext) const
+ElemParam::execute(StylesheetExecutionContext&      executionContext) const
 {
-	assert(m_qname != 0);
+    assert(m_qname != 0);
 
-	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
+    const XObjectPtr    obj = executionContext.getParamVariable(*m_qname);
 
-	if (obj.null() == true)
-	{
-		ElemVariable::execute(executionContext);
-	}
-	else
-	{
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireTraceEvent(
-				TracerEvent(
-					executionContext,					
-					*this));
-		}
-	}
+    if (obj.null() == true)
+    {
+        ElemVariable::execute(executionContext);
+    }
+    else
+    {
+        if(0 != executionContext.getTraceListeners())
+        {
+            executionContext.fireTraceEvent(
+                TracerEvent(
+                    executionContext,                   
+                    *this));
+        }
+    }
 }
 #endif
 

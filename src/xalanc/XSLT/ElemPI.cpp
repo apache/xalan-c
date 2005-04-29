@@ -38,58 +38,57 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemPI::ElemPI(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_PI),
-	m_nameAVT(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_PI),
+    m_nameAVT(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_NAME))
-		{			
-			m_nameAVT =
-					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
-				processSpaceAttr(aname, atts, i, constructionContext))
-		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        if(equals(aname, Constants::ATTRNAME_NAME))
+        {           
+            m_nameAVT =
+                    constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false &&
+                processSpaceAttr(
+                    Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theGuard.get(),
-							Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
-
-	if(0 == m_nameAVT)
-	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
-                theGuard.get(),
-				Constants::ELEMNAME_PI_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_NAME),
-			0,
-			this);
-	}
+    if(0 == m_nameAVT)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_PI_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_NAME);
+    }
 }
 
 
@@ -103,7 +102,7 @@ ElemPI::~ElemPI()
 const XalanDOMString&
 ElemPI::getElementName() const
 {
-	return Constants::ELEMNAME_PI_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_PI_WITH_PREFIX_STRING;
 }
 
 
@@ -112,34 +111,28 @@ ElemPI::getElementName() const
 const ElemTemplateElement*
 ElemPI::startElement(StylesheetExecutionContext& executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
-	
-	XalanDOMString&	piName = executionContext.getAndPushCachedString();
+    ElemTemplateElement::startElement(executionContext);
+    
+    XalanDOMString& piName = executionContext.getAndPushCachedString();
 
-	m_nameAVT->evaluate(piName, *this, executionContext);
+    m_nameAVT->evaluate(piName, *this, executionContext);
 
-	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
-	{
-        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+    if(equalsIgnoreCaseASCII(
+            piName,
+            Constants::ATTRVAL_OUTPUT_METHOD_XML) ||
+       isValidNCName(piName) == false)
+    {
+        error(
+            executionContext,
+            XalanMessages::PINameInvalid_1Param,
+            piName);
+    }
 
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param, theGuard.get(), "xml"),
-			0, getLocator());
-	}
-	else if(!isValidNCName(piName))
-	{
-        StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+    XalanDOMString& theResult = executionContext.getAndPushCachedString();
 
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName, theGuard.get()),
-			0, getLocator());
-	}
+    executionContext.pushCopyTextNodesOnly(true);
 
-	XalanDOMString& theResult = executionContext.getAndPushCachedString();
-
-	executionContext.pushCopyTextNodesOnly(true);
-
-	return beginChildrenToString(executionContext,theResult);
+    return beginChildrenToString(executionContext,theResult);
 }
 
 
@@ -147,16 +140,16 @@ ElemPI::startElement(StylesheetExecutionContext& executionContext) const
 void
 ElemPI::endElement(StylesheetExecutionContext& executionContext) const
 {
-	endChildrenToString(executionContext);
+    endChildrenToString(executionContext);
 
-	XalanDOMString & theResult = executionContext.getAndPopCachedString();
-	XalanDOMString & piName = executionContext.getAndPopCachedString();
+    XalanDOMString & theResult = executionContext.getAndPopCachedString();
+    XalanDOMString & piName = executionContext.getAndPopCachedString();
 
-	executionContext.processingInstruction(
-				c_wstr(piName),
-				c_wstr(theResult));
+    executionContext.processingInstruction(
+                c_wstr(piName),
+                c_wstr(theResult));
 
-	executionContext.popCopyTextNodesOnly();
+    executionContext.popCopyTextNodesOnly();
 }
 #endif
 
@@ -164,69 +157,67 @@ ElemPI::endElement(StylesheetExecutionContext& executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemPI::execute(StylesheetExecutionContext&		executionContext) const
+ElemPI::execute(StylesheetExecutionContext&     executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
-	
-	StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    ElemTemplateElement::execute(executionContext);
+    
+    StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
 
-	XalanDOMString&		piName = theGuard.get();
+    XalanDOMString&     piName = theGuard.get();
 
-	m_nameAVT->evaluate(piName, *this, executionContext);
+    m_nameAVT->evaluate(piName, *this, executionContext);
 
-	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
-	{
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param,"xml"),
-			0, getLocator());
-	}
-	else if(!isValidNCName(piName))
-	{
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName),
-			0, getLocator());
-	}
+    if(equalsIgnoreCaseASCII(
+            piName,
+            Constants::ATTRVAL_OUTPUT_METHOD_XML) ||
+       isValidNCName(piName) == false)
+    {
+        error(
+            executionContext,
+            XalanMessages::PINameInvalid_1Param,
+            piName);
+    }
 
-	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+    StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly  theSetAndRestore(executionContext, true);
 
-	childrenToResultPI(
-			executionContext,
-			piName);
+    childrenToResultPI(
+            executionContext,
+            piName);
 }
 #endif
 
 
 
 bool
-ElemPI::childTypeAllowed(int	xslToken) const
+ElemPI::childTypeAllowed(int    xslToken) const
 {
-	bool	fResult = false;
-	
-	switch(xslToken)
-	{
-	// char-instructions 
-	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
-	case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
-	case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
-	case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
-	case StylesheetConstructionContext::ELEMNAME_COPY_OF:
-	case StylesheetConstructionContext::ELEMNAME_NUMBER:
-	case StylesheetConstructionContext::ELEMNAME_CHOOSE:
-	case StylesheetConstructionContext::ELEMNAME_IF:
-	case StylesheetConstructionContext::ELEMNAME_TEXT:
-	case StylesheetConstructionContext::ELEMNAME_COPY:
-	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
-	case StylesheetConstructionContext::ELEMNAME_MESSAGE:
-		fResult = true;
-		break;
-		
-	default:
-		break;
-	}
-	
-	return fResult;
+    bool    fResult = false;
+    
+    switch(xslToken)
+    {
+    // char-instructions 
+    case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
+    case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
+    case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
+    case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+    case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+    case StylesheetConstructionContext::ELEMNAME_NUMBER:
+    case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+    case StylesheetConstructionContext::ELEMNAME_IF:
+    case StylesheetConstructionContext::ELEMNAME_TEXT:
+    case StylesheetConstructionContext::ELEMNAME_COPY:
+    case StylesheetConstructionContext::ELEMNAME_VARIABLE:
+    case StylesheetConstructionContext::ELEMNAME_MESSAGE:
+        fResult = true;
+        break;
+        
+    default:
+        break;
+    }
+    
+    return fResult;
 }
 
 

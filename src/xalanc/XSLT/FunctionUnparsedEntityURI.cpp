@@ -60,8 +60,8 @@ FunctionUnparsedEntityURI::execute(
 
         executionContext.error(
             XalanMessageLoader::getMessage(
-                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 theGuard.get(),
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "unparsed-entity-uri"),
             context,
             locator);
@@ -107,8 +107,8 @@ const XalanDOMString&
 FunctionUnparsedEntityURI::getError(XalanDOMString&     theResult) const
 {
     return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 theResult,
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 "unparsed-entity-uri");
 }
 

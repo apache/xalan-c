@@ -44,7 +44,7 @@ const DoubleSupport::NumberUnion    DoubleSupport::s_negativeZero = { -s_positiv
 
 
 void
-DoubleSupport::initialize(MemoryManagerType&     /* theManager */)
+DoubleSupport::initialize()
 {
     // We initialize this at here because some
     // platforms have had issues with signals
@@ -304,8 +304,9 @@ DoubleSupport::negative(double  theDouble)
 
 
 double
-DoubleSupport::toDouble(const XalanDOMString&   theString,
-                        MemoryManagerType&      theManager)
+DoubleSupport::toDouble(
+            const XalanDOMString&   theString,
+            MemoryManager&          theManager)
 {
     return toDouble(c_wstr(theString), theManager);
 }
@@ -542,7 +543,7 @@ inline double
 convertHelper(
             const XalanDOMChar*     theString,
             bool                    fGotDecimalPoint,
-            MemoryManagerType&      theManager)
+            MemoryManager&          theManager)
 {
     // This is a big hack.  If the length of the
     // string is less than n characters, we'll convert
@@ -559,10 +560,12 @@ convertHelper(
     else
     {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        const char  theDecimalPointChar = std::localeconv()->decimal_point[0];
-#else
-        const char  theDecimalPointChar = localeconv()->decimal_point[0];
+        XALAN_USING_STD(localeconv)
+        XALAN_USING_STD(atof)
 #endif
+
+        const char  theDecimalPointChar =
+            localeconv()->decimal_point[0];
 
         // trim any whitespace
         consumeWhitespace(theString, theLength);
@@ -575,7 +578,11 @@ convertHelper(
             char    theBuffer[theBufferSize];
 
 #if defined(XALAN_NON_ASCII_PLATFORM)
-            translateWideString(theString, theBuffer, theLength, theDecimalPointChar);
+            translateWideString(
+                theString,
+                theBuffer,
+                theLength,
+                theDecimalPointChar);
 #else
             for(XalanDOMString::size_type i = 0; i < theLength; ++i)
             {
@@ -592,11 +599,7 @@ convertHelper(
             theBuffer[theLength] = '\0';
 #endif
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-            return std::atof(theBuffer);
-#else
             return atof(theBuffer);
-#endif
         }
         else
         {
@@ -607,16 +610,18 @@ convertHelper(
 
             CopyWideStringToVector(theString, theVector);
 #else
-            theVector.resize(theLength + 1, CharVectorType::value_type(0));
+            theVector.resize(
+                theLength + 1,
+                CharVectorType::value_type(0));
 
-            translateWideString(theString, &*theVector.begin(), theLength, theDecimalPointChar);
+            translateWideString(
+                theString,
+                &*theVector.begin(),
+                theLength,
+                theDecimalPointChar);
 #endif
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-            return std::atof(&*theVector.begin());
-#else
             return atof(&*theVector.begin());
-#endif
         }
     }
 }
@@ -624,8 +629,9 @@ convertHelper(
 
 
 double
-doConvert(const XalanDOMChar*   theString,
-          MemoryManagerType&      theManager)
+doConvert(
+            const XalanDOMChar*     theString,
+            MemoryManager&          theManager)
 {
     assert(theString != 0);
     assert(*theString != 0);
@@ -638,15 +644,19 @@ doConvert(const XalanDOMChar*   theString,
     }
     else
     {
-        return convertHelper(theString, fGotDecimalPoint,theManager);
+        return convertHelper(
+                    theString,
+                    fGotDecimalPoint,
+                    theManager);
     }
 }
 
 
 
 double
-DoubleSupport::toDouble(const XalanDOMChar*     theString,
-                        MemoryManagerType&      theManager)
+DoubleSupport::toDouble(
+            const XalanDOMChar*     theString,
+            MemoryManager&          theManager)
 {
     if (theString == 0 ||
         *theString == 0)

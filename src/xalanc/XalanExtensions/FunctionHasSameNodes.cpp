@@ -44,46 +44,46 @@ FunctionHasSameNodes::~FunctionHasSameNodes()
 
 XObjectPtr
 FunctionHasSameNodes::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	if (args.size() != 2)
-	{
-        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    if (args.size() != 2)
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-		executionContext.error(getError(theGuard.get()), context, locator);
-	}
+        executionContext.error(getError(theGuard.get()), context, locator);
+    }
 
-	assert(args[0].null() == false && args[1].null() == false);
+    assert(args[0].null() == false && args[1].null() == false);
 
-	const NodeRefListBase&	nodeset1 = args[0]->nodeset();
-	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
+    const NodeRefListBase&  nodeset1 = args[0]->nodeset();
+    const NodeRefListBase&  nodeset2 = args[1]->nodeset();
 
-	const NodeRefListBase::size_type	theLength = nodeset1.getLength();
+    const NodeRefListBase::size_type    theLength = nodeset1.getLength();
 
-	bool	fResult = true;
+    bool    fResult = true;
 
-	if (theLength != nodeset2.getLength())
-	{
-		fResult = false;
-	}
-	else
-	{
-		for (NodeRefListBase::size_type i = 0; i < theLength && fResult == true; ++i)
-		{
-			XalanNode* const	theNode = nodeset1.item(i);
-			assert(theNode != 0);
+    if (theLength != nodeset2.getLength())
+    {
+        fResult = false;
+    }
+    else
+    {
+        for (NodeRefListBase::size_type i = 0; i < theLength && fResult == true; ++i)
+        {
+            XalanNode* const    theNode = nodeset1.item(i);
+            assert(theNode != 0);
 
-			if (nodeset2.indexOf(theNode) == NodeRefListBase::npos)
-			{
-				fResult = false;
-			}
-		}
-	}
+            if (nodeset2.indexOf(theNode) == NodeRefListBase::npos)
+            {
+                fResult = false;
+            }
+        }
+    }
 
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+    return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
@@ -103,9 +103,9 @@ FunctionHasSameNodes::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionHasSameNodes::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsTwoArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsTwoArguments_1Param,
                 "has-same-nodes");
 
 }

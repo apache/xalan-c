@@ -36,6 +36,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(MemoryManager)
+
+
+
 // A class to help us support IEEE 754.
 class XALAN_PLATFORMSUPPORT_EXPORT DoubleSupport
 {
@@ -43,9 +47,10 @@ public:
 
     /**
      * Perform static initialization.  See class PlatformSupportInit.
+     *
      */
     static void
-    initialize(MemoryManagerType&      theManager);
+    initialize();
  
     /**
      * Perform static shut down.  See class PlatformSupportInit.
@@ -520,10 +525,13 @@ public:
      * point number.
      *
      * @param theString The string to convert.
+     * @param theManager The MemoryManager instance to use.
      * @return The result of the conversion
      */
     static double
-    toDouble(const XalanDOMString&  theString, MemoryManagerType&      theManager);
+    toDouble(
+            const XalanDOMString&   theString,
+            MemoryManager&          theManager);
 
     /**
      * Convert a string to a double value.  Returns
@@ -531,10 +539,13 @@ public:
      * point number.
      *
      * @param theString The string to convert.
+     * @param theManager The MemoryManager instance to use.
      * @return The result of the conversion
      */
     static double
-    toDouble(const XalanDOMChar*    theString, MemoryManagerType&      theManager);
+    toDouble(
+            const XalanDOMChar*     theString,
+            MemoryManager&          theManager);
 
     /**
      * Round a number according to the XPath

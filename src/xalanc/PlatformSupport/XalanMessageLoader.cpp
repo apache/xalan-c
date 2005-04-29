@@ -97,8 +97,8 @@ XalanMessageLoader::terminate()
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes    msgToLoad,
             XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad,
             const XalanDOMString&   repText1 )
 {
     assert(s_msgLoader != 0);
@@ -121,8 +121,8 @@ XalanMessageLoader::getMessage(
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes    msgToLoad,
             XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad,
             const XalanDOMString&   repText1, 
             const XalanDOMString&   repText2)
 {
@@ -147,8 +147,8 @@ XalanMessageLoader::getMessage(
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes    msgToLoad,
             XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad,
             const XalanDOMString&   repText1 ,
             const XalanDOMString&   repText2 ,
             const XalanDOMString&   repText3)
@@ -175,8 +175,8 @@ XalanMessageLoader::getMessage(
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes    msgToLoad,
-            XalanDOMString&         theResultMessage)
+            XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad)
 
 {
     assert(s_msgLoader != 0);
@@ -228,8 +228,8 @@ XalanMessageLoader::load(
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes    msgToLoad,
             XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad,
             const char*             repText1,
             const char*             repText2,
             const char*             repText3,
@@ -247,6 +247,8 @@ XalanMessageLoader::getMessage(
         repText3,
         repText4);
 
+    theResultMessage.assign(sBuffer);
+
     return theResultMessage;
 }
 
@@ -254,12 +256,12 @@ XalanMessageLoader::getMessage(
 
 XalanDOMString&
 XalanMessageLoader::getMessage(
-            XalanMessages::Codes     msgToLoad,
-            XalanDOMString&          theResultMessage,
-            const XalanDOMChar*      repText1, 
-            const XalanDOMChar*      repText2,
-            const XalanDOMChar*      repText3,
-            const XalanDOMChar*      repText4)
+            XalanDOMString&         theResultMessage,
+            XalanMessages::Codes    msgToLoad,
+            const XalanDOMChar*     repText1, 
+            const XalanDOMChar*     repText2,
+            const XalanDOMChar*     repText3,
+            const XalanDOMChar*     repText4)
 {
     XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
 
@@ -272,6 +274,8 @@ XalanMessageLoader::getMessage(
         repText2,
         repText3,
         repText4);
+
+    theResultMessage.assign(sBuffer);
 
     return theResultMessage;
 }

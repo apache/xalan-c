@@ -38,65 +38,65 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAlign : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAlign()
-	{
-	}
+    XalanEXSLTFunctionAlign()
+    {
+    }
 
 
-	virtual
-	~XalanEXSLTFunctionAlign()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAlign()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAlign*
+    virtual XalanEXSLTFunctionAlign*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
                     "align()");
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAlign&
-	operator=(const XalanEXSLTFunctionAlign&);
+    // Not implemented...
+    XalanEXSLTFunctionAlign&
+    operator=(const XalanEXSLTFunctionAlign&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAlign&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAlign&) const;
 
 
-	// Data members...
-	static const XalanDOMChar	s_centerString[];
-	static const XalanDOMChar	s_rightString[];
+    // Data members...
+    static const XalanDOMChar   s_centerString[];
+    static const XalanDOMChar   s_rightString[];
 };
 
 
@@ -105,60 +105,60 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionConcat : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionConcat() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionConcat() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionConcat()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionConcat()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionConcat*
+    virtual XalanEXSLTFunctionConcat*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
                     "concat()");
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionConcat&
-	operator=(const XalanEXSLTFunctionConcat&);
+    // Not implemented...
+    XalanEXSLTFunctionConcat&
+    operator=(const XalanEXSLTFunctionConcat&);
 
-	bool
-	operator==(const XalanEXSLTFunctionConcat&) const;
+    bool
+    operator==(const XalanEXSLTFunctionConcat&) const;
 };
 
 
@@ -167,82 +167,86 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionPadding : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionPadding(MemoryManagerType&  theManager) :
-		Function(),
-		m_space(s_spaceString, theManager)
-	{
-	}
+    XalanEXSLTFunctionPadding(MemoryManagerType&  theManager) :
+        Function(),
+        m_space(s_spaceString, theManager)
+    {
+    }
 
-	// A dummy constructor for use internally.  Do not use this one!!!!
-	XalanEXSLTFunctionPadding(MemoryManagerType&  theManager, int	/* theDummy */) :
-		Function(),
-		m_space(theManager)
-	{
-	}
+    // A dummy constructor for use internally.  Do not use this one!!!!
+    XalanEXSLTFunctionPadding(
+                MemoryManagerType&  theManager,
+                int                 /* theDummy */) :
+        Function(),
+        m_space(theManager)
+    {
+    }
 
-	XalanEXSLTFunctionPadding(const XalanEXSLTFunctionPadding& other, MemoryManagerType&  theManager) :
-		Function(other),
-		m_space(s_spaceString, theManager)
-	{
-	}
+    XalanEXSLTFunctionPadding(
+                const XalanEXSLTFunctionPadding&    other,
+                MemoryManagerType&                  theManager) :
+        Function(other),
+        m_space(s_spaceString, theManager)
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionPadding()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionPadding()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionPadding*
+    virtual XalanEXSLTFunctionPadding*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this, theManager);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this, theManager);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
                     "padding()");
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionPadding(const XalanEXSLTFunctionPadding&);
+    // Not implemented...
+    XalanEXSLTFunctionPadding(const XalanEXSLTFunctionPadding&);
 
-	XalanEXSLTFunctionPadding&
-	operator=(const XalanEXSLTFunctionPadding&);
+    XalanEXSLTFunctionPadding&
+    operator=(const XalanEXSLTFunctionPadding&);
 
-	bool
-	operator==(const XalanEXSLTFunctionPadding&) const;
+    bool
+    operator==(const XalanEXSLTFunctionPadding&) const;
 
 
-	// Data members...
-	const XalanDOMString		m_space;
+    // Data members...
+    const XalanDOMString        m_space;
 
-	static const XalanDOMChar	s_spaceString[];
+    static const XalanDOMChar   s_spaceString[];
 };
 
 
@@ -250,71 +254,71 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionEncodeURI : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionEncodeURI() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionEncodeURI() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionEncodeURI()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionEncodeURI()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionEncodeURI*
+    virtual XalanEXSLTFunctionEncodeURI*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
                     "encode-uri()");
-	}
+    }
 
-	const XalanDOMString&
-	escapedOctet(
+    const XalanDOMString&
+    escapedOctet(
                 XalanDOMChar        theChar,
                 XalanDOMString&     theBuffer) const;
 
-	static const XalanDOMChar	            s_reservedChars[];
-	static const XalanDOMString::size_type  s_reservedCharsSize;
+    static const XalanDOMChar               s_reservedChars[];
+    static const XalanDOMString::size_type  s_reservedCharsSize;
 
-	static const XalanDOMChar               s_excludedChars[];
-	static const XalanDOMString::size_type  s_excludedCharsSize;
+    static const XalanDOMChar               s_excludedChars[];
+    static const XalanDOMString::size_type  s_excludedCharsSize;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionEncodeURI&
-	operator=(const XalanEXSLTFunctionEncodeURI&);
+    // Not implemented...
+    XalanEXSLTFunctionEncodeURI&
+    operator=(const XalanEXSLTFunctionEncodeURI&);
 
-	bool
-	operator==(const XalanEXSLTFunctionEncodeURI&) const;
+    bool
+    operator==(const XalanEXSLTFunctionEncodeURI&) const;
 };
 
 
@@ -323,75 +327,75 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDecodeURI : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionDecodeURI() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionDecodeURI() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionDecodeURI()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionDecodeURI()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionDecodeURI*
+    virtual XalanEXSLTFunctionDecodeURI*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
                     "decode-uri()");
 
-	}
+    }
 
-	XalanDOMChar
-	hexCharsToByte(	
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			const LocatorType*			locator,
-			const XalanDOMChar			highHexChar,
-			const XalanDOMChar			lowHexChar) const;
+    XalanDOMChar
+    hexCharsToByte( 
+            XPathExecutionContext&      executionContext,
+            XalanNode*                  context,
+            const LocatorType*          locator,
+            const XalanDOMChar          highHexChar,
+            const XalanDOMChar          lowHexChar) const;
 
-	static const XalanDOMString::size_type s_octetSize;
+    static const XalanDOMString::size_type s_octetSize;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionDecodeURI&
-	operator=(const XalanEXSLTFunctionDecodeURI&);
+    // Not implemented...
+    XalanEXSLTFunctionDecodeURI&
+    operator=(const XalanEXSLTFunctionDecodeURI&);
 
-	bool
-	operator==(const XalanEXSLTFunctionDecodeURI&) const;
+    bool
+    operator==(const XalanEXSLTFunctionDecodeURI&) const;
 };
 
 XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_STRINGIMPL_HEADER_GUARD_1357924680
+#endif  // EXSLT_STRINGIMPL_HEADER_GUARD_1357924680

@@ -36,37 +36,42 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemOtherwise::ElemOtherwise(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_OTHERWISE)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_OTHERWISE)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false ||
-		   processSpaceAttr(aname, atts, i, constructionContext))
-		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theGuard.get(),
-							Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+        if(isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false &&
+           processSpaceAttr(
+                Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING.c_str(),
+                aname,
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 }
 
 
@@ -74,25 +79,25 @@ ElemOtherwise::ElemOtherwise(
 const XalanDOMString&
 ElemOtherwise::getElementName() const
 {
-	return Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_OTHERWISE_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemOtherwise::startElement(StylesheetExecutionContext&	executionContext) const
+ElemOtherwise::startElement(StylesheetExecutionContext& executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	return beginExecuteChildren(executionContext);
+    return beginExecuteChildren(executionContext);
 }
 
 
 
 void
-ElemOtherwise::endElement(StylesheetExecutionContext&	executionContext) const
+ElemOtherwise::endElement(StylesheetExecutionContext&   executionContext) const
 {
-	endExecuteChildren(executionContext);
+    endExecuteChildren(executionContext);
 }
 #endif
 
@@ -100,11 +105,11 @@ ElemOtherwise::endElement(StylesheetExecutionContext&	executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemOtherwise::execute(StylesheetExecutionContext&	executionContext) const
+ElemOtherwise::execute(StylesheetExecutionContext&  executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	executeChildren(executionContext);
+    executeChildren(executionContext);
 }
 #endif
 

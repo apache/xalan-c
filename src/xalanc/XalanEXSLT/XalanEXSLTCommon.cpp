@@ -32,241 +32,242 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_booleanString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_booleanString[] =
 {
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	0
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_externalString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_externalString[] =
 {
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	0
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    0
 };
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_nodeSetString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_nodeSetString[] =
 {
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_t,
+    0
 };
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_numberString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_numberString[] =
 {
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_r,
-	0
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    0
 };
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_rtfString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_rtfString[] =
 {
-	XalanUnicode::charLetter_R,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_F,
-	0
+    XalanUnicode::charLetter_R,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_F,
+    0
 };
 
 
 
-const XalanDOMChar	XalanEXSLTFunctionObjectType::s_stringString[] =
+const XalanDOMChar  XalanEXSLTFunctionObjectType::s_stringString[] =
 {
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_g,
-	0
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
 };
 
 
 
-static const XalanDOMChar	s_objectTypeFunctionName[] =
+static const XalanDOMChar   s_objectTypeFunctionName[] =
 {
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_j,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_y,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_j,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_y,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
 XObjectPtr
 XalanEXSLTFunctionObjectType::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	// Make sure nothing's happened to our strings and that
-	// they were actually initialized...
-	assert(XalanDOMString::equals(m_boolean, s_booleanString) == true);
-	assert(XalanDOMString::equals(m_external, s_externalString) == true);
-	assert(XalanDOMString::equals(m_nodeSet, s_nodeSetString) == true);
-	assert(XalanDOMString::equals(m_number, s_numberString) == true);
-	assert(XalanDOMString::equals(m_rtf, s_rtfString) == true);
-	assert(XalanDOMString::equals(m_string, s_stringString) == true);
+    // Make sure nothing's happened to our strings and that
+    // they were actually initialized...
+    assert(XalanDOMString::equals(m_boolean, s_booleanString) == true);
+    assert(XalanDOMString::equals(m_external, s_externalString) == true);
+    assert(XalanDOMString::equals(m_nodeSet, s_nodeSetString) == true);
+    assert(XalanDOMString::equals(m_number, s_numberString) == true);
+    assert(XalanDOMString::equals(m_rtf, s_rtfString) == true);
+    assert(XalanDOMString::equals(m_string, s_stringString) == true);
 
-	if (args.size() != 1)
-	{
-        XalanDOMString theResult(executionContext.getMemoryManager());
+    if (args.size() != 1)
+    {
+        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
 
-		executionContext.error(getError(theResult), context, locator);
-	}
+        executionContext.error(getError(theGuard.get()), context, locator);
+    }
 
-	assert(args[0].null() == false);
+    assert(args[0].null() == false);
 
-	const XalanDOMString*	theResult = &m_external;
+    const XalanDOMString*   theResult = &m_external;
 
-	switch(args[0]->getType())
-	{
-	case XObject::eTypeBoolean:
-		theResult = &m_boolean;
-		break;
+    switch(args[0]->getType())
+    {
+    case XObject::eTypeBoolean:
+        theResult = &m_boolean;
+        break;
 
-	case XObject::eTypeNodeSet:
-		theResult = &m_nodeSet;
-		break;
+    case XObject::eTypeNodeSet:
+        theResult = &m_nodeSet;
+        break;
 
-	case XObject::eTypeNumber:
-		theResult = &m_number;
-		break;
+    case XObject::eTypeNumber:
+        theResult = &m_number;
+        break;
 
-	case XObject::eTypeResultTreeFrag:
-		theResult = &m_rtf;
-		break;
+    case XObject::eTypeResultTreeFrag:
+        theResult = &m_rtf;
+        break;
 
-	case XObject::eTypeString:
-		theResult = &m_string;
-		break;
+    case XObject::eTypeString:
+        theResult = &m_string;
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 
-	assert(theResult != 0);
+    assert(theResult != 0);
 
-	return executionContext.getXObjectFactory().createStringReference(*theResult);
+    return executionContext.getXObjectFactory().createStringReference(*theResult);
 }
 
 
 
 const XalanDOMString&
-XalanEXSLTFunctionObjectType::getError(XalanDOMString& theResult) const
+XalanEXSLTFunctionObjectType::getError(XalanDOMString&  theResult) const
 {
-	 XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theResult, s_objectTypeFunctionName);
-     
-     return theResult;
+     return XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+                s_objectTypeFunctionName);
 }
 
 
 
-static const XalanDOMChar	s_commonNamespace[] =
+static const XalanDOMChar   s_commonNamespace[] =
 {
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charColon,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charFullStop,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charColon,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charFullStop,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 
 
-static const XalanDOMChar	s_nodeSetFunctionName[] =
+static const XalanDOMChar   s_nodeSetFunctionName[] =
 {
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_t,
+    0
 };
 
 
 
-static const XalanEXSLTFunctionNodeSet		s_nodesetFunction;
+static const XalanEXSLTFunctionNodeSet      s_nodesetFunction;
 
 // Note this is a special constructor of XalanEXSLTFunctionObjectType which
 // allocates no memory.  It is only used here, so we can have table-based
 // initialization, but not have any memory allocation.
 
-static const XalanEXSLTFunctionObjectType	s_objectTypeFunction(XalanMemMgrs::getDummyMemMgr(), 1);
+static const XalanEXSLTFunctionObjectType   s_objectTypeFunction(XalanMemMgrs::getDummyMemMgr(), 1);
 
 
 
-static const XalanEXSLTCommonFunctionsInstaller::FunctionTableEntry		theFunctionTable[] =
+static const XalanEXSLTCommonFunctionsInstaller::FunctionTableEntry     theFunctionTable[] =
 {
-	{ s_nodeSetFunctionName, &s_nodesetFunction },
-	{ s_objectTypeFunctionName, &s_objectTypeFunction },
-	{ 0, 0 }
+    { s_nodeSetFunctionName, &s_nodesetFunction },
+    { s_objectTypeFunctionName, &s_objectTypeFunction },
+    { 0, 0 }
 };
 
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSupport)
+XalanEXSLTCommonFunctionsInstaller::installLocal(XPathEnvSupportDefault&    theSupport)
 {
-	doInstallLocal(s_commonNamespace, theFunctionTable, theSupport);
+    doInstallLocal(s_commonNamespace, theFunctionTable, theSupport);
 }
 
 
@@ -274,15 +275,15 @@ XalanEXSLTCommonFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSupp
 void
 XalanEXSLTCommonFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal( theManager, s_commonNamespace, theFunctionTable);
+    doInstallGlobal( theManager, s_commonNamespace, theFunctionTable);
 }
 
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSupport)
+XalanEXSLTCommonFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&  theSupport)
 {
-	doUninstallLocal(s_commonNamespace, theFunctionTable, theSupport);
+    doUninstallLocal(s_commonNamespace, theFunctionTable, theSupport);
 }
 
 
@@ -290,7 +291,7 @@ XalanEXSLTCommonFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSu
 void
 XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(theManager, s_commonNamespace, theFunctionTable);
+    doUninstallGlobal(theManager, s_commonNamespace, theFunctionTable);
 }
 
 

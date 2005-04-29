@@ -43,99 +43,108 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemCopy::ElemCopy(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemUse(constructionContext,
-			stylesheetTree,
-			lineNumber,
-			columnNumber,
-			StylesheetConstructionContext::ELEMNAME_COPY)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemUse(constructionContext,
+            stylesheetTree,
+            lineNumber,
+            columnNumber,
+            StylesheetConstructionContext::ELEMNAME_COPY)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
-				processSpaceAttr(aname, atts, i, constructionContext) ||
-				isAttrOK(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param, theResult,
-							Constants::ELEMNAME_COPY_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+        if(processUseAttributeSets(
+                constructionContext,
+                aname,
+                atts,
+                i) == false &&
+           processSpaceAttr(
+                Constants::ELEMNAME_COPY_WITH_PREFIX_STRING.c_str(),
+                aname,
+                atts,
+                i,
+                constructionContext) == false &&
+           isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_COPY_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 }
 
 
 const XalanDOMString&
 ElemCopy::getElementName() const
 {
-	return Constants::ELEMNAME_COPY_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_COPY_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemCopy::startElement(StylesheetExecutionContext&	executionContext) const
+ElemCopy::startElement(StylesheetExecutionContext&  executionContext) const
 {
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+    XalanNode* const    sourceNode = executionContext.getCurrentNode();
 
-	assert(sourceNode != 0);
+    assert(sourceNode != 0);
 
-	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
+    const XalanNode::NodeType   nodeType = sourceNode->getNodeType();
 
-	if(XalanNode::DOCUMENT_NODE != nodeType)
-	{
-		executionContext.cloneToResultTree(
-			*sourceNode,
-			nodeType,
-			true,
-			false,
-			getLocator());
+    if(XalanNode::DOCUMENT_NODE != nodeType)
+    {
+        executionContext.cloneToResultTree(
+            *sourceNode,
+            nodeType,
+            true,
+            false,
+            getLocator());
 
-		if(XalanNode::ELEMENT_NODE == nodeType)
-		{
-			ElemUse::startElement(executionContext);
+        if(XalanNode::ELEMENT_NODE == nodeType)
+        {
+            ElemUse::startElement(executionContext);
 
-			executionContext.copyNamespaceAttributes(*sourceNode);
+            executionContext.copyNamespaceAttributes(*sourceNode);
 
-			return beginExecuteChildren(executionContext);
+            return beginExecuteChildren(executionContext);
 
-		}
-		else
-		{
-			if(0 != executionContext.getTraceListeners())
-			{
-				executionContext.fireTraceEvent(TracerEvent(executionContext,
-					*this));
-			}
-		}
-	}
-	else
-	{
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireTraceEvent(TracerEvent(executionContext, 				
-				*this));
-		}
+        }
+        else
+        {
+            if(0 != executionContext.getTraceListeners())
+            {
+                executionContext.fireTraceEvent(TracerEvent(executionContext,
+                    *this));
+            }
+        }
+    }
+    else
+    {
+        if(0 != executionContext.getTraceListeners())
+        {
+            executionContext.fireTraceEvent(TracerEvent(executionContext,               
+                *this));
+        }
 
-		ElemUse::startElement(executionContext);
+        ElemUse::startElement(executionContext);
 
-		return beginExecuteChildren(executionContext);
-	}  
+        return beginExecuteChildren(executionContext);
+    }  
 
-	return 0;
+    return 0;
 }
 
 
@@ -143,29 +152,29 @@ ElemCopy::startElement(StylesheetExecutionContext&	executionContext) const
 void
 ElemCopy::endElement(StylesheetExecutionContext& executionContext) const
 {
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+    XalanNode* const    sourceNode = executionContext.getCurrentNode();
 
-	assert(sourceNode != 0);
+    assert(sourceNode != 0);
 
-	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
+    const XalanNode::NodeType   nodeType = sourceNode->getNodeType();
 
-	if(XalanNode::DOCUMENT_NODE != nodeType)
-	{
-		if(XalanNode::ELEMENT_NODE == nodeType)
-		{
-			endExecuteChildren(executionContext);
+    if(XalanNode::DOCUMENT_NODE != nodeType)
+    {
+        if(XalanNode::ELEMENT_NODE == nodeType)
+        {
+            endExecuteChildren(executionContext);
 
-			executionContext.endElement(c_wstr(sourceNode->getNodeName()));
+            executionContext.endElement(c_wstr(sourceNode->getNodeName()));
 
-			ElemUse::endElement(executionContext);
-		}
-	}
-	else
-	{
-		endExecuteChildren(executionContext);
+            ElemUse::endElement(executionContext);
+        }
+    }
+    else
+    {
+        endExecuteChildren(executionContext);
 
-		ElemUse::endElement(executionContext);
-	}
+        ElemUse::endElement(executionContext);
+    }
 }
 #endif
 
@@ -173,54 +182,54 @@ ElemCopy::endElement(StylesheetExecutionContext& executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
+ElemCopy::execute(StylesheetExecutionContext&   executionContext) const
 {
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+    XalanNode* const    sourceNode = executionContext.getCurrentNode();
 
-	assert(sourceNode != 0);
+    assert(sourceNode != 0);
 
-	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
+    const XalanNode::NodeType   nodeType = sourceNode->getNodeType();
 
-	if(XalanNode::DOCUMENT_NODE != nodeType)
-	{
-		executionContext.cloneToResultTree(
-			*sourceNode,
-			nodeType,
-			true,
-			false,
-			getLocator());
+    if(XalanNode::DOCUMENT_NODE != nodeType)
+    {
+        executionContext.cloneToResultTree(
+            *sourceNode,
+            nodeType,
+            true,
+            false,
+            getLocator());
 
-		if(XalanNode::ELEMENT_NODE == nodeType)
-		{
-			ElemUse::execute(executionContext);
+        if(XalanNode::ELEMENT_NODE == nodeType)
+        {
+            ElemUse::execute(executionContext);
 
-			executionContext.copyNamespaceAttributes(*sourceNode);
+            executionContext.copyNamespaceAttributes(*sourceNode);
 
-			executeChildren(executionContext);
+            executeChildren(executionContext);
 
-			executionContext.endElement(c_wstr(sourceNode->getNodeName()));
-		}
-		else
-		{
-			if(0 != executionContext.getTraceListeners())
-			{
-				executionContext.fireTraceEvent(TracerEvent(executionContext,
-					*this));
-			}
-		}
-	}
-	else
-	{
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireTraceEvent(TracerEvent(executionContext, 				
-				*this));
-		}
+            executionContext.endElement(c_wstr(sourceNode->getNodeName()));
+        }
+        else
+        {
+            if(0 != executionContext.getTraceListeners())
+            {
+                executionContext.fireTraceEvent(TracerEvent(executionContext,
+                    *this));
+            }
+        }
+    }
+    else
+    {
+        if(0 != executionContext.getTraceListeners())
+        {
+            executionContext.fireTraceEvent(TracerEvent(executionContext,               
+                *this));
+        }
 
-		ElemUse::execute(executionContext);
+        ElemUse::execute(executionContext);
 
-		executeChildren(executionContext);
-	}  
+        executeChildren(executionContext);
+    }  
 }
 #endif
 

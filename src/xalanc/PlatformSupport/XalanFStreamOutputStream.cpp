@@ -32,19 +32,22 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanFStreamOutputStream::XalanFStreamOutputStream(
-			FILE*			    theHandle,
+            FILE*               theHandle,
             MemoryManagerType&   theManager,
-			unsigned int	    theBufferSize) :
-	XalanOutputStream(theManager, theBufferSize),
-	m_handle(theHandle)
+            unsigned int        theBufferSize) :
+    XalanOutputStream(theManager, theBufferSize),
+    m_handle(theHandle)
 {
-	assert(m_handle != 0);
+    assert(m_handle != 0);
 }
 
+
+    
 XalanFStreamOutputStream*
-XalanFStreamOutputStream::create(	FILE*			    theFileHandle,
-                                 MemoryManagerType&   theManager,
-                                 unsigned int	    theBufferSize)
+XalanFStreamOutputStream::create(
+            FILE*               theFileHandle,
+            MemoryManagerType&   theManager,
+            unsigned int        theBufferSize)
 {
     typedef XalanFStreamOutputStream ThisType;
 
@@ -61,6 +64,8 @@ XalanFStreamOutputStream::create(	FILE*			    theFileHandle,
     return theResult;
 }
 
+
+
 XalanFStreamOutputStream::~XalanFStreamOutputStream()
 {
 }
@@ -76,88 +81,102 @@ XalanFStreamOutputStream::doFlush()
 
 void
 XalanFStreamOutputStream::writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength)
+            const char*     theBuffer,
+            size_type       theBufferLength)
 {
-	const size_t	theBytesWritten =
-		fwrite(theBuffer,
-			   1,
-			   theBufferLength,
-			   m_handle);
+    const size_t    theBytesWritten =
+        fwrite(theBuffer,
+               1,
+               theBufferLength,
+               m_handle);
 
-	if (theBytesWritten != theBufferLength)
-	{
+    if (theBytesWritten != theBufferLength)
+    {
         XalanDOMString theBuffer(getMemoryManager());
 
-		throw XalanFStreamOutputStreamWriteException(errno, theBuffer);
-	}
+        throw XalanFStreamOutputStreamWriteException(errno, theBuffer);
+    }
 }
+
+
 
 XalanDOMString&
 FormatMessageLocal(
-			const XalanDOMString&	theMessage,
-			int				        theErrorCode,
+            const XalanDOMString&   theMessage,
+            int                     theErrorCode,
             XalanDOMString&         theResult)
 {
-	XalanDOMString strErrorCode(theResult.getMemoryManager());
+    XalanDOMString strErrorCode(theResult.getMemoryManager());
 
     XalanDOMString strErrorMsg(theResult.getMemoryManager());
 
-	LongToDOMString(theErrorCode, strErrorCode);
+    LongToDOMString(theErrorCode, strErrorCode);
 
     theResult.assign(theMessage);
 
-    XalanMessageLoader::getMessage(XalanMessages::SystemErrorCode_1Param, strErrorMsg, strErrorCode);
+    XalanMessageLoader::getMessage(
+        strErrorMsg,
+        XalanMessages::SystemErrorCode_1Param,
+        strErrorCode);
 
     theResult.append(strErrorMsg);
 
-	return theResult;
+    return theResult;
 }
 
 
-const XalanDOMChar	XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::m_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_F,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_O,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_W,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+const XalanDOMChar  XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::m_type[] = 
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_F,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_O,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_W,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
-XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOutputStreamWriteException(int	theErrorCode,
-                                                                                        XalanDOMString&         theBuffer) :                                                                                                         
-	XalanOutputStreamException(FormatMessageLocal(
-        XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param,theBuffer, XalanDOMString(theBuffer.getMemoryManager())),
-        theErrorCode, theBuffer), theBuffer.getMemoryManager())
+
+
+XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOutputStreamWriteException(
+            int                 theErrorCode,
+            XalanDOMString&     theBuffer) :                                                                                                         
+    XalanOutputStreamException(
+        FormatMessageLocal(
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::ErrorWritingFile_1Param,
+                XalanDOMString(theBuffer.getMemoryManager())),
+            theErrorCode,
+            theBuffer),
+        theBuffer.getMemoryManager())
 {
 }
 

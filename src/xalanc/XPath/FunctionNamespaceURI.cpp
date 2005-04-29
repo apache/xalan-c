@@ -46,59 +46,62 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 
 
 
-static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const
 {
-	if (context == 0)
-	{
-        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    if (context == 0)
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
         XalanDOMString& theResult = theGuard.get();
 
- 		executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theResult ,"namespace-uri()"),
-				context,
-				locator);
+        executionContext.error(
+            XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                "namespace-uri()"),
+            context,
+            locator);
 
-		// Dummy return value...
-		return XObjectPtr(0);
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createStringReference(DOMServices::getNamespaceOfNode(*context));
-	}
+        // Dummy return value...
+        return XObjectPtr(0);
+    }
+    else
+    {
+        return executionContext.getXObjectFactory().createStringReference(DOMServices::getNamespaceOfNode(*context));
+    }
 }
 
 
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const
 {
-	assert(arg1.null() == false);	
-	
-	const NodeRefListBase&	theList = arg1->nodeset();
+    assert(arg1.null() == false);   
+    
+    const NodeRefListBase&  theList = arg1->nodeset();
 
-	if (theList.getLength() == 0)
-	{
-		return executionContext.getXObjectFactory().createStringReference(theEmptyString);
-	}
-	else
-	{
-		assert(theList.item(0) != 0);
+    if (theList.getLength() == 0)
+    {
+        return executionContext.getXObjectFactory().createStringReference(theEmptyString);
+    }
+    else
+    {
+        assert(theList.item(0) != 0);
 
-		return execute(executionContext, theList.item(0), locator);
-	}
+        return execute(executionContext, theList.item(0), locator);
+    }
 }
 
 
@@ -110,7 +113,7 @@ FunctionNamespaceURI*
 #endif
 FunctionNamespaceURI::clone(MemoryManagerType&  theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -118,12 +121,10 @@ FunctionNamespaceURI::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionNamespaceURI::getError(XalanDOMString& theResult) const
 {
-	XalanMessageLoader::getMessage(
-        XalanMessages::FunctionTakesZeroOrOneArg_1Param,
-        theResult,
-        "namespace-uri()");
-
-    return theResult;
+    return XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                "namespace-uri()");
 }
 
 

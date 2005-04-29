@@ -35,126 +35,126 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	FormatterToXMLBase::s_specialChars[kSpecialsSize] =
+const XalanDOMChar  FormatterToXMLBase::s_specialChars[kSpecialsSize] =
 {
-	kNotSpecial,		// 0
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kAttributeSpecial,	// 0x9 -- horizontal tab.  Write as a numeric character reference in attribute values.
-	kBothSpecial,		// 0xA -- linefeed  Normalize as requested, and write as a numeric character reference in attribute values.
-	kNotSpecial,
-	kNotSpecial,
-	kAttributeSpecial,	// 0xD -- carriage return.  Write as a numeric character reference in attribute values.
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x10
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x20
-	kNotSpecial,
-	kAttributeSpecial,	// 0x22 '"'
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0x26 -- '&'
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x30
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0x3C '<'
-	kNotSpecial,
-	kBothSpecial		// 0x3E '>'
+    kNotSpecial,        // 0
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kAttributeSpecial,  // 0x9 -- horizontal tab.  Write as a numeric character reference in attribute values.
+    kBothSpecial,       // 0xA -- linefeed  Normalize as requested, and write as a numeric character reference in attribute values.
+    kNotSpecial,
+    kNotSpecial,
+    kAttributeSpecial,  // 0xD -- carriage return.  Write as a numeric character reference in attribute values.
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,        // 0x10
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,        // 0x20
+    kNotSpecial,
+    kAttributeSpecial,  // 0x22 '"'
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kBothSpecial,       // 0x26 -- '&'
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,        // 0x30
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kNotSpecial,
+    kBothSpecial,       // 0x3C '<'
+    kNotSpecial,
+    kBothSpecial        // 0x3E '>'
 };
 
 
 
 FormatterToXMLBase::FormatterToXMLBase(
-			Writer&					writer,
-			const XalanDOMString&	version,
-			const XalanDOMString&	mediaType,
-			const XalanDOMString&	doctypeSystem,
-			const XalanDOMString&	doctypePublic,
-			bool					xmlDecl,
-			const XalanDOMString&	standalone,
+            Writer&                 writer,
+            const XalanDOMString&   version,
+            const XalanDOMString&   mediaType,
+            const XalanDOMString&   doctypeSystem,
+            const XalanDOMString&   doctypePublic,
+            bool                    xmlDecl,
+            const XalanDOMString&   standalone,
             MemoryManagerType&      theManager) :
-	FormatterListener(OUTPUT_METHOD_XML),
-	m_writer(&writer),
-	m_nextIsRaw(false),
-	m_spaceBeforeClose(false),
-	m_doctypeSystem(doctypeSystem,theManager),
-	m_doctypePublic(doctypePublic,theManager),
-	m_version(version,theManager),
-	m_standalone(standalone,theManager),
-	m_mediaType(mediaType, theManager),
-	m_newlineString(0),
-	m_newlineStringLength(0),
-	m_needToOutputDoctypeDecl(false),
+    FormatterListener(OUTPUT_METHOD_XML),
+    m_writer(&writer),
+    m_nextIsRaw(false),
+    m_spaceBeforeClose(false),
+    m_doctypeSystem(doctypeSystem,theManager),
+    m_doctypePublic(doctypePublic,theManager),
+    m_version(version,theManager),
+    m_standalone(standalone,theManager),
+    m_mediaType(mediaType, theManager),
+    m_newlineString(0),
+    m_newlineStringLength(0),
+    m_needToOutputDoctypeDecl(false),
     // We must write the XML declaration if standalone is specified
     m_shouldWriteXMLHeader(xmlDecl == true ? true : standalone.length() != 0),
-	m_elemStack(theManager)
+    m_elemStack(theManager)
 {
-	if(isEmpty(m_doctypePublic) == false)
-	{
-		if(startsWith(
-			m_doctypePublic,
-			s_xhtmlDocTypeString) == true)
-		{
-			m_spaceBeforeClose = true;
-		}
-	}
+    if(isEmpty(m_doctypePublic) == false)
+    {
+        if(startsWith(
+            m_doctypePublic,
+            s_xhtmlDocTypeString) == true)
+        {
+            m_spaceBeforeClose = true;
+        }
+    }
 
-	const XalanOutputStream* const	theStream = writer.getStream();
+    const XalanOutputStream* const  theStream = writer.getStream();
 
-	if (theStream == 0)
-	{
-		m_newlineString = XalanOutputStream::defaultNewlineString();
-	}
-	else
-	{
-		m_newlineString = theStream->getNewlineString();
-	}
+    if (theStream == 0)
+    {
+        m_newlineString = XalanOutputStream::defaultNewlineString();
+    }
+    else
+    {
+        m_newlineString = theStream->getNewlineString();
+    }
 
-	assert(m_newlineString != 0);
+    assert(m_newlineString != 0);
 
-	m_newlineStringLength = length(m_newlineString);
+    m_newlineStringLength = length(m_newlineString);
 
-	assert(m_newlineString != 0);
+    assert(m_newlineString != 0);
 }
 
 
@@ -167,18 +167,18 @@ FormatterToXMLBase::~FormatterToXMLBase()
 
 unsigned int
 FormatterToXMLBase::decodeUTF16SurrogatePair(
-			XalanDOMChar	theHighSurrogate,
-			XalanDOMChar	theLowSurrogate,
+            XalanDOMChar    theHighSurrogate,
+            XalanDOMChar    theLowSurrogate,
             MemoryManagerType& theManager)
 {
-	assert(isUTF16HighSurrogate(theHighSurrogate) == true);
+    assert(isUTF16HighSurrogate(theHighSurrogate) == true);
 
-	if (isUTF16LowSurrogate(theLowSurrogate) == false)
-	{
+    if (isUTF16LowSurrogate(theLowSurrogate) == false)
+    {
         throwInvalidUTF16SurrogateException(theHighSurrogate, theLowSurrogate, theManager);
-	}
+    }
 
-	return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
+    return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
 }
 
 
@@ -186,47 +186,58 @@ FormatterToXMLBase::decodeUTF16SurrogatePair(
 XALAN_USING_XERCES(SAXException)
 
 void
-FormatterToXMLBase::throwInvalidUTF16SurrogateException(XalanDOMChar	ch,
-                                                        MemoryManagerType& theManager)
+FormatterToXMLBase::throwInvalidUTF16SurrogateException(
+            XalanDOMChar        ch,
+            MemoryManagerType&  theManager)
 {
-	XalanDOMString	theMessage(theManager);
-    XalanDOMString	theBuffer(theManager);
+    XalanDOMString  theMessage(theManager);
+    XalanDOMString  theBuffer(theManager);
 
-    XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, theMessage, UnsignedLongToHexDOMString(ch, theBuffer));
+    XalanMessageLoader::getMessage(
+        theMessage,
+        XalanMessages::InvalidHighSurrogate_1Param,
+        UnsignedLongToHexDOMString(ch, theBuffer));
 
-	throw SAXException(c_wstr(theMessage), &theManager);
+    throw SAXException(c_wstr(theMessage), &theManager);
 }
 
 
 
 void
 FormatterToXMLBase::throwInvalidUTF16SurrogateException(
-			XalanDOMChar	    ch,
-			XalanDOMChar	    next,
+            XalanDOMChar        ch,
+            XalanDOMChar        next,
             MemoryManagerType&  theManager)
 {
-    XalanDOMString	theMessage(theManager);
-    XalanDOMString	theBuffer(theManager);
-    XalanDOMString	theBuffer2(theManager);
+    XalanDOMString  theMessage(theManager);
+    XalanDOMString  theBuffer1(theManager);
+    XalanDOMString  theBuffer2(theManager);
 
-	XalanMessageLoader::getMessage(XalanMessages::InvalidUFT16Surrogate_2Param, theMessage, 
-                    UnsignedLongToHexDOMString(ch, theBuffer),UnsignedLongToHexDOMString(next, theBuffer2));
+    XalanMessageLoader::getMessage(
+        theMessage,
+        XalanMessages::InvalidSurrogatePair_2Param,
+        UnsignedLongToHexDOMString(ch, theBuffer1),
+        UnsignedLongToHexDOMString(next, theBuffer2));
 
-	throw SAXException(c_wstr(theMessage), &theManager);
+    throw SAXException(theMessage.c_str(), &theManager);
 }
 
 
 
 void
-FormatterToXMLBase::throwInvalidCharacterException(unsigned int		ch,
-                                                   MemoryManagerType& theManager)
+FormatterToXMLBase::throwInvalidCharacterException(
+            unsigned int        ch,
+            MemoryManagerType&  theManager)
 {
-	XalanDOMString	theMessage(theManager);
-    XalanDOMString	theBuffer(theManager);  
+    XalanDOMString  theMessage(theManager);
+    XalanDOMString  theBuffer(theManager);  
 
-    XalanMessageLoader::getMessage(XalanMessages::InvalidCharDetected_1Param, theMessage, UnsignedLongToHexDOMString(ch, theBuffer));
+    XalanMessageLoader::getMessage(
+        theMessage,
+        XalanMessages::InvalidScalar_1Param,
+        UnsignedLongToHexDOMString(ch, theBuffer));
 
-	throw SAXException(c_wstr(theMessage),&theManager);
+    throw SAXException(theMessage.c_str(), &theManager);
 }
 
 
@@ -234,13 +245,13 @@ FormatterToXMLBase::throwInvalidCharacterException(unsigned int		ch,
 void
 FormatterToXMLBase::flushWriter()
 {
-	m_writer->flush();
+    m_writer->flush();
 }
 
 
 
 void
-FormatterToXMLBase::setDocumentLocator(const LocatorType* const 	/* locator */)
+FormatterToXMLBase::setDocumentLocator(const LocatorType* const     /* locator */)
 {
 }
 
@@ -249,21 +260,21 @@ FormatterToXMLBase::setDocumentLocator(const LocatorType* const 	/* locator */)
 void
 FormatterToXMLBase::startDocument()
 {
-	if (m_doctypeSystem.empty() == false)
-	{
-		m_needToOutputDoctypeDecl = true;
-	}
+    if (m_doctypeSystem.empty() == false)
+    {
+        m_needToOutputDoctypeDecl = true;
+    }
 
-	if(m_shouldWriteXMLHeader == true)
-	{
-		writeXMLHeader();
+    if(m_shouldWriteXMLHeader == true)
+    {
+        writeXMLHeader();
 
         // Write a newline here, so the DOCTYPE comes out on a separate line
         if (m_needToOutputDoctypeDecl == true)
         {
             outputNewline();
         }
-	}
+    }
 }
 
 
@@ -271,86 +282,86 @@ FormatterToXMLBase::startDocument()
 void
 FormatterToXMLBase::endDocument()
 {
-	m_needToOutputDoctypeDecl = false;
+    m_needToOutputDoctypeDecl = false;
 
-	flushBuffer();
+    flushBuffer();
 }
 
 
 
 void
 FormatterToXMLBase::characters(
-			const XMLCh* const	chars,
-			const unsigned int	length)
+            const XMLCh* const  chars,
+            const unsigned int  length)
 {
-	if(length != 0)
-	{
-		if(m_nextIsRaw)
-		{
-			m_nextIsRaw = false;
+    if(length != 0)
+    {
+        if(m_nextIsRaw)
+        {
+            m_nextIsRaw = false;
 
-			charactersRaw(chars, length);
-		}
-		else
-		{
-			writeCharacters(chars, length);
-		}
-	}
+            charactersRaw(chars, length);
+        }
+        else
+        {
+            writeCharacters(chars, length);
+        }
+    }
 }
 
 
 
 void
 FormatterToXMLBase::cdata(
-			const XMLCh* const	ch,
-			const unsigned int	length)
+            const XMLCh* const  ch,
+            const unsigned int  length)
 {
-	if (length != 0)
-	{
-		if(m_nextIsRaw == true)
-		{
-			m_nextIsRaw = false;
+    if (length != 0)
+    {
+        if(m_nextIsRaw == true)
+        {
+            m_nextIsRaw = false;
 
-			charactersRaw(ch, length);
-		}
-		else
-		{
-			writeCDATA(ch, length);
-		}
-	}
+            charactersRaw(ch, length);
+        }
+        else
+        {
+            writeCDATA(ch, length);
+        }
+    }
 }
 
 
 
 void
 FormatterToXMLBase::processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data)
+            const XMLCh* const  target,
+            const XMLCh* const  data)
 {
-	// Use a fairly nasty hack to tell if the next node is supposed to be 
-	// unescaped text.
-	if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
-	   equals(data, length(data), s_piData, s_piDataLength) == true)
-	{
-		m_nextIsRaw = true;
-	}
-	else	
-	{
-		writeProcessingInstruction(target, data);
-	}
+    // Use a fairly nasty hack to tell if the next node is supposed to be 
+    // unescaped text.
+    if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
+       equals(data, length(data), s_piData, s_piDataLength) == true)
+    {
+        m_nextIsRaw = true;
+    }
+    else    
+    {
+        writeProcessingInstruction(target, data);
+    }
 }
 
 
 
 void
 FormatterToXMLBase::ignorableWhitespace(
-			const XMLCh* const	chars,
-			const unsigned int	length)
+            const XMLCh* const  chars,
+            const unsigned int  length)
 {
-	if (length > 0)
-	{
-		characters(chars, length);
-	}
+    if (length > 0)
+    {
+        characters(chars, length);
+    }
 }
 
 
@@ -358,7 +369,7 @@ FormatterToXMLBase::ignorableWhitespace(
 Writer*
 FormatterToXMLBase::getWriter() const
 {
-	return m_writer;
+    return m_writer;
 }
 
 
@@ -366,7 +377,7 @@ FormatterToXMLBase::getWriter() const
 const XalanDOMString&
 FormatterToXMLBase::getDoctypeSystem() const
 {
-	return m_doctypeSystem;
+    return m_doctypeSystem;
 }
 
 
@@ -374,7 +385,7 @@ FormatterToXMLBase::getDoctypeSystem() const
 const XalanDOMString&
 FormatterToXMLBase::getDoctypePublic() const
 {
-	return m_doctypePublic;
+    return m_doctypePublic;
 }
 
 
@@ -382,7 +393,7 @@ FormatterToXMLBase::getDoctypePublic() const
 const XalanDOMString&
 FormatterToXMLBase::getMediaType() const
 {
-	return m_mediaType;
+    return m_mediaType;
 }
 
 
@@ -390,37 +401,37 @@ FormatterToXMLBase::getMediaType() const
 void
 FormatterToXMLBase::resetDocument()
 {
-	// I don't do anything with this yet.
+    // I don't do anything with this yet.
 }
 
 
 
-#define FXML_SIZE(str)	((sizeof(str) / sizeof(str[0]) - 1))
+#define FXML_SIZE(str)  ((sizeof(str) / sizeof(str[0]) - 1))
 
-const XalanDOMChar	FormatterToXMLBase::s_xhtmlDocTypeString[] =
+const XalanDOMChar  FormatterToXMLBase::s_xhtmlDocTypeString[] =
 {
-	XalanUnicode::charHyphenMinus,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_W,
-	XalanUnicode::charDigit_3,
-	XalanUnicode::charLetter_C,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_D,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_D,
-	XalanUnicode::charSpace,
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_H,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_M,
-	XalanUnicode::charLetter_L,
-	XalanDOMChar(0)
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_W,
+    XalanUnicode::charDigit_3,
+    XalanUnicode::charLetter_C,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_D,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_D,
+    XalanUnicode::charSpace,
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_H,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_M,
+    XalanUnicode::charLetter_L,
+    XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type		FormatterToXMLBase::s_xhtmlDocTypeStringLength =
-		FXML_SIZE(s_xhtmlDocTypeString);
+const XalanDOMString::size_type     FormatterToXMLBase::s_xhtmlDocTypeStringLength =
+        FXML_SIZE(s_xhtmlDocTypeString);
 
 
 XALAN_CPP_NAMESPACE_END

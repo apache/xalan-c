@@ -42,78 +42,67 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemWithParam::ElemWithParam(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_WITH_PARAM),
-	m_selectPattern(0),
-	m_qname(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_WITH_PARAM),
+    m_selectPattern(0),
+    m_qname(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_SELECT))
-		{
-			m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_qname = constructionContext.createXalanQName(
-						atts.getValue(i),
-						stylesheetTree.getNamespaces(),
-						getLocator());
+        if(equals(aname, Constants::ATTRNAME_SELECT))
+        {
+            m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_NAME))
+        {
+            m_qname = constructionContext.createXalanQName(
+                        atts.getValue(i),
+                        stylesheetTree.getNamespaces(),
+                        getLocator());
 
-			if (m_qname->isValid() == false)
-			{
-                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            if (m_qname->isValid() == false)
+            {
+                error(
+                    constructionContext,
+                    XalanMessages::AttributeValueNotValidQName_2Param,
+                    Constants::ATTRNAME_NAME.c_str(),
+                    atts.getValue(i));
+            }
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-				constructionContext.error(
-						XalanMessageLoader::getMessage(
-							XalanMessages::AttributeValueNotValidQName_2Param,
-                            theGuard.get(),
-							Constants::ATTRNAME_NAME.c_str(),
-							atts.getValue(i)),
-						0,
-						this);
-			}
-		}
-		else if(!isAttrOK(aname, atts, i, constructionContext))
-		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                        theGuard.get(),
-						Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING.c_str(),
-						aname),
-					0,
-					this);
-		}
-	}
-
-	if(m_qname == 0)
-	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
-                theGuard.get(),
-				Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_NAME),
-			0,
-			this);
-	}
+    if(m_qname == 0)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_NAME);
+    }
 }
 
 
@@ -127,15 +116,15 @@ ElemWithParam::~ElemWithParam()
 const XalanDOMString&
 ElemWithParam::getElementName() const
 {
-	return Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
 }
 
 
 
 const XPath*
-ElemWithParam::getXPath(unsigned int	index) const
+ElemWithParam::getXPath(unsigned int    index) const
 {
-	return index == 0 ? m_selectPattern : 0;
+    return index == 0 ? m_selectPattern : 0;
 }
 
 
@@ -145,63 +134,63 @@ ElemWithParam::getXPath(unsigned int	index) const
 const ElemTemplateElement* 
 ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
 {
-	assert(m_qname != 0);
+    assert(m_qname != 0);
 
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	XObjectPtr theValue;
+    XObjectPtr theValue;
 
-	if(m_selectPattern == 0)
-	{
-		if (getFirstChildElem() == 0)
-		{
-			theValue = executionContext.getXObjectFactory().createStringReference(s_emptyString);
-		}
-		else
-		{
-			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
-			return beginExecuteChildren(executionContext);
-		}
-	}
-	else
-	{
-		theValue = m_selectPattern->execute(*this, executionContext);
-	
-		if(0 != executionContext.getTraceListeners())
-		{
-			executionContext.fireSelectEvent(
-				SelectionEvent(
-					executionContext,
-					executionContext.getCurrentNode(),
-					*this,
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("select"), executionContext.getMemoryManager()),
-					*m_selectPattern,
-					theValue));
-		}
+    if(m_selectPattern == 0)
+    {
+        if (getFirstChildElem() == 0)
+        {
+            theValue = executionContext.getXObjectFactory().createStringReference(s_emptyString);
+        }
+        else
+        {
+            executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
+            return beginExecuteChildren(executionContext);
+        }
+    }
+    else
+    {
+        theValue = m_selectPattern->execute(*this, executionContext);
+    
+        if(0 != executionContext.getTraceListeners())
+        {
+            executionContext.fireSelectEvent(
+                SelectionEvent(
+                    executionContext,
+                    executionContext.getCurrentNode(),
+                    *this,
+                    XalanDOMString(XALAN_STATIC_UCODE_STRING("select"), executionContext.getMemoryManager()),
+                    *m_selectPattern,
+                    theValue));
+        }
 
-	}
+    }
 
     assert(theValue.null() == false);
 
     executionContext.pushParam(
-			*m_qname,
-			theValue);
+            *m_qname,
+            theValue);
 
-	return 0;
+    return 0;
 }
 
 
 void
 ElemWithParam::endElement(StylesheetExecutionContext& executionContext) const
 {
-	if (0 == m_selectPattern && 0 != getFirstChildElem())
-	{
+    if (0 == m_selectPattern && 0 != getFirstChildElem())
+    {
         endExecuteChildren(executionContext);
 
         executionContext.pushParam(
-					*m_qname,
-					executionContext.endCreateXResultTreeFrag());
-	}
+                    *m_qname,
+                    executionContext.endCreateXResultTreeFrag());
+    }
 }
 #endif
 

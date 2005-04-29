@@ -56,103 +56,105 @@ FunctionEvaluate::~FunctionEvaluate()
 
 inline XObjectPtr
 doExecute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XalanDOMString&			expression,
-			const PrefixResolver&			resolver,
-			const Function::LocatorType*	locator)
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XalanDOMString&           expression,
+            const PrefixResolver&           resolver,
+            const Function::LocatorType*    locator)
 {
-	// $$$ ToDo: Consider moving all of this into a member function of
-	// XPathExecutionContext.
-    XPathProcessorImpl					theProcessor(executionContext.getMemoryManager());
+    // $$$ ToDo: Consider moving all of this into a member function of
+    // XPathExecutionContext.
+    XPathProcessorImpl                  theProcessor(executionContext.getMemoryManager());
 
-	XPathConstructionContextDefault		theConstructionContext(executionContext.getMemoryManager());
+    XPathConstructionContextDefault     theConstructionContext(executionContext.getMemoryManager());
 
-	XPath								theXPath(executionContext.getMemoryManager(), locator);
+    XPath                               theXPath(executionContext.getMemoryManager(), locator);
 
-	theProcessor.initXPath(
-			theXPath,
-			theConstructionContext,
-			expression,
-			resolver,
-			locator);
+    theProcessor.initXPath(
+            theXPath,
+            theConstructionContext,
+            expression,
+            resolver,
+            locator);
 
-	return theXPath.execute(context, resolver, executionContext);
+    return theXPath.execute(context, resolver, executionContext);
 }
 
 
 
 inline XObjectPtr
 doExecute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XalanDOMString&			expression,
-			const XalanNode*				resolver,
-			const Function::LocatorType*	locator)
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XalanDOMString&           expression,
+            const XalanNode*                resolver,
+            const Function::LocatorType*    locator)
 {
-	assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
+    assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	ElementPrefixResolverProxy	theProxy((const XalanElement*)resolver, 
+    ElementPrefixResolverProxy  theProxy((const XalanElement*)resolver, 
                                             executionContext.getMemoryManager());
 #else
-	ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(resolver), 
+    ElementPrefixResolverProxy  theProxy(static_cast<const XalanElement*>(resolver), 
                                             executionContext.getMemoryManager());
 #endif
 
-	return doExecute(executionContext, context, expression, theProxy, locator);
+    return doExecute(executionContext, context, expression, theProxy, locator);
 }
 
 
 
 XObjectPtr
 FunctionEvaluate::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	if (args.size() != 1)
-	{
+    if (args.size() != 1)
+    {
         XPathExecutionContext::GetAndReleaseCachedString theString(executionContext);
 
-		executionContext.error(getError(theString.get()), context, locator);
-	}
+        executionContext.error(getError(theString.get()), context, locator);
+    }
 
-	assert(args[0].null() == false);
+    assert(args[0].null() == false);
 
-	const XalanDOMString&	theExpression = args[0]->str();
+    const XalanDOMString&   theExpression = args[0]->str();
 
-	const PrefixResolver* const	theResolver =
-		executionContext.getPrefixResolver();
+    const PrefixResolver* const theResolver =
+        executionContext.getPrefixResolver();
 
-	if (theResolver != 0)
-	{
-		return doExecute(executionContext, context, theExpression, *theResolver, locator);
-	}
-	else
-	{
-		const XalanNode*	resolverNode = context;
+    if (theResolver != 0)
+    {
+        return doExecute(executionContext, context, theExpression, *theResolver, locator);
+    }
+    else
+    {
+        const XalanNode*    resolverNode = context;
 
-		if (resolverNode->getNodeType() != XalanNode::ELEMENT_NODE)
-		{
-			resolverNode = DOMServices::getParentOfNode(*resolverNode);
+        if (resolverNode->getNodeType() != XalanNode::ELEMENT_NODE)
+        {
+            resolverNode = DOMServices::getParentOfNode(*resolverNode);
 
-			if (context->getNodeType() != XalanNode::ELEMENT_NODE)
-			{
-                XPathExecutionContext::GetAndReleaseCachedString theString(executionContext);
+            if (context->getNodeType() != XalanNode::ELEMENT_NODE)
+            {
+                const XPathExecutionContext::GetCachedString    theString(executionContext);
 
-				executionContext.warn(
-					XalanMessageLoader::getMessage(XalanMessages::NoPrefixResolverAvailable, theString.get()),
-					context,
-					locator);
+                executionContext.warn(
+                    XalanMessageLoader::getMessage(
+                        theString.get(),
+                        XalanMessages::NoPrefixResolverAvailable),
+                    context,
+                    locator);
 
-				resolverNode = 0;
-			}
-		}
+                resolverNode = 0;
+            }
+        }
 
-		return doExecute(executionContext, context, theExpression, resolverNode, locator);
-	}
+        return doExecute(executionContext, context, theExpression, resolverNode, locator);
+    }
 }
 
 
@@ -172,9 +174,9 @@ FunctionEvaluate::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionEvaluate::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsOneArgument_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 "evaluate");
 }
 

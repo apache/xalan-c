@@ -27,13 +27,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanTransformerOutputStream::XalanTransformerOutputStream(
     MemoryManagerType&          theManager,
-	void*						theOutputHandle, 
-	XalanOutputHandlerType		theOutputHandler,
-	XalanFlushHandlerType		theFlushHandler):
+    void*                       theOutputHandle, 
+    XalanOutputHandlerType      theOutputHandler,
+    XalanFlushHandlerType       theFlushHandler):
     XalanOutputStream(theManager),
-	m_outputHandle(theOutputHandle),
-	m_outputHandler(theOutputHandler),
-	m_flushHandler(theFlushHandler)
+    m_outputHandle(theOutputHandle),
+    m_outputHandler(theOutputHandler),
+    m_flushHandler(theFlushHandler)
 {
 }
 
@@ -48,32 +48,34 @@ XalanTransformerOutputStream::~XalanTransformerOutputStream()
 void
 XalanTransformerOutputStream::doFlush()
 {
-	if(m_flushHandler != 0)
-	{
-		m_flushHandler(m_outputHandle);
-	}
+    if(m_flushHandler != 0)
+    {
+        m_flushHandler(m_outputHandle);
+    }
 }
 
 
 
 void
 XalanTransformerOutputStream::writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength)
+            const char*     theBuffer,
+            size_type       theBufferLength)
 {
-	const size_t theBytesWritten = m_outputHandler(theBuffer, theBufferLength, m_outputHandle);		
+    const size_t theBytesWritten = m_outputHandler(theBuffer, theBufferLength, m_outputHandle);     
 
-	// We validate that the number of bytes written equals the number of bytes sent to
-	// the output handler. Otherwise we will stop processing  and throw an exception. 
-	// Thus the callback can alert us of memory allocation issues or buffer overflows.
-	if(theBytesWritten != theBufferLength)
-	{
+    // We validate that the number of bytes written equals the number of bytes sent to
+    // the output handler. Otherwise we will stop processing  and throw an exception. 
+    // Thus the callback can alert us of memory allocation issues or buffer overflows.
+    if(theBytesWritten != theBufferLength)
+    {
+        XalanDOMString  theBuffer(getMemoryManager());
 
-        XalanDOMString theBuffer(getMemoryManager());
-
-		throw XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual, theBuffer), getMemoryManager());
-	}
+        throw XalanOutputStreamException(
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::NumberBytesWrittenDoesNotEqual),
+            getMemoryManager());
+    }
 }
 
 

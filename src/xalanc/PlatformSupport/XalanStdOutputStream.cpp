@@ -37,43 +37,43 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanStdOutputStream::XalanStdOutputStream(StreamType&	theOutputStream,
+XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
                                            MemoryManagerType&  theManager) :
-	XalanOutputStream(theManager),
+    XalanOutputStream(theManager),
 #if !defined(XALAN_NEWLINE_IS_CRLF)
-	m_outputStream(theOutputStream)
+    m_outputStream(theOutputStream)
 #else
-	m_outputStream(theOutputStream),
-	m_newlineString(0),
-	m_newlineStringLength(0)
+    m_outputStream(theOutputStream),
+    m_newlineString(0),
+    m_newlineStringLength(0)
 #endif
 {
-	// This will make sure that cerr is not buffered...
-	if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
-	{
-		setBufferSize(0);
+    // This will make sure that cerr is not buffered...
+    if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
+    {
+        setBufferSize(0);
 
 #if defined(XALAN_NEWLINE_IS_CRLF)
-		m_newlineString = s_nlString;
-		m_newlineStringLength = s_nlStringLength;
+        m_newlineString = s_nlString;
+        m_newlineStringLength = s_nlStringLength;
 #endif
-	}
+    }
 #if defined(XALAN_NEWLINE_IS_CRLF)
-	else if (&m_outputStream == &XALAN_STD_QUALIFIER cout)
-	{
-		m_newlineString = s_nlString;
-		m_newlineStringLength = s_nlStringLength;
-	}
-	else
-	{
-		m_newlineString = s_nlCRString;
-		m_newlineStringLength = s_nlCRStringLength;
-	}
+    else if (&m_outputStream == &XALAN_STD_QUALIFIER cout)
+    {
+        m_newlineString = s_nlString;
+        m_newlineStringLength = s_nlStringLength;
+    }
+    else
+    {
+        m_newlineString = s_nlCRString;
+        m_newlineStringLength = s_nlCRStringLength;
+    }
 #endif
 }
 
 XalanStdOutputStream*
-XalanStdOutputStream::create(   StreamType&	theOutputStream,
+XalanStdOutputStream::create(   StreamType& theOutputStream,
                                 MemoryManagerType&  theManager)
 {
     typedef XalanStdOutputStream ThisType;
@@ -99,9 +99,9 @@ XalanStdOutputStream::~XalanStdOutputStream()
 void
 XalanStdOutputStream::newline()
 {
-	assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
+    assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
 
-	write(m_newlineString, m_newlineStringLength);
+    write(m_newlineString, m_newlineStringLength);
 }
 
 
@@ -109,9 +109,9 @@ XalanStdOutputStream::newline()
 const XalanDOMChar*
 XalanStdOutputStream::getNewlineString() const
 {
-	assert(m_newlineString != 0);
+    assert(m_newlineString != 0);
 
-	return m_newlineString;
+    return m_newlineString;
 }
 #endif
 
@@ -120,51 +120,51 @@ XalanStdOutputStream::getNewlineString() const
 void
 XalanStdOutputStream::doFlush()
 {
-	// Don't try to flush if the stream is in a bad state...
-	if(m_outputStream)
-	{
-		m_outputStream.flush();
+    // Don't try to flush if the stream is in a bad state...
+    if(m_outputStream)
+    {
+        m_outputStream.flush();
 
-		if(!m_outputStream)
-		{
+        if(!m_outputStream)
+        {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-			using namespace std;
+            using namespace std;
 #endif
             XalanDOMString thebuffer(getMemoryManager());
 
-			throw XalanStdOutputStreamWriteException(errno, thebuffer);
-		}
-	}
+            throw XalanStdOutputStreamWriteException(errno, thebuffer);
+        }
+    }
 }
 
 
 
 void
 XalanStdOutputStream::writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength)
+            const char*     theBuffer,
+            size_type       theBufferLength)
 {
-	assert(StreamSizeType(theBufferLength) == theBufferLength);
+    assert(StreamSizeType(theBufferLength) == theBufferLength);
 
-	m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
+    m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 
-	if(!m_outputStream)
-	{
+    if(!m_outputStream)
+    {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using namespace std;
+        using namespace std;
 #endif
         XalanDOMString thebuffer(getMemoryManager());
 
-		throw XalanStdOutputStreamWriteException(errno, thebuffer);
-	}
+        throw XalanStdOutputStreamWriteException(errno, thebuffer);
+    }
 }
 
 
 
 static XalanDOMString&
 FormatMessageLocal(
-			const XalanDOMString&	theMessage,
-			int						theErrorCode,
+            const XalanDOMString&   theMessage,
+            int                     theErrorCode,
             XalanDOMString&         theResult)
 {
     theResult.assign(theMessage);
@@ -173,60 +173,71 @@ FormatMessageLocal(
 
     XalanDOMString  theStrErrMsg(theResult.getMemoryManager());
 
-	LongToDOMString(theErrorCode, theStrErrCode);
+    LongToDOMString(theErrorCode, theStrErrCode);
 
-    theResult.append(XalanMessageLoader::getMessage(XalanMessages::MessageErrorCodeWas_1Param,theStrErrMsg, theStrErrCode));
+    theResult.append(
+        XalanMessageLoader::getMessage(
+            theStrErrMsg,
+            XalanMessages::MessageErrorCodeWas_1Param,
+            theStrErrCode));
 
-	return theResult ;
+    return theResult;
 }
 
 
-const XalanDOMChar	XalanStdOutputStream::XalanStdOutputStreamWriteException::m_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_O,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_W,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+
+const XalanDOMChar  XalanStdOutputStream::XalanStdOutputStreamWriteException::m_type[] = 
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_O,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_W,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 
 
 XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWriteException(
-		int					theErrorCode,
-        XalanDOMString&		theBuffer) :
-	XalanOutputStreamException(FormatMessageLocal(XalanMessageLoader::getMessage(XalanMessages::ErrorWritingToStdStream,theBuffer),
-        theErrorCode, theBuffer),theBuffer.getMemoryManager())
+        int                 theErrorCode,
+        XalanDOMString&     theBuffer) :
+    XalanOutputStreamException(
+        FormatMessageLocal(
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::ErrorWritingToStdStream),
+        theErrorCode,
+        theBuffer),
+    theBuffer.getMemoryManager())
 {
 }
 

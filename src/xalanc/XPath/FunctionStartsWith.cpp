@@ -43,18 +43,18 @@ FunctionStartsWith::~FunctionStartsWith()
 
 XObjectPtr
 FunctionStartsWith::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false);	
+    assert(arg1.null() == false && arg2.null() == false);   
 
-	const bool	fStartsWith = startsWith(arg1->str(), 
+    const bool  fStartsWith = startsWith(arg1->str(), 
                             arg2->str());
 
-	return executionContext.getXObjectFactory().createBoolean(fStartsWith);
+    return executionContext.getXObjectFactory().createBoolean(fStartsWith);
 }
 
 
@@ -66,7 +66,7 @@ FunctionStartsWith*
 #endif
 FunctionStartsWith::clone(MemoryManagerType& theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -74,9 +74,9 @@ FunctionStartsWith::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionStartsWith::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesTwoArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesTwoArguments_1Param,
                 "starts-with()");
 }
 

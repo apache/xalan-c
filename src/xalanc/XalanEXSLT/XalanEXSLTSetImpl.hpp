@@ -44,45 +44,45 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDifference : public FunctionDifferenc
 {
 public:
 
-	XalanEXSLTFunctionDifference() :
-		FunctionDifference()
-	{
-	}
+    XalanEXSLTFunctionDifference() :
+        FunctionDifference()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionDifference()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionDifference()
+    {
+    }
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionDifference*
+    virtual XalanEXSLTFunctionDifference*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
+                    theBuffer,
                     XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
-                    theBuffer ,
                     "difference()");
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionDifference&
-	operator=(const XalanEXSLTFunctionDifference&);
+    // Not implemented...
+    XalanEXSLTFunctionDifference&
+    operator=(const XalanEXSLTFunctionDifference&);
 
-	bool
-	operator==(const XalanEXSLTFunctionDifference&) const;
+    bool
+    operator==(const XalanEXSLTFunctionDifference&) const;
 };
 
 
@@ -91,46 +91,46 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDistinct : public FunctionDistinct
 {
 public:
 
-	XalanEXSLTFunctionDistinct() :
-		FunctionDistinct()
-	{
-	}
+    XalanEXSLTFunctionDistinct() :
+        FunctionDistinct()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionDistinct()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionDistinct()
+    {
+    }
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionDistinct*
+    virtual XalanEXSLTFunctionDistinct*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
                     theBuffer ,
+                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
                     "distinct()");
-	}
+    }
 
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionDistinct&
-	operator=(const XalanEXSLTFunctionDistinct&);
+    // Not implemented...
+    XalanEXSLTFunctionDistinct&
+    operator=(const XalanEXSLTFunctionDistinct&);
 
-	bool
-	operator==(const XalanEXSLTFunctionDistinct&) const;
+    bool
+    operator==(const XalanEXSLTFunctionDistinct&) const;
 };
 
 
@@ -139,62 +139,62 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionHasSameNode : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionHasSameNode() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionHasSameNode() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionHasSameNode()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionHasSameNode()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionHasSameNode*
+    virtual XalanEXSLTFunctionHasSameNode*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "has-same-node()");
-	}
+    }
 
 
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionHasSameNode&
-	operator=(const XalanEXSLTFunctionHasSameNode&);
+    // Not implemented...
+    XalanEXSLTFunctionHasSameNode&
+    operator=(const XalanEXSLTFunctionHasSameNode&);
 
-	bool
-	operator==(const XalanEXSLTFunctionHasSameNode&) const;
+    bool
+    operator==(const XalanEXSLTFunctionHasSameNode&) const;
 };
 
 
@@ -203,47 +203,47 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionIntersection : public FunctionInterse
 {
 public:
 
-	XalanEXSLTFunctionIntersection() :
-		FunctionIntersection()
-	{
-	}
+    XalanEXSLTFunctionIntersection() :
+        FunctionIntersection()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionIntersection()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionIntersection()
+    {
+    }
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionIntersection*
+    virtual XalanEXSLTFunctionIntersection*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "distinct()");
 
-		return theBuffer;
-	}
+        return theBuffer;
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionIntersection&
-	operator=(const XalanEXSLTFunctionIntersection&);
+    // Not implemented...
+    XalanEXSLTFunctionIntersection&
+    operator=(const XalanEXSLTFunctionIntersection&);
 
-	bool
-	operator==(const XalanEXSLTFunctionIntersection&) const;
+    bool
+    operator==(const XalanEXSLTFunctionIntersection&) const;
 };
 
 
@@ -252,62 +252,62 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLeading : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionLeading() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionLeading() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionLeading()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionLeading()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionLeading*
+    virtual XalanEXSLTFunctionLeading*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "leading()");
 
-		return theBuffer;
-	}
+        return theBuffer;
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionLeading&
-	operator=(const XalanEXSLTFunctionLeading&);
+    // Not implemented...
+    XalanEXSLTFunctionLeading&
+    operator=(const XalanEXSLTFunctionLeading&);
 
-	bool
-	operator==(const XalanEXSLTFunctionLeading&) const;
+    bool
+    operator==(const XalanEXSLTFunctionLeading&) const;
 };
 
 
@@ -316,60 +316,60 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionTrailing : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionTrailing() :
-		Function()
-	{
-	}
+    XalanEXSLTFunctionTrailing() :
+        Function()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionTrailing()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionTrailing()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionTrailing*
+    virtual XalanEXSLTFunctionTrailing*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
         return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "trailing()");
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionTrailing&
-	operator=(const XalanEXSLTFunctionTrailing&);
+    // Not implemented...
+    XalanEXSLTFunctionTrailing&
+    operator=(const XalanEXSLTFunctionTrailing&);
 
-	bool
-	operator==(const XalanEXSLTFunctionTrailing&) const;
+    bool
+    operator==(const XalanEXSLTFunctionTrailing&) const;
 };
 
 
@@ -378,4 +378,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_SETIMPL_HEADER_GUARD_1357924680
+#endif  // EXSLT_SETIMPL_HEADER_GUARD_1357924680

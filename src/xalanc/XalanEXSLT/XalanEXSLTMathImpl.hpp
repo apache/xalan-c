@@ -38,53 +38,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAbs : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAbs()
-	{
-	}
+    XalanEXSLTFunctionAbs()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionAbs()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAbs()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAbs*
+    virtual XalanEXSLTFunctionAbs*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAbs&
-	operator=(const XalanEXSLTFunctionAbs&);
+    // Not implemented...
+    XalanEXSLTFunctionAbs&
+    operator=(const XalanEXSLTFunctionAbs&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAbs&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAbs&) const;
 };
 
 
@@ -93,53 +93,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionRandom : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionRandom()
-	{
-	}
+    XalanEXSLTFunctionRandom()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionRandom()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionRandom()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionRandom*
+    virtual XalanEXSLTFunctionRandom*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionRandom&
-	operator=(const XalanEXSLTFunctionRandom&);
+    // Not implemented...
+    XalanEXSLTFunctionRandom&
+    operator=(const XalanEXSLTFunctionRandom&);
 
-	bool
-	operator==(const XalanEXSLTFunctionRandom&) const;
+    bool
+    operator==(const XalanEXSLTFunctionRandom&) const;
 };
 
 
@@ -148,53 +148,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAcos : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAcos()
-	{
-	}
+    XalanEXSLTFunctionAcos()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionAcos()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAcos()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAcos*
+    virtual XalanEXSLTFunctionAcos*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAcos&
-	operator=(const XalanEXSLTFunctionAcos&);
+    // Not implemented...
+    XalanEXSLTFunctionAcos&
+    operator=(const XalanEXSLTFunctionAcos&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAcos&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAcos&) const;
 };
 
 
@@ -203,53 +203,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAsin : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAsin()
-	{
-	}
+    XalanEXSLTFunctionAsin()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionAsin()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAsin()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAsin*
+    virtual XalanEXSLTFunctionAsin*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAsin&
-	operator=(const XalanEXSLTFunctionAsin&);
+    // Not implemented...
+    XalanEXSLTFunctionAsin&
+    operator=(const XalanEXSLTFunctionAsin&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAsin&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAsin&) const;
 };
 
 
@@ -258,53 +258,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAtan : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAtan()
-	{
-	}
+    XalanEXSLTFunctionAtan()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionAtan()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAtan()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAtan*
+    virtual XalanEXSLTFunctionAtan*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAtan&
-	operator=(const XalanEXSLTFunctionAtan&);
+    // Not implemented...
+    XalanEXSLTFunctionAtan&
+    operator=(const XalanEXSLTFunctionAtan&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAtan&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAtan&) const;
 };
 
 
@@ -313,53 +313,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAtan2 : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionAtan2()
-	{
-	}
+    XalanEXSLTFunctionAtan2()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionAtan2()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionAtan2()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionAtan2*
+    virtual XalanEXSLTFunctionAtan2*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionAtan2&
-	operator=(const XalanEXSLTFunctionAtan2&);
+    // Not implemented...
+    XalanEXSLTFunctionAtan2&
+    operator=(const XalanEXSLTFunctionAtan2&);
 
-	bool
-	operator==(const XalanEXSLTFunctionAtan2&) const;
+    bool
+    operator==(const XalanEXSLTFunctionAtan2&) const;
 };
 
 
@@ -368,76 +368,76 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionConstant : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionConstant()
-	{
-	}
+    XalanEXSLTFunctionConstant()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionConstant()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionConstant()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionConstant*
+    virtual XalanEXSLTFunctionConstant*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        return XalanMessageLoader::getMessage(
                     theBuffer,
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "constant()");
-	}
+    }
 
 private:
 
-	static const XalanDOMChar	s_eString[];
-	static const XalanDOMChar	s_ln10String[];
-	static const XalanDOMChar	s_ln2String[];
-	static const XalanDOMChar	s_log2EString[];
-	static const XalanDOMChar	s_piString[];
-	static const XalanDOMChar	s_sqrt1_2String[];
-	static const XalanDOMChar	s_sqrt2String[];
+    static const XalanDOMChar   s_eString[];
+    static const XalanDOMChar   s_ln10String[];
+    static const XalanDOMChar   s_ln2String[];
+    static const XalanDOMChar   s_log2EString[];
+    static const XalanDOMChar   s_piString[];
+    static const XalanDOMChar   s_sqrt1_2String[];
+    static const XalanDOMChar   s_sqrt2String[];
 
-	static const double		s_eValues[];
-	static const double		s_ln10Values[];
-	static const double		s_ln2Values[];
-	static const double		s_log2EValues[];
-	static const double		s_piValues[];
-	static const double		s_sqrt1_2Values[];
-	static const double		s_sqrt2Values[];
+    static const double     s_eValues[];
+    static const double     s_ln10Values[];
+    static const double     s_ln2Values[];
+    static const double     s_log2EValues[];
+    static const double     s_piValues[];
+    static const double     s_sqrt1_2Values[];
+    static const double     s_sqrt2Values[];
 
 
-	// Not implemented...
-	XalanEXSLTFunctionConstant&
-	operator=(const XalanEXSLTFunctionConstant&);
+    // Not implemented...
+    XalanEXSLTFunctionConstant&
+    operator=(const XalanEXSLTFunctionConstant&);
 
-	bool
-	operator==(const XalanEXSLTFunctionConstant&) const;
+    bool
+    operator==(const XalanEXSLTFunctionConstant&) const;
 };
 
 
@@ -446,53 +446,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionCos : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionCos()
-	{
-	}
+    XalanEXSLTFunctionCos()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionCos()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionCos()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionCos*
+    virtual XalanEXSLTFunctionCos*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionCos&
-	operator=(const XalanEXSLTFunctionCos&);
+    // Not implemented...
+    XalanEXSLTFunctionCos&
+    operator=(const XalanEXSLTFunctionCos&);
 
-	bool
-	operator==(const XalanEXSLTFunctionCos&) const;
+    bool
+    operator==(const XalanEXSLTFunctionCos&) const;
 };
 
 
@@ -501,53 +501,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionExp : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionExp()
-	{
-	}
+    XalanEXSLTFunctionExp()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionExp()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionExp()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionExp*
+    virtual XalanEXSLTFunctionExp*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionExp&
-	operator=(const XalanEXSLTFunctionExp&);
+    // Not implemented...
+    XalanEXSLTFunctionExp&
+    operator=(const XalanEXSLTFunctionExp&);
 
-	bool
-	operator==(const XalanEXSLTFunctionExp&) const;
+    bool
+    operator==(const XalanEXSLTFunctionExp&) const;
 };
 
 
@@ -556,53 +556,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionHighest : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionHighest()
-	{
-	}
+    XalanEXSLTFunctionHighest()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionHighest()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionHighest()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionHighest*
+    virtual XalanEXSLTFunctionHighest*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionHighest&
-	operator=(const XalanEXSLTFunctionHighest&);
+    // Not implemented...
+    XalanEXSLTFunctionHighest&
+    operator=(const XalanEXSLTFunctionHighest&);
 
-	bool
-	operator==(const XalanEXSLTFunctionHighest&) const;
+    bool
+    operator==(const XalanEXSLTFunctionHighest&) const;
 };
 
 
@@ -611,53 +611,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLog : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionLog()
-	{
-	}
+    XalanEXSLTFunctionLog()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionLog()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionLog()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionLog*
+    virtual XalanEXSLTFunctionLog*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionLog&
-	operator=(const XalanEXSLTFunctionLog&);
+    // Not implemented...
+    XalanEXSLTFunctionLog&
+    operator=(const XalanEXSLTFunctionLog&);
 
-	bool
-	operator==(const XalanEXSLTFunctionLog&) const;
+    bool
+    operator==(const XalanEXSLTFunctionLog&) const;
 };
 
 
@@ -666,53 +666,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLowest : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionLowest()
-	{
-	}
+    XalanEXSLTFunctionLowest()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionLowest()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionLowest()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionLowest*
+    virtual XalanEXSLTFunctionLowest*
 #endif
-	clone(MemoryManagerType&  theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&  theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionLowest&
-	operator=(const XalanEXSLTFunctionLowest&);
+    // Not implemented...
+    XalanEXSLTFunctionLowest&
+    operator=(const XalanEXSLTFunctionLowest&);
 
-	bool
-	operator==(const XalanEXSLTFunctionLowest&) const;
+    bool
+    operator==(const XalanEXSLTFunctionLowest&) const;
 };
 
 
@@ -721,53 +721,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionMax : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionMax()
-	{
-	}
+    XalanEXSLTFunctionMax()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionMax()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionMax()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionMax*
+    virtual XalanEXSLTFunctionMax*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionMax&
-	operator=(const XalanEXSLTFunctionMax&);
+    // Not implemented...
+    XalanEXSLTFunctionMax&
+    operator=(const XalanEXSLTFunctionMax&);
 
-	bool
-	operator==(const XalanEXSLTFunctionMax&) const;
+    bool
+    operator==(const XalanEXSLTFunctionMax&) const;
 };
 
 
@@ -776,53 +776,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionMin : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionMin()
-	{
-	}
+    XalanEXSLTFunctionMin()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionMin()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionMin()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionMin*
+    virtual XalanEXSLTFunctionMin*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionMin&
-	operator=(const XalanEXSLTFunctionMin&);
+    // Not implemented...
+    XalanEXSLTFunctionMin&
+    operator=(const XalanEXSLTFunctionMin&);
 
-	bool
-	operator==(const XalanEXSLTFunctionMin&) const;
+    bool
+    operator==(const XalanEXSLTFunctionMin&) const;
 };
 
 
@@ -831,53 +831,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionPower : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionPower()
-	{
-	}
+    XalanEXSLTFunctionPower()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionPower()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionPower()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionPower*
+    virtual XalanEXSLTFunctionPower*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionPower&
-	operator=(const XalanEXSLTFunctionPower&);
+    // Not implemented...
+    XalanEXSLTFunctionPower&
+    operator=(const XalanEXSLTFunctionPower&);
 
-	bool
-	operator==(const XalanEXSLTFunctionPower&) const;
+    bool
+    operator==(const XalanEXSLTFunctionPower&) const;
 };
 
 
@@ -886,53 +886,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionSin : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionSin()
-	{
-	}
+    XalanEXSLTFunctionSin()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionSin()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionSin()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionSin*
+    virtual XalanEXSLTFunctionSin*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionSin&
-	operator=(const XalanEXSLTFunctionSin&);
+    // Not implemented...
+    XalanEXSLTFunctionSin&
+    operator=(const XalanEXSLTFunctionSin&);
 
-	bool
-	operator==(const XalanEXSLTFunctionSin&) const;
+    bool
+    operator==(const XalanEXSLTFunctionSin&) const;
 };
 
 
@@ -941,53 +941,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionSqrt : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionSqrt()
-	{
-	}
+    XalanEXSLTFunctionSqrt()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionSqrt()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionSqrt()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionSqrt*
+    virtual XalanEXSLTFunctionSqrt*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionSqrt&
-	operator=(const XalanEXSLTFunctionSqrt&);
+    // Not implemented...
+    XalanEXSLTFunctionSqrt&
+    operator=(const XalanEXSLTFunctionSqrt&);
 
-	bool
-	operator==(const XalanEXSLTFunctionSqrt&) const;
+    bool
+    operator==(const XalanEXSLTFunctionSqrt&) const;
 };
 
 
@@ -996,53 +996,53 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionTan : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionTan()
-	{
-	}
+    XalanEXSLTFunctionTan()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionTan()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionTan()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionTan*
+    virtual XalanEXSLTFunctionTan*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	const XalanDOMString&
-	getError(XalanDOMString&    theBuffer) const;
+    const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionTan&
-	operator=(const XalanEXSLTFunctionTan&);
+    // Not implemented...
+    XalanEXSLTFunctionTan&
+    operator=(const XalanEXSLTFunctionTan&);
 
-	bool
-	operator==(const XalanEXSLTFunctionTan&) const;
+    bool
+    operator==(const XalanEXSLTFunctionTan&) const;
 };
 
 
@@ -1051,4 +1051,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_MATHIMPL_HEADER_GUARD_1357924680
+#endif  // EXSLT_MATHIMPL_HEADER_GUARD_1357924680

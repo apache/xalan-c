@@ -44,43 +44,43 @@ FunctionIntersection::~FunctionIntersection()
 
 XObjectPtr
 FunctionIntersection::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	if (args.size() != 2)
-	{
+    if (args.size() != 2)
+    {
         XalanDOMString theResult(executionContext.getMemoryManager());
 
-		executionContext.error(getError(theResult), context, locator);
-	}
+        executionContext.error(getError(theResult), context, locator);
+    }
 
-	assert(args[0].null() == false && args[1].null() == false);
+    assert(args[0].null() == false && args[1].null() == false);
 
-	const NodeRefListBase&	nodeset1 = args[0]->nodeset();
-	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
+    const NodeRefListBase&  nodeset1 = args[0]->nodeset();
+    const NodeRefListBase&  nodeset2 = args[1]->nodeset();
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	theResult(executionContext);
+    BorrowReturnMutableNodeRefList  theResult(executionContext);
 
-	const NodeRefListBase::size_type	theLength = nodeset1.getLength();
+    const NodeRefListBase::size_type    theLength = nodeset1.getLength();
 
-	for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
-	{
-		XalanNode* const	theNode = nodeset1.item(i);
-		assert(theNode != 0);
+    for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
+    {
+        XalanNode* const    theNode = nodeset1.item(i);
+        assert(theNode != 0);
 
-		if (nodeset2.indexOf(theNode) != NodeRefListBase::npos)
-		{
-			theResult->addNodeInDocOrder(theNode, executionContext);
-		}
-	}
+        if (nodeset2.indexOf(theNode) != NodeRefListBase::npos)
+        {
+            theResult->addNodeInDocOrder(theNode, executionContext);
+        }
+    }
 
-	theResult->setDocumentOrder();
+    theResult->setDocumentOrder();
 
-	return executionContext.getXObjectFactory().createNodeSet(theResult);
+    return executionContext.getXObjectFactory().createNodeSet(theResult);
 }
 
 
@@ -100,9 +100,9 @@ FunctionIntersection::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionIntersection::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsTwoArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsTwoArguments_1Param,
                 "intersection");
 }
 

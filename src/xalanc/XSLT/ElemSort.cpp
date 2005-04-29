@@ -36,97 +36,98 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemSort::ElemSort(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_SORT),
-	m_selectPattern(0),
-	m_langAVT(0),
-	m_dataTypeAVT(0),
-	m_orderAVT(0),
-	m_caseOrderAVT(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_SORT),
+    m_selectPattern(0),
+    m_langAVT(0),
+    m_dataTypeAVT(0),
+    m_orderAVT(0),
+    m_caseOrderAVT(0)
 {
-	const unsigned int nAttrs = atts.getLength();
+    const unsigned int nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_SELECT))
-		{
-			m_selectPattern 
-				= constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_LANG))
-		{			
-			m_langAVT =
-					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_DATATYPE))
-		{
-			m_dataTypeAVT =
-					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_ORDER))
-		{
-			m_orderAVT =
-					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
-		{
-			m_caseOrderAVT =
-					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(!isAttrOK(aname, atts, i, constructionContext))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
+        if(equals(aname, Constants::ATTRNAME_SELECT))
+        {
+            m_selectPattern 
+                = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_LANG))
+        {           
+            m_langAVT =
+                    constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_DATATYPE))
+        {
+            m_dataTypeAVT =
+                    constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_ORDER))
+        {
+            m_orderAVT =
+                    constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_CASEORDER))
+        {
+            m_caseOrderAVT =
+                    constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_SORT_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                        theResult,
-							Constants::ELEMNAME_SORT_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+    if(0 == m_dataTypeAVT)
+    {
+        m_dataTypeAVT =
+            constructionContext.createAVT(
+                getLocator(),
+                c_wstr(Constants::ATTRNAME_DATATYPE),
+                c_wstr(Constants::ATTRVAL_DATATYPE_TEXT),
+                *this);
+    }
 
-	if(0 == m_dataTypeAVT)
-	{
-		m_dataTypeAVT =
-			constructionContext.createAVT(
-				getLocator(),
-				c_wstr(Constants::ATTRNAME_DATATYPE),
-				c_wstr(Constants::ATTRVAL_DATATYPE_TEXT),
-				*this);
-	}
-
-	if(0 == m_orderAVT)
-	{
-		m_orderAVT =
-			constructionContext.createAVT(
-				getLocator(),
-				c_wstr(Constants::ATTRNAME_ORDER),
-				c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
-				*this);
-	}
+    if(0 == m_orderAVT)
+    {
+        m_orderAVT =
+            constructionContext.createAVT(
+                getLocator(),
+                c_wstr(Constants::ATTRNAME_ORDER),
+                c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
+                *this);
+    }
 }
+
+
 
 ElemSort*
 ElemSort::create(
             MemoryManagerType& theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber)
 {
     typedef ElemSort ThisType;
 
@@ -145,6 +146,8 @@ ElemSort::create(
     return theResult;
 }
 
+
+
 ElemSort::~ElemSort()
 {
 }
@@ -154,15 +157,15 @@ ElemSort::~ElemSort()
 const XalanDOMString&
 ElemSort::getElementName() const
 {
-	return Constants::ELEMNAME_SORT_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_SORT_WITH_PREFIX_STRING;
 }
 
 
 
 const XPath*
-ElemSort::getXPath(unsigned int		index) const
+ElemSort::getXPath(unsigned int     index) const
 {
-	return index == 0 ? m_selectPattern : 0;
+    return index == 0 ? m_selectPattern : 0;
 }
 
 

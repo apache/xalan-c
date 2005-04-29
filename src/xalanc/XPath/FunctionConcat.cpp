@@ -43,71 +43,71 @@ FunctionConcat::~FunctionConcat()
 
 XObjectPtr
 FunctionConcat::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false);	
+    assert(arg1.null() == false && arg2.null() == false);   
 
-	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-	XalanDOMString&		theString = theResult.get();
+    XalanDOMString&     theString = theResult.get();
 
-	arg1->str(theString);
-	arg2->str(theString);
+    arg1->str(theString);
+    arg2->str(theString);
 
-	return executionContext.getXObjectFactory().createString(theResult);
+    return executionContext.getXObjectFactory().createString(theResult);
 }
 
 
 
 XObjectPtr
 FunctionConcat::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const XObjectPtr		arg3,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const XObjectPtr        arg3,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);	
+    assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);   
 
-	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-	XalanDOMString&			theString = theResult.get();
+    XalanDOMString&         theString = theResult.get();
 
-	arg1->str(theString);
-	arg2->str(theString);
-	arg3->str(theString);
+    arg1->str(theString);
+    arg2->str(theString);
+    arg3->str(theString);
 
-	return executionContext.getXObjectFactory().createString(theResult);
+    return executionContext.getXObjectFactory().createString(theResult);
 }
 
 
 
 XObjectPtr
 FunctionConcat::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						/* context */,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				/* locator */) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      /* context */,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              /* locator */) const
 {
-	const XObjectArgVectorType::const_iterator	theEnd = args.end();
+    const XObjectArgVectorType::const_iterator  theEnd = args.end();
 
-	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-	XalanDOMString&		theString = theResult.get();
+    XalanDOMString&     theString = theResult.get();
 
-	XObjectArgVectorType::const_iterator	i = args.begin();
+    XObjectArgVectorType::const_iterator    i = args.begin();
 
-	for(; i != theEnd; ++i)
-	{
-		(*i)->str(theString);
-	}
+    for(; i != theEnd; ++i)
+    {
+        (*i)->str(theString);
+    }
 
-	return executionContext.getXObjectFactory().createString(theResult);
+    return executionContext.getXObjectFactory().createString(theResult);
 }
 
 
@@ -119,7 +119,7 @@ FunctionConcat*
 #endif
 FunctionConcat::clone(MemoryManagerType&    theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -127,9 +127,9 @@ FunctionConcat::clone(MemoryManagerType&    theManager) const
 const XalanDOMString&
 FunctionConcat::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakes2ArgsAtLeast_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakes2ArgsAtLeast_1Param,
                 "concat()");
 }
 

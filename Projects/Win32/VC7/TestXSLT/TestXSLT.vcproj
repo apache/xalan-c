@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="..\..\..\..\Build\Win32\VC7\Debug\Nls\Include,$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
 				PreprocessorDefinitions="_DEBUG,WIN32,_WINDOWS,_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -77,7 +77,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="..\..\..\..\Build\Win32\VC7\Release\Nls\Include,$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
 				PreprocessorDefinitions="NDEBUG,_USRDLL,WIN32,_WINDOWS,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;..\..\..\..\..\..\xml-xerces\c\src&quot;;..\..\..\..\src\"
+				AdditionalIncludeDirectories="..\..\..\..\Build\Win32\VC7\Release.symbols\Nls\Include,&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;..\..\..\..\..\..\xml-xerces\c\src&quot;;..\..\..\..\src\"
 				PreprocessorDefinitions="NDEBUG,_USRDLL,XALAN_XERCES,WIN32,_WINDOWS,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"

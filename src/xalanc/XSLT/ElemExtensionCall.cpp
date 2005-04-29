@@ -33,36 +33,42 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemExtensionCall::ElemExtensionCall(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
-			ExtensionNSHandler&				ns) :
-	ElemLiteralResult(constructionContext,
-					  stylesheetTree,
-					  name,
-					  atts,
-					  lineNumber,
-					  columnNumber,
-					  StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL),
-	m_qname(constructionContext.createXalanQName(name, getStylesheet().getNamespaces(), getLocator())),
-	m_nsh(ns)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber,
+            ExtensionNSHandler&             ns) :
+    ElemLiteralResult(constructionContext,
+        stylesheetTree,
+        name,
+        atts,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL),
+    m_qname(
+        constructionContext.createXalanQName(
+            name,
+            getStylesheet().getNamespaces(),
+            getLocator())),
+    m_nsh(ns)
 {
-	assert(m_qname != 0);
+    assert(m_qname != 0);
 }
+
+
 
 ElemExtensionCall*
 ElemExtensionCall::create(
             MemoryManagerType&              theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
-			ExtensionNSHandler&				ns)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber,
+            ExtensionNSHandler&             ns)
 {
     typedef ElemExtensionCall ThisType;
 
@@ -84,26 +90,24 @@ ElemExtensionCall::create(
 }
 
 
+
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemExtensionCall::startElement(StylesheetExecutionContext&	executionContext) const
+ElemExtensionCall::startElement(StylesheetExecutionContext& executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-    XalanDOMString  theResult(executionContext.getMemoryManager());
+    warn(
+        executionContext,
+        XalanMessages::XalanHandleExtensions);
 
-	executionContext.warn( 
-		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions, theResult),
-		0,
-		getLocator());
-
-	return ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+    return ElemTemplateElement::getFirstChildElemToExecute(executionContext);
 }
 
 
 
 void 
-ElemExtensionCall::endElement(StylesheetExecutionContext&	/*executionContext*/) const
+ElemExtensionCall::endElement(StylesheetExecutionContext&   /*executionContext*/) const
 {
 }
 
@@ -111,10 +115,10 @@ ElemExtensionCall::endElement(StylesheetExecutionContext&	/*executionContext*/) 
 
 bool
 ElemExtensionCall::executeChildElement(
-					StylesheetExecutionContext& /*executionContext*/,
-					const ElemTemplateElement*	element) const
+                    StylesheetExecutionContext& /*executionContext*/,
+                    const ElemTemplateElement*  element) const
 {
-	return  element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
+    return  element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
 }
 #endif
 
@@ -122,30 +126,30 @@ ElemExtensionCall::executeChildElement(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemExtensionCall::execute(StylesheetExecutionContext&	executionContext) const
+ElemExtensionCall::execute(StylesheetExecutionContext&  executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	executionContext.warn( 
-		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
-		0,
-		getLocator());
+    executionContext.warn( 
+        XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
+        0,
+        getLocator());
 
-	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
-	{
-		if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
-		{
-			child->execute(executionContext);
-		}
-	}
+    for (const ElemTemplateElement* child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
+    {
+        if(child->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK)
+        {
+            child->execute(executionContext);
+        }
+    }
 }
 #endif
 
 
 bool
-ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContext) const
+ElemExtensionCall::elementAvailable(StylesheetExecutionContext&     executionContext) const
 {
-	return executionContext.elementAvailable(*m_qname);
+    return executionContext.elementAvailable(*m_qname);
 }
 
 

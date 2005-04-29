@@ -42,60 +42,58 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionEvaluate : public FunctionEvaluate
 {
 public:
 
-	typedef FunctionEvaluate	ParentType;
+    typedef FunctionEvaluate    ParentType;
 
-	XalanEXSLTFunctionEvaluate() :
-		FunctionEvaluate()
-	{
-	}
+    XalanEXSLTFunctionEvaluate() :
+        FunctionEvaluate()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionEvaluate()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionEvaluate()
+    {
+    }
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionEvaluate*
+    virtual XalanEXSLTFunctionEvaluate*
 #endif
-	clone(MemoryManagerType&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theResult) const
-	{
-		return XalanMessageLoader::getMessage(
-                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theResult) const
+    {
+        return XalanMessageLoader::getMessage(
                     theResult,
+                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
                     "evaluate");
-
-        return theResult;
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionEvaluate&
-	operator=(const XalanEXSLTFunctionEvaluate&);
+    // Not implemented...
+    XalanEXSLTFunctionEvaluate&
+    operator=(const XalanEXSLTFunctionEvaluate&);
 
-	bool
-	operator==(const XalanEXSLTFunctionEvaluate&) const;
+    bool
+    operator==(const XalanEXSLTFunctionEvaluate&) const;
 };
 
 
@@ -104,4 +102,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_DYNAMICIMPL_HEADER_GUARD_1357924680
+#endif  // EXSLT_DYNAMICIMPL_HEADER_GUARD_1357924680

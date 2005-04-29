@@ -51,169 +51,173 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const MutableNodeRefList	KeyTable::s_dummyList(XalanMemMgrs::getDummyMemMgr());
+const MutableNodeRefList    KeyTable::s_dummyList(XalanMemMgrs::getDummyMemMgr());
 
 
 
 KeyTable::KeyTable(
-			XalanNode*							startNode,
-			const PrefixResolver&				resolver,
-			const KeyDeclarationVectorType&		keyDeclarations,
-			StylesheetExecutionContext&			executionContext) :
-	m_keys(executionContext.getMemoryManager())
+            XalanNode*                          startNode,
+            const PrefixResolver&               resolver,
+            const KeyDeclarationVectorType&     keyDeclarations,
+            StylesheetExecutionContext&         executionContext) :
+    m_keys(executionContext.getMemoryManager())
 {
-    XalanNode*	pos = startNode;
+    XalanNode*  pos = startNode;
 
-	const KeyDeclarationVectorType::size_type	nDeclarations =
-			keyDeclarations.size();
+    const KeyDeclarationVectorType::size_type   nDeclarations =
+            keyDeclarations.size();
 
     // Do a non-recursive pre-walk over the tree.
     while(0 != pos)
     {
-		// We're going to have to walk the attribute list 
-		// if it's an element, so get the attributes.
-		const XalanNamedNodeMap*	attrs = 0;
+        // We're going to have to walk the attribute list 
+        // if it's an element, so get the attributes.
+        const XalanNamedNodeMap*    attrs = 0;
 
-		int							nNodes = 0;
+        int                         nNodes = 0;
 
-		if(XalanNode::ELEMENT_NODE == pos->getNodeType())
-		{
-			attrs = pos->getAttributes();
+        if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+        {
+            attrs = pos->getAttributes();
 
-			nNodes = attrs->getLength();
+            nNodes = attrs->getLength();
         
-			if(0 == nNodes)
-			{
-				attrs = 0;
-			}
-		}
+            if(0 == nNodes)
+            {
+                attrs = 0;
+            }
+        }
 
-		// Walk the primary node, and each of the attributes.
-		// This loop is a little strange... it is meant to always 
-		// execute once, then execute for each of the attributes.
-		XalanNode*	testNode = pos;
+        // Walk the primary node, and each of the attributes.
+        // This loop is a little strange... it is meant to always 
+        // execute once, then execute for each of the attributes.
+        XalanNode*  testNode = pos;
 
-		for(int nodeIndex = -1; nodeIndex < nNodes;)
-		{
-			// Walk through each of the declarations made with xsl:key
-			for(unsigned int i = 0; i < nDeclarations; ++i)
-			{
-				const KeyDeclaration&	kd = keyDeclarations[i];
+        for(int nodeIndex = -1; nodeIndex < nNodes;)
+        {
+            // Walk through each of the declarations made with xsl:key
+            for(unsigned int i = 0; i < nDeclarations; ++i)
+            {
+                const KeyDeclaration&   kd = keyDeclarations[i];
 
-				if (executionContext.getInConstruction(kd) == true)			
-				{
-					assert(kd.getURI() != 0);
+                if (executionContext.getInConstruction(kd) == true)         
+                {
+                    assert(kd.getURI() != 0);
                     StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
 
-					throw XSLTProcessorException(
+                    throw XSLTProcessorException(
                             executionContext.getMemoryManager(),
-						XalanMessageLoader::getMessage(XalanMessages::UseOfFunctionIsIllegal_2Param, theGuard.get(),"key()","xsl:key"),
-							*kd.getURI(),
-							kd.getLineNumber(),
-							kd.getColumnNumber());
-				}
-				else
-				{
-					executionContext.beginConstruction(kd);
+                            XalanMessageLoader::getMessage(
+                                theGuard.get(),
+                                XalanMessages::UseOfFunctionIsIllegal_2Param,
+                                "key()",
+                                "xsl:key"),
+                            *kd.getURI(),
+                            kd.getLineNumber(),
+                            kd.getColumnNumber());
+                }
+                else
+                {
+                    executionContext.beginConstruction(kd);
 
-					// See if our node matches the given key declaration according to 
-					// the match attribute on xsl:key.
-					assert(kd.getMatchPattern() != 0);
+                    // See if our node matches the given key declaration according to 
+                    // the match attribute on xsl:key.
+                    assert(kd.getMatchPattern() != 0);
 
-					const XPath::eMatchScore	score =
-							kd.getMatchPattern()->getMatchScore(testNode,
-																resolver,
-																executionContext);
+                    const XPath::eMatchScore    score =
+                            kd.getMatchPattern()->getMatchScore(testNode,
+                                                                resolver,
+                                                                executionContext);
 
-					if(score != XPath::eMatchScoreNone)
-					{
-						processKeyDeclaration(
-							m_keys,
-							kd,
-							testNode,
-							resolver,
-							executionContext);
-					}
+                    if(score != XPath::eMatchScoreNone)
+                    {
+                        processKeyDeclaration(
+                            m_keys,
+                            kd,
+                            testNode,
+                            resolver,
+                            executionContext);
+                    }
 
-					executionContext.endConstruction(kd);
-				} // if (kd.getInConstruction() == true)
-			} // end for(int i = 0; i < nDeclarations; ++i)
+                    executionContext.endConstruction(kd);
+                } // if (kd.getInConstruction() == true)
+            } // end for(int i = 0; i < nDeclarations; ++i)
 
-			++nodeIndex;
+            ++nodeIndex;
 
-			if(0 != attrs)
-			{
-				testNode = attrs->item(nodeIndex);
-			}
-		} // for(int nodeIndex = -1; nodeIndex < nNodes;)
+            if(0 != attrs)
+            {
+                testNode = attrs->item(nodeIndex);
+            }
+        } // for(int nodeIndex = -1; nodeIndex < nNodes;)
 
-		// The rest of this is getting the next pre-walk position in 
-		// the tree.
-		XalanNode*	nextNode = pos->getFirstChild();
+        // The rest of this is getting the next pre-walk position in 
+        // the tree.
+        XalanNode*  nextNode = pos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if(startNode == pos)
-			{
-				break;
-			}
-			else
-			{
-				nextNode = pos->getNextSibling();
+        while(0 == nextNode)
+        {
+            if(startNode == pos)
+            {
+                break;
+            }
+            else
+            {
+                nextNode = pos->getNextSibling();
 
-				if(0 == nextNode)
-				{
-					pos = pos->getParentNode();
+                if(0 == nextNode)
+                {
+                    pos = pos->getParentNode();
 
-					if((startNode == pos) || (0 == pos))
-					{
-						nextNode = 0;
-						break;
-					}
-				}
-			}
-		}
+                    if((startNode == pos) || (0 == pos))
+                    {
+                        nextNode = 0;
+                        break;
+                    }
+                }
+            }
+        }
 
-		pos = nextNode;
+        pos = nextNode;
     } // while(0 != pos)
 
-	if (m_keys.empty() == false)
-	{
-		const KeysMapType::iterator		theEnd = m_keys.end();
-		KeysMapType::iterator			theCurrent = m_keys.begin();
-		assert(theCurrent != theEnd);
+    if (m_keys.empty() == false)
+    {
+        const KeysMapType::iterator     theEnd = m_keys.end();
+        KeysMapType::iterator           theCurrent = m_keys.begin();
+        assert(theCurrent != theEnd);
 
-		do
-		{
-			NodeListMapType&	theCurrentNodeListMap = (*theCurrent).second;
+        do
+        {
+            NodeListMapType&    theCurrentNodeListMap = (*theCurrent).second;
 
-			if (theCurrentNodeListMap.empty() == false)
-			{
-				const NodeListMapType::iterator		theEnd = theCurrentNodeListMap.end();
-				NodeListMapType::iterator			theCurrent = theCurrentNodeListMap.begin();
-				assert(theCurrent != theEnd);
+            if (theCurrentNodeListMap.empty() == false)
+            {
+                const NodeListMapType::iterator     theEnd = theCurrentNodeListMap.end();
+                NodeListMapType::iterator           theCurrent = theCurrentNodeListMap.begin();
+                assert(theCurrent != theEnd);
 
-				do
-				{
-					(*theCurrent).second.setDocumentOrder();
+                do
+                {
+                    (*theCurrent).second.setDocumentOrder();
 
-					++theCurrent;
-				}
-				while(theCurrent != theEnd);
-			}
+                    ++theCurrent;
+                }
+                while(theCurrent != theEnd);
+            }
 
-			++theCurrent;
-		}
-		while(theCurrent != theEnd);
-	}	
+            ++theCurrent;
+        }
+        while(theCurrent != theEnd);
+    }   
 } // end constructor
 
 KeyTable*
 KeyTable::create(MemoryManagerType& theManager,
-			XalanNode*							startNode,
-			const PrefixResolver&				resolver,
-			const KeyDeclarationVectorType&		keyDeclarations,
-			StylesheetExecutionContext&			executionContext)
+            XalanNode*                          startNode,
+            const PrefixResolver&               resolver,
+            const KeyDeclarationVectorType&     keyDeclarations,
+            StylesheetExecutionContext&         executionContext)
 {
     typedef KeyTable ThisType;
 
@@ -238,98 +242,98 @@ KeyTable::~KeyTable()
 
 const MutableNodeRefList&
 KeyTable::getNodeSetByKey(
-					  const XalanQName&			qname, 
-					  const XalanDOMString&		ref) const
+                      const XalanQName&         qname, 
+                      const XalanDOMString&     ref) const
 {
-	const KeysMapType::const_iterator	i = m_keys.find(qname);
+    const KeysMapType::const_iterator   i = m_keys.find(qname);
 
-	if (i != m_keys.end())
-	{
-		const NodeListMapType&	theMap = (*i).second;
+    if (i != m_keys.end())
+    {
+        const NodeListMapType&  theMap = (*i).second;
 
-		const NodeListMapType::const_iterator	j = theMap.find(ref);
+        const NodeListMapType::const_iterator   j = theMap.find(ref);
 
-		if (j != theMap.end())
-		{
-			return (*j).second;
-		}
-	}
+        if (j != theMap.end())
+        {
+            return (*j).second;
+        }
+    }
 
-	// It makes things much easier if we always return
-	// a list of nodes.  So this is just an empty one
-	// to return when the ref is not found.
-	return s_dummyList;
+    // It makes things much easier if we always return
+    // a list of nodes.  So this is just an empty one
+    // to return when the ref is not found.
+    return s_dummyList;
 }
 
 
 
 inline void
 addIfNotFound(
-			StylesheetExecutionContext&		executionContext,
-			MutableNodeRefList&				theNodeList,
-			XalanNode*						theNode)
+            StylesheetExecutionContext&     executionContext,
+            MutableNodeRefList&             theNodeList,
+            XalanNode*                      theNode)
 {
-	theNodeList.addNodeInDocOrder(theNode, executionContext);
+    theNodeList.addNodeInDocOrder(theNode, executionContext);
 }
 
 
-static const NodeRefList	theEmptyList(XalanMemMgrs::getDummyMemMgr());
+static const NodeRefList    theEmptyList(XalanMemMgrs::getDummyMemMgr());
 
 void
 KeyTable::processKeyDeclaration(
-			KeysMapType&					theKeys,
-			const KeyDeclaration&			kd,
-			XalanNode*						testNode,
-			const PrefixResolver&			resolver,
-			StylesheetExecutionContext&		executionContext)
+            KeysMapType&                    theKeys,
+            const KeyDeclaration&           kd,
+            XalanNode*                      testNode,
+            const PrefixResolver&           resolver,
+            StylesheetExecutionContext&     executionContext)
 {
-	// Query from the node, according the the select pattern in the
-	// use attribute in xsl:key.
-	assert(kd.getUse() != 0);
+    // Query from the node, according the the select pattern in the
+    // use attribute in xsl:key.
+    assert(kd.getUse() != 0);
 
-	const XObjectPtr	xuse(kd.getUse()->execute(testNode, resolver, theEmptyList, executionContext));
+    const XObjectPtr    xuse(kd.getUse()->execute(testNode, resolver, theEmptyList, executionContext));
 
-	if(xuse->getType() != XObject::eTypeNodeSet)
-	{
-		assert(kd.getQName() != 0);
+    if(xuse->getType() != XObject::eTypeNodeSet)
+    {
+        assert(kd.getQName() != 0);
 
-		addIfNotFound(
-			executionContext,
-			theKeys[*kd.getQName()][xuse->str()],
-			testNode);
-	}
-	else
-	{
-		const NodeRefListBase&	nl = xuse->nodeset();
+        addIfNotFound(
+            executionContext,
+            theKeys[*kd.getQName()][xuse->str()],
+            testNode);
+    }
+    else
+    {
+        const NodeRefListBase&  nl = xuse->nodeset();
 
-		// Use each node in the node list as a key value that we'll be 
-		// able to use to look up the given node.
-		const NodeRefListBase::size_type	nUseValues = nl.getLength();
+        // Use each node in the node list as a key value that we'll be 
+        // able to use to look up the given node.
+        const NodeRefListBase::size_type    nUseValues = nl.getLength();
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
 
-		XalanDOMString&		nodeData = theGuard.get();
+        XalanDOMString&     nodeData = theGuard.get();
 
-		// Use each node in the node list as a key value that we'll be 
-		// able to use to look up the given node.
-		for(unsigned int i = 0; i < nUseValues; ++i)
-		{
-			// Get the string value of the node to use as the result of the
-			// expression.
-			assert(nl.item(i) != 0);
+        // Use each node in the node list as a key value that we'll be 
+        // able to use to look up the given node.
+        for(unsigned int i = 0; i < nUseValues; ++i)
+        {
+            // Get the string value of the node to use as the result of the
+            // expression.
+            assert(nl.item(i) != 0);
 
-			DOMServices::getNodeData(*nl.item(i), nodeData);
+            DOMServices::getNodeData(*nl.item(i), nodeData);
 
-			assert(kd.getQName() != 0);
+            assert(kd.getQName() != 0);
 
-			addIfNotFound(
-				executionContext,
-				theKeys[*kd.getQName()][nodeData],
-				testNode);
+            addIfNotFound(
+                executionContext,
+                theKeys[*kd.getQName()][nodeData],
+                testNode);
 
-			clear(nodeData);
-		}
-	}  
+            clear(nodeData);
+        }
+    }  
 }
 
 

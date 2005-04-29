@@ -47,59 +47,59 @@ FunctionLang::~FunctionLang()
 
 XObjectPtr
 FunctionLang::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false);	
+    assert(arg1.null() == false);   
 
-	const XalanNode*		parent = context;
+    const XalanNode*        parent = context;
 
-	bool					fMatch = false;
+    bool                    fMatch = false;
 
-	const XalanDOMString&	lang = arg1->str();
+    const XalanDOMString&   lang = arg1->str();
 
-	while(0 != parent)
-	{
-		if(XalanNode::ELEMENT_NODE == parent->getNodeType())
-		{
-			const XalanElement* const	theElementNode =
+    while(0 != parent)
+    {
+        if(XalanNode::ELEMENT_NODE == parent->getNodeType())
+        {
+            const XalanElement* const   theElementNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement*)parent;
+                (const XalanElement*)parent;
 #else
-				static_cast<const XalanElement*>(parent);
+                static_cast<const XalanElement*>(parent);
 #endif
 
-			const XalanDOMString&		langVal =
-				theElementNode->getAttributeNS(
+            const XalanDOMString&       langVal =
+                theElementNode->getAttributeNS(
                     DOMServices::s_XMLNamespaceURI,
                     s_attributeName);
 
-			if(0 != length(langVal))
-			{
+            if(0 != length(langVal))
+            {
                 XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
                 XPathExecutionContext::GetAndReleaseCachedString theGuard2(executionContext);
 
-				if(startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
-				{
-					const XalanDOMString::size_type		valLen = length(lang);
+                if(startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
+                {
+                    const XalanDOMString::size_type     valLen = length(lang);
 
-					if(length(langVal) == valLen ||
-					   charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
-					{
-						fMatch = true;
+                    if(length(langVal) == valLen ||
+                       charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
+                    {
+                        fMatch = true;
 
-						break;
-					}
-				}
-			}
-		}
+                        break;
+                    }
+                }
+            }
+        }
 
-		parent = DOMServices::getParentOfNode(*parent);
-	}
+        parent = DOMServices::getParentOfNode(*parent);
+    }
 
-	return executionContext.getXObjectFactory().createBoolean(fMatch);
+    return executionContext.getXObjectFactory().createBoolean(fMatch);
 }
 
 
@@ -111,7 +111,7 @@ FunctionLang*
 #endif
 FunctionLang::clone(MemoryManagerType&  theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -119,9 +119,9 @@ FunctionLang::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionLang::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsOneArgument_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 "lang()");
 }
 

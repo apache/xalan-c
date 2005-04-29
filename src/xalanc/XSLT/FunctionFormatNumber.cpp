@@ -40,63 +40,63 @@ FunctionFormatNumber::~FunctionFormatNumber()
 
 XObjectPtr
 FunctionFormatNumber::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      locator) const
 {
-	assert(arg1.null() == false && arg2.null() == false);	
-	
-    const double			theNumber = arg1->num();
-    const XalanDOMString&	thePattern = arg2->str();
+    assert(arg1.null() == false && arg2.null() == false);   
+    
+    const double            theNumber = arg1->num();
+    const XalanDOMString&   thePattern = arg2->str();
 
-	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
 
     GetAndReleaseCachedString   theString(executionContext);
 
-	executionContext.formatNumber(
-			theNumber, 
-			thePattern, 
-			theString.get(), 
-			context, 
-			locator);	
+    executionContext.formatNumber(
+            theNumber, 
+            thePattern, 
+            theString.get(), 
+            context, 
+            locator);   
 
-	return executionContext.getXObjectFactory().createString(theString);
+    return executionContext.getXObjectFactory().createString(theString);
 }
 
 
 
 XObjectPtr
 FunctionFormatNumber::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const XObjectPtr		arg3,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const XObjectPtr        arg3,
+            const LocatorType*      locator) const
 {
-	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
-	
-    const double						theNumber = arg1->num();
-	const XalanDOMString&				thePattern = arg2->str();
+    assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
+    
+    const double                        theNumber = arg1->num();
+    const XalanDOMString&               thePattern = arg2->str();
 
-	const XalanDOMString&				theDFSName = arg3->str();
-	assert(length(theDFSName) != 0);
-	
-	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+    const XalanDOMString&               theDFSName = arg3->str();
+    assert(length(theDFSName) != 0);
+    
+    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
 
-	GetAndReleaseCachedString	theString(executionContext);
+    GetAndReleaseCachedString   theString(executionContext);
 
-	executionContext.formatNumber(
-		theNumber, 
-		thePattern,
-		theDFSName,
-		theString.get(),
-		context, 
-		locator);
+    executionContext.formatNumber(
+        theNumber, 
+        thePattern,
+        theDFSName,
+        theString.get(),
+        context, 
+        locator);
 
-	return executionContext.getXObjectFactory().createString(theString);
+    return executionContext.getXObjectFactory().createString(theString);
 }
 
 
@@ -108,7 +108,7 @@ FunctionFormatNumber*
 #endif
 FunctionFormatNumber::clone(MemoryManagerType&  theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -116,9 +116,9 @@ FunctionFormatNumber::clone(MemoryManagerType&  theManager) const
 const XalanDOMString&
 FunctionFormatNumber::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesTwoOrThreeArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesTwoOrThreeArguments_1Param,
                 "format-number()");
 }
 

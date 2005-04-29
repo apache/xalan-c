@@ -43,67 +43,67 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMChar	xsltHeader[] =
+static const XalanDOMChar   xsltHeader[] =
 {
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_L,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charSpace,
-	0
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_L,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charSpace,
+    0
 };
 
-static const XalanDOMChar	xmlHeader[] =
+static const XalanDOMChar   xmlHeader[] =
 {
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_M,
-	XalanUnicode::charLetter_L,
-	XalanUnicode::charSpace,
-	0
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_M,
+    XalanUnicode::charLetter_L,
+    XalanUnicode::charSpace,
+    0
 };
 
-static const XalanDOMChar	xpathHeader[] =
+static const XalanDOMChar   xpathHeader[] =
 {
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charSpace,
-	0
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_P,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charSpace,
+    0
 };
 
-static const XalanDOMChar	uriHeader[] =
+static const XalanDOMChar   uriHeader[] =
 {
-	0
+    0
 };
 
-static const XalanDOMChar	uriSeparator[] =
+static const XalanDOMChar   uriSeparator[] =
 {
-	XalanUnicode::charComma,
-	XalanUnicode::charSpace,
-	0
+    XalanUnicode::charComma,
+    XalanUnicode::charSpace,
+    0
 };
 
-static const XalanDOMChar	locationOpen[] =
+static const XalanDOMChar   locationOpen[] =
 {
-	XalanUnicode::charSpace,
-	XalanUnicode::charLeftParenthesis,
-	0
+    XalanUnicode::charSpace,
+    XalanUnicode::charLeftParenthesis,
+    0
 };
 
-static const XalanDOMChar	locationClose[] =
+static const XalanDOMChar   locationClose[] =
 {
-	XalanUnicode::charRightParenthesis,
-	0
+    XalanUnicode::charRightParenthesis,
+    0
 };
 
 
 ProblemListenerDefault::ProblemListenerDefault( MemoryManagerType& theManager,
-                                                PrintWriter*		pw) :
-	ProblemListener(),
+                                                PrintWriter*        pw) :
+    ProblemListener(),
     m_memoryManager(theManager),
-	m_pw(pw)
+    m_pw(pw)
 
 {
 }
@@ -117,113 +117,128 @@ ProblemListenerDefault::~ProblemListenerDefault()
 
 
 void
-ProblemListenerDefault::setPrintWriter(PrintWriter*		pw)
+ProblemListenerDefault::setPrintWriter(PrintWriter*     pw)
 {
-	m_pw = pw;
+    m_pw = pw;
 }
 
 
 
 void
 ProblemListenerDefault::problem(
-			eProblemSource				where,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset)
+            eProblemSource              where,
+            eClassification             classification,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            int                         lineNo,
+            int                         charOffset)
 {
-	if (m_pw != 0)
-	{
-		problem(*m_pw, where, classification, sourceNode, styleNode, msg, uri, lineNo, charOffset);
-	}
+    if (m_pw != 0)
+    {
+        problem(*m_pw, where, classification, sourceNode, styleNode, msg, uri, lineNo, charOffset);
+    }
 }
 
 
 
 void
 ProblemListenerDefault::problem(
-			PrintWriter&				pw,
-			eProblemSource				where,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset)
+            PrintWriter&                pw,
+            eProblemSource              where,
+            eClassification             classification,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            int                         lineNo,
+            int                         charOffset)
 {
     MemoryManagerType& theManager = pw.getMemoryManager();
 
-	if (eXMLPARSER == where)
-	{
-		pw.print(xmlHeader);
-	}
-	else if (eXPATH == where)
-	{
-		pw.print(xpathHeader);
-	}
-	else
-	{
-		pw.print(xsltHeader);
-	}
+    if (eXMLPARSER == where)
+    {
+        pw.print(xmlHeader);
+    }
+    else if (eXPATH == where)
+    {
+        pw.print(xpathHeader);
+    }
+    else
+    {
+        pw.print(xsltHeader);
+    }
 
-	if (eERROR == classification)
-	{
-        XalanDOMString theBuffer(theManager);
+    XalanDOMString  theBuffer(theManager);
 
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Error_1Param, theBuffer, msg));
-	}
-	else if (eWARNING == classification)
-	{
-        XalanDOMString theBuffer(theManager);
+    if (eERROR == classification)
+    {
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::Error_1Param,
+            msg);
+    }
+    else if (eWARNING == classification)
+    {
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::Warning_1Param,
+            msg);
+    }
+    else
+    {
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::Message_1Param,
+            msg);
+    }
 
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Warning_1Param, theBuffer, msg));
-	}
-	else
-	{
-        XalanDOMString theBuffer(theManager);
+    pw.print(theBuffer);
 
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::Message_1Param, theBuffer, msg));
-	}
+    if (0 != styleNode)
+    {
+        pw.print(
+            XalanMessageLoader::getMessage(
+                theBuffer, 
+                XalanMessages::StyleTreeNode_1Param,
+                styleNode->getElementName()));
+    }
 
-	if (0 != styleNode)
-	{
-        XalanDOMString theBuffer(theManager);
+    if (0 != sourceNode)
+    {
+        pw.print(
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::SourceTreeNode_1Param,
+                sourceNode->getNodeName()));
+    }
 
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::StyleTreeNode_1Param, theBuffer, styleNode->getElementName()));
-	}
+    pw.print(locationOpen);
 
-	if (0 != sourceNode)
-	{
-        XalanDOMString theBuffer(theManager);
+    if (0 != uri)
+    {
+        pw.print(uri);
+        pw.print(uriSeparator);
+    }
 
-		pw.print(XalanMessageLoader::getMessage(XalanMessages::SourceTreeNode_1Param, theBuffer, sourceNode->getNodeName()));
-	}
-
-	pw.print(locationOpen);
-
-	if (0 != uri)
-	{
-		pw.print(uri);
-		pw.print(uriSeparator);
-	}
-
-	XalanDOMString lineNoString(theManager);
+    XalanDOMString  lineNoString(theManager);
     LongToDOMString(lineNo, lineNoString);
 
-	XalanDOMString charOffsetString(theManager);
+    XalanDOMString  charOffsetString(theManager);
     LongToDOMString(charOffset, charOffsetString);
 
-    XalanDOMString theBuffer(theManager);
+    XalanMessageLoader::getMessage(
+        theBuffer,
+        XalanMessages::LineNumberColumnNumber_2Params,
+        lineNoString,
+        charOffsetString);
 
-	pw.print(XalanMessageLoader::getMessage(XalanMessages::LineNumberColumnNumber_2Params, theBuffer, lineNoString , charOffsetString));
+    pw.print(theBuffer);
 
-	pw.print(locationClose);
+    pw.print(locationClose);
 
-	pw.println();
+    pw.println();
 }
 
 

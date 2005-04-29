@@ -37,37 +37,42 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemComment::ElemComment(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_COMMENT)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_COMMENT)
 {
-	const unsigned int nAttrs = atts.getLength();
+    const unsigned int nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false ||
-		   processSpaceAttr(aname, atts, i, constructionContext))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param, theResult,
-							Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}	
+        if(isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false &&
+           processSpaceAttr(
+                Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
+                aname,
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }   
 }
 
 
@@ -80,37 +85,37 @@ ElemComment::~ElemComment()
 const XalanDOMString&
 ElemComment::getElementName() const
 {
-	return Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemComment::startElement(StylesheetExecutionContext&		executionContext) const
+ElemComment::startElement(StylesheetExecutionContext&       executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	executionContext.pushCopyTextNodesOnly(true);
+    executionContext.pushCopyTextNodesOnly(true);
 
-	XalanDOMString& theResult = executionContext.getAndPushCachedString();
+    XalanDOMString& theResult = executionContext.getAndPushCachedString();
 
-	return beginChildrenToString(executionContext,theResult);
+    return beginChildrenToString(executionContext,theResult);
 
 }
 
 
 
 void
-ElemComment::endElement(StylesheetExecutionContext&		executionContext) const
+ElemComment::endElement(StylesheetExecutionContext&     executionContext) const
 {
-	
-	endChildrenToString(executionContext);
+    
+    endChildrenToString(executionContext);
 
-	XalanDOMString& theResult = executionContext.getAndPopCachedString();
+    XalanDOMString& theResult = executionContext.getAndPopCachedString();
 
-	executionContext.comment(c_wstr(theResult));
+    executionContext.comment(c_wstr(theResult));
 
-	executionContext.popCopyTextNodesOnly();
+    executionContext.popCopyTextNodesOnly();
 }
 #endif
 
@@ -118,11 +123,11 @@ ElemComment::endElement(StylesheetExecutionContext&		executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemComment::execute(StylesheetExecutionContext&	executionContext) const
+ElemComment::execute(StylesheetExecutionContext&    executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);
+    StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly  theSetAndRestore(executionContext, true);
 
     childrenToResultComment(executionContext);
 }
@@ -131,35 +136,35 @@ ElemComment::execute(StylesheetExecutionContext&	executionContext) const
 
 
 bool
-ElemComment::childTypeAllowed(int	xslToken) const
+ElemComment::childTypeAllowed(int   xslToken) const
 {
-	bool	fResult = false;
-	
-	switch(xslToken)
-	{
-	// char-instructions 
-	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
-	case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
-	case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
-	case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
-	case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
-	case StylesheetConstructionContext::ELEMNAME_COPY_OF:
-	case StylesheetConstructionContext::ELEMNAME_NUMBER:
-	case StylesheetConstructionContext::ELEMNAME_CHOOSE:
-	case StylesheetConstructionContext::ELEMNAME_IF:
-	case StylesheetConstructionContext::ELEMNAME_TEXT:
-	case StylesheetConstructionContext::ELEMNAME_COPY:
-	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
-	case StylesheetConstructionContext::ELEMNAME_MESSAGE:
-		fResult = true;
-		break;
-		
-	default:
-		break;
-	}
-	
-	return fResult;
+    bool    fResult = false;
+    
+    switch(xslToken)
+    {
+    // char-instructions 
+    case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES:
+    case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
+    case StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE:
+    case StylesheetConstructionContext::ELEMNAME_FOR_EACH:
+    case StylesheetConstructionContext::ELEMNAME_VALUE_OF:
+    case StylesheetConstructionContext::ELEMNAME_COPY_OF:
+    case StylesheetConstructionContext::ELEMNAME_NUMBER:
+    case StylesheetConstructionContext::ELEMNAME_CHOOSE:
+    case StylesheetConstructionContext::ELEMNAME_IF:
+    case StylesheetConstructionContext::ELEMNAME_TEXT:
+    case StylesheetConstructionContext::ELEMNAME_COPY:
+    case StylesheetConstructionContext::ELEMNAME_VARIABLE:
+    case StylesheetConstructionContext::ELEMNAME_MESSAGE:
+        fResult = true;
+        break;
+        
+    default:
+        break;
+    }
+    
+    return fResult;
 }
 
 

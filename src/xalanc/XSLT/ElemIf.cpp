@@ -45,57 +45,56 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemIf::ElemIf(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_IF),
-	m_test(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_IF),
+    m_test(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if (equals(aname, Constants::ATTRNAME_TEST))
-		{
-			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-		}
-		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
-				 processSpaceAttr(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
+        if (equals(aname, Constants::ATTRNAME_TEST))
+        {
+            m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false &&
+                processSpaceAttr(
+                    Constants::ELEMNAME_IF_WITH_PREFIX_STRING.c_str(),
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_IF_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult,
-							Constants::ELEMNAME_IF_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
-
-	if(0 == m_test)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-		constructionContext.error(
-				XalanMessageLoader::getMessage(
-					XalanMessages::TemplateMustHaveAttribute_2Param,
-                    theResult,
-					Constants::ELEMNAME_IF_WITH_PREFIX_STRING,
-					Constants::ATTRNAME_TEST),
-				0,
-				this);
-	}
+    if(0 == m_test)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_IF_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_TEST);
+    }
 }
 
 
@@ -103,52 +102,52 @@ ElemIf::ElemIf(
 const XalanDOMString&
 ElemIf::getElementName() const
 {
-	return Constants::ELEMNAME_IF_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_IF_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemIf::startElement(StylesheetExecutionContext&		executionContext) const
+ElemIf::startElement(StylesheetExecutionContext&        executionContext) const
 {
-	assert(m_test != 0);
+    assert(m_test != 0);
 
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	bool	fResult;
+    bool    fResult;
 
-	m_test->execute(*this, executionContext, fResult);
+    m_test->execute(*this, executionContext, fResult);
 
-	if(0 != executionContext.getTraceListeners())
-	{
-		executionContext.fireSelectEvent(
-			SelectionEvent(executionContext,
-			executionContext.getCurrentNode(),
-			*this,
-			XalanDOMString("test", executionContext.getMemoryManager()),
-			*m_test,
-			fResult));
-	}
+    if(0 != executionContext.getTraceListeners())
+    {
+        executionContext.fireSelectEvent(
+            SelectionEvent(executionContext,
+            executionContext.getCurrentNode(),
+            *this,
+            XalanDOMString("test", executionContext.getMemoryManager()),
+            *m_test,
+            fResult));
+    }
 
-	if(fResult == true)
-	{
-		executionContext.pushExecuteIf(true);
-		return beginExecuteChildren(executionContext);
-	}
+    if(fResult == true)
+    {
+        executionContext.pushExecuteIf(true);
+        return beginExecuteChildren(executionContext);
+    }
 
-	executionContext.pushExecuteIf(false);
-	return 0;
+    executionContext.pushExecuteIf(false);
+    return 0;
 }
 
 
 
 void
-ElemIf::endElement(StylesheetExecutionContext&	executionContext) const
+ElemIf::endElement(StylesheetExecutionContext&  executionContext) const
 {
-	if(executionContext.popExecuteIf())
-	{
-		endExecuteChildren(executionContext);
-	}
+    if(executionContext.popExecuteIf())
+    {
+        endExecuteChildren(executionContext);
+    }
 }
 #endif
 
@@ -156,40 +155,40 @@ ElemIf::endElement(StylesheetExecutionContext&	executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemIf::execute(StylesheetExecutionContext&		executionContext) const
+ElemIf::execute(StylesheetExecutionContext&     executionContext) const
 {
-	assert(m_test != 0);
+    assert(m_test != 0);
 
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	bool	fResult;
+    bool    fResult;
 
-	m_test->execute(*this, executionContext, fResult);
+    m_test->execute(*this, executionContext, fResult);
 
-	if(0 != executionContext.getTraceListeners())
-	{
-		executionContext.fireSelectEvent(
-			SelectionEvent(executionContext,
-			executionContext.getCurrentNode(),
-			*this,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
-			*m_test,
-			fResult));
-	}
+    if(0 != executionContext.getTraceListeners())
+    {
+        executionContext.fireSelectEvent(
+            SelectionEvent(executionContext,
+            executionContext.getCurrentNode(),
+            *this,
+            XalanDOMString("test", executionContext.getMemoryManager()),
+            *m_test,
+            fResult));
+    }
 
-	if(fResult == true)
-	{
-		executeChildren(executionContext);
-	}
+    if(fResult == true)
+    {
+        executeChildren(executionContext);
+    }
 }
 #endif
 
 
 
 const XPath*
-ElemIf::getXPath(unsigned int	index) const
+ElemIf::getXPath(unsigned int   index) const
 {
-	return index == 0 ? m_test : 0;
+    return index == 0 ? m_test : 0;
 }
 
 

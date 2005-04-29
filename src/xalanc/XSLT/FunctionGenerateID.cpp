@@ -35,12 +35,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FunctionGenerateID::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    FunctionGenerateID::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 FunctionGenerateID::FunctionGenerateID() :
-	Function()
+    Function()
 {
 }
 
@@ -55,75 +55,75 @@ FunctionGenerateID::~FunctionGenerateID()
 // Append the suffix to the provided string.
 void
 getSuffix(
-		const XalanNode*	theNode,
-		XalanDOMString&		theResult)
+        const XalanNode*    theNode,
+        XalanDOMString&     theResult)
 {
-	assert(theNode != 0);
+    assert(theNode != 0);
 
-	// We're assuming here that each node has an implementation with a 
-	// unique address that we can convert into a string...
-	PointerToDOMString(theNode->getOwnerDocument(), theResult);
+    // We're assuming here that each node has an implementation with a 
+    // unique address that we can convert into a string...
+    PointerToDOMString(theNode->getOwnerDocument(), theResult);
 
-	append(theResult, XalanDOMChar(XalanUnicode::charLetter_N));
+    append(theResult, XalanDOMChar(XalanUnicode::charLetter_N));
 
-	PointerToDOMString(theNode, theResult);
+    PointerToDOMString(theNode, theResult);
 }
 
 
 
 XObjectPtr
 FunctionGenerateID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const
 {
-	if (context == 0)
-	{
-        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    if (context == 0)
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-		executionContext.error(
-				XalanMessageLoader::getMessage(
-                    XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+        executionContext.error(
+                XalanMessageLoader::getMessage(
                     theGuard.get(),
+                    XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                     "generate-id()"),
-				context,
-				locator);
+                context,
+                locator);
 
-		return XObjectPtr();
-	}
-	else
-	{
-		XPathExecutionContext::GetAndReleaseCachedString	theID(executionContext);
+        return XObjectPtr();
+    }
+    else
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theID(executionContext);
 
-		theID.get() = XalanUnicode::charLetter_N;
+        theID.get() = XalanUnicode::charLetter_N;
 
-		getSuffix(context, theID.get());
+        getSuffix(context, theID.get());
 
-		return executionContext.getXObjectFactory().createString(theID);
-	}
+        return executionContext.getXObjectFactory().createString(theID);
+    }
 }
 
 
 
 XObjectPtr
 FunctionGenerateID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const
 {
-	assert(arg1.null() == false);
+    assert(arg1.null() == false);
 
-	const NodeRefListBase&	theNodeList = arg1->nodeset();
+    const NodeRefListBase&  theNodeList = arg1->nodeset();
 
-	if (theNodeList.getLength() == 0)
-	{
-		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
-	}
-	else
-	{
-		return execute(executionContext, theNodeList.item(0), locator);
-	}
+    if (theNodeList.getLength() == 0)
+    {
+        return executionContext.getXObjectFactory().createStringReference(s_emptyString);
+    }
+    else
+    {
+        return execute(executionContext, theNodeList.item(0), locator);
+    }
 }
 
 
@@ -135,7 +135,7 @@ FunctionGenerateID*
 #endif
 FunctionGenerateID::clone(MemoryManagerType&    theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -143,9 +143,9 @@ FunctionGenerateID::clone(MemoryManagerType&    theManager) const
 const XalanDOMString&
 FunctionGenerateID::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
                 "generate-id");
 }
 

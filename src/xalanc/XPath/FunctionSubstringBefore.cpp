@@ -41,69 +41,69 @@ FunctionSubstringBefore::~FunctionSubstringBefore()
 
 
 
-static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 inline XObjectPtr
-createEmptyString(XPathExecutionContext&	executionContext)
+createEmptyString(XPathExecutionContext&    executionContext)
 {
-	return executionContext.getXObjectFactory().createStringReference(theEmptyString);
+    return executionContext.getXObjectFactory().createStringReference(theEmptyString);
 }
 
 
 
 XObjectPtr
 FunctionSubstringBefore::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false);
+    assert(arg1.null() == false && arg2.null() == false);
 
-	const XalanDOMString&				theFirstString = arg1->str();
+    const XalanDOMString&               theFirstString = arg1->str();
 
-	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
+    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
 
-	if (theFirstStringLength == 0)
-	{
-		return createEmptyString(executionContext);
-	}
-	else
-	{
-		const XalanDOMString&				theSecondString = arg2->str();
+    if (theFirstStringLength == 0)
+    {
+        return createEmptyString(executionContext);
+    }
+    else
+    {
+        const XalanDOMString&               theSecondString = arg2->str();
 
-		const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
+        const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
 
-		if (theSecondStringLength == 0)
-		{
-			return createEmptyString(executionContext);
-		}
-		else
-		{
-			const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
-													   theSecondString);
+        if (theSecondStringLength == 0)
+        {
+            return createEmptyString(executionContext);
+        }
+        else
+        {
+            const XalanDOMString::size_type     theIndex = indexOf(theFirstString,
+                                                       theSecondString);
 
-			if (theIndex == theFirstStringLength)
-			{
-				return createEmptyString(executionContext);
-			}
-			else
-			{
-				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+            if (theIndex == theFirstStringLength)
+            {
+                return createEmptyString(executionContext);
+            }
+            else
+            {
+                XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-				XalanDOMString&		theString = theResult.get();
+                XalanDOMString&     theString = theResult.get();
 
-				theString.assign(
-						toCharArray(theFirstString),
-						theIndex);
+                theString.assign(
+                        toCharArray(theFirstString),
+                        theIndex);
 
-				// Create a string of the appropriate length...
-				return executionContext.getXObjectFactory().createString(theResult);
-			}
-		}
-	}
+                // Create a string of the appropriate length...
+                return executionContext.getXObjectFactory().createString(theResult);
+            }
+        }
+    }
 }
 
 
@@ -115,7 +115,7 @@ FunctionSubstringBefore*
 #endif
 FunctionSubstringBefore::clone(MemoryManagerType&   theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -123,9 +123,9 @@ FunctionSubstringBefore::clone(MemoryManagerType&   theManager) const
 const XalanDOMString&
 FunctionSubstringBefore::getError(XalanDOMString&   theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesTwoArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesTwoArguments_1Param,
                 "substring-before()");
 }
 

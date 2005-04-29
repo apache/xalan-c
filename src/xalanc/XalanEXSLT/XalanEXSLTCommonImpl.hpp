@@ -42,53 +42,59 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionNodeSet : public FunctionNodeSet
 {
 public:
 
-	XalanEXSLTFunctionNodeSet() :
-		FunctionNodeSet(true)
-	{
-	}
+    XalanEXSLTFunctionNodeSet() :
+        FunctionNodeSet(true)
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionNodeSet()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionNodeSet()
+    {
+    }
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionNodeSet*
+    virtual XalanEXSLTFunctionNodeSet*
 #endif
-	clone(MemoryManagerType& theManager) const
-	{
-		return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManagerType& theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
-	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,theBuffer , "node-set()");
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theBuffer) const
+    {
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+            "node-set()");
 
-		return theBuffer;
-	}
+        return theBuffer;
+    }
 
 
-	virtual const XalanDOMString&
-	getInvalidArgumentTypeError(XalanDOMString& theResult) const 
-	{
-		 XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentType_1Param,theResult,"node-set()");
+    virtual const XalanDOMString&
+    getInvalidArgumentTypeError(XalanDOMString& theResult) const 
+    {
+         XalanMessageLoader::getMessage(
+             theResult,
+             XalanMessages::InvalidArgumentType_1Param,
+             "node-set()");
          
          return theResult;
-	}
+    }
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionNodeSet&
-	operator=(const XalanEXSLTFunctionNodeSet&);
+    // Not implemented...
+    XalanEXSLTFunctionNodeSet&
+    operator=(const XalanEXSLTFunctionNodeSet&);
 
-	bool
-	operator==(const XalanEXSLTFunctionNodeSet&) const;
+    bool
+    operator==(const XalanEXSLTFunctionNodeSet&) const;
 };
 
 
@@ -97,56 +103,56 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionObjectType : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionObjectType(MemoryManagerType& theManager) :
-		Function(),
-		m_boolean(s_booleanString, theManager),
-		m_external(s_externalString, theManager),
-		m_nodeSet(s_nodeSetString, theManager),
-		m_number(s_numberString, theManager),
-		m_rtf(s_rtfString, theManager),
-		m_string(s_stringString, theManager)
-	{
-	}
+    XalanEXSLTFunctionObjectType(MemoryManagerType& theManager) :
+        Function(),
+        m_boolean(s_booleanString, theManager),
+        m_external(s_externalString, theManager),
+        m_nodeSet(s_nodeSetString, theManager),
+        m_number(s_numberString, theManager),
+        m_rtf(s_rtfString, theManager),
+        m_string(s_stringString, theManager)
+    {
+    }
 
-	// A dummy constructor for use internally.  Do not use this one!!!!
-	XalanEXSLTFunctionObjectType(MemoryManagerType& theManager, int	/* theDummy */) :
-		Function(),
-		m_boolean(theManager),
-		m_external(theManager),
-		m_nodeSet(theManager),
-		m_number(theManager),
-		m_rtf(theManager),
-		m_string(theManager)
-	{
-	}
+    // A dummy constructor for use internally.  Do not use this one!!!!
+    XalanEXSLTFunctionObjectType(MemoryManagerType& theManager, int /* theDummy */) :
+        Function(),
+        m_boolean(theManager),
+        m_external(theManager),
+        m_nodeSet(theManager),
+        m_number(theManager),
+        m_rtf(theManager),
+        m_string(theManager)
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionObjectType()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionObjectType()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
+    using ParentType::execute;
 #endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionObjectType*
+    virtual XalanEXSLTFunctionObjectType*
 #endif
-	clone(MemoryManagerType& theManager) const
-	{
+    clone(MemoryManagerType& theManager) const
+    {
         typedef  XalanEXSLTFunctionObjectType Type;
 
         XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
@@ -158,41 +164,41 @@ public:
          theGuard.release();
 
         return theResult;
-	}
+    }
 
 protected:
 
 
 
-	const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionObjectType(const XalanEXSLTFunctionObjectType&);
+    // Not implemented...
+    XalanEXSLTFunctionObjectType(const XalanEXSLTFunctionObjectType&);
 
-	XalanEXSLTFunctionObjectType&
-	operator=(const XalanEXSLTFunctionObjectType&);
+    XalanEXSLTFunctionObjectType&
+    operator=(const XalanEXSLTFunctionObjectType&);
 
-	bool
-	operator==(const XalanEXSLTFunctionObjectType&) const;
+    bool
+    operator==(const XalanEXSLTFunctionObjectType&) const;
 
 
-	// Data members...
-	const XalanDOMString	m_boolean;
-	const XalanDOMString	m_external;
-	const XalanDOMString	m_nodeSet;
-	const XalanDOMString	m_number;
-	const XalanDOMString	m_rtf;
-	const XalanDOMString	m_string;
+    // Data members...
+    const XalanDOMString    m_boolean;
+    const XalanDOMString    m_external;
+    const XalanDOMString    m_nodeSet;
+    const XalanDOMString    m_number;
+    const XalanDOMString    m_rtf;
+    const XalanDOMString    m_string;
 
-	static const XalanDOMChar	s_booleanString[];
-	static const XalanDOMChar	s_externalString[];
-	static const XalanDOMChar	s_nodeSetString[];
-	static const XalanDOMChar	s_numberString[];
-	static const XalanDOMChar	s_rtfString[];
-	static const XalanDOMChar	s_stringString[];
+    static const XalanDOMChar   s_booleanString[];
+    static const XalanDOMChar   s_externalString[];
+    static const XalanDOMChar   s_nodeSetString[];
+    static const XalanDOMChar   s_numberString[];
+    static const XalanDOMChar   s_rtfString[];
+    static const XalanDOMChar   s_stringString[];
 };
 
 
@@ -201,4 +207,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_COMMONIMPL_HEADER_GUARD_1357924680
+#endif  // EXSLT_COMMONIMPL_HEADER_GUARD_1357924680

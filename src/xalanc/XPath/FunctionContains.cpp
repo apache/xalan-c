@@ -43,38 +43,38 @@ FunctionContains::~FunctionContains()
 
 XObjectPtr
 FunctionContains::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false);	
+    assert(arg1.null() == false && arg2.null() == false);   
 
-	const XalanDOMString&	str1 = arg1->str();
-	const XalanDOMString&	str2 = arg2->str();
+    const XalanDOMString&   str1 = arg1->str();
+    const XalanDOMString&   str2 = arg2->str();
 
-	bool					fResult = true;
+    bool                    fResult = true;
 
-	// If str2 is empty, then don't bother to check anything.
-	if (isEmpty(str2) == false)
-	{
-		// Is str1 empty?
-		if (isEmpty(str1) == true)
-		{
-			fResult = false;
-		}
-		else
-		{
-			// OK, both strings have some data, so look for
-			// the index...
-			const XalanDOMString::size_type		theIndex = indexOf(str1, str2);
+    // If str2 is empty, then don't bother to check anything.
+    if (isEmpty(str2) == false)
+    {
+        // Is str1 empty?
+        if (isEmpty(str1) == true)
+        {
+            fResult = false;
+        }
+        else
+        {
+            // OK, both strings have some data, so look for
+            // the index...
+            const XalanDOMString::size_type     theIndex = indexOf(str1, str2);
 
-			fResult = theIndex < length(str1) ? true : false;
-		}
-	}
+            fResult = theIndex < length(str1) ? true : false;
+        }
+    }
 
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+    return executionContext.getXObjectFactory().createBoolean(fResult);
 }
 
 
@@ -86,7 +86,7 @@ FunctionContains*
 #endif
 FunctionContains::clone(MemoryManagerType& theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -94,9 +94,10 @@ FunctionContains::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionContains::getError(XalanDOMString& theResult) const
 {
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "contains()");
-
-    return theResult;
+    return XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::FunctionTakesTwoArguments_1Param,
+                "contains()");
 }
 
 

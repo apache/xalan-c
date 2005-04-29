@@ -36,57 +36,56 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemWhen::ElemWhen(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_WHEN),
-	m_test(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_WHEN),
+    m_test(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; ++i)
-	{
-		const XalanDOMChar* const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; ++i)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if (equals(aname, Constants::ATTRNAME_TEST))
-		{
-			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
-		}
-		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
-				 processSpaceAttr(aname, atts, i, constructionContext)))
-		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        if (equals(aname, Constants::ATTRNAME_TEST))
+        {
+            m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+        }
+        else if(isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false && 
+                processSpaceAttr(
+                    Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                        theGuard.get(),
-						Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
-						aname),
-					0,
-					this);
-		}
-	}
-
-	if(0 == m_test)
-	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
-                theGuard.get(),
-				Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_TEST),
-			0,
-			this);
-	}
+    if(0 == m_test)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_TEST);
+    }
 }
 
 
@@ -94,25 +93,25 @@ ElemWhen::ElemWhen(
 const XalanDOMString&
 ElemWhen::getElementName() const
 {
-	return Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemWhen::startElement(StylesheetExecutionContext&	executionContext) const
+ElemWhen::startElement(StylesheetExecutionContext&  executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
-	
-	return beginExecuteChildren(executionContext);
+    ElemTemplateElement::startElement(executionContext);
+    
+    return beginExecuteChildren(executionContext);
 }
 
 
 
 void
-ElemWhen::endElement(StylesheetExecutionContext&	executionContext) const
+ElemWhen::endElement(StylesheetExecutionContext&    executionContext) const
 {
-	 endExecuteChildren(executionContext);
+     endExecuteChildren(executionContext);
 }
 #endif
 
@@ -120,20 +119,20 @@ ElemWhen::endElement(StylesheetExecutionContext&	executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemWhen::execute(StylesheetExecutionContext&	executionContext) const
+ElemWhen::execute(StylesheetExecutionContext&   executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	executeChildren(executionContext);
+    executeChildren(executionContext);
 }
 #endif
 
 
 
 const XPath*
-ElemWhen::getXPath(unsigned int	index) const
+ElemWhen::getXPath(unsigned int index) const
 {
-	return index == 0 ? m_test : 0;
+    return index == 0 ? m_test : 0;
 }
 
 

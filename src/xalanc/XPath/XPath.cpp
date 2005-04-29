@@ -57,19 +57,19 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XPath::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XPath::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XPath::XPath(MemoryManagerType& theManager, const LocatorType*		theLocator) :
-	m_expression(theManager),
-	m_locator(theLocator),
-	m_inStylesheet(false)
+XPath::XPath(MemoryManagerType& theManager, const LocatorType*      theLocator) :
+    m_expression(theManager),
+    m_locator(theLocator),
+    m_inStylesheet(false)
 {
 }
 
 XPath*
-XPath::create(MemoryManagerType& theManager, const LocatorType*	theLocator)
+XPath::create(MemoryManagerType& theManager, const LocatorType* theLocator)
 {
     typedef XPath Type;
 
@@ -92,69 +92,67 @@ XPath::~XPath()
 
 void
 XPath::unknownOpCodeError(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext,
-			OpCodeMapPositionType	opPos) const
+            XalanNode*              context,
+            XPathExecutionContext&  executionContext,
+            OpCodeMapPositionType   opPos) const
 {
     const GetCachedString   theGuard1(executionContext);
 
-	XalanDOMString&		theOpCode = theGuard1.get();
+    XalanDOMString&     theOpCode = theGuard1.get();
 
-	LongToDOMString(
+    LongToDOMString(
         m_expression.getOpCodeMapValue(opPos),
         theOpCode);
 
     const GetCachedString   theGuard2(executionContext);
 
-	XalanDOMString&		theBuffer = theGuard2.get();
-
-	executionContext.error(
-	    XalanMessageLoader::getMessage(
-            XalanMessages::UnknownOpCode_1Param,
-            theBuffer,
+    executionContext.error(
+        XalanMessageLoader::getMessage(
+            theGuard2.get(),
+            XalanMessages::InvalidOpcodeWasDetected_1Param,
             theOpCode),
-		context,
-		m_locator);
+        context,
+        m_locator);
 }
 
 
 
 void
 XPath::notNodeSetError(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            XPathExecutionContext&  executionContext) const
 {
     GetCachedString     theGuard(executionContext);
 
-	XalanDOMString&		theBuffer = theGuard.get();
+    XalanDOMString&     theBuffer = theGuard.get();
 
-	executionContext.error(
-		XalanMessageLoader::getMessage(
-            XalanMessages::ExpressionDoesNotEvaluateToNodeSet,
-            theBuffer),
-		context,
-		m_locator);
+    executionContext.error(
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::ExpressionDoesNotEvaluateToNodeSet),
+        context,
+        m_locator);
 }
 
 
 
 const XObjectPtr
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const
 {
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore   theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                    executionContext,
+                                    &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	    theNodePushAndPop(
-									executionContext,
-									context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop     theNodePushAndPop(
+                                    executionContext,
+                                    context);
 
-	return executeMore(
+    return executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext);
@@ -164,24 +162,24 @@ XPath::execute(
 
 void
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext,
-			bool&					result) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext,
+            bool&                   result) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                    executionContext,
+                                    &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	theNodePushAndPop(
-									executionContext,
-									context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop theNodePushAndPop(
+                                    executionContext,
+                                    context);
 
-	executeMore(
+    executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext,
@@ -192,24 +190,24 @@ XPath::execute(
 
 void
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext,
-			double&					result) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext,
+            double&                 result) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                    executionContext,
+                                    &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	theNodePushAndPop(
-									executionContext,
-									context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop theNodePushAndPop(
+                                    executionContext,
+                                    context);
 
-	executeMore(
+    executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext,
@@ -220,24 +218,24 @@ XPath::execute(
 
 void
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext,
-			XalanDOMString&			result) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         result) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                    executionContext,
+                                    &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	theNodePushAndPop(
-									executionContext,
-									context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop theNodePushAndPop(
+                                    executionContext,
+                                    context);
 
-	executeMore(
+    executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext,
@@ -248,25 +246,25 @@ XPath::execute(
 
 void
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                    executionContext,
+                                    &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	theNodePushAndPop(
-									executionContext,
-									context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop theNodePushAndPop(
+                                    executionContext,
+                                    context);
 
-	executeMore(
+    executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext,
@@ -278,25 +276,25 @@ XPath::execute(
 
 const XObjectPtr
 XPath::execute(
-			XalanNode*				context,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext,
-			MutableNodeRefList&		result) const
+            XalanNode*              context,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext,
+            MutableNodeRefList&     result) const
 {
-	assert(context != 0);
-	assert(result.empty() == true);
+    assert(context != 0);
+    assert(result.empty() == true);
 
-	// Push and pop the PrefixResolver...
-	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									        executionContext,
-									        &prefixResolver);
+    // Push and pop the PrefixResolver...
+    const PrefixResolverSetAndRestore   theResolverSetAndRestore(
+                                            executionContext,
+                                            &prefixResolver);
 
-	// Push and pop the current node...
-	const CurrentNodePushAndPop	    theNodePushAndPop(
-									    executionContext,
-									    context);
+    // Push and pop the current node...
+    const CurrentNodePushAndPop     theNodePushAndPop(
+                                        executionContext,
+                                        context);
 
-	return executeMore(
+    return executeMore(
             context,
             getInitialOpCodePosition(),
             executionContext,
@@ -307,2071 +305,2075 @@ XPath::execute(
 
 const XObjectPtr
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_OR:
-		return executionContext.getXObjectFactory().createBoolean(Or(context, opPos, executionContext));
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_OR:
+        return executionContext.getXObjectFactory().createBoolean(Or(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_AND:
-		return executionContext.getXObjectFactory().createBoolean(And(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_AND:
+        return executionContext.getXObjectFactory().createBoolean(And(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_NOTEQUALS:
-		return executionContext.getXObjectFactory().createBoolean(notequals(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_NOTEQUALS:
+        return executionContext.getXObjectFactory().createBoolean(notequals(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_EQUALS:
-		return executionContext.getXObjectFactory().createBoolean(equals(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_EQUALS:
+        return executionContext.getXObjectFactory().createBoolean(equals(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_LTE:
-		return executionContext.getXObjectFactory().createBoolean(lte(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_LTE:
+        return executionContext.getXObjectFactory().createBoolean(lte(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_LT:
-		return executionContext.getXObjectFactory().createBoolean(lt(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_LT:
+        return executionContext.getXObjectFactory().createBoolean(lt(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_GTE:
-		return executionContext.getXObjectFactory().createBoolean(gte(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_GTE:
+        return executionContext.getXObjectFactory().createBoolean(gte(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_GT:
-		return executionContext.getXObjectFactory().createBoolean(gt(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_GT:
+        return executionContext.getXObjectFactory().createBoolean(gt(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_PLUS:
-		return executionContext.getXObjectFactory().createNumber(plus(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_PLUS:
+        return executionContext.getXObjectFactory().createNumber(plus(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MINUS:
-		return executionContext.getXObjectFactory().createNumber(minus(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MINUS:
+        return executionContext.getXObjectFactory().createNumber(minus(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MULT:
-		return executionContext.getXObjectFactory().createNumber(mult(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MULT:
+        return executionContext.getXObjectFactory().createNumber(mult(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_DIV:
-		return executionContext.getXObjectFactory().createNumber(div(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_DIV:
+        return executionContext.getXObjectFactory().createNumber(div(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MOD:
-		return executionContext.getXObjectFactory().createNumber(mod(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MOD:
+        return executionContext.getXObjectFactory().createNumber(mod(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_NEG:
-		return executionContext.getXObjectFactory().createNumber(neg(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_NEG:
+        return executionContext.getXObjectFactory().createNumber(neg(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_UNION:
-		return Union(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_UNION:
+        return Union(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_LITERAL:
-		return literal(opPos, executionContext);
-		break;
+    case XPathExpression::eOP_LITERAL:
+        return literal(opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		return variable(opPos, executionContext);
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        return variable(opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		return group(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_GROUP:
+        return group(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_NUMBERLIT:
-		return numberlit(opPos, executionContext);
-		break;
+    case XPathExpression::eOP_NUMBERLIT:
+        return numberlit(opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		return runExtFunction(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        return runExtFunction(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		return runFunction(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        return runFunction(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		return locationPath(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        return locationPath(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_POSITION:
-		return executionContext.getXObjectFactory().createNumber(functionPosition(context, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_POSITION:
+        return executionContext.getXObjectFactory().createNumber(functionPosition(context, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LAST:
-		return executionContext.getXObjectFactory().createNumber(functionLast(executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_LAST:
+        return executionContext.getXObjectFactory().createNumber(functionLast(executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_COUNT:
-		return executionContext.getXObjectFactory().createNumber(functionCount(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_COUNT:
+        return executionContext.getXObjectFactory().createNumber(functionCount(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NOT:
-		return executionContext.getXObjectFactory().createBoolean(functionNot(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NOT:
+        return executionContext.getXObjectFactory().createBoolean(functionNot(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_TRUE:
-		return executionContext.getXObjectFactory().createBoolean(true);
-		break;
+    case XPathExpression::eOP_FUNCTION_TRUE:
+        return executionContext.getXObjectFactory().createBoolean(true);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FALSE:
-		return executionContext.getXObjectFactory().createBoolean(false);
-		break;
+    case XPathExpression::eOP_FUNCTION_FALSE:
+        return executionContext.getXObjectFactory().createBoolean(false);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-		return executionContext.getXObjectFactory().createBoolean(functionBoolean(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+        return executionContext.getXObjectFactory().createBoolean(functionBoolean(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-		return executionContext.getXObjectFactory().createStringReference(functionName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+        return executionContext.getXObjectFactory().createStringReference(functionName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-		return executionContext.getXObjectFactory().createStringReference(functionName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+        return executionContext.getXObjectFactory().createStringReference(functionName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		return executionContext.getXObjectFactory().createStringReference(functionLocalName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+        return executionContext.getXObjectFactory().createStringReference(functionLocalName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		return executionContext.getXObjectFactory().createStringReference(functionLocalName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+        return executionContext.getXObjectFactory().createStringReference(functionLocalName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-		return executionContext.getXObjectFactory().createNumber(functionFloor(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+        return executionContext.getXObjectFactory().createNumber(functionFloor(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_CEILING:
-		return executionContext.getXObjectFactory().createNumber(functionCeiling(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_CEILING:
+        return executionContext.getXObjectFactory().createNumber(functionCeiling(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_ROUND:
-		return executionContext.getXObjectFactory().createNumber(functionRound(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_ROUND:
+        return executionContext.getXObjectFactory().createNumber(functionRound(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-		return executionContext.getXObjectFactory().createNumber(functionNumber(context, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+        return executionContext.getXObjectFactory().createNumber(functionNumber(context, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-		return executionContext.getXObjectFactory().createNumber(functionNumber(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+        return executionContext.getXObjectFactory().createNumber(functionNumber(context, opPos, executionContext));
+        break;
 
-//	case XPathExpression::eOP_FUNCTION_STRING_0:
-//		return functionString(context);
-//		break;
+//  case XPathExpression::eOP_FUNCTION_STRING_0:
+//      return functionString(context);
+//      break;
 
-//	case XPathExpression::eOP_FUNCTION_STRING_1:
-//		return functionString(context, opPos, executionContext);
-//		break;
+//  case XPathExpression::eOP_FUNCTION_STRING_1:
+//      return functionString(context, opPos, executionContext);
+//      break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-		return executionContext.getXObjectFactory().createNumber(functionStringLength(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+        return executionContext.getXObjectFactory().createNumber(functionStringLength(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-		return executionContext.getXObjectFactory().createNumber(functionStringLength(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+        return executionContext.getXObjectFactory().createNumber(functionStringLength(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_SUM:
-		return executionContext.getXObjectFactory().createNumber(functionSum(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_SUM:
+        return executionContext.getXObjectFactory().createNumber(functionSum(context, opPos, executionContext));
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 
-	return XObjectPtr();
+    return XObjectPtr();
 }
 
 
 
 void
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext,
-			bool&					result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            bool&                   result) const
 {
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_OR:
-		result = Or(context, opPos, executionContext);
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_OR:
+        result = Or(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_AND:
-		result = And(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_AND:
+        result = And(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_NOTEQUALS:
-		result = notequals(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_NOTEQUALS:
+        result = notequals(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_EQUALS:
-		result = equals(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_EQUALS:
+        result = equals(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_LTE:
-		result = lte(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_LTE:
+        result = lte(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_LT:
-		result = lt(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_LT:
+        result = lt(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_GTE:
-		result = gte(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_GTE:
+        result = gte(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_GT:
-		result = gt(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_GT:
+        result = gt(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_PLUS:
-		result = XObject::boolean(plus(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_PLUS:
+        result = XObject::boolean(plus(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MINUS:
-		result = XObject::boolean(minus(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MINUS:
+        result = XObject::boolean(minus(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MULT:
-		result = XObject::boolean(mult(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MULT:
+        result = XObject::boolean(mult(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_DIV:
-		result = XObject::boolean(div(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_DIV:
+        result = XObject::boolean(div(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_MOD:
-		result = XObject::boolean(mod(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_MOD:
+        result = XObject::boolean(mod(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_NEG:
-		result = XObject::boolean(neg(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_NEG:
+        result = XObject::boolean(neg(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_UNION:
+        Union(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_LITERAL:
-		literal(opPos, result);
-		break;
+    case XPathExpression::eOP_LITERAL:
+        literal(opPos, result);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		result = variable(opPos, executionContext)->boolean();
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        result = variable(opPos, executionContext)->boolean();
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_GROUP:
+        group(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_NUMBERLIT:
-		numberlit(opPos, result);
-		break;
+    case XPathExpression::eOP_NUMBERLIT:
+        numberlit(opPos, result);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		result = runExtFunction(context, opPos, executionContext)->boolean();
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        result = runExtFunction(context, opPos, executionContext)->boolean();
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		result = runFunction(context, opPos, executionContext)->boolean();
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        result = runFunction(context, opPos, executionContext)->boolean();
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        locationPath(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_POSITION:
-		result = XObject::boolean(functionPosition(context, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_POSITION:
+        result = XObject::boolean(functionPosition(context, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LAST:
-		result = XObject::boolean(functionLast(executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_LAST:
+        result = XObject::boolean(functionLast(executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_COUNT:
-		result = XObject::boolean(functionCount(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_COUNT:
+        result = XObject::boolean(functionCount(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NOT:
-		result = functionNot(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_NOT:
+        result = functionNot(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_TRUE:
-		result = true;
-		break;
+    case XPathExpression::eOP_FUNCTION_TRUE:
+        result = true;
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FALSE:
-		result = false;
-		break;
+    case XPathExpression::eOP_FUNCTION_FALSE:
+        result = false;
+        break;
 
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-		result = functionBoolean(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+        result = functionBoolean(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-		result = XObject::boolean(functionName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+        result = XObject::boolean(functionName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-		result = XObject::boolean(functionName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+        result = XObject::boolean(functionName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		result = XObject::boolean(functionLocalName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+        result = XObject::boolean(functionLocalName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		result = XObject::boolean(functionLocalName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+        result = XObject::boolean(functionLocalName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-		result = XObject::boolean(functionFloor(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+        result = XObject::boolean(functionFloor(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_CEILING:
-		result = XObject::boolean(functionCeiling(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_CEILING:
+        result = XObject::boolean(functionCeiling(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_ROUND:
-		result = XObject::boolean(functionRound(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_ROUND:
+        result = XObject::boolean(functionRound(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-		result = XObject::boolean(functionNumber(context, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+        result = XObject::boolean(functionNumber(context, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-		result = XObject::boolean(functionNumber(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+        result = XObject::boolean(functionNumber(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-		result = XObject::boolean(functionStringLength(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+        result = XObject::boolean(functionStringLength(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-		result = XObject::boolean(functionStringLength(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+        result = XObject::boolean(functionStringLength(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_SUM:
-		result = XObject::boolean(functionSum(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_SUM:
+        result = XObject::boolean(functionSum(context, opPos, executionContext));
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 }
 
 
 
 void
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext,
-			double&					result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            double&                 result) const
 {
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_OR:
-		result = XObject::number(Or(context, opPos, executionContext));
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_OR:
+        result = XObject::number(Or(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_AND:
-		result = XObject::number(And(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_AND:
+        result = XObject::number(And(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_NOTEQUALS:
-		result = XObject::number(notequals(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_NOTEQUALS:
+        result = XObject::number(notequals(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_EQUALS:
-		result = XObject::number(equals(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_EQUALS:
+        result = XObject::number(equals(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_LTE:
-		result = XObject::number(lte(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_LTE:
+        result = XObject::number(lte(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_LT:
-		result = XObject::number(lt(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_LT:
+        result = XObject::number(lt(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_GTE:
-		result = XObject::number(gte(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_GTE:
+        result = XObject::number(gte(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_GT:
-		result = XObject::number(gt(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_GT:
+        result = XObject::number(gt(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_PLUS:
-		result = plus(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_PLUS:
+        result = plus(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_MINUS:
-		result = minus(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_MINUS:
+        result = minus(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_MULT:
-		result = mult(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_MULT:
+        result = mult(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_DIV:
-		result = div(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_DIV:
+        result = div(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_MOD:
-		result = mod(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_MOD:
+        result = mod(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_NEG:
-		result = neg(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_NEG:
+        result = neg(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_UNION:
+        Union(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_LITERAL:
-		literal(opPos, result);
-		break;
+    case XPathExpression::eOP_LITERAL:
+        literal(opPos, result);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		result = variable(opPos, executionContext)->num();
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        result = variable(opPos, executionContext)->num();
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_GROUP:
+        group(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_NUMBERLIT:
-		result = numberlit(opPos);
-		break;
+    case XPathExpression::eOP_NUMBERLIT:
+        result = numberlit(opPos);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		result = runExtFunction(context, opPos, executionContext)->num();
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        result = runExtFunction(context, opPos, executionContext)->num();
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		result = runFunction(context, opPos, executionContext)->num();
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        result = runFunction(context, opPos, executionContext)->num();
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        locationPath(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_POSITION:
-		result = functionPosition(context, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_POSITION:
+        result = functionPosition(context, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LAST:
-		result = functionLast(executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_LAST:
+        result = functionLast(executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_COUNT:
-		result = functionCount(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_COUNT:
+        result = functionCount(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NOT:
-		result = XObject::number(functionNot(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NOT:
+        result = XObject::number(functionNot(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_TRUE:
-		result = XObject::number(true);
-		break;
+    case XPathExpression::eOP_FUNCTION_TRUE:
+        result = XObject::number(true);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FALSE:
-		result = XObject::number(false);
-		break;
+    case XPathExpression::eOP_FUNCTION_FALSE:
+        result = XObject::number(false);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-		result = XObject::number(functionBoolean(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+        result = XObject::number(functionBoolean(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-		result = XObject::number(functionName(context),executionContext.getMemoryManager());
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+        result = XObject::number(functionName(context),executionContext.getMemoryManager());
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-		result = XObject::number(functionName(context, opPos, executionContext),executionContext.getMemoryManager());
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+        result = XObject::number(functionName(context, opPos, executionContext),executionContext.getMemoryManager());
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		result = XObject::number(functionLocalName(context),executionContext.getMemoryManager());
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+        result = XObject::number(functionLocalName(context),executionContext.getMemoryManager());
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		result = XObject::number(functionLocalName(context, opPos, executionContext),executionContext.getMemoryManager());
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+        result = XObject::number(functionLocalName(context, opPos, executionContext),executionContext.getMemoryManager());
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-		result = functionFloor(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+        result = functionFloor(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_CEILING:
-		result = functionCeiling(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_CEILING:
+        result = functionCeiling(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_ROUND:
-		result = functionRound(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_ROUND:
+        result = functionRound(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-		result = functionNumber(context, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+        result = functionNumber(context, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-		result = functionNumber(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+        result = functionNumber(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-		result = functionStringLength(context);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+        result = functionStringLength(context);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-		result = functionStringLength(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+        result = functionStringLength(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_SUM:
-		result = functionSum(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION_SUM:
+        result = functionSum(context, opPos, executionContext);
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 }
 
 
 
 void
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext,
-			XalanDOMString&			result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         result) const
 {
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_OR:
-		XObject::string(Or(context, opPos, executionContext), result);
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_OR:
+        XObject::string(Or(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_AND:
-		XObject::string(And(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_AND:
+        XObject::string(And(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_NOTEQUALS:
-		XObject::string(notequals(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_NOTEQUALS:
+        XObject::string(notequals(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_EQUALS:
-		XObject::string(equals(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_EQUALS:
+        XObject::string(equals(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_LTE:
-		XObject::string(lte(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_LTE:
+        XObject::string(lte(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_LT:
-		XObject::string(lt(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_LT:
+        XObject::string(lt(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_GTE:
-		XObject::string(gte(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_GTE:
+        XObject::string(gte(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_GT:
-		XObject::string(gt(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_GT:
+        XObject::string(gt(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_PLUS:
-		XObject::string(plus(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_PLUS:
+        XObject::string(plus(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_MINUS:
-		XObject::string(minus(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_MINUS:
+        XObject::string(minus(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_MULT:
-		XObject::string(mult(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_MULT:
+        XObject::string(mult(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_DIV:
-		XObject::string(div(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_DIV:
+        XObject::string(div(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_MOD:
-		XObject::string(mod(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_MOD:
+        XObject::string(mod(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_NEG:
-		XObject::string(neg(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_NEG:
+        XObject::string(neg(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_UNION:
+        Union(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_LITERAL:
-		literal(opPos, result);
-		break;
+    case XPathExpression::eOP_LITERAL:
+        literal(opPos, result);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		variable(opPos, executionContext)->str(result);
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        variable(opPos, executionContext)->str(result);
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_GROUP:
+        group(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_NUMBERLIT:
-		numberlit(opPos, result);
-		break;
+    case XPathExpression::eOP_NUMBERLIT:
+        numberlit(opPos, result);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		runExtFunction(context, opPos, executionContext)->str(result);
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        runExtFunction(context, opPos, executionContext)->str(result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		runFunction(context, opPos, executionContext)->str(result);
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        runFunction(context, opPos, executionContext)->str(result);
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        locationPath(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_POSITION:
-		XObject::string(functionPosition(context, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_POSITION:
+        XObject::string(functionPosition(context, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LAST:
-		XObject::string(functionLast(executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_LAST:
+        XObject::string(functionLast(executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_COUNT:
-		XObject::string(functionCount(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_COUNT:
+        XObject::string(functionCount(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NOT:
-		XObject::string(functionNot(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_NOT:
+        XObject::string(functionNot(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_TRUE:
-		XObject::string(true, result);
-		break;
+    case XPathExpression::eOP_FUNCTION_TRUE:
+        XObject::string(true, result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FALSE:
-		XObject::string(false, result);
-		break;
+    case XPathExpression::eOP_FUNCTION_FALSE:
+        XObject::string(false, result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-		XObject::string(functionBoolean(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+        XObject::string(functionBoolean(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-		result.append(functionName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+        result.append(functionName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-		result.append(functionName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+        result.append(functionName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		result.append(functionLocalName(context));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+        result.append(functionLocalName(context));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		result.append(functionLocalName(context, opPos, executionContext));
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+        result.append(functionLocalName(context, opPos, executionContext));
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-		XObject::string(functionFloor(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+        XObject::string(functionFloor(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_CEILING:
-		XObject::string(functionCeiling(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_CEILING:
+        XObject::string(functionCeiling(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_ROUND:
-		XObject::string(functionRound(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_ROUND:
+        XObject::string(functionRound(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-		XObject::string(functionNumber(context, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+        XObject::string(functionNumber(context, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-		XObject::string(functionNumber(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+        XObject::string(functionNumber(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-		XObject::string(functionStringLength(context), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+        XObject::string(functionStringLength(context), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-		XObject::string(functionStringLength(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+        XObject::string(functionStringLength(context, opPos, executionContext), result);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_SUM:
-		XObject::string(functionSum(context, opPos, executionContext), result);
-		break;
+    case XPathExpression::eOP_FUNCTION_SUM:
+        XObject::string(functionSum(context, opPos, executionContext), result);
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 }
 
 
 
 inline void
 stringToCharacters(
-			const XalanDOMString&		str,
-			FormatterListener&			formatterListener,
-			XPath::MemberFunctionPtr	function)
+            const XalanDOMString&       str,
+            FormatterListener&          formatterListener,
+            XPath::MemberFunctionPtr    function)
 {
-	(formatterListener.*function)(str.c_str(), str.length());
+    (formatterListener.*function)(str.c_str(), str.length());
 }
 
 
 
 void
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_OR:
-		XObject::string(
-				Or(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_OR:
+        XObject::string(
+                Or(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_AND:
-		XObject::string(
-				And(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_AND:
+        XObject::string(
+                And(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_NOTEQUALS:
-		XObject::string(
-				notequals(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_NOTEQUALS:
+        XObject::string(
+                notequals(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_EQUALS:
-		XObject::string(
-				equals(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_EQUALS:
+        XObject::string(
+                equals(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_LTE:
-		XObject::string(
-				lte(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_LTE:
+        XObject::string(
+                lte(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_LT:
-		XObject::string(
-				lt(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_LT:
+        XObject::string(
+                lt(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_GTE:
-		XObject::string(
-				gte(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_GTE:
+        XObject::string(
+                gte(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_GT:
-		XObject::string(
-				gt(context, opPos, executionContext),
-				formatterListener,
-				function);
-		break;
+    case XPathExpression::eOP_GT:
+        XObject::string(
+                gt(context, opPos, executionContext),
+                formatterListener,
+                function);
+        break;
 
-	case XPathExpression::eOP_PLUS:
-		plus(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_PLUS:
+        plus(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_MINUS:
-		minus(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_MINUS:
+        minus(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_MULT:
-		mult(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_MULT:
+        mult(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_DIV:
-		div(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_DIV:
+        div(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_MOD:
-		mod(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_MOD:
+        mod(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_NEG:
-		neg(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_NEG:
+        neg(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_UNION:
+        Union(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_LITERAL:
-		literal(opPos, formatterListener, function);
-		break;
+    case XPathExpression::eOP_LITERAL:
+        literal(opPos, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		variable(opPos, executionContext)->str( formatterListener, function);
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        variable(opPos, executionContext)->str( formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_GROUP:
+        group(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_NUMBERLIT:
-		numberlit(opPos, formatterListener, function);
-		break;
+    case XPathExpression::eOP_NUMBERLIT:
+        numberlit(opPos, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		runExtFunction(context, opPos, executionContext)->str( formatterListener, function);
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        runExtFunction(context, opPos, executionContext)->str( formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		runFunction(context, opPos, executionContext)->str(formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        runFunction(context, opPos, executionContext)->str(formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext, formatterListener, function);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        locationPath(context, opPos, executionContext, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_POSITION:
-		XObject::string(functionPosition(context, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_POSITION:
+        XObject::string(functionPosition(context, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LAST:
-		XObject::string(functionLast(executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_LAST:
+        XObject::string(functionLast(executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_COUNT:
-		XObject::string(functionCount(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_COUNT:
+        XObject::string(functionCount(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NOT:
-		XObject::string(functionNot(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_NOT:
+        XObject::string(functionNot(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_TRUE:
-		XObject::string(true, formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_TRUE:
+        XObject::string(true, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FALSE:
-		XObject::string(false, formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_FALSE:
+        XObject::string(false, formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-		XObject::string(functionBoolean(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+        XObject::string(functionBoolean(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-		stringToCharacters(functionName(context), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+        stringToCharacters(functionName(context), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-		stringToCharacters(functionName(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+        stringToCharacters(functionName(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-		stringToCharacters(functionLocalName(context), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+        stringToCharacters(functionLocalName(context), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-		stringToCharacters(functionLocalName(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+        stringToCharacters(functionLocalName(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-		XObject::string(functionFloor(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+        XObject::string(functionFloor(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_CEILING:
-		XObject::string(functionCeiling(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_CEILING:
+        XObject::string(functionCeiling(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_ROUND:
-		XObject::string(functionRound(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_ROUND:
+        XObject::string(functionRound(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-		XObject::string(functionNumber(context, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+        XObject::string(functionNumber(context, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-		XObject::string(functionNumber(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+        XObject::string(functionNumber(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-		XObject::string(functionStringLength(context), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+        XObject::string(functionStringLength(context), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-		XObject::string(functionStringLength(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+        XObject::string(functionStringLength(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	case XPathExpression::eOP_FUNCTION_SUM:
-		XObject::string(functionSum(context, opPos, executionContext), formatterListener, function);
-		break;
+    case XPathExpression::eOP_FUNCTION_SUM:
+        XObject::string(functionSum(context, opPos, executionContext), formatterListener, function);
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 }
 
 
 
 const XObjectPtr
 XPath::executeMore(
-			XalanNode* 				context,
-			OpCodeMapPositionType 	opPos,
-			XPathExecutionContext&	executionContext,
-			MutableNodeRefList&		result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            MutableNodeRefList&     result) const
 {
-	XObjectPtr	theXObject;
+    XObjectPtr  theXObject;
 
-	switch(m_expression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eOP_XPATH:
-		theXObject = executeMore(context, opPos + 2, executionContext, result);
-		break;
+    switch(m_expression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eOP_XPATH:
+        theXObject = executeMore(context, opPos + 2, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_OR:
-	case XPathExpression::eOP_AND:
-	case XPathExpression::eOP_NOTEQUALS:
-	case XPathExpression::eOP_EQUALS:
-	case XPathExpression::eOP_LTE:
-	case XPathExpression::eOP_LT:
-	case XPathExpression::eOP_GTE:
-	case XPathExpression::eOP_GT:
-	case XPathExpression::eOP_PLUS:
-	case XPathExpression::eOP_MINUS:
-	case XPathExpression::eOP_MULT:
-	case XPathExpression::eOP_DIV:
-	case XPathExpression::eOP_MOD:
-	case XPathExpression::eOP_NEG:
-	case XPathExpression::eOP_LITERAL:
-	case XPathExpression::eOP_NUMBERLIT:
-	case XPathExpression::eOP_FUNCTION_POSITION:
-	case XPathExpression::eOP_FUNCTION_LAST:
-	case XPathExpression::eOP_FUNCTION_COUNT:
-	case XPathExpression::eOP_FUNCTION_NOT:
-	case XPathExpression::eOP_FUNCTION_TRUE:
-	case XPathExpression::eOP_FUNCTION_FALSE:
-	case XPathExpression::eOP_FUNCTION_BOOLEAN:
-	case XPathExpression::eOP_FUNCTION_NAME_0:
-	case XPathExpression::eOP_FUNCTION_NAME_1:
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
-	case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
-	case XPathExpression::eOP_FUNCTION_FLOOR:
-	case XPathExpression::eOP_FUNCTION_CEILING:
-	case XPathExpression::eOP_FUNCTION_ROUND:
-	case XPathExpression::eOP_FUNCTION_NUMBER_0:
-	case XPathExpression::eOP_FUNCTION_NUMBER_1:
-	case XPathExpression::eOP_FUNCTION_STRING_0:
-	case XPathExpression::eOP_FUNCTION_STRING_1:
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-	case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
-	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
-	case XPathExpression::eOP_FUNCTION_NAMESPACEURI_1:
-	case XPathExpression::eOP_FUNCTION_SUM:
-		notNodeSetError(context, executionContext);
-		break;
+    case XPathExpression::eOP_OR:
+    case XPathExpression::eOP_AND:
+    case XPathExpression::eOP_NOTEQUALS:
+    case XPathExpression::eOP_EQUALS:
+    case XPathExpression::eOP_LTE:
+    case XPathExpression::eOP_LT:
+    case XPathExpression::eOP_GTE:
+    case XPathExpression::eOP_GT:
+    case XPathExpression::eOP_PLUS:
+    case XPathExpression::eOP_MINUS:
+    case XPathExpression::eOP_MULT:
+    case XPathExpression::eOP_DIV:
+    case XPathExpression::eOP_MOD:
+    case XPathExpression::eOP_NEG:
+    case XPathExpression::eOP_LITERAL:
+    case XPathExpression::eOP_NUMBERLIT:
+    case XPathExpression::eOP_FUNCTION_POSITION:
+    case XPathExpression::eOP_FUNCTION_LAST:
+    case XPathExpression::eOP_FUNCTION_COUNT:
+    case XPathExpression::eOP_FUNCTION_NOT:
+    case XPathExpression::eOP_FUNCTION_TRUE:
+    case XPathExpression::eOP_FUNCTION_FALSE:
+    case XPathExpression::eOP_FUNCTION_BOOLEAN:
+    case XPathExpression::eOP_FUNCTION_NAME_0:
+    case XPathExpression::eOP_FUNCTION_NAME_1:
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_0:
+    case XPathExpression::eOP_FUNCTION_LOCALNAME_1:
+    case XPathExpression::eOP_FUNCTION_FLOOR:
+    case XPathExpression::eOP_FUNCTION_CEILING:
+    case XPathExpression::eOP_FUNCTION_ROUND:
+    case XPathExpression::eOP_FUNCTION_NUMBER_0:
+    case XPathExpression::eOP_FUNCTION_NUMBER_1:
+    case XPathExpression::eOP_FUNCTION_STRING_0:
+    case XPathExpression::eOP_FUNCTION_STRING_1:
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
+    case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
+    case XPathExpression::eOP_FUNCTION_NAMESPACEURI_0:
+    case XPathExpression::eOP_FUNCTION_NAMESPACEURI_1:
+    case XPathExpression::eOP_FUNCTION_SUM:
+        notNodeSetError(context, executionContext);
+        break;
 
-	case XPathExpression::eOP_UNION:
-		Union(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_UNION:
+        Union(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_VARIABLE:
-		theXObject = variable(opPos, executionContext);
-		break;
+    case XPathExpression::eOP_VARIABLE:
+        theXObject = variable(opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_GROUP:
-		group(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_GROUP:
+        group(context, opPos, executionContext, result);
+        break;
 
-	case XPathExpression::eOP_EXTFUNCTION:
-		theXObject = runExtFunction(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_EXTFUNCTION:
+        theXObject = runExtFunction(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		theXObject = runFunction(context, opPos, executionContext);
-		break;
+    case XPathExpression::eOP_FUNCTION:
+        theXObject = runFunction(context, opPos, executionContext);
+        break;
 
-	case XPathExpression::eOP_LOCATIONPATH:
-		locationPath(context, opPos, executionContext, result);
-		break;
+    case XPathExpression::eOP_LOCATIONPATH:
+        locationPath(context, opPos, executionContext, result);
+        break;
 
-	default:
-		unknownOpCodeError(context, executionContext, opPos);
-		break;
-	}
+    default:
+        unknownOpCodeError(context, executionContext, opPos);
+        break;
+    }
 
-	if (theXObject.null() == false && theXObject->getType() != XObject::eTypeNodeSet)
-	{
-		notNodeSetError(context, executionContext);
-	}
+    if (theXObject.null() == false && theXObject->getType() != XObject::eTypeNodeSet)
+    {
+        notNodeSetError(context, executionContext);
+    }
 
-	return theXObject;
+    return theXObject;
 }
 
 
 
 inline void
 XPath::doGetMatchScore(
-			XalanNode*				context,
-			XPathExecutionContext&	executionContext,
-			eMatchScore&			score) const
+            XalanNode*              context,
+            XPathExecutionContext&  executionContext,
+            eMatchScore&            score) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	OpCodeMapPositionType	opPos =
+    OpCodeMapPositionType   opPos =
         m_expression.getInitialOpCodePosition() + 2;
 
-	while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
-	{
-		const OpCodeMapPositionType	    nextOpPos = m_expression.getNextOpCodePosition(opPos);
+    while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
+    {
+        const OpCodeMapPositionType     nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		score = locationPathPattern(executionContext, *context, opPos);
+        score = locationPathPattern(executionContext, *context, opPos);
 
-		if(score == eMatchScoreNone)
-		{
-			opPos = nextOpPos;
-		}
-		else
-		{
-			break;
-		}
-	}
+        if(score == eMatchScoreNone)
+        {
+            opPos = nextOpPos;
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::getMatchScore(
-			XalanNode*				node,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              node,
+            XPathExecutionContext&  executionContext) const
 {
-	eMatchScore		score = eMatchScoreNone;
+    eMatchScore     score = eMatchScoreNone;
 
-	if(m_expression.getOpCodeMapValue(0) != XPathExpression::eOP_MATCHPATTERN)
-	{
-        XalanDOMString  theResult(executionContext.getMemoryManager());
+    if(m_expression.getOpCodeMapValue(0) != XPathExpression::eOP_MATCHPATTERN)
+    {
+        GetCachedString     theGuard(executionContext);
 
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern, theResult),
-			node,
-			m_locator);
-	}
-	else
-	{
-		assert(node != 0);
+        XalanDOMString&     theBuffer = theGuard.get();
 
-		doGetMatchScore(node, executionContext, score);
-	}
+        executionContext.error(
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern),
+            node,
+            m_locator);
+    }
+    else
+    {
+        assert(node != 0);
 
-	return score;
+        doGetMatchScore(node, executionContext, score);
+    }
+
+    return score;
 }
 
 
 
 XPath::eMatchScore
 XPath::getMatchScore(
-			XalanNode*				node,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              node,
+            const PrefixResolver&   resolver,
+            XPathExecutionContext&  executionContext) const
 {
-	const PrefixResolver* const		theCurrentResolver =
-		executionContext.getPrefixResolver();
+    const PrefixResolver* const     theCurrentResolver =
+        executionContext.getPrefixResolver();
 
-	if (theCurrentResolver == &resolver)
-	{
-		return getMatchScore(node, executionContext);
-	}
-	else
-	{
-		// Push and pop the PrefixResolver...
-		const PrefixResolverSetAndRestore	theSetAndRestore(
-									            executionContext,
-									            theCurrentResolver,
-									            &resolver);
+    if (theCurrentResolver == &resolver)
+    {
+        return getMatchScore(node, executionContext);
+    }
+    else
+    {
+        // Push and pop the PrefixResolver...
+        const PrefixResolverSetAndRestore   theSetAndRestore(
+                                                executionContext,
+                                                theCurrentResolver,
+                                                &resolver);
 
-		return getMatchScore(node, executionContext);
-	}
+        return getMatchScore(node, executionContext);
+    }
 }
 
 
 
 inline const XalanDOMString*
 getStringFromTokenQueue(
-			const XPathExpression&	        expression,
-            XPath::OpCodeMapPositionType	opPos)
+            const XPathExpression&          expression,
+            XPath::OpCodeMapPositionType    opPos)
 {
-	const XPath::OpCodeMapValueType     tokenPosition =
-				expression.getOpCodeMapValue(opPos);
+    const XPath::OpCodeMapValueType     tokenPosition =
+                expression.getOpCodeMapValue(opPos);
 
     if (tokenPosition == XPathExpression::eEMPTY ||
         tokenPosition == XPathExpression::eELEMWILDCARD)
-	{
-		return 0;
-	}
-	else
-	{
+    {
+        return 0;
+    }
+    else
+    {
         assert(tokenPosition != XPathExpression::eENDOP);
 
-		const XObject* const	token =
-					expression.getToken(tokenPosition);
-		assert(token != 0);
+        const XObject* const    token =
+                    expression.getToken(tokenPosition);
+        assert(token != 0);
 
-		return &token->str();
-	}
+        return &token->str();
+    }
 }
 
 
 
 void
-XPath::getTargetData(TargetDataVectorType&	targetData) const
+XPath::getTargetData(TargetDataVectorType&  targetData) const
 {
-	OpCodeMapPositionType   opPos =
+    OpCodeMapPositionType   opPos =
         m_expression.getInitialOpCodePosition() + 2;
 
-	targetData.reserve(eDefaultTargetDataSize);
+    targetData.reserve(eDefaultTargetDataSize);
 
-	while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
-	{
-		const OpCodeMapPositionType	    nextOpPos = m_expression.getNextOpCodePosition(opPos);
+    while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
+    {
+        const OpCodeMapPositionType     nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		opPos += 2;
-	 
-		unsigned long	stepCount = 0;
+        opPos += 2;
+     
+        unsigned long   stepCount = 0;
 
-		while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
-		{
-			++stepCount;
+        while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
+        {
+            ++stepCount;
 
-			const OpCodeMapPositionType	    nextStepPos =
-				m_expression.getNextOpCodePosition(opPos);
+            const OpCodeMapPositionType     nextStepPos =
+                m_expression.getNextOpCodePosition(opPos);
 
-			const OpCodeMapValueType    nextOp = m_expression.getOpCodeMapValue(nextStepPos);
+            const OpCodeMapValueType    nextOp = m_expression.getOpCodeMapValue(nextStepPos);
 
-			if(nextOp == XPathExpression::eENDOP)
-			{
-				eMatchScore					score = eMatchScoreNone;
+            if(nextOp == XPathExpression::eENDOP)
+            {
+                eMatchScore                 score = eMatchScoreNone;
 
-				const XalanDOMChar*			targetLocalName = 0;
+                const XalanDOMChar*         targetLocalName = 0;
 
-				TargetData::eTargetType		targetType = TargetData::eOther;
+                TargetData::eTargetType     targetType = TargetData::eOther;
 
-				bool	fIsAttribute = false;
+                bool    fIsAttribute = false;
 
-				const OpCodeMapValueType	stepType = m_expression.getOpCodeMapValue(opPos);
+                const OpCodeMapValueType    stepType = m_expression.getOpCodeMapValue(opPos);
 
-				opPos += 3;
+                opPos += 3;
 
-				switch(stepType)
-				{
-				case XPathExpression::eOP_FUNCTION:
-					targetLocalName = PSEUDONAME_ANY;
-					score = eMatchScoreOther;
-					targetType = TargetData::eAny;
-					break;
+                switch(stepType)
+                {
+                case XPathExpression::eOP_FUNCTION:
+                    targetLocalName = PSEUDONAME_ANY;
+                    score = eMatchScoreOther;
+                    targetType = TargetData::eAny;
+                    break;
 
-				case XPathExpression::eFROM_ROOT:
-					targetLocalName = PSEUDONAME_ROOT;
-					score = eMatchScoreOther;
-					break;
+                case XPathExpression::eFROM_ROOT:
+                    targetLocalName = PSEUDONAME_ROOT;
+                    score = eMatchScoreOther;
+                    break;
 
-				case XPathExpression::eMATCH_ATTRIBUTE:
-					fIsAttribute = true;
-					// fall through on purpose...
+                case XPathExpression::eMATCH_ATTRIBUTE:
+                    fIsAttribute = true;
+                    // fall through on purpose...
 
-				case XPathExpression::eMATCH_ANY_ANCESTOR:
-				case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
-					{
-						const OpCodeMapValueType	tok = m_expression.getOpCodeMapValue(opPos);
+                case XPathExpression::eMATCH_ANY_ANCESTOR:
+                case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
+                    {
+                        const OpCodeMapValueType    tok = m_expression.getOpCodeMapValue(opPos);
 
-						switch(tok)
-						{
-						case XPathExpression::eNODETYPE_COMMENT:
-							targetLocalName = PSEUDONAME_COMMENT;
-							score = eMatchScoreNodeTest;
-							break;
+                        switch(tok)
+                        {
+                        case XPathExpression::eNODETYPE_COMMENT:
+                            targetLocalName = PSEUDONAME_COMMENT;
+                            score = eMatchScoreNodeTest;
+                            break;
 
-						case XPathExpression::eNODETYPE_TEXT:
-							targetLocalName = PSEUDONAME_TEXT;
-							score = eMatchScoreNodeTest;
-							break;
+                        case XPathExpression::eNODETYPE_TEXT:
+                            targetLocalName = PSEUDONAME_TEXT;
+                            score = eMatchScoreNodeTest;
+                            break;
 
-						case XPathExpression::eNODETYPE_NODE:
-							targetLocalName = PSEUDONAME_NODE;
-							score = eMatchScoreNodeTest;
-							break;
+                        case XPathExpression::eNODETYPE_NODE:
+                            targetLocalName = PSEUDONAME_NODE;
+                            score = eMatchScoreNodeTest;
+                            break;
 
-						case XPathExpression::eNODETYPE_ROOT:
-							targetLocalName = PSEUDONAME_ROOT;
-							score = eMatchScoreNodeTest;
-							break;
+                        case XPathExpression::eNODETYPE_ROOT:
+                            targetLocalName = PSEUDONAME_ROOT;
+                            score = eMatchScoreNodeTest;
+                            break;
 
-						case XPathExpression::eNODETYPE_ANYELEMENT:
-							targetLocalName = PSEUDONAME_ANY;
-							score = eMatchScoreNodeTest;
-							targetType = TargetData::eElement;
-							break;
+                        case XPathExpression::eNODETYPE_ANYELEMENT:
+                            targetLocalName = PSEUDONAME_ANY;
+                            score = eMatchScoreNodeTest;
+                            targetType = TargetData::eElement;
+                            break;
 
-						case XPathExpression::eNODETYPE_PI:
-							{
-								const OpCodeMapValueType	argLen =
-									m_expression.getOpCodeArgumentLength(opPos - 3);
+                        case XPathExpression::eNODETYPE_PI:
+                            {
+                                const OpCodeMapValueType    argLen =
+                                    m_expression.getOpCodeArgumentLength(opPos - 3);
 
-								targetLocalName = PSEUDONAME_PI;
+                                targetLocalName = PSEUDONAME_PI;
 
-								if (argLen == 1)
-								{
-									score = eMatchScoreNodeTest;
-								}
-								else if (argLen == 2)
-								{
-									score = eMatchScoreQName;
-								}
-							}
-							break;
+                                if (argLen == 1)
+                                {
+                                    score = eMatchScoreNodeTest;
+                                }
+                                else if (argLen == 2)
+                                {
+                                    score = eMatchScoreQName;
+                                }
+                            }
+                            break;
 
-						case XPathExpression::eNODENAME:
-							{
-								const XalanDOMString* const		targetNamespace =
-										getStringFromTokenQueue(m_expression, opPos + 1);
+                        case XPathExpression::eNODENAME:
+                            {
+                                const XalanDOMString* const     targetNamespace =
+                                        getStringFromTokenQueue(m_expression, opPos + 1);
 
-								const XalanDOMString* const		targetLocal =
-										getStringFromTokenQueue(m_expression, opPos + 2);
+                                const XalanDOMString* const     targetLocal =
+                                        getStringFromTokenQueue(m_expression, opPos + 2);
 
-								if (targetLocal == 0)
-								{
-									targetLocalName = 0;
-								}
-								else
-								{
-									targetLocalName = targetLocal->c_str();
-								}
+                                if (targetLocal == 0)
+                                {
+                                    targetLocalName = 0;
+                                }
+                                else
+                                {
+                                    targetLocalName = targetLocal->c_str();
+                                }
 
-								targetType = fIsAttribute ?
-									TargetData::eAttribute :
-									TargetData::eElement;
+                                targetType = fIsAttribute ?
+                                    TargetData::eAttribute :
+                                    TargetData::eElement;
 
-								if(targetLocalName != 0)
-								{
-									if(targetLocalName == PSEUDONAME_ANY)
-									{
-										targetLocalName = PSEUDONAME_ANY;
+                                if(targetLocalName != 0)
+                                {
+                                    if(targetLocalName == PSEUDONAME_ANY)
+                                    {
+                                        targetLocalName = PSEUDONAME_ANY;
 
-										if (targetNamespace == 0 ||
-											*targetNamespace == PSEUDONAME_ANY)
-										{
-											score = eMatchScoreNodeTest;
-										}
-										else
-										{
-											score = eMatchScoreNSWild;
-										}
-									}
-									else
-									{
-										score = eMatchScoreQName;
-									}
-								}
-								else
-								{
-									targetLocalName = PSEUDONAME_ANY;
+                                        if (targetNamespace == 0 ||
+                                            *targetNamespace == PSEUDONAME_ANY)
+                                        {
+                                            score = eMatchScoreNodeTest;
+                                        }
+                                        else
+                                        {
+                                            score = eMatchScoreNSWild;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        score = eMatchScoreQName;
+                                    }
+                                }
+                                else
+                                {
+                                    targetLocalName = PSEUDONAME_ANY;
 
-									if (targetNamespace == 0 ||
-										*targetNamespace == PSEUDONAME_ANY)
-									{
-										score = eMatchScoreNodeTest;
-									}
-									else
-									{
-										score = eMatchScoreNSWild;
-									}
-								}
-							}
+                                    if (targetNamespace == 0 ||
+                                        *targetNamespace == PSEUDONAME_ANY)
+                                    {
+                                        score = eMatchScoreNodeTest;
+                                    }
+                                    else
+                                    {
+                                        score = eMatchScoreNSWild;
+                                    }
+                                }
+                            }
 
-							break;
+                            break;
 
-						default:
-							targetLocalName = PSEUDONAME_ANY;
-							score = eMatchScoreNodeTest;
-							break;
-						}
-					}
-					break;
-				}
+                        default:
+                            targetLocalName = PSEUDONAME_ANY;
+                            score = eMatchScoreNodeTest;
+                            break;
+                        }
+                    }
+                    break;
+                }
 
-				assert(targetLocalName != 0);
+                assert(targetLocalName != 0);
 
-				// If there are multiple steps, or a predicate,
-				// the priority is always eMatchScoreOther.
-				if (stepCount > 1 ||
-					opPos + 3 < nextStepPos)
-				{
-					score = eMatchScoreOther;
-				}
+                // If there are multiple steps, or a predicate,
+                // the priority is always eMatchScoreOther.
+                if (stepCount > 1 ||
+                    opPos + 3 < nextStepPos)
+                {
+                    score = eMatchScoreOther;
+                }
 
-				targetData.push_back(TargetData(targetLocalName, score, targetType));
-			}
+                targetData.push_back(TargetData(targetLocalName, score, targetType));
+            }
 
-			opPos = nextStepPos;
-		}
+            opPos = nextStepPos;
+        }
 
-		opPos = nextOpPos;
-	}
+        opPos = nextOpPos;
+    }
 }
 
 
 
 bool
 XPath::Or(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	bool	theResult;
+    bool    theResult;
 
-	executeMore(context, opPos, executionContext, theResult);
+    executeMore(context, opPos, executionContext, theResult);
 
-	if(theResult == false)
-	{
-		opPos = m_expression.getNextOpCodePosition(opPos);
+    if(theResult == false)
+    {
+        opPos = m_expression.getNextOpCodePosition(opPos);
 
-		executeMore(context, opPos, executionContext, theResult);
-	}
+        executeMore(context, opPos, executionContext, theResult);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 bool
 XPath::And(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;	
+    opPos += 2; 
 
-	bool	fResult;
+    bool    fResult;
 
-	executeMore(context, opPos, executionContext, fResult);
+    executeMore(context, opPos, executionContext, fResult);
 
-	if (fResult == true)
-	{
-		opPos = m_expression.getNextOpCodePosition(opPos);
+    if (fResult == true)
+    {
+        opPos = m_expression.getNextOpCodePosition(opPos);
 
-		executeMore(context, opPos, executionContext, fResult);
-	}	
+        executeMore(context, opPos, executionContext, fResult);
+    }   
 
-	return fResult;
+    return fResult;
 }
 
 
 
 bool
 XPath::notequals(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;	
+    opPos += 2; 
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->notEquals(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->notEquals(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 bool
 XPath::equals(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;	
+    opPos += 2; 
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->equals(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->equals(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 bool
 XPath::lte(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;	
+    opPos += 2; 
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->lessThanOrEquals(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->lessThanOrEquals(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 bool
 XPath::lt(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->lessThan(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->lessThan(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 bool
 XPath::gte(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->greaterThanOrEquals(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->greaterThanOrEquals(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 bool
 XPath::gt(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const XObjectPtr	expr1(executeMore(context, opPos, executionContext));
-	assert(expr1.get() != 0);
+    const XObjectPtr    expr1(executeMore(context, opPos, executionContext));
+    assert(expr1.get() != 0);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	return expr1->greaterThan(
-			*executeMore(context, opPos, executionContext).get(),
-			executionContext);
+    return expr1->greaterThan(
+            *executeMore(context, opPos, executionContext).get(),
+            executionContext);
 }
 
 
 
 double
 XPath::getNumericOperand(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	if (m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_NUMBERLIT)
-	{
-		assert(m_expression.tokenQueueSize() >
-			m_expression.getOpCodeMapValue(opPos + 3));
+    if (m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_NUMBERLIT)
+    {
+        assert(m_expression.tokenQueueSize() >
+            m_expression.getOpCodeMapValue(opPos + 3));
 
-		return m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(opPos + 2));
-	}
-	else
-	{
-		double	theResult;
+        return m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(opPos + 2));
+    }
+    else
+    {
+        double  theResult;
 
-		executeMore(context, opPos, executionContext, theResult);
+        executeMore(context, opPos, executionContext, theResult);
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
 
 double
 XPath::plus(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const double	expr1 = getNumericOperand(context, opPos, executionContext);
+    const double    expr1 = getNumericOperand(context, opPos, executionContext);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, opPos, executionContext);
+    const double    expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return DoubleSupport::add(expr1, expr2);
+    return DoubleSupport::add(expr1, expr2);
 }
 
 
 
 void
 XPath::plus(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = plus(context, opPos, executionContext);
+    const double    theResult = plus(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 double
 XPath::minus(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const double	expr1 = getNumericOperand(context, opPos, executionContext);
+    const double    expr1 = getNumericOperand(context, opPos, executionContext);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, opPos, executionContext);
+    const double    expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return DoubleSupport::subtract(expr1, expr2);
+    return DoubleSupport::subtract(expr1, expr2);
 }
 
 
 
 void
 XPath::minus(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = minus(context, opPos, executionContext);
+    const double    theResult = minus(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 double
 XPath::mult(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const double	expr1 = getNumericOperand(context, opPos, executionContext);
+    const double    expr1 = getNumericOperand(context, opPos, executionContext);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, opPos, executionContext);
+    const double    expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return DoubleSupport::multiply(expr1, expr2);
+    return DoubleSupport::multiply(expr1, expr2);
 }
 
 
 
 void
 XPath::mult(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = mult(context, opPos, executionContext);
+    const double    theResult = mult(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 double
 XPath::div(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;
+    opPos += 2;
 
-	const double	expr1 = getNumericOperand(context, opPos, executionContext);
+    const double    expr1 = getNumericOperand(context, opPos, executionContext);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, opPos, executionContext);
+    const double    expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return DoubleSupport::divide(expr1, expr2);
+    return DoubleSupport::divide(expr1, expr2);
 }
 
 
 
 void
 XPath::div(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = div(context, opPos, executionContext);
+    const double    theResult = div(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 double
 XPath::mod(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	opPos += 2;	
+    opPos += 2; 
 
-	const double	expr1 = getNumericOperand(context, opPos, executionContext);
+    const double    expr1 = getNumericOperand(context, opPos, executionContext);
 
-	opPos = m_expression.getNextOpCodePosition(opPos);
+    opPos = m_expression.getNextOpCodePosition(opPos);
 
-	const double	expr2 = getNumericOperand(context, opPos, executionContext);
+    const double    expr2 = getNumericOperand(context, opPos, executionContext);
 
-	return DoubleSupport::modulus(expr1, expr2);
+    return DoubleSupport::modulus(expr1, expr2);
 }
 
 
 
 void
 XPath::mod(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = mod(context, opPos, executionContext);
+    const double    theResult = mod(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 double
 XPath::neg(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	return DoubleSupport::negative(getNumericOperand(context, opPos + 2, executionContext));
+    return DoubleSupport::negative(getNumericOperand(context, opPos + 2, executionContext));
 }
 
 
 
 void
 XPath::neg(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	const double	theResult = neg(context, opPos, executionContext);
+    const double    theResult = neg(context, opPos, executionContext);
 
-	XObject::string(theResult, formatterListener, function);
+    XObject::string(theResult, formatterListener, function);
 }
 
 
 
 const XObjectPtr
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+    BorrowReturnMutableNodeRefList  resultNodeList(executionContext);
 
-	Union(context, opPos, executionContext, *resultNodeList);
+    Union(context, opPos, executionContext, *resultNodeList);
 
-	return executionContext.getXObjectFactory().createNodeSet(resultNodeList);
+    return executionContext.getXObjectFactory().createNodeSet(resultNodeList);
 }
 
 
 
 void
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			bool&					result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            bool&                   result) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+    BorrowReturnMutableNodeRefList  resultNodeList(executionContext);
 
-	Union(context, opPos, executionContext, *resultNodeList);
+    Union(context, opPos, executionContext, *resultNodeList);
 
-	result = XObject::boolean(*resultNodeList);
+    result = XObject::boolean(*resultNodeList);
 }
 
 
 
 void
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			double&					result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            double&                 result) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+    BorrowReturnMutableNodeRefList  resultNodeList(executionContext);
 
-	Union(context, opPos, executionContext, *resultNodeList);
+    Union(context, opPos, executionContext, *resultNodeList);
 
-	result = XObject::number(executionContext, *resultNodeList);
+    result = XObject::number(executionContext, *resultNodeList);
 }
 
 
 
 void
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			XalanDOMString&			result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         result) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+    BorrowReturnMutableNodeRefList  resultNodeList(executionContext);
 
-	Union(context, opPos, executionContext, *resultNodeList);
+    Union(context, opPos, executionContext, *resultNodeList);
 
-	XObject::string(*resultNodeList, result);
+    XObject::string(*resultNodeList, result);
 }
 
 
 
 void
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
+    BorrowReturnMutableNodeRefList  resultNodeList(executionContext);
 
-	Union(context, opPos, executionContext, *resultNodeList);
+    Union(context, opPos, executionContext, *resultNodeList);
 
-	XObject::string(*resultNodeList, formatterListener, function);
+    XObject::string(*resultNodeList, formatterListener, function);
 }
 
 
 
 void
 XPath::Union(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			MutableNodeRefList&		result) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            MutableNodeRefList&     result) const
 {
-	assert(result.empty() == true);
+    assert(result.empty() == true);
 
-	opPos += 2;
+    opPos += 2;
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	theGuard(executionContext);
+    BorrowReturnMutableNodeRefList  theGuard(executionContext);
 
-	MutableNodeRefList&		tempNodeList = *theGuard;
+    MutableNodeRefList&     tempNodeList = *theGuard;
 
-	while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
-	{
-		const XObjectPtr	nodesetResult(executeMore(context, opPos, executionContext, tempNodeList));
+    while(m_expression.getOpCodeMapValue(opPos) != XPathExpression::eENDOP)
+    {
+        const XObjectPtr    nodesetResult(executeMore(context, opPos, executionContext, tempNodeList));
 
-		if (nodesetResult.null() == false)
-		{
-			result.addNodesInDocOrder(nodesetResult->nodeset(), executionContext);
-		}
-		else
-		{
-			result.addNodesInDocOrder(tempNodeList, executionContext);
+        if (nodesetResult.null() == false)
+        {
+            result.addNodesInDocOrder(nodesetResult->nodeset(), executionContext);
+        }
+        else
+        {
+            result.addNodesInDocOrder(tempNodeList, executionContext);
 
-			tempNodeList.clear();
-		}
+            tempNodeList.clear();
+        }
 
-		opPos = m_expression.getNextOpCodePosition(opPos);
-	}
+        opPos = m_expression.getNextOpCodePosition(opPos);
+    }
 
-	result.setDocumentOrder();
+    result.setDocumentOrder();
 }
 
 
 
 const XObjectPtr
 XPath::literal(
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidOpCodePosition(opPos + 2));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
-    const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
+    const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	if (m_inStylesheet == true)
-	{
-		return executionContext.getXObjectFactory().createString(*theLiteral);
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createString(theLiteral->str());
-	}
+    if (m_inStylesheet == true)
+    {
+        return executionContext.getXObjectFactory().createString(*theLiteral);
+    }
+    else
+    {
+        return executionContext.getXObjectFactory().createString(theLiteral->str());
+    }
 }
 
 
 
 void
 XPath::literal(
-			OpCodeMapPositionType	opPos,
-			bool&	                theResult) const
+            OpCodeMapPositionType   opPos,
+            bool&                   theResult) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidOpCodePosition(opPos + 2));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
-    const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
+    const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	theResult = theLiteral->boolean();
+    theResult = theLiteral->boolean();
 }
 
 
 
 void
 XPath::literal(
-			OpCodeMapPositionType	opPos,
-			double&		            theResult) const
+            OpCodeMapPositionType   opPos,
+            double&                 theResult) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidOpCodePosition(opPos + 2));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
-    const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
+    const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	theResult = theLiteral->num();
+    theResult = theLiteral->num();
 }
 
 
 
 void
 XPath::literal(
-			OpCodeMapPositionType	opPos,
-			XalanDOMString&		    theString) const
+            OpCodeMapPositionType   opPos,
+            XalanDOMString&         theString) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidOpCodePosition(opPos + 2));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
-    const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
+    const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	theLiteral->str(theString);
+    theLiteral->str(theString);
 }
 
 
 
 void
 XPath::literal(
-			OpCodeMapPositionType	opPos,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            OpCodeMapPositionType   opPos,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidOpCodePosition(opPos + 2));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
-    const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
+    const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-	theLiteral->str( formatterListener, function);
+    theLiteral->str( formatterListener, function);
 }
 
 
 
 const XObjectPtr
 XPath::variable(
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-    const XToken* const	    ns =
+    const XToken* const     ns =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(ns != 0);
 
-	const XToken* const	    varName =
+    const XToken* const     varName =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(varName != 0);
 
-	return executionContext.getVariable(XalanQNameByReference(ns->str(), varName->str()), m_locator);
+    return executionContext.getVariable(XalanQNameByReference(ns->str(), varName->str()), m_locator);
 }
 
 
 
 const XObjectPtr
 XPath::numberlit(
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-	const XToken* const	    theLiteral =
+    const XToken* const     theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-	if (m_inStylesheet == true)
-	{
-		return executionContext.getXObjectFactory().createNumber(*theLiteral);
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createNumber(theLiteral->num());
-	}
+    if (m_inStylesheet == true)
+    {
+        return executionContext.getXObjectFactory().createNumber(*theLiteral);
+    }
+    else
+    {
+        return executionContext.getXObjectFactory().createNumber(theLiteral->num());
+    }
 }
 
 
 
 double
-XPath::numberlit(OpCodeMapPositionType	opPos) const
+XPath::numberlit(OpCodeMapPositionType  opPos) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-	const XToken* const	    theLiteral =
+    const XToken* const     theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-	return theLiteral->num();
+    return theLiteral->num();
 }
 
 
 
 void
 XPath::numberlit(
-			OpCodeMapPositionType	opPos,
-			bool&	                theResult) const
+            OpCodeMapPositionType   opPos,
+            bool&                   theResult) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-	const XToken* const	    theLiteral =
+    const XToken* const     theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-	theResult = theLiteral->boolean();
+    theResult = theLiteral->boolean();
 }
 
 
 
 void
 XPath::numberlit(
-			OpCodeMapPositionType	opPos,
-			XalanDOMString&		    theString) const
+            OpCodeMapPositionType   opPos,
+            XalanDOMString&         theString) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-	const XToken* const	    theLiteral =
+    const XToken* const     theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-	theLiteral->str(theString);
+    theLiteral->str(theString);
 }
 
 
 
 void
 XPath::numberlit(
-			OpCodeMapPositionType	opPos,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            OpCodeMapPositionType   opPos,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidOpCodePosition(opPos + 3));
     assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
-	const XToken* const	    theLiteral =
+    const XToken* const     theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
@@ -2382,1606 +2384,1614 @@ XPath::numberlit(
 
 const XObjectPtr
 XPath::locationPath(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {    
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
+    BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-	locationPath(context, opPos, executionContext, *mnl.get());
+    locationPath(context, opPos, executionContext, *mnl.get());
 
-	return executionContext.getXObjectFactory().createNodeSet(mnl);
+    return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
 
 
 
 void
 XPath::locationPath(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			bool&					theResult) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            bool&                   theResult) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
+    BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-	locationPath(context, opPos, executionContext, *mnl.get());
+    locationPath(context, opPos, executionContext, *mnl.get());
 
-	theResult = XObject::boolean(*mnl.get());
+    theResult = XObject::boolean(*mnl.get());
 }
 
 
 
 void
 XPath::locationPath(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			double&					theResult) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            double&                 theResult) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
+    BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-	locationPath(context, opPos, executionContext, *mnl.get());
+    locationPath(context, opPos, executionContext, *mnl.get());
 
-	theResult = XObject::number(executionContext, *mnl.get());
+    theResult = XObject::number(executionContext, *mnl.get());
 }
 
 
 
 void
 XPath::locationPath(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			XalanDOMString&			theResult) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         theResult) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
+    BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-	locationPath(context, opPos, executionContext, *mnl.get());
+    locationPath(context, opPos, executionContext, *mnl.get());
 
-	XObject::string(*mnl.get(), theResult);
+    XObject::string(*mnl.get(), theResult);
 }
 
 
 
 void
 XPath::locationPath(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
+    BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-	locationPath(context, opPos, executionContext, *mnl.get());
+    locationPath(context, opPos, executionContext, *mnl.get());
 
-	XObject::string(*mnl, formatterListener, function);
+    XObject::string(*mnl, formatterListener, function);
 }
 
 
 
 const XObjectPtr
 XPath::runExtFunction(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	const OpCodeMapPositionType	    endExtFunc =
+    const OpCodeMapPositionType     endExtFunc =
         opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
 
-	opPos += 2;
+    opPos += 2;
 
-	const XToken* const	    ns = m_expression.getToken(m_expression.getOpCodeMapValue(opPos));
+    const XToken* const     ns = m_expression.getToken(m_expression.getOpCodeMapValue(opPos));
     assert(ns != 0);
 
-	++opPos;
+    ++opPos;
 
-	const XToken* const	    funcName = m_expression.getToken(m_expression.getOpCodeMapValue(opPos));
+    const XToken* const     funcName = m_expression.getToken(m_expression.getOpCodeMapValue(opPos));
     assert(funcName != 0);
 
-	++opPos;
+    ++opPos;
 
-	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
+    typedef XPathExecutionContext::XObjectArgVectorType     XObjectArgVectorType;
 
-	XObjectArgVectorType	args(executionContext.getMemoryManager());
+    XObjectArgVectorType    args(executionContext.getMemoryManager());
 
-	while(opPos < endExtFunc)
-	{
-		const OpCodeMapPositionType	    nextOpPos =
+    while(opPos < endExtFunc)
+    {
+        const OpCodeMapPositionType     nextOpPos =
             m_expression.getNextOpCodePosition(opPos);
 
-		args.push_back(executeMore(context, opPos, executionContext));
+        args.push_back(executeMore(context, opPos, executionContext));
 
-		opPos = nextOpPos;
-	}
+        opPos = nextOpPos;
+    }
 
-	return extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
+    return extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
 }
 
 
 
 const XObjectPtr
 XPath::runFunction(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	const OpCodeMapPositionType	    endFunc =
+    const OpCodeMapPositionType     endFunc =
         opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
 
-	opPos += 2;
+    opPos += 2;
 
-	// This is index into the function table for the
-	// function.
-	const OpCodeMapValueType	funcID = m_expression.getOpCodeMapValue(opPos);
+    // This is index into the function table for the
+    // function.
+    const OpCodeMapValueType    funcID = m_expression.getOpCodeMapValue(opPos);
 
-	opPos++;
+    opPos++;
 
-	// Number of args is next.
-	const OpCodeMapValueType	argCount = m_expression.getOpCodeMapValue(opPos);
+    // Number of args is next.
+    const OpCodeMapValueType    argCount = m_expression.getOpCodeMapValue(opPos);
 
-	opPos++;
+    opPos++;
 
-	if (argCount == 0)
-	{
-		assert(opPos == endFunc);
+    if (argCount == 0)
+    {
+        assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, m_locator);
-	}
-	else if (argCount == 1)
-	{
-		return s_functions[funcID].execute(
-			executionContext,
-			context,
-			executeMore(context, opPos, executionContext),
-			m_locator);
-	}
-	else if (argCount == 2)
-	{
-		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
+        return s_functions[funcID].execute(executionContext, context, m_locator);
+    }
+    else if (argCount == 1)
+    {
+        return s_functions[funcID].execute(
+            executionContext,
+            context,
+            executeMore(context, opPos, executionContext),
+            m_locator);
+    }
+    else if (argCount == 2)
+    {
+        const XObjectPtr    theArg1(executeMore(context, opPos, executionContext));
 
-		opPos = m_expression.getNextOpCodePosition(opPos);
+        opPos = m_expression.getNextOpCodePosition(opPos);
 
-		assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
+        assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
 
-		return s_functions[funcID].execute(
-			executionContext,
-			context,
-			theArg1,
-			executeMore(context, opPos, executionContext),
-			m_locator);
-	}
-	else if (argCount == 3)
-	{
-		const XObjectPtr	theArg1(executeMore(context, opPos, executionContext));
+        return s_functions[funcID].execute(
+            executionContext,
+            context,
+            theArg1,
+            executeMore(context, opPos, executionContext),
+            m_locator);
+    }
+    else if (argCount == 3)
+    {
+        const XObjectPtr    theArg1(executeMore(context, opPos, executionContext));
 
-		opPos = m_expression.getNextOpCodePosition(opPos);
+        opPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectPtr	theArg2(executeMore(context, opPos, executionContext));
+        const XObjectPtr    theArg2(executeMore(context, opPos, executionContext));
 
-		opPos = m_expression.getNextOpCodePosition(opPos);
+        opPos = m_expression.getNextOpCodePosition(opPos);
 
-		assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
+        assert(m_expression.getNextOpCodePosition(opPos) == endFunc);
 
-		return s_functions[funcID].execute(
-			executionContext,
-			context,
-			theArg1,
-			theArg2,
-			executeMore(context, opPos, executionContext),
-			m_locator);
-	}
-	else
-	{
-		typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
+        return s_functions[funcID].execute(
+            executionContext,
+            context,
+            theArg1,
+            theArg2,
+            executeMore(context, opPos, executionContext),
+            m_locator);
+    }
+    else
+    {
+        typedef XPathExecutionContext::XObjectArgVectorType     XObjectArgVectorType;
 
-		XObjectArgVectorType	args(executionContext.getMemoryManager());
+        XObjectArgVectorType    args(executionContext.getMemoryManager());
 
-		args.reserve(argCount);
+        args.reserve(argCount);
 
-		while(opPos < endFunc)
-		{
-			args.push_back(executeMore(context, opPos, executionContext));
+        while(opPos < endFunc)
+        {
+            args.push_back(executeMore(context, opPos, executionContext));
 
-			opPos = m_expression.getNextOpCodePosition(opPos);
-		}
+            opPos = m_expression.getNextOpCodePosition(opPos);
+        }
 
-		return function(context, funcID, args, executionContext);
-	}
+        return function(context, funcID, args, executionContext);
+    }
 }
 
 
 
 double
 XPath::functionCount(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	result(executionContext);
+    BorrowReturnMutableNodeRefList  result(executionContext);
 
-	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+    const XObjectPtr    nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
 
-	if (nodesetResult.null() == false)
-	{
-		return nodesetResult->nodeset().getLength();
-	}
-	else
-	{
-		return result->getLength();
-	}
+    if (nodesetResult.null() == false)
+    {
+        return nodesetResult->nodeset().getLength();
+    }
+    else
+    {
+        return result->getLength();
+    }
 }
 
 
 
 const XalanDOMString&
 XPath::functionName(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	result(executionContext);
+    BorrowReturnMutableNodeRefList  result(executionContext);
 
-	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+    const XObjectPtr    nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
 
-	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
-			&nodesetResult->nodeset() : &*result;
-	assert(theNodeList != 0);
+    const NodeRefListBase* const    theNodeList = nodesetResult.null() == false ?
+            &nodesetResult->nodeset() : &*result;
+    assert(theNodeList != 0);
 
-	if (theNodeList->getLength() == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		assert(theNodeList->item(0) != 0);
+    if (theNodeList->getLength() == 0)
+    {
+        return s_emptyString;
+    }
+    else
+    {
+        assert(theNodeList->item(0) != 0);
 
-		return functionName(theNodeList->item(0));
-	}
+        return functionName(theNodeList->item(0));
+    }
 }
 
 
 
 const XalanDOMString&
-XPath::functionLocalName(XalanNode*		context) const
+XPath::functionLocalName(XalanNode*     context) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	const XalanDOMString*		theResult = &s_emptyString;
+    const XalanDOMString*       theResult = &s_emptyString;
 
-	const XalanNode::NodeType	theType = context->getNodeType();
+    const XalanNode::NodeType   theType = context->getNodeType();
 
-	if(theType == XalanNode::ELEMENT_NODE ||
-	   theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-	{
-		theResult = &DOMServices::getLocalNameOfNode(*context);
-	}
-	else if (theType == XalanNode::ATTRIBUTE_NODE)
-	{
-		const XalanDOMString&	theLocalName = DOMServices::getLocalNameOfNode(*context);
+    if(theType == XalanNode::ELEMENT_NODE ||
+       theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+    {
+        theResult = &DOMServices::getLocalNameOfNode(*context);
+    }
+    else if (theType == XalanNode::ATTRIBUTE_NODE)
+    {
+        const XalanDOMString&   theLocalName = DOMServices::getLocalNameOfNode(*context);
 
-		if (theLocalName != DOMServices::s_XMLNamespace)
-		{
-			theResult = &theLocalName;
-		}
-	}
+        if (theLocalName != DOMServices::s_XMLNamespace)
+        {
+            theResult = &theLocalName;
+        }
+    }
 
-	return *theResult;
+    return *theResult;
 }
 
 
 
 const XalanDOMString&
 XPath::functionLocalName(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	result(executionContext);
+    BorrowReturnMutableNodeRefList  result(executionContext);
 
-	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+    const XObjectPtr    nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
 
-	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
-			&nodesetResult->nodeset() : &*result;
-	assert(theNodeList != 0);
+    const NodeRefListBase* const    theNodeList = nodesetResult.null() == false ?
+            &nodesetResult->nodeset() : &*result;
+    assert(theNodeList != 0);
 
-	if (theNodeList->getLength() == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		assert(theNodeList->item(0) != 0);
+    if (theNodeList->getLength() == 0)
+    {
+        return s_emptyString;
+    }
+    else
+    {
+        assert(theNodeList->item(0) != 0);
 
-		return functionLocalName(theNodeList->item(0));
-	}
+        return functionLocalName(theNodeList->item(0));
+    }
 }
 
 
 
 double
-XPath::functionStringLength(XalanNode*	context) const
+XPath::functionStringLength(XalanNode*  context) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	FormatterStringLengthCounter	theCounter;
+    FormatterStringLengthCounter    theCounter;
 
-	DOMServices::getNodeData(*context, theCounter, &FormatterListener::characters);
+    DOMServices::getNodeData(*context, theCounter, &FormatterListener::characters);
 
-	return theCounter.getCount();
+    return theCounter.getCount();
 }
 
 
 
 double
 XPath::functionStringLength(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	FormatterStringLengthCounter	theCounter;
+    FormatterStringLengthCounter    theCounter;
 
-	executeMore(context, opPos + 2, executionContext, theCounter, &FormatterListener::characters);
+    executeMore(context, opPos + 2, executionContext, theCounter, &FormatterListener::characters);
 
-	return theCounter.getCount();
+    return theCounter.getCount();
 }
 
 
 
 double
 XPath::functionSum(
-			XalanNode*				context,
-			OpCodeMapPositionType	opPos,
-			XPathExecutionContext&	executionContext) const
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            XPathExecutionContext&  executionContext) const
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	double	sum = 0.0;
+    double  sum = 0.0;
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	result(executionContext);
+    BorrowReturnMutableNodeRefList  result(executionContext);
 
-	const XObjectPtr	nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
+    const XObjectPtr    nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
 
-	const NodeRefListBase* const	theNodeList = nodesetResult.null() == false ?
-			&nodesetResult->nodeset() : &*result;
-	assert(theNodeList != 0);
+    const NodeRefListBase* const    theNodeList = nodesetResult.null() == false ?
+            &nodesetResult->nodeset() : &*result;
+    assert(theNodeList != 0);
 
-	const NodeRefListBase::size_type	theLength = theNodeList->getLength();
+    const NodeRefListBase::size_type    theLength = theNodeList->getLength();
 
-	if (theLength != 0)
-	{
-		assert(theNodeList->item(0) != 0);
+    if (theLength != 0)
+    {
+        assert(theNodeList->item(0) != 0);
 
-		const XPathExecutionContext::GetAndReleaseCachedString  theData(executionContext);
+        const XPathExecutionContext::GetAndReleaseCachedString  theData(executionContext);
 
-		XalanDOMString&		theString = theData.get();
+        XalanDOMString&     theString = theData.get();
 
-		for (NodeRefListBase::size_type i = 0; i < theLength; i++)
-		{
-			DOMServices::getNodeData(*theNodeList->item(i), theString);
+        for (NodeRefListBase::size_type i = 0; i < theLength; i++)
+        {
+            DOMServices::getNodeData(*theNodeList->item(i), theString);
 
-			sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString, executionContext.getMemoryManager()));
+            sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString, executionContext.getMemoryManager()));
 
-			clear(theString);
-		}
-	}
+            clear(theString);
+        }
+    }
 
-	return sum;
+    return sum;
 }
 
 
 
 XPath::eMatchScore
 XPath::locationPathPattern(
-			XPathExecutionContext&	executionContext,
-			XalanNode&				context, 
-			OpCodeMapPositionType 	opPos) const
+            XPathExecutionContext&  executionContext,
+            XalanNode&              context, 
+            OpCodeMapPositionType   opPos) const
 {
-	eMatchScore	score = eMatchScoreNone;
+    eMatchScore score = eMatchScoreNone;
 
-	stepPattern(executionContext, &context, opPos + 2, score);
+    stepPattern(executionContext, &context, opPos + 2, score);
 
-	return score;
+    return score;
 }
 
 
 
 void
 XPath::step(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			OpCodeMapPositionType 	opPos,
-			MutableNodeRefList& 	queryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            MutableNodeRefList&     queryResults) const
 {
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType   stepType =
-		currentExpression.getOpCodeMapValue(opPos);
+    const OpCodeMapValueType   stepType =
+        currentExpression.getOpCodeMapValue(opPos);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	subQueryResults(executionContext);
+    BorrowReturnMutableNodeRefList  subQueryResults(executionContext);
 
-	bool	continueStepRecursion = true;
+    bool    continueStepRecursion = true;
 
-	switch(stepType)
-	{
-	case XPathExpression::eOP_VARIABLE:
-	case XPathExpression::eOP_EXTFUNCTION:
-	case XPathExpression::eOP_FUNCTION:
-	case XPathExpression::eOP_GROUP:
-		opPos = findNodeSet(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    switch(stepType)
+    {
+    case XPathExpression::eOP_VARIABLE:
+    case XPathExpression::eOP_EXTFUNCTION:
+    case XPathExpression::eOP_FUNCTION:
+    case XPathExpression::eOP_GROUP:
+        opPos = findNodeSet(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_ROOT:
-		opPos = findRoot(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_ROOT:
+        opPos = findRoot(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_PARENT:
-		opPos = findParent(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_PARENT:
+        opPos = findParent(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_SELF:
-		opPos = findSelf(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_SELF:
+        opPos = findSelf(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_ANCESTORS:
-		opPos = findAncestors(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_ANCESTORS:
+        opPos = findAncestors(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_ANCESTORS_OR_SELF:
-		opPos = findAncestorsOrSelf(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_ANCESTORS_OR_SELF:
+        opPos = findAncestorsOrSelf(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eMATCH_ATTRIBUTE:
-		continueStepRecursion = false;
-		// fall-through on purpose.
+    case XPathExpression::eMATCH_ATTRIBUTE:
+        continueStepRecursion = false;
+        // fall-through on purpose.
 
-	case XPathExpression::eFROM_ATTRIBUTES:
-		opPos = findAttributes(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_ATTRIBUTES:
+        opPos = findAttributes(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eMATCH_ANY_ANCESTOR:
-	case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
-	case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
-		continueStepRecursion = false;
-		// fall-through on purpose.
+    case XPathExpression::eMATCH_ANY_ANCESTOR:
+    case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
+    case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
+        continueStepRecursion = false;
+        // fall-through on purpose.
 
-	case XPathExpression::eFROM_CHILDREN:
-		opPos = findChildren(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_CHILDREN:
+        opPos = findChildren(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_DESCENDANTS:
-	case XPathExpression::eFROM_DESCENDANTS_OR_SELF:
-		opPos = findDescendants(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_DESCENDANTS:
+    case XPathExpression::eFROM_DESCENDANTS_OR_SELF:
+        opPos = findDescendants(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_FOLLOWING:
-		opPos = findFollowing(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_FOLLOWING:
+        opPos = findFollowing(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_FOLLOWING_SIBLINGS:
-		opPos = findFollowingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_FOLLOWING_SIBLINGS:
+        opPos = findFollowingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_PRECEDING:
-		opPos = findPreceeding(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_PRECEDING:
+        opPos = findPreceeding(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_PRECEDING_SIBLINGS:
-		opPos = findPreceedingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_PRECEDING_SIBLINGS:
+        opPos = findPreceedingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
 
-	case XPathExpression::eFROM_NAMESPACE:
-		opPos = findNamespace(executionContext, context, opPos,  stepType, *subQueryResults);
-		break;
+    case XPathExpression::eFROM_NAMESPACE:
+        opPos = findNamespace(executionContext, context, opPos,  stepType, *subQueryResults);
+        break;
 
-	default:
-		opPos = findNodesOnUnknownAxis(executionContext, context, opPos, stepType, *subQueryResults);
-		break;
-	}
+    default:
+        opPos = findNodesOnUnknownAxis(executionContext, context, opPos, stepType, *subQueryResults);
+        break;
+    }
 
-	OpCodeMapValueType  nextStepType = currentExpression.getOpCodeMapValue(opPos);
+    OpCodeMapValueType  nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-	// Push and pop the context node list...
-	XPathExecutionContext::ContextNodeListPushAndPop    thePushAndPop(
-										executionContext,
-										*subQueryResults);
+    // Push and pop the context node list...
+    XPathExecutionContext::ContextNodeListPushAndPop    thePushAndPop(
+                                        executionContext,
+                                        *subQueryResults);
 
-	if(XPathExpression::eOP_PREDICATE == nextStepType ||
-	   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
-	{
-		opPos =
+    if(XPathExpression::eOP_PREDICATE == nextStepType ||
+       XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+    {
+        opPos =
             predicates(
-			    executionContext,
-		        opPos, 
-		        *subQueryResults);
+                executionContext,
+                opPos, 
+                *subQueryResults);
 
-		nextStepType = currentExpression.getOpCodeMapValue(opPos);
-	}
+        nextStepType = currentExpression.getOpCodeMapValue(opPos);
+    }
 
-	if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
-	{
-		const NodeRefListBase::size_type	nContexts = subQueryResults->getLength();
+    if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
+    {
+        const NodeRefListBase::size_type    nContexts = subQueryResults->getLength();
 
-		if (nContexts > 0)
-		{
-			for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
-			{
-				XalanNode* const	node = subQueryResults->item(i);
-				assert(node != 0);
+        if (nContexts > 0)
+        {
+            for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
+            {
+                XalanNode* const    node = subQueryResults->item(i);
+                assert(node != 0);
 
-				BorrowReturnMutableNodeRefList	mnl(executionContext);
+                BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-				step(executionContext, node, opPos, *mnl);
+                step(executionContext, node, opPos, *mnl);
 
-				if (mnl->empty() == false)
-				{
-					if(queryResults.empty() == false)
-					{
-						queryResults.addNodesInDocOrder(*mnl, executionContext);
+                if (mnl->empty() == false)
+                {
+                    if(queryResults.empty() == false)
+                    {
+                        queryResults.addNodesInDocOrder(*mnl, executionContext);
 
-						queryResults.setDocumentOrder();
-					}
-					else
-					{
-						assert(mnl->getDocumentOrder() == true);
+                        queryResults.setDocumentOrder();
+                    }
+                    else
+                    {
+                        assert(mnl->getDocumentOrder() == true);
 
-						queryResults.swap(*mnl);
-					}
-				}
-			}
+                        queryResults.swap(*mnl);
+                    }
+                }
+            }
 
-			if (queryResults.empty() == true)
-			{
-				queryResults.setDocumentOrder();
-			}
-		}
-	}
-	else
-	{
-		if (subQueryResults->empty() == true)
-		{
-			queryResults.clear();
-		}
-		else if (subQueryResults->getReverseDocumentOrder() == true)
-		{
-			queryResults.swap(*subQueryResults);
+            if (queryResults.empty() == true)
+            {
+                queryResults.setDocumentOrder();
+            }
+        }
+    }
+    else
+    {
+        if (subQueryResults->empty() == true)
+        {
+            queryResults.clear();
+        }
+        else if (subQueryResults->getReverseDocumentOrder() == true)
+        {
+            queryResults.swap(*subQueryResults);
 
-			queryResults.reverse();
-		}
-		else
-		{
-			assert(subQueryResults->getDocumentOrder() == true);
+            queryResults.reverse();
+        }
+        else
+        {
+            assert(subQueryResults->getDocumentOrder() == true);
 
-			queryResults.swap(*subQueryResults);
-		}
-	}
+            queryResults.swap(*subQueryResults);
+        }
+    }
 }
 
 
 
 XalanNode*
 XPath::stepPattern(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			eMatchScore& 			scoreHolder) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            eMatchScore&            scoreHolder) const
 {
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapPositionType     endStep = currentExpression.getNextOpCodePosition(opPos);
-	OpCodeMapValueType              nextStepType = currentExpression.getOpCodeMapValue(endStep);
+    const OpCodeMapPositionType     endStep = currentExpression.getNextOpCodePosition(opPos);
+    OpCodeMapValueType              nextStepType = currentExpression.getOpCodeMapValue(endStep);
 
-	if(XPathExpression::eENDOP != nextStepType)
-	{
-		// Continue step via recursion...
-		context = stepPattern(
-						executionContext,
-						context,
-						endStep,
-						scoreHolder);
+    if(XPathExpression::eENDOP != nextStepType)
+    {
+        // Continue step via recursion...
+        context = stepPattern(
+                        executionContext,
+                        context,
+                        endStep,
+                        scoreHolder);
 
-		if(0 == context)
-		{
-			scoreHolder = eMatchScoreNone;
+        if(0 == context)
+        {
+            scoreHolder = eMatchScoreNone;
 
-		}
+        }
 
-		if (scoreHolder == eMatchScoreNone)
-		{
-			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
-			return 0;
-		}
+        if (scoreHolder == eMatchScoreNone)
+        {
+            // !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
+            return 0;
+        }
 
-		scoreHolder = eMatchScoreOther;
+        scoreHolder = eMatchScoreOther;
 
-		if (nextStepType != XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
-		{
-			context = DOMServices::getParentOfNode(*context);
-		}
+        if (nextStepType != XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
+        {
+            context = DOMServices::getParentOfNode(*context);
+        }
 
-		if(0 == context)
-		{
-			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
-			return 0;
-		}
-	}
+        if(0 == context)
+        {
+            // !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
+            return 0;
+        }
+    }
 
-	assert(context != 0);
+    assert(context != 0);
 
-	OpCodeMapValueType	argLen = 0;
+    OpCodeMapValueType  argLen = 0;
 
-	eMatchScore		    score = eMatchScoreNone;
+    eMatchScore         score = eMatchScoreNone;
 
-	const OpCodeMapPositionType	    startOpPos = opPos;
-	const OpCodeMapValueType	    stepType =
+    const OpCodeMapPositionType     startOpPos = opPos;
+    const OpCodeMapValueType        stepType =
         currentExpression.getOpCodeMapValue(opPos);
 
-	switch(stepType)
-	{
-	case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL:
-		score = scoreHolder;
-		break;
+    switch(stepType)
+    {
+    case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL:
+        score = scoreHolder;
+        break;
 
-	case XPathExpression::eOP_FUNCTION:
-		{
-			argLen = currentExpression.getOpCodeLengthFromOpMap(opPos,
+    case XPathExpression::eOP_FUNCTION:
+        {
+            argLen = currentExpression.getOpCodeLengthFromOpMap(opPos,
                                                                 executionContext.getMemoryManager());
 
-			const XObjectPtr		obj(executeMore(context, opPos, executionContext));
-			assert(obj.get() != 0);
+            const XObjectPtr        obj(executeMore(context, opPos, executionContext));
+            assert(obj.get() != 0);
 
-			const NodeRefListBase&				nl = obj->nodeset();
+            const NodeRefListBase&              nl = obj->nodeset();
 
-			const NodeRefListBase::size_type	len = nl.getLength();
+            const NodeRefListBase::size_type    len = nl.getLength();
 
-			if (nextStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
-			{
-				bool	fFound = false;
+            if (nextStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
+            {
+                bool    fFound = false;
 
-				while(context != 0 && fFound == false)
-				{
-					for(NodeRefListBase::size_type i = 0; i < len; i++)
-					{
-						XalanNode* const	n = nl.item(i);
+                while(context != 0 && fFound == false)
+                {
+                    for(NodeRefListBase::size_type i = 0; i < len; i++)
+                    {
+                        XalanNode* const    n = nl.item(i);
 
-						if(n == context)
-						{
-							score = eMatchScoreOther;
+                        if(n == context)
+                        {
+                            score = eMatchScoreOther;
 
-							context = n;
+                            context = n;
 
-							fFound = true;
+                            fFound = true;
 
-							break;
-						}
-					}
+                            break;
+                        }
+                    }
 
-					context = DOMServices::getParentOfNode(*context);
-				}
-			}
-			else
-			{
-				for(NodeRefListBase::size_type i = 0; i < len; i++)
-				{
-					XalanNode* const	n = nl.item(i);
+                    context = DOMServices::getParentOfNode(*context);
+                }
+            }
+            else
+            {
+                for(NodeRefListBase::size_type i = 0; i < len; i++)
+                {
+                    XalanNode* const    n = nl.item(i);
 
-					if(n == context)
-					{
-						score = eMatchScoreOther;
+                    if(n == context)
+                    {
+                        score = eMatchScoreOther;
 
-						context = n;
+                        context = n;
 
-						break;
-					}
-				}
-			}
-		}
-		break;
+                        break;
+                    }
+                }
+            }
+        }
+        break;
 
-	case XPathExpression::eFROM_ROOT:
-		{
-			argLen = currentExpression.getOpCodeArgumentLength(opPos);
-
-			opPos += 3;
-
-			const XalanNode::NodeType	nodeType = context->getNodeType();
-
-			if (nodeType == XalanNode::DOCUMENT_NODE ||
-				nodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
-			{
-				score = eMatchScoreOther;
-			}
-			else
-			{
-				const OpCodeMapPositionType     prevPos = currentExpression.getNextOpCodePosition(startOpPos);		
-				const OpCodeMapValueType        prevStepType = currentExpression.getOpCodeMapValue(prevPos);
-
-				if (eMatchScoreNone == score  && 
-				    (prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR ||
-					 prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE))
-				{
-					const NodeTester	theTester(
-									*this,
-									executionContext,
-									opPos,
-									argLen,
-									stepType);
-
-					while(0 != context)
-					{
-						score =
-							theTester(*context, context->getNodeType());
-							assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
-
-						if(eMatchScoreNone != score)
-							break;
-
-						context = DOMServices::getParentOfNode(*context);
-					}
-				}
-			}
-		}
-		break;
-
-	case XPathExpression::eMATCH_ATTRIBUTE:
-		{
-			argLen = currentExpression.getOpCodeArgumentLength(opPos);
-
-			opPos += 3;
-
-			score = NodeTester(
-							*this,
-							executionContext,
-							opPos,
-							argLen,
-							XPathExpression::eFROM_ATTRIBUTES)(*context, context->getNodeType());
-
-			assert(score == nodeTest(
-							 executionContext,
-							 context,
-							 context->getNodeType(),
-							 opPos,
-							 argLen,
-							 XPathExpression::eFROM_ATTRIBUTES));
-		}
-		break;
-
-	case XPathExpression::eMATCH_ANY_ANCESTOR:
-	case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
-		{
-			argLen = currentExpression.getOpCodeArgumentLength(opPos);
-
-			XalanNode::NodeType		nodeType = context->getNodeType();
-
-			if(nodeType != XalanNode::ATTRIBUTE_NODE)
-			{
-				opPos += 3;
-
-				const NodeTester	theTester(
-									*this,
-									executionContext,
-									opPos,
-									argLen,
-									stepType);
-
-				for(;;)
-				{
-					score = theTester(*context, nodeType);
-					assert(score == nodeTest(executionContext, context, nodeType, opPos, argLen, stepType));
-
-					if(eMatchScoreNone != score)
-						break;
-
-					context = DOMServices::getParentOfNode(*context);
-
-					if (context == 0)
-						break;
-
-					nodeType = context->getNodeType();
-				}
-			}
-		}
-		break;
-
-	case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
-		{
-			argLen = currentExpression.getOpCodeArgumentLength(opPos);
-
-			const XalanNode::NodeType	nodeType = context->getNodeType();
-
-			if(nodeType != XalanNode::ATTRIBUTE_NODE)
-			{
-				opPos += 3;
-
-				score = NodeTester(
-								*this,
-								executionContext,
-								opPos,
-								argLen,
-								XPathExpression::eMATCH_IMMEDIATE_ANCESTOR)(*context, nodeType);
-
-				assert(score == nodeTest(
-								 executionContext,
-								 context,
-								 nodeType,
-								 opPos,
-								 argLen,
-								 XPathExpression::eMATCH_IMMEDIATE_ANCESTOR));
-			}
-		}
-		break;
-
-	default:
+    case XPathExpression::eFROM_ROOT:
         {
-            XalanDOMString  theBuffer(executionContext.getMemoryManager());
+            argLen = currentExpression.getOpCodeArgumentLength(opPos);
+
+            opPos += 3;
+
+            const XalanNode::NodeType   nodeType = context->getNodeType();
+
+            if (nodeType == XalanNode::DOCUMENT_NODE ||
+                nodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
+            {
+                score = eMatchScoreOther;
+            }
+            else
+            {
+                const OpCodeMapPositionType     prevPos = currentExpression.getNextOpCodePosition(startOpPos);      
+                const OpCodeMapValueType        prevStepType = currentExpression.getOpCodeMapValue(prevPos);
+
+                if (eMatchScoreNone == score  && 
+                    (prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR ||
+                     prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE))
+                {
+                    const NodeTester    theTester(
+                                    *this,
+                                    executionContext,
+                                    opPos,
+                                    argLen,
+                                    stepType);
+
+                    while(0 != context)
+                    {
+                        score =
+                            theTester(*context, context->getNodeType());
+                            assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
+
+                        if(eMatchScoreNone != score)
+                            break;
+
+                        context = DOMServices::getParentOfNode(*context);
+                    }
+                }
+            }
+        }
+        break;
+
+    case XPathExpression::eMATCH_ATTRIBUTE:
+        {
+            argLen = currentExpression.getOpCodeArgumentLength(opPos);
+
+            opPos += 3;
+
+            score = NodeTester(
+                            *this,
+                            executionContext,
+                            opPos,
+                            argLen,
+                            XPathExpression::eFROM_ATTRIBUTES)(*context, context->getNodeType());
+
+            assert(score == nodeTest(
+                             executionContext,
+                             context,
+                             context->getNodeType(),
+                             opPos,
+                             argLen,
+                             XPathExpression::eFROM_ATTRIBUTES));
+        }
+        break;
+
+    case XPathExpression::eMATCH_ANY_ANCESTOR:
+    case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
+        {
+            argLen = currentExpression.getOpCodeArgumentLength(opPos);
+
+            XalanNode::NodeType     nodeType = context->getNodeType();
+
+            if(nodeType != XalanNode::ATTRIBUTE_NODE)
+            {
+                opPos += 3;
+
+                const NodeTester    theTester(
+                                    *this,
+                                    executionContext,
+                                    opPos,
+                                    argLen,
+                                    stepType);
+
+                for(;;)
+                {
+                    score = theTester(*context, nodeType);
+                    assert(score == nodeTest(executionContext, context, nodeType, opPos, argLen, stepType));
+
+                    if(eMatchScoreNone != score)
+                        break;
+
+                    context = DOMServices::getParentOfNode(*context);
+
+                    if (context == 0)
+                        break;
+
+                    nodeType = context->getNodeType();
+                }
+            }
+        }
+        break;
+
+    case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
+        {
+            argLen = currentExpression.getOpCodeArgumentLength(opPos);
+
+            const XalanNode::NodeType   nodeType = context->getNodeType();
+
+            if(nodeType != XalanNode::ATTRIBUTE_NODE)
+            {
+                opPos += 3;
+
+                score = NodeTester(
+                                *this,
+                                executionContext,
+                                opPos,
+                                argLen,
+                                XPathExpression::eMATCH_IMMEDIATE_ANCESTOR)(*context, nodeType);
+
+                assert(score == nodeTest(
+                                 executionContext,
+                                 context,
+                                 nodeType,
+                                 opPos,
+                                 argLen,
+                                 XPathExpression::eMATCH_IMMEDIATE_ANCESTOR));
+            }
+        }
+        break;
+
+    default:
+        {
+            const GetCachedString   theGuard1(executionContext);
+            const GetCachedString   theGuard2(executionContext);
 
             executionContext.error(
-                XalanMessageLoader::getMessage(XalanMessages::UnknownMatchOperation, theBuffer)
-                , context, getLocator());
+                XalanMessageLoader::getMessage(
+                    theGuard1.get(),
+                    XalanMessages::UnknownMatchOpCode_1Param,
+                    LongToDOMString(
+                        stepType,
+                        theGuard2.get())),
+                context,
+                getLocator());
+
             break;
         }
-	}
+    }
 
-	opPos += argLen;
+    opPos += argLen;
 
-	nextStepType = currentExpression.getOpCodeMapValue(opPos);
+    nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-	if(score != eMatchScoreNone &&
-	   (XPathExpression::eOP_PREDICATE == nextStepType || XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType))
-	{
-		score = eMatchScoreOther;
+    if(score != eMatchScoreNone &&
+       (XPathExpression::eOP_PREDICATE == nextStepType || XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType))
+    {
+        score = eMatchScoreOther;
 
-		while(XPathExpression::eOP_PREDICATE == nextStepType ||
-			  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
-		{
-			// This is a quick hack to look ahead and see if we have
-			// number literal as the predicate, i.e. match="foo[1]".
-			if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
-			{
-				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
-				{
-					score = handleFoundIndexPositional(
-							executionContext,
-							context,
-							startOpPos);
-				}
-				else
-				{
-					score = handleFoundIndex(
-							executionContext,
-							context,
-							startOpPos);
-				}
-			}
-			else
-			{
-				const XObjectPtr	pred(predicate(context, opPos, executionContext));
-				assert(pred.get() != 0);
+        while(XPathExpression::eOP_PREDICATE == nextStepType ||
+              XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+        {
+            // This is a quick hack to look ahead and see if we have
+            // number literal as the predicate, i.e. match="foo[1]".
+            if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+            {
+                if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
+                {
+                    score = handleFoundIndexPositional(
+                            executionContext,
+                            context,
+                            startOpPos);
+                }
+                else
+                {
+                    score = handleFoundIndex(
+                            executionContext,
+                            context,
+                            startOpPos);
+                }
+            }
+            else
+            {
+                const XObjectPtr    pred(predicate(context, opPos, executionContext));
+                assert(pred.get() != 0);
 
-				if(XObject::eTypeNumber == pred->getType())
-				{
-					score = handleFoundIndex(executionContext, context, startOpPos);
-				}
-				else if(pred->boolean() == false)
-				{
-					score = eMatchScoreNone;
+                if(XObject::eTypeNumber == pred->getType())
+                {
+                    score = handleFoundIndex(executionContext, context, startOpPos);
+                }
+                else if(pred->boolean() == false)
+                {
+                    score = eMatchScoreNone;
 
-					break;
-				}
-			}
+                    break;
+                }
+            }
 
-			opPos = currentExpression.getNextOpCodePosition(opPos);
-			nextStepType = currentExpression.getOpCodeMapValue(opPos);
-		}
-	}
+            opPos = currentExpression.getNextOpCodePosition(opPos);
+            nextStepType = currentExpression.getOpCodeMapValue(opPos);
+        }
+    }
 
-	if (scoreHolder == eMatchScoreNone || 
+    if (scoreHolder == eMatchScoreNone || 
         score == eMatchScoreNone)
-	{
-		scoreHolder = score;
-	}
+    {
+        scoreHolder = score;
+    }
 
-	return score == eMatchScoreNone ? 0 : context;
+    return score == eMatchScoreNone ? 0 : context;
 }
 
 
 
 XPath::eMatchScore
 XPath::handleFoundIndex(
-			XPathExecutionContext&	executionContext,
-			XalanNode* 				localContext, 
-			OpCodeMapPositionType 	startOpPos) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              localContext, 
+            OpCodeMapPositionType   startOpPos) const
 {
-	// We have an index somewhere in our pattern.  So, we have 
-	// to do a full search for our step, using the parent as 
-	// localContext, then see if the current localContext is found in the 
-	// node set.  Seems crazy, but, so far, it seems like the 
-	// easiest way.
-	XalanNode* const	parentContext =
-				DOMServices::getParentOfNode(*localContext);
+    // We have an index somewhere in our pattern.  So, we have 
+    // to do a full search for our step, using the parent as 
+    // localContext, then see if the current localContext is found in the 
+    // node set.  Seems crazy, but, so far, it seems like the 
+    // easiest way.
+    XalanNode* const    parentContext =
+                DOMServices::getParentOfNode(*localContext);
 
-	if (parentContext == 0)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    if (parentContext == 0)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-		BorrowReturnMutableNodeRefList	mnl(executionContext);
+        BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-		step(executionContext, parentContext, startOpPos, *mnl);
+        step(executionContext, parentContext, startOpPos, *mnl);
 
-		if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
-		{
-			return eMatchScoreNone;
-		}
-		else
-		{
-			return eMatchScoreOther;
-		}
-	}
+        if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
+        {
+            return eMatchScoreNone;
+        }
+        else
+        {
+            return eMatchScoreOther;
+        }
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::handleFoundIndexPositional(
-			XPathExecutionContext&	executionContext,
-			XalanNode* 				localContext,
-			OpCodeMapPositionType 	startOpPos) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              localContext,
+            OpCodeMapPositionType   startOpPos) const
 {
-	XalanNode* const	parentContext =
-				DOMServices::getParentOfNode(*localContext);
+    XalanNode* const    parentContext =
+                DOMServices::getParentOfNode(*localContext);
 
-	if (parentContext == 0)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    if (parentContext == 0)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-		BorrowReturnMutableNodeRefList	mnl(executionContext);
+        BorrowReturnMutableNodeRefList  mnl(executionContext);
 
-		step(executionContext, parentContext, startOpPos, *mnl);
+        step(executionContext, parentContext, startOpPos, *mnl);
 
-		if (mnl->empty() == true)
-		{
-			return eMatchScoreNone;
-		}
-		else
-		{
-			assert(mnl->getLength() == 1 && mnl->item(0) == localContext);
+        if (mnl->empty() == true)
+        {
+            return eMatchScoreNone;
+        }
+        else
+        {
+            assert(mnl->getLength() == 1 && mnl->item(0) == localContext);
 
-			return eMatchScoreOther;
-		}
-	}
+            return eMatchScoreOther;
+        }
+    }
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findNodeSet(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		/* stepType */,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      /* stepType */,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
+    assert(subQueryResults.empty() == true);
 
-	const XObjectPtr	nodesetResult(executeMore(context, opPos, executionContext, subQueryResults));
+    const XObjectPtr    nodesetResult(executeMore(context, opPos, executionContext, subQueryResults));
 
-	if (nodesetResult.null() == true)
-	{
-		assert(subQueryResults.getDocumentOrder());
-	}
-	else
-	{
-		subQueryResults.addNodesInDocOrder(nodesetResult->nodeset(), executionContext);
+    if (nodesetResult.null() == true)
+    {
+        assert(subQueryResults.getDocumentOrder());
+    }
+    else
+    {
+        subQueryResults.addNodesInDocOrder(nodesetResult->nodeset(), executionContext);
 
-		subQueryResults.setDocumentOrder();
-	}
+        subQueryResults.setDocumentOrder();
+    }
 
-	return opPos + getExpression().getOpCodeLengthFromOpMap(opPos, executionContext.getMemoryManager());
+    return opPos + getExpression().getOpCodeLengthFromOpMap(opPos, executionContext.getMemoryManager());
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findRoot(
-			XPathExecutionContext&	/* executionContext */,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		/* stepType */,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  /* executionContext */,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      /* stepType */,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
+    assert(subQueryResults.empty() == true);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	XalanNode* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-									context :
-									context->getOwnerDocument();
-	assert(docContext != 0);
+    XalanNode* const    docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+                                    context :
+                                    context->getOwnerDocument();
+    assert(docContext != 0);
 
-	subQueryResults.addNode(docContext);
+    subQueryResults.addNode(docContext);
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen + 3;
+    return opPos + argLen + 3;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findParent(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-			currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+            currentExpression.getOpCodeArgumentLength(opPos);
 
-	XalanNode* const	theParent = DOMServices::getParentOfNode(*context);
+    XalanNode* const    theParent = DOMServices::getParentOfNode(*context);
 
-	opPos += 3;
+    opPos += 3;
 
-	if(0 != theParent)
-	{
-		if(argLen > 0)
-		{
-			const NodeTester	theTester(
-							*this,
-							executionContext,
-							opPos,
-							argLen,
-							stepType);
+    if(0 != theParent)
+    {
+        if(argLen > 0)
+        {
+            const NodeTester    theTester(
+                            *this,
+                            executionContext,
+                            opPos,
+                            argLen,
+                            stepType);
 
-			const eMatchScore	score = theTester(*theParent, theParent->getNodeType());
-			assert(score == nodeTest(executionContext, theParent, theParent->getNodeType(), opPos, argLen, stepType));
+            const eMatchScore   score = theTester(*theParent, theParent->getNodeType());
+            assert(score == nodeTest(executionContext, theParent, theParent->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNode(theParent);
-			}
-		}
-		else
-		{
-			subQueryResults.addNode(theParent);
-		}
-	}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNode(theParent);
+            }
+        }
+        else
+        {
+            subQueryResults.addNode(theParent);
+        }
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findSelf(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	if(argLen == 0)
-	{
-		subQueryResults.addNode(context);
-	}
-	else
-	{
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    if(argLen == 0)
+    {
+        subQueryResults.addNode(context);
+    }
+    else
+    {
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		const eMatchScore	score =
-			theTester(*context, context->getNodeType());
-			assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
+        const eMatchScore   score =
+            theTester(*context, context->getNodeType());
+            assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
-		if(eMatchScoreNone != score)
-		{
-			subQueryResults.addNode(context);
-		}
-	}
+        if(eMatchScoreNone != score)
+        {
+            subQueryResults.addNode(context);
+        }
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findAncestors(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	context = DOMServices::getParentOfNode(*context);
+    context = DOMServices::getParentOfNode(*context);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-			currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+            currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	if (context != 0)
-	{
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    if (context != 0)
+    {
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		do
-		{
-			const eMatchScore	score =
-				theTester(*context, context->getNodeType());
-				assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
+        do
+        {
+            const eMatchScore   score =
+                theTester(*context, context->getNodeType());
+                assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNode(context);
-			}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNode(context);
+            }
 
-			context = DOMServices::getParentOfNode(*context);
-		} while(0 != context);
-	}
+            context = DOMServices::getParentOfNode(*context);
+        } while(0 != context);
+    }
 
-	subQueryResults.setReverseDocumentOrder();
+    subQueryResults.setReverseDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findAncestorsOrSelf(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType	argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	const NodeTester	theTester(
-					*this,
-					executionContext,
-					opPos,
-					argLen,
-					stepType);
+    const NodeTester    theTester(
+                    *this,
+                    executionContext,
+                    opPos,
+                    argLen,
+                    stepType);
 
-	do
-	{
-		const eMatchScore	score =
-				theTester(*context, context->getNodeType());
-				assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
+    do
+    {
+        const eMatchScore   score =
+                theTester(*context, context->getNodeType());
+                assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
-		if(eMatchScoreNone != score)
-		{
-			subQueryResults.addNode(context);
-		}
+        if(eMatchScoreNone != score)
+        {
+            subQueryResults.addNode(context);
+        }
 
-		context = DOMServices::getParentOfNode(*context);
-	} while(0 != context);
+        context = DOMServices::getParentOfNode(*context);
+    } while(0 != context);
 
-	subQueryResults.setReverseDocumentOrder();
+    subQueryResults.setReverseDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findAttributes(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType	argLen =
-				currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+                currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
-	{
-		const XalanNamedNodeMap* const	attributeList = context->getAttributes();
+    if(context->getNodeType() == XalanNode::ELEMENT_NODE)
+    {
+        const XalanNamedNodeMap* const  attributeList = context->getAttributes();
 
-		if(attributeList != 0) 
-		{
-			const unsigned int	nAttrs = attributeList->getLength();
+        if(attributeList != 0) 
+        {
+            const unsigned int  nAttrs = attributeList->getLength();
 
-			if (nAttrs != 0)
-			{
-				const NodeTester	theTester(
-								*this,
-								executionContext,
-								opPos,
-								argLen,
-								stepType);
+            if (nAttrs != 0)
+            {
+                const NodeTester    theTester(
+                                *this,
+                                executionContext,
+                                opPos,
+                                argLen,
+                                stepType);
 
-				for(unsigned int j = 0; j < nAttrs; j++)
-				{
-					XalanNode* const	theNode = attributeList->item(j);
-					assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+                for(unsigned int j = 0; j < nAttrs; j++)
+                {
+                    XalanNode* const    theNode = attributeList->item(j);
+                    assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-					const eMatchScore	score =
-						theTester(*theNode, XalanNode::ATTRIBUTE_NODE);
-						assert(score == nodeTest(executionContext, theNode, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
+                    const eMatchScore   score =
+                        theTester(*theNode, XalanNode::ATTRIBUTE_NODE);
+                        assert(score == nodeTest(executionContext, theNode, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
 
-					if(eMatchScoreNone != score)
-					{
-						subQueryResults.addNode(theNode);
-					}
-				}
-			}
-		}
-	}
+                    if(eMatchScoreNone != score)
+                    {
+                        subQueryResults.addNode(theNode);
+                    }
+                }
+            }
+        }
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findChildren(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	XalanNode*	child = context->getFirstChild();
+    XalanNode*  child = context->getFirstChild();
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	if (child != 0)
-	{
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    if (child != 0)
+    {
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		do
-		{
-			const eMatchScore	score =
-					theTester(*child, child->getNodeType());
-					assert(score == nodeTest(executionContext, child, child->getNodeType(), opPos, argLen, stepType));
+        do
+        {
+            const eMatchScore   score =
+                    theTester(*child, child->getNodeType());
+                    assert(score == nodeTest(executionContext, child, child->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNode(child);
-			}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNode(child);
+            }
 
-			child = child->getNextSibling();
-		} while(0 != child);
-	}
+            child = child->getNextSibling();
+        } while(0 != child);
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findDescendants(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	// Perform a pre-order traversal of descendents...
-	XalanNode*	pos = context;
+    // Perform a pre-order traversal of descendents...
+    XalanNode*  pos = context;
 
-	opPos += 3;
+    opPos += 3;
 
-	const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-	do
-	{					
-		if(stepType == XPathExpression::eFROM_DESCENDANTS_OR_SELF ||
-		   context != pos)
-		{
-			const eMatchScore	score =
-				theTester(*pos, pos->getNodeType());
-				assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+    do
+    {                   
+        if(stepType == XPathExpression::eFROM_DESCENDANTS_OR_SELF ||
+           context != pos)
+        {
+            const eMatchScore   score =
+                theTester(*pos, pos->getNodeType());
+                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-			if(score != eMatchScoreNone)
-			{
-				subQueryResults.addNode(pos);
-			}
-		}
+            if(score != eMatchScoreNone)
+            {
+                subQueryResults.addNode(pos);
+            }
+        }
 
-		XalanNode*	nextNode = pos->getFirstChild();
+        XalanNode*  nextNode = pos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if(context == pos)
-				break;
+        while(0 == nextNode)
+        {
+            if(context == pos)
+                break;
 
-			nextNode = pos->getNextSibling();
+            nextNode = pos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				pos = DOMServices::getParentOfNode(*pos);
+            if(0 == nextNode)
+            {
+                pos = DOMServices::getParentOfNode(*pos);
 
-				if(context == pos || pos == 0)
-				{
-					nextNode = 0;
-					break;
-				}
-			}
-		}
+                if(context == pos || pos == 0)
+                {
+                    nextNode = 0;
+                    break;
+                }
+            }
+        }
 
-		pos = nextNode;
-	} while(0 != pos);
+        pos = nextNode;
+    } while(0 != pos);
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findFollowing(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	// What fun...
-	XalanDocument* const	doc = context->getOwnerDocument();
+    // What fun...
+    XalanDocument* const    doc = context->getOwnerDocument();
 
-	XalanNode*				pos = context;
+    XalanNode*              pos = context;
 
-	const NodeTester	theTester(
-					*this,
-					executionContext,
-					opPos,
-					argLen,
-					stepType);
+    const NodeTester    theTester(
+                    *this,
+                    executionContext,
+                    opPos,
+                    argLen,
+                    stepType);
 
-	while(0 != pos)
-	{
-		XalanNode*	nextNode = 0;
+    while(0 != pos)
+    {
+        XalanNode*  nextNode = 0;
 
-		if(pos != context)
-		{
-			const eMatchScore	score =
-				theTester(*pos, pos->getNodeType());
-				assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+        if(pos != context)
+        {
+            const eMatchScore   score =
+                theTester(*pos, pos->getNodeType());
+                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNodeInDocOrder(pos, executionContext);
-			}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNodeInDocOrder(pos, executionContext);
+            }
 
-			nextNode = pos->getFirstChild();
-		}
-		else
-		{
-			nextNode = 0;
-		}
+            nextNode = pos->getFirstChild();
+        }
+        else
+        {
+            nextNode = 0;
+        }
 
-		while(0 == nextNode)
-		{
-			// This requires some explanation.  pos could be an attribute
-			// node, so getNextSibling() will always return 0.  In that
-			// case, I want to continue the search with the first child of
-			// the owner element, as if attribute nodes are children which
-			// are always _before_ the first child element.  I don't have to
-			// consider following attributes, since they _never_ match the
-			// following axis.
-			if (pos->getNodeType() == XalanNode::ATTRIBUTE_NODE)
-			{
-				assert(DOMServices::getParentOfNode(*pos) != 0);
+        while(0 == nextNode)
+        {
+            // This requires some explanation.  pos could be an attribute
+            // node, so getNextSibling() will always return 0.  In that
+            // case, I want to continue the search with the first child of
+            // the owner element, as if attribute nodes are children which
+            // are always _before_ the first child element.  I don't have to
+            // consider following attributes, since they _never_ match the
+            // following axis.
+            if (pos->getNodeType() == XalanNode::ATTRIBUTE_NODE)
+            {
+                assert(DOMServices::getParentOfNode(*pos) != 0);
 
-				nextNode = DOMServices::getParentOfNode(*pos)->getFirstChild();
-			}
-			else
-			{
-				nextNode = pos->getNextSibling();
-			}
+                nextNode = DOMServices::getParentOfNode(*pos)->getFirstChild();
+            }
+            else
+            {
+                nextNode = pos->getNextSibling();
+            }
 
-			if(0 == nextNode)
-			{
-				pos = DOMServices::getParentOfNode(*pos);
+            if(0 == nextNode)
+            {
+                pos = DOMServices::getParentOfNode(*pos);
 
-				if(doc == pos || 0 == pos)
-				{
-					nextNode = 0;
+                if(doc == pos || 0 == pos)
+                {
+                    nextNode = 0;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		pos = nextNode;
-	}
+        pos = nextNode;
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findFollowingSiblings(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType	argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	XalanNode*	pos = context->getNextSibling();
+    XalanNode*  pos = context->getNextSibling();
 
-	opPos += 3;
+    opPos += 3;
 
-	if (pos != 0)
-	{
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    if (pos != 0)
+    {
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		do
-		{
-			const eMatchScore	score =
-					theTester(*pos, pos->getNodeType());
-					assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+        do
+        {
+            const eMatchScore   score =
+                    theTester(*pos, pos->getNodeType());
+                    assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNode(pos);
-			}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNode(pos);
+            }
 
-			pos = pos->getNextSibling();
-		} while(0 != pos);
-	}
+            pos = pos->getNextSibling();
+        } while(0 != pos);
+    }
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
@@ -3993,394 +4003,400 @@ XPath::findFollowingSiblings(
  */
 static XalanNode*
 findTopNode(
-			XalanNode*				context,
-			XalanNode::NodeType		theType)
+            XalanNode*              context,
+            XalanNode::NodeType     theType)
 {
-	assert(context != 0);
+    assert(context != 0);
 
-	if (theType == XalanNode::DOCUMENT_NODE)
-	{
-		return context;
-	}
-	else
-	{
-		XalanDocument* const	theDocument = context->getOwnerDocument();
-		assert(theDocument != 0);
+    if (theType == XalanNode::DOCUMENT_NODE)
+    {
+        return context;
+    }
+    else
+    {
+        XalanDocument* const    theDocument = context->getOwnerDocument();
+        assert(theDocument != 0);
 
-		if (theDocument->getDocumentElement() != 0)
-		{
-			return theDocument;
-		}
-		else
-		{
-			XalanNode*	theNode = 0;
+        if (theDocument->getDocumentElement() != 0)
+        {
+            return theDocument;
+        }
+        else
+        {
+            XalanNode*  theNode = 0;
 
-			while(context != 0 &&
-				  context->getNodeType() != XalanNode::DOCUMENT_NODE)
-			{
-				theNode = context;
+            while(context != 0 &&
+                  context->getNodeType() != XalanNode::DOCUMENT_NODE)
+            {
+                theNode = context;
 
-				context = DOMServices::getParentOfNode(*context);
-			}
+                context = DOMServices::getParentOfNode(*context);
+            }
 
-			assert(theNode != 0);
+            assert(theNode != 0);
 
-			return theNode;
-		}
-	}
+            return theNode;
+        }
+    }
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findPreceeding(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	// Ugh.  Reverse document order, no parents, I guess.
-	const XalanNode::NodeType	theType = context->getNodeType();
+    // Ugh.  Reverse document order, no parents, I guess.
+    const XalanNode::NodeType   theType = context->getNodeType();
 
-	XalanNode* const	topNode = findTopNode(context, theType);
+    XalanNode* const    topNode = findTopNode(context, theType);
 
-	XalanNode*			pos = topNode;
+    XalanNode*          pos = topNode;
 
-	// If the context node is an attribute, we need to perform some
-	// magic to stop the search at the appropriate point, which is when
-	// we arrive back at the parent.
-	const bool				contextIsAttribute =
-			theType == XalanNode::ATTRIBUTE_NODE ? true : false;
+    // If the context node is an attribute, we need to perform some
+    // magic to stop the search at the appropriate point, which is when
+    // we arrive back at the parent.
+    const bool              contextIsAttribute =
+            theType == XalanNode::ATTRIBUTE_NODE ? true : false;
 
-	const XalanNode* const	theAttributeContextParent =
-		contextIsAttribute == true ? DOMServices::getParentOfNode(*context) : 0;
+    const XalanNode* const  theAttributeContextParent =
+        contextIsAttribute == true ? DOMServices::getParentOfNode(*context) : 0;
 
-	const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-	while(0 != pos)
-	{
-		if(context == pos)
-		{
-			break;
-		}
+    while(0 != pos)
+    {
+        if(context == pos)
+        {
+            break;
+        }
 
-		const eMatchScore	score =
-				theTester(*pos, pos->getNodeType());
-				assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+        const eMatchScore   score =
+                theTester(*pos, pos->getNodeType());
+                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-		if(eMatchScoreNone != score)
-		{
-			// Ugh. If I could think a little better tonight, I'm
-			// sure there's a better way to check for the parent.
-			bool		isParent = false;
+        if(eMatchScoreNone != score)
+        {
+            // Ugh. If I could think a little better tonight, I'm
+            // sure there's a better way to check for the parent.
+            bool        isParent = false;
 
-			XalanNode*	parent = DOMServices::getParentOfNode(*context);
+            XalanNode*  parent = DOMServices::getParentOfNode(*context);
 
-			while(0 != parent)
-			{
-				if(parent == pos)
-				{
-					isParent = true;
-					break;
-				}
+            while(0 != parent)
+            {
+                if(parent == pos)
+                {
+                    isParent = true;
+                    break;
+                }
 
-				parent = DOMServices::getParentOfNode(*parent);
-			}
+                parent = DOMServices::getParentOfNode(*parent);
+            }
 
-			if(isParent == false)
-			{
-				subQueryResults.addNode(pos);
-			}
-		}
+            if(isParent == false)
+            {
+                subQueryResults.addNode(pos);
+            }
+        }
 
-		XalanNode*	nextNode = 0;
+        XalanNode*  nextNode = 0;
 
-		// Check to see if we're back at the attribute context node's
-		// parent, in which case, we should stop.
-		if (contextIsAttribute == true &&
-			pos == theAttributeContextParent)
-		{
-			nextNode = context;
-		}
-		else
-		{
-			nextNode = pos->getFirstChild();
-		}
+        // Check to see if we're back at the attribute context node's
+        // parent, in which case, we should stop.
+        if (contextIsAttribute == true &&
+            pos == theAttributeContextParent)
+        {
+            nextNode = context;
+        }
+        else
+        {
+            nextNode = pos->getFirstChild();
+        }
 
-		while(0 == nextNode)
-		{
-			nextNode = pos->getNextSibling();
+        while(0 == nextNode)
+        {
+            nextNode = pos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				pos = DOMServices::getParentOfNode(*pos);
+            if(0 == nextNode)
+            {
+                pos = DOMServices::getParentOfNode(*pos);
 
-				if(topNode == pos)
-				{
-					nextNode = 0;
-					break;
-				}
-			}
-		}
+                if(topNode == pos)
+                {
+                    nextNode = 0;
+                    break;
+                }
+            }
+        }
 
-		pos = nextNode;
-	}
+        pos = nextNode;
+    }
 
-	// Now, reverse the order of the nodes, since
-	// preceeding is a reverse axis, and we searched
-	// the document from the root to this node.
-	subQueryResults.reverse();
+    // Now, reverse the order of the nodes, since
+    // preceeding is a reverse axis, and we searched
+    // the document from the root to this node.
+    subQueryResults.reverse();
 
-	subQueryResults.setReverseDocumentOrder();
+    subQueryResults.setReverseDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findPreceedingSiblings(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType    argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
 #if 1
-	XalanNode*	pos = context->getPreviousSibling();
+    XalanNode*  pos = context->getPreviousSibling();
 
-	if (pos != 0)
-	{
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+    if (pos != 0)
+    {
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		do
-		{
-			const eMatchScore	score = 
-				theTester(*pos, pos->getNodeType());
-				assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+        do
+        {
+            const eMatchScore   score = 
+                theTester(*pos, pos->getNodeType());
+                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-			if(eMatchScoreNone != score)
-			{
-				subQueryResults.addNode(pos);
-			}
+            if(eMatchScoreNone != score)
+            {
+                subQueryResults.addNode(pos);
+            }
 
-			pos = pos->getPreviousSibling();
-		} while(0 != pos);
-	}
+            pos = pos->getPreviousSibling();
+        } while(0 != pos);
+    }
 #else
     // This is some experimental code which avoids using getPreviousSibling(), with the idea that we
     // could reduce our in-memory representation size by not keeping the previous sibling node.
-	XalanNode*	pos = context->getParentNode();
+    XalanNode*  pos = context->getParentNode();
 
-	if (pos != 0)
-	{
-		pos = pos->getFirstChild();
+    if (pos != 0)
+    {
+        pos = pos->getFirstChild();
 
-		if (pos != context)
-		{
-			const NodeTester	theTester(
-							*this,
-							executionContext,
-							opPos,
-							argLen,
-							stepType);
+        if (pos != context)
+        {
+            const NodeTester    theTester(
+                            *this,
+                            executionContext,
+                            opPos,
+                            argLen,
+                            stepType);
 
-			do
-			{
-				const eMatchScore	score = 
-					theTester(*pos, pos->getNodeType());
-					assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+            do
+            {
+                const eMatchScore   score = 
+                    theTester(*pos, pos->getNodeType());
+                    assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-				if(eMatchScoreNone != score)
-				{
-					subQueryResults.addNode(pos);
-				}
+                if(eMatchScoreNone != score)
+                {
+                    subQueryResults.addNode(pos);
+                }
 
-				pos = pos->getNextSibling();
-			} while(pos != context);
-		}
+                pos = pos->getNextSibling();
+            } while(pos != context);
+        }
 
-		// Now, reverse the order of the nodes, since
-		// preceeding-sibling is a reverse axis, and we searched
-		// the document from the root to this node.
-		subQueryResults.reverse();
-	}
+        // Now, reverse the order of the nodes, since
+        // preceeding-sibling is a reverse axis, and we searched
+        // the document from the root to this node.
+        subQueryResults.reverse();
+    }
 #endif
 
-	subQueryResults.setReverseDocumentOrder();
+    subQueryResults.setReverseDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findNamespace(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType		stepType,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(subQueryResults.empty() == true);
-	assert(context != 0);
+    assert(subQueryResults.empty() == true);
+    assert(context != 0);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType	argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-	opPos += 3;
+    opPos += 3;
 
-	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
-	{
-		// Look up the element chain until we hit the document, so that we
-		// get all of the attribute/namespace nodes.
-		const XalanNode* const	theOwnerDocument = context->getOwnerDocument();
-		assert(theOwnerDocument != 0);
+    if(context->getNodeType() == XalanNode::ELEMENT_NODE)
+    {
+        // Look up the element chain until we hit the document, so that we
+        // get all of the attribute/namespace nodes.
+        const XalanNode* const  theOwnerDocument = context->getOwnerDocument();
+        assert(theOwnerDocument != 0);
 
-		const XalanNode*		theCurrentNode = context;
+        const XalanNode*        theCurrentNode = context;
 
-		const NodeTester	theTester(
-						*this,
-						executionContext,
-						opPos,
-						argLen,
-						stepType);
+        const NodeTester    theTester(
+                        *this,
+                        executionContext,
+                        opPos,
+                        argLen,
+                        stepType);
 
-		NodeRefListBase::size_type	nNSFound = 0;
-		bool						defaultNSFound = false;
+        NodeRefListBase::size_type  nNSFound = 0;
+        bool                        defaultNSFound = false;
 
-		do
-		{
-			const XalanNamedNodeMap* const	attributeList =
-				theCurrentNode->getAttributes();
+        do
+        {
+            const XalanNamedNodeMap* const  attributeList =
+                theCurrentNode->getAttributes();
 
-			if(attributeList != 0) 
-			{
-				unsigned int	nAttrs = attributeList->getLength();
+            if(attributeList != 0) 
+            {
+                unsigned int    nAttrs = attributeList->getLength();
 
-				while(nAttrs > 0)
-				{
-					--nAttrs;
+                while(nAttrs > 0)
+                {
+                    --nAttrs;
 
-					XalanNode* const	attr = attributeList->item(nAttrs);
-					assert(attr != 0 && attr->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+                    XalanNode* const    attr = attributeList->item(nAttrs);
+                    assert(attr != 0 && attr->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-					const XalanDOMString&	theNodeName = attr->getNodeName();
+                    const XalanDOMString&   theNodeName = attr->getNodeName();
 
-					// This is an optimization to keep non-namespace attributes out of
-					// the call to nodeTest().
-					if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
-						theNodeName == DOMServices::s_XMLNamespace)
-					{
-						const eMatchScore	score =
-							theTester(*attr, XalanNode::ATTRIBUTE_NODE);
-							assert(score == nodeTest(executionContext, attr, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
+                    // This is an optimization to keep non-namespace attributes out of
+                    // the call to nodeTest().
+                    if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+                        theNodeName == DOMServices::s_XMLNamespace)
+                    {
+                        const eMatchScore   score =
+                            theTester(*attr, XalanNode::ATTRIBUTE_NODE);
+                            assert(score == nodeTest(executionContext, attr, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
 
-						if(score != eMatchScoreNone)
-						{
-							const XalanDOMString&	theNodeValue = attr->getNodeValue();
+                        if(score != eMatchScoreNone)
+                        {
+                            const XalanDOMString&   theNodeValue = attr->getNodeValue();
 
- 							bool			foundNSMatch = false;
+                            bool            foundNSMatch = false;
  
- 							// Need to check default NS slightly differently
- 							if (theNodeName == DOMServices::s_XMLNamespace)
- 							{
- 								// If namespace is empty, don't add anything
- 								// as under XPath an empty default is indicated
- 								// by no node.
+                            // Need to check default NS slightly differently
+                            if (theNodeName == DOMServices::s_XMLNamespace)
+                            {
+                                // If namespace is empty, don't add anything
+                                // as under XPath an empty default is indicated
+                                // by no node.
  
- 								foundNSMatch = defaultNSFound ||
- 									(theNodeValue == DOMServices::s_emptyString);
- 								defaultNSFound = true;
- 							}
+                                foundNSMatch = defaultNSFound ||
+                                    (theNodeValue == DOMServices::s_emptyString);
+                                defaultNSFound = true;
+                            }
  
- 							for (NodeRefListBase::size_type lstIndex = 0; 
- 								 foundNSMatch == false && lstIndex < nNSFound;
- 								 ++lstIndex)
- 							{
- 								if (subQueryResults.item(lstIndex)->getNodeName() == theNodeName)
- 								{
- 									foundNSMatch = true;
- 								}
- 							}
+                            for (NodeRefListBase::size_type lstIndex = 0; 
+                                 foundNSMatch == false && lstIndex < nNSFound;
+                                 ++lstIndex)
+                            {
+                                if (subQueryResults.item(lstIndex)->getNodeName() == theNodeName)
+                                {
+                                    foundNSMatch = true;
+                                }
+                            }
 
-							if (foundNSMatch == false) 
- 							{
- 								subQueryResults.addNode(attr);
- 								++nNSFound;
- 							}
-						}
-					}
-				}
-			}
+                            if (foundNSMatch == false) 
+                            {
+                                subQueryResults.addNode(attr);
+                                ++nNSFound;
+                            }
+                        }
+                    }
+                }
+            }
 
-			theCurrentNode = theCurrentNode->getParentNode();
-		} while (theCurrentNode != theOwnerDocument && theCurrentNode != 0);
-	}
+            theCurrentNode = theCurrentNode->getParentNode();
+        } while (theCurrentNode != theOwnerDocument && theCurrentNode != 0);
+    }
 
-	subQueryResults.reverse();
+    subQueryResults.reverse();
 
-	subQueryResults.setDocumentOrder();
+    subQueryResults.setDocumentOrder();
 
-	return opPos + argLen;
+    return opPos + argLen;
 }
 
 
 
 XPath::OpCodeMapPositionType
 XPath::findNodesOnUnknownAxis(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 	    /* stepType */,
-			MutableNodeRefList& 	/* subQueryResults */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context, 
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      stepType,
+            MutableNodeRefList&     /* subQueryResults */) const
 {
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	const OpCodeMapValueType	argLen =
-		currentExpression.getOpCodeArgumentLength(opPos);
+    const OpCodeMapValueType    argLen =
+        currentExpression.getOpCodeArgumentLength(opPos);
 
-    XalanDOMString  theBuffer(executionContext.getMemoryManager());
+    const GetCachedString   theGuard1(executionContext);
+    const GetCachedString   theGuard2(executionContext);
 
-	executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownAxis, theBuffer),
-			context,
-			getLocator());
+    executionContext.error(
+            XalanMessageLoader::getMessage(
+                theGuard1.get(),
+                XalanMessages::UnknownAxis_1Param,
+                LongToDOMString(
+                    stepType,
+                    theGuard2.get())),
+            context,
+            getLocator());
 
-	return opPos + argLen + 3;
+    return opPos + argLen + 3;
 }
 
 
@@ -4388,290 +4404,296 @@ XPath::findNodesOnUnknownAxis(
 #if !defined(NDEBUG)
 XPath::eMatchScore
 XPath::nodeTest(
-			XPathExecutionContext&	executionContext,
-			XalanNode* 				context,
-			XalanNode::NodeType		nodeType,
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 	    argLen,
-			OpCodeMapValueType 		stepType) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            XalanNode::NodeType     nodeType,
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      argLen,
+            OpCodeMapValueType      stepType) const
 {
-	assert(context->getNodeType() == nodeType);
+    assert(context->getNodeType() == nodeType);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	eMatchScore		score = eMatchScoreNone;
+    eMatchScore     score = eMatchScoreNone;
 
-	const OpCodeMapValueType	testType = currentExpression.getOpCodeMapValue(opPos);
+    const OpCodeMapValueType    testType = currentExpression.getOpCodeMapValue(opPos);
 
-	switch(testType)
-	{
-	case XPathExpression::eNODETYPE_COMMENT:
-		if (XalanNode::COMMENT_NODE == nodeType)
-		{
-			score = eMatchScoreNodeTest;
-		}
-		break;
+    switch(testType)
+    {
+    case XPathExpression::eNODETYPE_COMMENT:
+        if (XalanNode::COMMENT_NODE == nodeType)
+        {
+            score = eMatchScoreNodeTest;
+        }
+        break;
 
-	case XPathExpression::eNODETYPE_TEXT:
-		if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
-			 XalanNode::TEXT_NODE == nodeType) &&
+    case XPathExpression::eNODETYPE_TEXT:
+        if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
+             XalanNode::TEXT_NODE == nodeType) &&
 #if defined(XALAN_OLD_STYLE_CASTS)
-			executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
+            executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
 #else
-			executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
-#endif			
-		{
-			  score = eMatchScoreNodeTest;
-		}
-	  break;
+            executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
+#endif          
+        {
+              score = eMatchScoreNodeTest;
+        }
+      break;
 
-	case XPathExpression::eNODETYPE_PI:
-		if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
-		{
-			if(argLen == 1)
-			{
-				score = eMatchScoreNodeTest;
-			}
-			else if(argLen == 2)
-			{
-				opPos++;
+    case XPathExpression::eNODETYPE_PI:
+        if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
+        {
+            if(argLen == 1)
+            {
+                score = eMatchScoreNodeTest;
+            }
+            else if(argLen == 2)
+            {
+                opPos++;
 
-				const OpCodeMapValueType	tokenPosition =
-					currentExpression.getOpCodeMapValue(opPos);
+                const OpCodeMapValueType    tokenPosition =
+                    currentExpression.getOpCodeMapValue(opPos);
 
-				const XObject* const	name =
-					currentExpression.getToken(tokenPosition);
-				assert(name != 0);
+                const XObject* const    name =
+                    currentExpression.getToken(tokenPosition);
+                assert(name != 0);
 
-				if (context->getNodeName() == name->str())
-				{
-					score = eMatchScoreQName;
-				}
-			}
-			else
-			{
+                if (context->getNodeName() == name->str())
+                {
+                    score = eMatchScoreQName;
+                }
+            }
+            else
+            {
                 XalanDOMString  theBuffer(executionContext.getMemoryManager());
 
-				executionContext.error(XalanMessageLoader::getMessage(XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, theBuffer,  "processing-instruction()"), context, getLocator());
-			}
-		}
+                executionContext.error(
+                    XalanMessageLoader::getMessage(
+                        theBuffer,
+                        XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, 
+                        "processing-instruction()"),
+                    context,
+                    getLocator());
+            }
+        }
 
-		break;
+        break;
 
-	case XPathExpression::eNODETYPE_NODE:
-		if (nodeType == XalanNode::CDATA_SECTION_NODE ||
-			nodeType == XalanNode::TEXT_NODE)
-		{
+    case XPathExpression::eNODETYPE_NODE:
+        if (nodeType == XalanNode::CDATA_SECTION_NODE ||
+            nodeType == XalanNode::TEXT_NODE)
+        {
 #if defined(XALAN_OLD_STYLE_CASTS)
-			if (executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
+            if (executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
 #else
-			if (executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
+            if (executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
 #endif
-			{
-				score = eMatchScoreNodeTest;
-			}
-		}
-		else
-		{
-			score = eMatchScoreNodeTest;
-		}
-		break;
+            {
+                score = eMatchScoreNodeTest;
+            }
+        }
+        else
+        {
+            score = eMatchScoreNodeTest;
+        }
+        break;
 
-	case XPathExpression::eNODETYPE_ROOT:
-		if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
-			XalanNode::DOCUMENT_NODE == nodeType)
-		{
-			score =  eMatchScoreOther;
-		}
-		break;
+    case XPathExpression::eNODETYPE_ROOT:
+        if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
+            XalanNode::DOCUMENT_NODE == nodeType)
+        {
+            score =  eMatchScoreOther;
+        }
+        break;
 
-	case XPathExpression::eNODENAME:
-		{
-			opPos++;
+    case XPathExpression::eNODENAME:
+        {
+            opPos++;
 
-			if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
-			{
-				bool					test = false;
+            if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
+            {
+                bool                    test = false;
 
-				OpCodeMapValueType 		queueIndex = currentExpression.getOpCodeMapValue(opPos);
+                OpCodeMapValueType      queueIndex = currentExpression.getOpCodeMapValue(opPos);
                 assert(queueIndex == XPathExpression::eEMPTY ||
                        queueIndex < currentExpression.tokenQueueSize());
 
-                const XalanDOMString&	targetNS = queueIndex != XPathExpression::eEMPTY ?
-										currentExpression.getToken(queueIndex)->str() :
-											s_emptyString;
+                const XalanDOMString&   targetNS = queueIndex != XPathExpression::eEMPTY ?
+                                        currentExpression.getToken(queueIndex)->str() :
+                                            s_emptyString;
 
-				opPos++;
+                opPos++;
 
-				// From the draft: "Two expanded names are equal if they 
-				// have the same local part, and either both have no URI or 
-				// both have the same URI."
-				// "A node test * is true for any node of the principal node type. 
-				// For example, child::* will select all element children of the 
-				// context node, and attribute::* will select all attributes of 
-				// the context node."
-				// "A node test can have the form NCName:*. In this case, the prefix 
-				// is expanded in the same way as with a QName using the context 
-				// namespace declarations. The node test will be true for any node 
-				// of the principal type whose expanded name has the URI to which 
-				// the prefix expands, regardless of the local part of the name."
-				const bool	isTotallyWild =
-							0 == length(targetNS) &&
-							currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
+                // From the draft: "Two expanded names are equal if they 
+                // have the same local part, and either both have no URI or 
+                // both have the same URI."
+                // "A node test * is true for any node of the principal node type. 
+                // For example, child::* will select all element children of the 
+                // context node, and attribute::* will select all attributes of 
+                // the context node."
+                // "A node test can have the form NCName:*. In this case, the prefix 
+                // is expanded in the same way as with a QName using the context 
+                // namespace declarations. The node test will be true for any node 
+                // of the principal type whose expanded name has the URI to which 
+                // the prefix expands, regardless of the local part of the name."
+                const bool  isTotallyWild =
+                            0 == length(targetNS) &&
+                            currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
 
-				bool		didMatchNS = false;
+                bool        didMatchNS = false;
 
-				if(isTotallyWild == false)
-				{
-					const XalanDOMString&	contextNS = DOMServices::getNamespaceOfNode(*context);
+                if(isTotallyWild == false)
+                {
+                    const XalanDOMString&   contextNS = DOMServices::getNamespaceOfNode(*context);
 
-					if(0 != length(targetNS) && 0 != length(contextNS))
-					{
-						test = contextNS == targetNS;
+                    if(0 != length(targetNS) && 0 != length(contextNS))
+                    {
+                        test = contextNS == targetNS;
 
-						didMatchNS = true;
-					}
-					else
-					{
-						test = XPathExpression::eELEMWILDCARD == queueIndex || 
-						   (0 == length(contextNS) && 0 == length(targetNS));
-					}
-				}
-				else
-				{
-					test = true;
-				}
+                        didMatchNS = true;
+                    }
+                    else
+                    {
+                        test = XPathExpression::eELEMWILDCARD == queueIndex || 
+                           (0 == length(contextNS) && 0 == length(targetNS));
+                    }
+                }
+                else
+                {
+                    test = true;
+                }
 
-				queueIndex = currentExpression.getOpCodeMapValue(opPos);
+                queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-				if(test == true)
-				{
-					switch(nodeType)
-					{
-					case XalanNode::ATTRIBUTE_NODE:
-						if(stepType == XPathExpression::eFROM_ATTRIBUTES ||
-							stepType == XPathExpression::eFROM_NAMESPACE)
-						{
-							assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+                if(test == true)
+                {
+                    switch(nodeType)
+                    {
+                    case XalanNode::ATTRIBUTE_NODE:
+                        if(stepType == XPathExpression::eFROM_ATTRIBUTES ||
+                            stepType == XPathExpression::eFROM_NAMESPACE)
+                        {
+                            assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-							const XalanDOMString&	attrName =
-										context->getNodeName();
+                            const XalanDOMString&   attrName =
+                                        context->getNodeName();
 
-							const bool				isNamespace =
-									startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
-									attrName == DOMServices::s_XMLNamespace;
+                            const bool              isNamespace =
+                                    startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
+                                    attrName == DOMServices::s_XMLNamespace;
 
-							if(XPathExpression::eELEMWILDCARD == queueIndex)
-							{
-								if(stepType == XPathExpression::eFROM_ATTRIBUTES)
-								{
-									if (isNamespace == false)
-									{
-										if (isTotallyWild == true)
-										{
-											score = eMatchScoreNodeTest;
-										}
-										else
-										{
-											score = eMatchScoreNSWild;
-										}
-									}
-								}
-								else
-								{
-									if (isNamespace == true)
-									{
-										score = eMatchScoreNodeTest;
-									}
-								}
-							}
-							else
-							{
-								if(stepType == XPathExpression::eFROM_ATTRIBUTES)
-								{
-									if (isNamespace == false)
-									{
-										assert(queueIndex >= 0);
+                            if(XPathExpression::eELEMWILDCARD == queueIndex)
+                            {
+                                if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+                                {
+                                    if (isNamespace == false)
+                                    {
+                                        if (isTotallyWild == true)
+                                        {
+                                            score = eMatchScoreNodeTest;
+                                        }
+                                        else
+                                        {
+                                            score = eMatchScoreNSWild;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (isNamespace == true)
+                                    {
+                                        score = eMatchScoreNodeTest;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+                                {
+                                    if (isNamespace == false)
+                                    {
+                                        assert(queueIndex >= 0);
 
-										const XalanDOMString&	targetLocalName =
-															currentExpression.getToken(queueIndex)->str();
+                                        const XalanDOMString&   targetLocalName =
+                                                            currentExpression.getToken(queueIndex)->str();
 
-										const XalanDOMString&	localAttrName =
-												DOMServices::getLocalNameOfNode(*context);
+                                        const XalanDOMString&   localAttrName =
+                                                DOMServices::getLocalNameOfNode(*context);
 
-										if (localAttrName == targetLocalName)
-										{
-											score = eMatchScoreQName;
-										}
-									}
-								}
-								else
-								{
-									if (isNamespace == true)
-									{
-										const XalanAttr* const	theAttrNode =
+                                        if (localAttrName == targetLocalName)
+                                        {
+                                            score = eMatchScoreQName;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (isNamespace == true)
+                                    {
+                                        const XalanAttr* const  theAttrNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-											(const XalanAttr*)context;
+                                            (const XalanAttr*)context;
 #else
-											static_cast<const XalanAttr*>(context);
+                                            static_cast<const XalanAttr*>(context);
 #endif
-										assert(theAttrNode != 0);
+                                        assert(theAttrNode != 0);
 
-										const XalanDOMString&	theNamespace =
-													theAttrNode->getLocalName();
+                                        const XalanDOMString&   theNamespace =
+                                                    theAttrNode->getLocalName();
 
-										assert(queueIndex >= 0);
+                                        assert(queueIndex >= 0);
 
-										const XalanDOMString&	targetLocalName =
-															currentExpression.getToken(queueIndex)->str();
+                                        const XalanDOMString&   targetLocalName =
+                                                            currentExpression.getToken(queueIndex)->str();
 
-										if (theNamespace == targetLocalName)
-										{
-											score = eMatchScoreQName;
-										}
-									}
-								}
-							}
-						}
-						break;
+                                        if (theNamespace == targetLocalName)
+                                        {
+                                            score = eMatchScoreQName;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
 
-					case XalanNode::ELEMENT_NODE:
-						if(stepType != XPathExpression::eFROM_ATTRIBUTES)
-						{
-							if(XPathExpression::eELEMWILDCARD == queueIndex)
-							{
-								score = didMatchNS == true ?
-									eMatchScoreNSWild : eMatchScoreNodeTest;
-							}
-							else
-							{
-								assert(queueIndex >= 0);
+                    case XalanNode::ELEMENT_NODE:
+                        if(stepType != XPathExpression::eFROM_ATTRIBUTES)
+                        {
+                            if(XPathExpression::eELEMWILDCARD == queueIndex)
+                            {
+                                score = didMatchNS == true ?
+                                    eMatchScoreNSWild : eMatchScoreNodeTest;
+                            }
+                            else
+                            {
+                                assert(queueIndex >= 0);
 
-								const XalanDOMString&	targetLocalName =
-															currentExpression.getToken(queueIndex)->str();
+                                const XalanDOMString&   targetLocalName =
+                                                            currentExpression.getToken(queueIndex)->str();
 
-								if (DOMServices::getLocalNameOfNode(*context) == targetLocalName)
-								{
-									score = eMatchScoreQName;
-								}
-							}
-						}
-						break;
+                                if (DOMServices::getLocalNameOfNode(*context) == targetLocalName)
+                                {
+                                    score = eMatchScoreQName;
+                                }
+                            }
+                        }
+                        break;
 
-					default:
-						// Trying to match on anything else causes nasty bugs.
-						break;
-					} // end switch(nodeType)
-				} // end if(test)
-			} // end if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
-		} // end case XPathExpression::eNODENAME
-		break;
+                    default:
+                        // Trying to match on anything else causes nasty bugs.
+                        break;
+                    } // end switch(nodeType)
+                } // end if(test)
+            } // end if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
+        } // end case XPathExpression::eNODENAME
+        break;
 
-	default:
-		break;
-	} // end switch(testType)
+    default:
+        break;
+    } // end switch(testType)
 
-	return score;
+    return score;
 }
 #endif  // !defined(NDEBUG)
 
@@ -4679,124 +4701,124 @@ XPath::nodeTest(
 
 XPath::OpCodeMapPositionType
 XPath::predicates(
-			XPathExecutionContext&	executionContext,
-			OpCodeMapPositionType 	opPos,
-			MutableNodeRefList& 	subQueryResults) const
+            XPathExecutionContext&  executionContext,
+            OpCodeMapPositionType   opPos,
+            MutableNodeRefList&     subQueryResults) const
 {
-	assert(&executionContext.getContextNodeList() == &subQueryResults);
+    assert(&executionContext.getContextNodeList() == &subQueryResults);
 
-	const XPathExpression&	currentExpression = getExpression();
+    const XPathExpression&  currentExpression = getExpression();
 
-	assert(currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE ||
-		   currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE_WITH_POSITION);
+    assert(currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE ||
+           currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE_WITH_POSITION);
 
-	NodeRefListBase::size_type	theLength = subQueryResults.getLength();
+    NodeRefListBase::size_type  theLength = subQueryResults.getLength();
 
-	for(;;)
-	{
-		// If we have no nodes left, then there's no point in executing any
-		// predicates.  However, we will continue to loop, since we need to
-		// update endPredicatePos.
-		if (theLength > 0)
-		{
-			const OpCodeMapPositionType	predOpPos = opPos + 2;
+    for(;;)
+    {
+        // If we have no nodes left, then there's no point in executing any
+        // predicates.  However, we will continue to loop, since we need to
+        // update endPredicatePos.
+        if (theLength > 0)
+        {
+            const OpCodeMapPositionType predOpPos = opPos + 2;
 
-			// OK, this is a huge hack/optimization.  If the predicate is
-			// simple a number, such as [2], we can just get the
-			// numeric value from the expression, and not bother executing
-			// the predicate.  Furthermore, we don't need to execute the
-			// predicate for each node, since the evaluation is no dependent
-			// on the context node.  All we really have to do is remove all
-			// nodes from subQueryResults, _except_ for the node at that
-			// position.  The only trick is that XPath indexes from 1, while
-			// our node lists index from 0.
-			if (m_expression.getOpCodeMapValue(predOpPos) == XPathExpression::eOP_NUMBERLIT)
-			{
-				assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(predOpPos + 3));
+            // OK, this is a huge hack/optimization.  If the predicate is
+            // simple a number, such as [2], we can just get the
+            // numeric value from the expression, and not bother executing
+            // the predicate.  Furthermore, we don't need to execute the
+            // predicate for each node, since the evaluation is no dependent
+            // on the context node.  All we really have to do is remove all
+            // nodes from subQueryResults, _except_ for the node at that
+            // position.  The only trick is that XPath indexes from 1, while
+            // our node lists index from 0.
+            if (m_expression.getOpCodeMapValue(predOpPos) == XPathExpression::eOP_NUMBERLIT)
+            {
+                assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(predOpPos + 3));
 
-				// Get the value of the number...
-				const double	theIndex =
-					m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(predOpPos + 2));
+                // Get the value of the number...
+                const double    theIndex =
+                    m_expression.getNumberLiteral(m_expression.getOpCodeMapValue(predOpPos + 2));
 
-				// If the index is out of range, or not an integer, just clear subQueryResults...
-				if (theIndex <= 0.0 ||
-					NodeRefListBase::size_type(theIndex) > theLength ||
-					double(NodeRefListBase::size_type(theIndex)) != theIndex)
-				{
-					subQueryResults.clear();
-				}
-				else if (theLength > 1)
-				{
-					// Save the matching node...
-					XalanNode* const	theNode =
-						subQueryResults.item(NodeRefListBase::size_type(theIndex) - 1);
+                // If the index is out of range, or not an integer, just clear subQueryResults...
+                if (theIndex <= 0.0 ||
+                    NodeRefListBase::size_type(theIndex) > theLength ||
+                    double(NodeRefListBase::size_type(theIndex)) != theIndex)
+                {
+                    subQueryResults.clear();
+                }
+                else if (theLength > 1)
+                {
+                    // Save the matching node...
+                    XalanNode* const    theNode =
+                        subQueryResults.item(NodeRefListBase::size_type(theIndex) - 1);
 
-					// Clear the list...
-					subQueryResults.clear();
+                    // Clear the list...
+                    subQueryResults.clear();
 
-					// Add the node back in...
-					subQueryResults.addNode(theNode);
+                    // Add the node back in...
+                    subQueryResults.addNode(theNode);
 
-					subQueryResults.setDocumentOrder();
-				}
-				else
-				{
-					// OK, if there's only 1 node in the list, then
-					// we don't need to bother modifying the list.
-					// Just assert that theIndex == 1.0...
-					assert(theIndex == 1.0);
-				}
-			}
-			else
-			{
-				for(NodeRefListBase::size_type i = 0; i < theLength; ++i)
-				{
-					XalanNode* const	theNode = subQueryResults.item(i);
-					assert(theNode != 0);
+                    subQueryResults.setDocumentOrder();
+                }
+                else
+                {
+                    // OK, if there's only 1 node in the list, then
+                    // we don't need to bother modifying the list.
+                    // Just assert that theIndex == 1.0...
+                    assert(theIndex == 1.0);
+                }
+            }
+            else
+            {
+                for(NodeRefListBase::size_type i = 0; i < theLength; ++i)
+                {
+                    XalanNode* const    theNode = subQueryResults.item(i);
+                    assert(theNode != 0);
 
-					const XObjectPtr		pred(predicate(theNode, opPos, executionContext));
-					assert(pred.get() != 0);
+                    const XObjectPtr        pred(predicate(theNode, opPos, executionContext));
+                    assert(pred.get() != 0);
 
-					// Remove any node that doesn't satisfy the predicate.
-					if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
-					   pred->boolean() == false)
-					{
-						// Set the node to 0.  After we're done,
-						// we'll clear it out.
-						subQueryResults.setNode(i, 0);
-					}
-				}
+                    // Remove any node that doesn't satisfy the predicate.
+                    if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
+                       pred->boolean() == false)
+                    {
+                        // Set the node to 0.  After we're done,
+                        // we'll clear it out.
+                        subQueryResults.setNode(i, 0);
+                    }
+                }
 
-				// Clear out any null entries...
-				subQueryResults.clearNulls();
-			}
-		}
+                // Clear out any null entries...
+                subQueryResults.clearNulls();
+            }
+        }
 
-		opPos = currentExpression.getNextOpCodePosition(opPos);
+        opPos = currentExpression.getNextOpCodePosition(opPos);
 
-		const OpCodeMapValueType	nextStepType = currentExpression.getOpCodeMapValue(opPos);
+        const OpCodeMapValueType    nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-		if (nextStepType != XPathExpression::eOP_PREDICATE &&
-		    nextStepType != XPathExpression::eOP_PREDICATE_WITH_POSITION)
-		{
-			break;
-		}
-		else
-		{
-			theLength = subQueryResults.getLength();
-		}
-	}
+        if (nextStepType != XPathExpression::eOP_PREDICATE &&
+            nextStepType != XPathExpression::eOP_PREDICATE_WITH_POSITION)
+        {
+            break;
+        }
+        else
+        {
+            theLength = subQueryResults.getLength();
+        }
+    }
 
-	return opPos;
+    return opPos;
 }
 
 
 
-XPath::NodeTester::NodeTester(const NodeTester&		theSource) :
-	m_executionContext(theSource.m_executionContext),
-	m_targetNamespace(theSource.m_targetNamespace),
-	m_targetLocalName(theSource.m_targetLocalName),
-	m_testFunction(theSource.m_testFunction),
+XPath::NodeTester::NodeTester(const NodeTester&     theSource) :
+    m_executionContext(theSource.m_executionContext),
+    m_targetNamespace(theSource.m_targetNamespace),
+    m_targetLocalName(theSource.m_targetLocalName),
+    m_testFunction(theSource.m_testFunction),
     m_testFunction2(theSource.m_testFunction2)
 {
 }
@@ -4804,161 +4826,162 @@ XPath::NodeTester::NodeTester(const NodeTester&		theSource) :
 
 
 XPath::NodeTester::NodeTester(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			OpCodeMapPositionType 	opPos,
-			OpCodeMapValueType 	    argLen,
-			OpCodeMapValueType		stepType) :
-	m_executionContext(&executionContext),
-	m_targetNamespace(0),
-	m_targetLocalName(0),
-	m_testFunction(0),
+            const XPath&            xpath,
+            XPathExecutionContext&  executionContext,
+            OpCodeMapPositionType   opPos,
+            OpCodeMapValueType      argLen,
+            OpCodeMapValueType      stepType) :
+    m_executionContext(&executionContext),
+    m_targetNamespace(0),
+    m_targetLocalName(0),
+    m_testFunction(0),
     m_testFunction2(&NodeTester::testDefault2)
 {
-	const XPathExpression&	theExpression = xpath.getExpression();
+    const XPathExpression&  theExpression = xpath.getExpression();
 
-	switch(theExpression.getOpCodeMapValue(opPos))
-	{
-	case XPathExpression::eNODETYPE_COMMENT:
-		m_testFunction = &NodeTester::testComment;
-		break;
+    switch(theExpression.getOpCodeMapValue(opPos))
+    {
+    case XPathExpression::eNODETYPE_COMMENT:
+        m_testFunction = &NodeTester::testComment;
+        break;
 
-	case XPathExpression::eNODETYPE_TEXT:
-		m_testFunction = &NodeTester::testText;
-		break;
+    case XPathExpression::eNODETYPE_TEXT:
+        m_testFunction = &NodeTester::testText;
+        break;
 
-	case XPathExpression::eNODETYPE_PI:
-		if (argLen == 1)
-		{
-			m_testFunction = &NodeTester::testPI;
-		}
-		else if(argLen == 2)
-		{
-			m_testFunction = &NodeTester::testPIName;
+    case XPathExpression::eNODETYPE_PI:
+        if (argLen == 1)
+        {
+            m_testFunction = &NodeTester::testPI;
+        }
+        else if(argLen == 2)
+        {
+            m_testFunction = &NodeTester::testPIName;
 
-			m_targetLocalName = getStringFromTokenQueue(
-				theExpression,
-				opPos + 1);
-		}
-		else
-		{
-            XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+            m_targetLocalName = getStringFromTokenQueue(
+                theExpression,
+                opPos + 1);
+        }
+        else
+        {
+            GetCachedString     theGuard(executionContext);
 
-			executionContext.error(
+            executionContext.error(
                 XalanMessageLoader::getMessage(
-                    XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, theGuard.get(),
+                    theGuard.get(),
+                    XalanMessages::ArgLengthNodeTestIsIncorrect_1Param,
                     "processing-instruction()"),
-                    0,
-                    xpath.getLocator());
-		}
-		break;
+                0,
+                xpath.getLocator());
+        }
+        break;
 
-	case XPathExpression::eNODETYPE_NODE:
-		m_testFunction = &NodeTester::testNode;
-		break;
+    case XPathExpression::eNODETYPE_NODE:
+        m_testFunction = &NodeTester::testNode;
+        break;
 
-	case XPathExpression::eNODETYPE_ROOT:
-		m_testFunction = &NodeTester::testRoot;
-		break;
+    case XPathExpression::eNODETYPE_ROOT:
+        m_testFunction = &NodeTester::testRoot;
+        break;
 
-	case XPathExpression::eNODENAME:
-		{
-			bool	isTotallyWild = false;
+    case XPathExpression::eNODENAME:
+        {
+            bool    isTotallyWild = false;
 
-			m_targetNamespace = getStringFromTokenQueue(
-					theExpression,
-					opPos + 1);
+            m_targetNamespace = getStringFromTokenQueue(
+                    theExpression,
+                    opPos + 1);
 
-			if (m_targetNamespace == 0 &&
-				theExpression.getOpCodeMapValue(opPos + 2) == XPathExpression::eELEMWILDCARD)
-			{
-				isTotallyWild = true;
-			}
-			else
-			{
-				m_targetLocalName = getStringFromTokenQueue(
-					theExpression,
-					opPos + 2);
-			}
+            if (m_targetNamespace == 0 &&
+                theExpression.getOpCodeMapValue(opPos + 2) == XPathExpression::eELEMWILDCARD)
+            {
+                isTotallyWild = true;
+            }
+            else
+            {
+                m_targetLocalName = getStringFromTokenQueue(
+                    theExpression,
+                    opPos + 2);
+            }
 
-			if(stepType == XPathExpression::eFROM_ATTRIBUTES)
-			{
-				if (isTotallyWild == true)
-				{
-					m_testFunction = &NodeTester::testAttributeTotallyWild;
-				}
-				else if (m_targetNamespace == 0)
-				{
-					assert(m_targetLocalName != 0);
+            if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+            {
+                if (isTotallyWild == true)
+                {
+                    m_testFunction = &NodeTester::testAttributeTotallyWild;
+                }
+                else if (m_targetNamespace == 0)
+                {
+                    assert(m_targetLocalName != 0);
 
-					m_testFunction = &NodeTester::testAttributeNCName;
-				}
-				else if (m_targetLocalName == 0)
-				{
-					assert(m_targetNamespace != 0);
+                    m_testFunction = &NodeTester::testAttributeNCName;
+                }
+                else if (m_targetLocalName == 0)
+                {
+                    assert(m_targetNamespace != 0);
 
-					m_testFunction = &NodeTester::testAttributeNamespaceOnly;
-				}
-				else
-				{
-					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+                    m_testFunction = &NodeTester::testAttributeNamespaceOnly;
+                }
+                else
+                {
+                    assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
 
-					m_testFunction = &NodeTester::testAttributeQName;
-				}
-			}
-			else if (stepType == XPathExpression::eFROM_NAMESPACE)
-			{
-				if (isTotallyWild == true)
-				{
-					m_testFunction = &NodeTester::testNamespaceTotallyWild;
-				}
-				else
-				{
-					m_testFunction = &NodeTester::testNamespaceNCName;
-				}
-			}
-			else
-			{
-				if (isTotallyWild == true)
-				{
-					m_testFunction = &NodeTester::testElementTotallyWild;
-				}
-				else if (m_targetNamespace == 0)
-				{
-					m_testFunction = &NodeTester::testElementNCName;
-				}
-				else if (m_targetLocalName == 0)
-				{
-					assert(m_targetNamespace != 0);
+                    m_testFunction = &NodeTester::testAttributeQName;
+                }
+            }
+            else if (stepType == XPathExpression::eFROM_NAMESPACE)
+            {
+                if (isTotallyWild == true)
+                {
+                    m_testFunction = &NodeTester::testNamespaceTotallyWild;
+                }
+                else
+                {
+                    m_testFunction = &NodeTester::testNamespaceNCName;
+                }
+            }
+            else
+            {
+                if (isTotallyWild == true)
+                {
+                    m_testFunction = &NodeTester::testElementTotallyWild;
+                }
+                else if (m_targetNamespace == 0)
+                {
+                    m_testFunction = &NodeTester::testElementNCName;
+                }
+                else if (m_targetLocalName == 0)
+                {
+                    assert(m_targetNamespace != 0);
 
-					m_testFunction = &NodeTester::testElementNamespaceOnly;
-				}
-				else
-				{
-					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+                    m_testFunction = &NodeTester::testElementNamespaceOnly;
+                }
+                else
+                {
+                    assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-					m_testFunction = &NodeTester::testElementQName;
-				}
-			}
-		}
-		break;
+                    m_testFunction = &NodeTester::testElementQName;
+                }
+            }
+        }
+        break;
 
-	default:
-		m_testFunction = &NodeTester::testDefault;
-		break;
-	}
+    default:
+        m_testFunction = &NodeTester::testDefault;
+        break;
+    }
 
-	assert(m_testFunction != 0);
+    assert(m_testFunction != 0);
 }
 
 
 
 XPath::NodeTester::NodeTester() :
-	m_executionContext(0),
-	m_targetNamespace(0),
-	m_targetLocalName(0),
-	m_testFunction(&NodeTester::testDefault),
+    m_executionContext(0),
+    m_targetNamespace(0),
+    m_targetLocalName(0),
+    m_testFunction(&NodeTester::testDefault),
     m_testFunction2(&NodeTester::testDefault2)
 {
 }
@@ -4966,28 +4989,28 @@ XPath::NodeTester::NodeTester() :
 
 
 XPath::NodeTester::NodeTester(
-            XPathConstructionContext&	theConstructionContext,
+            XPathConstructionContext&   theConstructionContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
             const LocatorType*          theLocator,
-            eMatchScore*				theMatchScore) :
-	m_executionContext(0),
-	m_targetNamespace(0),
-	m_targetLocalName(0),
-	m_testFunction(&NodeTester::testDefault),
+            eMatchScore*                theMatchScore) :
+    m_executionContext(0),
+    m_targetNamespace(0),
+    m_targetLocalName(0),
+    m_testFunction(&NodeTester::testDefault),
     m_testFunction2(&NodeTester::testDefault2)
 {
-	const eMatchScore	theScore =
-		initialize(
-			theConstructionContext,
-			theNameTest,
-			thePrefixResolver,
-			theLocator);
+    const eMatchScore   theScore =
+        initialize(
+            theConstructionContext,
+            theNameTest,
+            thePrefixResolver,
+            theLocator);
 
-	if (theMatchScore != 0)
-	{
-		*theMatchScore = theScore;
-	}
+    if (theMatchScore != 0)
+    {
+        *theMatchScore = theScore;
+    }
 }
     
 
@@ -4996,40 +5019,40 @@ XPath::NodeTester::NodeTester(
             const XalanDOMString&   theNamespaceURI,
             const XalanDOMString&   theLocalName,
             eMatchScore*            theMatchScore) :
-	m_executionContext(0),
-	m_targetNamespace(0),
-	m_targetLocalName(0),
-	m_testFunction(&NodeTester::testDefault),
+    m_executionContext(0),
+    m_targetNamespace(0),
+    m_targetLocalName(0),
+    m_testFunction(&NodeTester::testDefault),
     m_testFunction2(0)
 {
-	const eMatchScore	theScore =
-		initialize(theNamespaceURI, theLocalName);
+    const eMatchScore   theScore =
+        initialize(theNamespaceURI, theLocalName);
 
-	if (theMatchScore != 0)
-	{
-		*theMatchScore = theScore;
-	}
+    if (theMatchScore != 0)
+    {
+        *theMatchScore = theScore;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::initialize(
-            XPathConstructionContext&	theConstructionContext,
+            XPathConstructionContext&   theConstructionContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
             const LocatorType*          theLocator)
 {
-	const XalanDOMString::size_type     theLength =
+    const XalanDOMString::size_type     theLength =
                 length(theNameTest);
 
     if (theLength == 1 && theNameTest[0] == XPath::PSEUDONAME_ANY[0])
     {
-		return initialize(s_emptyString, s_emptyString);
+        return initialize(s_emptyString, s_emptyString);
     }
     else
     {
-		eMatchScore		theResult = eMatchScoreNone;
+        eMatchScore     theResult = eMatchScoreNone;
 
         const XalanDOMString::size_type     theIndex =
                 indexOf(theNameTest, XalanUnicode::charColon);
@@ -5039,11 +5062,12 @@ XPath::NodeTester::initialize(
         {
             if (XalanQName::isValidNCName(theNameTest) == false)
             {
-                XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
+                const XPathConstructionContext::GetAndReleaseCachedString   theGuard(theConstructionContext);
 
-		        theConstructionContext.error(
+                theConstructionContext.error(
                     XalanMessageLoader::getMessage(
-                        XalanMessages::IsNotValidQName_1Param, theBuffer,
+                        theGuard.get(),
+                        XalanMessages::IsNotValidQName_1Param,
                         theNameTest),
                         0,
                         theLocator);
@@ -5051,15 +5075,15 @@ XPath::NodeTester::initialize(
             else
             {
                 theResult = initialize(
-					s_emptyString,
-					theConstructionContext.getPooledString(theNameTest));
+                    s_emptyString,
+                    theConstructionContext.getPooledString(theNameTest));
             }
         }
         else
         {
             const XPathConstructionContext::GetAndReleaseCachedString   scratchGuard(theConstructionContext);
 
-	        XalanDOMString&		theScratchString = scratchGuard.get();
+            XalanDOMString&     theScratchString = scratchGuard.get();
 
             theScratchString.assign(theNameTest, 0, theIndex);
 
@@ -5069,10 +5093,10 @@ XPath::NodeTester::initialize(
 
             if (theNamespaceURI == 0)
             {
-		        theConstructionContext.error(
+                theConstructionContext.error(
                     XalanMessageLoader::getMessage(
-                        XalanMessages::UndeclaredNamespacePrefix_1Param,
-                        theScratchString),
+                        theScratchString,
+                        XalanMessages::PrefixIsNotDeclared_1Param),
                         0,
                         theLocator);
             }
@@ -5080,12 +5104,11 @@ XPath::NodeTester::initialize(
             {
                 // OK, now we have a namespace URI...
                 if (XalanQName::isValidNCName(theScratchString) == false)
-                {                    
-                    XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
-
-		            theConstructionContext.error(
+                {
+                    theConstructionContext.error(
                         XalanMessageLoader::getMessage(
-                            XalanMessages::IsNotValidQName_1Param, theBuffer,
+                            theScratchString,
+                            XalanMessages::IsNotValidQName_1Param,
                             theNameTest),
                             0,
                             theLocator);
@@ -5094,7 +5117,7 @@ XPath::NodeTester::initialize(
                          theNameTest[theIndex + 1] == XPath::PSEUDONAME_ANY[0])
                 {
                     // It's of the form "NCName:*"
-					theResult = initialize(
+                    theResult = initialize(
                         theConstructionContext.getPooledString(*theNamespaceURI),
                         s_emptyString);
                 }
@@ -5104,19 +5127,18 @@ XPath::NodeTester::initialize(
 
                     if (XalanQName::isValidNCName(theScratchString) == false)
                     {
-                        XalanDOMString  theBuffer(theConstructionContext.getMemoryManager());
-
-		                theConstructionContext.error(
+                        theConstructionContext.error(
                             XalanMessageLoader::getMessage(
-                                XalanMessages::IsNotValidQName_1Param, theBuffer,
+                                theScratchString,
+                                XalanMessages::IsNotValidQName_1Param,
                                 theNameTest),
-                                0,
-                                theLocator);
+                            0,
+                            theLocator);
                     }
                     else
                     {
                         // It's of the form "NCName:NCName"
-						theResult = initialize(
+                        theResult = initialize(
                             theConstructionContext.getPooledString(*theNamespaceURI),
                             theConstructionContext.getPooledString(theScratchString));
                     }
@@ -5124,7 +5146,7 @@ XPath::NodeTester::initialize(
             }
         }
 
-		return theResult;
+        return theResult;
     }
 }
 
@@ -5143,15 +5165,15 @@ XPath::NodeTester::initialize(
         {
             m_testFunction2 = &NodeTester::testElementNamespaceOnly2;
 
-			return eMatchScoreNSWild;
+            return eMatchScoreNSWild;
         }
         else
         {
             m_testFunction2 = &NodeTester::testElementQName2;
 
-			m_targetLocalName = &theLocalName;
+            m_targetLocalName = &theLocalName;
 
-			return eMatchScoreQName;
+            return eMatchScoreQName;
         }
     }
     else if (theLocalName.empty() == false)
@@ -5160,27 +5182,27 @@ XPath::NodeTester::initialize(
 
         m_targetLocalName = &theLocalName;
 
-		return eMatchScoreQName;
+        return eMatchScoreQName;
     }
     else
     {
         m_testFunction2 = &NodeTester::testElementTotallyWild2;
 
-		return eMatchScoreNodeTest;
+        return eMatchScoreNodeTest;
     }
 }
 
 
 
 inline bool
-isNamespaceDeclaration(const XalanNode&		theAttributeNode)
+isNamespaceDeclaration(const XalanNode&     theAttributeNode)
 {
-	assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
+    assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
+    return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
 #else
-	return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
+    return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
 #endif
 }
 
@@ -5193,520 +5215,520 @@ isNamespaceDeclaration(const XalanNode&		theAttributeNode)
 
 XPath::eMatchScore
 XPath::NodeTester::testComment(
-			const XalanNode& 		/* context */,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        /* context */,
+            XalanNode::NodeType     nodeType) const
 {
-	if (XalanNode::COMMENT_NODE == nodeType)
-	{
-		return eMatchScoreNodeTest;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    if (XalanNode::COMMENT_NODE == nodeType)
+    {
+        return eMatchScoreNodeTest;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testText(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	if ((XalanNode::TEXT_NODE == nodeType || XalanNode::CDATA_SECTION_NODE == nodeType) &&
+    if ((XalanNode::TEXT_NODE == nodeType || XalanNode::CDATA_SECTION_NODE == nodeType) &&
 #if defined(XALAN_OLD_STYLE_CASTS)
-		shouldStripSourceNode((const XalanText&)context) == false)
+        shouldStripSourceNode((const XalanText&)context) == false)
 #else
-		shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
+        shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
 #endif
-	{
-		return eMatchScoreNodeTest;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    {
+        return eMatchScoreNodeTest;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testPI(
-			const XalanNode& 		/* context */,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        /* context */,
+            XalanNode::NodeType     nodeType) const
 {
-	if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
-	{
-		return eMatchScoreNodeTest;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
+    {
+        return eMatchScoreNodeTest;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testPIName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetLocalName != 0);
+    assert(m_targetLocalName != 0);
 
-	if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType &&
-		context.getNodeName() == *m_targetLocalName)
-	{
-		return eMatchScoreQName;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType &&
+        context.getNodeName() == *m_targetLocalName)
+    {
+        return eMatchScoreQName;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testNode(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	if ((nodeType != XalanNode::TEXT_NODE && nodeType != XalanNode::CDATA_SECTION_NODE) ||
+    if ((nodeType != XalanNode::TEXT_NODE && nodeType != XalanNode::CDATA_SECTION_NODE) ||
 #if defined(XALAN_OLD_STYLE_CASTS)
-		shouldStripSourceNode((const XalanText&)context) == false)
+        shouldStripSourceNode((const XalanText&)context) == false)
 #else
-		shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
+        shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
 #endif
-	{
-		return eMatchScoreNodeTest;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    {
+        return eMatchScoreNodeTest;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testRoot(
-			const XalanNode& 		/* context */,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        /* context */,
+            XalanNode::NodeType     nodeType) const
 {
-	if (XalanNode::DOCUMENT_NODE == nodeType ||
-		XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType)
-	{
-		return eMatchScoreOther;
-	}
-	else
-	{
-		return eMatchScoreNone;
-	}
+    if (XalanNode::DOCUMENT_NODE == nodeType ||
+        XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType)
+    {
+        return eMatchScoreOther;
+    }
+    else
+    {
+        return eMatchScoreNone;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testAttributeNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace == 0 && m_targetLocalName != 0);
 
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == true ||
-		matchLocalName(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == true ||
+        matchLocalName(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 inline bool
-XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
+XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&   context) const
 {
-	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-	return DOMServices::getLocalNameOfNode(context) == *m_targetLocalName &&
-		   context.getNamespaceURI() == *m_targetNamespace;
+    return DOMServices::getLocalNameOfNode(context) == *m_targetLocalName &&
+           context.getNamespaceURI() == *m_targetNamespace;
 }
 
 
 XPath::eMatchScore
 XPath::NodeTester::testAttributeQName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == true ||
-		matchLocalNameAndNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == true ||
+        matchLocalNameAndNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testAttributeNamespaceOnly(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace != 0 && m_targetLocalName == 0);
+    assert(m_targetNamespace != 0 && m_targetLocalName == 0);
 
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == true ||
-		matchNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNSWild;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == true ||
+        matchNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNSWild;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testAttributeTotallyWild(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == true)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNodeTest;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == true)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNodeTest;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testElementNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace == 0 && m_targetLocalName != 0);
 
-	if (XalanNode::ELEMENT_NODE != nodeType ||
-		matchLocalName(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (XalanNode::ELEMENT_NODE != nodeType ||
+        matchLocalName(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testElementQName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-	if (XalanNode::ELEMENT_NODE != nodeType ||
-		matchLocalNameAndNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (XalanNode::ELEMENT_NODE != nodeType ||
+        matchLocalNameAndNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testElementNamespaceOnly(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace != 0 && m_targetLocalName == 0);
+    assert(m_targetNamespace != 0 && m_targetLocalName == 0);
 
-	if (XalanNode::ELEMENT_NODE != nodeType ||
-		matchNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNSWild;
-	}
+    if (XalanNode::ELEMENT_NODE != nodeType ||
+        matchNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNSWild;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testElementTotallyWild(
-			const XalanNode& 		/* context */,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        /* context */,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace == 0 && m_targetLocalName == 0);
+    assert(m_targetNamespace == 0 && m_targetLocalName == 0);
 
-	if (XalanNode::ELEMENT_NODE != nodeType)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNodeTest;
-	}
+    if (XalanNode::ELEMENT_NODE != nodeType)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNodeTest;
+    }
 }
 
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementNCName2(const XalanElement&	context) const
+XPath::NodeTester::testElementNCName2(const XalanElement&   context) const
 {
-	assert(
+    assert(
         m_targetNamespace == 0 &&
         m_targetLocalName != 0);
 
-	if (matchLocalName(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (matchLocalName(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementQName2(const XalanElement&	context) const
+XPath::NodeTester::testElementQName2(const XalanElement&    context) const
 {
-	assert(
+    assert(
         m_targetNamespace != 0 &&
         m_targetLocalName != 0);
 
-	if (matchLocalNameAndNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (matchLocalNameAndNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementNamespaceOnly2(const XalanElement&	context) const
+XPath::NodeTester::testElementNamespaceOnly2(const XalanElement&    context) const
 {
-	assert(
+    assert(
         m_targetNamespace != 0 &&
         m_targetLocalName == 0);
 
-	if (matchNamespaceURI(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNSWild;
-	}
+    if (matchNamespaceURI(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNSWild;
+    }
 }
 
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementTotallyWild2(const XalanElement&	/* context */) const
+XPath::NodeTester::testElementTotallyWild2(const XalanElement&  /* context */) const
 {
-	assert(
+    assert(
         m_targetNamespace == 0 &&
         m_targetLocalName == 0);
 
-	return eMatchScoreNodeTest;
+    return eMatchScoreNodeTest;
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testNamespaceNCName(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+    assert(m_targetNamespace == 0 && m_targetLocalName != 0);
 
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == false ||
-		matchNamespace(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreQName;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == false ||
+        matchNamespace(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreQName;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testNamespaceTotallyWild(
-			const XalanNode& 		context,
-			XalanNode::NodeType		nodeType) const
+            const XalanNode&        context,
+            XalanNode::NodeType     nodeType) const
 {
-	assert(m_targetNamespace == 0 && m_targetLocalName == 0);
+    assert(m_targetNamespace == 0 && m_targetLocalName == 0);
 
-	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
-		isNamespaceDeclaration(context) == false)
-	{
-		return eMatchScoreNone;
-	}
-	else
-	{
-		return eMatchScoreNodeTest;
-	}
+    if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+        isNamespaceDeclaration(context) == false)
+    {
+        return eMatchScoreNone;
+    }
+    else
+    {
+        return eMatchScoreNodeTest;
+    }
 }
 
 
 
 XPath::eMatchScore
 XPath::NodeTester::testDefault(
-			const XalanNode& 		/* context */,
-			XalanNode::NodeType		/* nodeType */) const
+            const XalanNode&        /* context */,
+            XalanNode::NodeType     /* nodeType */) const
 {
-	return eMatchScoreNone;
+    return eMatchScoreNone;
 }
 
 
 
 XPath::eMatchScore
-XPath::NodeTester::testDefault2(const XalanElement&		/* context */) const
+XPath::NodeTester::testDefault2(const XalanElement&     /* context */) const
 {
-	return eMatchScoreNone;
+    return eMatchScoreNone;
 }
 
 
 
 bool
-XPath::NodeTester::matchLocalName(const XalanNode&	context) const
+XPath::NodeTester::matchLocalName(const XalanNode&  context) const
 {
-	assert(m_targetLocalName != 0);
+    assert(m_targetLocalName != 0);
 
-	return length(context.getNamespaceURI()) == 0 &&
-		DOMServices::getLocalNameOfNode(context) == *m_targetLocalName;
+    return length(context.getNamespaceURI()) == 0 &&
+        DOMServices::getLocalNameOfNode(context) == *m_targetLocalName;
 }
 
 
 
 bool
-XPath::NodeTester::matchNamespaceURI(const XalanNode&	context) const
+XPath::NodeTester::matchNamespaceURI(const XalanNode&   context) const
 {
-	assert(m_targetNamespace != 0);
+    assert(m_targetNamespace != 0);
 
-	return context.getNamespaceURI() == *m_targetNamespace;
+    return context.getNamespaceURI() == *m_targetNamespace;
 }
 
 
 bool
-XPath::NodeTester::matchNamespace(const XalanNode&	context) const
+XPath::NodeTester::matchNamespace(const XalanNode&  context) const
 {
-	assert(m_targetLocalName != 0);
+    assert(m_targetLocalName != 0);
 
-	return context.getLocalName() == *m_targetLocalName;
+    return context.getLocalName() == *m_targetLocalName;
 }
 
 
 
 bool
-XPath::NodeTester::shouldStripSourceNode(const XalanText&	context) const
+XPath::NodeTester::shouldStripSourceNode(const XalanText&   context) const
 {
-	assert(m_executionContext != 0);
+    assert(m_executionContext != 0);
 
     return m_executionContext->shouldStripSourceNode(context);
 }
 
 
 
-const XalanDOMChar	XPath::PSEUDONAME_ANY[] =
+const XalanDOMChar  XPath::PSEUDONAME_ANY[] =
 {
-	XalanUnicode::charAsterisk,
-	0
+    XalanUnicode::charAsterisk,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_ROOT[] =
+const XalanDOMChar  XPath::PSEUDONAME_ROOT[] =
 {
-	XalanUnicode::charSolidus,
-	0
+    XalanUnicode::charSolidus,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_TEXT[] =
+const XalanDOMChar  XPath::PSEUDONAME_TEXT[] =
 {
-	XalanUnicode::charNumberSign,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charNumberSign,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_COMMENT[] =
+const XalanDOMChar  XPath::PSEUDONAME_COMMENT[] =
 {
-	XalanUnicode::charNumberSign,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_t,
-	0
+    XalanUnicode::charNumberSign,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_PI[] =
+const XalanDOMChar  XPath::PSEUDONAME_PI[] =
 {
-	XalanUnicode::charNumberSign,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_i,
-	0
+    XalanUnicode::charNumberSign,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_i,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_OTHER[] =
+const XalanDOMChar  XPath::PSEUDONAME_OTHER[] =
 {
-	XalanUnicode::charAsterisk,
-	0
+    XalanUnicode::charAsterisk,
+    0
 };
 
-const XalanDOMChar	XPath::PSEUDONAME_NODE[] =
+const XalanDOMChar  XPath::PSEUDONAME_NODE[] =
 {
-	XalanUnicode::charNumberSign,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charNumberSign,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
 
 // Don't auto-create the table...
 
-XPath::FunctionTableType		XPath::s_functions(false);
+XPath::FunctionTableType        XPath::s_functions(false);
 
 
 
@@ -5715,7 +5737,7 @@ XPath::initialize(MemoryManagerType& theManager)
 {
     s_functions.setMemoryManager(theManager);
 
-	s_functions.CreateTable();
+    s_functions.CreateTable();
 }
 
 
@@ -5723,7 +5745,7 @@ XPath::initialize(MemoryManagerType& theManager)
 void
 XPath::terminate()
 {
-	s_functions.DestroyTable();
+    s_functions.DestroyTable();
 }
 
 

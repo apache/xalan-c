@@ -28,31 +28,31 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	PlatformSupportInit::s_initCounter = 0;
+unsigned long   PlatformSupportInit::s_initCounter = 0;
 
 
 
 PlatformSupportInit::PlatformSupportInit(MemoryManagerType&      theManager) :
-	m_xalanDOMInit(theManager)
+    m_xalanDOMInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 
 
 PlatformSupportInit::~PlatformSupportInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 
@@ -60,11 +60,11 @@ PlatformSupportInit::~PlatformSupportInit()
 void
 PlatformSupportInit::initialize(MemoryManagerType&      theManager)
 {
-    DoubleSupport::initialize(theManager);
+    DoubleSupport::initialize();
 
-	XalanMessageLoader::initialize(theManager);
+    XalanMessageLoader::initialize(theManager);
 
-	XalanTranscodingServices::initialize(theManager);
+    XalanTranscodingServices::initialize(theManager);
 }
 
 
@@ -72,9 +72,9 @@ PlatformSupportInit::initialize(MemoryManagerType&      theManager)
 void
 PlatformSupportInit::terminate()
 {
-	XalanTranscodingServices::terminate();
+    XalanTranscodingServices::terminate();
 
-	XalanMessageLoader::terminate();
+    XalanMessageLoader::terminate();
 
     DoubleSupport::terminate();
 }

@@ -43,13 +43,13 @@ FunctionCurrent::~FunctionCurrent()
 
 XObjectPtr
 FunctionCurrent::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const LocatorType*      /* locator */) const
 {
-	assert(executionContext.getCurrentNode() != 0);
+    assert(executionContext.getCurrentNode() != 0);
 
-	return executionContext.getXObjectFactory().createNodeSet(executionContext.getCurrentNode());
+    return executionContext.getXObjectFactory().createNodeSet(executionContext.getCurrentNode());
 }
 
 
@@ -61,7 +61,7 @@ FunctionCurrent*
 #endif
 FunctionCurrent::clone(MemoryManagerType&   theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -69,9 +69,9 @@ FunctionCurrent::clone(MemoryManagerType&   theManager) const
 const XalanDOMString&
 FunctionCurrent::getError(XalanDOMString&   theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
                 "current()");
 }
 

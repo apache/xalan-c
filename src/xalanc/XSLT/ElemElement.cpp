@@ -42,68 +42,72 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemElement::ElemElement(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemUse(constructionContext,
-			stylesheetTree,
-			lineNumber,
-			columnNumber,
-			StylesheetConstructionContext::ELEMNAME_ELEMENT),
-	m_nameAVT(0),
-	m_namespaceAVT(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemUse(constructionContext,
+            stylesheetTree,
+            lineNumber,
+            columnNumber,
+            StylesheetConstructionContext::ELEMNAME_ELEMENT),
+    m_nameAVT(0),
+    m_namespaceAVT(0)
 {
-	// Namespace aliases are not used for xsl:element, so
-	// turn them off...
-//	m_namespacesHandler.setProcessNamespaceAliaises(false);
+    // Namespace aliases are not used for xsl:element, so
+    // turn them off...
+//  m_namespacesHandler.setProcessNamespaceAliaises(false);
 
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_nameAVT =
-				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
-		}
-		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
-		{
-			m_namespaceAVT =
-				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this); 
-		}
-		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
-			    processSpaceAttr(aname, atts, i, constructionContext) ||
-				isAttrOK(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
+        if(equals(aname, Constants::ATTRNAME_NAME))
+        {
+            m_nameAVT =
+                constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
+        }
+        else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
+        {
+            m_namespaceAVT =
+                constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this); 
+        }
+        else if(processUseAttributeSets(
+                    constructionContext,
+                    aname,
+                    atts,
+                    i) == false &&
+                processSpaceAttr(
+                    Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING.c_str(),
+                    aname,
+                    atts,
+                    i,
+                    constructionContext)  == false &&
+                isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult,
-							Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
-
-	if(0 == m_nameAVT)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::TemplateMustHaveAttribute_2Param
-            ,theResult
-			,Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING
-			,Constants::ATTRNAME_NAME),
-			0,
-			this);
-	}
+    if(0 == m_nameAVT)
+    {
+            error(
+                constructionContext,
+                XalanMessages::ElementMustHaveAttribute_2Param,
+                Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING,
+                Constants::ATTRNAME_NAME);
+    }
 }
 
 
@@ -117,222 +121,210 @@ ElemElement::~ElemElement()
 const XalanDOMString&
 ElemElement::getElementName() const
 {
-	return Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemElement::startElement(StylesheetExecutionContext&		executionContext) const
+ElemElement::startElement(StylesheetExecutionContext&       executionContext) const
 {
-	XalanDOMString&		elemName = executionContext.getAndPushCachedString();
+    XalanDOMString&     elemName = executionContext.getAndPushCachedString();
 
-	m_nameAVT->evaluate(elemName, *this, executionContext);
+    m_nameAVT->evaluate(elemName, *this, executionContext);
 
-	bool	isIllegalElement = !XalanQName::isValidQName(elemName);
+    bool    isIllegalElement = !XalanQName::isValidQName(elemName);
 
-	if (isIllegalElement == true)
-	{
-        XalanDOMString  theResult(executionContext.getMemoryManager());
+    if (isIllegalElement == true)
+    {
+        warn(
+            executionContext,
+            XalanMessages::IllegalElementName_1Param,
+            elemName);
 
-		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::IllegalElementName_1Param, theResult, elemName),
-			executionContext.getCurrentNode(),
-			getLocator());
+        executionContext.pushSkipElementAttributes(true);
+    }
+    else
+    {
+        StylesheetExecutionContext::GetAndReleaseCachedString   elemNameSpaceGuard(executionContext);
 
-		executionContext.pushSkipElementAttributes(true);
-	}
-	else
-	{
-		StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
+        XalanDOMString&     elemNameSpace = elemNameSpaceGuard.get();
 
-		XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
+        if (m_namespaceAVT != 0)
+        {
+            m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
+        }
 
-		if (m_namespaceAVT != 0)
-		{
-			m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
-		}
+        XalanDOMString::size_type   namespaceLen = length(elemNameSpace);
 
-		XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
+        bool    foundResultNamespaceForPrefix = false;
 
-		bool	foundResultNamespaceForPrefix = false;
+        XalanDOMString::size_type           len = length(elemName);
 
-		XalanDOMString::size_type			len = length(elemName);
+        const XalanDOMString::size_type     indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-		const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+        const bool  havePrefix = indexOfNSSep == len ? false : true;
 
-		const bool	havePrefix = indexOfNSSep == len ? false : true;
+        StylesheetExecutionContext::GetAndReleaseCachedString   prefixGuard(executionContext);
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
+        XalanDOMString&     prefix = prefixGuard.get();
 
-		XalanDOMString&		prefix = prefixGuard.get();
+        if (havePrefix == true)
+        {
+            substring(elemName, prefix, 0, indexOfNSSep);
 
-		if (havePrefix == true)
-		{
-			substring(elemName, prefix, 0, indexOfNSSep);
+            const XalanDOMString* const     theNamespace =
+                executionContext.getResultNamespaceForPrefix(prefix);
 
-			const XalanDOMString* const		theNamespace =
-				executionContext.getResultNamespaceForPrefix(prefix);
+            if (theNamespace != 0)
+            {
+                foundResultNamespaceForPrefix = true;
+            }
+            else
+            {
+                const XalanDOMString* const     theNamespace =
+                    getNamespacesHandler().getNamespace(prefix);
 
-			if (theNamespace != 0)
-			{
-				foundResultNamespaceForPrefix = true;
-			}
-			else
-			{
-				const XalanDOMString* const		theNamespace =
-					getNamespacesHandler().getNamespace(prefix);
+                if(theNamespace == 0 && namespaceLen == 0)
+                {
+                    warn(
+                        executionContext,
+                        XalanMessages::PrefixIsNotDeclared_1Param,
+                        prefix);
 
-				if(theNamespace == 0 && namespaceLen == 0)
-				{
-                    XalanDOMString  theResult(executionContext.getMemoryManager());
+                    if (m_namespaceAVT != 0)
+                    {
+                        elemName.erase(0, indexOfNSSep + 1);
+                    }
+                    else
+                    {
+                        isIllegalElement = true;
 
-					executionContext.warn(
-						XalanMessageLoader::getMessage(
-							XalanMessages::CannotResolvePrefix_1Param,
-                            theResult,
-							prefix),
-						executionContext.getCurrentNode(),
-						getLocator());
+                        warn(
+                            executionContext,
+                            XalanMessages::IllegalElementName_1Param,
+                            elemName);
+                    }
+                }
+                else if (theNamespace != 0 &&
+                         namespaceLen == 0 &&
+                         equals(prefix, DOMServices::s_XMLNamespace) == false)
+                {
+                    elemNameSpace = *theNamespace;
+                }
+            }
+        }
 
-					if (m_namespaceAVT != 0)
-					{
-						elemName.erase(0, indexOfNSSep + 1);
-					}
-					else
-					{
-						isIllegalElement = true;
+        if (isIllegalElement == false)
+        {
+            executionContext.startElement(c_wstr(elemName));   
 
-                        XalanDOMString  theResult(executionContext.getMemoryManager());
+            if(0 == m_namespaceAVT &&
+               (havePrefix == false || foundResultNamespaceForPrefix == true))
+            {
+                if (havePrefix == false)
+                {
+                    fixupDefaultNamespace(executionContext);
+                }
+            }
+            else
+            {
+                if(havePrefix == false)
+                {
+                    if (namespaceLen > 0)
+                    {
+                        const XalanDOMString* const     theDefaultNamespace =
+                                executionContext.getResultNamespaceForPrefix(s_emptyString);
 
-						executionContext.warn(
-							XalanMessageLoader::getMessage(
-								XalanMessages::IllegalElementName_1Param,
-                                theResult,
-								elemName),
-							executionContext.getCurrentNode(),
-							getLocator());
-					}
-				}
-				else if (theNamespace != 0 &&
-						 namespaceLen == 0 &&
-						 equals(prefix, DOMServices::s_XMLNamespace) == false)
-				{
-					elemNameSpace = *theNamespace;
-				}
-			}
-		}
+                        if (theDefaultNamespace == 0 ||
+                            equals(*theDefaultNamespace, elemNameSpace) == false)
+                        {
+                            executionContext.addResultAttribute(
+                                    DOMServices::s_XMLNamespace,
+                                    elemNameSpace);
+                        }
+                    }
+                    else
+                    {
+                        // OK, the namespace we're generating is the default namespace,
+                        // so let's make sure that we really need it.  If we don't,
+                        // we end up with another xmlns="" on the element we're
+                        // generating.  Although this isn't really an error, it's
+                        // a bit unsightly, so let's suppress it...
+                        const XalanDOMString&   theParentDefaultNamespace =
+                                getParentDefaultNamespace();
 
-		if (isIllegalElement == false)
-		{
-			executionContext.startElement(c_wstr(elemName));   
+                        if (length(theParentDefaultNamespace) == 0)
+                        {
+                            if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
+                            {
+                                executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+                            }
+                        }
+                        else
+                        {
+                            executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+                        }
+                    }
+                }
+                else
+                {
+                    const XalanDOMString* const     theNamespace =
+                            executionContext.getResultNamespaceForPrefix(prefix);
 
-			if(0 == m_namespaceAVT &&
-			   (havePrefix == false || foundResultNamespaceForPrefix == true))
-			{
-				if (havePrefix == false)
-				{
-					fixupDefaultNamespace(executionContext);
-				}
-			}
-			else
-			{
-				if(havePrefix == false)
-				{
-					if (namespaceLen > 0)
-					{
-						const XalanDOMString* const		theDefaultNamespace =
-								executionContext.getResultNamespaceForPrefix(s_emptyString);
+                    if (theNamespace == 0 ||
+                        equals(*theNamespace, elemNameSpace) == false)
+                    {
+                        insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
 
-						if (theDefaultNamespace == 0 ||
-							equals(*theDefaultNamespace, elemNameSpace) == false)
-						{
-							executionContext.addResultAttribute(
-									DOMServices::s_XMLNamespace,
-									elemNameSpace);
-						}
-					}
-					else
-					{
-						// OK, the namespace we're generating is the default namespace,
-						// so let's make sure that we really need it.  If we don't,
-						// we end up with another xmlns="" on the element we're
-						// generating.  Although this isn't really an error, it's
-						// a bit unsightly, so let's suppress it...
-						const XalanDOMString&	theParentDefaultNamespace =
-								getParentDefaultNamespace();
+                        executionContext.addResultAttribute(prefix, elemNameSpace);
+                    }
+                }
+            }
+        }
 
-						if (length(theParentDefaultNamespace) == 0)
-						{
-							if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
-							{
-								executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-							}
-						}
-						else
-						{
-							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-						}
-					}
-				}
-				else
-				{
-					const XalanDOMString* const		theNamespace =
-							executionContext.getResultNamespaceForPrefix(prefix);
+        if (isIllegalElement == true)
+        {
+            executionContext.pushSkipElementAttributes(true);
+        }
+        else
+        {
+            ElemUse::startElement(executionContext);
 
-					if (theNamespace == 0 ||
-						equals(*theNamespace, elemNameSpace) == false)
-					{
-						insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+            executionContext.pushSkipElementAttributes(false);
+        }
+    }
 
-						executionContext.addResultAttribute(prefix, elemNameSpace);
-					}
-				}
-			}
-		}
-
-		if (isIllegalElement == true)
-		{
-			executionContext.pushSkipElementAttributes(true);
-		}
-		else
-		{
-			ElemUse::startElement(executionContext);
-
-			executionContext.pushSkipElementAttributes(false);
-		}
-	}
-
-	return beginExecuteChildren(executionContext);
+    return beginExecuteChildren(executionContext);
 }
 
 
 
 void
-ElemElement::endElement(StylesheetExecutionContext&		executionContext) const
+ElemElement::endElement(StylesheetExecutionContext&     executionContext) const
 {
-	endExecuteChildren(executionContext);
+    endExecuteChildren(executionContext);
 
-	bool ignoreAttributeElements = executionContext.popSkipElementAttributes();
-	
-	const XalanDOMString& elemName = executionContext.getAndPopCachedString();
+    bool ignoreAttributeElements = executionContext.popSkipElementAttributes();
+    
+    const XalanDOMString& elemName = executionContext.getAndPopCachedString();
 
-	if (!ignoreAttributeElements)
-	{
-		executionContext.endElement(c_wstr(elemName));
-		ElemUse::endElement(executionContext);
-	}
+    if (!ignoreAttributeElements)
+    {
+        executionContext.endElement(c_wstr(elemName));
+        ElemUse::endElement(executionContext);
+    }
 }
 
 
 
 bool
 ElemElement::executeChildElement(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement*	element) const
+            StylesheetExecutionContext& executionContext,
+            const ElemTemplateElement*  element) const
 {
-	return !(element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_ATTRIBUTE
-			 && executionContext.getSkipElementAttributes() == true);
+    return !(element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_ATTRIBUTE
+             && executionContext.getSkipElementAttributes() == true);
 }
 #endif
 
@@ -340,212 +332,211 @@ ElemElement::executeChildElement(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemElement::execute(StylesheetExecutionContext&		executionContext) const
+ElemElement::execute(StylesheetExecutionContext&        executionContext) const
 {
-	StylesheetExecutionContext::GetAndReleaseCachedString	elemNameGuard(executionContext);
+    StylesheetExecutionContext::GetAndReleaseCachedString   elemNameGuard(executionContext);
 
-	XalanDOMString&		elemName = elemNameGuard.get();
+    XalanDOMString&     elemName = elemNameGuard.get();
 
-	m_nameAVT->evaluate(elemName, *this, executionContext);
+    m_nameAVT->evaluate(elemName, *this, executionContext);
 
-	bool	isIllegalElement = !XalanQName::isValidQName(elemName);
+    bool    isIllegalElement = !XalanQName::isValidQName(elemName);
 
-	if (isIllegalElement == true)
-	{
-		executionContext.warn(
-			XalanMessageLoader::getMessage(XalanMessages::IllegalElementName_1Param, elemName),
-			executionContext.getCurrentNode(),
-			getLocator());
+    if (isIllegalElement == true)
+    {
+        warn(
+            executionContext,
+            XalanMessages::IllegalElementName_1Param,
+            elemName,
+            executionContext.getCurrentNode());
 
-		ElemUse::doExecute(executionContext, false);
+        ElemUse::doExecute(executionContext, false);
 
-		doExecuteChildren(executionContext, true);
-	}
-	else
-	{
-		StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
+        doExecuteChildren(executionContext, true);
+    }
+    else
+    {
+        StylesheetExecutionContext::GetAndReleaseCachedString   elemNameSpaceGuard(executionContext);
 
-		XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
+        XalanDOMString&     elemNameSpace = elemNameSpaceGuard.get();
 
-		if (m_namespaceAVT != 0)
-		{
-			m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
-		}
+        if (m_namespaceAVT != 0)
+        {
+            m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
+        }
 
-		XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
+        XalanDOMString::size_type   namespaceLen = length(elemNameSpace);
 
-		bool	foundResultNamespaceForPrefix = false;
+        bool    foundResultNamespaceForPrefix = false;
 
-		XalanDOMString::size_type			len = length(elemName);
+        XalanDOMString::size_type           len = length(elemName);
 
-		const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+        const XalanDOMString::size_type     indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-		const bool	havePrefix = indexOfNSSep == len ? false : true;
+        const bool  havePrefix = indexOfNSSep == len ? false : true;
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
+        StylesheetExecutionContext::GetAndReleaseCachedString   prefixGuard(executionContext);
 
-		XalanDOMString&		prefix = prefixGuard.get();
+        XalanDOMString&     prefix = prefixGuard.get();
 
-		if (havePrefix == true)
-		{
-			substring(elemName, prefix, 0, indexOfNSSep);
+        if (havePrefix == true)
+        {
+            substring(elemName, prefix, 0, indexOfNSSep);
 
-			const XalanDOMString* const		theNamespace =
-				executionContext.getResultNamespaceForPrefix(prefix);
+            const XalanDOMString* const     theNamespace =
+                executionContext.getResultNamespaceForPrefix(prefix);
 
-			if (theNamespace != 0)
-			{
-				foundResultNamespaceForPrefix = true;
-			}
-			else
-			{
-				const XalanDOMString* const		theNamespace =
-					getNamespacesHandler().getNamespace(prefix);
+            if (theNamespace != 0)
+            {
+                foundResultNamespaceForPrefix = true;
+            }
+            else
+            {
+                const XalanDOMString* const     theNamespace =
+                    getNamespacesHandler().getNamespace(prefix);
 
-				if(theNamespace == 0 && namespaceLen == 0)
-				{
-					executionContext.warn(
-						XalanMessageLoader::getMessage(
-							XalanMessages::CannotResolvePrefix_1Param,
-							prefix),
-						executionContext.getCurrentNode(),
-						getLocator());
+                if(theNamespace == 0 && namespaceLen == 0)
+                {
+                    warn(
+                        executionContext,
+                        XalanMessages::PrefixIsNotDeclared_1Param,
+                        prefix,
+                        executionContext.getCurrentNode());
 
-					if (m_namespaceAVT != 0)
-					{
-						elemName.erase(0, indexOfNSSep + 1);
-					}
-					else
-					{
-						isIllegalElement = true;
+                    if (m_namespaceAVT != 0)
+                    {
+                        elemName.erase(0, indexOfNSSep + 1);
+                    }
+                    else
+                    {
+                        isIllegalElement = true;
 
-						executionContext.warn(
-							XalanMessageLoader::getMessage(
-								XalanMessages::IllegalElementName_1Param,
-								elemName),
-							executionContext.getCurrentNode(),
-							getLocator());
-					}
-				}
-				else if (theNamespace != 0 &&
-						 namespaceLen == 0 &&
-						 equals(prefix, DOMServices::s_XMLNamespace) == false)
-				{
-					elemNameSpace = *theNamespace;
-				}
-			}
-		}
+                        warn(
+                            executionContext,
+                            XalanMessages::IllegalElementName_1Param,
+                            elemName,
+                            executionContext.getCurrentNode());
+                    }
+                }
+                else if (theNamespace != 0 &&
+                         namespaceLen == 0 &&
+                         equals(prefix, DOMServices::s_XMLNamespace) == false)
+                {
+                    elemNameSpace = *theNamespace;
+                }
+            }
+        }
 
-		if (isIllegalElement == false)
-		{
-			executionContext.startElement(c_wstr(elemName));   
+        if (isIllegalElement == false)
+        {
+            executionContext.startElement(c_wstr(elemName));   
 
-			if(0 == m_namespaceAVT &&
-			   (havePrefix == false || foundResultNamespaceForPrefix == true))
-			{
-				if (havePrefix == false)
-				{
-					fixupDefaultNamespace(executionContext);
-				}
-			}
-			else
-			{
-				if(havePrefix == false)
-				{
-					if (namespaceLen > 0)
-					{
-						const XalanDOMString* const		theDefaultNamespace =
-								executionContext.getResultNamespaceForPrefix(s_emptyString);
+            if(0 == m_namespaceAVT &&
+               (havePrefix == false || foundResultNamespaceForPrefix == true))
+            {
+                if (havePrefix == false)
+                {
+                    fixupDefaultNamespace(executionContext);
+                }
+            }
+            else
+            {
+                if(havePrefix == false)
+                {
+                    if (namespaceLen > 0)
+                    {
+                        const XalanDOMString* const     theDefaultNamespace =
+                                executionContext.getResultNamespaceForPrefix(s_emptyString);
 
-						if (theDefaultNamespace == 0 ||
-							equals(*theDefaultNamespace, elemNameSpace) == false)
-						{
-							executionContext.addResultAttribute(
-									DOMServices::s_XMLNamespace,
-									elemNameSpace);
-						}
-					}
-					else
-					{
-						// OK, the namespace we're generating is the default namespace,
-						// so let's make sure that we really need it.  If we don't,
-						// we end up with another xmlns="" on the element we're
-						// generating.  Although this isn't really an error, it's
-						// a bit unsightly, so let's suppress it...
-						const XalanDOMString&	theParentDefaultNamespace =
-								getParentDefaultNamespace();
+                        if (theDefaultNamespace == 0 ||
+                            equals(*theDefaultNamespace, elemNameSpace) == false)
+                        {
+                            executionContext.addResultAttribute(
+                                    DOMServices::s_XMLNamespace,
+                                    elemNameSpace);
+                        }
+                    }
+                    else
+                    {
+                        // OK, the namespace we're generating is the default namespace,
+                        // so let's make sure that we really need it.  If we don't,
+                        // we end up with another xmlns="" on the element we're
+                        // generating.  Although this isn't really an error, it's
+                        // a bit unsightly, so let's suppress it...
+                        const XalanDOMString&   theParentDefaultNamespace =
+                                getParentDefaultNamespace();
 
-						if (length(theParentDefaultNamespace) == 0)
-						{
-							if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
-							{
-								executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-							}
-						}
-						else
-						{
-							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-						}
-					}
-				}
-				else
-				{
-					const XalanDOMString* const		theNamespace =
-							executionContext.getResultNamespaceForPrefix(prefix);
+                        if (length(theParentDefaultNamespace) == 0)
+                        {
+                            if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
+                            {
+                                executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+                            }
+                        }
+                        else
+                        {
+                            executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+                        }
+                    }
+                }
+                else
+                {
+                    const XalanDOMString* const     theNamespace =
+                            executionContext.getResultNamespaceForPrefix(prefix);
 
-					if (theNamespace == 0 ||
-						equals(*theNamespace, elemNameSpace) == false)
-					{
-						insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+                    if (theNamespace == 0 ||
+                        equals(*theNamespace, elemNameSpace) == false)
+                    {
+                        insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
 
-						executionContext.addResultAttribute(prefix, elemNameSpace);
-					}
-				}
-			}
-		}
+                        executionContext.addResultAttribute(prefix, elemNameSpace);
+                    }
+                }
+            }
+        }
 
-		if (isIllegalElement == true)
-		{
-			ElemUse::doExecute(executionContext, false);
+        if (isIllegalElement == true)
+        {
+            ElemUse::doExecute(executionContext, false);
 
-			doExecuteChildren(executionContext, true);
-		}
-		else
-		{
-			ElemUse::doExecute(executionContext, true);
+            doExecuteChildren(executionContext, true);
+        }
+        else
+        {
+            ElemUse::doExecute(executionContext, true);
 
-			doExecuteChildren(executionContext, false);
+            doExecuteChildren(executionContext, false);
 
-			executionContext.endElement(c_wstr(elemName));
-		}
-	}
+            executionContext.endElement(c_wstr(elemName));
+        }
+    }
 }
 
 
 
 void
 ElemElement::doExecuteChildren(
-			StylesheetExecutionContext&		executionContext,			
-			bool							skipAttributeChildren) const
+            StylesheetExecutionContext&     executionContext,           
+            bool                            skipAttributeChildren) const
 {
-	if (skipAttributeChildren == false)
-	{
-		// If we should execute all children, then just call
-		// executeChildren()...
-		executeChildren(executionContext);
-	}
-	else
-	{
-		StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+    if (skipAttributeChildren == false)
+    {
+        // If we should execute all children, then just call
+        // executeChildren()...
+        executeChildren(executionContext);
+    }
+    else
+    {
+        StylesheetExecutionContext::PushAndPopElementFrame  thePushAndPop(executionContext, this);
 
-		for (ElemTemplateElement* node = getFirstChildElem(); node != 0; node = node->getNextSiblingElem()) 
-		{
-			if (node->getXSLToken() != StylesheetConstructionContext::ELEMNAME_ATTRIBUTE)
-			{
-				node->execute(executionContext);
-			}
-		}
-	}
+        for (ElemTemplateElement* node = getFirstChildElem(); node != 0; node = node->getNextSiblingElem()) 
+        {
+            if (node->getXSLToken() != StylesheetConstructionContext::ELEMNAME_ATTRIBUTE)
+            {
+                node->execute(executionContext);
+            }
+        }
+    }
 }
 #endif
 
@@ -553,59 +544,59 @@ ElemElement::doExecuteChildren(
 
 void
 ElemElement::namespacesPostConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler,
-			NamespacesHandler&				theHandler)
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler,
+            NamespacesHandler&              theHandler)
 {
-	theHandler.postConstruction(
-			constructionContext,
-			false,
-			getElementName(),
-			&theParentHandler);
+    theHandler.postConstruction(
+            constructionContext,
+            false,
+            getElementName(),
+            &theParentHandler);
 }
 
 
 
 void
-ElemElement::fixupDefaultNamespace(StylesheetExecutionContext&	executionContext) const
+ElemElement::fixupDefaultNamespace(StylesheetExecutionContext&  executionContext) const
 {
-	// OK, now let's check to make sure we don't have to change the default namespace...
-	const XalanDOMString* const		theCurrentDefaultNamespace =
-				executionContext.getResultNamespaceForPrefix(s_emptyString);
+    // OK, now let's check to make sure we don't have to change the default namespace...
+    const XalanDOMString* const     theCurrentDefaultNamespace =
+                executionContext.getResultNamespaceForPrefix(s_emptyString);
 
-	const XalanDOMString* const		theElementDefaultNamespace =
-				getNamespacesHandler().getNamespace(s_emptyString);
+    const XalanDOMString* const     theElementDefaultNamespace =
+                getNamespacesHandler().getNamespace(s_emptyString);
 
-	if (theCurrentDefaultNamespace != 0)
-	{
-		if (theElementDefaultNamespace == 0)
-		{
-			// There was no default namespace, so we have to turn the
-			// current one off.
-			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
-		}
-		else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
-		{
-			// There is a default namespace, but it's different from the current one,
-			// so we have to change it.
-			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
-		}
-	}
-	else
-	{
-		// There's no current default namespace in the result tree, but there may be
-		// on for this xsl:element instance, so we have to add it, if so.
-		const XalanDOMString&	theParentDefaultNamespace =
-					getParentDefaultNamespace();
+    if (theCurrentDefaultNamespace != 0)
+    {
+        if (theElementDefaultNamespace == 0)
+        {
+            // There was no default namespace, so we have to turn the
+            // current one off.
+            executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
+        }
+        else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
+        {
+            // There is a default namespace, but it's different from the current one,
+            // so we have to change it.
+            executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+        }
+    }
+    else
+    {
+        // There's no current default namespace in the result tree, but there may be
+        // on for this xsl:element instance, so we have to add it, if so.
+        const XalanDOMString&   theParentDefaultNamespace =
+                    getParentDefaultNamespace();
 
-		if (theElementDefaultNamespace != 0)
-		{
-			if (length(theParentDefaultNamespace) == 0 || theParentDefaultNamespace != *theElementDefaultNamespace)
-			{
-				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
-			}
-		}
-	}
+        if (theElementDefaultNamespace != 0)
+        {
+            if (length(theParentDefaultNamespace) == 0 || theParentDefaultNamespace != *theElementDefaultNamespace)
+            {
+                executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+            }
+        }
+    }
 }
 
 
@@ -613,27 +604,27 @@ ElemElement::fixupDefaultNamespace(StylesheetExecutionContext&	executionContext)
 const XalanDOMString&
 ElemElement::getParentDefaultNamespace() const
 {
-	const ElemTemplateElement* const	theParent =
-		getParentNodeElem();
+    const ElemTemplateElement* const    theParent =
+        getParentNodeElem();
 
-	if (theParent == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		const XalanDOMString* const		theParentDefaultNamespace =
-						theParent->getNamespacesHandler().getNamespace(s_emptyString);
+    if (theParent == 0)
+    {
+        return s_emptyString;
+    }
+    else
+    {
+        const XalanDOMString* const     theParentDefaultNamespace =
+                        theParent->getNamespacesHandler().getNamespace(s_emptyString);
 
-		if (theParentDefaultNamespace == 0)
-		{
-			return s_emptyString;
-		}
-		else
-		{
-			return *theParentDefaultNamespace;
-		}
-	}
+        if (theParentDefaultNamespace == 0)
+        {
+            return s_emptyString;
+        }
+        else
+        {
+            return *theParentDefaultNamespace;
+        }
+    }
 }
 
 

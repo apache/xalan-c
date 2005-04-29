@@ -45,38 +45,42 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemChoose::ElemChoose(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_CHOOSE)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        StylesheetConstructionContext::ELEMNAME_CHOOSE)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false ||
-		   processSpaceAttr(aname, atts, i, constructionContext))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param, 
-                            theResult,
-							Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}	
+        if(isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false &&
+           processSpaceAttr(
+                Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING.c_str(),
+                aname,
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 }
 
 
@@ -84,68 +88,68 @@ ElemChoose::ElemChoose(
 const XalanDOMString&
 ElemChoose::getElementName() const
 {
-	return Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING;
 }
 
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemChoose::startElement(StylesheetExecutionContext&		executionContext) const
+ElemChoose::startElement(StylesheetExecutionContext&        executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+    XalanNode* sourceNode = executionContext.getCurrentNode();
 
     for (const ElemTemplateElement* node = getFirstChildElem();
-			node != 0;
-				node = node->getNextSiblingElem()) 
+            node != 0;
+                node = node->getNextSiblingElem()) 
     {
-		const int	type = node->getXSLToken();
+        const int   type = node->getXSLToken();
 
-		if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
-		{
+        if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
+        {
 
-			const XPath* const		theXPath = node->getXPath();
-			assert(theXPath != 0);
+            const XPath* const      theXPath = node->getXPath();
+            assert(theXPath != 0);
 
-			bool	test;
+            bool    test;
 
-			theXPath->execute(*this, executionContext, test);
+            theXPath->execute(*this, executionContext, test);
 
-			if(0 != executionContext.getTraceListeners())
-			{
-				executionContext.fireSelectEvent(
-					SelectionEvent(executionContext,
-					sourceNode,
-					*node,
-					Constants::ATTRNAME_TEST,
-					*theXPath,
-					test));
-			}
+            if(0 != executionContext.getTraceListeners())
+            {
+                executionContext.fireSelectEvent(
+                    SelectionEvent(executionContext,
+                    sourceNode,
+                    *node,
+                    Constants::ATTRNAME_TEST,
+                    *theXPath,
+                    test));
+            }
 
-			if(test == true)
-			{
-				return node;
-			}
-		}
-		else
-		{
-			// xsl:otherwise
-			return node;
-		}
+            if(test == true)
+            {
+                return node;
+            }
+        }
+        else
+        {
+            // xsl:otherwise
+            return node;
+        }
     }
-	return 0;
+    return 0;
 }
 
 
 
 const ElemTemplateElement*
 ElemChoose::getNextChildElemToExecute(
-			StylesheetExecutionContext& /*executionContext*/,
-			const ElemTemplateElement*	/*currentElem*/) const
+            StylesheetExecutionContext& /*executionContext*/,
+            const ElemTemplateElement*  /*currentElem*/) const
 {
-	return 0;
+    return 0;
 }
 #endif
 
@@ -153,51 +157,51 @@ ElemChoose::getNextChildElemToExecute(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
+ElemChoose::execute(StylesheetExecutionContext&     executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+    XalanNode* sourceNode = executionContext.getCurrentNode();
 
     for (const ElemTemplateElement* node = getFirstChildElem();
-			node != 0;
-				node = node->getNextSiblingElem()) 
+            node != 0;
+                node = node->getNextSiblingElem()) 
     {
-		const int	type = node->getXSLToken();
+        const int   type = node->getXSLToken();
 
-		if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
-		{
+        if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
+        {
 
-			const XPath* const		theXPath = node->getXPath();
-			assert(theXPath != 0);
+            const XPath* const      theXPath = node->getXPath();
+            assert(theXPath != 0);
 
-			bool	test;
+            bool    test;
 
-			theXPath->execute(*this, executionContext, test);
+            theXPath->execute(*this, executionContext, test);
 
-			if(0 != executionContext.getTraceListeners())
-			{
-				executionContext.fireSelectEvent(
-					SelectionEvent(executionContext,
-					sourceNode,
-					*node,
-					Constants::ATTRNAME_TEST,
-					*theXPath,
-					test));
-			}
+            if(0 != executionContext.getTraceListeners())
+            {
+                executionContext.fireSelectEvent(
+                    SelectionEvent(executionContext,
+                    sourceNode,
+                    *node,
+                    Constants::ATTRNAME_TEST,
+                    *theXPath,
+                    test));
+            }
 
-			if(test == true)
-			{
-				node->execute(executionContext);
+            if(test == true)
+            {
+                node->execute(executionContext);
 
-				break;
-			}
-		}
-		else
-		{
-			// xsl:otherwise
-			node->execute(executionContext);
-		}
+                break;
+            }
+        }
+        else
+        {
+            // xsl:otherwise
+            node->execute(executionContext);
+        }
     }
 }
 #endif
@@ -205,23 +209,23 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 
 
 bool
-ElemChoose::childTypeAllowed(int	xslToken) const
+ElemChoose::childTypeAllowed(int    xslToken) const
 {
-	bool	fResult = false;
-	
-	switch(xslToken)
-	{
-	// char-instructions 
+    bool    fResult = false;
+    
+    switch(xslToken)
+    {
+    // char-instructions 
     case StylesheetConstructionContext::ELEMNAME_WHEN:
     case StylesheetConstructionContext::ELEMNAME_OTHERWISE:
-		fResult = true;
-		break;
-		
-	default:
-		break;
-	}
-	
-	return fResult;
+        fResult = true;
+        break;
+        
+    default:
+        break;
+    }
+    
+    return fResult;
 }
 
 

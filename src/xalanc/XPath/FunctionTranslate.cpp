@@ -46,64 +46,64 @@ FunctionTranslate::~FunctionTranslate()
 
 XObjectPtr
 FunctionTranslate::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const XObjectPtr		arg3,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const XObjectPtr        arg3,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
+    assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 
-	const XalanDOMString&	theFirstString = arg1->str();
-	const XalanDOMString&	theSecondString = arg2->str();
-	const XalanDOMString&	theThirdString = arg3->str();
+    const XalanDOMString&   theFirstString = arg1->str();
+    const XalanDOMString&   theSecondString = arg2->str();
+    const XalanDOMString&   theThirdString = arg3->str();
 
-	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
-	const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
-	const XalanDOMString::size_type		theThirdStringLength = length(theThirdString);
+    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
+    const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
+    const XalanDOMString::size_type     theThirdStringLength = length(theThirdString);
 
-	typedef XalanVector<XalanDOMChar>		VectorType;
+    typedef XalanVector<XalanDOMChar>       VectorType;
 
-	// A string to hold the result.
-	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+    // A string to hold the result.
+    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-	XalanDOMString&		theString = theResult.get();
+    XalanDOMString&     theString = theResult.get();
 
-	// The result string can only be as large as the first string, so
-	// just reserve the space now.  Also reserve space for the
-	// terminating 0.
-	reserve(theString, theFirstStringLength + 1);
+    // The result string can only be as large as the first string, so
+    // just reserve the space now.  Also reserve space for the
+    // terminating 0.
+    reserve(theString, theFirstStringLength + 1);
 
-	for (XalanDOMString::size_type i = 0; i < theFirstStringLength; i++)
-	{
-		const XalanDOMChar					theCurrentChar = charAt(theFirstString, i);
+    for (XalanDOMString::size_type i = 0; i < theFirstStringLength; i++)
+    {
+        const XalanDOMChar                  theCurrentChar = charAt(theFirstString, i);
 
-		const XalanDOMString::size_type		theIndex = indexOf(theSecondString, theCurrentChar);
+        const XalanDOMString::size_type     theIndex = indexOf(theSecondString, theCurrentChar);
 
-		if (theIndex >= theSecondStringLength)
-		{
-			// Didn't find the character in the second string, so it
-			// is not translated.
-			append(theString, theCurrentChar);
-		}
-		else if (theIndex < theThirdStringLength)
-		{
-			// OK, there's a corresponding character in the
-			// third string, so do the translation...
-			append(theString, charAt(theThirdString, theIndex));
-		}
-		else
-		{
-			// There's no corresponding character in the
-			// third string, since it's shorter than the
-			// second string.  In this case, the character
-			// is removed from the output string, so don't
-			// do anything.
-		}
-	}
+        if (theIndex >= theSecondStringLength)
+        {
+            // Didn't find the character in the second string, so it
+            // is not translated.
+            append(theString, theCurrentChar);
+        }
+        else if (theIndex < theThirdStringLength)
+        {
+            // OK, there's a corresponding character in the
+            // third string, so do the translation...
+            append(theString, charAt(theThirdString, theIndex));
+        }
+        else
+        {
+            // There's no corresponding character in the
+            // third string, since it's shorter than the
+            // second string.  In this case, the character
+            // is removed from the output string, so don't
+            // do anything.
+        }
+    }
 
-	return executionContext.getXObjectFactory().createString(theResult);
+    return executionContext.getXObjectFactory().createString(theResult);
 }
 
 
@@ -115,7 +115,7 @@ FunctionTranslate*
 #endif
 FunctionTranslate::clone(MemoryManagerType&     theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -123,9 +123,9 @@ FunctionTranslate::clone(MemoryManagerType&     theManager) const
 const XalanDOMString&
 FunctionTranslate::getError(XalanDOMString&     theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesThreeArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesThreeArguments_1Param,
                 "translate()");
 }
 

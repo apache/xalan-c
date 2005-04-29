@@ -35,7 +35,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+XALAN_USING_XERCES(Locator)
 
 
 
@@ -54,117 +55,119 @@ class XALAN_XPATH_EXPORT XPathConstructionContext
 {
 public:
 
-	XPathConstructionContext(MemoryManagerType&              theManager);
+    XPathConstructionContext(MemoryManagerType&              theManager);
 
-	virtual
-	~XPathConstructionContext();
-
-
-	/**
-	 * Reset the instance.  Any existing objects
-	 * created by the instance will be destroyed.
-	 */
-	virtual void
-	reset() = 0;
-
-	/**
-	 * Get a pooled string given the source string.  If
-	 * the string already exists in the pool, no copy
-	 * will be made.  If not, a copy will be made and
-	 * kept for later use.
-	 *
-	 * @param theString The source string
-	 * @return a const reference to a pooled string.
-	 */
-	virtual const XalanDOMString&
-	getPooledString(const XalanDOMString&	theString) = 0;
-
-	/**
-	 * Get a pooled string given the source character
-	 * array.  If the string already exists in the pool,
-	 * no copy will be made.  If not, a copy will be made
-	 * and kept for later use.
-	 *
-	 * @param theString The source character array
-	 * @param theLength The length of the character array
-	 * @return a const reference to a pooled string.
-	 */
-	virtual const XalanDOMString&
-	getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
-
-	/**
-	 * Get a cached string for temporary use.
-	 *
-	 * @return A reference to the string
-	 */
-	virtual XalanDOMString&
-	getCachedString() = 0;
-
-	/**
-	 * Return a cached string.
-	 *
-	 * @param theString The string to release.
-	 *
-	 * @return true if the string was released successfully.
-	 */
-	virtual bool
-	releaseCachedString(XalanDOMString&		theString) = 0;
-
-	class GetAndReleaseCachedString
-	{
-	public:
-
-		GetAndReleaseCachedString(XPathConstructionContext&		theConstructionContext) :
-			m_constructionContext(&theConstructionContext),
-			m_string(&theConstructionContext.getCachedString())
-		{
-		}
-
-		// Note non-const copy semantics...
-		GetAndReleaseCachedString(GetAndReleaseCachedString&	theSource) :
-			m_constructionContext(theSource.m_constructionContext),
-			m_string(theSource.m_string)
-		{
-			theSource.m_string = 0;
-		}
-
-		~GetAndReleaseCachedString()
-		{
-			if (m_string != 0)
-			{
-				m_constructionContext->releaseCachedString(*m_string);
-			}
-		}
-
-		XalanDOMString&
-		get() const
-		{
-			assert(m_string != 0);
-
-			return *m_string;
-		}
-
-		XPathConstructionContext&
-		getConstructionContext() const
-		{
-			return *m_constructionContext;
-		}
+    virtual
+    ~XPathConstructionContext();
 
 
-	private:
+    /**
+     * Reset the instance.  Any existing objects
+     * created by the instance will be destroyed.
+     */
+    virtual void
+    reset() = 0;
 
-		// Not implemented...
-		GetAndReleaseCachedString&
-		operator=(const GetAndReleaseCachedString&);
+    /**
+     * Get a pooled string given the source string.  If
+     * the string already exists in the pool, no copy
+     * will be made.  If not, a copy will be made and
+     * kept for later use.
+     *
+     * @param theString The source string
+     * @return a const reference to a pooled string.
+     */
+    virtual const XalanDOMString&
+    getPooledString(const XalanDOMString&   theString) = 0;
+
+    /**
+     * Get a pooled string given the source character
+     * array.  If the string already exists in the pool,
+     * no copy will be made.  If not, a copy will be made
+     * and kept for later use.
+     *
+     * @param theString The source character array
+     * @param theLength The length of the character array
+     * @return a const reference to a pooled string.
+     */
+    virtual const XalanDOMString&
+    getPooledString(
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
+
+    /**
+     * Get a cached string for temporary use.
+     *
+     * @return A reference to the string
+     */
+    virtual XalanDOMString&
+    getCachedString() = 0;
+
+    /**
+     * Return a cached string.
+     *
+     * @param theString The string to release.
+     *
+     * @return true if the string was released successfully.
+     */
+    virtual bool
+    releaseCachedString(XalanDOMString&     theString) = 0;
+
+    class GetAndReleaseCachedString
+    {
+    public:
+
+        GetAndReleaseCachedString(XPathConstructionContext&     theConstructionContext) :
+            m_constructionContext(&theConstructionContext),
+            m_string(&theConstructionContext.getCachedString())
+        {
+        }
+
+        // Note non-const copy semantics...
+        GetAndReleaseCachedString(GetAndReleaseCachedString&    theSource) :
+            m_constructionContext(theSource.m_constructionContext),
+            m_string(theSource.m_string)
+        {
+            theSource.m_string = 0;
+        }
+
+        ~GetAndReleaseCachedString()
+        {
+            if (m_string != 0)
+            {
+                m_constructionContext->releaseCachedString(*m_string);
+            }
+        }
+
+        XalanDOMString&
+        get() const
+        {
+            assert(m_string != 0);
+
+            return *m_string;
+        }
+
+        XPathConstructionContext&
+        getConstructionContext() const
+        {
+            return *m_constructionContext;
+        }
 
 
-		// Data members...
-		XPathConstructionContext*	m_constructionContext;
+    private:
 
-		XalanDOMString*				m_string;
-	};
+        // Not implemented...
+        GetAndReleaseCachedString&
+        operator=(const GetAndReleaseCachedString&);
+
+
+        // Data members...
+        XPathConstructionContext*   m_constructionContext;
+
+        XalanDOMString*             m_string;
+    };
+
+    typedef GetAndReleaseCachedString   GetCachedString;
 
     MemoryManagerType&
     getMemoryManager()
@@ -172,17 +175,17 @@ public:
         return m_memoryManager;
     }
 
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const = 0;
+    virtual void
+    error(
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode,
+            const Locator*          locator) const = 0;
 
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const = 0;
+    virtual void
+    warn(
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode,
+            const Locator*          locator) const = 0;
 
     MemoryManagerType&              m_memoryManager;
 };
@@ -193,4 +196,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHCONSTRUCTIONCONTEXT_HEADER_GUARD_1357924680
+#endif  // XPATHCONSTRUCTIONCONTEXT_HEADER_GUARD_1357924680

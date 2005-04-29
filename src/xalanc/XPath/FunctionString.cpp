@@ -47,64 +47,66 @@ FunctionString::~FunctionString()
 
 XObjectPtr
 FunctionString::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const
 {
-	if (context == 0)
-	{
-        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
-        XalanDOMString& theResult = theGuard.get();
+    if (context == 0)
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        XalanDOMString&     theResult = theGuard.get();
 
-        XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theResult, "string"),
-		executionContext.error(
-			    theResult,
-				context,
-				locator);
+        executionContext.error(
+            XalanMessageLoader::getMessage(
+                theResult,
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                "string"),
+            context,
+            locator);
 
-		// Dummy return value...
-		return XObjectPtr();
-	}
-	else
-	{
-		// The XPath standard says that if there are no arguments,
-		// the argument defaults to a node set with the context node
-		// as the only member.  The string value of a node set is the
-		// string value of the first node in the node set.
-		// DOMServices::getNodeData() will give us the data.
+        // Dummy return value...
+        return XObjectPtr();
+    }
+    else
+    {
+        // The XPath standard says that if there are no arguments,
+        // the argument defaults to a node set with the context node
+        // as the only member.  The string value of a node set is the
+        // string value of the first node in the node set.
+        // DOMServices::getNodeData() will give us the data.
 
-		// Get a cached string...
-		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+        // Get a cached string...
+        XPathExecutionContext::GetAndReleaseCachedString    theData(executionContext);
 
-		XalanDOMString&		theString = theData.get();
+        XalanDOMString&     theString = theData.get();
 
-		DOMServices::getNodeData(*context, theString);
+        DOMServices::getNodeData(*context, theString);
 
-		return executionContext.getXObjectFactory().createString(theData);
-	}
+        return executionContext.getXObjectFactory().createString(theData);
+    }
 }
 
 
 
 XObjectPtr
 FunctionString::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,          
+            const XObjectPtr        arg1,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false);	
+    assert(arg1.null() == false);   
 
-	if (arg1->getType() == XObject::eTypeString)
-	{
-		// Since XObjects are reference counted, just return the
-		// argument.
-		return arg1;
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createStringAdapter(arg1);
-	}
+    if (arg1->getType() == XObject::eTypeString)
+    {
+        // Since XObjects are reference counted, just return the
+        // argument.
+        return arg1;
+    }
+    else
+    {
+        return executionContext.getXObjectFactory().createStringAdapter(arg1);
+    }
 }
 
 
@@ -116,7 +118,7 @@ FunctionString*
 #endif
 FunctionString::clone(MemoryManagerType&    theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -124,9 +126,9 @@ FunctionString::clone(MemoryManagerType&    theManager) const
 const XalanDOMString&
 FunctionString::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
                 "string()");
 }
 

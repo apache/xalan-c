@@ -44,37 +44,40 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+typedef XPathConstructionContext::GetCachedString   GetCachedString;
+
+
+
 ElemApplyImport::ElemApplyImport(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber, 
-			int								columnNumber) :
-		ElemTemplateElement(constructionContext,
-							stylesheetTree,
-							lineNumber,
-							columnNumber,
-							StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber, 
+            int                             columnNumber) :
+        ElemTemplateElement(constructionContext,
+                            stylesheetTree,
+                            lineNumber,
+                            columnNumber,
+                            StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
     for(unsigned int i = 0; i < nAttrs; i++)
     {
-		const XalanDOMChar*	const	aname = atts.getName(i);
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(isAttrOK(aname, atts, i, constructionContext) == false)
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult, 
-							Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
+        if(isAttrOK(
+                aname,
+                atts,
+                i,
+                constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
     }
 }
 
@@ -83,56 +86,55 @@ ElemApplyImport::ElemApplyImport(
 const XalanDOMString&
 ElemApplyImport::getElementName() const
 {
-	return Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING;
 }
 
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemApplyImport::startElement(StylesheetExecutionContext&	executionContext) const
+ElemApplyImport::startElement(StylesheetExecutionContext&   executionContext) const
 {
-	if (executionContext.getCurrentTemplate() == 0)
-	{
-        XalanDOMString  theResult(executionContext.getMemoryManager());
+    if (executionContext.getCurrentTemplate() == 0)
+    {
+        error(
+            executionContext,
+            XalanMessages::NoCurrentTemplate);
+    }
 
-		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate, theResult),
-				executionContext.getCurrentNode(), getLocator());
-	}
+    ElemTemplateElement::startElement(executionContext);
 
-	ElemTemplateElement::startElement(executionContext);
+    executionContext.pushInvoker(this);
 
-	executionContext.pushInvoker(this);
-
-	executionContext.pushContextMarker();
-	
-	return findTemplateToTransformChild(	
-			executionContext,
-			*this,
-			0,
-			executionContext.getCurrentNode());
+    executionContext.pushContextMarker();
+    
+    return findTemplateToTransformChild(    
+            executionContext,
+            *this,
+            0,
+            executionContext.getCurrentNode());
 }
 
 
 
 void
-ElemApplyImport::endElement(StylesheetExecutionContext&		executionContext) const
+ElemApplyImport::endElement(StylesheetExecutionContext&     executionContext) const
 {
-	executionContext.popContextMarker();
+    executionContext.popContextMarker();
 
-	executionContext.popInvoker();
+    executionContext.popInvoker();
 
-	ElemTemplateElement::endElement(executionContext);
+    ElemTemplateElement::endElement(executionContext);
 }
 
 
 
 const ElemTemplateElement*
 ElemApplyImport::getNextChildElemToExecute(
-		StylesheetExecutionContext&		/* execution Context */,
-		const ElemTemplateElement*		/* currentElem */) const
+        StylesheetExecutionContext&     /* execution Context */,
+        const ElemTemplateElement*      /* currentElem */) const
 {
-	return 0;
+    return 0;
 }
 #endif
 
@@ -140,37 +142,41 @@ ElemApplyImport::getNextChildElemToExecute(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
+ElemApplyImport::execute(StylesheetExecutionContext&    executionContext) const
 {
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-	assert(sourceNode != 0);
+    XalanNode* const    sourceNode = executionContext.getCurrentNode();
+    assert(sourceNode != 0);
 
-	if (executionContext.getCurrentTemplate() == 0)
-	{
-		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate),
-				sourceNode, getLocator());
-	}
+    if (executionContext.getCurrentTemplate() == 0)
+    {
+        XPathExecutionContext::GetCachedString  theResult(executionContext);
 
-	ElemTemplateElement::execute(executionContext);
+        error(
+            executionContext,
+            XalanMessages::NoCurrentTemplate,
+            sourceNode);
+    }
 
-	const StylesheetExecutionContext::PushAndPopContextMarker	thePushPop(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	transformChild(
-			executionContext,
-			*this,
-			0,
-			sourceNode);
+    const StylesheetExecutionContext::PushAndPopContextMarker   thePushPop(executionContext);
+
+    transformChild(
+            executionContext,
+            *this,
+            0,
+            sourceNode);
 }
 #endif
 
 
 
 ElemTemplateElement*
-ElemApplyImport::appendChildElem(ElemTemplateElement*	/* newChild */)
+ElemApplyImport::appendChildElem(ElemTemplateElement*   /* newChild */)
 {
-	throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+    throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 

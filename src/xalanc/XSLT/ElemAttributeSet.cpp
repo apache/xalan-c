@@ -38,72 +38,68 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemAttributeSet::ElemAttributeSet(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber) :
-	ElemUse(constructionContext,
-			stylesheetTree,
-			lineNumber,
-			columnNumber,
-			StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET),
-	m_qname(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            int                             lineNumber,
+            int                             columnNumber) :
+    ElemUse(constructionContext,
+            stylesheetTree,
+            lineNumber,
+            columnNumber,
+            StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET),
+    m_qname(0)
 {
-	const unsigned int	nAttrs = atts.getLength();
+    const unsigned int  nAttrs = atts.getLength();
 
-	for(unsigned int i = 0; i < nAttrs; i++)
-	{
-		const XalanDOMChar*	const	aname = atts.getName(i);
+    for(unsigned int i = 0; i < nAttrs; i++)
+    {
+        const XalanDOMChar* const   aname = atts.getName(i);
 
-		if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_qname = constructionContext.createXalanQName(
-				atts.getValue(i),
-				stylesheetTree.getNamespaces(),
-				getLocator());
-		}
-		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
-					isAttrOK(aname, atts, i, constructionContext)))
-		{
-            XalanDOMString  theResult(constructionContext.getMemoryManager());
+        if(equals(aname, Constants::ATTRNAME_NAME))
+        {
+            m_qname = constructionContext.createXalanQName(
+                atts.getValue(i),
+                stylesheetTree.getNamespaces(),
+                getLocator());
 
-			constructionContext.error(
-					XalanMessageLoader::getMessage(
-						XalanMessages::TemplateHasIllegalAttribute_2Param,
-                            theResult,
-							Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING.c_str(),
-							aname),
-					0,
-					this);
-		}
-	}
+            if (m_qname->isValid() == false)
+            {
+                error(
+                    constructionContext,
+                    XalanMessages::AttributeValueNotValidQName_2Param,
+                    aname,
+                    atts.getValue(i));
+            }
+        }
+        else if(processUseAttributeSets(
+                    constructionContext,
+                    aname,
+                    atts,
+                    i) == false &&
+                isAttrOK(
+                    aname,
+                    atts,
+                    i,
+                    constructionContext) == false)
+        {
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING.c_str(),
+                aname);
+        }
+    }
 
-	if(m_qname == 0)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(
-				XalanMessages::TemplateMustHaveAttribute_2Param,
-                theResult,
-				Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING,
-				Constants::ATTRNAME_NAME),
-			0,
-			this);
-	}
-	else if (m_qname->isValid() == false)
-	{
-        XalanDOMString  theResult(constructionContext.getMemoryManager());
-
-		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::TemplateHasIllegalAttribute_2Param
-                ,theResult
-				,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING
-				,Constants::ATTRNAME_NAME),
-				0,
-				this);
-	}
+    if(m_qname == 0)
+    {
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING,
+            Constants::ATTRNAME_NAME);
+    }
+    assert(m_qname->isValid() == true);
 }
 
 
@@ -117,7 +113,7 @@ ElemAttributeSet::~ElemAttributeSet()
 const XalanDOMString&
 ElemAttributeSet::getElementName() const
 {
-	return Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING;
 }
 
 
@@ -126,12 +122,12 @@ ElemAttributeSet::getElementName() const
 const ElemTemplateElement*
 ElemAttributeSet::startElement(StylesheetExecutionContext& executionContext) const
 {
-	ElemUse::startElement(executionContext);
+    ElemUse::startElement(executionContext);
 
-	executionContext.pushCurrentStackFrameIndex(executionContext.getGlobalStackFrameIndex());
-	executionContext.pushOnElementRecursionStack(this);
+    executionContext.pushCurrentStackFrameIndex(executionContext.getGlobalStackFrameIndex());
+    executionContext.pushOnElementRecursionStack(this);
 
-	return getFirstChildElemToExecute(executionContext);
+    return getFirstChildElemToExecute(executionContext);
 }
 
 
@@ -139,18 +135,18 @@ ElemAttributeSet::startElement(StylesheetExecutionContext& executionContext) con
 void
 ElemAttributeSet::endElement(StylesheetExecutionContext& executionContext) const
 {
-	executionContext.popElementRecursionStack();
-	executionContext.popCurrentStackFrameIndex();
+    executionContext.popElementRecursionStack();
+    executionContext.popCurrentStackFrameIndex();
 
-	ElemUse::endElement(executionContext);
+    ElemUse::endElement(executionContext);
 }
 
 
 
 const ElemTemplateElement*
-ElemAttributeSet::getInvoker(StylesheetExecutionContext&	executionContext) const
+ElemAttributeSet::getInvoker(StylesheetExecutionContext&    executionContext) const
 {
-	return executionContext.getInvoker();
+    return executionContext.getInvoker();
 }
 #endif
 
@@ -158,29 +154,29 @@ ElemAttributeSet::getInvoker(StylesheetExecutionContext&	executionContext) const
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
+ElemAttributeSet::execute(StylesheetExecutionContext&   executionContext) const
 {
-	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-	typedef StylesheetExecutionContext::ElementRecursionStackPusher				ElementRecursionStackPusher;
+    typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex     SetAndRestoreCurrentStackFrameIndex;
+    typedef StylesheetExecutionContext::ElementRecursionStackPusher             ElementRecursionStackPusher;
 
-	// This will push and pop the stack automatically...
-	ElementRecursionStackPusher		thePusher(executionContext, this);
+    // This will push and pop the stack automatically...
+    ElementRecursionStackPusher     thePusher(executionContext, this);
 
-	// Make sure only global variables are visible during execution...
-	SetAndRestoreCurrentStackFrameIndex		theSetAndRestore(
-					executionContext, 
-					executionContext.getGlobalStackFrameIndex());
+    // Make sure only global variables are visible during execution...
+    SetAndRestoreCurrentStackFrameIndex     theSetAndRestore(
+                    executionContext, 
+                    executionContext.getGlobalStackFrameIndex());
 
-	ElemUse::execute(executionContext);
+    ElemUse::execute(executionContext);
 
-	const ElemTemplateElement*	attr = getFirstChildElem();
+    const ElemTemplateElement*  attr = getFirstChildElem();
 
-	while(0 != attr)
-	{
-		attr->execute(executionContext);
+    while(0 != attr)
+    {
+        attr->execute(executionContext);
 
-		attr = attr->getNextSiblingElem();
-	}
+        attr = attr->getNextSiblingElem();
+    }
 }
 #endif
 
@@ -188,30 +184,30 @@ ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 
 void
 ElemAttributeSet::addToStylesheet(
-			StylesheetConstructionContext&	/* constructionContext */,
-			Stylesheet&						theStylesheet)
+            StylesheetConstructionContext&  /* constructionContext */,
+            Stylesheet&                     theStylesheet)
 {
-	theStylesheet.getStylesheetRoot().addAttributeSet(*this);
+    theStylesheet.getStylesheetRoot().addAttributeSet(*this);
 }
 
 
 
 bool
-ElemAttributeSet::childTypeAllowed(int	xslToken) const
+ElemAttributeSet::childTypeAllowed(int  xslToken) const
 {
-	bool	fResult = false;
+    bool    fResult = false;
 
-	switch(xslToken)
-	{
-	case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
-		fResult = true;
-		break;
-		
-	default:
-		break;
-	}
+    switch(xslToken)
+    {
+    case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
+        fResult = true;
+        break;
+        
+    default:
+        break;
+    }
 
-	return fResult;
+    return fResult;
 }
 
 

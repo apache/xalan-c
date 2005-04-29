@@ -113,7 +113,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-const XalanDOMString	XSLTEngineImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XSLTEngineImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -123,43 +123,43 @@ const XalanDOMString	XSLTEngineImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr(
 
 XSLTEngineImpl::XSLTEngineImpl(
             MemoryManagerType&  theManager,
-			XMLParserLiaison&	parserLiaison,
-			XPathEnvSupport&	xpathEnvSupport,
-			DOMSupport&			domSupport,
-			XObjectFactory&		xobjectFactory,
-			XPathFactory&		xpathFactory) :
-	XSLTProcessor(),
-	PrefixResolver(),
-	m_resultNameSpacePrefix(theManager),
-	m_resultNameSpaceURL(theManager),
-	m_xpathFactory(xpathFactory),
-	m_xobjectFactory(xobjectFactory),
+            XMLParserLiaison&   parserLiaison,
+            XPathEnvSupport&    xpathEnvSupport,
+            DOMSupport&         domSupport,
+            XObjectFactory&     xobjectFactory,
+            XPathFactory&       xpathFactory) :
+    XSLTProcessor(),
+    PrefixResolver(),
+    m_resultNameSpacePrefix(theManager),
+    m_resultNameSpaceURL(theManager),
+    m_xpathFactory(xpathFactory),
+    m_xobjectFactory(xobjectFactory),
     m_xpathProcessor(theManager, XPathProcessorImpl::create(theManager)),
-	m_cdataStack(theManager),
-	m_stylesheetLocatorStack(theManager),
-	m_defaultProblemListener(theManager),
-	m_problemListener(&m_defaultProblemListener),
-	m_stylesheetRoot(0),
-	m_traceSelects(false),
-	m_quietConflictWarnings(true),
-	m_diagnosticsPrintWriter(0),
-	m_durationsTable(theManager),
-	m_traceListeners(theManager),
-	m_uniqueNSValue(0),
-	m_topLevelParams(theManager),
-	m_parserLiaison(parserLiaison),
-	m_xpathEnvSupport(xpathEnvSupport),
-	m_domSupport(domSupport),
-	m_executionContext(0),
-	m_outputContextStack(theManager),
-	m_resultNamespacesStack(theManager),
-	m_dummyAttributesList(theManager),
-	m_scratchString(theManager),
-	m_attributeNamesVisited(theManager),
-	m_hasCDATASectionElements(false),
-	m_xpathConstructionContext(theManager)
+    m_cdataStack(theManager),
+    m_stylesheetLocatorStack(theManager),
+    m_defaultProblemListener(theManager),
+    m_problemListener(&m_defaultProblemListener),
+    m_stylesheetRoot(0),
+    m_traceSelects(false),
+    m_quietConflictWarnings(true),
+    m_diagnosticsPrintWriter(0),
+    m_durationsTable(theManager),
+    m_traceListeners(theManager),
+    m_uniqueNSValue(0),
+    m_topLevelParams(theManager),
+    m_parserLiaison(parserLiaison),
+    m_xpathEnvSupport(xpathEnvSupport),
+    m_domSupport(domSupport),
+    m_executionContext(0),
+    m_outputContextStack(theManager),
+    m_resultNamespacesStack(theManager),
+    m_dummyAttributesList(theManager),
+    m_scratchString(theManager),
+    m_attributeNamesVisited(theManager),
+    m_hasCDATASectionElements(false),
+    m_xpathConstructionContext(theManager)
 {
-	m_outputContextStack.pushContext();
+    m_outputContextStack.pushContext();
 }
 
 
@@ -167,36 +167,36 @@ XSLTEngineImpl::XSLTEngineImpl(
 void
 XSLTEngineImpl::reset()
 {
-	m_topLevelParams.clear();
-	m_durationsTable.clear();
-	m_stylesheetLocatorStack.clear();
-	m_cdataStack.clear();
+    m_topLevelParams.clear();
+    m_durationsTable.clear();
+    m_stylesheetLocatorStack.clear();
+    m_cdataStack.clear();
 
-	m_stylesheetRoot = 0;
+    m_stylesheetRoot = 0;
 
-	m_outputContextStack.reset();
+    m_outputContextStack.reset();
 
-	m_outputContextStack.pushContext();
+    m_outputContextStack.pushContext();
 
-	m_xpathEnvSupport.reset();
-	m_xpathFactory.reset();
-	m_xobjectFactory.reset();
-	m_domSupport.reset();
+    m_xpathEnvSupport.reset();
+    m_xpathFactory.reset();
+    m_xobjectFactory.reset();
+    m_domSupport.reset();
 
-	m_resultNamespacesStack.clear();
+    m_resultNamespacesStack.clear();
 
-	m_attributeNamesVisited.clear();
+    m_attributeNamesVisited.clear();
 
-	m_hasCDATASectionElements = false;
+    m_hasCDATASectionElements = false;
 
-	m_xpathConstructionContext.reset();
+    m_xpathConstructionContext.reset();
 }
 
 
 
 XSLTEngineImpl::~XSLTEngineImpl()
 {
-	reset();
+    reset();
 }
 
 
@@ -207,320 +207,337 @@ XSLTEngineImpl::~XSLTEngineImpl()
 
 
 
-static const XalanDOMChar	s_dummyString = 0;
+static const XalanDOMChar   s_dummyString = 0;
 
 
 void
 XSLTEngineImpl::process(
-			const XSLTInputSource&			inputSource, 
-	        const XSLTInputSource&			stylesheetSource,
-	        XSLTResultTarget&				outputTarget,
-			StylesheetConstructionContext&	constructionContext,
-			StylesheetExecutionContext&		executionContext)
+            const XSLTInputSource&          inputSource, 
+            const XSLTInputSource&          stylesheetSource,
+            XSLTResultTarget&               outputTarget,
+            StylesheetConstructionContext&  constructionContext,
+            StylesheetExecutionContext&     executionContext)
 {
-	XalanDOMString	xslIdentifier(executionContext.getMemoryManager());
+    XalanDOMString  xslIdentifier(executionContext.getMemoryManager());
 
-	if (0 == stylesheetSource.getSystemId())
-	{
-		XalanMessageLoader::getMessage(XalanMessages::InputXSL, xslIdentifier);
-	}
-	else
-	{
-		xslIdentifier = stylesheetSource.getSystemId();
-	}
+    if (0 == stylesheetSource.getSystemId())
+    {
+        XalanMessageLoader::getMessage(
+            xslIdentifier,
+            XalanMessages::InputXSL);
+    }
+    else
+    {
+        xslIdentifier = stylesheetSource.getSystemId();
+    }
 
-	bool totalTimeID = true;
+    bool totalTimeID = true;
 
-	if(m_diagnosticsPrintWriter != 0)
-	{
-		pushTime(&totalTimeID);
-	}
+    if(m_diagnosticsPrintWriter != 0)
+    {
+        pushTime(&totalTimeID);
+    }
 
-	XalanNode*	sourceTree = getSourceTreeFromInput(inputSource);
+    XalanNode*  sourceTree = getSourceTreeFromInput(inputSource);
 
-	m_stylesheetRoot = processStylesheet(stylesheetSource, constructionContext);
+    m_stylesheetRoot = processStylesheet(stylesheetSource, constructionContext);
 
-	if(0 != sourceTree && m_stylesheetRoot == 0)
-	{
-		// Didn't get a stylesheet from the input source, so look for a
-		// stylesheet processing instruction...
+    if(0 != sourceTree && m_stylesheetRoot == 0)
+    {
+        // Didn't get a stylesheet from the input source, so look for a
+        // stylesheet processing instruction...
 
-		// The PI must be a child of the document...
-		const XalanNode*	child = sourceTree->getFirstChild();
+        // The PI must be a child of the document...
+        const XalanNode*    child = sourceTree->getFirstChild();
 
-		XalanDOMString		theCurrentToken(executionContext.getMemoryManager());
-		XalanDOMString		theStylesheetURI(executionContext.getMemoryManager());
+        XalanDOMString      theCurrentToken(executionContext.getMemoryManager());
+        XalanDOMString      theStylesheetURI(executionContext.getMemoryManager());
 
-		bool			isOK = false;
+        bool            isOK = false;
 
-		while(child != 0 && isOK == false && theStylesheetURI.empty() == true)
-		{
-			if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
-			{
-				const XalanDOMString&	nodeName = child->getNodeName();
+        while(child != 0 && isOK == false && theStylesheetURI.empty() == true)
+        {
+            if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
+            {
+                const XalanDOMString&   nodeName = child->getNodeName();
 
-				if(equals(nodeName, s_stylesheetNodeName))
-				{
-					StringTokenizer 	tokenizer(child->getNodeValue(), s_piTokenizerString);
+                if(equals(nodeName, s_stylesheetNodeName))
+                {
+                    StringTokenizer     tokenizer(child->getNodeValue(), s_piTokenizerString);
 
-					while(tokenizer.hasMoreTokens() == true && (isOK == false || theStylesheetURI.empty() == true))
-					{
-						tokenizer.nextToken(theCurrentToken);
+                    while(tokenizer.hasMoreTokens() == true && (isOK == false || theStylesheetURI.empty() == true))
+                    {
+                        tokenizer.nextToken(theCurrentToken);
 
-						if(equals(theCurrentToken, s_typeString))
-						{
-							tokenizer.nextToken(theCurrentToken);
+                        if(equals(theCurrentToken, s_typeString))
+                        {
+                            tokenizer.nextToken(theCurrentToken);
 
+                            const XalanDOMString::size_type     theLength =
+                                    theCurrentToken.length();
 
-							const XalanDOMString::size_type		theLength =
-									theCurrentToken.length();
+                            if (theLength > 2)
+                            {
+                                theCurrentToken.erase(theLength - 1, 1);
+                                theCurrentToken.erase(0, 1);
 
-							if (theLength > 2)
-							{
-								theCurrentToken.erase(theLength - 1, 1);
-								theCurrentToken.erase(0, 1);
+                                if(equals(theCurrentToken, s_typeValueString1) ||
+                                    equals(theCurrentToken, s_typeValueString2) ||
+                                    equals(theCurrentToken, s_typeValueString3) ||
+                                    equals(theCurrentToken, s_typeValueString4))
+                                {
+                                    isOK = true;
+                                }
+                            }
+                        }
+                        else if(equals(theCurrentToken, s_hrefString))
+                        {
+                            tokenizer.nextToken(theCurrentToken);
 
-								if(equals(theCurrentToken, s_typeValueString1) ||
-									equals(theCurrentToken, s_typeValueString2) ||
-									equals(theCurrentToken, s_typeValueString3) ||
-									equals(theCurrentToken, s_typeValueString4))
-								{
-									isOK = true;
-								}
-							}
-						}
-						else if(equals(theCurrentToken, s_hrefString))
-						{
-							tokenizer.nextToken(theCurrentToken);
+                            const XalanDOMString::size_type     theLength =
+                                    theCurrentToken.length();
 
-							const XalanDOMString::size_type		theLength =
-									theCurrentToken.length();
+                            if (theLength > 2)
+                            {
+                                // Trim of the starting and trailing delimiters...
+                                theStylesheetURI.assign(theCurrentToken, 1, theLength - 2);
+                            }
+                        }
+                    }
+                }
+            }
 
-							if (theLength > 2)
-							{
-								// Trim of the starting and trailing delimiters...
-								theStylesheetURI.assign(theCurrentToken, 1, theLength - 2);
-							}
-						}
-					}
-				}
-			}
+            child = child->getNextSibling();
+        }
 
-			child = child->getNextSibling();
-		}
+        if (isOK == true && theStylesheetURI.empty() == false)
+        {
+            const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-		if (isOK == true && theStylesheetURI.empty() == false)
-		{
-			const XalanDOMChar* const	pxch = inputSource.getSystemId();
+            XalanDOMString&             sysid = theGuard.get();
 
-            const XalanDOMString		sysid(pxch == 0 ? &s_dummyString : pxch ,constructionContext.getMemoryManager() ); 
+            const XalanDOMChar* const   pxch = inputSource.getSystemId();
 
-			getStylesheetFromPIURL(
-					theStylesheetURI,
-					*sourceTree,
-					sysid,
-					true,
-					constructionContext);
-		}
-	}
+            if (pxch != 0)
+            {
+                sysid.assign(pxch);
+            }
 
-	if(0 == m_stylesheetRoot)
-	{
+            getStylesheetFromPIURL(
+                    theStylesheetURI,
+                    *sourceTree,
+                    sysid,
+                    true,
+                    constructionContext);
+        }
+    }
+
+    if(0 == m_stylesheetRoot)
+    {
         const ECGetAndReleaseCachedString   theGuard(executionContext);
 
-		error(
+        error(
             XalanMessageLoader::getMessage(
-                XalanMessages::FailedToProcessStylesheet,
-                theGuard.get()));
-	}
-	else if(0 != sourceTree)
-	{
-		executionContext.setStylesheetRoot(m_stylesheetRoot);
+                theGuard.get(),
+                XalanMessages::FailedToProcessStylesheet));
+    }
+    else if(0 != sourceTree)
+    {
+        executionContext.setStylesheetRoot(m_stylesheetRoot);
 
-		FormatterListener* const	theFormatter =
-				outputTarget.getFormatterListener();
+        FormatterListener* const    theFormatter =
+                outputTarget.getFormatterListener();
 
-		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
-		{
-			theFormatter->setPrefixResolver(this);
-		}
+        if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
+        {
+            theFormatter->setPrefixResolver(this);
+        }
 
-		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
+        m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
-		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
-	}
+        m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
+    }
 
-	if(m_diagnosticsPrintWriter != 0)
-	{
+    if(m_diagnosticsPrintWriter != 0)
+    {
         const ECGetAndReleaseCachedString   theGuard(executionContext);
 
-		displayDuration(
+        displayDuration(
             XalanMessageLoader::getMessage(
-                XalanMessages::TotalTime,
-                theGuard.get()),
+                theGuard.get(),
+                XalanMessages::TotalTime),
             &totalTimeID);
-	}
+    }
 }
 
 
 
 void
 XSLTEngineImpl::process(
-			const XSLTInputSource&			inputSource, 
-	        XSLTResultTarget&				outputTarget,
-			StylesheetExecutionContext&		executionContext)
+            const XSLTInputSource&          inputSource, 
+            XSLTResultTarget&               outputTarget,
+            StylesheetExecutionContext&     executionContext)
 {
-	bool	totalTimeID = true;
+    bool    totalTimeID = true;
 
-	if(m_diagnosticsPrintWriter != 0)
-	{
-		pushTime(&totalTimeID);
-	}
+    if(m_diagnosticsPrintWriter != 0)
+    {
+        pushTime(&totalTimeID);
+    }
 
-	XalanNode* const	sourceTree = getSourceTreeFromInput(inputSource);
+    XalanNode* const    sourceTree = getSourceTreeFromInput(inputSource);
 
-	if(0 != sourceTree)
-	{
-		if (m_stylesheetRoot == 0)
-		{
+    if(0 != sourceTree)
+    {
+        if (m_stylesheetRoot == 0)
+        {
             const ECGetAndReleaseCachedString theGuard(executionContext);
 
-			error(XalanMessageLoader::getMessage(XalanMessages::NoStylesheet, theGuard.get()));
-		}
+            error(
+                XalanMessageLoader::getMessage(
+                    theGuard.get(),
+                    XalanMessages::NoStylesheet));
+        }
 
-		FormatterListener* const	theFormatter =
-				outputTarget.getFormatterListener();
+        FormatterListener* const    theFormatter =
+                outputTarget.getFormatterListener();
 
-		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
-		{
-			theFormatter->setPrefixResolver(this);
-		}
+        if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
+        {
+            theFormatter->setPrefixResolver(this);
+        }
 
-		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
+        m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
-		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
-	}
+        m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
+    }
 
-	if(m_diagnosticsPrintWriter != 0)
-	{
+    if(m_diagnosticsPrintWriter != 0)
+    {
         const ECGetAndReleaseCachedString   theGuard(executionContext);
 
-		displayDuration(
+        displayDuration(
             XalanMessageLoader::getMessage(
-                XalanMessages::TotalTime,
-                theGuard.get()),
+                theGuard.get(),
+                XalanMessages::TotalTime),
             &totalTimeID);
-	}
+    }
 }
 
 
 
 StylesheetRoot*
 XSLTEngineImpl::processStylesheet(
-			const XalanDOMString&			xsldocURLString,
-			StylesheetConstructionContext&	constructionContext)
+            const XalanDOMString&           xsldocURLString,
+            StylesheetConstructionContext&  constructionContext)
 {
-	const XSLTInputSource	input(
+    const XSLTInputSource   input(
                                 c_wstr(xsldocURLString),
                                 constructionContext.getMemoryManager());
 
-	return processStylesheet(input, constructionContext);
+    return processStylesheet(input, constructionContext);
 }
 
 
 
 StylesheetRoot*
 XSLTEngineImpl::processStylesheet(
-  			const XSLTInputSource&			stylesheetSource,
-			StylesheetConstructionContext&	constructionContext)
+            const XSLTInputSource&          stylesheetSource,
+            StylesheetConstructionContext&  constructionContext)
 {
-	StylesheetRoot*		theStylesheet = 0;
+    StylesheetRoot*     theStylesheet = 0;
 
-	const XalanDOMChar* const	systemID = stylesheetSource.getSystemId();
-	XalanNode* const			stylesheetNode = stylesheetSource.getNode();
+    const XalanDOMChar* const   systemID = stylesheetSource.getSystemId();
+    XalanNode* const            stylesheetNode = stylesheetSource.getNode();
 
-	if (systemID != 0 || stylesheetNode != 0 || stylesheetSource.getStream() != 0)
-	{
-        XalanDOMString	xslIdentifier(constructionContext.getMemoryManager());
+    if (systemID != 0 || stylesheetNode != 0 || stylesheetSource.getStream() != 0)
+    {
+        const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-		theStylesheet = constructionContext.create(stylesheetSource);
+        XalanDOMString&     xslIdentifier = theGuard.get();
 
-		StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
+        theStylesheet = constructionContext.create(stylesheetSource);
 
-		if(stylesheetNode != 0)
-		{
-			const XalanNode::NodeType	theType = stylesheetNode->getNodeType();
+        StylesheetHandler   stylesheetProcessor(*theStylesheet, constructionContext);
 
-			if (theType != XalanNode::ELEMENT_NODE && theType != XalanNode::DOCUMENT_NODE)
-			{
-                const CCGetAndReleaseCachedString theGuard(constructionContext);
+        if(stylesheetNode != 0)
+        {
+            const XalanNode::NodeType   theType = stylesheetNode->getNodeType();
 
-				error(XalanMessageLoader::getMessage(XalanMessages::CompilingDOMStylesheetReqDocument, theGuard.get()));
-			}
-			else
-			{
+            if (theType != XalanNode::ELEMENT_NODE && theType != XalanNode::DOCUMENT_NODE)
+            {
+                const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-				XalanMessageLoader::getMessage(XalanMessages::InputXSL, xslIdentifier);
+                error(
+                    XalanMessageLoader::getMessage(
+                        theGuard.get(),
+                        XalanMessages::CompilingDOMStylesheetReqDocument));
+            }
+            else
+            {
+
+                XalanMessageLoader::getMessage(
+                    xslIdentifier,
+                    XalanMessages::InputXSL);
 
                 FormatterTreeWalker tw(stylesheetProcessor, constructionContext.getMemoryManager());
 
-				if (theType == XalanNode::DOCUMENT_NODE)
-				{
-					tw.traverse(stylesheetNode);
-				}
-				else
-				{
-					stylesheetProcessor.startDocument();
+                if (theType == XalanNode::DOCUMENT_NODE)
+                {
+                    tw.traverse(stylesheetNode);
+                }
+                else
+                {
+                    stylesheetProcessor.startDocument();
 
-					tw.traverseSubtree(stylesheetNode);
+                    tw.traverseSubtree(stylesheetNode);
 
-					stylesheetProcessor.endDocument();
-				}
-			}
-		}
-		else
-		{
-			if (systemID != 0)
-			{
-				xslIdentifier = systemID;
-			}
+                    stylesheetProcessor.endDocument();
+                }
+            }
+        }
+        else
+        {
+            if (systemID != 0)
+            {
+                xslIdentifier = systemID;
+            }
 
-			if(m_diagnosticsPrintWriter != 0)
-			{
+            if(m_diagnosticsPrintWriter != 0)
+            {
                 const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-				diag(
+                diag(
                     XalanMessageLoader::getMessage(
-                        XalanMessages::Parsing_1Param,
                         theGuard.get(),
+                        XalanMessages::Parsing_1Param,
                         xslIdentifier));
 
-				pushTime(&xslIdentifier);
-			}
-                  
-            XalanDOMString  theEmpryString(getMemoryManager());
+                pushTime(&xslIdentifier);
+            }
 
-			m_parserLiaison.parseXMLStream(stylesheetSource,
-										   stylesheetProcessor,
-                                           theEmpryString);
+            m_parserLiaison.parseXMLStream(
+                stylesheetSource,
+                stylesheetProcessor,
+                s_emptyString);
 
-			if(m_diagnosticsPrintWriter != 0)
-			{
-                const CCGetAndReleaseCachedString theGuard(constructionContext);
+            if(m_diagnosticsPrintWriter != 0)
+            {
+                const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-				displayDuration(
+                displayDuration(
                     XalanMessageLoader::getMessage(
-                        XalanMessages::ParseOf_1Param,
                         theGuard.get(),
+                        XalanMessages::ParseOf_1Param,
                         xslIdentifier),
                     &xslIdentifier);
-			}
-		}
+            }
+        }
 
-		theStylesheet->postConstruction(constructionContext);
-	}
+        theStylesheet->postConstruction(constructionContext);
+    }
 
-	return theStylesheet;
+    return theStylesheet;
 }
 
 
@@ -530,92 +547,91 @@ XSLTEngineImpl::processStylesheet(
 //==========================================================
 
 XalanNode*
-XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
+XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&   inputSource)
 {
-	XalanNode*		sourceTree = inputSource.getNode();
+    XalanNode*      sourceTree = inputSource.getNode();
 
-	if(0 == sourceTree)
-	{
+    if(0 == sourceTree)
+    {
         const CCGetAndReleaseCachedString   theGuard1(m_xpathConstructionContext);
 
-		XalanDOMString&     xmlIdentifier = theGuard1.get();
+        XalanDOMString&     xmlIdentifier = theGuard1.get();
 
-		const XalanDOMChar* const	theSystemID = inputSource.getSystemId();
+        const XalanDOMChar* const   theSystemID = inputSource.getSystemId();
 
-		if (0 != theSystemID)
-		{
-			try
-			{
-				URISupport::getURLStringFromString(theSystemID, xmlIdentifier);
-			}
-			catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
-			{
-				xmlIdentifier = theSystemID;
-			}
-		}
-		else
-		{
-			XalanMessageLoader::getMessage(
-                XalanMessages::InputXML,
-                xmlIdentifier);
-		}
+        if (0 != theSystemID)
+        {
+            try
+            {
+                URISupport::getURLStringFromString(theSystemID, xmlIdentifier);
+            }
+            catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+            {
+                xmlIdentifier = theSystemID;
+            }
+        }
+        else
+        {
+            XalanMessageLoader::getMessage(
+                xmlIdentifier,
+                XalanMessages::InputXML);
+        }
 
-		if(m_diagnosticsPrintWriter != 0)
-		{
-            const CCGetAndReleaseCachedString   theGuard2(m_xpathConstructionContext);
+        if(m_diagnosticsPrintWriter != 0)
+        {
+            const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
 
-			// In case we have a fragment identifier, go ahead and 
-			// try to parse the XML here.
-			diag(
+            // In case we have a fragment identifier, go ahead and 
+            // try to parse the XML here.
+            diag(
                 XalanMessageLoader::getMessage(
+                    theGuard.get(),
                     XalanMessages::Parsing_1Param,
-                    theGuard2.get(),
-                    xmlIdentifier,
-                    theGuard1.get()));
+                    xmlIdentifier));
 
-			pushTime(&xmlIdentifier);
-		}
+            pushTime(&xmlIdentifier);
+        }
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-		QuantifyStartRecordingData();
+        QuantifyStartRecordingData();
 #endif
 
-		XalanDocument* const	theDocument =
-			m_parserLiaison.parseXMLStream(
+        XalanDocument* const    theDocument =
+            m_parserLiaison.parseXMLStream(
                 inputSource,
-				xmlIdentifier);
-		assert(theDocument != 0);
+                xmlIdentifier);
+        assert(theDocument != 0);
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-		QuantifyStopRecordingData();
+        QuantifyStopRecordingData();
 #endif
 
         if(0 != m_diagnosticsPrintWriter)
-		{
-            const CCGetAndReleaseCachedString   theGuard3(m_xpathConstructionContext);
+        {
+            const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
 
-			displayDuration(
-				XalanMessageLoader::getMessage(
+            displayDuration(
+                XalanMessageLoader::getMessage(
+                    theGuard.get(),
                     XalanMessages::ParseOf_1Param,
-                    theGuard3.get(),
                     xmlIdentifier),
-				&xmlIdentifier);
-		}
+                &xmlIdentifier);
+        }
  
-		m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
+        m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
 
-		sourceTree = theDocument;
-	}
+        sourceTree = theDocument;
+    }
 
-	return sourceTree;
+    return sourceTree;
 }
 
 
 
 const XalanDOMString*
-XSLTEngineImpl::getNamespaceForPrefix(const XalanDOMString&		prefix) const
+XSLTEngineImpl::getNamespaceForPrefix(const XalanDOMString&     prefix) const
 {
-	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
+    return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
 }
 
 
@@ -623,361 +639,378 @@ XSLTEngineImpl::getNamespaceForPrefix(const XalanDOMString&		prefix) const
 const XalanDOMString&
 XSLTEngineImpl::getURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
 
 XalanDocument*
 XSLTEngineImpl::parseXML(
-			const XalanDOMString&	urlString,
-			DocumentHandlerType*	docHandler,
-			XalanDocument*			docToRegister)
+            const XalanDOMString&   urlString,
+            DocumentHandlerType*    docHandler,
+            XalanDocument*          docToRegister)
 {
-	
-	XalanDocument*	doc =
-			m_xpathEnvSupport.getSourceDocument(urlString);
+    
+    XalanDocument*  doc =
+            m_xpathEnvSupport.getSourceDocument(urlString);
 
-	if(doc == 0)
-	{
-		EntityResolverType* const	theResolver = 
-			m_parserLiaison.getEntityResolver();
+    if(doc == 0)
+    {
+        EntityResolverType* const   theResolver = 
+            m_parserLiaison.getEntityResolver();
 
-		if (theResolver == 0)
-		{
-			const XSLTInputSource	inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
+        if (theResolver == 0)
+        {
+            const XSLTInputSource   inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
 
-			doc = parseXML(inputSource, docHandler, docToRegister);
-		}
-		else
-		{
-			const XalanAutoPtr<InputSourceType> resolverInputSource =  
+            doc = parseXML(inputSource, docHandler, docToRegister);
+        }
+        else
+        {
+            const XalanAutoPtr<InputSourceType> resolverInputSource =  
                                 theResolver->resolveEntity(0, c_wstr(urlString));
 
-			if (resolverInputSource.get() != 0)
-			{
-				doc = parseXML(
+            if (resolverInputSource.get() != 0)
+            {
+                doc = parseXML(
                             *resolverInputSource.get(),
                             docHandler,
                             docToRegister);
-			}
-			else
-			{
-				const XSLTInputSource	inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
+            }
+            else
+            {
+                const XSLTInputSource   inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
 
-				doc = parseXML(
+                doc = parseXML(
                             inputSource,
                             docHandler,
                             docToRegister);
-			}
-		}
+            }
+        }
 
-		if (doc != 0)
-		{
-			m_xpathEnvSupport.setSourceDocument(urlString, doc);
-		}
-	}
+        if (doc != 0)
+        {
+            m_xpathEnvSupport.setSourceDocument(urlString, doc);
+        }
+    }
 
-	return doc;
+    return doc;
 }
 
 
 
 XalanDocument*
 XSLTEngineImpl::parseXML(
-			const InputSourceType&	inputSource,
-			DocumentHandlerType*	docHandler,
-			XalanDocument*			docToRegister)
+            const InputSourceType&  inputSource,
+            DocumentHandlerType*    docHandler,
+            XalanDocument*          docToRegister)
 {
     if(0 != docHandler)
-	{
-		m_parserLiaison.parseXMLStream(
+    {
+        m_parserLiaison.parseXMLStream(
             inputSource,
             *docHandler,
             s_emptyString);
 
-		return docToRegister;
-	}
-	else
-	{
-		return m_parserLiaison.parseXMLStream(
+        return docToRegister;
+    }
+    else
+    {
+        return m_parserLiaison.parseXMLStream(
                     inputSource,
                     s_emptyString);
-	}
+    }
 }
 
 
 
 Stylesheet*
 XSLTEngineImpl::getStylesheetFromPIURL(
-			const XalanDOMString&			xslURLString,
-			XalanNode&						fragBase,
-			const XalanDOMString&			xmlBaseIdent,
-			bool							isRoot,
-			StylesheetConstructionContext&	constructionContext)
+            const XalanDOMString&           xslURLString,
+            XalanNode&                      fragBase,
+            const XalanDOMString&           xmlBaseIdent,
+            bool                            isRoot,
+            StylesheetConstructionContext&  constructionContext)
 {
     MemoryManager&          theMemoryManager =
         constructionContext.getMemoryManager();
 
-    Stylesheet*				stylesheet = 0;
+    Stylesheet*             stylesheet = 0;
 
     const CCGetAndReleaseCachedString theGuard(constructionContext);
-	XalanDOMString	&		stringHolder = theGuard.get();
+    XalanDOMString  &       stringHolder = theGuard.get();
 
     const CCGetAndReleaseCachedString theGuard1(constructionContext);
-	XalanDOMString&		localXSLURLString = theGuard1.get();	
+    XalanDOMString&     localXSLURLString = theGuard1.get();    
     
     trim(xslURLString, localXSLURLString);
 
-	const XalanDOMString::size_type		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
+    const XalanDOMString::size_type     fragIndex =
+        indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
-	const XalanDocument*	stylesheetDoc = 0;
+    const XalanDocument*    stylesheetDoc = 0;
 
-	if(fragIndex == 0)
-	{
+    if(fragIndex == 0)
+    {
         const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-        XalanDOMString&	fragID = theGuard.get();
+        XalanDOMString& fragID = theGuard.get();
 
         fragID.assign(localXSLURLString);
 
-		const XalanElement*		nsNode = 0;
+        const XalanElement*     nsNode = 0;
 
-		const XalanNode::NodeType	theType = fragBase.getNodeType();
+        const XalanNode::NodeType   theType = fragBase.getNodeType();
 
-		if (theType == XalanNode::DOCUMENT_NODE)
-		{
-			const XalanDocument&	doc =
+        if (theType == XalanNode::DOCUMENT_NODE)
+        {
+            const XalanDocument&    doc =
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocument&)fragBase;
+                (const XalanDocument&)fragBase;
 #else
-				static_cast<const XalanDocument&>(fragBase);
+                static_cast<const XalanDocument&>(fragBase);
 #endif
 
-			nsNode = doc.getDocumentElement(); 
-		}
-		else if	(theType == XalanNode::ELEMENT_NODE)
-		{
+            nsNode = doc.getDocumentElement(); 
+        }
+        else if (theType == XalanNode::ELEMENT_NODE)
+        {
 #if defined(XALAN_OLD_STYLE_CASTS)
-			nsNode = (const XalanElement*)&fragBase;
+            nsNode = (const XalanElement*)&fragBase;
 #else
-			nsNode = static_cast<const XalanElement*>(&fragBase);
+            nsNode = static_cast<const XalanElement*>(&fragBase);
 #endif
-		}
-		else
-		{
-			XalanNode* const	node = fragBase.getParentNode();
+        }
+        else
+        {
+            XalanNode* const    node = fragBase.getParentNode();
 
-			if	(node->getNodeType() == XalanNode::ELEMENT_NODE) 
-			{
+            if  (node->getNodeType() == XalanNode::ELEMENT_NODE) 
+            {
 #if defined(XALAN_OLD_STYLE_CASTS)
-				nsNode = (const XalanElement*)&fragBase;
+                nsNode = (const XalanElement*)&fragBase;
 #else
-				nsNode = static_cast<XalanElement*>(node);
+                nsNode = static_cast<XalanElement*>(node);
 #endif
-			}
-			else
-			{
+            }
+            else
+            {
                 const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-				error(XalanMessageLoader::getMessage(XalanMessages::CantFindFragment_1Param, theGuard.get() , fragID));
-			}
-		}
+                error(
+                    XalanMessageLoader::getMessage(
+                        theGuard.get(),
+                        XalanMessages::CantFindFragment_1Param,
+                        fragID));
+            }
+        }
 
-		// Try a bunch of really ugly stuff to find the fragment.
-		// What's the right way to do this?
+        // Try a bunch of really ugly stuff to find the fragment.
+        // What's the right way to do this?
         const CCGetAndReleaseCachedString theGuard3(constructionContext);
 
-		XalanDOMString&	ds = theGuard3.get();
+        XalanDOMString& ds = theGuard3.get();
 
         ds.append("id(");
 
-		ds += fragID;
-		ds += XalanDOMString(XALAN_STATIC_UCODE_STRING(")"), theMemoryManager);
+        ds += fragID;
+        ds.append(")");
 
-		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_domSupport, theMemoryManager);
+        ElementPrefixResolverProxy      theProxy(nsNode, m_xpathEnvSupport, m_domSupport, theMemoryManager);
 
-		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
-															m_domSupport,
-															m_xobjectFactory,
-															&fragBase,
-															0,
-															&theProxy);
+        XPathExecutionContextDefault    theExecutionContext(m_xpathEnvSupport,
+                                                            m_domSupport,
+                                                            m_xobjectFactory,
+                                                            &fragBase,
+                                                            0,
+                                                            &theProxy);
 
-		const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
-		assert(xobj.null() == false);
+        const XObjectPtr    xobj(evalXPathStr(ds, theExecutionContext));
+        assert(xobj.null() == false);
 
-		NodeRefList		nl( xobj->nodeset(), theMemoryManager);
+        NodeRefList     nl( xobj->nodeset(), theMemoryManager);
 
-		if(nl.getLength() == 0)
-		{
-			ds.assign("//*[@id='");
-			ds += fragID;
+        if(nl.getLength() == 0)
+        {
+            ds.assign("//*[@id='");
+            ds += fragID;
             ds.append("']");
 
-			const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
-			assert(xobj.null() == false);
+            const XObjectPtr    xobj(evalXPathStr(ds, theExecutionContext));
+            assert(xobj.null() == false);
 
-			nl = xobj->nodeset();
+            nl = xobj->nodeset();
 
-			if(nl.getLength() == 0)
-			{
-				ds.assign("//*[@name='");
-				ds += fragID;
-				ds.append("']");
+            if(nl.getLength() == 0)
+            {
+                ds.assign("//*[@name='");
+                ds += fragID;
+                ds.append("']");
 
-				const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
-				assert(xobj.null() == false);
+                const XObjectPtr    xobj(evalXPathStr(ds, theExecutionContext));
+                assert(xobj.null() == false);
 
-				nl = xobj->nodeset();
+                nl = xobj->nodeset();
 
-				if(nl.getLength() == 0)
-				{
-					// Well, hell, maybe it's an XPath...
-					const XObjectPtr	xobj(evalXPathStr(fragID, theExecutionContext));
-					assert(xobj.null() == false);
+                if(nl.getLength() == 0)
+                {
+                    // Well, hell, maybe it's an XPath...
+                    const XObjectPtr    xobj(evalXPathStr(fragID, theExecutionContext));
+                    assert(xobj.null() == false);
 
-					nl = xobj->nodeset();
-				}
-			}
-		}
+                    nl = xobj->nodeset();
+                }
+            }
+        }
 
-		if(nl.getLength() == 0)
-		{
-            const CCGetAndReleaseCachedString theGuard(constructionContext);
+        if(nl.getLength() == 0)
+        {
+            const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-			error(XalanMessageLoader::getMessage(XalanMessages::CantFindFragment_1Param,theGuard.get() ,fragID));
-		}
+            error(
+                XalanMessageLoader::getMessage(
+                    theGuard.get(),
+                    XalanMessages::CantFindFragment_1Param,
+                    fragID));
+        }
 
-		XalanNode* const	frag = nl.item(0);
+        XalanNode* const    frag = nl.item(0);
 
-		if(XalanNode::ELEMENT_NODE == frag->getNodeType())
-		{
-			if(m_diagnosticsPrintWriter != 0)
-			{
-				pushTime(frag);
-			}
+        if(XalanNode::ELEMENT_NODE == frag->getNodeType())
+        {
+            if(m_diagnosticsPrintWriter != 0)
+            {
+                pushTime(frag);
+            }
 
-			XalanMemMgrAutoPtr<Stylesheet, true>	theGuard;
+            XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
 
-			if(isRoot)
-			{
-				StylesheetRoot* const	theLocalRoot =
-					constructionContext.create(stringHolder);
+            if(isRoot)
+            {
+                StylesheetRoot* const   theLocalRoot =
+                    constructionContext.create(stringHolder);
 
-				stylesheet = theLocalRoot;
+                stylesheet = theLocalRoot;
 
-				m_stylesheetRoot = theLocalRoot;
-			}
-			else
-			{
+                m_stylesheetRoot = theLocalRoot;
+            }
+            else
+            {
 #if defined(XALAN_OLD_STYLE_CASTS)
                 stylesheet = constructionContext.create( *((StylesheetRoot*)m_stylesheetRoot), stringHolder);
 #else
-				stylesheet = constructionContext.create( *const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
+                stylesheet = constructionContext.create( *const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
 #endif
 
                 theGuard.reset(&theMemoryManager, stylesheet);
-			}
+            }
 
-			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
+            StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
 
-			FormatterTreeWalker tw(stylesheetProcessor,  theMemoryManager);
+            FormatterTreeWalker tw(stylesheetProcessor,  theMemoryManager);
 
-			stylesheetProcessor.startDocument();
+            stylesheetProcessor.startDocument();
 
-			tw.traverseSubtree(frag);
+            tw.traverseSubtree(frag);
 
-			stylesheetProcessor.endDocument();
+            stylesheetProcessor.endDocument();
 
-			if(m_diagnosticsPrintWriter != 0)
-			{
-                const CCGetAndReleaseCachedString theGuard(constructionContext);
+            if(m_diagnosticsPrintWriter != 0)
+            {
+                const CCGetAndReleaseCachedString   theGuard(constructionContext);
 
-				displayDuration(
-						XalanMessageLoader::getMessage(XalanMessages::SetupOf_1Param,localXSLURLString, theGuard.get()),
-						frag);
-			}
+                displayDuration(
+                    XalanMessageLoader::getMessage(
+                        theGuard.get(),
+                        XalanMessages::SetupOf_1Param,
+                        localXSLURLString),
+                    frag);
+            }
 
-			stylesheet->postConstruction(constructionContext);
+            stylesheet->postConstruction(constructionContext);
 
-			theGuard.release();
-		}
-		else
-		{
-			stylesheetDoc = 0;
+            theGuard.release();
+        }
+        else
+        {
+            stylesheetDoc = 0;
 
             const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-			error(XalanMessageLoader::getMessage(XalanMessages::NodePointedByFragment, theGuard.get(), fragID));
-		}
-	}
-	else
-	{
-		if(m_diagnosticsPrintWriter != 0)
-		{
+            error(
+                XalanMessageLoader::getMessage(
+                    theGuard.get(),
+                    XalanMessages::NodePointedByFragment_1Param,
+                    fragID));
+        }
+    }
+    else
+    {
+        if(m_diagnosticsPrintWriter != 0)
+        {
             const CCGetAndReleaseCachedString theGuard(constructionContext);
 
             XalanDOMString& theBuffer = theGuard.get();
 
-            XalanMessageLoader::getMessage(XalanMessages::ParsingAndPreparing_1Param, theBuffer, localXSLURLString);
+            XalanMessageLoader::getMessage(
+                theBuffer,
+                XalanMessages::ParsingAndPreparing_1Param,
+                localXSLURLString);
 
-            theBuffer.append(" ==========");
+            diag(theBuffer);
 
-			diag( theBuffer);
+            pushTime(&localXSLURLString);
+        }
 
-			pushTime(&localXSLURLString);
-		}
+        XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
 
-		XalanMemMgrAutoPtr<Stylesheet, true>	theGuard;
-
-		const XalanDocument* const	theOwnerDocument =
-				fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?
+        const XalanDocument* const  theOwnerDocument =
+                fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocument*)&fragBase :
+                (const XalanDocument*)&fragBase :
 #else
-				static_cast<const XalanDocument*>(&fragBase) :
+                static_cast<const XalanDocument*>(&fragBase) :
 #endif
-				fragBase.getOwnerDocument();
-		assert(theOwnerDocument != 0);
+                fragBase.getOwnerDocument();
+        assert(theOwnerDocument != 0);
 
-		// Catch any XMLExceptions thrown, since we may not
-		// be able to resolve the URL.  In that case, the
-		// parser will throw an error.  We do this because
-		// we don't know what sort of EntityResolvers might
-		// be active, so we never want to error out here.
-		try
-		{
-			if (length(xmlBaseIdent) == 0)
-			{
-				URISupport::getURLStringFromString(
-							localXSLURLString,
-							m_xpathEnvSupport.findURIFromDoc(theOwnerDocument),
-							localXSLURLString);
-			}
-			else
-			{
-				URISupport::getURLStringFromString(
-							localXSLURLString,
-							xmlBaseIdent,
-							localXSLURLString);
-			}
-		}
-		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
-		{
-		}
+        // Catch any XMLExceptions thrown, since we may not
+        // be able to resolve the URL.  In that case, the
+        // parser will throw an error.  We do this because
+        // we don't know what sort of EntityResolvers might
+        // be active, so we never want to error out here.
+        try
+        {
+            if (length(xmlBaseIdent) == 0)
+            {
+                URISupport::getURLStringFromString(
+                            localXSLURLString,
+                            m_xpathEnvSupport.findURIFromDoc(theOwnerDocument),
+                            localXSLURLString);
+            }
+            else
+            {
+                URISupport::getURLStringFromString(
+                            localXSLURLString,
+                            xmlBaseIdent,
+                            localXSLURLString);
+            }
+        }
+        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        {
+        }
 
-		if(isRoot)
-		{
-			StylesheetRoot* const	theLocalRoot =
-					constructionContext.create(localXSLURLString);
+        if(isRoot)
+        {
+            StylesheetRoot* const   theLocalRoot =
+                    constructionContext.create(localXSLURLString);
 
-			stylesheet = theLocalRoot;
+            stylesheet = theLocalRoot;
 
-			m_stylesheetRoot = theLocalRoot;
-		}
-		else
-		{
+            m_stylesheetRoot = theLocalRoot;
+        }
+        else
+        {
             stylesheet = Stylesheet::create(
                             theMemoryManager,
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -988,38 +1021,38 @@ XSLTEngineImpl::getStylesheetFromPIURL(
                             localXSLURLString,
                             constructionContext);
 
-			theGuard.reset(&theMemoryManager, stylesheet);
-		}
+            theGuard.reset(&theMemoryManager, stylesheet);
+        }
 
-		StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
+        StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
 
-		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
+        typedef StylesheetConstructionContext::URLAutoPtrType   URLAutoPtrType;
 
-		URLAutoPtrType	xslURL(constructionContext.getURLFromString(localXSLURLString));
+        URLAutoPtrType  xslURL(constructionContext.getURLFromString(localXSLURLString));
 
-		XSLTInputSource		inputSource(xslURL->getURLText(), theMemoryManager);
+        XSLTInputSource     inputSource(xslURL->getURLText(), theMemoryManager);
 
-		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor, s_emptyString);
+        m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor, s_emptyString);
 
-		stylesheet->postConstruction(constructionContext);
+        stylesheet->postConstruction(constructionContext);
 
-		theGuard.release();
+        theGuard.release();
 
-		if(m_diagnosticsPrintWriter != 0)
-		{
+        if(m_diagnosticsPrintWriter != 0)
+        {
             const CCGetAndReleaseCachedString theGuard(constructionContext);
 
-			displayDuration(
+            displayDuration(
                 XalanMessageLoader::getMessage(
-                    XalanMessages::ParsingAndInitOf_1Param,
                     theGuard.get(),
+                    XalanMessages::ParsingAndInitOf_1Param,
                     localXSLURLString),
                     &localXSLURLString);
 
-		}
-	}
+        }
+    }
 
-	return stylesheet;
+    return stylesheet;
 }
 
 
@@ -1027,23 +1060,23 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 const StylesheetRoot*
 XSLTEngineImpl::getStylesheetRoot() const
 {
-	return m_stylesheetRoot;
+    return m_stylesheetRoot;
 }
 
 
 
 void
-XSLTEngineImpl::setStylesheetRoot(const StylesheetRoot*		theStylesheet)
+XSLTEngineImpl::setStylesheetRoot(const StylesheetRoot*     theStylesheet)
 {
-	m_stylesheetRoot = theStylesheet;
+    m_stylesheetRoot = theStylesheet;
 }
 
 
 
 void
-XSLTEngineImpl::setExecutionContext(StylesheetExecutionContext*		theExecutionContext)
+XSLTEngineImpl::setExecutionContext(StylesheetExecutionContext*     theExecutionContext)
 {
-	m_executionContext = theExecutionContext;
+    m_executionContext = theExecutionContext;
 }
 
 
@@ -1055,7 +1088,7 @@ XSLTEngineImpl::setExecutionContext(StylesheetExecutionContext*		theExecutionCon
 XSLTEngineImpl::size_type
 XSLTEngineImpl::getTraceListeners() const
 {
-	return m_traceListeners.size();
+    return m_traceListeners.size();
 }
 
 
@@ -1063,52 +1096,52 @@ XSLTEngineImpl::getTraceListeners() const
 void
 XSLTEngineImpl::addTraceListener(TraceListener* tl)
 {
-	if (tl != 0)
-	{
-		m_traceListeners.push_back(tl);
-	}
+    if (tl != 0)
+    {
+        m_traceListeners.push_back(tl);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::removeTraceListener(TraceListener*	tl)
+XSLTEngineImpl::removeTraceListener(TraceListener*  tl)
 {
-	XALAN_USING_STD(remove)
+    XALAN_USING_STD(remove)
 
-	const TraceListenerVectorType::iterator		i =
-		remove(
-			m_traceListeners.begin(),
-			m_traceListeners.end(),
-			tl);
+    const TraceListenerVectorType::iterator     i =
+        remove(
+            m_traceListeners.begin(),
+            m_traceListeners.end(),
+            tl);
 
-	m_traceListeners.erase(i);
+    m_traceListeners.erase(i);
 }
 
 
 
 void
-XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&	ge)
+XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&  ge)
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	for_each(
-		m_traceListeners.begin(),
-		m_traceListeners.end(),
-		TraceListener::TraceListenerGenerateFunctor(ge));
+    for_each(
+        m_traceListeners.begin(),
+        m_traceListeners.end(),
+        TraceListener::TraceListenerGenerateFunctor(ge));
 }
 
 
 
 void
-XSLTEngineImpl::fireSelectEvent(const SelectionEvent&	se)
+XSLTEngineImpl::fireSelectEvent(const SelectionEvent&   se)
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	for_each(
-		m_traceListeners.begin(),
-		m_traceListeners.end(),
-		TraceListener::TraceListenerSelectFunctor(se));
+    for_each(
+        m_traceListeners.begin(),
+        m_traceListeners.end(),
+        TraceListener::TraceListenerSelectFunctor(se));
 }
 
 
@@ -1116,12 +1149,12 @@ XSLTEngineImpl::fireSelectEvent(const SelectionEvent&	se)
 void
 XSLTEngineImpl::fireTraceEvent(const TracerEvent& te)
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	for_each(
-		m_traceListeners.begin(),
-		m_traceListeners.end(),
-		TraceListener::TraceListenerTraceFunctor(te));
+    for_each(
+        m_traceListeners.begin(),
+        m_traceListeners.end(),
+        TraceListener::TraceListenerTraceFunctor(te));
 }
 
 
@@ -1129,367 +1162,367 @@ XSLTEngineImpl::fireTraceEvent(const TracerEvent& te)
 bool
 XSLTEngineImpl::getTraceSelects() const
 {
-	return m_traceSelects;
+    return m_traceSelects;
 }
 
 
 
 void
-XSLTEngineImpl::setTraceSelects(bool	b)
+XSLTEngineImpl::setTraceSelects(bool    b)
 {
-	m_traceSelects = b;
-}
-
-
-
-void
-XSLTEngineImpl::message(
-			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const
-{
-	problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
+    m_traceSelects = b;
 }
 
 
 
 void
 XSLTEngineImpl::message(
-			const XalanDOMString&	msg,
-			const LocatorType&		locator,
-			const XalanNode*		sourceNode) const
+            const XalanDOMString&       msg,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode) const
 {
-	problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
+    problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::message(
+            const XalanDOMString&   msg,
+            const LocatorType&      locator,
+            const XalanNode*        sourceNode) const
+{
+    problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
 }
 
 
 
 void
 XSLTEngineImpl::problem(
-			const XalanDOMString&				msg, 
-			ProblemListener::eClassification	classification,
-			const XalanNode*					sourceNode,
-			const ElemTemplateElement*			styleNode) const
+            const XalanDOMString&               msg, 
+            ProblemListener::eClassification    classification,
+            const XalanNode*                    sourceNode,
+            const ElemTemplateElement*          styleNode) const
 {
-	const XalanDOMChar*		id = 0;
+    const XalanDOMChar*     id = 0;
 
     MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
 
-	XalanDOMString			uri( theManager );
+    XalanDOMString          uri( theManager );
 
-	int						lineNumber = XalanLocator::getUnknownValue();
-	int 					columnNumber = XalanLocator::getUnknownValue();
+    int                     lineNumber = XalanLocator::getUnknownValue();
+    int                     columnNumber = XalanLocator::getUnknownValue();
 
-	const LocatorType*		locator = getLocatorFromStack();
+    const LocatorType*      locator = getLocatorFromStack();
 
-	if (locator == 0 && styleNode != 0)
-	{
-		locator = styleNode->getLocator();
-	}
+    if (locator == 0 && styleNode != 0)
+    {
+        locator = styleNode->getLocator();
+    }
 
-	if (locator != 0)
-	{
-		id = locator->getPublicId();
+    if (locator != 0)
+    {
+        id = locator->getPublicId();
 
-		if (id == 0)
-		{
-			id = locator->getSystemId();
-		}
+        if (id == 0)
+        {
+            id = locator->getSystemId();
+        }
 
-		if (id != 0)
-		{
-			uri = id;
-		}
+        if (id != 0)
+        {
+            uri = id;
+        }
 
-		lineNumber = locator->getLineNumber();
-		columnNumber = locator->getColumnNumber();
-	}
-	else if (styleNode != 0)
-	{
-		lineNumber = styleNode->getLineNumber();
-		columnNumber = styleNode->getColumnNumber();
+        lineNumber = locator->getLineNumber();
+        columnNumber = locator->getColumnNumber();
+    }
+    else if (styleNode != 0)
+    {
+        lineNumber = styleNode->getLineNumber();
+        columnNumber = styleNode->getColumnNumber();
 
-		uri = styleNode->getURI();
-	}
+        uri = styleNode->getURI();
+    }
 
-	if (m_problemListener != 0)
-	{
-		m_problemListener->problem(
-					ProblemListener::eXSLPROCESSOR,
-					classification,
-					sourceNode,
-					styleNode,
-					msg,
-					id,
-					lineNumber,
-					columnNumber);
-	}
+    if (m_problemListener != 0)
+    {
+        m_problemListener->problem(
+                    ProblemListener::eXSLPROCESSOR,
+                    classification,
+                    sourceNode,
+                    styleNode,
+                    msg,
+                    id,
+                    lineNumber,
+                    columnNumber);
+    }
 
-	if (classification == ProblemListener::eERROR)
-	{
-		throw XSLTProcessorException(theManager, msg, uri, lineNumber, columnNumber);
-	}
+    if (classification == ProblemListener::eERROR)
+    {
+        throw XSLTProcessorException(theManager, msg, uri, lineNumber, columnNumber);
+    }
 }
 
 
 
-static const XalanDOMChar	theDummy = 0;
+static const XalanDOMChar   theDummy = 0;
 
 void
 XSLTEngineImpl::problem(
-			const XalanDOMString&				msg, 
-			ProblemListener::eClassification	classification,
-			const LocatorType&					locator,
-			const XalanNode*					sourceNode) const
+            const XalanDOMString&               msg, 
+            ProblemListener::eClassification    classification,
+            const LocatorType&                  locator,
+            const XalanNode*                    sourceNode) const
 {
-	const XalanDOMChar*		id = locator.getSystemId();
+    const XalanDOMChar*     id = locator.getSystemId();
 
-	if (id == 0)
-	{
-		id = &theDummy;
-	}
+    if (id == 0)
+    {
+        id = &theDummy;
+    }
 
-	const XalanLocator::size_type	lineNumber = locator.getLineNumber();
-	const XalanLocator::size_type 	columnNumber = locator.getColumnNumber();
+    const XalanLocator::size_type   lineNumber = locator.getLineNumber();
+    const XalanLocator::size_type   columnNumber = locator.getColumnNumber();
 
-	if (m_problemListener != 0)
-	{
-		m_problemListener->problem(
-					ProblemListener::eXSLPROCESSOR,
-					classification,
-					sourceNode,
-					0,
-					msg,
-					id,
-					lineNumber,
-					columnNumber);
-	}
+    if (m_problemListener != 0)
+    {
+        m_problemListener->problem(
+                    ProblemListener::eXSLPROCESSOR,
+                    classification,
+                    sourceNode,
+                    0,
+                    msg,
+                    id,
+                    lineNumber,
+                    columnNumber);
+    }
 
-	if (classification == ProblemListener::eERROR)
-	{
+    if (classification == ProblemListener::eERROR)
+    {
         MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
 
-		throw XSLTProcessorException( theManager, msg, XalanDOMString(id, theManager), lineNumber, columnNumber);
-	}
+        throw XSLTProcessorException( theManager, msg, XalanDOMString(id, theManager), lineNumber, columnNumber);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::warn(
-			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const
+            const XalanDOMString&       msg,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode) const
 {
-	const LocatorType* const	locator = styleNode == 0 ? 0 : styleNode->getLocator();
+    const LocatorType* const    locator = styleNode == 0 ? 0 : styleNode->getLocator();
 
-	if (locator != 0)
-	{
-		problem(msg, ProblemListener::eWARNING, *locator, sourceNode);
-	}
-	else
-	{
-		problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
-	}
+    if (locator != 0)
+    {
+        problem(msg, ProblemListener::eWARNING, *locator, sourceNode);
+    }
+    else
+    {
+        problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::warn(
-			const XalanDOMString&	msg,
-			const LocatorType&		locator,
-			const XalanNode*		sourceNode) const
+            const XalanDOMString&   msg,
+            const LocatorType&      locator,
+            const XalanNode*        sourceNode) const
 {
-	problem(msg, ProblemListener::eWARNING, locator, sourceNode);
+    problem(msg, ProblemListener::eWARNING, locator, sourceNode);
 }
 
 
 void
 XSLTEngineImpl::error(
-			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const
+            const XalanDOMString&       msg,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode) const
 {
-	problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
+    problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
 }
 
 
 
 void
 XSLTEngineImpl::error(
-			const XalanDOMString&	msg,
-			const LocatorType&		locator,
-			const XalanNode*		sourceNode) const
+            const XalanDOMString&   msg,
+            const LocatorType&      locator,
+            const XalanNode*        sourceNode) const
 {
-	problem(msg, ProblemListener::eERROR, locator, sourceNode);
+    problem(msg, ProblemListener::eERROR, locator, sourceNode);
 }
 
 
 
 void
-XSLTEngineImpl::pushTime(const void*	key)
+XSLTEngineImpl::pushTime(const void*    key)
 {
-	if(0 != key)
-	{
+    if(0 != key)
+    {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		m_durationsTable[key] = std::clock();
+        m_durationsTable[key] = std::clock();
 #else
-		m_durationsTable[key] = clock();
+        m_durationsTable[key] = clock();
 #endif
-	}
+    }
 }
 
 
 
 XSLTEngineImpl::ClockType
-XSLTEngineImpl::popDuration(const void*		key)
+XSLTEngineImpl::popDuration(const void*     key)
 {
-	ClockType 	clockTicksDuration = 0;
+    ClockType   clockTicksDuration = 0;
 
-	if(0 != key)
-	{
-		const DurationsTableMapType::iterator	i =
-				m_durationsTable.find(key);
+    if(0 != key)
+    {
+        const DurationsTableMapType::iterator   i =
+                m_durationsTable.find(key);
 
-		if (i != m_durationsTable.end())
-		{
+        if (i != m_durationsTable.end())
+        {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-			clockTicksDuration = std::clock() - (*i).second;
+            clockTicksDuration = std::clock() - (*i).second;
 #else
-			clockTicksDuration = clock() - (*i).second;
+            clockTicksDuration = clock() - (*i).second;
 #endif
 
-			m_durationsTable.erase(i);
-		}
-	}
+            m_durationsTable.erase(i);
+        }
+    }
 
-	return clockTicksDuration;
+    return clockTicksDuration;
 }
 
 
 
 void
 XSLTEngineImpl::displayDuration(
-			const XalanDOMString&	info,
-			const void*				key)
+            const XalanDOMString&   info,
+            const void*             key)
 {
-	if(0 != key)
-	{
-		const ClockType	theDuration = popDuration(key);
+    if(0 != key)
+    {
+        const ClockType theDuration = popDuration(key);
 
-		if(m_diagnosticsPrintWriter != 0)
-		{
-			const double	millis = (double(theDuration) / CLOCKS_PER_SEC) * 1000.0;
+        if(m_diagnosticsPrintWriter != 0)
+        {
+            const double    millis = (double(theDuration) / CLOCKS_PER_SEC) * 1000.0;
 
-			m_diagnosticsPrintWriter->print(info);
+            m_diagnosticsPrintWriter->print(info);
 
-			m_diagnosticsPrintWriter->print(" took ");
-			m_diagnosticsPrintWriter->print(millis);
-			m_diagnosticsPrintWriter->println(" milliseconds.");
-		}
-	}
+            m_diagnosticsPrintWriter->print(" took ");
+            m_diagnosticsPrintWriter->print(millis);
+            m_diagnosticsPrintWriter->println(" milliseconds.");
+        }
+    }
 }
 
 
 
 void
-XSLTEngineImpl::setDiagnosticsOutput(PrintWriter*	pw)
+XSLTEngineImpl::setDiagnosticsOutput(PrintWriter*   pw)
 {
-	m_diagnosticsPrintWriter = pw;
+    m_diagnosticsPrintWriter = pw;
 
-	m_problemListener->setPrintWriter(pw);
+    m_problemListener->setPrintWriter(pw);
 }
 
 
 
 void
-XSLTEngineImpl::diag(const XalanDOMString& 	s) const
+XSLTEngineImpl::diag(const XalanDOMString&  s) const
 {
-	if (0 != m_diagnosticsPrintWriter)
-	{
-		m_diagnosticsPrintWriter->println(s);
-	}
+    if (0 != m_diagnosticsPrintWriter)
+    {
+        m_diagnosticsPrintWriter->println(s);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::diag(const char*	s) const
+XSLTEngineImpl::diag(const char*    s) const
 {
     MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
 
-    XalanDOMString	theTarget(theManager);
+    XalanDOMString  theTarget(theManager);
 
     TranscodeFromLocalCodePage(s, theTarget);
 
-	diag(theTarget);
+    diag(theTarget);
 }
 
 
 
 void
-XSLTEngineImpl::setQuietConflictWarnings(bool	b)
+XSLTEngineImpl::setQuietConflictWarnings(bool   b)
 {
-	m_quietConflictWarnings = b;
+    m_quietConflictWarnings = b;
 }
 
 
 
 void
-XSLTEngineImpl::setDocumentLocator(const LocatorType*	/* locator */)
+XSLTEngineImpl::setDocumentLocator(const LocatorType*   /* locator */)
 {
-	// Do nothing for now
+    // Do nothing for now
 }
 
 
 
 void
 XSLTEngineImpl::traceSelect(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		theTemplate,
-			const NodeRefListBase&			nl,
-			const XPath*					xpath) const
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement&      theTemplate,
+            const NodeRefListBase&          nl,
+            const XPath*                    xpath) const
 {
-	if (0 != m_diagnosticsPrintWriter)
-	{
+    if (0 != m_diagnosticsPrintWriter)
+    {
         const ECGetAndReleaseCachedString theGuard(executionContext);
 
-        XalanDOMString&	msg = theGuard.get();
+        XalanDOMString& msg = theGuard.get();
 
         msg.assign(theTemplate.getElementName());
         msg.append(": ");
 
-		if(xpath != 0)
-		{
-			msg += xpath->getExpression().getCurrentPattern();
-			msg.append(", ");
-		}
-		else
-		{
+        if(xpath != 0)
+        {
+            msg += xpath->getExpression().getCurrentPattern();
+            msg.append(", ");
+        }
+        else
+        {
             msg.append("*|text(), (default select), ");
-		}
+        }
         const ECGetAndReleaseCachedString theGuard1(executionContext);
 
         XalanDOMString& theBuffer = theGuard1.get();
         UnsignedLongToDOMString(nl.getLength(), theBuffer);
 
-		msg += theBuffer;
+        msg += theBuffer;
             
         msg.append(" selected");
 
-		const XalanQName* const		mode = executionContext.getCurrentMode();
+        const XalanQName* const     mode = executionContext.getCurrentMode();
 
-		if(mode != 0 && mode->isEmpty() == false)
-		{
-			msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = {"), executionContext.getMemoryManager());
-			msg += mode->getNamespace();
-			msg += XalanDOMString(XALAN_STATIC_UCODE_STRING("}"), executionContext.getMemoryManager());
-			msg += mode->getLocalPart();
-		}
+        if(mode != 0 && mode->isEmpty() == false)
+        {
+            msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = {"), executionContext.getMemoryManager());
+            msg += mode->getNamespace();
+            msg += XalanDOMString(XALAN_STATIC_UCODE_STRING("}"), executionContext.getMemoryManager());
+            msg += mode->getLocalPart();
+        }
 
-		m_diagnosticsPrintWriter->println(msg);
-	}
+        m_diagnosticsPrintWriter->println(msg);
+    }
 }
 
 
@@ -1497,39 +1530,39 @@ XSLTEngineImpl::traceSelect(
 void
 XSLTEngineImpl::startDocument()
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(m_executionContext != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(m_executionContext != 0);
 
-	if (getHasPendingStartDocument() == false)
-	{
-		assert(m_cdataStack.empty() == true || m_outputContextStack.size() != 1);
+    if (getHasPendingStartDocument() == false)
+    {
+        assert(m_cdataStack.empty() == true || m_outputContextStack.size() != 1);
 
-		m_resultNamespacesStack.pushContext();
+        m_resultNamespacesStack.pushContext();
 
-		setHasPendingStartDocument(true);
+        setHasPendingStartDocument(true);
 
-		setMustFlushPendingStartDocument(false);
+        setMustFlushPendingStartDocument(false);
 
-		if (m_hasCDATASectionElements == true)
-		{
-			m_cdataStack.push_back(false);
-		}
-	}
-	else if (getMustFlushPendingStartDocument() == true)
-	{
-		getFormatterListenerImpl()->startDocument();
+        if (m_hasCDATASectionElements == true)
+        {
+            m_cdataStack.push_back(false);
+        }
+    }
+    else if (getMustFlushPendingStartDocument() == true)
+    {
+        getFormatterListenerImpl()->startDocument();
 
-		if(getTraceListeners() > 0)
-		{
-			const GenerateEvent		ge(GenerateEvent::EVENTTYPE_STARTDOCUMENT,  getMemoryManager());
+        if(getTraceListeners() > 0)
+        {
+            const GenerateEvent     ge(GenerateEvent::EVENTTYPE_STARTDOCUMENT,  getMemoryManager());
 
-			fireGenerateEvent(ge);
-		}
+            fireGenerateEvent(ge);
+        }
 
-		// Reset this, but leave getMustFlushPendingStartDocument() alone,
-		// since it will still be needed.
-		setHasPendingStartDocument(false);
-	}
+        // Reset this, but leave getMustFlushPendingStartDocument() alone,
+        // since it will still be needed.
+        setHasPendingStartDocument(false);
+    }
 }
 
 
@@ -1537,121 +1570,121 @@ XSLTEngineImpl::startDocument()
 void
 XSLTEngineImpl::endDocument()
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(m_executionContext != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(m_executionContext != 0);
 
-	setMustFlushPendingStartDocument(true);
+    setMustFlushPendingStartDocument(true);
 
-	flushPending();
+    flushPending();
 
-	getFormatterListenerImpl()->endDocument();
+    getFormatterListenerImpl()->endDocument();
 
-	if(getTraceListeners() > 0)
-	{
-		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDDOCUMENT,  getMemoryManager());
+    if(getTraceListeners() > 0)
+    {
+        const GenerateEvent     ge(GenerateEvent::EVENTTYPE_ENDDOCUMENT,  getMemoryManager());
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 
-	if (m_hasCDATASectionElements == true)
-	{
-		m_cdataStack.pop_back();
-	}
-	assert(m_cdataStack.empty() == true);
+    if (m_hasCDATASectionElements == true)
+    {
+        m_cdataStack.pop_back();
+    }
+    assert(m_cdataStack.empty() == true);
 
-	m_resultNamespacesStack.popContext();
+    m_resultNamespacesStack.popContext();
 
-	assert(m_resultNamespacesStack.empty() == true);
+    assert(m_resultNamespacesStack.empty() == true);
 }
 
 
 
 void
 XSLTEngineImpl::addResultAttribute(
-			AttributeListImpl&			attList,
-			const XalanDOMString&		aname,
-			const XalanDOMChar*			value)
+            AttributeListImpl&          attList,
+            const XalanDOMString&       aname,
+            const XalanDOMChar*         value)
 {
-	assert(value != 0);
+    assert(value != 0);
 
-	// Always exclude the implicit XML declaration...
-	if (equals(aname, DOMServices::s_XMLNamespacePrefix) == false) 
-	{
-		bool	fExcludeAttribute = false;
+    // Always exclude the implicit XML declaration...
+    if (equals(aname, DOMServices::s_XMLNamespacePrefix) == false) 
+    {
+        bool    fExcludeAttribute = false;
 
-		if (equals(aname, DOMServices::s_XMLNamespace) == true)
-		{
-			// OK, we're adding a default namespace declaration.  So see if the length
-			// of the namespace is 0.  If it's not, go ahead and add the declaration.
-			// If it's not, it means we're "turning off" the previous default
-			// declaration.
+        if (equals(aname, DOMServices::s_XMLNamespace) == true)
+        {
+            // OK, we're adding a default namespace declaration.  So see if the length
+            // of the namespace is 0.  If it's not, go ahead and add the declaration.
+            // If it's not, it means we're "turning off" the previous default
+            // declaration.
 
-			const XalanDOMString* const		currentDefaultNamespace =
-						getNamespaceForPrefix(s_emptyString);
+            const XalanDOMString* const     currentDefaultNamespace =
+                        getNamespaceForPrefix(s_emptyString);
 
-			const XalanDOMString::size_type		theLength = length(value);
+            const XalanDOMString::size_type     theLength = length(value);
 
-			// Note that we use an empty string for the prefix, instead of "xmlns", since the
-			// prefix really is "".
-			if (theLength != 0)
-			{
-				if (currentDefaultNamespace != 0 &&
-					equals(*currentDefaultNamespace, value, theLength) == true)
-				{
-					fExcludeAttribute = true;
-				}
-				else
-				{
-					addResultNamespaceDecl(s_emptyString, value, theLength);
-				}
-			}
-			else
-			{
-				// OK, we're turning of the previous default namespace declaration.
-				// Check to see if there is one, and if there isn't, don't add
-				// the namespace declaration _and_ don't add the attribute.
-				if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
-				{
-					addResultNamespaceDecl(s_emptyString, value, theLength);
-				}
-				else
-				{
-					fExcludeAttribute = true;
-				}
-			}
-		}
-		else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator) == true)
-		{
-			assert(m_executionContext != 0);
+            // Note that we use an empty string for the prefix, instead of "xmlns", since the
+            // prefix really is "".
+            if (theLength != 0)
+            {
+                if (currentDefaultNamespace != 0 &&
+                    equals(*currentDefaultNamespace, value, theLength) == true)
+                {
+                    fExcludeAttribute = true;
+                }
+                else
+                {
+                    addResultNamespaceDecl(s_emptyString, value, theLength);
+                }
+            }
+            else
+            {
+                // OK, we're turning of the previous default namespace declaration.
+                // Check to see if there is one, and if there isn't, don't add
+                // the namespace declaration _and_ don't add the attribute.
+                if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
+                {
+                    addResultNamespaceDecl(s_emptyString, value, theLength);
+                }
+                else
+                {
+                    fExcludeAttribute = true;
+                }
+            }
+        }
+        else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator) == true)
+        {
+            assert(m_executionContext != 0);
 
-			const ECGetAndReleaseCachedString	prefixGuard(*m_executionContext);
+            const ECGetAndReleaseCachedString   prefixGuard(*m_executionContext);
 
-			XalanDOMString&		prefix = prefixGuard.get();
+            XalanDOMString&     prefix = prefixGuard.get();
 
-			substring(aname, prefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
+            substring(aname, prefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
-			const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
+            const XalanDOMString* const theNamespace = getResultNamespaceForPrefix(prefix);
 
-			const XalanDOMString::size_type		theLength = length(value);
+            const XalanDOMString::size_type     theLength = length(value);
 
-			if (theNamespace == 0 || equals(*theNamespace, value, theLength) == false)
-			{
-				addResultNamespaceDecl(prefix, value, theLength);
-			}
-			else
-			{
-				fExcludeAttribute = true;
-			}
-		}
+            if (theNamespace == 0 || equals(*theNamespace, value, theLength) == false)
+            {
+                addResultNamespaceDecl(prefix, value, theLength);
+            }
+            else
+            {
+                fExcludeAttribute = true;
+            }
+        }
 
-		if (fExcludeAttribute == false)
-		{
-			attList.addAttribute(
-				c_wstr(aname),
-				c_wstr(Constants::ATTRTYPE_CDATA),
-				c_wstr(value));
-		}
-	}
+        if (fExcludeAttribute == false)
+        {
+            attList.addAttribute(
+                c_wstr(aname),
+                c_wstr(Constants::ATTRTYPE_CDATA),
+                c_wstr(value));
+        }
+    }
 }
 
 
@@ -1659,22 +1692,22 @@ XSLTEngineImpl::addResultAttribute(
 bool
 XSLTEngineImpl::pendingAttributesHasDefaultNS() const
 {
-	const AttributeListImpl&	thePendingAttributes =
-		(const AttributeListImpl&)getPendingAttributes();
+    const AttributeListImpl&    thePendingAttributes =
+        (const AttributeListImpl&)getPendingAttributes();
 
-	const unsigned int	n = thePendingAttributes.getLength();
+    const unsigned int  n = thePendingAttributes.getLength();
 
-	for(unsigned int i = 0; i < n; i++)
-	{
-		if(equals(
+    for(unsigned int i = 0; i < n; i++)
+    {
+        if(equals(
             thePendingAttributes.getName(i),
-			DOMServices::s_XMLNamespace) == true)
-		{
-			return true;
-		}
-	}
+            DOMServices::s_XMLNamespace) == true)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 
@@ -1682,329 +1715,329 @@ XSLTEngineImpl::pendingAttributesHasDefaultNS() const
 void
 XSLTEngineImpl::flushPending()
 {
-	if(getHasPendingStartDocument() == true && 0 != length(getPendingElementName()))
-	{
-		assert(getFormatterListenerImpl() != 0);
-		assert(m_executionContext != 0);
+    if(getHasPendingStartDocument() == true && 0 != length(getPendingElementName()))
+    {
+        assert(getFormatterListenerImpl() != 0);
+        assert(m_executionContext != 0);
 
-		if (m_stylesheetRoot->isOutputMethodSet() == false)
-		{
-			if (equalsIgnoreCaseASCII(
+        if (m_stylesheetRoot->isOutputMethodSet() == false)
+        {
+            if (equalsIgnoreCaseASCII(
                     getPendingElementName(),
-					Constants::ELEMNAME_HTML_STRING) == true &&
-				pendingAttributesHasDefaultNS() == false)
-			{
-			    FormatterListener* const	theFormatter =
-							getFormatterListenerImpl();
-				assert(
+                    Constants::ELEMNAME_HTML_STRING) == true &&
+                pendingAttributesHasDefaultNS() == false)
+            {
+                FormatterListener* const    theFormatter =
+                            getFormatterListenerImpl();
+                assert(
                     theFormatter != 0 &&
                     theFormatter->getWriter() != 0);
-				if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
-				{
-					// Yuck!!! Ugly hack to switch to HTML on-the-fly.
-					setFormatterListenerImpl(
-						m_executionContext->createFormatterToHTML(
-							*theFormatter->getWriter(),
-							theFormatter->getEncoding(),
-							theFormatter->getMediaType(),
-							theFormatter->getDoctypeSystem(),
-							theFormatter->getDoctypePublic(),
-							m_stylesheetRoot->getHTMLOutputIndent(),
-							theFormatter->getIndent() > 0 ?
+                if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
+                {
+                    // Yuck!!! Ugly hack to switch to HTML on-the-fly.
+                    setFormatterListenerImpl(
+                        m_executionContext->createFormatterToHTML(
+                            *theFormatter->getWriter(),
+                            theFormatter->getEncoding(),
+                            theFormatter->getMediaType(),
+                            theFormatter->getDoctypeSystem(),
+                            theFormatter->getDoctypePublic(),
+                            m_stylesheetRoot->getHTMLOutputIndent(),
+                            theFormatter->getIndent() > 0 ?
                                 theFormatter->getIndent() :
-								StylesheetExecutionContext::eDefaultHTMLIndentAmount));
+                                StylesheetExecutionContext::eDefaultHTMLIndentAmount));
 
-					if (m_hasCDATASectionElements == true)
-					{
-						m_hasCDATASectionElements = false;
-					}
-				}
-			}
-		}
-	}
+                    if (m_hasCDATASectionElements == true)
+                    {
+                        m_hasCDATASectionElements = false;
+                    }
+                }
+            }
+        }
+    }
 
-	if(getHasPendingStartDocument() == true &&
+    if(getHasPendingStartDocument() == true &&
        getMustFlushPendingStartDocument() == true)
-	{
-		startDocument();
-	}
+    {
+        startDocument();
+    }
 
-	XalanDOMString&		thePendingElementName = getPendingElementNameImpl();
+    XalanDOMString&     thePendingElementName = getPendingElementNameImpl();
 
-	if(0 != length(thePendingElementName) &&
+    if(0 != length(thePendingElementName) &&
        getMustFlushPendingStartDocument() == true)
-	{
-		assert(getFormatterListenerImpl() != 0);
-		assert(m_executionContext != 0);
+    {
+        assert(getFormatterListenerImpl() != 0);
+        assert(m_executionContext != 0);
 
-		if(m_hasCDATASectionElements == true)
-		{
-			m_cdataStack.push_back(isCDataResultElem(thePendingElementName));
-		}
+        if(m_hasCDATASectionElements == true)
+        {
+            m_cdataStack.push_back(isCDataResultElem(thePendingElementName));
+        }
 
-		AttributeListImpl&	thePendingAttributes =
-				getPendingAttributesImpl();
+        AttributeListImpl&  thePendingAttributes =
+                getPendingAttributesImpl();
 
-		getFormatterListenerImpl()->startElement(
+        getFormatterListenerImpl()->startElement(
                 c_wstr(thePendingElementName),
                 thePendingAttributes);
 
-		if(getTraceListeners() > 0)
-		{
-			const GenerateEvent		ge(
-				GenerateEvent::EVENTTYPE_STARTELEMENT,
+        if(getTraceListeners() > 0)
+        {
+            const GenerateEvent     ge(
+                GenerateEvent::EVENTTYPE_STARTELEMENT,
                  getMemoryManager(),
-				thePendingElementName,
-				&thePendingAttributes);
+                thePendingElementName,
+                &thePendingAttributes);
 
-			fireGenerateEvent(ge);
-		}
+            fireGenerateEvent(ge);
+        }
 
-		thePendingAttributes.clear();
+        thePendingAttributes.clear();
 
-		clear(thePendingElementName);
-	}
+        clear(thePendingElementName);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::startElement(const XalanDOMChar*	name)
+XSLTEngineImpl::startElement(const XalanDOMChar*    name)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(name != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(name != 0);
 
-	flushPending();
+    flushPending();
 
-	m_resultNamespacesStack.pushContext();
+    m_resultNamespacesStack.pushContext();
 
-	setPendingElementName(name);
+    setPendingElementName(name);
 
-	setMustFlushPendingStartDocument(true);
+    setMustFlushPendingStartDocument(true);
 }
 
 
 
 void
 XSLTEngineImpl::startElement(
-			const XalanDOMChar*		name,
-			AttributeListType&		atts)
+            const XalanDOMChar*     name,
+            AttributeListType&      atts)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(name != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(name != 0);
 
-	flushPending();
+    flushPending();
 
-	const unsigned int	nAtts = atts.getLength();
+    const unsigned int  nAtts = atts.getLength();
 
-	assert(m_outputContextStack.empty() == false);
+    assert(m_outputContextStack.empty() == false);
 
-	AttributeListImpl&	thePendingAttributes =
-		getPendingAttributesImpl();
+    AttributeListImpl&  thePendingAttributes =
+        getPendingAttributesImpl();
 
-	thePendingAttributes.clear();
+    thePendingAttributes.clear();
 
-	for(unsigned int i = 0; i < nAtts; i++)
-	{
-		thePendingAttributes.addAttribute(
-			atts.getName(i),
-			atts.getType(i),
-			atts.getValue(i));
-	}
+    for(unsigned int i = 0; i < nAtts; i++)
+    {
+        thePendingAttributes.addAttribute(
+            atts.getName(i),
+            atts.getType(i),
+            atts.getValue(i));
+    }
 
-	m_resultNamespacesStack.pushContext();
+    m_resultNamespacesStack.pushContext();
 
-	setPendingElementName(name);
+    setPendingElementName(name);
 }
 
 
 
 void
-XSLTEngineImpl::endElement(const XalanDOMChar*	name)
+XSLTEngineImpl::endElement(const XalanDOMChar*  name)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(name != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(name != 0);
 
-	flushPending();
+    flushPending();
 
-	getFormatterListenerImpl()->endElement(name);
+    getFormatterListenerImpl()->endElement(name);
 
-	if(getTraceListeners() > 0)
-	{
-		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDELEMENT, 
+    if(getTraceListeners() > 0)
+    {
+        const GenerateEvent     ge(GenerateEvent::EVENTTYPE_ENDELEMENT, 
                                      getMemoryManager(),
                                      name, 
                                      &getPendingAttributesImpl());
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 
-	m_resultNamespacesStack.popContext();
+    m_resultNamespacesStack.popContext();
 
-	if(m_hasCDATASectionElements == true)
-	{
-		assert(m_cdataStack.empty() == false);
+    if(m_hasCDATASectionElements == true)
+    {
+        assert(m_cdataStack.empty() == false);
 
-		m_cdataStack.pop_back();
-	}
+        m_cdataStack.pop_back();
+    }
 }
 
 
 
 void
 XSLTEngineImpl::characters(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type 	length)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   length)
 {
-	characters(
+    characters(
         ch,
-		0,
-		length);
+        0,
+        length);
 }
 
 
 
 void
 XSLTEngineImpl::characters(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	length)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   length)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(ch != 0);
-	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
+    assert(getFormatterListenerImpl() != 0);
+    assert(ch != 0);
+    assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
-	doFlushPending();
+    doFlushPending();
 
-	if(generateCDATASection() == true)
-	{
-		getFormatterListenerImpl()->cdata(ch + start, length);
+    if(generateCDATASection() == true)
+    {
+        getFormatterListenerImpl()->cdata(ch + start, length);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(ch, start, length, true);
-		}
-	}
-	else
-	{
-		getFormatterListenerImpl()->characters(ch + start, length);
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(ch, start, length, true);
+        }
+    }
+    else
+    {
+        getFormatterListenerImpl()->characters(ch + start, length);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(ch, start, length, false);
-		}
-	}
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(ch, start, length, false);
+        }
+    }
 }
 
 
 
 void
-XSLTEngineImpl::characters(const XalanNode&		node)
+XSLTEngineImpl::characters(const XalanNode&     node)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
+    assert(getFormatterListenerImpl() != 0);
+    assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
-	doFlushPending();
+    doFlushPending();
 
-	if(generateCDATASection() == true)
-	{
-		DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::cdata);
+    if(generateCDATASection() == true)
+    {
+        DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::cdata);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(node, true);
-		}
-	}
-	else
-	{
-		DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::characters);
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(node, true);
+        }
+    }
+    else
+    {
+        DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::characters);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(node, false);
-		}
-	}
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(node, false);
+        }
+    }
 }
 
 
 
 void
-XSLTEngineImpl::characters(const XObjectPtr&	xobject)
+XSLTEngineImpl::characters(const XObjectPtr&    xobject)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(xobject.null() == false);
-	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
+    assert(getFormatterListenerImpl() != 0);
+    assert(xobject.null() == false);
+    assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
-	doFlushPending();
+    doFlushPending();
 
-	if(generateCDATASection() == true)
-	{
-		xobject->str(*getFormatterListenerImpl(), &FormatterListener::cdata);
+    if(generateCDATASection() == true)
+    {
+        xobject->str(*getFormatterListenerImpl(), &FormatterListener::cdata);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(xobject, true);
-		}
-	}
-	else
-	{
-		xobject->str(*getFormatterListenerImpl(), &FormatterListener::characters);
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(xobject, true);
+        }
+    }
+    else
+    {
+        xobject->str(*getFormatterListenerImpl(), &FormatterListener::characters);
 
-		if(getTraceListeners() > 0)
-		{
-			fireCharacterGenerateEvent(xobject, false);
-		}
-	}
+        if(getTraceListeners() > 0)
+        {
+            fireCharacterGenerateEvent(xobject, false);
+        }
+    }
 }
 
 
 
 void 
 XSLTEngineImpl::charactersRaw(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	length)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   length)
 {
-	assert(ch != 0);
+    assert(ch != 0);
 
-	doFlushPending();
+    doFlushPending();
 
-	getFormatterListenerImpl()->charactersRaw(ch, length);
+    getFormatterListenerImpl()->charactersRaw(ch, length);
 
-	if(getTraceListeners() > 0)
-	{
-		fireCharacterGenerateEvent(ch, start, length, false);
-	}
+    if(getTraceListeners() > 0)
+    {
+        fireCharacterGenerateEvent(ch, start, length, false);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::charactersRaw(const XalanNode&	node)
+XSLTEngineImpl::charactersRaw(const XalanNode&  node)
 {
-	doFlushPending();
+    doFlushPending();
 
-	DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::charactersRaw);
+    DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::charactersRaw);
 
-	if(getTraceListeners() > 0)
-	{
-		fireCharacterGenerateEvent(node, false);
-	}
+    if(getTraceListeners() > 0)
+    {
+        fireCharacterGenerateEvent(node, false);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::charactersRaw(const XObjectPtr&		xobject)
+XSLTEngineImpl::charactersRaw(const XObjectPtr&     xobject)
 {
-	doFlushPending();
+    doFlushPending();
 
-	xobject->str(*getFormatterListenerImpl(), &FormatterListener::charactersRaw);
+    xobject->str(*getFormatterListenerImpl(), &FormatterListener::charactersRaw);
 
-	if(getTraceListeners() > 0)
-	{
-		fireCharacterGenerateEvent(xobject, false);
-	}
+    if(getTraceListeners() > 0)
+    {
+        fireCharacterGenerateEvent(xobject, false);
+    }
 }
 
 
@@ -2012,185 +2045,202 @@ XSLTEngineImpl::charactersRaw(const XObjectPtr&		xobject)
 void
 XSLTEngineImpl::resetDocument()
 {
-	assert(getFormatterListenerImpl() != 0);
+    assert(getFormatterListenerImpl() != 0);
 
-	flushPending();
-	
-	getFormatterListenerImpl()->resetDocument();
+    flushPending();
+    
+    getFormatterListenerImpl()->resetDocument();
 }
 
 
 
 void
 XSLTEngineImpl::ignorableWhitespace(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	length)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   length)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(ch != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(ch != 0);
 
-	doFlushPending();
+    doFlushPending();
 
-	getFormatterListenerImpl()->ignorableWhitespace(ch, length);
+    getFormatterListenerImpl()->ignorableWhitespace(ch, length);
 
-	if(getTraceListeners() > 0)
-	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_IGNORABLEWHITESPACE,
-					     getMemoryManager(), ch, 0, length);
+    if(getTraceListeners() > 0)
+    {
+        GenerateEvent ge(GenerateEvent::EVENTTYPE_IGNORABLEWHITESPACE,
+                         getMemoryManager(), ch, 0, length);
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::processingInstruction(
-			const XalanDOMChar*		target,
-			const XalanDOMChar*		data)
+            const XalanDOMChar*     target,
+            const XalanDOMChar*     data)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(target != 0);
-	assert(data != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(target != 0);
+    assert(data != 0);
 
-	doFlushPending();
+    doFlushPending();
 
-	getFormatterListenerImpl()->processingInstruction(target, data);
+    getFormatterListenerImpl()->processingInstruction(target, data);
 
-	if(getTraceListeners() > 0)
-	{
-		GenerateEvent ge(
-				GenerateEvent::EVENTTYPE_PI,
+    if(getTraceListeners() > 0)
+    {
+        GenerateEvent ge(
+                GenerateEvent::EVENTTYPE_PI,
                  getMemoryManager(),
                 target,
-				data);
+                data);
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::comment(const XalanDOMChar*		data)
+XSLTEngineImpl::comment(const XalanDOMChar*     data)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(data != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(data != 0);
 
-	doFlushPending();
+    doFlushPending();
 
-	getFormatterListenerImpl()->comment(data);
+    getFormatterListenerImpl()->comment(data);
 
-	if(getTraceListeners() > 0)
-	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_COMMENT,
+    if(getTraceListeners() > 0)
+    {
+        GenerateEvent ge(GenerateEvent::EVENTTYPE_COMMENT,
                                            getMemoryManager(),
                                           data);
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 }
 
 
 void
-XSLTEngineImpl::entityReference(const XalanDOMChar*		name)
+XSLTEngineImpl::entityReference(const XalanDOMChar*     name)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(name != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(name != 0);
 
-	doFlushPending();
+    doFlushPending();
 
-	getFormatterListenerImpl()->entityReference(name);
+    getFormatterListenerImpl()->entityReference(name);
 
-	if(getTraceListeners() > 0)
-	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENTITYREF,
+    if(getTraceListeners() > 0)
+    {
+        GenerateEvent ge(GenerateEvent::EVENTTYPE_ENTITYREF,
                                           getMemoryManager(),  name);
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::cdata(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	length)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   length)
 {
-	assert(getFormatterListenerImpl() != 0);
-	assert(ch != 0);
+    assert(getFormatterListenerImpl() != 0);
+    assert(ch != 0);
 
-	setMustFlushPendingStartDocument(true);
+    setMustFlushPendingStartDocument(true);
 
-	flushPending();
+    flushPending();
 
-	getFormatterListenerImpl()->cdata(ch, length);
+    getFormatterListenerImpl()->cdata(ch, length);
 
-	if(getTraceListeners() > 0)
-	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, getMemoryManager(), ch, start,
-					length);
+    if(getTraceListeners() > 0)
+    {
+        GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, getMemoryManager(), ch, start,
+                    length);
 
-		fireGenerateEvent(ge);
-	}
+        fireGenerateEvent(ge);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::checkDefaultNamespace(
-			const XalanDOMString&	theElementName,
-			const XalanDOMString&	theElementNamespaceURI)
+            const XalanDOMString&   theElementName,
+            const XalanDOMString&   theElementNamespaceURI)
 {
-	// Check for elements with no prefix...
-	if (indexOf(theElementName, XalanUnicode::charColon) == theElementName.length())
-	{
-		// Get the current default namespace URI..
-		const XalanDOMString* const		theResultNamespace =
-			getResultNamespaceForPrefix(s_emptyString);
+    // Check for elements with no prefix...
+    if (indexOf(theElementName, XalanUnicode::charColon) == theElementName.length())
+    {
+        // Get the current default namespace URI..
+        const XalanDOMString* const     theResultNamespace =
+            getResultNamespaceForPrefix(s_emptyString);
 
-		// If there is one, and the URIs are different, add a new declaration.  This
-		// will also "turn-off" the default namespace, if necessary.
-		if (theResultNamespace != 0 && theElementNamespaceURI != *theResultNamespace)
-		{
-			addResultAttribute(DOMServices::s_XMLNamespace, theElementNamespaceURI);
-		}
-	}
+        // If there is one, and the URIs are different, add a new declaration.  This
+        // will also "turn-off" the default namespace, if necessary.
+        if (theResultNamespace != 0 && theElementNamespaceURI != *theResultNamespace)
+        {
+            addResultAttribute(DOMServices::s_XMLNamespace, theElementNamespaceURI);
+        }
+    }
 }
 
 
 
 void
 XSLTEngineImpl::warnCopyTextNodesOnly(
-			const XalanNode*	sourceNode,
-			const LocatorType*	locator)
+            const XalanNode*    sourceNode,
+            const LocatorType*  locator)
 {
-    XalanDOMString theResult( getMemoryManager());
+    assert(m_executionContext != 0);
 
-	warn(XalanMessageLoader::getMessage(XalanMessages::OnlyTextNodesCanBeCopied, theResult),
-			*locator,
-			sourceNode);
+    ECGetAndReleaseCachedString     theGuard(*m_executionContext);
+
+    const XalanDOMString&   theMessage =
+        XalanMessageLoader::getMessage(
+            theGuard.get(),
+            XalanMessages::OnlyTextNodesCanBeCopied);
+
+    if (locator != 0)
+    {
+        warn(
+            theMessage,
+            *locator,
+            sourceNode);
+    }
+    else
+    {
+        warn(
+            theMessage,
+            sourceNode);
+    }
 }
 
 
 
 inline void
 XSLTEngineImpl::cloneToResultTree(
-			const XalanText&	node,
-			bool				overrideStrip)
+            const XalanText&    node,
+            bool                overrideStrip)
 {
-	assert(m_executionContext != 0 && m_stylesheetRoot != 0);
-	assert(node.getParentNode() == 0 ||
-		   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
+    assert(m_executionContext != 0 && m_stylesheetRoot != 0);
+    assert(node.getParentNode() == 0 ||
+           node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
 
     if (overrideStrip == true ||
         m_executionContext->shouldStripSourceNode(node) == false)
     {
-	    const XalanDOMString&	data = node.getData();
+        const XalanDOMString&   data = node.getData();
         assert(0 != length(data));
 
-	    characters(toCharArray(data), 0, length(data));
+        characters(toCharArray(data), 0, length(data));
     }
 }
 
@@ -2198,810 +2248,853 @@ XSLTEngineImpl::cloneToResultTree(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			const XalanNode&	node,
-			bool				cloneTextNodesOnly,
-			const LocatorType*	locator)
+            const XalanNode&    node,
+            bool                cloneTextNodesOnly,
+            const LocatorType*  locator)
 {
-	XalanNode::NodeType		posNodeType = node.getNodeType();
+    XalanNode::NodeType     posNodeType = node.getNodeType();
 
-	if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
-	{
-		outputResultTreeFragment(
+    if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
+    {
+        outputResultTreeFragment(
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocumentFragment&)node,
+                (const XalanDocumentFragment&)node,
 #else
-				static_cast<const XalanDocumentFragment&>(node),
+                static_cast<const XalanDocumentFragment&>(node),
 #endif
-			cloneTextNodesOnly,
-			locator);
-	}
-	else if (cloneTextNodesOnly == true &&
-		posNodeType != XalanNode::TEXT_NODE)
-	{
-		warnCopyTextNodesOnly(
-			&node,
-			locator);
-	}
-	else
-	{
-		const XalanNode*	pos = &node;
+            cloneTextNodesOnly,
+            locator);
+    }
+    else if (cloneTextNodesOnly == true &&
+        posNodeType != XalanNode::TEXT_NODE)
+    {
+        warnCopyTextNodesOnly(
+            &node,
+            locator);
+    }
+    else
+    {
+        const XalanNode*    pos = &node;
 
-		while(pos != 0)
-		{
-			if(posNodeType != XalanNode::ATTRIBUTE_NODE)
-			{
-				flushPending();
-			}
+        while(pos != 0)
+        {
+            if(posNodeType != XalanNode::ATTRIBUTE_NODE)
+            {
+                flushPending();
+            }
 
-			cloneToResultTree(
-							*pos,
-							posNodeType,
-							false,
-							true,
-							false,
-							locator);
+            cloneToResultTree(
+                            *pos,
+                            posNodeType,
+                            false,
+                            true,
+                            false,
+                            locator);
 
-			const XalanNode*	nextNode = pos->getFirstChild();
+            const XalanNode*    nextNode = pos->getFirstChild();
 
-			while(nextNode == 0)
-			{
-				if(XalanNode::ELEMENT_NODE == posNodeType)
-				{
-					endElement(c_wstr(pos->getNodeName()));
-				}
+            while(nextNode == 0)
+            {
+                if(XalanNode::ELEMENT_NODE == posNodeType)
+                {
+                    endElement(c_wstr(pos->getNodeName()));
+                }
 
-				if(&node == pos)
-					break;
+                if(&node == pos)
+                    break;
 
-				nextNode = pos->getNextSibling();
+                nextNode = pos->getNextSibling();
 
-				if(nextNode == 0)
-				{
-					pos = pos->getParentNode();
-					assert(pos != 0);
+                if(nextNode == 0)
+                {
+                    pos = pos->getParentNode();
+                    assert(pos != 0);
 
-					posNodeType = pos->getNodeType();
+                    posNodeType = pos->getNodeType();
 
-					if (&node == pos)
-					{
-						if(XalanNode::ELEMENT_NODE == posNodeType)
-						{
-							endElement(c_wstr(pos->getNodeName()));
-						}
+                    if (&node == pos)
+                    {
+                        if(XalanNode::ELEMENT_NODE == posNodeType)
+                        {
+                            endElement(c_wstr(pos->getNodeName()));
+                        }
 
-						nextNode = 0;
-						break;
-					}
-				}
-			}
+                        nextNode = 0;
+                        break;
+                    }
+                }
+            }
 
-			pos = nextNode;
+            pos = nextNode;
 
-			if (pos != 0)
-			{
-				posNodeType = pos->getNodeType();
-			}
-		}
-	}
+            if (pos != 0)
+            {
+                posNodeType = pos->getNodeType();
+            }
+        }
+    }
 }
 
 
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			const XalanNode&		node,
-			XalanNode::NodeType		nodeType,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes,
-			bool					cloneTextNodesOnly,
-			const LocatorType*		locator)
+            const XalanNode&        node,
+            XalanNode::NodeType     nodeType,
+            bool                    overrideStrip,
+            bool                    shouldCloneAttributes,
+            bool                    cloneTextNodesOnly,
+            const LocatorType*      locator)
 {
-	assert(nodeType == node.getNodeType());
-	assert(m_executionContext != 0);
+    assert(nodeType == node.getNodeType());
+    assert(m_executionContext != 0);
 
-	if(cloneTextNodesOnly == true)
-	{
-		if (nodeType != XalanNode::TEXT_NODE)
-		{
-			warnCopyTextNodesOnly(
-					&node,
-					locator);
-		}
-		else
-		{
-			const XalanText& 	tx =
+    if(cloneTextNodesOnly == true)
+    {
+        if (nodeType != XalanNode::TEXT_NODE)
+        {
+            warnCopyTextNodesOnly(
+                    &node,
+                    locator);
+        }
+        else
+        {
+            const XalanText&    tx =
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText&)node;
+                (const XalanText&)node;
 #else
-				static_cast<const XalanText&>(node);
+                static_cast<const XalanText&>(node);
 #endif
 
-			cloneToResultTree(tx, overrideStrip);
-		}
-	}
-	else
-	{
-		switch(nodeType)
-		{
-		case XalanNode::TEXT_NODE:
-			{
-				const XalanText& 	tx =
-	#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanText&)node;
-	#else
-					static_cast<const XalanText&>(node);
-	#endif
-
-				cloneToResultTree(tx, overrideStrip);
-			}
-			break;
-
-		case XalanNode::ELEMENT_NODE:
-			{
-				const XalanDOMString&	theElementName =
-					node.getNodeName();
-
-				startElement(c_wstr(theElementName));
-
-				if(shouldCloneAttributes == true)
-				{
-					copyAttributesToAttList(
-						node,
-						getPendingAttributesImpl());
-
-					copyNamespaceAttributes(node);
-				}
-
-				checkDefaultNamespace(theElementName, node.getNamespaceURI());
-			}
-			break;
-
-		case XalanNode::CDATA_SECTION_NODE:
-			{
-				const XalanDOMString& 	data = node.getNodeValue();
-
-				cdata(toCharArray(data), 0, length(data));
-			}
-			break;
-
-		case XalanNode::ATTRIBUTE_NODE:
-			if (length(getPendingElementName()) != 0)
-			{
-				addResultAttribute(
-						getPendingAttributesImpl(),
-						node.getNodeName(),
-						node.getNodeValue());
-			}
-			else
-			{
-                XalanDOMString theBuffer( getMemoryManager());
-
-				warn(
-					XalanMessageLoader::getMessage(XalanMessages::WrongAttemptingToAddAttrinbute, theBuffer),
-					*locator,
-					&node);
-			}
-			break;
-
-		case XalanNode::COMMENT_NODE:
-			comment(c_wstr(node.getNodeValue()));
-			break;
-
-		case XalanNode::ENTITY_REFERENCE_NODE:
-			entityReference(c_wstr(node.getNodeName()));
-			break;
-
-		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			processingInstruction(
-					c_wstr(node.getNodeName()),
-					c_wstr(node.getNodeValue()));
-			break;
-
-		case XalanNode::DOCUMENT_FRAGMENT_NODE:
-			assert(false);
-			break;
-
-		// Can't really do this, but we won't throw an error so that copy-of will
-		// work
-		case XalanNode::DOCUMENT_NODE:
-		case XalanNode::DOCUMENT_TYPE_NODE:
-		break;
-
-		default:
+            cloneToResultTree(tx, overrideStrip);
+        }
+    }
+    else
+    {
+        switch(nodeType)
+        {
+        case XalanNode::TEXT_NODE:
             {
-                XalanDOMString  theResult(getMemoryManager());
+                const XalanText&    tx =
+    #if defined(XALAN_OLD_STYLE_CASTS)
+                    (const XalanText&)node;
+    #else
+                    static_cast<const XalanText&>(node);
+    #endif
 
-			    error(XalanMessageLoader::getMessage(XalanMessages::CantCreateItemInResultTree, theResult), *locator, &node);
+                cloneToResultTree(tx, overrideStrip);
             }
-		break;
-		}
-	}
+            break;
+
+        case XalanNode::ELEMENT_NODE:
+            {
+                const XalanDOMString&   theElementName =
+                    node.getNodeName();
+
+                startElement(c_wstr(theElementName));
+
+                if(shouldCloneAttributes == true)
+                {
+                    copyAttributesToAttList(
+                        node,
+                        getPendingAttributesImpl());
+
+                    copyNamespaceAttributes(node);
+                }
+
+                checkDefaultNamespace(theElementName, node.getNamespaceURI());
+            }
+            break;
+
+        case XalanNode::CDATA_SECTION_NODE:
+            {
+                const XalanDOMString&   data = node.getNodeValue();
+
+                cdata(toCharArray(data), 0, length(data));
+            }
+            break;
+
+        case XalanNode::ATTRIBUTE_NODE:
+            if (length(getPendingElementName()) != 0)
+            {
+                addResultAttribute(
+                        getPendingAttributesImpl(),
+                        node.getNodeName(),
+                        node.getNodeValue());
+            }
+            else
+            {
+                const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+
+                const XalanDOMString&   theMessage =
+                    XalanMessageLoader::getMessage(
+                        theGuard.get(),
+                        XalanMessages::WrongAttemptingToAddAttrinbute);
+
+                if (locator != 0)
+                {
+                    warn(
+                        theMessage,
+                        *locator,
+                        &node);
+                }
+                else
+                {
+                    warn(
+                        theMessage,
+                        &node);
+                }
+            }
+            break;
+
+        case XalanNode::COMMENT_NODE:
+            comment(c_wstr(node.getNodeValue()));
+            break;
+
+        case XalanNode::ENTITY_REFERENCE_NODE:
+            entityReference(c_wstr(node.getNodeName()));
+            break;
+
+        case XalanNode::PROCESSING_INSTRUCTION_NODE:
+            processingInstruction(
+                    c_wstr(node.getNodeName()),
+                    c_wstr(node.getNodeValue()));
+            break;
+
+        case XalanNode::DOCUMENT_FRAGMENT_NODE:
+            assert(false);
+            break;
+
+        // Can't really do this, but we won't throw an error so that copy-of will
+        // work
+        case XalanNode::DOCUMENT_NODE:
+        case XalanNode::DOCUMENT_TYPE_NODE:
+        break;
+
+        default:
+            {
+                const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+
+                const XalanDOMString&   theMessage =
+                    XalanMessageLoader::getMessage(
+                        theGuard.get(),
+                        XalanMessages::CantCreateItemInResultTree);
+
+                if (locator != 0)
+                {
+                    warn(
+                        theMessage,
+                        *locator,
+                        &node);
+                }
+                else
+                {
+                    warn(
+                        theMessage,
+                        &node);
+                }
+            }
+        break;
+        }
+    }
 }
 
 
 
 void
 XSLTEngineImpl::outputToResultTree(
-			const XObject& 		value,
-			bool				outputTextNodesOnly,
-			const LocatorType*	locator)
+            const XObject&      value,
+            bool                outputTextNodesOnly,
+            const LocatorType*  locator)
 {
-	const XObject::eObjectType	type = value.getType();
+    const XObject::eObjectType  type = value.getType();
 
-	switch(type)
-	{
-	case XObject::eTypeBoolean:
-	case XObject::eTypeNumber:
-	case XObject::eTypeString:
-		{
-			const XalanDOMString&	s = value.str();
+    switch(type)
+    {
+    case XObject::eTypeBoolean:
+    case XObject::eTypeNumber:
+    case XObject::eTypeString:
+        {
+            const XalanDOMString&   s = value.str();
 
-			characters(toCharArray(s), 0, length(s));
-		}
-		break;
+            characters(toCharArray(s), 0, length(s));
+        }
+        break;
 
-	case XObject::eTypeNodeSet:
-		{
-			const NodeRefListBase&	nl = value.nodeset();
+    case XObject::eTypeNodeSet:
+        {
+            const NodeRefListBase&  nl = value.nodeset();
 
-			const NodeRefListBase::size_type	nChildren = nl.getLength();
+            const NodeRefListBase::size_type    nChildren = nl.getLength();
 
-			for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
-			{
-				XalanNode*			pos = nl.item(i);
-				assert(pos != 0);
+            for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
+            {
+                XalanNode*          pos = nl.item(i);
+                assert(pos != 0);
 
-				XalanNode::NodeType		posNodeType = pos->getNodeType();
+                XalanNode::NodeType     posNodeType = pos->getNodeType();
 
-				if (outputTextNodesOnly == true &&
-					posNodeType != XalanNode::TEXT_NODE)
-				{
-					warnCopyTextNodesOnly(
-							pos,
-							locator);
-				}
-				else
-				{
-					XalanNode* const	top = pos;
+                if (outputTextNodesOnly == true &&
+                    posNodeType != XalanNode::TEXT_NODE)
+                {
+                    warnCopyTextNodesOnly(
+                            pos,
+                            locator);
+                }
+                else
+                {
+                    XalanNode* const    top = pos;
 
-					while(0 != pos)
-					{
-						flushPending();
+                    while(0 != pos)
+                    {
+                        flushPending();
 
-						XalanNode::NodeType		posNodeType = pos->getNodeType();
+                        XalanNode::NodeType     posNodeType = pos->getNodeType();
 
-						cloneToResultTree(*pos, posNodeType, false, false, false, locator);
+                        cloneToResultTree(*pos, posNodeType, false, false, false, locator);
 
-						XalanNode*	nextNode = pos->getFirstChild();
+                        XalanNode*  nextNode = pos->getFirstChild();
 
-						while(0 == nextNode)
-						{
-							if(XalanNode::ELEMENT_NODE == posNodeType)
-							{
-								endElement(c_wstr(pos->getNodeName()));
-							}
+                        while(0 == nextNode)
+                        {
+                            if(XalanNode::ELEMENT_NODE == posNodeType)
+                            {
+                                endElement(c_wstr(pos->getNodeName()));
+                            }
 
-							if(top == pos)
-								break;
+                            if(top == pos)
+                                break;
 
-							nextNode = pos->getNextSibling();
+                            nextNode = pos->getNextSibling();
 
-							if(0 == nextNode)
-							{
-								pos = pos->getParentNode();
-								assert(pos != 0);
+                            if(0 == nextNode)
+                            {
+                                pos = pos->getParentNode();
+                                assert(pos != 0);
 
-								posNodeType = pos->getNodeType();
+                                posNodeType = pos->getNodeType();
 
-								if(top == pos)
-								{
-									if(XalanNode::ELEMENT_NODE == posNodeType)
-									{
-										endElement(c_wstr(pos->getNodeName()));
-									}
+                                if(top == pos)
+                                {
+                                    if(XalanNode::ELEMENT_NODE == posNodeType)
+                                    {
+                                        endElement(c_wstr(pos->getNodeName()));
+                                    }
 
-									nextNode = 0;
-									break;
-								}
-							}
-						}
+                                    nextNode = 0;
+                                    break;
+                                }
+                            }
+                        }
 
-						pos = nextNode;
+                        pos = nextNode;
 
-						if (pos != 0)
-						{
-							posNodeType = pos->getNodeType();
-						}
-					}
-				}
-			}
-		}
-		break;
-		
-	case XObject::eTypeResultTreeFrag:
-		outputResultTreeFragment(value, outputTextNodesOnly, locator);
-		break;
+                        if (pos != 0)
+                        {
+                            posNodeType = pos->getNodeType();
+                        }
+                    }
+                }
+            }
+        }
+        break;
+        
+    case XObject::eTypeResultTreeFrag:
+        outputResultTreeFragment(value, outputTextNodesOnly, locator);
+        break;
 
-	case XObject::eTypeNull:
-	case XObject::eTypeUnknown:
-	case XObject::eUnknown:
-	default:
-		assert(false);
-		break;
-	}
+    case XObject::eTypeNull:
+    case XObject::eTypeUnknown:
+    case XObject::eUnknown:
+    default:
+        assert(false);
+        break;
+    }
 }
 
 
 
 void
 XSLTEngineImpl::outputResultTreeFragment(
-			const XalanDocumentFragment& 	theTree,
-			bool							outputTextNodesOnly,
-			const LocatorType*				locator)
+            const XalanDocumentFragment&    theTree,
+            bool                            outputTextNodesOnly,
+            const LocatorType*              locator)
 {
-	for(XalanNode* child = theTree.getFirstChild(); child != 0; child = child->getNextSibling())
-	{
-		XalanNode*	pos = child;
+    for(XalanNode* child = theTree.getFirstChild(); child != 0; child = child->getNextSibling())
+    {
+        XalanNode*  pos = child;
 
-		XalanNode::NodeType		posNodeType = pos->getNodeType();
+        XalanNode::NodeType     posNodeType = pos->getNodeType();
 
-		if (outputTextNodesOnly == true &&
-			posNodeType != XalanNode::TEXT_NODE)
-		{
-			warnCopyTextNodesOnly(
-					pos,
-					locator);
-		}
-		else
-		{
-			XalanNode* const	top = pos;
+        if (outputTextNodesOnly == true &&
+            posNodeType != XalanNode::TEXT_NODE)
+        {
+            warnCopyTextNodesOnly(
+                    pos,
+                    locator);
+        }
+        else
+        {
+            XalanNode* const    top = pos;
 
-			while(0 != pos)
-			{
-				flushPending();
+            while(0 != pos)
+            {
+                flushPending();
 
-				cloneToResultTree(*pos, posNodeType, true, true, false, locator);
+                cloneToResultTree(*pos, posNodeType, true, true, false, locator);
 
-				XalanNode*	nextNode = pos->getFirstChild();
+                XalanNode*  nextNode = pos->getFirstChild();
 
-				while(0 == nextNode)
-				{
-					if(XalanNode::ELEMENT_NODE == posNodeType)
-					{
-						endElement(c_wstr(pos->getNodeName()));
-					}
+                while(0 == nextNode)
+                {
+                    if(XalanNode::ELEMENT_NODE == posNodeType)
+                    {
+                        endElement(c_wstr(pos->getNodeName()));
+                    }
 
-					if(top == pos)
-						break;
+                    if(top == pos)
+                        break;
 
-					nextNode = pos->getNextSibling();
+                    nextNode = pos->getNextSibling();
 
-					if(0 == nextNode)
-					{
-						pos = pos->getParentNode();
+                    if(0 == nextNode)
+                    {
+                        pos = pos->getParentNode();
 
-						if(0 == pos)
-						{
-							nextNode = 0;
+                        if(0 == pos)
+                        {
+                            nextNode = 0;
 
-							break;
-						}
-						else
-						{
-							assert(0 != pos);
+                            break;
+                        }
+                        else
+                        {
+                            assert(0 != pos);
 
-							posNodeType = pos->getNodeType();
+                            posNodeType = pos->getNodeType();
 
-							if(top == pos)
-							{
-								if(XalanNode::ELEMENT_NODE == posNodeType)
-								{
-									endElement(c_wstr(pos->getNodeName()));
-								}
+                            if(top == pos)
+                            {
+                                if(XalanNode::ELEMENT_NODE == posNodeType)
+                                {
+                                    endElement(c_wstr(pos->getNodeName()));
+                                }
 
-								nextNode = 0;
+                                nextNode = 0;
 
-								break;
-							}
-						}
-					}
-				}
+                                break;
+                            }
+                        }
+                    }
+                }
 
-				pos = nextNode;
+                pos = nextNode;
 
-				if (pos != 0)
-				{
-					posNodeType = pos->getNodeType();
-				}
-			}
-		}
-	}
+                if (pos != 0)
+                {
+                    posNodeType = pos->getNodeType();
+                }
+            }
+        }
+    }
 }
 
 
 
 bool
-XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
+XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName) const
 {
-	assert(m_executionContext != 0);
-	assert(m_hasCDATASectionElements == true);
+    assert(m_executionContext != 0);
+    assert(m_hasCDATASectionElements == true);
 
-	bool	fResult = false;
+    bool    fResult = false;
 
-	// We only want to worry about cdata-section-elements when we're serializing the
-	// result tree, which is only when the output context is 1.
-	if (m_outputContextStack.size() == 1)
-	{
-		const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
+    // We only want to worry about cdata-section-elements when we're serializing the
+    // result tree, which is only when the output context is 1.
+    if (m_outputContextStack.size() == 1)
+    {
+        const XalanDOMString::size_type     indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
-		if(indexOfNSSep == length(elementName))
-		{
-			const XalanDOMString* const		elemNS =
-						getResultNamespaceForPrefix(s_emptyString);
+        if(indexOfNSSep == length(elementName))
+        {
+            const XalanDOMString* const     elemNS =
+                        getResultNamespaceForPrefix(s_emptyString);
 
-			if (elemNS != 0)
-			{
-				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
-			}
-			else
-			{
-				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
-			}
-		}
-		else
-		{
-			typedef const ECGetAndReleaseCachedString	GetAndReleaseCachedString;
+            if (elemNS != 0)
+            {
+                fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
+            }
+            else
+            {
+                fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
+            }
+        }
+        else
+        {
+            typedef const ECGetAndReleaseCachedString   GetAndReleaseCachedString;
 
-			GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
-			GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+            GetAndReleaseCachedString   elemLocalNameGuard(*m_executionContext);
+            GetAndReleaseCachedString   prefixGuard(*m_executionContext);
 
-			XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
-			XalanDOMString&		prefix = prefixGuard.get();
+            XalanDOMString&     elemLocalName = elemLocalNameGuard.get();
+            XalanDOMString&     prefix = prefixGuard.get();
 
-			substring(elementName, prefix, 0, indexOfNSSep);
-			substring(elementName, elemLocalName, indexOfNSSep + 1);
+            substring(elementName, prefix, 0, indexOfNSSep);
+            substring(elementName, elemLocalName, indexOfNSSep + 1);
 
-			if(equals(prefix, DOMServices::s_XMLString))
-			{
-				fResult =
-						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elemLocalName));
-			}
-			else
-			{
-				const XalanDOMString* const		elemNS =
-					getResultNamespaceForPrefix(prefix);
+            if(equals(prefix, DOMServices::s_XMLString))
+            {
+                fResult =
+                    m_stylesheetRoot->isCDATASectionElementName(
+                        XalanQNameByReference(
+                            DOMServices::s_XMLNamespaceURI,
+                            elemLocalName));
+            }
+            else
+            {
+                const XalanDOMString* const     elemNS =
+                    getResultNamespaceForPrefix(prefix);
 
-				if(elemNS == 0)
-				{
-					error(XalanMessageLoader::getMessage(XalanMessages::PrefixMustResolveToNamespace_1Param,prefix));
-				}
-				else
-				{
-					fResult =
-							m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elemLocalName));
-				}
-			}
-		}
-	}
+                if(elemNS == 0)
+                {
+                    GetAndReleaseCachedString   theGuard(*m_executionContext);
 
-	return fResult;
+                    error(
+                        XalanMessageLoader::getMessage(
+                            theGuard.get(),
+                            XalanMessages::PrefixIsNotDeclared_1Param,
+                            prefix));
+                }
+                else
+                {
+                    fResult =
+                        m_stylesheetRoot->isCDATASectionElementName(
+                            XalanQNameByReference(
+                                *elemNS,
+                                elemLocalName));
+                }
+            }
+        }
+    }
+
+    return fResult;
 }
-	
+    
 
 
 const XalanDOMString*
-XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
+XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&   prefix) const
 {
-	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
+    return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
 }
   
 
 
 const XalanDOMString*
-XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
+XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&   theNamespace) const
 {
-	return m_resultNamespacesStack.getPrefixForNamespace(theNamespace);
+    return m_resultNamespacesStack.getPrefixForNamespace(theNamespace);
 }
 
 
 
 inline bool
 isPrefixUsed(
-			const XalanDOMString&		thePrefix,
-			XalanDOMString::size_type	thePrefixLength,
-			const XalanDOMChar*			theName,
-			XalanDOMString::size_type	theNameLength)
+            const XalanDOMString&       thePrefix,
+            XalanDOMString::size_type   thePrefixLength,
+            const XalanDOMChar*         theName,
+            XalanDOMString::size_type   theNameLength)
 {
-	assert(thePrefixLength != 0);
+    assert(thePrefixLength != 0);
 
-	// The name must be greater than the length of the prefix + 1, since
-	// there must be a ':' to separate the prefix from the local part...
-	if (theNameLength <= thePrefixLength + 1)
-	{
-		return false;
-	}
-	else
-	{
-		assert(theName != 0);
+    // The name must be greater than the length of the prefix + 1, since
+    // there must be a ':' to separate the prefix from the local part...
+    if (theNameLength <= thePrefixLength + 1)
+    {
+        return false;
+    }
+    else
+    {
+        assert(theName != 0);
 
-		const XalanDOMString::size_type		theIndex = indexOf(
-			theName,
-			XalanUnicode::charColon);
+        const XalanDOMString::size_type     theIndex = indexOf(
+            theName,
+            XalanUnicode::charColon);
 
-		// OK, if the index of the ':' is the same as the length of the prefix,
-		// and theElementName starts with thePrefix, then the prefix is in use.
-		if (theIndex == thePrefixLength &&
-			startsWith(theName, thePrefix) == true)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        // OK, if the index of the ':' is the same as the length of the prefix,
+        // and theElementName starts with thePrefix, then the prefix is in use.
+        if (theIndex == thePrefixLength &&
+            startsWith(theName, thePrefix) == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 
 
 inline bool
 isPrefixUsed(
-			const XalanDOMString&		thePrefix,
-			XalanDOMString::size_type	thePrefixLength,
-			const XalanDOMString&		theName)
+            const XalanDOMString&       thePrefix,
+            XalanDOMString::size_type   thePrefixLength,
+            const XalanDOMString&       theName)
 {
-	return isPrefixUsed(thePrefix, thePrefixLength, c_wstr(theName), length(theName));
+    return isPrefixUsed(thePrefix, thePrefixLength, c_wstr(theName), length(theName));
 }
 
 
 
 inline bool
 isPrefixUsedOrDeclared(
-			const XalanDOMString&		thePrefix,
-			XalanDOMString::size_type	thePrefixLength,
-			const XalanDOMChar*			theName,
-			XalanDOMString::size_type	theNameLength)
+            const XalanDOMString&       thePrefix,
+            XalanDOMString::size_type   thePrefixLength,
+            const XalanDOMChar*         theName,
+            XalanDOMString::size_type   theNameLength)
 {
-	if (isPrefixUsed(thePrefix, thePrefixLength, theName, theNameLength) == true)
-	{
-		return true;
-	}
-	else
-	{
-		const XalanDOMString::size_type		theDeclarationLength =
-			thePrefixLength + DOMServices::s_XMLNamespaceWithSeparatorLength;
+    if (isPrefixUsed(thePrefix, thePrefixLength, theName, theNameLength) == true)
+    {
+        return true;
+    }
+    else
+    {
+        const XalanDOMString::size_type     theDeclarationLength =
+            thePrefixLength + DOMServices::s_XMLNamespaceWithSeparatorLength;
 
-		// If this is a namespace declaration for this prefix, then all of
-		// these conditions must be true...
-		if (theDeclarationLength == theNameLength &&
-			startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true &&
-			endsWith(theName, c_wstr(thePrefix)) == true)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+        // If this is a namespace declaration for this prefix, then all of
+        // these conditions must be true...
+        if (theDeclarationLength == theNameLength &&
+            startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true &&
+            endsWith(theName, c_wstr(thePrefix)) == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 
 
 inline bool
 isPendingAttributePrefix(
-			const AttributeListType&	thePendingAttributes,
-			const XalanDOMString&		thePrefix,
-			XalanDOMString::size_type	thePrefixLength)
+            const AttributeListType&    thePendingAttributes,
+            const XalanDOMString&       thePrefix,
+            XalanDOMString::size_type   thePrefixLength)
 {
-	const unsigned int	thePendingAttributesCount =
-				thePendingAttributes.getLength();
+    const unsigned int  thePendingAttributesCount =
+                thePendingAttributes.getLength();
 
-	if (thePendingAttributesCount == 0)
-	{
-		// No attributes, no problem...
-		return false;
-	}
-	else
-	{
-		bool	fResult = false;
+    if (thePendingAttributesCount == 0)
+    {
+        // No attributes, no problem...
+        return false;
+    }
+    else
+    {
+        bool    fResult = false;
 
-		// Check each attribute...
-		for (unsigned int i = 0; i < thePendingAttributesCount; ++i)
-		{
-			const XalanDOMChar* const	thePendingAttributeName =
-							thePendingAttributes.getName(i);
-			assert(thePendingAttributeName != 0);
+        // Check each attribute...
+        for (unsigned int i = 0; i < thePendingAttributesCount; ++i)
+        {
+            const XalanDOMChar* const   thePendingAttributeName =
+                            thePendingAttributes.getName(i);
+            assert(thePendingAttributeName != 0);
 
-			if (isPrefixUsedOrDeclared(
-					thePrefix,
-					thePrefixLength,
-					thePendingAttributeName,
-					length(thePendingAttributeName)) == true)
-			{
-				fResult = true;
+            if (isPrefixUsedOrDeclared(
+                    thePrefix,
+                    thePrefixLength,
+                    thePendingAttributeName,
+                    length(thePendingAttributeName)) == true)
+            {
+                fResult = true;
 
-				break;
-			}
-		}
+                break;
+            }
+        }
 
-		return fResult;
-	}
+        return fResult;
+    }
 }
 
 
 
 bool
-XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
+XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&     thePrefix) const
 {
-	const XalanDOMString::size_type		thePrefixLength = length(thePrefix);
-	assert(thePrefixLength > 0);
+    const XalanDOMString::size_type     thePrefixLength = length(thePrefix);
+    assert(thePrefixLength > 0);
 
-	// The element name must be greater than the length of the prefix + 1, since
-	// there must be a ':' to separate the prefix from the local part...
-	if (isPrefixUsed(thePrefix, thePrefixLength, getPendingElementName()) == true)
-	{
-		return true;
-	}
-	else
-	{
-		// The element is not using the prefix, so check the
-		// pending attributes...
-		return isPendingAttributePrefix(
-						getPendingAttributes(),
-						thePrefix,
-						thePrefixLength);
-	}
+    // The element name must be greater than the length of the prefix + 1, since
+    // there must be a ':' to separate the prefix from the local part...
+    if (isPrefixUsed(thePrefix, thePrefixLength, getPendingElementName()) == true)
+    {
+        return true;
+    }
+    else
+    {
+        // The element is not using the prefix, so check the
+        // pending attributes...
+        return isPendingAttributePrefix(
+                        getPendingAttributes(),
+                        thePrefix,
+                        thePrefixLength);
+    }
 }
 
 
 
 void
 XSLTEngineImpl::addResultNamespace(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theName,
-			const XalanNode&		theNode,
-			AttributeListImpl&		thePendingAttributes,
-			bool					fOnlyIfPrefixNotPresent)
+            const XalanDOMString&   thePrefix,
+            const XalanDOMString&   theName,
+            const XalanNode&        theNode,
+            AttributeListImpl&      thePendingAttributes,
+            bool                    fOnlyIfPrefixNotPresent)
 {
-	if (fOnlyIfPrefixNotPresent == false ||
-		m_resultNamespacesStack.prefixIsPresentLocal(thePrefix) == false)
-	{
-		const XalanDOMString* const 	desturi = getResultNamespaceForPrefix(thePrefix);
-		const XalanDOMString&			srcURI = theNode.getNodeValue();
+    if (fOnlyIfPrefixNotPresent == false ||
+        m_resultNamespacesStack.prefixIsPresentLocal(thePrefix) == false)
+    {
+        const XalanDOMString* const     desturi = getResultNamespaceForPrefix(thePrefix);
+        const XalanDOMString&           srcURI = theNode.getNodeValue();
 
-		if(desturi == 0 || equals(srcURI, *desturi) == false)
-		{
-			addResultAttribute(thePendingAttributes, theName, srcURI);
-			addResultNamespaceDecl(thePrefix, srcURI);
-		}
-	}
+        if(desturi == 0 || equals(srcURI, *desturi) == false)
+        {
+            addResultAttribute(thePendingAttributes, theName, srcURI);
+            addResultNamespaceDecl(thePrefix, srcURI);
+        }
+    }
 }
 
 
 
 void
 XSLTEngineImpl::addResultNamespace(
-			const XalanNode&	theNode,
-			AttributeListImpl&	thePendingAttributes,
-			bool				fOnlyIfPrefixNotPresent)
+            const XalanNode&    theNode,
+            AttributeListImpl&  thePendingAttributes,
+            bool                fOnlyIfPrefixNotPresent)
 {
-	assert(m_executionContext != 0);
-	assert(theNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
+    assert(m_executionContext != 0);
+    assert(theNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-	const XalanDOMString& 	aname = theNode.getNodeName();
+    const XalanDOMString&   aname = theNode.getNodeName();
 
-	if (equals(aname, DOMServices::s_XMLNamespace) == true)
-	{
-		// Default namespace declaration...
-		addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
-	}
-	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
-	{
-		const ECGetAndReleaseCachedString	prefixGuard(*m_executionContext);
+    if (equals(aname, DOMServices::s_XMLNamespace) == true)
+    {
+        // Default namespace declaration...
+        addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+    }
+    else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
+    {
+        const ECGetAndReleaseCachedString   prefixGuard(*m_executionContext);
 
-		XalanDOMString& 	thePrefix = prefixGuard.get();
+        XalanDOMString&     thePrefix = prefixGuard.get();
 
-		substring(aname, thePrefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
+        substring(aname, thePrefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
-		addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
-	}
+        addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+    }
 }
 
 
 
 void
-XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src) 
+XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&    src) 
 {
-	assert(m_attributeNamesVisited.empty() == true);
+    assert(m_attributeNamesVisited.empty() == true);
 
-	const XalanNode*	parent = &src;
+    const XalanNode*    parent = &src;
 
-	while (parent != 0 &&
-		   parent->getNodeType() == XalanNode::ELEMENT_NODE) 
-	{
-		const XalanNamedNodeMap* const	nnm =
-				parent->getAttributes();
-		assert(nnm != 0);
+    while (parent != 0 &&
+           parent->getNodeType() == XalanNode::ELEMENT_NODE) 
+    {
+        const XalanNamedNodeMap* const  nnm =
+                parent->getAttributes();
+        assert(nnm != 0);
 
-		const unsigned int	nAttrs = nnm->getLength();
+        const unsigned int  nAttrs = nnm->getLength();
 
-		assert(m_outputContextStack.empty() == false);
+        assert(m_outputContextStack.empty() == false);
 
-		AttributeListImpl&	thePendingAttributes =
-				getPendingAttributesImpl();
+        AttributeListImpl&  thePendingAttributes =
+                getPendingAttributesImpl();
 
-		for (unsigned int i = 0;  i < nAttrs; i++) 
-		{
-			const XalanNode* const	attr = nnm->item(i);
-			assert(attr != 0);
+        for (unsigned int i = 0;  i < nAttrs; i++) 
+        {
+            const XalanNode* const  attr = nnm->item(i);
+            assert(attr != 0);
 
-			const XalanDOMString&	nodeName = attr->getNodeName();
+            const XalanDOMString&   nodeName = attr->getNodeName();
 
-			XALAN_USING_STD(find_if)
+            XALAN_USING_STD(find_if)
 
-			if (find_if(
-					m_attributeNamesVisited.begin(),
-					m_attributeNamesVisited.end(),
-					FindStringPointerFunctor(nodeName)) == m_attributeNamesVisited.end())
-			{
-				addResultNamespace(*attr, thePendingAttributes, true);
+            if (find_if(
+                    m_attributeNamesVisited.begin(),
+                    m_attributeNamesVisited.end(),
+                    FindStringPointerFunctor(nodeName)) == m_attributeNamesVisited.end())
+            {
+                addResultNamespace(*attr, thePendingAttributes, true);
 
-				m_attributeNamesVisited.push_back(&nodeName);
-			}
-		}
+                m_attributeNamesVisited.push_back(&nodeName);
+            }
+        }
 
-		parent = parent->getParentNode();
-	}
+        parent = parent->getParentNode();
+    }
 
-	m_attributeNamesVisited.clear();
+    m_attributeNamesVisited.clear();
 }
 
 
 
 const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
-			const XalanDOMString&	str,
-			XPathExecutionContext&	executionContext)
+            const XalanDOMString&   str,
+            XPathExecutionContext&  executionContext)
 {
-	assert(executionContext.getPrefixResolver() != 0);
+    assert(executionContext.getPrefixResolver() != 0);
 
-    XPath* const		theXPath = m_xpathFactory.create();
+    XPath* const        theXPath = m_xpathFactory.create();
 
-	const XPathGuard	theGuard(m_xpathFactory, theXPath);
+    const XPathGuard    theGuard(m_xpathFactory, theXPath);
 
     m_xpathProcessor->initXPath(
-			*theXPath,
-			m_xpathConstructionContext,
-			str,
-			*executionContext.getPrefixResolver(),
-			getLocatorFromStack());
+            *theXPath,
+            m_xpathConstructionContext,
+            str,
+            *executionContext.getPrefixResolver(),
+            getLocatorFromStack());
 
     return theXPath->execute(
-			executionContext.getCurrentNode(),
-			*executionContext.getPrefixResolver(),
-			executionContext);
+            executionContext.getCurrentNode(),
+            *executionContext.getPrefixResolver(),
+            executionContext);
 }
 
 
 
 const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext)
+            const XalanDOMString&   str,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext)
 {
-    XPath* const		theXPath = m_xpathFactory.create();
+    XPath* const        theXPath = m_xpathFactory.create();
 
-	const XPathGuard	theGuard(m_xpathFactory, theXPath);
+    const XPathGuard    theGuard(m_xpathFactory, theXPath);
 
     m_xpathProcessor->initXPath(
-			*theXPath,
-			m_xpathConstructionContext,
-			str,
-			prefixResolver,
-			getLocatorFromStack());
+            *theXPath,
+            m_xpathConstructionContext,
+            str,
+            prefixResolver,
+            getLocatorFromStack());
 
     return theXPath->execute(contextNode, prefixResolver, executionContext);
 }
@@ -3010,17 +3103,17 @@ XSLTEngineImpl::evalXPathStr(
 
 const XObjectPtr
 XSLTEngineImpl::evalXPathStr(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const XalanElement&		prefixResolver,
-			XPathExecutionContext&	executionContext)
+            const XalanDOMString&   str,
+            XalanNode*              contextNode,
+            const XalanElement&     prefixResolver,
+            XPathExecutionContext&  executionContext)
 {
-    ElementPrefixResolverProxy	theProxy(&prefixResolver,
-										 m_xpathEnvSupport,
-										 m_domSupport, 
+    ElementPrefixResolverProxy  theProxy(&prefixResolver,
+                                         m_xpathEnvSupport,
+                                         m_domSupport, 
                                          executionContext.getMemoryManager());
 
-	return evalXPathStr(str, contextNode, theProxy, executionContext);
+    return evalXPathStr(str, contextNode, theProxy, executionContext);
 }
 
 
@@ -3031,67 +3124,67 @@ XSLTEngineImpl::evalXPathStr(
  */
 const XPath*
 XSLTEngineImpl::createMatchPattern(
-			const XalanDOMString&	str,
-			const PrefixResolver&	resolver)
+            const XalanDOMString&   str,
+            const PrefixResolver&   resolver)
 {
-	XPath* const	xpath = m_xpathFactory.create();
+    XPath* const    xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(
-			*xpath,
-			m_xpathConstructionContext,
-			str,
-			resolver,
-			getLocatorFromStack());
+    m_xpathProcessor->initMatchPattern(
+            *xpath,
+            m_xpathConstructionContext,
+            str,
+            resolver,
+            getLocatorFromStack());
 
-	return xpath;
+    return xpath;
 }
 
 
 
 void
-XSLTEngineImpl::returnXPath(const XPath*	xpath)
+XSLTEngineImpl::returnXPath(const XPath*    xpath)
 {
-	m_xpathFactory.returnObject(xpath);
+    m_xpathFactory.returnObject(xpath);
 }
 
 
 
 inline void
 XSLTEngineImpl::copyAttributeToTarget(
-			const XalanDOMString&	attrName,
-			const XalanDOMString&	attrValue,
-			AttributeListImpl&		attrList)
+            const XalanDOMString&   attrName,
+            const XalanDOMString&   attrValue,
+            AttributeListImpl&      attrList)
 {
-	addResultAttribute(attrList, attrName, attrValue);
+    addResultAttribute(attrList, attrName, attrValue);
 }
 
 
 
 void
 XSLTEngineImpl::copyAttributesToAttList(
-			const XalanNode& 	node,
-			AttributeListImpl&	attList)
+            const XalanNode&    node,
+            AttributeListImpl&  attList)
 {
-	assert(m_stylesheetRoot != 0);
+    assert(m_stylesheetRoot != 0);
 
-	const XalanNamedNodeMap* const	attributes =
-		node.getAttributes();
+    const XalanNamedNodeMap* const  attributes =
+        node.getAttributes();
 
-	if (attributes != 0)
-	{
-		const unsigned int	nAttributes = attributes->getLength();
+    if (attributes != 0)
+    {
+        const unsigned int  nAttributes = attributes->getLength();
 
-		for(unsigned int i = 0; i < nAttributes; ++i)  
-		{	
-			const XalanNode* const 	attr = attributes->item(i);
-			assert(attr != 0);
+        for(unsigned int i = 0; i < nAttributes; ++i)  
+        {   
+            const XalanNode* const  attr = attributes->item(i);
+            assert(attr != 0);
 
-			copyAttributeToTarget(
-				attr->getNodeName(),
-				attr->getNodeValue(),
-				attList);
-		}
-	}
+            copyAttributeToTarget(
+                attr->getNodeName(),
+                attr->getNodeValue(),
+                attList);
+        }
+    }
 }
 
 
@@ -3099,58 +3192,58 @@ XSLTEngineImpl::copyAttributesToAttList(
 XMLParserLiaison&
 XSLTEngineImpl::getXMLParserLiaison() const
 {
-	return m_parserLiaison;
+    return m_parserLiaison;
 }
 
 
 
 void
-XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue)
+XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&     theValue)
 {
-	do
-	{
-		assign(m_scratchString, s_uniqueNamespacePrefix);
+    do
+    {
+        assign(m_scratchString, s_uniqueNamespacePrefix);
 
-		UnsignedLongToDOMString(m_uniqueNSValue++, m_scratchString);
-	} while(getResultNamespaceForPrefix(m_scratchString) != 0);
+        UnsignedLongToDOMString(m_uniqueNSValue++, m_scratchString);
+    } while(getResultNamespaceForPrefix(m_scratchString) != 0);
 
-	append(theValue, m_scratchString);
+    append(theValue, m_scratchString);
 }
 
 
 
 void
 XSLTEngineImpl::setStylesheetParam(
-			const XalanDOMString&	theName,
-			const XalanDOMString&	expression)
+            const XalanDOMString&   theName,
+            const XalanDOMString&   expression)
 {
-	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport, getMemoryManager());
+    const XalanQNameByValue     qname(theName, 0, m_xpathEnvSupport, m_domSupport, getMemoryManager());
 
     const ParamVectorType::value_type   temp(getMemoryManager(), qname, expression);
 
-	m_topLevelParams.push_back(temp);
+    m_topLevelParams.push_back(temp);
 }
 
 
 
 void
 XSLTEngineImpl::setStylesheetParam(
-			const XalanDOMString&	theName,
-			XObjectPtr				theValue)
+            const XalanDOMString&   theName,
+            XObjectPtr              theValue)
 {
-	const XalanQNameByValue		qname(theName, 0, m_xpathEnvSupport, m_domSupport,  getMemoryManager());
+    const XalanQNameByValue     qname(theName, 0, m_xpathEnvSupport, m_domSupport,  getMemoryManager());
 
     const ParamVectorType::value_type   temp(getMemoryManager(), qname, theValue);
 
-	m_topLevelParams.push_back(temp);
+    m_topLevelParams.push_back(temp);
 }
 
 
 
 void
-XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionContext)
+XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&   executionContext)
 {
-	executionContext.pushTopLevelVariables(m_topLevelParams);
+    executionContext.pushTopLevelVariables(m_topLevelParams);
 }
 
 
@@ -3158,57 +3251,57 @@ XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionConte
 FormatterListener*
 XSLTEngineImpl::getFormatterListener() const
 {
-	return getFormatterListenerImpl();
+    return getFormatterListenerImpl();
 }
 
 
 
 void
-XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
+XSLTEngineImpl::setFormatterListener(FormatterListener*     flistener)
 {
-	if (getHasPendingStartDocument() == true &&
+    if (getHasPendingStartDocument() == true &&
         getFormatterListenerImpl() != 0)
-	{
-		setMustFlushPendingStartDocument(true);
+    {
+        setMustFlushPendingStartDocument(true);
 
-		flushPending();
-	}
+        flushPending();
+    }
 
-	setFormatterListenerImpl(flistener);
+    setFormatterListenerImpl(flistener);
 }
 
 
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-			const XalanNode&	theNode,
-			bool				isCDATA)
+            const XalanNode&    theNode,
+            bool                isCDATA)
 {
     XalanDOMString  theBuffer(getMemoryManager());
     
     DOMServices::getNodeData(theNode, theBuffer);
 
-	fireCharacterGenerateEvent(theBuffer, isCDATA);
+    fireCharacterGenerateEvent(theBuffer, isCDATA);
 }
 
 
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-			const XObjectPtr&	theXObject,
-			bool				isCDATA)
+            const XObjectPtr&   theXObject,
+            bool                isCDATA)
 {
-	fireCharacterGenerateEvent(theXObject->str(), isCDATA);
+    fireCharacterGenerateEvent(theXObject->str(), isCDATA);
 }
 
 
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-			const XalanDOMString&	theString,
-			bool					isCDATA)
+            const XalanDOMString&   theString,
+            bool                    isCDATA)
 {
-	fireCharacterGenerateEvent(
+    fireCharacterGenerateEvent(
         theString.c_str(),
         0,
         theString.length(),
@@ -3219,37 +3312,37 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	length,
-			bool						isCDATA)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   length,
+            bool                        isCDATA)
 {
-	const GenerateEvent		ge(
-		isCDATA == true ? GenerateEvent::EVENTTYPE_CDATA : GenerateEvent::EVENTTYPE_CHARACTERS,
+    const GenerateEvent     ge(
+        isCDATA == true ? GenerateEvent::EVENTTYPE_CDATA : GenerateEvent::EVENTTYPE_CHARACTERS,
          getMemoryManager(),
-		ch,
-		start,
-		length);
+        ch,
+        start,
+        length);
 
-	fireGenerateEvent(ge);
+    fireGenerateEvent(ge);
 }
 
 
 void
 XSLTEngineImpl::installFunctions(MemoryManagerType& theManager)
 {
-	XPath::installFunction(XPathFunctionTable::s_current, FunctionCurrent());
-	XPath::installFunction(XPathFunctionTable::s_document, FunctionDocument());
-	XPath::installFunction(XPathFunctionTable::s_elementAvailable, FunctionElementAvailable());
-	XPath::installFunction(XPathFunctionTable::s_functionAvailable, FunctionFunctionAvailable());
-	XPath::installFunction(XPathFunctionTable::s_formatNumber, FunctionFormatNumber());
-	XPath::installFunction(XPathFunctionTable::s_generateId, FunctionGenerateID());
-	XPath::installFunction(XPathFunctionTable::s_key, FunctionKey());
+    XPath::installFunction(XPathFunctionTable::s_current, FunctionCurrent());
+    XPath::installFunction(XPathFunctionTable::s_document, FunctionDocument());
+    XPath::installFunction(XPathFunctionTable::s_elementAvailable, FunctionElementAvailable());
+    XPath::installFunction(XPathFunctionTable::s_functionAvailable, FunctionFunctionAvailable());
+    XPath::installFunction(XPathFunctionTable::s_formatNumber, FunctionFormatNumber());
+    XPath::installFunction(XPathFunctionTable::s_generateId, FunctionGenerateID());
+    XPath::installFunction(XPathFunctionTable::s_key, FunctionKey());
 
     const FunctionSystemProperty    temp(theManager);
 
-	XPath::installFunction(XPathFunctionTable::s_systemProperty, temp);
-	XPath::installFunction(XPathFunctionTable::s_unparsedEntityUri, FunctionUnparsedEntityURI());
+    XPath::installFunction(XPathFunctionTable::s_systemProperty, temp);
+    XPath::installFunction(XPathFunctionTable::s_unparsedEntityUri, FunctionUnparsedEntityURI());
 }
 
 
@@ -3257,15 +3350,15 @@ XSLTEngineImpl::installFunctions(MemoryManagerType& theManager)
 void
 XSLTEngineImpl::uninstallFunctions()
 {
-	XPath::uninstallFunction(XPathFunctionTable::s_current);
-	XPath::uninstallFunction(XPathFunctionTable::s_document);
-	XPath::uninstallFunction(XPathFunctionTable::s_elementAvailable);
-	XPath::uninstallFunction(XPathFunctionTable::s_functionAvailable);
-	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
-	XPath::uninstallFunction(XPathFunctionTable::s_generateId);
-	XPath::uninstallFunction(XPathFunctionTable::s_key);
-	XPath::uninstallFunction(XPathFunctionTable::s_systemProperty);
-	XPath::uninstallFunction(XPathFunctionTable::s_unparsedEntityUri);
+    XPath::uninstallFunction(XPathFunctionTable::s_current);
+    XPath::uninstallFunction(XPathFunctionTable::s_document);
+    XPath::uninstallFunction(XPathFunctionTable::s_elementAvailable);
+    XPath::uninstallFunction(XPathFunctionTable::s_functionAvailable);
+    XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
+    XPath::uninstallFunction(XPathFunctionTable::s_generateId);
+    XPath::uninstallFunction(XPathFunctionTable::s_key);
+    XPath::uninstallFunction(XPathFunctionTable::s_systemProperty);
+    XPath::uninstallFunction(XPathFunctionTable::s_unparsedEntityUri);
 }
 
 
@@ -3277,27 +3370,27 @@ XALAN_USING_XALAN(XalanDOMString)
 
 XALAN_USING_XALAN(XalanMemMgrs)
 
-static XalanDOMString	s_XSLNameSpaceURL(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_XSLNameSpaceURL(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_XalanNamespaceURL(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_XalanNamespaceURL(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_uniqueNamespacePrefix(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_uniqueNamespacePrefix(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_stylesheetNodeName(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_stylesheetNodeName(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_typeString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_typeString(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_hrefString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_hrefString(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_piTokenizerString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_piTokenizerString(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_typeValueString1(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_typeValueString1(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_typeValueString2(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_typeValueString2(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_typeValueString3(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_typeValueString3(XalanMemMgrs::getDummyMemMgr());
 
-static XalanDOMString	s_typeValueString4(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_typeValueString4(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -3305,27 +3398,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString&	XSLTEngineImpl::s_XSLNameSpaceURL = ::s_XSLNameSpaceURL;
+const XalanDOMString&   XSLTEngineImpl::s_XSLNameSpaceURL = ::s_XSLNameSpaceURL;
 
-const XalanDOMString&	XSLTEngineImpl::s_XalanNamespaceURL = ::s_XalanNamespaceURL;
+const XalanDOMString&   XSLTEngineImpl::s_XalanNamespaceURL = ::s_XalanNamespaceURL;
 
-const XalanDOMString&	XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
+const XalanDOMString&   XSLTEngineImpl::s_uniqueNamespacePrefix = ::s_uniqueNamespacePrefix;
 
-const XalanDOMString&	XSLTEngineImpl::s_stylesheetNodeName = ::s_stylesheetNodeName;
+const XalanDOMString&   XSLTEngineImpl::s_stylesheetNodeName = ::s_stylesheetNodeName;
 
-const XalanDOMString&	XSLTEngineImpl::s_typeString = ::s_typeString;
+const XalanDOMString&   XSLTEngineImpl::s_typeString = ::s_typeString;
 
-const XalanDOMString&	XSLTEngineImpl::s_hrefString = ::s_hrefString;
+const XalanDOMString&   XSLTEngineImpl::s_hrefString = ::s_hrefString;
 
-const XalanDOMString&	XSLTEngineImpl::s_piTokenizerString = ::s_piTokenizerString;
+const XalanDOMString&   XSLTEngineImpl::s_piTokenizerString = ::s_piTokenizerString;
 
-const XalanDOMString&	XSLTEngineImpl::s_typeValueString1 = ::s_typeValueString1;
+const XalanDOMString&   XSLTEngineImpl::s_typeValueString1 = ::s_typeValueString1;
 
-const XalanDOMString&	XSLTEngineImpl::s_typeValueString2 = ::s_typeValueString2;
+const XalanDOMString&   XSLTEngineImpl::s_typeValueString2 = ::s_typeValueString2;
 
-const XalanDOMString&	XSLTEngineImpl::s_typeValueString3 = ::s_typeValueString3;
+const XalanDOMString&   XSLTEngineImpl::s_typeValueString3 = ::s_typeValueString3;
 
-const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
+const XalanDOMString&   XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
 
 
 #if 0
@@ -3333,78 +3426,78 @@ const XalanDOMString&	XSLTEngineImpl::s_typeValueString4 = ::s_typeValueString4;
 
 void
 dumpTable(
-			const XSLTEngineImpl::ElementKeysMapType&	theTable,
-			std::ostream&								theSourceStream,
-			std::ostream&								theHeaderStream)
+            const XSLTEngineImpl::ElementKeysMapType&   theTable,
+            std::ostream&                               theSourceStream,
+            std::ostream&                               theHeaderStream)
 {
-	XSLTEngineImpl::ElementKeysMapType::const_iterator	i = theTable.begin();
+    XSLTEngineImpl::ElementKeysMapType::const_iterator  i = theTable.begin();
 
-	while(i != theTable.end())
-	{
-		theSourceStream << "const XalanDOMChar\tXSLTEngineImpl::s_";
+    while(i != theTable.end())
+    {
+        theSourceStream << "const XalanDOMChar\tXSLTEngineImpl::s_";
 
-		const XalanDOMString&	theString = (*i).first;
+        const XalanDOMString&   theString = (*i).first;
 
-		theHeaderStream << "\t// The string \"" << theString << "\"\n\tstatic const XalanDOMChar\ts_";
+        theHeaderStream << "\t// The string \"" << theString << "\"\n\tstatic const XalanDOMChar\ts_";
 
-		bool	nextCap = false;
+        bool    nextCap = false;
 
-		XalanDOMString::const_iterator	j = theString.begin();
+        XalanDOMString::const_iterator  j = theString.begin();
 
-		while(*j)
-		{
-			if (*j == '-')
-			{
-				nextCap = true;
-			}
-			else
-			{
-				assert(*j >= 'a' && *j <= 'z');
+        while(*j)
+        {
+            if (*j == '-')
+            {
+                nextCap = true;
+            }
+            else
+            {
+                assert(*j >= 'a' && *j <= 'z');
 
-				if (nextCap)
-				{
-					theSourceStream << char(*j -'a' + 'A');
-					theHeaderStream << char(*j -'a' + 'A');
+                if (nextCap)
+                {
+                    theSourceStream << char(*j -'a' + 'A');
+                    theHeaderStream << char(*j -'a' + 'A');
 
-					nextCap = false;
-				}
-				else
-				{
-					theSourceStream << char(*j);
-					theHeaderStream << char(*j);
-				}
-			}
+                    nextCap = false;
+                }
+                else
+                {
+                    theSourceStream << char(*j);
+                    theHeaderStream << char(*j);
+                }
+            }
 
-			++j;
-		}
+            ++j;
+        }
 
-		j = theString.begin();
+        j = theString.begin();
 
-		theSourceStream << "[] =\n{\n";
-		theHeaderStream << "[];\n\n";
+        theSourceStream << "[] =\n{\n";
+        theHeaderStream << "[];\n\n";
 
-		while(*j)
-		{
-			if (*j == '-')
-			{
-				theSourceStream << "\tXalanUnicode::charHyphenMinus,\n";
-			}
-			else
-			{
-				assert(*j >= 'a' && *j <= 'z');
+        while(*j)
+        {
+            if (*j == '-')
+            {
+                theSourceStream << "\tXalanUnicode::charHyphenMinus,\n";
+            }
+            else
+            {
+                assert(*j >= 'a' && *j <= 'z');
 
-				theSourceStream << "\tXalanUnicode::charLetter_";
+                theSourceStream << "\tXalanUnicode::charLetter_";
 
-				theSourceStream << char(*j) << ",\n";
-			}
+                theSourceStream << char(*j) << ",\n";
+            }
 
-			++j;
-		}
+            ++j;
+        }
 
-		theSourceStream << "\t0\n};\n\n";
+        theSourceStream << "\t0\n};\n\n";
 
-		++i;
-	}
+        ++i;
+    }
 }
 #endif
 
@@ -3412,31 +3505,31 @@ dumpTable(
 void
 XSLTEngineImpl::initialize(MemoryManagerType&      theManager)
 {
-	::s_XSLNameSpaceURL.reset( theManager, "http://www.w3.org/1999/XSL/Transform");
+    ::s_XSLNameSpaceURL.reset( theManager, "http://www.w3.org/1999/XSL/Transform");
 
-	::s_XalanNamespaceURL.reset( theManager, "http://xml.apache.org/xalan");
+    ::s_XalanNamespaceURL.reset( theManager, "http://xml.apache.org/xalan");
 
-	::s_uniqueNamespacePrefix.reset( theManager, "ns");
+    ::s_uniqueNamespacePrefix.reset( theManager, "ns");
 
-	::s_stylesheetNodeName.reset( theManager, "xml-stylesheet");
+    ::s_stylesheetNodeName.reset( theManager, "xml-stylesheet");
 
-	::s_typeString.reset( theManager, "type");
+    ::s_typeString.reset( theManager, "type");
 
     XalanDOMString tmpString1(Constants::ATTRNAME_HREF, theManager);
 
     ::s_hrefString.swap(tmpString1);
 
-	::s_piTokenizerString.reset( theManager, " \t=");
+    ::s_piTokenizerString.reset( theManager, " \t=");
 
-	::s_typeValueString1.reset( theManager, "text/xml");
+    ::s_typeValueString1.reset( theManager, "text/xml");
 
-	::s_typeValueString2.reset( theManager, "text/xsl");
+    ::s_typeValueString2.reset( theManager, "text/xsl");
 
-	::s_typeValueString3.reset( theManager, "application/xml");
+    ::s_typeValueString3.reset( theManager, "application/xml");
 
-	::s_typeValueString4.reset( theManager, "application/xml+xslt");
+    ::s_typeValueString4.reset( theManager, "application/xml+xslt");
 
-	installFunctions(theManager);
+    installFunctions(theManager);
 }
 
 
@@ -3444,31 +3537,31 @@ XSLTEngineImpl::initialize(MemoryManagerType&      theManager)
 void
 XSLTEngineImpl::terminate()
 {
-	uninstallFunctions();
+    uninstallFunctions();
 
     MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
 
-	releaseMemory(::s_uniqueNamespacePrefix, theManager);
+    releaseMemory(::s_uniqueNamespacePrefix, theManager);
 
-	releaseMemory(::s_XalanNamespaceURL, theManager);
+    releaseMemory(::s_XalanNamespaceURL, theManager);
 
-	releaseMemory(::s_XSLNameSpaceURL, theManager);
+    releaseMemory(::s_XSLNameSpaceURL, theManager);
 
-	releaseMemory(::s_stylesheetNodeName, theManager);
+    releaseMemory(::s_stylesheetNodeName, theManager);
 
-	releaseMemory(::s_typeString, theManager);
+    releaseMemory(::s_typeString, theManager);
 
-	releaseMemory(::s_hrefString, theManager);
+    releaseMemory(::s_hrefString, theManager);
 
-	releaseMemory(::s_piTokenizerString, theManager);
+    releaseMemory(::s_piTokenizerString, theManager);
 
-	releaseMemory(::s_typeValueString1, theManager);
+    releaseMemory(::s_typeValueString1, theManager);
 
-	releaseMemory(::s_typeValueString2, theManager);
+    releaseMemory(::s_typeValueString2, theManager);
 
-	releaseMemory(::s_typeValueString3, theManager);
+    releaseMemory(::s_typeValueString3, theManager);
 
-	releaseMemory(::s_typeValueString4, theManager);
+    releaseMemory(::s_typeValueString4, theManager);
 }
 
 

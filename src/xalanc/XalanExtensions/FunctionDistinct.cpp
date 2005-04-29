@@ -57,69 +57,69 @@ FunctionDistinct::~FunctionDistinct()
 
 XObjectPtr
 FunctionDistinct::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	if (args.size() != 1)
-	{
-        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    if (args.size() != 1)
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-		executionContext.error(getError(theGuard.get()), context, locator);
-	}
+        executionContext.error(getError(theGuard.get()), context, locator);
+    }
 
-	assert(args[0].null() == false);
+    assert(args[0].null() == false);
 
-	const NodeRefListBase&	nodeset = args[0]->nodeset();
+    const NodeRefListBase&  nodeset = args[0]->nodeset();
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	BorrowReturnMutableNodeRefList	theResult(executionContext);
+    BorrowReturnMutableNodeRefList  theResult(executionContext);
 
-	const NodeRefListBase::size_type	theLength = nodeset.getLength();
+    const NodeRefListBase::size_type    theLength = nodeset.getLength();
 
-	if (theLength == 1)
-	{
-		theResult->addNode(nodeset.item(0));
-	}
-	else if (theLength > 1)
-	{
-		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+    if (theLength == 1)
+    {
+        theResult->addNode(nodeset.item(0));
+    }
+    else if (theLength > 1)
+    {
+        typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
 
-		GetAndReleaseCachedString	theGuard(executionContext);
+        GetAndReleaseCachedString   theGuard(executionContext);
 
-		XalanDOMString&				theCachedString = theGuard.get();
-
-
-		typedef XalanSet<XalanDOMString>					SetType;
-
-        SetType		theStrings(executionContext.getMemoryManager());
-
-		// Check to make sure each node has a unique
-		// string value.
-		for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
-		{
-			XalanNode* const	theNode = nodeset.item(i);
-			assert(theNode != 0);
-
-			DOMServices::getNodeData(*theNode, theCachedString);
-
-			if (theStrings.find(theCachedString) == theStrings.end())
-			{
-				theResult->addNodeInDocOrder(theNode, executionContext);
-
-				theStrings.insert(theCachedString);
-			}
+        XalanDOMString&             theCachedString = theGuard.get();
 
 
-			clear(theCachedString);
-		}
-	}
+        typedef XalanSet<XalanDOMString>                    SetType;
 
-	theResult->setDocumentOrder();
+        SetType     theStrings(executionContext.getMemoryManager());
 
-	return executionContext.getXObjectFactory().createNodeSet(theResult);
+        // Check to make sure each node has a unique
+        // string value.
+        for (NodeRefListBase::size_type i = 0; i < theLength; ++i)
+        {
+            XalanNode* const    theNode = nodeset.item(i);
+            assert(theNode != 0);
+
+            DOMServices::getNodeData(*theNode, theCachedString);
+
+            if (theStrings.find(theCachedString) == theStrings.end())
+            {
+                theResult->addNodeInDocOrder(theNode, executionContext);
+
+                theStrings.insert(theCachedString);
+            }
+
+
+            clear(theCachedString);
+        }
+    }
+
+    theResult->setDocumentOrder();
+
+    return executionContext.getXObjectFactory().createNodeSet(theResult);
 }
 
 
@@ -140,9 +140,9 @@ const XalanDOMString&
 FunctionDistinct::getError(XalanDOMString&  theResult) const
 {
 
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionAcceptsOneArgument_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
                 "distinct");
 }
 

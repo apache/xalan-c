@@ -41,81 +41,81 @@ FunctionSubstringAfter::~FunctionSubstringAfter()
 
 
 
-static const XalanDOMString		theEmptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     theEmptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 inline XObjectPtr
-createEmptyString(XPathExecutionContext&	executionContext)
+createEmptyString(XPathExecutionContext&    executionContext)
 {
-	return executionContext.getXObjectFactory().createStringReference(theEmptyString);
+    return executionContext.getXObjectFactory().createStringReference(theEmptyString);
 }
 
 
 
 XObjectPtr
 FunctionSubstringAfter::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		/* locator */) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              /* context */,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      /* locator */) const
 {
-	assert(arg1.null() == false && arg2.null() == false);
+    assert(arg1.null() == false && arg2.null() == false);
 
-	const XalanDOMString&				theFirstString = arg1->str();
+    const XalanDOMString&               theFirstString = arg1->str();
 
-	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
+    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
 
-	if (theFirstStringLength == 0)
-	{
-		return createEmptyString(executionContext);
-	}
-	else
-	{
-		const XalanDOMString&	theSecondString = arg2->str();
+    if (theFirstStringLength == 0)
+    {
+        return createEmptyString(executionContext);
+    }
+    else
+    {
+        const XalanDOMString&   theSecondString = arg2->str();
 
-		const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
+        const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
 
-		if (theSecondStringLength == 0)
-		{
-			return arg1;
-		}
-		else
-		{
-			const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
-													   theSecondString);
+        if (theSecondStringLength == 0)
+        {
+            return arg1;
+        }
+        else
+        {
+            const XalanDOMString::size_type     theIndex = indexOf(theFirstString,
+                                                       theSecondString);
 
-			if (theIndex == theFirstStringLength)
-			{
-				return createEmptyString(executionContext);
-			}
-			else
-			{
-				const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
+            if (theIndex == theFirstStringLength)
+            {
+                return createEmptyString(executionContext);
+            }
+            else
+            {
+                const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
 
-				// Find the first character, which will be the offset of the index of the
-				// beginning of the second string, plus the length of the second string.
-				const XalanDOMChar* const	theFirstCharacter =
-					toCharArray(theFirstString) + theIndex + theSecondStringLength;
+                // Find the first character, which will be the offset of the index of the
+                // beginning of the second string, plus the length of the second string.
+                const XalanDOMChar* const   theFirstCharacter =
+                    toCharArray(theFirstString) + theIndex + theSecondStringLength;
 
-				// The remaining length is just the opposite -- the length of the string,
-				// minus the index, minus the length of the second string.
-				const XalanDOMString::size_type		theSubstringLength =
-					theFirstStringLength  - theIndex - theSecondStringLength;
+                // The remaining length is just the opposite -- the length of the string,
+                // minus the index, minus the length of the second string.
+                const XalanDOMString::size_type     theSubstringLength =
+                    theFirstStringLength  - theIndex - theSecondStringLength;
 
-				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+                XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
-				XalanDOMString&		theString = theResult.get();
+                XalanDOMString&     theString = theResult.get();
 
-				assign(
-						theString,
-						theFirstCharacter,
-						theSubstringLength);
+                assign(
+                        theString,
+                        theFirstCharacter,
+                        theSubstringLength);
 
-				return executionContext.getXObjectFactory().createString(theResult);
-			}
-		}
-	}
+                return executionContext.getXObjectFactory().createString(theResult);
+            }
+        }
+    }
 }
 
 
@@ -127,7 +127,7 @@ FunctionSubstringAfter*
 #endif
 FunctionSubstringAfter::clone(MemoryManagerType&    theManager) const
 {
-	return XalanCopyConstruct(theManager, *this);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -135,9 +135,9 @@ FunctionSubstringAfter::clone(MemoryManagerType&    theManager) const
 const XalanDOMString&
 FunctionSubstringAfter::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(
-                XalanMessages::FunctionTakesTwoArguments_1Param,
+    return XalanMessageLoader::getMessage(
                 theResult,
+                XalanMessages::FunctionTakesTwoArguments_1Param,
                 "substring-after()");
 }
 

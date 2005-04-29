@@ -31,7 +31,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMString	XUnknown::s_unknownString(XalanMemMgrs::getDummyMemMgr());
+XalanDOMString  XUnknown::s_unknownString(XalanMemMgrs::getDummyMemMgr());
+
 
 
 static const XalanDOMChar   s_unknown[] =
@@ -50,18 +51,22 @@ static const XalanDOMChar   s_unknown[] =
 
 
 
-XUnknown::XUnknown(const XalanDOMString&	name,
-                   MemoryManagerType& theManager) :
-	XObject(eTypeUnknown),
-	m_value(theManager)
+XUnknown::XUnknown(
+            const XalanDOMString&   name,
+            MemoryManagerType&      theManager) :
+    XObject(eTypeUnknown),
+    m_value(theManager)
 {
-    XalanDOMString* pnt = const_cast<XalanDOMString*>(&m_value);
-
-    XalanMessageLoader::getMessage(XalanMessages::UnknownVariable_1Param, *pnt, name);
+    XalanMessageLoader::getMessage(
+        const_cast<XalanDOMString&>(m_value),
+        XalanMessages::UnknownVariable_1Param,
+        name);
 }
 
+
+    
 XUnknown*
-XUnknown::create(const XalanDOMString&	name, MemoryManagerType& theManager)
+XUnknown::create(const XalanDOMString&  name, MemoryManagerType& theManager)
 {
     typedef XUnknown Type;
 
@@ -76,9 +81,11 @@ XUnknown::create(const XalanDOMString&	name, MemoryManagerType& theManager)
     return theResult;
 }
 
-XUnknown::XUnknown(const XUnknown&	source, MemoryManagerType& theManager) :
-	XObject(source),
-	m_value(source.m_value, theManager)
+
+
+XUnknown::XUnknown(const XUnknown&  source, MemoryManagerType& theManager) :
+    XObject(source),
+    m_value(source.m_value, theManager)
 {
 }
 
@@ -94,12 +101,12 @@ XUnknown::~XUnknown()
 const XalanDOMString&
 XUnknown::getTypeString() const
 {
-	return s_unknownString;
+    return s_unknownString;
 }
 double
 XUnknown::num() const
 {
-	return 0.0;
+    return 0.0;
 }
 
 
@@ -107,7 +114,7 @@ XUnknown::num() const
 bool
 XUnknown::boolean() const
 {
-	return false;
+    return false;
 }
 
 
@@ -115,19 +122,19 @@ XUnknown::boolean() const
 const XalanDOMString&
 XUnknown::str() const
 {
-	return m_value;
+    return m_value;
 }
 
 
 
 void
 XUnknown::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function) const
 {
-	assert(length(m_value) == FormatterListener::size_type(length(m_value)));
+    assert(length(m_value) == FormatterListener::size_type(length(m_value)));
 
-	(formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
+    (formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
 }
 
 
@@ -135,25 +142,25 @@ XUnknown::str(
 double
 XUnknown::stringLength() const
 {
-	return length(m_value);
+    return length(m_value);
 }
 
 
 
 void
-XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject)
 {
-	theCallbackObject.Unknown(*this,
-							  m_value);
+    theCallbackObject.Unknown(*this,
+                              m_value);
 }
 
 
 
 void
-XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject) const
 {
-	theCallbackObject.Unknown(*this,
-							  m_value);
+    theCallbackObject.Unknown(*this,
+                              m_value);
 }
 
 
@@ -161,7 +168,7 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 void
 XUnknown::initialize(MemoryManagerType& theManager)
 {
-	s_unknownString.reset(theManager, s_unknown);
+    s_unknownString.reset(theManager, s_unknown);
 }
 
 
@@ -169,7 +176,7 @@ XUnknown::initialize(MemoryManagerType& theManager)
 void
 XUnknown::terminate()
 {
-	releaseMemory(s_unknownString, XalanMemMgrs::getDummyMemMgr());
+    releaseMemory(s_unknownString, XalanMemMgrs::getDummyMemMgr());
 }
 
 
