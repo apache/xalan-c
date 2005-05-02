@@ -595,23 +595,19 @@ ElemForEach::transformSelectedChildren(
                 }
                 else if (equals(scratchString, Constants::ATTRVAL_DATATYPE_TEXT) == false)
                 {
-                    const XalanQNameByValue     theQName(scratchString, this);
+                    const XalanQNameByValue     theQName(scratchString, executionContext.getMemoryManager(), this);
 
                     if (theQName.getNamespace().length() == 0)
                     {
                         error(
                             executionContext,
-                            XalanMessages::SortDataTypeMustBe,
-                            executionContext.getCurrentNode(),
-                            sort->getLocator());
+                            XalanMessages::SortDataTypeMustBe);
                     }
                     else
                     {
                         warn(
                             executionContext,
-                            XalanMessages::SortHasUnlnownDataType,
-                            executionContext.getCurrentNode(),
-                            sort->getLocator());
+                            XalanMessages::SortHasUnknownDataType);
                     }
                 }
             }
@@ -637,9 +633,7 @@ ElemForEach::transformSelectedChildren(
                 {
                     error(
                         executionContext,
-                        XalanMessages::SortMustBeAscendOrDescend,
-                        executionContext.getCurrentNode(),
-                        sort->getLocator());
+                        XalanMessages::SortMustBeAscendOrDescend);
                 }
             }
 
@@ -668,9 +662,7 @@ ElemForEach::transformSelectedChildren(
                 {
                     error(
                         executionContext,
-                        XalanMessages::SortCaseOrderMustBe,
-                        executionContext.getCurrentNode(),
-                        sort->getLocator());
+                        XalanMessages::SortCaseOrderMustBe);
                 }
             }
 

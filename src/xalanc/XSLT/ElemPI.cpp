@@ -109,7 +109,7 @@ ElemPI::getElementName() const
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemPI::startElement(StylesheetExecutionContext& executionContext) const
+ElemPI::startElement(StylesheetExecutionContext&    executionContext) const
 {
     ElemTemplateElement::startElement(executionContext);
     
@@ -138,16 +138,55 @@ ElemPI::startElement(StylesheetExecutionContext& executionContext) const
 
 
 void
-ElemPI::endElement(StylesheetExecutionContext& executionContext) const
+ElemPI::endElement(StylesheetExecutionContext&  executionContext) const
 {
     endChildrenToString(executionContext);
 
-    XalanDOMString & theResult = executionContext.getAndPopCachedString();
-    XalanDOMString & piName = executionContext.getAndPopCachedString();
+    XalanDOMString&     piData =
+        executionContext.getAndPopCachedString();
+
+    const XalanDOMString&   piName =
+        executionContext.getAndPopCachedString();
+
+    XalanDOMString::iterator    theEnd =
+        piData.end();
+
+    XalanDOMString::iterator    theCurrent =
+        piData.begin();
+
+    // We need to fix up any occurrences of the sequence '?>' in
+    // the PI's data by inserting a space between them.
+    while(theCurrent != theEnd)
+    {
+        const XalanDOMChar  theChar = *theCurrent;
+
+        if (theChar == XalanUnicode::charQuestionMark)
+        {
+            XalanDOMString::iterator    theNext =
+                theCurrent + 1;
+
+            if (theNext != theEnd &&
+                *theNext == XalanUnicode::charGreaterThanSign)
+            {
+                theCurrent =
+                    piData.insert(
+                        theNext,
+                        XalanUnicode::charSpace);
+
+                theEnd = piData.end();
+
+                // Move forward, since we're not interested in
+                // the '>' character.
+                ++theCurrent;
+            }
+        }
+
+        ++theCurrent;
+    }
 
     executionContext.processingInstruction(
-                c_wstr(piName),
-                c_wstr(theResult));
+                piName.c_str(),
+                piData.c_str());
 
     executionContext.popCopyTextNodesOnly();
 }

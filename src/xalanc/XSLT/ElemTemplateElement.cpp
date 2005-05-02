@@ -541,18 +541,47 @@ ElemTemplateElement::childrenToResultAttribute(
 void
 ElemTemplateElement::childrenToResultComment(StylesheetExecutionContext&    executionContext) const
 {
-    if (hasSingleTextChild() == true)
-    {
-        executionContext.comment(m_textLiteralChild->getText());
-    }
-    else
-    {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theResult(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
-        childrenToString(executionContext, theResult.get());
+    XalanDOMString&     theData = theGuard.get();
 
-        executionContext.comment(c_wstr(theResult.get()));
+    childrenToString(executionContext, theData);
+
+    XalanDOMString::iterator    theEnd =
+        theData.end();
+
+    XalanDOMString::iterator    theCurrent =
+        theData.begin();
+
+    // We need to fix up any occurrences of the sequence '--' in
+    // the comment's data by inserting a space between them.  Also,
+    // if the data ends with a '-', then we must append a space to
+    // the data.
+    while(theCurrent != theEnd)
+    {
+        const XalanDOMChar  theChar = *theCurrent;
+
+        if (theChar == XalanUnicode::charHyphenMinus)
+        {
+            XalanDOMString::iterator    theNext =
+                theCurrent + 1;
+
+            if (theNext == theEnd ||
+                *theNext == XalanUnicode::charHyphenMinus)
+            {
+                theCurrent =
+                    theData.insert(
+                        theNext,
+                        XalanUnicode::charSpace);
+
+                theEnd = theData.end();
+            }
+        }
+
+        ++theCurrent;
     }
+
+    executionContext.comment(theData.c_str());
 }
 
 
@@ -562,22 +591,51 @@ ElemTemplateElement::childrenToResultPI(
             StylesheetExecutionContext&     executionContext,
             const XalanDOMString&           theTarget) const
 {
-    if (hasSingleTextChild() == true)
-    {
-        executionContext.processingInstruction(
-                c_wstr(theTarget),
-                m_textLiteralChild->getText());
-    }
-    else
-    {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theResult(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
-        childrenToString(executionContext, theResult.get());
+    XalanDOMString&     theData = theGuard.get();
 
-        executionContext.processingInstruction(
-                c_wstr(theTarget),
-                c_wstr(theResult.get()));
+    childrenToString(executionContext, theData);
+
+    XalanDOMString::iterator    theEnd =
+        theData.end();
+
+    XalanDOMString::iterator    theCurrent =
+        theData.begin();
+
+    // We need to fix up any occurrences of the sequence '?>' in
+    // the PI's data by inserting a space between them.
+    while(theCurrent != theEnd)
+    {
+        const XalanDOMChar  theChar = *theCurrent;
+
+        if (theChar == XalanUnicode::charQuestionMark)
+        {
+            XalanDOMString::iterator    theNext =
+                theCurrent + 1;
+
+            if (theNext != theEnd &&
+                *theNext == XalanUnicode::charGreaterThanSign)
+            {
+                theCurrent =
+                    theData.insert(
+                        theNext,
+                        XalanUnicode::charSpace);
+
+                theEnd = theData.end();
+
+                // Move forward, since we're not interested in
+                // the '>' character.
+                ++theCurrent;
+            }
+        }
+
+        ++theCurrent;
     }
+
+    executionContext.processingInstruction(
+            theTarget.c_str(),
+            theData.c_str());
 }
 #endif
 

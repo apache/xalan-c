@@ -173,11 +173,16 @@ ElemMessage::execute(StylesheetExecutionContext&    executionContext) const
     {
         if (theLocator != 0)
         {
-            throw ElemMessageTerminateException(*theLocator, theString);
+            throw ElemMessageTerminateException(
+                        executionContext.getMemoryManager(),
+                        *theLocator,
+                        theString);
         }
         else
         {
-            throw ElemMessageTerminateException(theString);
+            throw ElemMessageTerminateException(
+                        executionContext.getMemoryManager(),
+                        theString);
         }
     }
 }

@@ -867,7 +867,7 @@ StylesheetExecutionContextDefault::pushParams(const ElemTemplateElement&    xslC
     }
     else
     {
-        ParamsVectorType    tempParams;
+        ParamsVectorType    tempParams(getMemoryManager());
 
         getParams(xslCallTemplateElement, tempParams);
 
@@ -1166,7 +1166,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
             eDefaultPIAllocatorBlockSize,
             eDefaultTextAllocatorBlockSize,
             eDefaultTextIWSAllocatorBlockSize) :
-        getSourceTreeFactory();
+        getSourceTreeFactory(getMemoryManager());
     assert(theDocument != 0);
 
     XalanSourceTreeDocumentFragment* const  theDocumentFragment =

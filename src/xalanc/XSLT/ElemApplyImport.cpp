@@ -153,8 +153,7 @@ ElemApplyImport::execute(StylesheetExecutionContext&    executionContext) const
 
         error(
             executionContext,
-            XalanMessages::NoCurrentTemplate,
-            sourceNode);
+            XalanMessages::NoCurrentTemplate);
     }
 
     ElemTemplateElement::execute(executionContext);

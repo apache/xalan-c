@@ -130,10 +130,9 @@ ElemExtensionCall::execute(StylesheetExecutionContext&  executionContext) const
 {
     ElemTemplateElement::execute(executionContext);
 
-    executionContext.warn( 
-        XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
-        0,
-        getLocator());
+    warn(
+        executionContext,
+        XalanMessages::XalanHandleExtensions);
 
     for (const ElemTemplateElement* child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
     {

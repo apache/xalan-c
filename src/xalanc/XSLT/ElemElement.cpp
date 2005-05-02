@@ -347,8 +347,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
         warn(
             executionContext,
             XalanMessages::IllegalElementName_1Param,
-            elemName,
-            executionContext.getCurrentNode());
+            elemName);
 
         ElemUse::doExecute(executionContext, false);
 
@@ -400,8 +399,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
                     warn(
                         executionContext,
                         XalanMessages::PrefixIsNotDeclared_1Param,
-                        prefix,
-                        executionContext.getCurrentNode());
+                        prefix);
 
                     if (m_namespaceAVT != 0)
                     {
@@ -414,8 +412,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
                         warn(
                             executionContext,
                             XalanMessages::IllegalElementName_1Param,
-                            elemName,
-                            executionContext.getCurrentNode());
+                            elemName);
                     }
                 }
                 else if (theNamespace != 0 &&

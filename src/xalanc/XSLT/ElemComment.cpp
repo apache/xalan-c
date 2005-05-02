@@ -111,7 +111,41 @@ ElemComment::endElement(StylesheetExecutionContext&     executionContext) const
     
     endChildrenToString(executionContext);
 
-    XalanDOMString& theResult = executionContext.getAndPopCachedString();
+    XalanDOMString&     theResult = executionContext.getAndPopCachedString();
+
+    XalanDOMString::iterator    theEnd =
+        theResult.end();
+
+    XalanDOMString::iterator    theCurrent =
+        theResult.begin();
+
+    // We need to fix up any occurrences of the sequence '--' in
+    // the comment's data by inserting a space between them.  Also,
+    // if the data ends with a '-', then we must append a space to
+    // the data.
+    while(theCurrent != theEnd)
+    {
+        const XalanDOMChar  theChar = *theCurrent;
+
+        if (theChar == XalanUnicode::charHyphenMinus)
+        {
+            XalanDOMString::iterator    theNext =
+                theCurrent + 1;
+
+            if (theNext == theEnd ||
+                *theNext == XalanUnicode::charHyphenMinus)
+            {
+                theCurrent =
+                    theResult.insert(
+                        theNext,
+                        XalanUnicode::charSpace);
+
+                theEnd = theResult.end();
+            }
+        }
+
+        ++theCurrent;
+    }
 
     executionContext.comment(c_wstr(theResult));
 

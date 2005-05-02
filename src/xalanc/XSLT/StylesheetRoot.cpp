@@ -982,8 +982,13 @@ StylesheetRoot::executeAttributeSet(
 
     if (i == m_attributeSetsMap.end())
     {
+        const GetCachedString   theGuard(theExecutionContext);
+
         theExecutionContext.error(
-            XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
+            XalanMessageLoader::getMessage(
+                theGuard.get(),
+                XalanMessages::UnknownNodeType_1Param,
+                Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
             theExecutionContext.getCurrentNode(),
             theLocator);
     }

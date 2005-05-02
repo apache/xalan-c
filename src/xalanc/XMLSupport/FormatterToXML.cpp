@@ -1341,28 +1341,7 @@ FormatterToXML::writeAttrString(
 void
 FormatterToXML::accumCommentData(const XalanDOMChar*    data)
 {
-    const XalanDOMString::size_type     len = length(data);
-    XalanDOMChar                        previousChar = 0;
-
-    for (XalanDOMString::size_type i = 0; i < len; ++i)
-    {
-        const XalanDOMChar  currentChar = data[i];
-
-        if (currentChar == XalanUnicode::charHyphenMinus &&
-            previousChar == XalanUnicode::charHyphenMinus)
-        {
-            accumName(XalanUnicode::charSpace);
-        }
-
-        accumName(currentChar);
-
-        previousChar = currentChar;
-    }
-        
-    if (previousChar == XalanUnicode::charHyphenMinus)
-    {
-        accumName(XalanUnicode::charSpace);
-    }
+    accumContent(data);
 }
 
 
@@ -1796,25 +1775,9 @@ FormatterToXML::accumNormalizedPIData(
             const XalanDOMChar*         theData,
             XalanDOMString::size_type   theLength)
 {
-    // If there are any "?>" pairs in the string,
-    // we have to normalize them to "? >", so they
-    // won't be confused with the end tag.
-
     for (XalanDOMString::size_type i = 0; i < theLength; ++i)
     {
-        const XalanDOMChar  theChar = theData[i];
-
-        if (theChar == XalanUnicode::charQuestionMark &&
-            i + 1 < theLength &&
-            theData[i + 1] == XalanUnicode::charGreaterThanSign)
-        {
-            accumContent(XalanUnicode::charQuestionMark);
-            accumContent(XalanUnicode::charSpace);
-        }
-        else
-        {
-            accumContent(theChar);
-        }
+        accumContent(theData[i]);
     }
 }
 

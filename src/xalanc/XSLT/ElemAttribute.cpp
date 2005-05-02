@@ -438,10 +438,10 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
     if(XalanQName::isValidQName(attrName) == false)
     {
-        executionContext.warn(
-            XalanMessageLoader::getMessage(XalanMessages::AttributeNameNotValidQName_1Param, attrName),
-            executionContext.getCurrentNode(),
-            getLocator());
+        warn(
+            executionContext,
+            XalanMessages::AttributeNameNotValidQName_1Param,
+            attrName);
     }
     else
     {
@@ -644,10 +644,10 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                     if (isEmpty(attrNameSpace))
                     {
                         // Could not resolve prefix
-                        executionContext.warn(
-                            XalanMessageLoader::getMessage(XalanMessages::CouldNotResolvePrefix),
-                            executionContext.getCurrentNode(),
-                            getLocator());
+                        warn(
+                            executionContext,
+                            XalanMessages::PrefixIsNotDeclared_1Param,
+                            nsprefix);
                     }
                     else
                     {
@@ -677,10 +677,9 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
         }
         else
         {
-            executionContext.warn(
-                XalanMessageLoader::getMessage(XalanMessages::AttributesCannotBeAdded),
-                executionContext.getCurrentNode(),
-                getLocator());
+            warn(
+                executionContext,
+                XalanMessages::AttributesCannotBeAdded);
         }
 
         // If there was no namespace, or the namespace was resolved, process

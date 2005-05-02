@@ -37,9 +37,9 @@ class DefaultCacheCreateFunctor
 {
 public:
 
-	ObjectType*
-	operator()(MemoryManagerType& theManager) const
-	{
+    ObjectType*
+    operator()(MemoryManagerType& theManager) const
+    {
         typedef ObjectType ThisType;
         
         XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
@@ -51,17 +51,18 @@ public:
         theGuard.release();
 
         return theResult;
-	}
+    }
 };
+
 
 template<class ObjectType>
 class DefaultCacheCreateFunctorMemMgr
 {
 public:
 
-	ObjectType*
-	operator()(MemoryManagerType& theManager) const
-	{
+    ObjectType*
+    operator()(MemoryManagerType& theManager) const
+    {
         typedef ObjectType ThisType;
         
         XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
@@ -73,7 +74,7 @@ public:
         theGuard.release();
 
         return theResult;
-	}
+    }
 };
 
 
@@ -82,10 +83,10 @@ class DefaultCacheResetFunctor
 {
 public:
 
-	void
-	operator()(ObjectType*) const
-	{
-	}
+    void
+    operator()(ObjectType*) const
+    {
+    }
 };
 
 
@@ -95,11 +96,11 @@ class ClearCacheResetFunctor
 {
 public:
 
-	void
-	operator()(ObjectType*	theInstance) const
-	{
-		theInstance->clear();
-	}
+    void
+    operator()(ObjectType*  theInstance) const
+    {
+        theInstance->clear();
+    }
 };
 
 
@@ -121,126 +122,127 @@ class XalanObjectCache
 {
 public:
 
-	typedef XalanVector<ObjectType*>			VectorType;
+    typedef XalanVector<ObjectType*>            VectorType;
 
-	typedef ObjectType	CacheObjectType;
+    typedef ObjectType  CacheObjectType;
 
-	explicit
-	XalanObjectCache(MemoryManagerType& theManager,
-                    unsigned int	initialListSize = 0) :
-		m_availableList(theManager),
-		m_busyList(theManager)
-	{
-		m_availableList.reserve(initialListSize);
+    explicit
+    XalanObjectCache(
+                MemoryManagerType&  theManager,
+                unsigned int        initialListSize = 0) :
+        m_availableList(theManager),
+        m_busyList(theManager)
+    {
+        m_availableList.reserve(initialListSize);
 
-		m_busyList.reserve(initialListSize);
-	}
+        m_busyList.reserve(initialListSize);
+    }
 
-	~XalanObjectCache()
-	{
-		reset();
+    ~XalanObjectCache()
+    {
+        reset();
 
 #if !defined(XALAN_NO_STD_NAMESPACE)
-		using std::for_each;
+        using std::for_each;
 #endif
 
-		for_each(
-				m_availableList.begin(),
-				m_availableList.end(),
-				m_deleteFunctor(theManager));
-	}
+        for_each(
+                m_availableList.begin(),
+                m_availableList.end(),
+                m_deleteFunctor(theManager));
+    }
 
-	ObjectType*
-	get()
-	{
-		// We'll always return the back of the free list, since
-		// that's the cheapest thing.
-		if (m_availableList.empty() == true)
-		{
-			ObjectType* const	theNewObject = m_createFunctor(theManager);
+    ObjectType*
+    get()
+    {
+        // We'll always return the back of the free list, since
+        // that's the cheapest thing.
+        if (m_availableList.empty() == true)
+        {
+            ObjectType* const   theNewObject = m_createFunctor(m_availableList.getMemoryManager());
 
-			m_busyList.push_back(theNewObject);
+            m_busyList.push_back(theNewObject);
 
-			return theNewObject;
-		}
-		else
-		{
-			ObjectType* const	theObject = m_availableList.back();
+            return theNewObject;
+        }
+        else
+        {
+            ObjectType* const   theObject = m_availableList.back();
 
-			m_busyList.push_back(theObject);
+            m_busyList.push_back(theObject);
 
-			m_availableList.pop_back();
+            m_availableList.pop_back();
 
-			return theObject;
-		}
-	}
+            return theObject;
+        }
+    }
 
-	bool
-	release(ObjectType*		theInstance)
-	{
+    bool
+    release(ObjectType*     theInstance)
+    {
 #if !defined(XALAN_NO_STD_NAMESPACE)
-		using std::find;
+        using std::find;
 #endif
 
-		typedef typename VectorType::iterator	IteratorType;
+        typedef typename VectorType::iterator   IteratorType;
 
-		const IteratorType	i =
-			find(
-				m_busyList.begin(),
-				m_busyList.end(),
-				theInstance);
+        const IteratorType  i =
+            find(
+                m_busyList.begin(),
+                m_busyList.end(),
+                theInstance);
 
-		if (i == m_busyList.end())
-		{
-			return false;
-		}
-		else
-		{
-			m_resetFunctor(theInstance);
+        if (i == m_busyList.end())
+        {
+            return false;
+        }
+        else
+        {
+            m_resetFunctor(theInstance);
 
-			m_availableList.push_back(theInstance);
+            m_availableList.push_back(theInstance);
 
-			m_busyList.erase(i);
+            m_busyList.erase(i);
 
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 
-	void
-	reset()
-	{
-		while (m_busyList.empty() == false)
-		{
-			ObjectType* const	theInstance = m_busyList.back();
+    void
+    reset()
+    {
+        while (m_busyList.empty() == false)
+        {
+            ObjectType* const   theInstance = m_busyList.back();
 
-			m_resetFunctor(theInstance);
+            m_resetFunctor(theInstance);
 
-			m_availableList.push_back(theInstance);
+            m_availableList.push_back(theInstance);
 
-			m_busyList.pop_back();
-		}
-	}
+            m_busyList.pop_back();
+        }
+    }
 
-	// Functors for various operations...
-	CreateFunctorType	m_createFunctor;
+    // Functors for various operations...
+    CreateFunctorType   m_createFunctor;
 
-	DeleteFunctorType	m_deleteFunctor;
+    DeleteFunctorType   m_deleteFunctor;
 
-	ResetFunctorType	m_resetFunctor;
+    ResetFunctorType    m_resetFunctor;
 
 private:
 
-	// There are not defined...
-	XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    // There are not defined...
+    XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&    theRHS);
 
-	XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
-	operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
+    operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&   theRHS);
 
 
-	// Data members...
-	VectorType			m_availableList;
+    // Data members...
+    VectorType          m_availableList;
 
-	VectorType			m_busyList;
+    VectorType          m_busyList;
 };
 
 
@@ -264,85 +266,85 @@ class XalanObjectCache
 {
 public:
 
-	typedef XalanVector<ObjectType*>			VectorType;
+    typedef XalanVector<ObjectType*>            VectorType;
 
-	typedef ObjectType	CacheObjectType;
+    typedef ObjectType  CacheObjectType;
 
-	explicit
-	XalanObjectCache(MemoryManagerType& theManager,
-                    unsigned int	initialListSize = 0) :
+    explicit
+    XalanObjectCache(MemoryManagerType& theManager,
+                    unsigned int    initialListSize = 0) :
         m_deleteFunctor(theManager),
-		m_availableList(theManager)
-	{
-		m_availableList.reserve(initialListSize);
-	}
+        m_availableList(theManager)
+    {
+        m_availableList.reserve(initialListSize);
+    }
 
-	~XalanObjectCache()
-	{
-		reset();
+    ~XalanObjectCache()
+    {
+        reset();
 
 #if !defined(XALAN_NO_STD_NAMESPACE)
-		using std::for_each;
+        using std::for_each;
 #endif
 
-		for_each(
-				m_availableList.begin(),
-				m_availableList.end(),
-				m_deleteFunctor);
-	}
+        for_each(
+                m_availableList.begin(),
+                m_availableList.end(),
+                m_deleteFunctor);
+    }
 
-	ObjectType*
-	get()
-	{
-		// We'll always return the back of the free list, since
-		// that's the cheapest thing.
-		if (m_availableList.empty() == true)
-		{
-			return m_createFunctor(m_availableList.getMemoryManager());
-		}
-		else
-		{
-			ObjectType* const	theObject = m_availableList.back();
+    ObjectType*
+    get()
+    {
+        // We'll always return the back of the free list, since
+        // that's the cheapest thing.
+        if (m_availableList.empty() == true)
+        {
+            return m_createFunctor(m_availableList.getMemoryManager());
+        }
+        else
+        {
+            ObjectType* const   theObject = m_availableList.back();
 
-			m_availableList.pop_back();
+            m_availableList.pop_back();
 
-			return theObject;
-		}
-	}
+            return theObject;
+        }
+    }
 
-	bool
-	release(ObjectType*		theInstance)
-	{
-		m_resetFunctor(theInstance);
+    bool
+    release(ObjectType*     theInstance)
+    {
+        m_resetFunctor(theInstance);
 
-		m_availableList.push_back(theInstance);
+        m_availableList.push_back(theInstance);
 
-		return true;
-	}
+        return true;
+    }
 
-	void
-	reset()
-	{
-	}
+    void
+    reset()
+    {
+    }
 
-	// Functors for various operations...
-	CreateFunctorType	m_createFunctor;
+    // Functors for various operations...
+    CreateFunctorType   m_createFunctor;
 
-	DeleteFunctorType	m_deleteFunctor;
+    DeleteFunctorType   m_deleteFunctor;
 
-	ResetFunctorType	m_resetFunctor;
+    ResetFunctorType    m_resetFunctor;
 
 private:
 
-	// These are not defined...
-	XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    // These are not defined...
+    XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&    theRHS);
 
-	XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
-	operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
+    operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&   theRHS);
 
 
-	// Data members...
-	VectorType			m_availableList;
+    // Data members...
+    VectorType          m_availableList;
 };
 
 
@@ -356,64 +358,102 @@ class GuardCachedObject
 {
 public:
 
-	typedef typename XalanObjectCacheType::CacheObjectType	CacheObjectType;
+    typedef typename XalanObjectCacheType::CacheObjectType  CacheObjectType;
 
-	GuardCachedObject(XalanObjectCacheType&	theCache) :
-		m_cache(theCache),
-		m_cachedObject(theCache.get())
-	{
-	}
+    GuardCachedObject(XalanObjectCacheType& theCache) :
+        m_cache(theCache),
+        m_cachedObject(theCache.get())
+    {
+    }
 
-	~GuardCachedObject()
-	{
-		if (m_cachedObject != 0)
-		{
-			m_cache.release(m_cachedObject);
-		}
-	}
+    ~GuardCachedObject()
+    {
+        if (m_cachedObject != 0)
+        {
+            m_cache.release(m_cachedObject);
+        }
+    }
 
-	CacheObjectType*
-	get() const
-	{
-		return m_cachedObject;
-	}
+    CacheObjectType*
+    get() const
+    {
+        return m_cachedObject;
+    }
 
-	CacheObjectType*
-	release()
-	{
-		CacheObjectType* const	temp = m_cachedObject;
+    CacheObjectType*
+    release()
+    {
+        CacheObjectType* const  temp = m_cachedObject;
 
-		m_cachedObject = 0;
+        m_cachedObject = 0;
 
-		return temp;
-	}
+        return temp;
+    }
 
 private:
 
-	// Not implemented...
-	GuardCachedObject(const GuardCachedObject<XalanObjectCacheType>&);
+    // Not implemented...
+    GuardCachedObject(const GuardCachedObject<XalanObjectCacheType>&);
 
 
-	// Data members...
-	XalanObjectCacheType&	m_cache;
+    // Data members...
+    XalanObjectCacheType&   m_cache;
 
-	CacheObjectType*		m_cachedObject;
+    CacheObjectType*        m_cachedObject;
 };
 
 
 
 template<class ObjectType>
-class XalanObjectCacheDefault : public XalanObjectCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >
+class XalanObjectCacheDefault :
+            public XalanObjectCache<
+                        ObjectType,
+                        DefaultCacheCreateFunctor<ObjectType>,
+                        DeleteFunctor<ObjectType>,
+                        DefaultCacheResetFunctor<ObjectType> >
 {
 public:
 
-	typedef XalanObjectCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >		BaseClassType;
+    typedef XalanObjectCache<
+                ObjectType,
+                DefaultCacheCreateFunctor<ObjectType>,
+                DeleteFunctor<ObjectType>,
+                DefaultCacheResetFunctor<ObjectType> >  BaseClassType;
 
-	explicit
-	XalanObjectCacheDefault(unsigned int	initialListSize = 0) :
-		BaseClassType(initialListSize)
-	{
-	}
+    explicit
+    XalanObjectCacheDefault(
+                MemoryManagerType&  theManager,
+                unsigned int        initialListSize = 0) :
+        BaseClassType(theManager, initialListSize)
+    {
+    }
+};
+
+
+
+template<class ObjectType>
+class XalanMemoryManagerObjectCacheDefault :
+            public XalanObjectCache<
+                        ObjectType,
+                        DefaultCacheCreateFunctorMemMgr<ObjectType>,
+                        DeleteFunctor<ObjectType>,
+                        DefaultCacheResetFunctor<ObjectType> >
+{
+public:
+
+    typedef XalanObjectCache<
+                ObjectType,
+                DefaultCacheCreateFunctorMemMgr<ObjectType>,
+                DeleteFunctor<ObjectType>,
+                DefaultCacheResetFunctor<ObjectType> >  BaseClassType;
+
+    explicit
+    XalanMemoryManagerObjectCacheDefault(
+                MemoryManagerType&  theManager,
+                unsigned int        initialListSize = 0) :
+        BaseClassType(theManager, initialListSize)
+    {
+    }
 };
 
 
