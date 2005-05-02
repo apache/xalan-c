@@ -231,6 +231,10 @@ SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\Include\XalanSet.hpp
 # End Source File
 # Begin Source File
