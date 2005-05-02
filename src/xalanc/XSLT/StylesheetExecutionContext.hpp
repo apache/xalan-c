@@ -386,42 +386,6 @@ public:
 #endif
 
     /**
-     * Whether diagnostic output is to be generated
-     * 
-     * @return true for diagnostics output 
-     */
-    virtual bool
-    doDiagnosticsOutput() const = 0;
-
-    /**
-     * Print a diagnostics string to the output device
-     * 
-     * @param theString string to print
-     */
-    virtual void
-    diag(const XalanDOMString&  theString) = 0;
-
-    /**
-     * Mark the time, so that displayDuration can later display the elapsed
-     * clock ticks.
-     * 
-     * @param theKey element to push
-     */
-    virtual void
-    pushTime(const void*    theKey) = 0;
-
-    /**
-     * Display the duration since pushTime was called.
-     *
-     * @param theMessage message to display
-     * @param theKey     key for which duration is displayed
-     */
-    virtual void
-    displayDuration(
-            const XalanDOMString&   theMessage,
-            const void*             theKey) = 0;
-
-    /**
      * See if there is an element pending.
      */
     virtual bool

@@ -143,7 +143,6 @@ XSLTEngineImpl::XSLTEngineImpl(
     m_traceSelects(false),
     m_quietConflictWarnings(true),
     m_diagnosticsPrintWriter(0),
-    m_durationsTable(theManager),
     m_traceListeners(theManager),
     m_uniqueNSValue(0),
     m_topLevelParams(theManager),
@@ -168,7 +167,6 @@ void
 XSLTEngineImpl::reset()
 {
     m_topLevelParams.clear();
-    m_durationsTable.clear();
     m_stylesheetLocatorStack.clear();
     m_cdataStack.clear();
 
@@ -229,13 +227,6 @@ XSLTEngineImpl::process(
     else
     {
         xslIdentifier = stylesheetSource.getSystemId();
-    }
-
-    bool totalTimeID = true;
-
-    if(m_diagnosticsPrintWriter != 0)
-    {
-        pushTime(&totalTimeID);
     }
 
     XalanNode*  sourceTree = getSourceTreeFromInput(inputSource);
@@ -357,17 +348,6 @@ XSLTEngineImpl::process(
 
         m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
     }
-
-    if(m_diagnosticsPrintWriter != 0)
-    {
-        const ECGetAndReleaseCachedString   theGuard(executionContext);
-
-        displayDuration(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::TotalTime),
-            &totalTimeID);
-    }
 }
 
 
@@ -378,13 +358,6 @@ XSLTEngineImpl::process(
             XSLTResultTarget&               outputTarget,
             StylesheetExecutionContext&     executionContext)
 {
-    bool    totalTimeID = true;
-
-    if(m_diagnosticsPrintWriter != 0)
-    {
-        pushTime(&totalTimeID);
-    }
-
     XalanNode* const    sourceTree = getSourceTreeFromInput(inputSource);
 
     if(0 != sourceTree)
@@ -410,17 +383,6 @@ XSLTEngineImpl::process(
         m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
         m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
-    }
-
-    if(m_diagnosticsPrintWriter != 0)
-    {
-        const ECGetAndReleaseCachedString   theGuard(executionContext);
-
-        displayDuration(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::TotalTime),
-            &totalTimeID);
     }
 }
 
@@ -503,35 +465,10 @@ XSLTEngineImpl::processStylesheet(
                 xslIdentifier = systemID;
             }
 
-            if(m_diagnosticsPrintWriter != 0)
-            {
-                const CCGetAndReleaseCachedString theGuard(constructionContext);
-
-                diag(
-                    XalanMessageLoader::getMessage(
-                        theGuard.get(),
-                        XalanMessages::Parsing_1Param,
-                        xslIdentifier));
-
-                pushTime(&xslIdentifier);
-            }
-
             m_parserLiaison.parseXMLStream(
                 stylesheetSource,
                 stylesheetProcessor,
                 s_emptyString);
-
-            if(m_diagnosticsPrintWriter != 0)
-            {
-                const CCGetAndReleaseCachedString   theGuard(constructionContext);
-
-                displayDuration(
-                    XalanMessageLoader::getMessage(
-                        theGuard.get(),
-                        XalanMessages::ParseOf_1Param,
-                        xslIdentifier),
-                    &xslIdentifier);
-            }
         }
 
         theStylesheet->postConstruction(constructionContext);
@@ -570,27 +507,6 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&   inputSource)
                 xmlIdentifier = theSystemID;
             }
         }
-        else
-        {
-            XalanMessageLoader::getMessage(
-                xmlIdentifier,
-                XalanMessages::InputXML);
-        }
-
-        if(m_diagnosticsPrintWriter != 0)
-        {
-            const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
-
-            // In case we have a fragment identifier, go ahead and 
-            // try to parse the XML here.
-            diag(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::Parsing_1Param,
-                    xmlIdentifier));
-
-            pushTime(&xmlIdentifier);
-        }
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
         QuantifyStartRecordingData();
@@ -606,18 +522,6 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&   inputSource)
         QuantifyStopRecordingData();
 #endif
 
-        if(0 != m_diagnosticsPrintWriter)
-        {
-            const CCGetAndReleaseCachedString   theGuard(m_xpathConstructionContext);
-
-            displayDuration(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::ParseOf_1Param,
-                    xmlIdentifier),
-                &xmlIdentifier);
-        }
- 
         m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
 
         sourceTree = theDocument;
@@ -878,11 +782,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
         if(XalanNode::ELEMENT_NODE == frag->getNodeType())
         {
-            if(m_diagnosticsPrintWriter != 0)
-            {
-                pushTime(frag);
-            }
-
             XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
 
             if(isRoot)
@@ -915,18 +814,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
             stylesheetProcessor.endDocument();
 
-            if(m_diagnosticsPrintWriter != 0)
-            {
-                const CCGetAndReleaseCachedString   theGuard(constructionContext);
-
-                displayDuration(
-                    XalanMessageLoader::getMessage(
-                        theGuard.get(),
-                        XalanMessages::SetupOf_1Param,
-                        localXSLURLString),
-                    frag);
-            }
-
             stylesheet->postConstruction(constructionContext);
 
             theGuard.release();
@@ -946,22 +833,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
     }
     else
     {
-        if(m_diagnosticsPrintWriter != 0)
-        {
-            const CCGetAndReleaseCachedString theGuard(constructionContext);
-
-            XalanDOMString& theBuffer = theGuard.get();
-
-            XalanMessageLoader::getMessage(
-                theBuffer,
-                XalanMessages::ParsingAndPreparing_1Param,
-                localXSLURLString);
-
-            diag(theBuffer);
-
-            pushTime(&localXSLURLString);
-        }
-
         XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
 
         const XalanDocument* const  theOwnerDocument =
@@ -1037,19 +908,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         stylesheet->postConstruction(constructionContext);
 
         theGuard.release();
-
-        if(m_diagnosticsPrintWriter != 0)
-        {
-            const CCGetAndReleaseCachedString theGuard(constructionContext);
-
-            displayDuration(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::ParsingAndInitOf_1Param,
-                    localXSLURLString),
-                    &localXSLURLString);
-
-        }
     }
 
     return stylesheet;
@@ -1361,102 +1219,11 @@ XSLTEngineImpl::error(
 
 
 void
-XSLTEngineImpl::pushTime(const void*    key)
-{
-    if(0 != key)
-    {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-        m_durationsTable[key] = std::clock();
-#else
-        m_durationsTable[key] = clock();
-#endif
-    }
-}
-
-
-
-XSLTEngineImpl::ClockType
-XSLTEngineImpl::popDuration(const void*     key)
-{
-    ClockType   clockTicksDuration = 0;
-
-    if(0 != key)
-    {
-        const DurationsTableMapType::iterator   i =
-                m_durationsTable.find(key);
-
-        if (i != m_durationsTable.end())
-        {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-            clockTicksDuration = std::clock() - (*i).second;
-#else
-            clockTicksDuration = clock() - (*i).second;
-#endif
-
-            m_durationsTable.erase(i);
-        }
-    }
-
-    return clockTicksDuration;
-}
-
-
-
-void
-XSLTEngineImpl::displayDuration(
-            const XalanDOMString&   info,
-            const void*             key)
-{
-    if(0 != key)
-    {
-        const ClockType theDuration = popDuration(key);
-
-        if(m_diagnosticsPrintWriter != 0)
-        {
-            const double    millis = (double(theDuration) / CLOCKS_PER_SEC) * 1000.0;
-
-            m_diagnosticsPrintWriter->print(info);
-
-            m_diagnosticsPrintWriter->print(" took ");
-            m_diagnosticsPrintWriter->print(millis);
-            m_diagnosticsPrintWriter->println(" milliseconds.");
-        }
-    }
-}
-
-
-
-void
 XSLTEngineImpl::setDiagnosticsOutput(PrintWriter*   pw)
 {
     m_diagnosticsPrintWriter = pw;
 
     m_problemListener->setPrintWriter(pw);
-}
-
-
-
-void
-XSLTEngineImpl::diag(const XalanDOMString&  s) const
-{
-    if (0 != m_diagnosticsPrintWriter)
-    {
-        m_diagnosticsPrintWriter->println(s);
-    }
-}
-
-
-
-void
-XSLTEngineImpl::diag(const char*    s) const
-{
-    MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
-
-    XalanDOMString  theTarget(theManager);
-
-    TranscodeFromLocalCodePage(s, theTarget);
-
-    diag(theTarget);
 }
 
 

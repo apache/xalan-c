@@ -31,7 +31,6 @@
 
 // Standard library headers
 #include <cassert>
-#include <ctime>
 
 
 
@@ -124,12 +123,6 @@ class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, public PrefixReso
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::clock_t	ClockType;
-#else
-	typedef clock_t			ClockType;
-#endif
-
 	struct LessXalanDOMStringPointers
 	{
 		bool
@@ -155,8 +148,6 @@ public:
 	typedef XalanVector<const LocatorType*>		LocatorStack;
 	typedef XalanVector<TraceListener*>			TraceListenerVectorType;
 	typedef XalanVector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
-
-	typedef XalanMap<const void*, ClockType>	DurationsTableMapType;
 
 	typedef XalanVector<bool>							BoolVectorType;
 
@@ -824,63 +815,6 @@ public:
 public:
 
 	/**
-	 * Mark the time, so that displayDuration can later display the elapsed
-	 * clock ticks.
-	 * 
-	 * @param theKey pointer to element to push
-	 */
-	void
-	pushTime(const void*	key);
-
-	/**
-	 * Returns the duration since pushTime was called for element
-	 * in milliseconds.
-	 *
-	 * @param key pointer to element involved
-	 */
-	ClockType
-	popDuration(const void* 	key);
-
-	/**
-	 * Display the duration since pushTime was called for element in
-	 * milliseconds, and a descriptive message
-	 *
-	 * @param info message to display
-	 * @param key pointer to element involved
-	 */
-	void
-	displayDuration(
-			const XalanDOMString&	info,
-			const void* 			key);
-
-
-	/**
-	 * Whether diagnostic output is to be generated
-	 * 
-	 * @return true for diagnostics output 
-	 */
-	bool doDiagnosticsOutput()
-	{
-		return 0 != m_diagnosticsPrintWriter ? true : false;
-	}
-
-	/**
-	 * Print a diagnostics string to the output device
-	 * 
-	 * @param s string to print
-	 */
-	void
-	diag(const XalanDOMString&	s) const;
-
-	/**
-	 * Print a diagnostics string to the output device
-	 * 
-	 * @param s string to print
-	 */
-	void
-	diag(const char*	s) const;
-
-	/**
 	 * Retrieve the result namespace corresponding to a prefix.
 	 * 
 	 * @param prefix prefix for namespace
@@ -1512,9 +1446,6 @@ private:
 	 * A stream to print diagnostics to.
 	 */
 	PrintWriter*	m_diagnosticsPrintWriter;
-
-	/* For diagnostics */
-	DurationsTableMapType	m_durationsTable;
 
 	/**
 	 * List of listeners who are interested in tracing what's 

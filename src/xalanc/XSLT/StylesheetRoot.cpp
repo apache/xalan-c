@@ -223,24 +223,6 @@ StylesheetRoot::process(
 
     executionContext.setRootDocument(sourceTree);
 
-    if(executionContext.doDiagnosticsOutput())
-    {
-        const GetCachedString   theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        theBuffer.assign(" =============================");
-
-        executionContext.diag(theBuffer);
-
-        executionContext.diag(
-            XalanMessageLoader::getMessage(
-                theBuffer,
-                XalanMessages::Transforming));
-
-        executionContext.pushTime(&sourceTree);
-    }
-
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     typedef StylesheetExecutionContext::PushAndPopContextMarker PushAndPopContextMarker;
     typedef StylesheetExecutionContext::PushAndPopElementFrame  PushAndPopElementFrame;
@@ -282,25 +264,6 @@ StylesheetRoot::process(
 #if defined(XALAN_VQ_SPECIAL_TRACE)
     QuantifyStopRecordingData();
 #endif
-
-    if(executionContext.doDiagnosticsOutput())
-    {
-        const GetCachedString   theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        executionContext.diag(theBuffer);
-
-        executionContext.displayDuration(
-            XalanMessageLoader::getMessage(
-                theBuffer,
-                XalanMessages::Transform),
-            &sourceTree);
-
-        theBuffer.clear();
-
-        executionContext.diag(theBuffer);
-    }
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     executionContext.clearTopLevelParams();

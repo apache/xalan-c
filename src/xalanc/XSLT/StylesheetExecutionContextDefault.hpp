@@ -300,20 +300,6 @@ public:
     popCurrentTemplate();
 
     virtual bool
-    doDiagnosticsOutput() const;
-
-    virtual void
-    diag(const XalanDOMString&  theString);
-
-    virtual void
-    pushTime(const void*    theKey);
-
-    virtual void
-    displayDuration(
-            const XalanDOMString&   theMessage,
-            const void*             theKey);
-
-    virtual bool
     isElementPending() const;
 
     virtual void

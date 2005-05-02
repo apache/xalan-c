@@ -380,48 +380,6 @@ StylesheetExecutionContextDefault::popCurrentTemplate()
 
 
 bool
-StylesheetExecutionContextDefault::doDiagnosticsOutput() const
-{
-    assert(m_xsltProcessor != 0);
-
-    return m_xsltProcessor->doDiagnosticsOutput();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::diag(const XalanDOMString&   theString)
-{
-    assert(m_xsltProcessor != 0);
-
-    m_xsltProcessor->diag(theString);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::pushTime(const void* theKey)
-{
-    assert(m_xsltProcessor != 0);
-
-    m_xsltProcessor->pushTime(theKey);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::displayDuration(
-            const XalanDOMString&   theMessage,
-            const void*             theKey)
-{
-    assert(m_xsltProcessor != 0);
-
-    m_xsltProcessor->displayDuration(theMessage, theKey);
-}
-
-
-
-bool
 StylesheetExecutionContextDefault::isElementPending() const
 {
     assert(m_xsltProcessor != 0);

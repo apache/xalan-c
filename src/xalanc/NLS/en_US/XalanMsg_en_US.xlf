@@ -561,11 +561,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Character data is not allowed at this position in the stylesheet.</target>
 </trans-unit>
 
-<trans-unit id="Transforming">
-		<source>Transforming... </source>
-		<target>Transforming... </target>
-</trans-unit>
-
 <trans-unit id="Transform">
 		<source> transform </source>
 		<target> transform </target>
@@ -671,16 +666,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Compiling a stylesheet from a DOM instance requires a Document or Element node.</target>
 </trans-unit>
 
-<trans-unit id="Parsing_1Param">
-		<source>========= Parsing '{0}' ========</source>
-		<target>========= Parsing '{0}' ========</target>
-</trans-unit>
-
-<trans-unit id="ParseOf_1Param">
-		<source>Parse of '{0}'</source>
-		<target>Parse of '{0}'</target>
-</trans-unit>
-
 <trans-unit id="CantIdentifyFragment_1Param">
 		<source>Could not identify the fragment '{0}'.</source>
 		<target>Could not identify the fragment '{0}'.</target>
@@ -691,24 +676,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Could not find the fragment '{0}'</target>
 </trans-unit>
 
-<trans-unit id="SetupOf_1Param">
-		<source>Setup of {0} </source>
-		<target>Setup of {0} </target>
-</trans-unit>
-
 <trans-unit id="NodePointedByFragment_1Param">
 		<source>The node pointed to by the fragment identifier '{0}' was not an Element.</source>
 		<target>The node pointed to by the fragment identifier '{0}' was not an Element.</target>
-</trans-unit>
-
-<trans-unit id="ParsingAndPreparing_1Param">
-		<source>========= Parsing and preparing '{0}' ==========</source>
-		<target>========= Parsing and preparing '{0}' ==========</target>
-</trans-unit>
-
-<trans-unit id="ParsingAndInitOf_1Param">
-		<source>Parsing and initialization of '{0}'.</source>
-		<target>Parsing and initialization of '{0}'.</target>
 </trans-unit>
 
 <trans-unit id="OnlyTextNodesCanBeCopied">
@@ -953,11 +923,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 <trans-unit id="PrefixOfLengthZeroDetected">
 		<source>A zero-length prefix was detected</source>
 		<target>A zero-length prefix was detected.</target>
-</trans-unit>
-
-<trans-unit id="InputXML">
-		<source>Input XML</source>
-		<target>Input XML</target>
 </trans-unit>
 
 <trans-unit id="SortMustBeAscendOrDescend">
