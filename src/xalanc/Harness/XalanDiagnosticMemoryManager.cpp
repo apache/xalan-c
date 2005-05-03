@@ -78,8 +78,6 @@ XalanDiagnosticMemoryManager::allocate(size_type  size)
                       << " bytes from locked instance "
                       << this
                       << ".\n";
-
-            dumpStatistics(m_stream);
         }
 
         throw LockException();
@@ -201,7 +199,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
             XALAN_USING_XERCES(XMLPlatformUtils);
 
-	        const size_type     theHeaderSize =
+            const size_type     theHeaderSize =
                 XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));
 
             const char* const   theChars =
