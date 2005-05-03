@@ -31,10 +31,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMStringCache::XalanDOMStringCache(MemoryManagerType&     theManager,
-                                         unsigned int	theMaximumSize) :
-    m_busyList(theManager),
+XalanDOMStringCache::XalanDOMStringCache(
+            MemoryManagerType&     theManager,
+            unsigned int	        theMaximumSize) :
 	m_availableList(theManager),
+    m_busyList(theManager),
 	m_maximumSize(theMaximumSize),
     m_allocator(theManager, XalanDOMStringReusableAllocator::eDefaultBlockSize)
 {
