@@ -233,9 +233,9 @@ public:
 	/**
 	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
-	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
-	 * or another expression is evaluated.
+	 * destroyed when the user's copy of the returned XObjectPtr goes out of
+     * scope, or when the XPathEvaluator goes out of scope or another expression
+     * is evaluated.
 	 *
 	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
 	 * instance goes out of scope, or another expression is evaluated.
@@ -256,9 +256,9 @@ public:
 	/**
 	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
-	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
-	 * or another expression is evaluated.
+	 * destroyed when the user's copy of the returned XObjectPtr goes out of
+     * scope, or when the XPathEvaluator goes out of scope or another expression
+     * is evaluated.
 	 *
 	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
 	 * instance goes out of scope, or another expression is evaluated.
@@ -277,11 +277,11 @@ public:
 			const PrefixResolver&	prefixResolver);
 
 	/**
-	 * Evaluate the supplied XPath, within the given context.  The
+	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
-	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
-	 * or another expression is evaluated.
+	 * destroyed when the user's copy of the returned XObjectPtr goes out of
+     * scope, or when the XPathEvaluator goes out of scope or another expression
+     * is evaluated.
 	 *
 	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
 	 * instance goes out of scope, or another expression is evaluated.
@@ -300,11 +300,11 @@ public:
 			const XalanElement*		namespaceNode = 0);
 
 	/**
-	 * Evaluate the supplied XPath, within the given context.  The
+	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
-	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
-	 * or another expression is evaluated.
+	 * destroyed when the user's copy of the returned XObjectPtr goes out of
+     * scope, or when the XPathEvaluator goes out of scope or another expression
+     * is evaluated.
 	 *
 	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
 	 * instance goes out of scope, or another expression is evaluated.
