@@ -33,21 +33,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "CAPI"="..\..\..\Tests\C-API\CAPI.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "CompileStylesheet"=".\CompileStylesheet\CompileStylesheet.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -64,21 +49,6 @@ Package=<4>
 ###############################################################################
 
 Project: "DocumentBuilder"=".\DocumentBuilder\DocumentBuilder.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "Errortests"="..\..\..\Tests\Errortests\Errortests.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -116,36 +86,6 @@ Package=<5>
 
 Package=<4>
 {{{
-}}}
-
-###############################################################################
-
-Project: "Memory"="..\..\..\Tests\Memory\Memory.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "Params"="..\..\..\Tests\Params\Params.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -345,21 +285,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "Transformer"="..\..\..\Tests\Transformer\Transformer.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "UseStylesheetParam"=".\UseStylesheetParam\UseStylesheetParam.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -435,67 +360,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "compare"="..\..\..\Tests\Compare\compare.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "conf"="..\..\..\Tests\Conf\conf.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "dom2dom"="..\..\..\Tests\Dom2Dom\Dom2Dom.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "extensions"="..\..\..\Tests\Extensions\extensions.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "inputsource"="..\..\..\Tests\InputSource\inputsource.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
