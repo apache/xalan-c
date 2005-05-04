@@ -86,14 +86,20 @@ public:
 
 template <class Type>
 void
-destroyObjWithMemMgr( Type* ptr, MemoryManagerType& theManager)
+destroyObjWithMemMgr(const Type* ptr, MemoryManagerType& theManager)
 {
-    if( ptr == 0 )
-        return;
+    if (ptr != 0)
+    {
+        Type* const     nonConstPointer =
+#if defined(XALAN_OLD_STYLE_CASTS)
+            (const Type*)ptr;
+#else
+            const_cast<Type*>(ptr);
+#endif
+        nonConstPointer->~Type();
 
-    ptr->~Type();
-
-    theManager.deallocate((void*)ptr);
+        theManager.deallocate(nonConstPointer);
+    }
 }
 
 
