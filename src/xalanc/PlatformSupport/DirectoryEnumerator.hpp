@@ -148,10 +148,16 @@ public:
 	 */
 	bool isDirectory() const
 	{
+#if defined(__SunOS_5_10) && (__SUNPRO_CC >= 0x570)
+            struct stat64 stat_Info;
 
-		struct	stat stat_Info;
-		const int   retCode = stat(d_name, &stat_Info);
- 
+            const int   retCode = stat64(d_name, &stat_Info);
+#else
+            struct	stat stat_Info;
+		
+            const int   retCode = stat(d_name, &stat_Info);
+#endif
+
         return retCode == -1 ? false : S_ISDIR(stat_Info.st_mode);
 	}
 
