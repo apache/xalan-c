@@ -369,15 +369,14 @@ public:
 
 
 template <class C>
-class ConstructValueWithNoMemoryManager 
+struct ConstructValueWithNoMemoryManager 
 { 
-public:
-    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) 
+    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) :
+        value()
     {
     }
 
     C value;
-
 };
 
 template <class C>

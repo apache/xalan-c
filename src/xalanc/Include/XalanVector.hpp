@@ -108,7 +108,8 @@ public:
 
     typedef XalanVector<value_type, ConstructionTraits>     ThisType;
 
-    typedef typename ConstructionTraits::Constructor Constructor;
+    typedef typename ConstructionTraits::Constructor    Constructor;
+    typedef typename Constructor::ConstructableType     ConstructibleType;
 
     XalanVector(
             MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
@@ -588,9 +589,9 @@ public:
     void
     resize(size_type   theSize)
     {
-        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
+        const ConstructibleType     defaultValue(*m_memoryManager);
 
-        resize(theSize , defaultValue.value);
+        resize(theSize, defaultValue.value);
     }
 
     void
