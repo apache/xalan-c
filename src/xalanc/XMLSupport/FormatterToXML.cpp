@@ -392,9 +392,9 @@ FormatterToXML::initAttrCharsMap()
         m_attrCharsMap[i] = 'S';
     }
 
-    for(size_t i = 0x7F; i < 0x9F; i++)
+    for(size_t j = 0x7F; j < 0x9F; j++)
     {
-        m_attrCharsMap[i] = 'S';
+        m_attrCharsMap[j] = 'S';
     }
 }
 
@@ -421,18 +421,18 @@ FormatterToXML::initCharsMap()
         m_charsMap[i] = 'S';
     }
 
-    for(size_t i = 0x7F; i < 0x9F; i++)
+    for(size_t j = 0x7F; j < 0x9F; j++)
     {
-        m_charsMap[i] = 'S';
+        m_charsMap[j] = 'S';
     }
 
 	m_charsMap[9] = '\0';
 
     assert(m_maxCharacter != 0);
 
-    for(XalanDOMChar i = m_maxCharacter; i < SPECIALSSIZE; ++i)
+    for(XalanDOMChar k = m_maxCharacter; k < SPECIALSSIZE; ++k)
     {
-        m_charsMap[i] = 'S';
+        m_charsMap[k] = 'S';
     }
 }
 
