@@ -57,7 +57,7 @@ XalanDiagnosticMemoryManager::~XalanDiagnosticMemoryManager()
     if (m_allocations.size() > 0 && m_stream != 0)
     {
         *m_stream << "Detected memory leaks. "
-                  << m_allocations.size()
+                  << int_type(m_allocations.size())
                   << " blocks are still allocated.\n";
     }
 }
@@ -74,7 +74,7 @@ XalanDiagnosticMemoryManager::allocate(size_type  size)
         if (m_stream != 0)
         {
             *m_stream << "Attempt to allocate "
-                      << size
+                      << int_type(size)
                       << " bytes from locked instance "
                       << this
                       << ".\n";
@@ -167,16 +167,16 @@ XalanDiagnosticMemoryManager::dumpStatistics(
     if (diagStream != 0)
     {
         *diagStream << "Total number of allocations: "
-                    << m_sequence
+                    << int_type(m_sequence)
                     << ".\n"
                     << "Total current allocations: "
-                    << m_allocations.size()
+                    << int_type(m_allocations.size())
                     << ".\n"
                     << "Total bytes currently allocated: "
-                    << m_currentAllocated
+                    << int_type(m_currentAllocated)
                     << ".\n"
                     << "Peak bytes allocated: "
-                    << m_highWaterMark
+                    << int_type(m_highWaterMark)
                     << ".\n";
 
         for(const_iterator i = m_allocations.begin();
@@ -192,9 +192,9 @@ XalanDiagnosticMemoryManager::dumpStatistics(
                         << thePointer
                         << " with sequence "
                         << dec
-                        << theData.m_sequence
+                        << int_type(theData.m_sequence)
                         << " is "
-                        << theData.m_size
+                        << int_type(theData.m_size)
                         << " bytes long.\n";
 
             XALAN_USING_XERCES(XMLPlatformUtils);

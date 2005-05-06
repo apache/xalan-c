@@ -55,6 +55,8 @@ class XALAN_HARNESS_EXPORT XalanDiagnosticMemoryManager : public MemoryManager
 {
 public:
 
+    typedef unsigned int int_type;
+
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef ostream				StreamType;
 #else
