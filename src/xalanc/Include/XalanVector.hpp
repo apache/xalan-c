@@ -205,6 +205,7 @@ public:
 
         return theResult;
     }
+
     XalanVector(
             size_type           theInsertSize,
             const value_type&   theData,
@@ -294,6 +295,8 @@ public:
         // Since we're using bare pointers for now, we can
         // assert this...
         assert(theFirst <= theLast);
+        assert(thePosition >= begin());
+        assert(thePosition <= end());
 
         invariants();
 
@@ -400,18 +403,6 @@ public:
         }
 
         invariants();
-    }
-
-    void
-    insert(
-            iterator  thePosition,
-            iterator  theFirst,
-            iterator  theLast)
-    {
-        insert(
-            thePosition,
-            const_iterator(theFirst),
-            const_iterator(theLast));
     }
 
     void
