@@ -26,6 +26,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DoubleSupport.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
@@ -177,6 +178,11 @@ FormatterToXML::FormatterToXML(
     //OK, now we can determine if the encoding is UTF*
     m_encodingIsUTF = canOmitXMLDeclaration || XalanTranscodingServices::encodingIsUTF32(m_encoding);
 
+    if (m_version.empty() != true &&
+        DoubleSupport::equal(DOMStringToDouble(m_version, theManager), 1.1) == true)
+    {
+        setXMLVersion(XML_VERSION_1_1);
+    }
 
 #if 1
     if (m_encodingIsUTF == true)
@@ -377,9 +383,19 @@ FormatterToXML::initAttrCharsMap()
         }
     }
 
-    m_attrCharsMap[XalanUnicode::charHTab] = 'S';
-    m_attrCharsMap[XalanUnicode::charLF] = 'S';
-    m_attrCharsMap[XalanUnicode::charCR] = 'S';
+	m_attrCharsMap[XalanUnicode::charHTab] = 'S';
+	m_attrCharsMap[XalanUnicode::charLF] = 'S';
+	m_attrCharsMap[XalanUnicode::charCR] = 'S';
+
+    for(size_t i = 1; i < 0x20; i++)
+    {
+        m_attrCharsMap[i] = 'S';
+    }
+
+    for(size_t i = 0x7F; i < 0x9F; i++)
+    {
+        m_attrCharsMap[i] = 'S';
+    }
 }
 
 
@@ -395,21 +411,22 @@ FormatterToXML::initCharsMap()
     memset(m_charsMap, 0, sizeof(m_charsMap));
 #endif
 
-    m_charsMap[XalanUnicode::charLF] = 'S';
     m_charsMap[XalanUnicode::charLessThanSign] = 'S';
     m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
     m_charsMap[XalanUnicode::charAmpersand] = 'S';
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    std::memset(m_charsMap, 'S', 20);
-#else
-    memset(m_charsMap, 'S', 20);
-#endif
 
-    // $$$ ToDo: I believe these are redundant...
-    m_charsMap[0x0A] = 'S';
-    m_charsMap[0x0D] = 'S';
-    m_charsMap[9] = '\0';
+    for(size_t i = 1; i < 0x20; i++)
+    {
+        m_charsMap[i] = 'S';
+    }
+
+    for(size_t i = 0x7F; i < 0x9F; i++)
+    {
+        m_charsMap[i] = 'S';
+    }
+
+	m_charsMap[9] = '\0';
 
     assert(m_maxCharacter != 0);
 
@@ -790,7 +807,22 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
     throw SAXException(theMessage.c_str(), &theManager);
 }
 
+void
+FormatterToXML::throwInvalidCharacterException( unsigned int		ch,
+                                                MemoryManagerType&  theManager)
+{
+    XalanDOMString	theMessage(theManager);
+    XalanDOMString	theBuffer(theManager);  
 
+    XalanMessageLoader::getMessage(
+            theMessage,
+            XalanMessages::InvalidScalar_1Param,
+            UnsignedLongToHexDOMString(ch, theBuffer));
+
+    XALAN_USING_XERCES(SAXException)
+
+    throw SAXException(c_wstr(theMessage),&theManager);
+}
 
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
@@ -849,20 +881,57 @@ FormatterToXML::accumDefaultEscape(
                 next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
             }
 
-            writeNumberedEntityReference(next);
-        }
-        else 
-        {
-            if(ch > m_maxCharacter || (ch < SPECIALSSIZE && m_attrCharsMap[ch] == 'S'))
+			writeNumberedEntityReference(next);
+		}
+		else 
+		{
+			if(ch > m_maxCharacter)
             {
-                writeNumberedEntityReference(ch);
+                if( !isXML1_1Version() && XalanUnicode::charLSEP == ch ) 
+                {
+                    throwInvalidCharacterException(ch, getMemoryManager());
+                }
+                else
+                {
+                    writeNumberedEntityReference(ch);
+                }
             }
-            else
-            {
-                accumContent(ch);
-            }
-        }
-    }
+            else if(ch < SPECIALSSIZE && m_attrCharsMap[ch] == 'S')
+			{
+                if(ch < 0x20 )
+                {
+                    if(isXML1_1Version())
+                    {
+                        writeNumberedEntityReference(ch);
+                    }
+                    else
+                    {
+                         throwInvalidCharacterException(ch, getMemoryManager());
+                    }
+                }
+                else if( XalanUnicode::charNEL == ch )
+                {
+                    if(isXML1_1Version())
+                    {
+                        writeNumberedEntityReference(ch);
+                    }
+                    else
+                    {
+                        throwInvalidCharacterException(ch, getMemoryManager());
+                    }
+                }
+                else
+                {
+                    writeNumberedEntityReference(ch);
+                }
+				
+			}
+			else
+			{
+				accumContent(ch);
+			}
+		}
+	}
 
     return i;
 }
@@ -1006,8 +1075,11 @@ FormatterToXML::startDocument()
 
         accumName(s_xmlHeaderEndString, 0, s_xmlHeaderEndStringLength);
 
-        outputLineSep();
-    }      
+        if(m_doIndent)
+        {
+		    outputLineSep();
+        }
+	}	   
 
 }
 

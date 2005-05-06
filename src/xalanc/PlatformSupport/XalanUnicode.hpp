@@ -167,6 +167,10 @@ struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
 
 		charRightCurlyBracket	= 0x7D,
 
+        charNEL                 = 0x85,
+
+        charLSEP                = 0x2028,
+
 		charPerMilleSign		= 0x2030
 	};
 
@@ -301,6 +305,10 @@ struct XALAN_PLATFORMSUPPORT_EXPORT XalanUnicode
 	static const XalanDOMChar	charVerticalLine		= 0x7C;
 
 	static const XalanDOMChar	charRightCurlyBracket	= 0x7D;
+
+	static const XalanDOMChar	charNEL                 = 0x85;
+
+	static const XalanDOMChar	charLSEP                = 0x2028;
 
 	static const XalanDOMChar	charPerMilleSign		= 0x2030;
 #endif
