@@ -48,13 +48,12 @@
 
 
 #include <xalanc/XMLSupport/FormatterToXML.hpp>
-#include <xalanc/XMLSupport/FormatterToXML_UTF8.hpp>
-#include <xalanc/XMLSupport/FormatterToXML_UTF16.hpp>
+#include <xalanc/XMLSupport/FormatterToXMLUnicode.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/FormatterToText.hpp>
 #include <xalanc/XMLSupport/XMLParserLiaison.hpp>
-
-
+#include <xalanc/XMLSupport/XalanUTF8Writer.hpp>
+#include <xalanc/XMLSupport/XalanUTF16Writer.hpp>
 
 #include <xalanc/XalanSourceTree/FormatterToSourceTree.hpp>
 #include <xalanc/XalanSourceTree/XalanSourceTreeDocument.hpp>
@@ -1398,8 +1397,9 @@ StylesheetExecutionContextDefault::createFormatterToXML(
     if (doIndent == false &&
         (encoding.empty() == true || XalanTranscodingServices::encodingIsUTF8(encoding)))
     {
-        FormatterToXML_UTF8* const  theFormatter =
-            FormatterToXML_UTF8::create(
+        typedef FormatterToXMLUnicode<XalanUTF8Writer> FormatterXML;
+		FormatterXML* const	theFormatter =
+            FormatterXML::create(
                 getMemoryManager(),
                 writer,
                 version,
@@ -1415,8 +1415,10 @@ StylesheetExecutionContextDefault::createFormatterToXML(
     }
     else if (doIndent == false && XalanTranscodingServices::encodingIsUTF16(encoding))
     {
-        FormatterToXML_UTF16* const theFormatter =
-            FormatterToXML_UTF16::create(
+        typedef FormatterToXMLUnicode<XalanUTF16Writer> FormatterXML;
+
+		FormatterXML* const	theFormatter =
+            FormatterXML::create(
                 getMemoryManager(),
                 writer,
                 version,
