@@ -131,15 +131,15 @@ ifeq ($(PLATFORM), CYGWIN)
               
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC1)
-  LINK = $(CXX) -D${PLATFORM}
+  LINK = $(CXX) -D${PLATFORM} ${LDFLAGS}
    
-  MAKE_SHARED = $(LINK) $(CXXFLAGS) -shared   -Wl,--warn-once \
- 											  -Wl,--out-implib \
- 											  -Wl,$(XSL_LIB_DIR)/$(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
+  MAKE_SHARED = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared   -Wl,--warn-once \
+ 							  -Wl,--out-implib \
+ 							  -Wl,$(XSL_LIB_DIR)/$(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
  											        																            
-  MAKE_SHARED_LOC = $(LINK) $(CXXFLAGS) -shared -Wl,--warn-once \
-												-Wl,--out-implib \
-          										-Wl,$(XSL_LIB_DIR)/$(LOC_LIB)
+  MAKE_SHARED_LOC = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared -Wl,--warn-once \
+							-Wl,--out-implib \
+        						-Wl,$(XSL_LIB_DIR)/$(LOC_LIB)
 
   LOC_OTHER_LINK_PARAMETERS = $(XERCES_LIB)
   
@@ -166,11 +166,11 @@ ifeq ($(PLATFORM), LINUX)
 			
 			CC1 = $(CC2) $(CXXFLAGS) 
 		
-		  CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		        CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 		
-			MAKE_SHARED = $(CXX) -qmkshrobj   ${bitstobuildLink}
+			MAKE_SHARED = $(CXX) -qmkshrobj  ${LDFLAGS} ${bitstobuildLink}
 		
-			LINK = $(CC1)  ${bitstobuildLink}
+			LINK = $(CC1)  ${bitstobuildLink} ${LDFLAGS}
 		
 		ifeq (${BITSTOBUILD}, 64)
 			MAKE_SHARED += -q64
@@ -223,15 +223,14 @@ ifeq ($(PLATFORM), LINUX)
 		    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib
 		  endif
 		
-		  EXTRA_LINK_OPTIONS= ${LDFLAGS}
 		  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 		  CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-		  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
+		  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
 		  LINK_SONAME = -Wl,-soname,$(SO_NAME)
-		  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
+		  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
 		  
 		  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
-		  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
+		  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
 	
 	 ## End of other compilers
 	endif
@@ -255,11 +254,10 @@ ifeq ($(PLATFORM), FREEBSD)
     ALLLIBS += -L${ICUROOT}
   endif
 
-  EXTRA_LINK_OPTIONS = ${LDFLAGS}
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
-  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
+  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
   
   MAKE_SHARED_LOC=$(MAKE_SHARED)
   
@@ -284,11 +282,10 @@ ifeq ($(PLATFORM), NETBSD)
     ALLLIBS += -L${ICUROOT}
   endif
 
-  EXTRA_LINK_OPTIONS = ${LDFLAGS}
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
-  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
+  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
 
   MAKE_SHARED_LOC=$(MAKE_SHARED)
 endif
@@ -334,9 +331,9 @@ ifeq ($(PLATFORM), SOLARIS)
 
 	EXTRA_LINK_OPTIONS=-lc
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-    CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC
-	LINK =  g++ -D${PLATFORM} -fPIC
+        CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+	LINK =  g++ -D${PLATFORM} -fPIC ${LDFLAGS}
 
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
@@ -345,13 +342,13 @@ ifeq ($(PLATFORM), SOLARIS)
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XSL_OBJ_DIR) -features=rtti -D${PLATFORM} -D_REENTRANT
 
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-    CC4 = $(CC) $(CXXFLAGS) -KPIC -mt -xs -D${PLATFORM} -D_REENTRANT
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XSL_OBJ_DIR) ${LDFLAGS} 
-    LINK_SONAME = -h ${SO_NAME} 
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
+        CC4 = $(CC) $(CXXFLAGS) -KPIC -mt -xs -D${PLATFORM} -D_REENTRANT
+        MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XSL_OBJ_DIR) ${LDFLAGS} 
+        LINK_SONAME = -h ${SO_NAME} 
+        MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
 	LINK = ${CXX} -D${PLATFORM} -ptr$(XSL_OBJ_DIR) ${LDFLAGS}
 
-    ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
+        ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -lc -lgen
   endif
 
@@ -380,9 +377,9 @@ ifeq ($(PLATFORM), AIX)
 
 	EXTRA_LINK_OPTIONS=-lc
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-    CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC
-	LINK =  g++ -D${PLATFORM} -fPIC
+        CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+	LINK =  g++ -D${PLATFORM} -fPIC ${LDFLAGS}
 
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
@@ -400,9 +397,9 @@ else
 endif
     CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
-	MAKE_SHARED = makeC++SharedLib_r -p 512 -brtl ${bitstobuildLink}
+	MAKE_SHARED = makeC++SharedLib_r -p 512 -brtl ${LDFLAGS} ${bitstobuildLink}
 
-	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
+	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
 ifeq (${BITSTOBUILD}, 64)
 	MAKE_SHARED += -X64
@@ -492,8 +489,8 @@ ifeq ($(PLATFORM), TRU64)
   SHLIBSUFFIX = .so
   CC1 = $(CXX) ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS) -nocxxstd
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${XSL_OBJ_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors -nocxxstd
-  LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${XSL_OBJ_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors -nocxxstd ${LDFLAGS}
+  LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) ${LDFLAGS}
   MAKE_SHARED_LOC=$(MAKE_SHARED)
 endif
 
@@ -509,13 +506,13 @@ ifeq ($(PLATFORM), MACOSX)
   CC4 = ${CC} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   LIB = $(LIB_NAME).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
   SO_NAME = $(LIB_NAME).$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
-  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x38000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LINK_NAME} 
-  LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS}
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x38000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LINK_NAME} ${LDFLAGS}
+  LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS} ${LDFLAGS}
   
   export DYLD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(DYLD_LIBRARY_PATH)
   LOC_LIB = ${LOC_LIBNAME}.${LIB_MAJOR_VER}.${LIB_MINOR_VER}$(SHLIBSUFFIX)
   LOC_SONAME = ${LOC_LIBNAME}.${LIB_MAJOR_VER}${SHLIBSUFFIX}
-  MAKE_SHARED_LOC= ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x40000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LOC_LIBNAME}${SHLIBSUFFIX}
+  MAKE_SHARED_LOC= ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x40000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LOC_LIBNAME}${SHLIBSUFFIX} ${LDFLAGS}
 endif
 
 #=============== OS400 SPECIFIC OPTIONS =========================
@@ -541,7 +538,7 @@ endif
   TO = qwobj
   EXTRA_COMPILE_OPTIONS = -I. -g  -qTERASPACE="*YES *NOTSIFC" -qSTGMDL="*INHERIT" -DXML_USE_ICONV400_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSSOR_SOCKET -qTGTRLS="V5R1M0"
   EXTRA_LINK_OPTIONS = -qOPTION="*DUPPROC *DUPVAR *NOWARN"
-  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) ${LDFLAGS}
 
 endif
 
