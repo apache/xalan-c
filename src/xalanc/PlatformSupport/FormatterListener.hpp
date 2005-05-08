@@ -80,7 +80,7 @@ protected:
     enum eXMLVer
     {
         XML_VERSION_1_0 = 0,
-        XML_VERSION_1_1 = 1,
+        XML_VERSION_1_1 = 1
     };
 
 public:
