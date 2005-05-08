@@ -48,9 +48,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManagerType& theManager) :
     m_decimalFormatCache(theManager),
-    m_defaultDecimalFormat(createDecimalFormat(XalanDecimalFormatSymbols(theManager))),
+    m_defaultDecimalFormat(0),
     m_memoryManager(theManager)
 {
+    XalanDecimalFormatSymbols tmpFormat(theManager);
+
+    DecimalFormatType** tmpFormatPtr = const_cast<DecimalFormatType**>(&m_defaultDecimalFormat) ;
+    
+    (*tmpFormatPtr)= createDecimalFormat(tmpFormat);
 }
 
 
