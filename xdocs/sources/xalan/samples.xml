@@ -59,6 +59,9 @@
       application executable is in the bin subdirectory (&xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin). To run a 
       sample, be sure the executable is on the path, and run it from the samples subdirectory that contains the input 
       files.</note>
+<note>The most of the samples are implemented without providing a pluggable memory manager. The <link anchor="simpletransform">SimpleTransform</link> sample illustrates, 
+      in addition to a simple transformation, the usage of the processor with memory manager</note></note>
+
 </s2>
 
 <anchor name="rebuilding"/>
