@@ -36,7 +36,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-typedef enum
+enum
 {
     kNotSpecial = 0,
     kContentSpecial = 1,	// A flag to indicate a value in s_specialChars applies to content
@@ -1437,8 +1437,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStrin
 };
 
 template<class T>
-const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStringLength =
-		FXML_SIZE(s_doctypeHeaderStartString);
+const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStringLength = 9;
+                                                    //		FXML_SIZE(s_doctypeHeaderStartString); 
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderPublicString[] =
@@ -1456,8 +1456,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderPublicStri
 };
 
 template<class T>
-const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderPublicStringLength =
-		FXML_SIZE(s_doctypeHeaderPublicString);
+const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderPublicStringLength = 9;
+		                                            // FXML_SIZE(s_doctypeHeaderPublicString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderSystemString[] =
@@ -1475,8 +1475,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderSystemStri
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_doctypeHeaderSystemStringLength =
-		FXML_SIZE(s_doctypeHeaderSystemString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_doctypeHeaderSystemStringLength = 9;
+		                                            // FXML_SIZE(s_doctypeHeaderSystemString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderStartString[] =
@@ -1500,8 +1500,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderStartString[] 
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderStartStringLength =
-		FXML_SIZE(s_xmlHeaderStartString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderStartStringLength = 15;
+		                                                // FXML_SIZE(s_xmlHeaderStartString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderEncodingString[] =
@@ -1522,8 +1522,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderEncodingString
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderEncodingStringLength =
-		FXML_SIZE(s_xmlHeaderEncodingString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderEncodingStringLength = 12;
+		                                                // FXML_SIZE(s_xmlHeaderEncodingString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderStandaloneString[] =
@@ -1546,8 +1546,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderStandaloneStri
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderStandaloneStringLength =
-		FXML_SIZE(s_xmlHeaderStandaloneString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderStandaloneStringLength = 14;
+		                                                    //FXML_SIZE(s_xmlHeaderStandaloneString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderEndString[] =
@@ -1559,8 +1559,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_xmlHeaderEndString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderEndStringLength =
-		FXML_SIZE(s_xmlHeaderEndString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xmlHeaderEndStringLength = 3;
+		                                                    // FXML_SIZE(s_xmlHeaderEndString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_defaultVersionString[] =
@@ -1572,8 +1572,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_defaultVersionString[] 
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_defaultVersionStringLength =
-		FXML_SIZE(s_defaultVersionString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_defaultVersionStringLength = 3;
+		//FXML_SIZE(s_defaultVersionString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_cdataOpenString[] =
@@ -1591,8 +1591,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_cdataOpenString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_cdataOpenStringLength =
-		FXML_SIZE(s_cdataOpenString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_cdataOpenStringLength = 9;
+		//FXML_SIZE(s_cdataOpenString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_cdataCloseString[] =
@@ -1604,8 +1604,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_cdataCloseString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_cdataCloseStringLength =
-		FXML_SIZE(s_cdataCloseString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_cdataCloseStringLength = 3;
+		//FXML_SIZE(s_cdataCloseString);
 
 
 template<class T>
@@ -1632,8 +1632,8 @@ const XalanDOMChar	FormatterToXMLUnicode<T>::s_xhtmlDocTypeString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xhtmlDocTypeStringLength =
-		FXML_SIZE(s_xhtmlDocTypeString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_xhtmlDocTypeStringLength =17;
+		//FXML_SIZE(s_xhtmlDocTypeString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_lessThanEntityString[] =
@@ -1646,8 +1646,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_lessThanEntityString[] 
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_lessThanEntityStringLength =
-		FXML_SIZE(s_lessThanEntityString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_lessThanEntityStringLength =4;
+		//FXML_SIZE(s_lessThanEntityString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_greaterThanEntityString[] =
@@ -1660,8 +1660,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_greaterThanEntityString
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_greaterThanEntityStringLength =
-		FXML_SIZE(s_greaterThanEntityString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_greaterThanEntityStringLength = 4;
+		//FXML_SIZE(s_greaterThanEntityString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_ampersandEntityString[] =
@@ -1675,8 +1675,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_ampersandEntityString[]
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_ampersandEntityStringLength =
-		FXML_SIZE(s_ampersandEntityString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_ampersandEntityStringLength = 5;
+		//FXML_SIZE(s_ampersandEntityString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_quoteEntityString[] =
@@ -1691,23 +1691,23 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_quoteEntityString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_quoteEntityStringLength =
-		FXML_SIZE(s_quoteEntityString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_quoteEntityStringLength =6;
+		//FXML_SIZE(s_quoteEntityString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_linefeedNCRString[] =
 {
-	value_type(XalanUnicode::charAmpersand),
-	value_type(XalanUnicode::charNumberSign),
-	value_type(XalanUnicode::charDigit_1),
-	value_type(XalanUnicode::charDigit_0),
-	value_type(XalanUnicode::charSemicolon),
-	value_type(0)
+	typename T::value_type(XalanUnicode::charAmpersand),
+	typename T::value_type(XalanUnicode::charNumberSign),
+	typename T::value_type(XalanUnicode::charDigit_1),
+	typename T::value_type(XalanUnicode::charDigit_0),
+	typename T::value_type(XalanUnicode::charSemicolon),
+	typename T::value_type(0)
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_linefeedNCRStringLength =
-		FXML_SIZE(s_linefeedNCRString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_linefeedNCRStringLength = 5;
+		//FXML_SIZE(s_linefeedNCRString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_carriageReturnNCRString[] =
@@ -1721,8 +1721,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_carriageReturnNCRString
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_carriageReturnNCRStringLength =
-		FXML_SIZE(s_carriageReturnNCRString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_carriageReturnNCRStringLength =5;
+		//FXML_SIZE(s_carriageReturnNCRString);
 
 template<class T>
 const typename T::value_type	FormatterToXMLUnicode<T>::s_htabNCRString[] =
@@ -1735,8 +1735,8 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_htabNCRString[] =
 };
 
 template<class T>
-const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_htabNCRStringLength =
-		FXML_SIZE(s_htabNCRString);
+const XalanDOMString::size_type		FormatterToXMLUnicode<T>::s_htabNCRStringLength =4;
+		//FXML_SIZE(s_htabNCRString);
 
 
 XALAN_CPP_NAMESPACE_END
