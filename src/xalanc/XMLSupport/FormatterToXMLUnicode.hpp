@@ -1437,7 +1437,7 @@ const typename T::value_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStrin
 };
 
 template<class T>
-const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStringLength = 9;
+const XalanDOMString::size_type	FormatterToXMLUnicode<T>::s_doctypeHeaderStartStringLength = 10;
                                                     //		FXML_SIZE(s_doctypeHeaderStartString); 
 
 template<class T>
