@@ -48,14 +48,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManagerType& theManager) :
     m_decimalFormatCache(theManager),
-    m_defaultDecimalFormat(0),
+    m_defaultDecimalFormat(theManager, createDecimalFormat(theManager)),
     m_memoryManager(theManager)
 {
-    XalanDecimalFormatSymbols tmpFormat(theManager);
-
-    DecimalFormatType** tmpFormatPtr = const_cast<DecimalFormatType**>(&m_defaultDecimalFormat) ;
-    
-    (*tmpFormatPtr)= createDecimalFormat(tmpFormat);
 }
 
 
@@ -80,14 +75,12 @@ ICUFormatNumberFunctor::create(MemoryManagerType& theManager)
 
 ICUFormatNumberFunctor::~ICUFormatNumberFunctor()
 {
-    delete m_defaultDecimalFormat;
-
     XALAN_USING_STD(for_each)
 
     for_each(
         m_decimalFormatCache.begin(),
         m_decimalFormatCache.end(),
-        DecimalFormatCacheStruct::DecimalFormatDeleteFunctor());
+        DecimalFormatCacheStruct::DecimalFormatDeleteFunctor(m_memoryManager));
 }
 
 
@@ -155,7 +148,7 @@ ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &
         {
             // Save the formatter, because splice() may invalidate
             // i.
-            DecimalFormatType* const        theFormatter = (*i).m_formatter;
+            DecimalFormatType* const    theFormatter = (*i).m_formatter;
 
             // Move the entry to the beginning the cache
             theNonConstCache.splice(theBegin, theNonConstCache, i);
@@ -177,36 +170,48 @@ ICUFormatNumberFunctor::doFormat(
 
     if (theDFS == 0)
     {
-        return doICUFormat(theNumber,thePattern,theResult);
+        return doICUFormat(theNumber, thePattern, theResult);
     }
 
-    XalanDOMString  nonLocalPattern(theResult.getMemoryManager()); 
+    XalanDOMString  nonLocalPattern(m_memoryManager);
 
-    UnlocalizePatternFunctor formatter(*theDFS);
+    UnlocalizePatternFunctor    formatter(*theDFS);
 
-    formatter(thePattern, nonLocalPattern);
+    formatter(thePattern, nonLocalPattern, m_memoryManager);
 
 
-    DecimalFormatType*  theFormatter = getCachedDecimalFormat(*theDFS);
+    DecimalFormatType* const    theFormatter =
+        getCachedDecimalFormat(*theDFS);
 
     if (theFormatter != 0)
     {
-        return doICUFormat(theNumber, nonLocalPattern, theResult, theFormatter);
+        return doICUFormat(
+                    theNumber,
+                    nonLocalPattern,
+                    theResult,
+                    theFormatter);
     }
     else
     {
-        XalanAutoPtr<DecimalFormatType> theDecimalFormatGuard(createDecimalFormat(*theDFS));
+        DFAutoPtrType   theDecimalFormatGuard(
+                            m_memoryManager,
+                            createDecimalFormat(*theDFS, m_memoryManager));
 
-        if (theDecimalFormatGuard.get() !=0)
+        if (theDecimalFormatGuard.get() != 0)
         {
             // OK, there was no error, so cache the instance...
             cacheDecimalFormat(theDecimalFormatGuard.get(), *theDFS);
 
             // Release the collator, since it's in the cache and
             // will be controlled by the cache...
-            DecimalFormatType * theDecimalFormat = theDecimalFormatGuard.release();
+            DecimalFormatType* const    theDecimalFormat =
+                theDecimalFormatGuard.releasePtr();
 
-            return doICUFormat(theNumber, nonLocalPattern, theResult, theDecimalFormat);
+            return doICUFormat(
+                        theNumber,
+                        nonLocalPattern,
+                        theResult,
+                        theDecimalFormat);
         }
         else
         {
@@ -217,42 +222,99 @@ ICUFormatNumberFunctor::doFormat(
 
 
 
-DecimalFormatType *
+DecimalFormatType*
 ICUFormatNumberFunctor::createDecimalFormat(
-        const XalanDecimalFormatSymbols&    theXalanDFS) const
+        const XalanDecimalFormatSymbols&    theXalanDFS,
+        MemoryManager&                      theManager)
 {
     UErrorCode theStatus = U_ZERO_ERROR;    
-    
+
     // Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
     XalanAutoPtr<DecimalFormatSymbols>  theDFS(new DecimalFormatSymbols(theStatus));
     // We got a XalanDecimalFormatSymbols, so set the
     // corresponding data in the ICU DecimalFormatSymbols.
-    theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, UChar(theXalanDFS.getZeroDigit()));
-    theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, UChar(theXalanDFS.getGroupingSeparator()));
-    theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, UChar(theXalanDFS.getDecimalSeparator()));
-    theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, UChar(theXalanDFS.getPerMill()));
-    theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, UChar(theXalanDFS.getPercent()));
-    theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, UChar(theXalanDFS.getDigit()));
-    theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, UChar(theXalanDFS.getPatternSeparator()));
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kZeroDigitSymbol,
+        UChar(theXalanDFS.getZeroDigit()));
 
-    theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getInfinity()));
-    theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager,theXalanDFS.getNaN()));
-    theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, UChar(theXalanDFS.getMinusSign()));
-    theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getCurrencySymbol()));
-    theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, theXalanDFS.getInternationalCurrencySymbol()));
-    theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, UChar(theXalanDFS.getMonetaryDecimalSeparator()));
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kGroupingSeparatorSymbol,
+        UChar(theXalanDFS.getGroupingSeparator()));
 
-    // Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
-    // DecimalFormat will adopt the DecimalFormatSymbols instance.
-    DecimalFormatType * theFormatter= new DecimalFormatType("", theDFS.release(), theStatus);
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kDecimalSeparatorSymbol,
+        UChar(theXalanDFS.getDecimalSeparator()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kPerMillSymbol,
+        UChar(theXalanDFS.getPerMill()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kPercentSymbol,
+        UChar(theXalanDFS.getPercent()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kDigitSymbol,
+        UChar(theXalanDFS.getDigit()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kPatternSeparatorSymbol,
+        UChar(theXalanDFS.getPatternSeparator()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kInfinitySymbol,
+        ICUBridge::XalanDOMStringToUnicodeString(
+            theManager,
+            theXalanDFS.getInfinity()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kNaNSymbol,
+        ICUBridge::XalanDOMStringToUnicodeString(
+            theManager,
+            theXalanDFS.getNaN()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kMinusSignSymbol,
+        UChar(theXalanDFS.getMinusSign()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kCurrencySymbol,
+        ICUBridge::XalanDOMStringToUnicodeString(
+            theManager,
+            theXalanDFS.getCurrencySymbol()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kIntlCurrencySymbol,
+        ICUBridge::XalanDOMStringToUnicodeString(
+            theManager,
+            theXalanDFS.getInternationalCurrencySymbol()));
+
+    theDFS->setSymbol(
+        DecimalFormatSymbols::kMonetarySeparatorSymbol,
+        UChar(theXalanDFS.getMonetaryDecimalSeparator()));
+
+    // Construct a DecimalFormat instance.
+    DecimalFormatType*  theFormatter = 0;
+
+    XalanConstruct(
+        theManager,
+        theFormatter,
+        theStatus);
+
+    // Guard this, just in case something happens before
+    // we return it. 
+    DFAutoPtrType   theGuard(theManager, theFormatter);
 
     if (U_SUCCESS(theStatus))
     {
-        return theFormatter;
+        // Note that we release the XalanAutoPtr, since the
+        // DecimalFormat will adopt the DecimalFormatSymbols instance.
+        theGuard->adoptDecimalFormatSymbols(theDFS.release());
+
+        return theGuard.releasePtr();
     } 
     else 
     {
-        delete theFormatter;
         return 0;
     }
 }
@@ -278,12 +340,14 @@ ICUFormatNumberFunctor::cacheDecimalFormat(
     if (theNonConstCache.size() == eCacheMax)
     {
         // Yes, so guard the collator instance, in case pop_back() throws...
-        XalanAutoPtr<DecimalFormatType> theDecimalFormatGuard(theNonConstCache.back().m_formatter);
+        DFAutoPtrType   theDecimalFormatGuard(
+                            m_memoryManager,
+                            theNonConstCache.back().m_formatter);
 
         theNonConstCache.pop_back();
     }
 
-  DecimalFormatCacheListType::value_type emptyDFC(m_memoryManager);
+    const DecimalFormatCacheListType::value_type    emptyDFC(m_memoryManager);
 
     theNonConstCache.push_front(emptyDFC);
 
@@ -307,9 +371,9 @@ ICUFormatNumberFunctor::doICUFormat(
 
     if (theFormatter == 0)
     {
-        if (m_defaultDecimalFormat != 0) 
+        if (m_defaultDecimalFormat.get() != 0) 
         {
-            theFormatter = m_defaultDecimalFormat;
+            theFormatter = m_defaultDecimalFormat.get();
         }
         else
         {
@@ -317,7 +381,9 @@ ICUFormatNumberFunctor::doICUFormat(
         }
     }
 
-    theFormatter->applyPattern(ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, thePattern),theStatus);
+    theFormatter->applyPattern(
+        ICUBridge::XalanDOMStringToUnicodeString(m_memoryManager, thePattern),
+        theStatus);
 
     if (U_SUCCESS(theStatus))
     {
@@ -331,10 +397,13 @@ ICUFormatNumberFunctor::doICUFormat(
 }
 
 XalanDOMString&
-ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(const XalanDOMString&  thePattern,     XalanDOMString& theResult) const
+ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(
+            const XalanDOMString&   thePattern,
+            XalanDOMString&         theResult,
+            MemoryManager&          theManager) const
 {
 
-    XalanDecimalFormatSymbols defaultDFS( theResult.getMemoryManager());
+    XalanDecimalFormatSymbols   defaultDFS(theManager);
 
     XalanDOMString::const_iterator iterator = thePattern.begin();
 

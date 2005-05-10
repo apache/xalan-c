@@ -23,6 +23,10 @@
 
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
+
+
 #include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
 
 
@@ -62,26 +66,29 @@ struct DecimalFormatCacheStruct
     {
     }
 
-    DecimalFormatCacheStruct(MemoryManagerType& theManager) :
-    m_DFS(theManager),
+    DecimalFormatCacheStruct(MemoryManagerType&     theManager) :
+        m_DFS(theManager),
         m_formatter(0)
     {
     }
 
-    DecimalFormatCacheStruct(const DecimalFormatCacheStruct& other, MemoryManagerType& theManager) :
-    m_DFS(other.m_DFS, theManager),
+    DecimalFormatCacheStruct(
+                const DecimalFormatCacheStruct&     other,
+                MemoryManagerType&                  theManager) :
+        m_DFS(other.m_DFS, theManager),
         m_formatter(other.m_formatter)
     {
     }
+
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
     bool
-        operator<(const DecimalFormatCacheStruct&  theRHS) const
+    operator<(const DecimalFormatCacheStruct&  theRHS) const
     {
         return this < &theRHS;
     }
 
     bool
-        operator==(const DecimalFormatCacheStruct&  theRHS) const
+    operator==(const DecimalFormatCacheStruct&  theRHS) const
     {
         return this == &theRHS;
     }
@@ -91,14 +98,33 @@ struct DecimalFormatCacheStruct
 
     DecimalFormatType * m_formatter;
 
-    struct DecimalFormatDeleteFunctor
+    class DecimalFormatDeleteFunctor
     {
+    public:
+
+        DecimalFormatDeleteFunctor(MemoryManager&   theManager) :
+            m_memoryManager(theManager)
+        {
+        }
 
         void
-            operator()(DecimalFormatCacheStruct&    theStruct) const
+        operator()(DecimalFormatCacheStruct&    theStruct) const
         {
-            delete theStruct.m_formatter;
+            assert(theStruct.m_formatter != 0);
+
+            XalanDestroy(
+                m_memoryManager,
+                *theStruct.m_formatter);
         }
+
+    private:
+
+        // Not implemented...
+        DecimalFormatDeleteFunctor&
+        operator=(const DecimalFormatDeleteFunctor&);
+
+        // Data members.
+        MemoryManager&  m_memoryManager;
     };
 
     struct DecimalFormatFindFunctor
@@ -121,7 +147,6 @@ private:
 
     DecimalFormatCacheStruct();
     DecimalFormatCacheStruct(const DecimalFormatCacheStruct& other);
-    
 };
 
 
@@ -161,14 +186,17 @@ public:
         }
 
         XalanDOMString&
-        operator()(const XalanDOMString&    thePattern, XalanDOMString& theResult) const;
+        operator()(
+                const XalanDOMString&   thePattern,
+                XalanDOMString&         theResult,
+                MemoryManager&          theManager) const;
 
     private:
-        const XalanDecimalFormatSymbols& m_DFS;
+
+        const XalanDecimalFormatSymbols&    m_DFS;
     };
 
     typedef XalanList<DecimalFormatCacheStruct>         DecimalFormatCacheListType;
-
 
 private:
 
@@ -194,9 +222,18 @@ private:
         DecimalFormatType*                  theFormatter,
         const XalanDecimalFormatSymbols&    theDFS) const;
 
-    DecimalFormat *
+    static DecimalFormat*
     createDecimalFormat(
-        const XalanDecimalFormatSymbols&    theXalanDFS) const;
+        const XalanDecimalFormatSymbols&    theXalanDFS,
+        MemoryManager&                      theManager);
+
+    static DecimalFormat*
+    createDecimalFormat(MemoryManager&  theManager)
+    {
+        const XalanDecimalFormatSymbols     theDFS(theManager);
+
+        return createDecimalFormat(theDFS, theManager);
+    }
 
     enum { eCacheMax = 10u };
 
@@ -209,13 +246,14 @@ private:
     bool
     operator==(const ICUFormatNumberFunctor&) const;
 
+    typedef XalanMemMgrAutoPtr<DecimalFormatType>   DFAutoPtrType;
 
     // Data members...
     mutable DecimalFormatCacheListType  m_decimalFormatCache;
 
-    DecimalFormatType* const    m_defaultDecimalFormat;
+    const DFAutoPtrType                 m_defaultDecimalFormat;
 
-    MemoryManagerType&  m_memoryManager;
+    MemoryManagerType&                  m_memoryManager;
 };
 
 
