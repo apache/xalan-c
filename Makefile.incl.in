@@ -179,7 +179,7 @@ ifeq ($(PLATFORM), LINUX)
 			LINK += -q64
 		endif
 		
-			SHLIBSUFFIX=.so
+			SHLIBSUFFIX=.a
 		
 		   
 		  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c
@@ -200,7 +200,7 @@ ifeq ($(PLATFORM), LINUX)
     
 		  
 		  ALLLIBS = ${LIBS}
-		  SHLIBSUFFIX=.so
+		  SHLIBSUFFIX=.a
 		  PIC_OPTION=
 		
 		  ifeq (${CXX}, icpc)
