@@ -687,6 +687,23 @@ DoubleSupport::isValid(const XalanDOMChar*      theString)
 
 
 
+inline double
+modfRound(double  theValue)
+{
+    double          intPart = 0;
+
+    const double    fracPart =
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+        std::modf(theValue + 0.5, &intPart);
+#else
+        modf(theValue + 0.5, &intPart);
+#endif
+
+    return intPart;
+}
+
+
+
 double
 DoubleSupport::round(double     theValue)
 {
@@ -708,7 +725,16 @@ DoubleSupport::round(double     theValue)
     }
     else if (theValue > 0)
     {
-        return long(theValue + 0.5);
+        // If the value is less than the maximum value for
+        // a long, this is the fastest way to do it.
+        if (theValue < LONG_MAX)
+        {
+            return long(theValue + 0.5);
+        }
+        else
+        {
+            return modfRound(theValue);
+        }
     }
     else
     {
@@ -717,20 +743,25 @@ DoubleSupport::round(double     theValue)
         // round up (toward 0), rather than down.
         double          intPart = 0;
 
+        const double    fracPart = 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        const double    fracPart = std::modf(theValue, &intPart);
+            std::modf(theValue, &intPart);
 #else
-        const double    fracPart = modf(theValue, &intPart);
+            modf(theValue, &intPart);
 #endif
 
-        if (fracPart == -0.5)
+        const double    theAdjustedValue =
+            fracPart == -0.5 ? theValue + 0.5 : theValue - 0.5;
+
+        // If the value is greater than the minimum value for
+        // a long, this is the fastest way to do it.
+        if (theAdjustedValue > LONG_MIN)
         {
-            // special case -- we have have to round toward 0...
-            return long(theValue + 0.5);
+            return long(theAdjustedValue);
         }
         else
         {
-            return long(theValue - 0.5);
+            return modfRound(theAdjustedValue);
         }
     }
 }
