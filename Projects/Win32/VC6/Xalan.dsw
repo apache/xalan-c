@@ -105,21 +105,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "PerfT"="..\..\..\Tests\PerfT\PerfT.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "SerializeNodeSet"=".\SerializeNodeSet\SerializeNodeSet.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -286,21 +271,6 @@ Package=<4>
 ###############################################################################
 
 Project: "UseStylesheetParam"=".\UseStylesheetParam\UseStylesheetParam.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XPathWrapper"=".\XPathWrapper\XPathWrapper.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

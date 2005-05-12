@@ -24,11 +24,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParsedSourceWrappers", "Par
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerfT", "PerfT\PerfT.vcproj", "{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerializeNodeSet", "SerializeNodeSet\SerializeNodeSet.vcproj", "{605EB7CF-631D-449C-818F-3C8176106DDB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
@@ -50,11 +45,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleXPathCAPI", "SimpleXP
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamTransform", "StreamTransform\StreamTransform.vcproj", "{A3460E83-A49E-484D-8178-2870D632577C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPathWrapper", "XPathWrapper\XPathWrapper.vcproj", "{1D581E76-D5CE-467E-AC11-922AA736100C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
 	EndProjectSection
@@ -114,11 +104,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "conf", "Conf\conf.vcproj", 
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf", "Performance\perf.vcproj", "{B71C67DD-7ADB-4914-B08F-166198921C03}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AllInOneWithICU", "AllInOne\AllInOneWithICU.vcproj", "{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{058582AA-14DE-43A9-975E-6F36DB74924E} = {058582AA-14DE-43A9-975E-6F36DB74924E}
@@ -165,12 +150,6 @@ Global
 		{776D0F8E-D36E-4994-AD94-B3B45D203164}.Release.Build.0 = Release|Win32
 		{776D0F8E-D36E-4994-AD94-B3B45D203164}.Release with symbols.ActiveCfg = Release|Win32
 		{776D0F8E-D36E-4994-AD94-B3B45D203164}.Release with symbols.Build.0 = Release|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Debug.ActiveCfg = Debug|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Debug.Build.0 = Debug|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Release.ActiveCfg = Release|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Release.Build.0 = Release|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Release with symbols.ActiveCfg = Release with symbols|Win32
-		{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}.Release with symbols.Build.0 = Release with symbols|Win32
 		{605EB7CF-631D-449C-818F-3C8176106DDB}.Debug.ActiveCfg = Debug|Win32
 		{605EB7CF-631D-449C-818F-3C8176106DDB}.Debug.Build.0 = Debug|Win32
 		{605EB7CF-631D-449C-818F-3C8176106DDB}.Release.ActiveCfg = Release|Win32
@@ -201,12 +180,6 @@ Global
 		{A3460E83-A49E-484D-8178-2870D632577C}.Release.Build.0 = Release|Win32
 		{A3460E83-A49E-484D-8178-2870D632577C}.Release with symbols.ActiveCfg = Release|Win32
 		{A3460E83-A49E-484D-8178-2870D632577C}.Release with symbols.Build.0 = Release|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Debug.ActiveCfg = Debug|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Debug.Build.0 = Debug|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Release.ActiveCfg = Release|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Release.Build.0 = Release|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Release with symbols.ActiveCfg = Release|Win32
-		{1D581E76-D5CE-467E-AC11-922AA736100C}.Release with symbols.Build.0 = Release|Win32
 		{69739EB0-6BA3-4E79-88CA-3A07A7902233}.Debug.ActiveCfg = Debug|Win32
 		{69739EB0-6BA3-4E79-88CA-3A07A7902233}.Debug.Build.0 = Debug|Win32
 		{69739EB0-6BA3-4E79-88CA-3A07A7902233}.Release.ActiveCfg = Release|Win32
@@ -273,12 +246,6 @@ Global
 		{E18F5989-80D9-46E7-9588-F5411C1DA8DE}.Release.Build.0 = Release|Win32
 		{E18F5989-80D9-46E7-9588-F5411C1DA8DE}.Release with symbols.ActiveCfg = Release with symbols|Win32
 		{E18F5989-80D9-46E7-9588-F5411C1DA8DE}.Release with symbols.Build.0 = Release with symbols|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Debug.ActiveCfg = Debug|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Debug.Build.0 = Debug|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Release.ActiveCfg = Release|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Release.Build.0 = Release|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Release with symbols.ActiveCfg = Release with symbols|Win32
-		{B71C67DD-7ADB-4914-B08F-166198921C03}.Release with symbols.Build.0 = Release with symbols|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Debug.ActiveCfg = Debug|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Debug.Build.0 = Debug|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Release.ActiveCfg = Release|Win32
