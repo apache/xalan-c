@@ -1338,12 +1338,12 @@ ElemNumber::getFormattedNumber(
                 break;
             }
         case XalanUnicode::charLetter_I:
-            long2roman(listElement, true, theResult);
+            toRoman(listElement, true, theResult);
             break;
 
         case XalanUnicode::charLetter_i:
             {
-                long2roman(listElement, true, theResult);
+                toRoman(listElement, true, theResult);
 
                 StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
                 
@@ -1548,25 +1548,14 @@ ElemNumber::int2alphaCount(
 
 
 void
-ElemNumber::tradAlphaCount(
-            CountType           /* val */,
-            XalanDOMString&     /* theResult */)
-{
-//  @@ JMD: We don't do languages yet, so this is just a placeholder
-    assert(false);
-}
-
-
-
-void
-ElemNumber::long2roman(
+ElemNumber::toRoman(
             CountType           val,
             bool                prefixesAreOK,
             XalanDOMString&     theResult)
 {
     if(val == 0)
     {
-        theResult = XalanUnicode::charDigit_0;;
+        theResult = XalanUnicode::charDigit_0;
     }
     else if (val > 3999)
     {
@@ -1582,18 +1571,23 @@ ElemNumber::long2roman(
 
         do
         {
-            while (localValue >= s_romanConvertTable[place].m_postValue)
+            assert(place < s_romanConvertTableSize);
+
+            const DecimalToRoman&   theCurrent =
+                s_romanConvertTable[place];
+
+            while (localValue >= theCurrent.m_postValue)
             {
-                theResult += s_romanConvertTable[place].m_postLetter;
-                localValue -= s_romanConvertTable[place].m_postValue;
+                theResult += theCurrent.m_postLetter;
+                localValue -= theCurrent.m_postValue;
             }
 
             if (prefixesAreOK)
             {
-                if (localValue >= s_romanConvertTable[place].m_preValue)
+                if (localValue >= theCurrent.m_preValue)
                 {
-                    theResult += s_romanConvertTable[place].m_preLetter;
-                    localValue -= s_romanConvertTable[place].m_preValue;
+                    theResult += theCurrent.m_preLetter;
+                    localValue -= theCurrent.m_preValue;
                 }
             } 
 
@@ -1906,8 +1900,7 @@ const XalanDOMChar      ElemNumber::s_errorString[] =
 
 
 const DecimalToRoman    ElemNumber::s_romanConvertTable[] =
-{
-    {
+{    {
         1000,
         { XalanUnicode::charLetter_M, 0 },
         900,
@@ -1958,6 +1951,8 @@ const DecimalToRoman    ElemNumber::s_romanConvertTable[] =
 };
 
 
+const size_t    ElemNumber::s_romanConvertTableSize = sizeof(s_romanConvertTable) / sizeof(s_romanConvertTable[0]);
+
 
 static XalanNumberingResourceBundle     s_staticElalphaResourceBundle(XalanMemMgrs::getDummyMemMgr());
 
@@ -1967,8 +1962,9 @@ const XalanNumberingResourceBundle& ElemNumber::s_elalphaResourceBundle =
 
 
 static void
-initializeTraditionalElalphaBundle(MemoryManagerType& theManager, 
-                                   XalanNumberingResourceBundle&    theBundle)
+initializeTraditionalElalphaBundle(
+            MemoryManagerType&              theManager, 
+            XalanNumberingResourceBundle&   theBundle)
 {
 
 
@@ -2034,9 +2030,20 @@ initializeTraditionalElalphaBundle(MemoryManagerType& theManager,
     theElalphaDigitsTable.resize(3);
 
     // Swap the empty tables with temporary ones...
-    XalanDOMCharVectorType(elalphaDigits, elalphaDigits + length(elalphaDigits), theManager).swap(theElalphaDigitsTable[0]);
-    XalanDOMCharVectorType(elalphaTens, elalphaTens + length(elalphaTens), theManager).swap(theElalphaDigitsTable[1]);
-    XalanDOMCharVectorType(elalphaHundreds, elalphaHundreds + length(elalphaHundreds), theManager).swap(theElalphaDigitsTable[2]);
+    XalanDOMCharVectorType(
+        elalphaDigits,
+        elalphaDigits + length(elalphaDigits),
+        theManager).swap(theElalphaDigitsTable[0]);
+
+    XalanDOMCharVectorType(
+        elalphaTens,
+        elalphaTens + length(elalphaTens),
+        theManager).swap(theElalphaDigitsTable[1]);
+
+    XalanDOMCharVectorType(
+        elalphaHundreds,
+        elalphaHundreds + length(elalphaHundreds),
+        theManager).swap(theElalphaDigitsTable[2]);
 
     // This table will indicate which positions the vectors of digits are in
     // the table...
@@ -2049,27 +2056,41 @@ initializeTraditionalElalphaBundle(MemoryManagerType& theManager,
     theDigitsTableTable.push_back(1);
     theDigitsTableTable.push_back(0);
 
-    const XalanDOMString    theLanguageString("el",theManager);
+    const XalanDOMString    theLanguageString("el", theManager);
 
     // Create an instance...
     XalanNumberingResourceBundle    theElaphaBundle(
         theLanguageString,
         theLanguageString,
         theLanguageString,
-        XalanDOMCharVectorType(elalphaAlphabet, elalphaAlphabet + length(elalphaAlphabet), theManager),
-        XalanDOMCharVectorType(elalphaTraditionalAlphabet, elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet), theManager),
+        XalanDOMCharVectorType(
+            elalphaAlphabet,
+            elalphaAlphabet + length(elalphaAlphabet),
+            theManager),
+        XalanDOMCharVectorType(
+            elalphaTraditionalAlphabet,
+            elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet),
+            theManager),
         XalanNumberingResourceBundle::eLeftToRight,
         XalanNumberingResourceBundle::eMultiplicativeAdditive,
         XalanNumberingResourceBundle::ePrecedes,
         ~NumberType(0),
-        NumberTypeVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount, theManager),
-        NumberTypeVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount, theManager),
+        NumberTypeVectorType(
+            elalphaNumberGroups,
+            elalphaNumberGroups + elalphaNumberGroupsCount,
+            theManager),
+        NumberTypeVectorType(
+            elalphaMultipliers,
+            elalphaMultipliers + elalphaMultipliersCount,
+            theManager),
         XalanDOMCharVectorType(theManager),
-        XalanDOMCharVectorType(elalphaMultiplierChars, elalphaMultiplierChars + length(elalphaMultiplierChars), theManager),
+        XalanDOMCharVectorType(
+            elalphaMultiplierChars,
+            elalphaMultiplierChars + length(elalphaMultiplierChars),
+            theManager),
         theElalphaDigitsTable,
         theDigitsTableTable,
         theManager);
-
 
     // Swap it with the one (this avoids making a copy...)
     theBundle.swap(theElaphaBundle);
@@ -2077,18 +2098,55 @@ initializeTraditionalElalphaBundle(MemoryManagerType& theManager,
 
 
 
+static const XalanDOMChar   s_textStringChars[] =
+{
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLeftParenthesis,
+    XalanUnicode::charRightParenthesis,
+    0
+};
+
+
+
+static const XalanDOMChar   s_commentStringChars[] =
+{
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLeftParenthesis,
+    XalanUnicode::charRightParenthesis,
+    0
+};
+
+
+
+static const XalanDOMChar   s_solidusStringChars[] =
+{
+    XalanUnicode::charSolidus,
+    0
+};
+
+
+
 void
 ElemNumber::initialize(MemoryManagerType&  theManager)
 {
+    s_staticTextString.reset(theManager, s_textStringChars);
 
-    s_staticTextString.reset( theManager, "text()");
+    s_staticCommentString.reset(theManager, s_commentStringChars);
 
-    s_staticCommentString.reset( theManager, "comment()");
-
-    s_staticSlashString.reset( theManager, "/");
+    s_staticSlashString.reset(theManager, s_solidusStringChars);
 
     initializeTraditionalElalphaBundle(theManager, s_staticElalphaResourceBundle);
 }
+
 
 
 void
@@ -2096,12 +2154,13 @@ ElemNumber::terminate()
 {
     MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
 
-    releaseMemory(s_staticTextString, theManager );
-    releaseMemory(s_staticCommentString, theManager );
-    releaseMemory(s_staticSlashString, theManager );
+    releaseMemory(s_staticTextString, theManager);
+    releaseMemory(s_staticCommentString, theManager);
+    releaseMemory(s_staticSlashString, theManager);
 
     XalanNumberingResourceBundle(theManager).swap(s_staticElalphaResourceBundle);
 }
+
 
 
 const XPath*

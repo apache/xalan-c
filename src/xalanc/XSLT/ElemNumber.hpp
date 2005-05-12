@@ -289,22 +289,6 @@ protected:
 			XalanDOMString&				theResult);
 
 	/**
-	 * Convert a long integer into traditional alphabetic counting, in other words
-	 * count using the traditional numbering.
-	 * @param val Value to convert -- must be greater than zero.
-	 * @param table a table containing one character for each digit in the radix
-	 * @return String representing alpha count of number.
-	 * @see XSLProcessor#DecimalToRoman
-	 *
-	 * Note that the radix of the conversion is inferred from the size
-	 * of the table.
-	 */
-	static void
-	tradAlphaCount(
-			CountType			val,
-			XalanDOMString&		theResult);
-
-	/**
 	 * Convert an integral into roman numerals.
 	 * @param val Value to convert.
 	 * @param prefixesAreOK true to enable prefix notation (e.g. 4 = "IV"), false to disable prefix notation (e.g. 4 = "IIII").
@@ -313,7 +297,7 @@ protected:
 	 * @see m_romanConvertTable
 	 */
 	static void
-	long2roman(
+	toRoman(
 			CountType			val,
 			bool				prefixesAreOK,
 			XalanDOMString&		theResult);
@@ -434,6 +418,7 @@ private:
 	 */
 	static const DecimalToRoman				s_romanConvertTable[];
 
+    static const size_t                     s_romanConvertTableSize;
 	/**
 	 * numbering resource bundle for Greek numbering.
 	 */
