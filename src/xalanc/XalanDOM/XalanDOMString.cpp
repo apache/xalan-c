@@ -488,13 +488,17 @@ XalanDOMString::insert(
 		assign(1, theChar);
 
 		assert(length() == 1);
+
+        thePosition = m_data.begin();
 	}
 	else
 	{
-		m_data.insert(thePosition, theChar);
+		thePosition = m_data.insert(thePosition, theChar);
 
 		++m_size;
 	}
+
+    assert(*thePosition == theChar);
 
 	invariants();
 
