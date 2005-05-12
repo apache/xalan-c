@@ -692,7 +692,6 @@ modfRound(double  theValue)
 {
     double          intPart = 0;
 
-    const double    fracPart =
 #if defined(XALAN_STRICT_ANSI_HEADERS)
         std::modf(theValue + 0.5, &intPart);
 #else
