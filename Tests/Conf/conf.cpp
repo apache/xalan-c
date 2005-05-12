@@ -201,7 +201,7 @@ parseWithXerces(
     XALAN_USING_XERCES(XercesDOMParser)
     XALAN_USING_XERCES(DOMDocument)
 
-    MemoryManagerType& mgr = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManagerType& mgr = h.getMemoryManager();
 
     h.data.xmlFormat = XalanDOMString("Xerces_DOM", mgr);
 
