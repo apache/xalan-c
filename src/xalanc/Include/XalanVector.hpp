@@ -112,7 +112,7 @@ public:
     typedef typename Constructor::ConstructableType     ConstructibleType;
 
     XalanVector(
-            MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
+            MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR,
             size_type           initialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
@@ -124,8 +124,8 @@ public:
 
     static XalanVector*
     create(
-        MemoryManagerType&  theManager,
-        size_type           initialAllocation = size_type(0))
+        MemoryManager&  theManager,
+        size_type       initialAllocation = size_type(0))
     {
         typedef XalanVector ThisType;
 
@@ -142,7 +142,7 @@ public:
 
     XalanVector(
             const ThisType&     theSource,
-            MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
+            MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR,
             size_type           theInitialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
@@ -169,9 +169,9 @@ public:
     }
 
     XalanVector(
-            const_iterator      theFirst, 
-            const_iterator      theLast,
-            MemoryManagerType&  theManager) :
+            const_iterator  theFirst, 
+            const_iterator  theLast,
+            MemoryManager&  theManager) :
         m_memoryManager(&theManager),
         m_size(0),
         m_allocation(0),
@@ -189,9 +189,9 @@ public:
 
     static XalanVector*
     create(           
-            const_iterator      theFirst, 
-            const_iterator      theLast,
-            MemoryManagerType&  theManager)
+            const_iterator  theFirst, 
+            const_iterator  theLast,
+            MemoryManager&  theManager)
     {
         typedef XalanVector ThisType;
 
@@ -209,7 +209,7 @@ public:
     XalanVector(
             size_type           theInsertSize,
             const value_type&   theData,
-            MemoryManagerType&  theManager) :
+            MemoryManager&      theManager) :
         m_memoryManager(&theManager),
         m_size(0),
         m_allocation(0),
@@ -843,10 +843,10 @@ public:
     {
         invariants();
 
-        MemoryManagerType* const    theTempManager = m_memoryManager;
-        const size_type             theTempLength = m_size;
-        const size_type             theTempAllocation = m_allocation;
-        value_type* const           theTempData = m_data;
+        MemoryManager* const    theTempManager = m_memoryManager;
+        const size_type         theTempLength = m_size;
+        const size_type         theTempAllocation = m_allocation;
+        value_type* const       theTempData = m_data;
 
         m_memoryManager = theOther.m_memoryManager;
         m_size = theOther.m_size;
@@ -861,13 +861,13 @@ public:
         invariants();
     }
 
-    const MemoryManagerType*
+    const MemoryManager*
     getMemoryManager() const
     {
         return m_memoryManager;
     }
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         assert (m_memoryManager != 0);
@@ -1078,7 +1078,7 @@ private:
 #endif
 
     // Data members...
-    MemoryManagerType*  m_memoryManager;
+    MemoryManager*  m_memoryManager;
 
     size_type           m_size;
 
