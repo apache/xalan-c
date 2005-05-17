@@ -220,7 +220,11 @@ class XalanMemMgrAutoPtrArray
 {
 public:
 
-    typedef unsigned int size_type;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    typedef std::size_t     size_type;
+#else
+    typedef size_t          size_type;
+#endif
 
     class MemMgrAutoPtrArrayData 
     {
@@ -278,7 +282,7 @@ public:
 
             m_memoryManager = theMemoryManager;
 
-            m_dataArray =   thePointer;
+            m_dataArray = thePointer;
 
             m_size = size;
 
@@ -400,11 +404,11 @@ public:
 
     MemMgrAutoPtrArrayData
     release()
-    {       
+    {
         MemMgrAutoPtrArrayData tmp = m_pointerInfo;
-    
-        m_pointerInfo.reset( 0 , 0 , 0); 
-        
+
+        m_pointerInfo.reset(0, 0, 0); 
+
         return MemMgrAutoPtrArrayData(tmp);
     }
 
@@ -413,7 +417,7 @@ public:
     {       
         MemMgrAutoPtrArrayData  tmp = release();
 
-        return tmp.m_dataPointer;
+        return tmp.m_dataArray;
     }
 
     void
