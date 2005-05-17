@@ -51,6 +51,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 #pragma warning(disable: 4100)
 #endif
 
+
+
+XALAN_USING_XERCES(MemoryManager)
+
+
+
 template <class Type, class ConstructionTraits = MemoryManagedConstructionTraits<Type> >
 class XalanVector
 {
