@@ -36,7 +36,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
+XALAN_USING_XERCES(MemoryManager)
 
 
 
@@ -51,16 +52,16 @@ public:
 #endif
 
     XalanAllocationGuard(
-                MemoryManagerType&  theMemoryManager,
-                void*               thePointer) :
+                MemoryManager&  theMemoryManager,
+                void*           thePointer) :
         m_memoryManager(theMemoryManager),
         m_pointer(thePointer)
     {
     }
 
     XalanAllocationGuard(
-                MemoryManagerType&  theMemoryManager,
-                size_type           theSize) :
+                MemoryManager&  theMemoryManager,
+                size_type       theSize) :
         m_memoryManager(theMemoryManager),
         m_pointer(theMemoryManager.allocate(theSize))
     {
@@ -89,7 +90,7 @@ public:
 private:
 
     // Data members...
-    MemoryManagerType&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 
     void*               m_pointer;
 };
@@ -120,8 +121,8 @@ XalanDestroy(Type*  theArg)
 template<class Type>
 void
 XalanDestroy(
-            MemoryManagerType&  theMemoryManager,
-            Type*               theArg)
+            MemoryManager&  theMemoryManager,
+            Type*           theArg)
 {
     if (theArg != 0)
     {
@@ -136,8 +137,8 @@ XalanDestroy(
 template<class Type>
 void
 XalanDestroy(
-            MemoryManagerType&  theMemoryManager,
-            Type&               theArg)
+            MemoryManager&  theMemoryManager,
+            Type&           theArg)
 {
     XalanDestroy(theArg);
 
@@ -149,8 +150,8 @@ XalanDestroy(
 template<class Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
-            Type*&              theInstance)
+            MemoryManager&  theMemoryManager,
+            Type*&          theInstance)
 {
     XalanAllocationGuard    theGuard(
                                 theMemoryManager,
@@ -171,7 +172,7 @@ template<
     class Param1Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
+            MemoryManager&      theMemoryManager,
             Type*&              theInstance,
             const Param1Type&   theParam1)
 {
@@ -194,9 +195,9 @@ template<
     class Param1Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
-            Type*&              theInstance,
-            Param1Type&         theParam1)
+            MemoryManager&  theMemoryManager,
+            Type*&          theInstance,
+            Param1Type&     theParam1)
 {
     XalanAllocationGuard    theGuard(
                                 theMemoryManager,
@@ -218,7 +219,7 @@ template<
     class Param2Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
+            MemoryManager&      theMemoryManager,
             Type*&              theInstance,
             Param1Type&         theParam1,
             const Param2Type&   theParam2)
@@ -244,7 +245,7 @@ template<
     class Param3Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
+            MemoryManager&      theMemoryManager,
             Type*&              theInstance,
             Param1Type&         theParam1,
             const Param2Type&   theParam2,
@@ -273,7 +274,7 @@ template<
     class Param5Type>
 Type*
 XalanConstruct(
-            MemoryManagerType&  theMemoryManager,
+            MemoryManager&      theMemoryManager,
             Type*&              theInstance,
             Param1Type&         theParam1,
             Param2Type&         theParam2,
@@ -295,11 +296,44 @@ XalanConstruct(
 
 
 
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type,
+    class Param3Type,
+    class Param4Type,
+    class Param5Type,
+    class Param6Type>
+Type*
+XalanConstruct(
+            MemoryManager&      theMemoryManager,
+            Type*&              theInstance,
+            Param1Type&         theParam1,
+            Param2Type&         theParam2,
+            const Param3Type&   theParam3,
+            const Param4Type&   theParam4,
+            const Param5Type&   theParam5,
+            const Param6Type&   theParam6)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1, theParam2, theParam3, theParam4, theParam5, theParam6);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
 template<class Type>
 Type*
 XalanCopyConstruct(
-            MemoryManagerType&  theMemoryManager,
-            const Type&         theSource)
+            MemoryManager&  theMemoryManager,
+            const Type&     theSource)
 {
     XalanAllocationGuard    theGuard(
                                 theMemoryManager,
@@ -320,9 +354,9 @@ template<
     class Param1Type>
 Type*
 XalanCopyConstruct(
-            MemoryManagerType&  theMemoryManager,
-            const Type&         theSource,
-            Param1Type&         theParam1)
+            MemoryManager&  theMemoryManager,
+            const Type&     theSource,
+            Param1Type&     theParam1)
 {
     XalanAllocationGuard    theGuard(
                                 theMemoryManager,
@@ -342,13 +376,13 @@ class XALAN_PLATFORM_EXPORT XalanMemMgrs
 {
 public:
 
-    static MemoryManagerType&
+    static MemoryManager&
     getDummyMemMgr();
 
-    static MemoryManagerType&
+    static MemoryManager&
     getDefaultXercesMemMgr();
 
-    static MemoryManagerType&
+    static MemoryManager&
     getDefault()
     {
         return getDefaultXercesMemMgr();
@@ -359,10 +393,12 @@ public:
 
 
 #if defined (XALAN_DEVELOPMENT)
+#define XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR
 #define XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR
 #define XALAN_DEFAULT_MEMMGR = XalanMemMgrs::getDummyMemMgr()
 #else
-#define XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR = XalanMemMgrs::getDefaultXercesMemMgr()
+#define XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR = XalanMemMgrs::getDefaultXercesMemMgr()
+#define XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR
 #define XALAN_DEFAULT_MEMMGR = XalanMemMgrs::getDefaultXercesMemMgr()
 #endif
 
@@ -371,7 +407,7 @@ public:
 template <class C>
 struct ConstructValueWithNoMemoryManager 
 { 
-    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) :
+    ConstructValueWithNoMemoryManager(MemoryManager& /*mgr*/) :
         value()
     {
     }
@@ -382,7 +418,7 @@ struct ConstructValueWithNoMemoryManager
 template <class C>
 struct ConstructValueWithMemoryManager
 {   
-    ConstructValueWithMemoryManager(MemoryManagerType& mgr) :
+    ConstructValueWithMemoryManager(MemoryManager& mgr) :
         value(mgr)
     {
     }
@@ -395,12 +431,12 @@ struct ConstructWithNoMemoryManager
 {
     typedef ConstructValueWithNoMemoryManager<C>   ConstructableType;
 
-    static C* construct(C* address, MemoryManagerType& /* mgr */)
+    static C* construct(C* address, MemoryManager& /* mgr */)
     {
         return (C*) new (address) C;
     }
 
-    static C* construct(C* address, const C& theRhs, MemoryManagerType& /* mgr */)
+    static C* construct(C* address, const C& theRhs, MemoryManager& /* mgr */)
     {
         return (C*) new (address) C(theRhs);
     }
@@ -411,12 +447,12 @@ struct ConstructWithMemoryManager
 {
     typedef ConstructValueWithMemoryManager<C>    ConstructableType;
 
-    static C* construct(C* address, MemoryManagerType& mgr)
+    static C* construct(C* address, MemoryManager& mgr)
     {
         return (C*) new (address) C(mgr);
     }
 
-    static C* construct(C* address, const C& theRhs, MemoryManagerType& mgr)
+    static C* construct(C* address, const C& theRhs, MemoryManager& mgr)
     {
         return (C*) new (address) C(theRhs, mgr);
     }
