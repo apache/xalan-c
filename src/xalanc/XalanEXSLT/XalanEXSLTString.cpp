@@ -80,7 +80,10 @@ XalanEXSLTFunctionAlign::execute(
         executionContext.error(getError(theBuffer), context, locator);
     }
 
-    assert(args[0].null() == false && args[1].null() == false && (theSize == 2 || args[2].null() == false));
+    assert(
+        args[0].null() == false &&
+        args[1].null() == false &&
+        (theSize == 2 || args[2].null() == false));
 
     const XalanDOMString&   theTargetString = args[0]->str();
     const XalanDOMString&   thePaddingString = args[1]->str();
@@ -239,7 +242,9 @@ XalanEXSLTFunctionPadding::execute(
         executionContext.error(getError(theBuffer), context, locator);
     }
 
-    assert(args[0].null() == false && (theSize == 1 || args[1].null() == false));
+    assert(
+        args[0].null() == false &&
+        (theSize == 1 || args[1].null() == false));
 
     const double                        theLength = DoubleSupport::round(args[0]->num());
     const XalanDOMString&               thePaddingString = theSize == 2 ? args[1]->str() : m_space;
@@ -345,15 +350,18 @@ XalanEXSLTFunctionEncodeURI::execute(
         executionContext.error(getError(theBuffer), context, locator);
     }
 
-    assert(args[0].null() == false && 
-           args[1].null() == false &&
-           (theSize == 3 || args[2].null() == false));
+    assert(
+        args[0].null() == false && 
+        args[1].null() == false &&
+        (theSize == 2 || args[2].null() == false));
 
     const XalanDOMString& theString = args[0]->str();
     const bool            escapeReserved = args[1]->boolean();
 
     // We only support UTF-8, which is the default when there are only two arguments.
-    const bool  fSupportedEncoding = theSize == 2 || XalanTranscodingServices::encodingIsUTF8(args[2]->str());
+    const bool  fSupportedEncoding =
+                    theSize == 2 ||
+                    XalanTranscodingServices::encodingIsUTF8(args[2]->str());
 
     if (theString.length() == 0 ||
         !fSupportedEncoding)
@@ -474,8 +482,9 @@ XalanEXSLTFunctionDecodeURI::execute(
         executionContext.error(getError(theGuard.get()), context, locator);
     }
 
-    assert(args[0].null() == false && 
-           (theSize == 2 || args[1].null() == false));
+    assert(
+        args[0].null() == false && 
+        (theSize == 1 || args[1].null() == false));
 
     const XalanDOMString& theString = args[0]->str();
 
