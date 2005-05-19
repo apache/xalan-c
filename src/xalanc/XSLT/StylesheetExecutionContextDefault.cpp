@@ -188,6 +188,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
     m_keyDeclarationSet(theManager),
     m_countersTable(theManager),
     m_sourceTreeResultTreeFactory(),
+    m_mode(0),
     m_currentTemplateStack(theManager),
     m_indentAmount(-1),
     m_xresultTreeFragAllocator(theManager, eXResultTreeFragAllocatorBlockSize),
@@ -217,6 +218,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 #endif
     m_usePerInstanceDocumentFactory(false),
     m_escapeURLs(eEscapeURLsDefault),
+    m_omitMETATag(eOmitMETATagDefault),
     m_hasStripOrPreserveSpace(false)
 {
     m_currentTemplateStack.push_back(0);
