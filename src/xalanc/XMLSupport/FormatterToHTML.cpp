@@ -431,10 +431,13 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 				indent(m_currentIndent);
 			}
 
-			accumContent(XalanUnicode::charLessThanSign);
-			accumContent(XalanUnicode::charSolidus);
-			accumName(name);
-			accumContent(XalanUnicode::charGreaterThanSign);
+			if(elemProperties.is(XalanHTMLElementsProperties::EMPTY) == false)
+			{
+			    accumContent(XalanUnicode::charLessThanSign);
+			    accumContent(XalanUnicode::charSolidus);
+			    accumName(name);
+			    accumContent(XalanUnicode::charGreaterThanSign);
+            }
 		}
 		else
 		{
