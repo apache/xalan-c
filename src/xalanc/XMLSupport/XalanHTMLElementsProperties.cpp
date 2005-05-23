@@ -255,6 +255,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
+			
+				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
+				ElemDesc::ATTREMPTY,
+			},
+			{
 				{ 0 },
 				0,
 			},
@@ -345,6 +350,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
+			
+				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_S, XalanUnicode::charLetter_H, XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, 0 },
+				ElemDesc::ATTREMPTY,
+			},
+			{
 				{ 0 },
 				0,
 			},
@@ -365,6 +375,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		ElemDesc::BLOCK | ElemDesc::LIST,
 		{
 			{
+			
+				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
+				ElemDesc::ATTREMPTY,
+			},
+			{
 				{ 0 },
 				0,
 			},
@@ -375,6 +390,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		0,
 		{
 			{
+			
+				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_W, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
+				ElemDesc::ATTREMPTY,
+			},
+			{
 				{ 0 },
 				0,
 			},
@@ -384,6 +404,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_H, 0 },
 		0,
 		{
+			{
+			
+				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_W, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
+				ElemDesc::ATTREMPTY,
+			},
 			{
 				{ 0 },
 				0,
@@ -414,6 +439,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		{ XalanUnicode::charLetter_U, XalanUnicode::charLetter_L, 0 },
 		ElemDesc::BLOCK | ElemDesc::LIST,
 		{
+			{
+			
+				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
+				ElemDesc::ATTREMPTY,
+			},
 			{
 				{ 0 },
 				0,
@@ -479,6 +509,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_R, 0 },
 		ElemDesc::BLOCK,
 		{
+			{
+			
+				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
+				ElemDesc::ATTREMPTY,
+			},
 			{
 				{ 0 },
 				0,
@@ -734,6 +769,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 		ElemDesc::BLOCK,
 		{
 			{
+			
+				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
+				ElemDesc::ATTREMPTY,
+			},
+			{
 				{ 0 },
 				0,
 			},
@@ -786,6 +826,11 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 			{
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, 0 },
 				ElemDesc::ATTRURL,
+			},
+			{
+			
+				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_S, XalanUnicode::charLetter_I, XalanUnicode::charLetter_Z, XalanUnicode::charLetter_E, 0 },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
