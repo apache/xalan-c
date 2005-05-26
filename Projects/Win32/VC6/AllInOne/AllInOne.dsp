@@ -1642,6 +1642,22 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File

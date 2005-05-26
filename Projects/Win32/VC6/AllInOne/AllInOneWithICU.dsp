@@ -73,7 +73,6 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
 # ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\Build\Win32\VC6\Debug\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /I "$(ICUROOT)\include" /D "_DEBUG" /D "XALAN_DOMSUPPORT_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_PLATFORMSUPPORT_BUILD_DLL" /D "XALAN_DOM_BUILD_DLL" /D "XALAN_XALANEXTENSIONS_BUILD_DLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "XALAN_TRANSFORMER_BUILD_DLL" /D "XALAN_XERCESPARSERLIAISON_BUILD_DLL" /D "XALAN_XMLSUPPORT_BUILD_DLL" /D "XALAN_XPATH_BUILD_DLL" /D "XALAN_XPATHCAPI_BUILD_DLL" /D "XALAN_ALLINONE_BUILD_DLL" /D "XALAN_EXSLT_BUILD_DLL" /D "XALAN_ICUBRIDGE_BUILD_DLL" /D "XALAN_HARNESS_BUILD_DLL" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /YX /FD /GZ /Zm250 /c
-# SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -1607,10 +1606,6 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp
 # End Source File
 # Begin Source File
@@ -1620,6 +1615,10 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp
 # End Source File
 # Begin Source File
 
@@ -1644,6 +1643,22 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp
 # End Source File
 # Begin Source File
 
