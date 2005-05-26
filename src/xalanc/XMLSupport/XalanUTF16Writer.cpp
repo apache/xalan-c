@@ -15,36 +15,26 @@
  */
 
 
-#include <xalanc/XMLSupport/XalanUTF16Writer.hpp>
-
-#include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
+#include "XalanUTF16Writer.hpp"
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-static XalanDOMString	s_localUTF16String(XalanMemMgrs::getDummyMemMgr());
 
 
-const XalanDOMString&	XalanUTF16Writer::s_utf16String = s_localUTF16String;
-
-void
-XalanUTF16Writer::initialize(MemoryManagerType& theManager)
+XalanUTF16Writer::XalanUTF16Writer(
+            Writer&         writer,
+            MemoryManager&  theMemoryManager) :
+    XalanFormatterWriter(
+        writer,
+        theMemoryManager),
+    m_buffer(),
+    m_bufferPosition(m_buffer),
+    m_bufferRemaining(kBufferSize)
 {
-    XalanDOMString theTmp(XalanTranscodingServices::s_utf16String, theManager);
-    
-   	s_localUTF16String.swap(theTmp);
 }
 
-void
-XalanUTF16Writer::terminate()
-{
-    XalanDOMString   temp(XalanMemMgrs::getDummyMemMgr());
-    
-    temp.swap(s_localUTF16String);
-}    
-    
+
+
 XALAN_CPP_NAMESPACE_END
-
-
-

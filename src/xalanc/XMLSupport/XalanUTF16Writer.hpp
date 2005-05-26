@@ -25,170 +25,155 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class XalanUTF16Writer : public XalanFormatterWriter
 {
-  public:
+public:
+
     typedef XalanDOMChar                value_type;
     typedef XalanDOMString::size_type   size_type;
  
-	/**
-	 * Perform static initialization.  See class XMLSupportInit.
-	 */
-	static void
-	initialize(MemoryManagerType& theManager);
 
-	static void
-	terminate();
+    XalanUTF16Writer(
+                Writer&         writer,
+                MemoryManager&  theMemoryManager);
 
-    XalanUTF16Writer(  Writer&	            writer , 
-                        MemoryManagerType&  theMemoryManager ) :
-        XalanFormatterWriter( writer, theMemoryManager),
-    	m_buffer(),
-	    m_bufferPosition(m_buffer),
-	    m_bufferRemaining(kBufferSize)
-    {
-    }
-
+    virtual
     ~XalanUTF16Writer()
     {
     }
 
-	const XalanDOMString&
-	getEncoding() const
+    /**
+     * Output a line break.
+     */
+    void
+    outputNewline()
     {
-	    return s_utf16String;
-    }
- 
-	void
-	safeWriteContent(
-			const XalanDOMChar*			theChars,
-			XalanDOMString::size_type	theLength)
-    {
-    	write( theChars, theLength);
+        assert(m_newlineString != 0);
+        assert(length(m_newlineString) == m_newlineStringLength);
+
+        write(
+            m_newlineString,
+            m_newlineStringLength);
     }
 
-	void
-	write(
-			const value_type*			theChars,
-			XalanDOMString::size_type	theLength)
+    void
+    safeWriteContent(
+            const XalanDOMChar*         theChars,
+            XalanDOMString::size_type   theLength)
     {
-    	if (theLength > sizeof(m_buffer))
-    	{
-    		flushBuffer();
+        write(theChars, theLength);
+    }
+
+    void
+    write(
+            const value_type*           theChars,
+            XalanDOMString::size_type   theLength)
+    {
+        if (theLength > sizeof(m_buffer))
+        {
+            flushBuffer();
     
-    		m_writer->write(theChars, 0, theLength);
-    	}
-    	else
-    	{
-    		if (m_bufferRemaining < theLength)
-    		{
-    			flushBuffer();
-    		}
+            m_writer.write(theChars, 0, theLength);
+        }
+        else
+        {
+            if (m_bufferRemaining < theLength)
+            {
+                flushBuffer();
+            }
     
-    		for(size_type i = 0; i < theLength; ++i)
-    		{
-    			*m_bufferPosition = theChars[i];
+            for(size_type i = 0; i < theLength; ++i)
+            {
+                *m_bufferPosition = theChars[i];
     
-    			++m_bufferPosition;
-    		}
+                ++m_bufferPosition;
+            }
     
-    		m_bufferRemaining -= theLength;
-    	}
+            m_bufferRemaining -= theLength;
+        }
   
     }
 
-	void
-	write(const XalanDOMString&		theChars)
-	{
-		write(theChars.c_str(), theChars.length());
-	}
+    void
+    write(const XalanDOMString&     theChars)
+    {
+        write(theChars.c_str(), theChars.length());
+    }
 
-	void
-	write(value_type	theChar)
+    void
+    write(value_type    theChar)
     {
    
-    	if (m_bufferRemaining == 0)
-    	{
-    		flushBuffer();
-    	}
+        if (m_bufferRemaining == 0)
+        {
+            flushBuffer();
+        }
     
-    	*m_bufferPosition = theChar;
+        *m_bufferPosition = theChar;
     
-    	++m_bufferPosition;
-    	--m_bufferRemaining;
+        ++m_bufferPosition;
+        --m_bufferRemaining;
     }
 
 
-	size_type
-	write(
-			value_type				    ch,
-			const value_type			/*chars*/[],
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	/*length*/)
+    size_type
+    write(
+            value_type                  ch,
+            const value_type            /*chars*/[],
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   /*length*/)
     {
-		write(ch);
-		
-	    return start;
+        write(ch);
+        
+        return start;
     }
 
     void
     writeSafe(
-        const XalanDOMChar*         theChars,
-        XalanDOMString::size_type   theLength)
+            const XalanDOMChar*         theChars,
+            XalanDOMString::size_type   theLength)
     {
         write(theChars, theLength);   
     }
 
-	void
-	write(const value_type*	theChars)
-	{
-		write(theChars, XalanDOMString::length(theChars));
-	}
+    void
+    write(const value_type* theChars)
+    {
+        write(theChars, XalanDOMString::length(theChars));
+    }
 
     void
     flushBuffer()
     {
-    	//m_writer->write(m_buffer, size_type(0), size_type(m_bufferPosition - m_buffer));
-    
-    	//m_bufferPosition = m_buffer;
-    	//m_bufferRemaining = kBufferSize;
-	    m_writer->write(
+        m_writer.write(
             reinterpret_cast<const char*>(m_buffer),
             0,
             (m_bufferPosition - m_buffer) * sizeof m_buffer[0]);
     
         
-	    m_bufferPosition = m_buffer;
-	    m_bufferRemaining = kBufferSize;
+        m_bufferPosition = m_buffer;
+        m_bufferRemaining = kBufferSize;
     }
     
    
 private:
 
+    enum
+    {
+        kBufferSize = 512       // The size of the buffer
+    };
 
-	enum
-	{
-		kBufferSize = 512		// The size of the buffer
-	};
 
-	/** 
-	 * The data.
-	 */
+    // Data members...
+    value_type              m_buffer[kBufferSize];
 
-	value_type			    m_buffer[kBufferSize];
+    value_type*             m_bufferPosition;
 
-	value_type*			    m_bufferPosition;
-
-	XalanDOMString::size_type	m_bufferRemaining;
-
-	/**
-	 * The string "UTF-16".
-	 */
-	static const XalanDOMString&	s_utf16String;
-
+    XalanDOMString::size_type   m_bufferRemaining;
 };
+
 
 
 XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANUTF16WRITER_HEADER_GUARD_1357924680
+#endif  // XALANUTF16WRITER_HEADER_GUARD_1357924680

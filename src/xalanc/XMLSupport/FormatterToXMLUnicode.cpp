@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-
+#if 0
 XalanDOMChar	s_specialChars[kSpecialsSize] =
 {
 	kNotSpecial,		// 0
@@ -95,17 +95,7 @@ XalanDOMChar	s_specialChars[kSpecialsSize] =
 	kNotSpecial,
 	kBothSpecial		// 0x3E '>'
 };
-
-
-
-
-
-
-
-
-
-
-
+#endif
 
 
 XALAN_CPP_NAMESPACE_END

@@ -47,13 +47,12 @@
 
 
 
-#include <xalanc/XMLSupport/FormatterToXML.hpp>
-#include <xalanc/XMLSupport/FormatterToXMLUnicode.hpp>
+#include <xalanc/XMLSupport/XalanXMLSerializerFactory.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/FormatterToText.hpp>
 #include <xalanc/XMLSupport/XMLParserLiaison.hpp>
-#include <xalanc/XMLSupport/XalanUTF8Writer.hpp>
-#include <xalanc/XMLSupport/XalanUTF16Writer.hpp>
+
+
 
 #include <xalanc/XalanSourceTree/FormatterToSourceTree.hpp>
 #include <xalanc/XalanSourceTree/XalanSourceTreeDocument.hpp>
@@ -223,6 +222,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 {
     m_currentTemplateStack.push_back(0);
 }
+
+
 
 StylesheetExecutionContextDefault*
 StylesheetExecutionContextDefault::create(
@@ -1396,64 +1397,26 @@ StylesheetExecutionContextDefault::createFormatterToXML(
             bool                    xmlDecl,
             const XalanDOMString&   standalone)
 {
-    if (doIndent == false &&
-        (encoding.empty() == true || XalanTranscodingServices::encodingIsUTF8(encoding)))
-    {
-        typedef FormatterToXMLUnicode<XalanUTF8Writer> FormatterXML;
-		FormatterXML* const	theFormatter =
-            FormatterXML::create(
-                getMemoryManager(),
-                writer,
-                version,
-                mediaType,
-                doctypeSystem,
-                doctypePublic,
-                xmlDecl,
-                standalone);
+    m_formatterListeners.push_back(0);
 
-        m_formatterListeners.push_back(theFormatter);
+    FormatterListener* const    theFormatterListener =
+        XalanXMLSerializerFactory::create(
+            getMemoryManager(),
+            writer,
+            version,
+            doIndent,
+            indent,
+            encoding,
+            mediaType,
+            doctypeSystem,
+            doctypePublic,
+            xmlDecl,
+            standalone);
+    assert(theFormatterListener != 0);
 
-        return theFormatter;
-    }
-    else if (doIndent == false && XalanTranscodingServices::encodingIsUTF16(encoding))
-    {
-        typedef FormatterToXMLUnicode<XalanUTF16Writer> FormatterXML;
+    m_formatterListeners.back() = theFormatterListener;
 
-		FormatterXML* const	theFormatter =
-            FormatterXML::create(
-                getMemoryManager(),
-                writer,
-                version,
-                mediaType,
-                doctypeSystem,
-                doctypePublic,
-                xmlDecl,
-                standalone);
-
-        m_formatterListeners.push_back(theFormatter);
-
-        return theFormatter;
-    }
-    else
-    {
-        FormatterToXML* const   theFormatter =
-            FormatterToXML::create(
-                getMemoryManager(),
-                writer,
-                version,
-                doIndent,
-                indent,
-                encoding,
-                mediaType,
-                doctypeSystem,
-                doctypePublic,
-                xmlDecl,
-                standalone);
-
-        m_formatterListeners.push_back(theFormatter);
-
-        return theFormatter;
-    }
+    return theFormatterListener;
 }
 
 
@@ -1470,6 +1433,8 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
             bool                    escapeURLs,
             bool                    omitMetaTag)
 {
+    m_formatterListeners.push_back(0);
+
     FormatterToHTML* const  theFormatter =
         FormatterToHTML::create(
             getMemoryManager(),
@@ -1483,7 +1448,7 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
             escapeURLs,
             omitMetaTag);
 
-    m_formatterListeners.push_back(theFormatter);
+    m_formatterListeners.back() = theFormatter;
 
     theFormatter->setPrefixResolver(m_xsltProcessor);
 
@@ -1497,10 +1462,12 @@ StylesheetExecutionContextDefault::createFormatterToText(
             Writer&                 writer,
             const XalanDOMString&   encoding)
 {
+    m_formatterListeners.push_back(0);
+
     FormatterToText* const  theFormatter =
         FormatterToText::create(getMemoryManager(), writer, encoding);
 
-    m_formatterListeners.push_back(theFormatter);
+    m_formatterListeners.back() = theFormatter;
 
     return theFormatter;
 }
@@ -1761,11 +1728,24 @@ StylesheetExecutionContextDefault::formatNumber(
 
     if (m_formatNumberFunctor == 0) 
     {
-        m_xpathExecutionContextDefault.doFormatNumber(number,pattern, theDFS, theResult,context,locator);
+        m_xpathExecutionContextDefault.doFormatNumber(
+            number,
+            pattern,
+            theDFS,
+            theResult,
+            context,
+            locator);
     } 
     else 
     {
-        (*m_formatNumberFunctor)(*this, number, pattern, theDFS, theResult, context, locator);
+        (*m_formatNumberFunctor)(
+            *this,
+            number,
+            pattern,
+            theDFS,
+            theResult,
+            context,
+            locator);
     }
 }
  

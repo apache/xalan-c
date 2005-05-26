@@ -1166,6 +1166,8 @@ private:
      * The length of the the string of characters that represents the newline
      */
     XalanDOMString::size_type   m_newlineStringLength;
+
+    bool                        m_isXML1_1;
 };
 
 

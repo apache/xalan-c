@@ -113,7 +113,11 @@ FormatterToXML::FormatterToXML(
     m_accumContentCharFunction(0),
     m_accumContentStringFunction(0),
     m_accumContentDOMStringFunction(0),
-    m_accumContentArrayFunction(0)
+    m_accumContentArrayFunction(0),
+    m_flushFunction(0),
+    m_newlineString(0),
+    m_newlineStringLength(0),
+    m_isXML1_1(false)
 {
     if (isEmpty(encoding) == false)
     {
@@ -181,7 +185,7 @@ FormatterToXML::FormatterToXML(
     if (m_version.empty() != true &&
         DoubleSupport::equal(DOMStringToDouble(m_version, theManager), 1.1) == true)
     {
-        setXMLVersion(XML_VERSION_1_1);
+        m_isXML1_1 = true;
     }
 
 #if 1
@@ -887,7 +891,7 @@ FormatterToXML::accumDefaultEscape(
 		{
 			if(ch > m_maxCharacter)
             {
-                if( !isXML1_1Version() && XalanUnicode::charLSEP == ch ) 
+                if( !m_isXML1_1 && XalanUnicode::charLSEP == ch ) 
                 {
                     throwInvalidCharacterException(ch, getMemoryManager());
                 }
@@ -900,7 +904,7 @@ FormatterToXML::accumDefaultEscape(
 			{
                 if(ch < 0x20 )
                 {
-                    if(isXML1_1Version())
+                    if(m_isXML1_1)
                     {
                         writeNumberedEntityReference(ch);
                     }
@@ -911,7 +915,7 @@ FormatterToXML::accumDefaultEscape(
                 }
                 else if( XalanUnicode::charNEL == ch )
                 {
-                    if(isXML1_1Version())
+                    if(m_isXML1_1)
                     {
                         writeNumberedEntityReference(ch);
                     }
@@ -924,7 +928,6 @@ FormatterToXML::accumDefaultEscape(
                 {
                     writeNumberedEntityReference(ch);
                 }
-				
 			}
 			else
 			{

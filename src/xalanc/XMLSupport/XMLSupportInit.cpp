@@ -18,10 +18,8 @@
 
 
 
-#include "FormatterToXMLUnicode.hpp"
+#include "XalanXMLSerializerBase.hpp"
 
-#include "XalanUTF8Writer.hpp"
-#include "XalanUTF16Writer.hpp"
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -61,8 +59,7 @@ XMLSupportInit::~XMLSupportInit()
 void
 XMLSupportInit::initialize(MemoryManagerType& theManager)
 {
-	FormatterToXMLUnicode<XalanUTF8Writer>::initialize(theManager);
-    FormatterToXMLUnicode<XalanUTF16Writer>::initialize(theManager);
+	XalanXMLSerializerBase::initialize(theManager);
 }
 
 
@@ -70,8 +67,7 @@ XMLSupportInit::initialize(MemoryManagerType& theManager)
 void
 XMLSupportInit::terminate()
 {
-    FormatterToXMLUnicode<XalanUTF16Writer>::terminate();
-	FormatterToXMLUnicode<XalanUTF8Writer>::terminate();
+    XalanXMLSerializerBase::terminate();
 }
 
 

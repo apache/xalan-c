@@ -51,6 +51,8 @@ class Writer;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
 
+XALAN_USING_XERCES(Locator)
+XALAN_USING_XERCES(AttributeList)
 
 
 /**
@@ -76,37 +78,23 @@ public:
 		OUTPUT_METHOD_OTHER = 5
 	};
 
-protected:
-    enum eXMLVer
-    {
-        XML_VERSION_1_0 = 0,
-        XML_VERSION_1_1 = 1
-    };
-
-public:
 	FormatterListener(eFormat	theFormat);
 
 	virtual
 	~FormatterListener();
 
+    /**
+	 * Get the output format for the instance.
+	 *
+	 * @return An enum indicating the output format.
+	 */
 	eFormat
 	getOutputFormat() const
 	{
 		return m_outputFormat;
 	}
 
-    eXMLVer
-    getXMLVersion() const
-    {
-        return m_XMLVersion;
-    }
-
-    bool
-    isXML1_1Version()const
-    {
-        return ( XML_VERSION_1_1 == m_XMLVersion );
-    }
-	/**
+    /**
 	 * Get the PrefixResolver for the FormatterListener
 	 *
 	 * @return A pointer to the PrefixResolver, if any.
@@ -214,7 +202,7 @@ public:
 	resetDocument() = 0;
 
 	virtual void
-	setDocumentLocator(const LocatorType* const		locator) = 0;
+	setDocumentLocator(const Locator* const     locator) = 0;
 
 	virtual void
 	startDocument() = 0;
@@ -222,7 +210,7 @@ public:
 	virtual void
 	startElement(
 			const	XMLCh* const	name,
-			AttributeListType&		attrs) = 0;
+			AttributeList&		    attrs) = 0;
 
 	virtual Writer*
 	getWriter() const;
@@ -264,19 +252,6 @@ protected:
 	const PrefixResolver*	m_prefixResolver;
 
 	static const XalanDOMString		s_emptyString;
-	
-	/**
-	 * Set the output version during serializing.
-	 * Should be called once
-	 *
-	 * @param   theVersion XML version of the output
-	 */
-    void
-    setXMLVersion( eXMLVer theVersion )
-    {
-        *(const_cast<eXMLVer*>(&m_XMLVersion)) = theVersion;
-    }
-    
 
 private:
 
@@ -291,8 +266,6 @@ private:
 
 	// Data membmers...
 	const eFormat	m_outputFormat;
-
-    const eXMLVer   m_XMLVersion;
 };
 
 

@@ -26,32 +26,54 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+#include <xalanc/PlatformSupport/XalanOutputStream.hpp>
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(MemoryManager)
+
 
 
 class XalanFormatterWriter
 {
-  public:
- 
+public:
   
-    XalanFormatterWriter(  Writer&	            writer , 
-                        MemoryManagerType&  theMemoryManager ) :
-        m_writer(&writer),
+    XalanFormatterWriter(
+                Writer&	        theWriter, 
+                MemoryManager&  theMemoryManager) :
+        m_writer(theWriter),
         m_memoryManager(theMemoryManager)
     {
+        const XalanOutputStream* const  theStream =
+            theWriter.getStream();
+
+        if (theStream == 0)
+        {
+            m_newlineString = XalanOutputStream::defaultNewlineString();
+        }
+        else
+        {
+            m_newlineString = theStream->getNewlineString();
+        }
+
+        assert(m_newlineString != 0);
+
+        m_newlineStringLength = length(m_newlineString);
+
+        assert(m_newlineString != 0);
     }
-  
+
     MemoryManagerType&
     getMemoryManager()
     {
         return m_memoryManager;
     }
 
+    virtual
     ~XalanFormatterWriter()
     {
     }
@@ -59,32 +81,27 @@ class XalanFormatterWriter
     Writer*
 	getWriter() const
     {
-        return m_writer;
+        return &m_writer;
     }
 
     XalanOutputStream*
     getStream()
     {
-        assert(m_writer != 0);
-
-	    return m_writer->getStream();
+	    return m_writer.getStream();
     }
-
-
 
     const XalanOutputStream*
     getStream() const
     {
-        assert(m_writer != 0);
-
-	    return m_writer->getStream();
+	    return m_writer.getStream();
     }
+
     void
     flushWriter()
     {
-    	m_writer->flush();
+    	m_writer.flush();
     }    
-       
+
 protected:
 
 	static bool
@@ -103,7 +120,7 @@ protected:
     decodeUTF16SurrogatePair(
 			    XalanDOMChar	theHighSurrogate,
 			    XalanDOMChar	theLowSurrogate,
-                MemoryManagerType& theManager)
+                MemoryManager&  theManager)
     {
 	    assert(isUTF16HighSurrogate(theHighSurrogate) == true);
 
@@ -116,8 +133,9 @@ protected:
     }
 
     static void
-    throwInvalidCharacterException( unsigned int		ch,
-                                    MemoryManagerType&  theManager)
+    throwInvalidCharacterException(
+                unsigned int	ch,
+                MemoryManager&  theManager)
     {
         XalanDOMString	theMessage(theManager);
         XalanDOMString	theBuffer(theManager);  
@@ -129,7 +147,7 @@ protected:
 
         XALAN_USING_XERCES(SAXException)
 
-        throw SAXException(c_wstr(theMessage),&theManager);
+        throw SAXException(c_wstr(theMessage), &theManager);
     }
 
     static void
@@ -139,9 +157,9 @@ protected:
                 MemoryManagerType& theManager)
     {
 
-	    XalanDOMString chStr(theManager); 
+	    XalanDOMString  chStr(theManager); 
 
-        XalanDOMString nextStr(theManager); 
+        XalanDOMString  nextStr(theManager); 
 
         UnsignedLongToHexDOMString(ch, chStr);
 
@@ -165,12 +183,34 @@ protected:
 	/** 
 	 * The writer.
 	 */
-	Writer*					m_writer;
+	Writer&					    m_writer;
 
-    MemoryManagerType&      m_memoryManager;
+    /**
+     * The MemoryManager instance to use for any dynamically-
+     * allocated memory.
+     */
+    MemoryManager&              m_memoryManager;
 
-	
+    /**
+     * The string of characters that represents the newline
+     */
+    const XalanDOMChar*         m_newlineString;
+
+    /**
+     * The length of the the string of characters that represents the newline
+     */
+    XalanDOMString::size_type   m_newlineStringLength;
+
+private:
+
+    // These are not implemented.
+    XalanFormatterWriter();
+
+    XalanFormatterWriter&
+    operator=(const XalanFormatterWriter&);
 };
+
+
 
 XALAN_CPP_NAMESPACE_END
 

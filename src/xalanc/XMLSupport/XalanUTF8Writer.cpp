@@ -13,38 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-#include <xalanc/XMLSupport/XalanUTF8Writer.hpp>
-
-#include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
+#include "XalanUTF8Writer.hpp"
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-static XalanDOMString	s_localUTF8String(XalanMemMgrs::getDummyMemMgr());
 
 
-const XalanDOMString&	XalanUTF8Writer::s_utf8String = s_localUTF8String;
-
-void
-XalanUTF8Writer::initialize(MemoryManagerType& theManager)
+XalanUTF8Writer::XalanUTF8Writer(
+            Writer&         writer,
+            MemoryManager&  theMemoryManager) :
+    XalanFormatterWriter(
+        writer,
+        theMemoryManager),
+    m_buffer(),
+    m_bufferPosition(m_buffer),
+    m_bufferRemaining(kBufferSize)
 {
-    XalanDOMString theTmp(XalanTranscodingServices::s_utf8String, theManager);
-    
-   	s_localUTF8String.swap(theTmp);
 }
-    
-void
-XalanUTF8Writer::terminate()
-{
-    XalanDOMString   temp(XalanMemMgrs::getDummyMemMgr());
-    
-    temp.swap(s_localUTF8String);
-}      
+
 
 
 XALAN_CPP_NAMESPACE_END
-
-
