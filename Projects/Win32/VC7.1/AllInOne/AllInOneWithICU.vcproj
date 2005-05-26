@@ -1346,6 +1346,18 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp">
 			</File>
 			<File
