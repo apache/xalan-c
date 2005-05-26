@@ -1297,22 +1297,10 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLBase.cpp">
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLBase.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML_UTF16.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML_UTF16.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML_UTF8.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML_UTF8.hpp">
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp">
@@ -1342,10 +1330,37 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp">
 			</File>
 		</Filter>
 		<Filter
