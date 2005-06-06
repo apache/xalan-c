@@ -39,7 +39,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 FormatterListener::FormatterListener(eFormat	theFormat) :
 	ParentType(),
 	m_prefixResolver(0),
-	m_outputFormat(theFormat)
+	m_outputFormat(theFormat),
+    m_XMLVersion(XML_VERSION_1_0)
 {
 	assert(length(s_piTarget) == s_piTargetLength);
 	assert(length(s_piData) == s_piDataLength);

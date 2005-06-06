@@ -136,6 +136,44 @@ public:
             m_newlineStringLength);
     }
 
+    size_type
+    writeCDATAChar(    
+                            const XalanDOMChar          chars[],
+                            size_type                   start,
+                            size_type                   length,
+                            int&                        /*state*/)
+    {
+        assert( chars != 0 && length != 0 && start < length);
+
+        return write(chars, start, length);
+    }
+    /**
+     * Writes name chars , if not presentable, throws 
+     */
+    void writeNameChar(const XalanDOMChar*            data,
+                       size_type                theLength)
+    {
+        write(data, theLength);
+    }
+
+    /**
+     * Writes name chars , if not presentable, throws 
+     */
+    void writePIChars(const XalanDOMChar*       data,
+                        size_type               theLength)
+    {
+        write(data, theLength);
+    }
+
+    /**
+     * Writes name chars , if not presentable, throws 
+     */
+    void writeCommentChars(const XalanDOMChar*      data,
+                           size_type                theLength)
+    {
+        write(data, theLength);
+    }
+
     void
     safeWriteContent(
             const XalanDOMChar*         theChars,
@@ -224,11 +262,11 @@ public:
 
     size_type
     write(
-            XalanDOMChar                ch,
             const XalanDOMChar          chars[],
             XalanDOMString::size_type   start,
             XalanDOMString::size_type   length)
     {
+        XalanDOMChar ch = chars[start];
 
         if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == false)
         {

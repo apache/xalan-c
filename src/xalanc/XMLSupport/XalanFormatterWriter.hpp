@@ -41,6 +41,109 @@ XALAN_USING_XERCES(MemoryManager)
 class XalanFormatterWriter
 {
 public:
+
+    template <class WriterType>
+    class NewLineWriterFunctor
+    {
+    public:
+        typedef WriterType              writer_type;
+
+        NewLineWriterFunctor(WriterType& writer) :
+          m_writer(writer),
+          m_newlineString(0),
+          m_newlineStringLength(0)
+        {
+            XalanOutputStream* stream = writer.getStream();
+
+            if(stream != 0)
+            {
+                m_newlineString = stream->getNewlineString();
+            }
+            else
+            {
+                m_newlineString = XalanOutputStream::defaultNewlineString();
+            }
+
+            assert(m_newlineString != 0);
+
+            m_newlineStringLength = length(m_newlineString);
+        }
+
+        void
+        operator()() 
+        {
+            assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
+
+            m_writer.write(m_newlineString, m_newlineStringLength);
+        }
+
+    private:
+        WriterType& m_writer;
+
+        /**
+        * The string of characters that represents the newline
+        */
+        const XalanDOMChar*         m_newlineString;
+
+        /**
+        * The length of the the string of characters that represents the newline
+        */
+        XalanDOMString::size_type   m_newlineStringLength;
+    };
+
+    template<class WriterType>
+    class WhiteSpaceWriterFunctor
+    {
+        typedef XalanDOMString::size_type   size_type;
+    public:
+        typedef WriterType                  writer_type;
+
+        WhiteSpaceWriterFunctor(WriterType& writer) :
+          m_writer(writer)
+          {
+          }
+
+        void
+        operator()(size_type count) 
+        {
+            for ( size_type i = 0 ; i < count ; i++ ) 
+            {
+                m_writer.write(WriterType::value_type(XalanUnicode::charSpace));
+            }
+        }
+    private:
+        WriterType& m_writer;
+    };
+
+    class CommonPresentableCharFunctor
+    {
+    public:
+
+        CommonPresentableCharFunctor(const XalanOutputStream* stream) :
+            m_stream(stream)
+        {
+            assert( stream != 0 );
+        }
+
+        bool
+        operator()(unsigned int theChar) const
+        {
+            bool result = true;
+
+            if( m_stream != 0)
+            {
+                result = m_stream->canTranscodeTo(theChar);
+            }
+            
+            return result;
+        }
+
+
+    private:
+        const XalanOutputStream* m_stream;
+    };
+
+public:
   
     XalanFormatterWriter(
                 Writer&	        theWriter, 
@@ -102,6 +205,7 @@ public:
     	m_writer.flush();
     }    
 
+    
 protected:
 
 	static bool

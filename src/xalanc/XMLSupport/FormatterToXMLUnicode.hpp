@@ -47,18 +47,23 @@ XALAN_CPP_NAMESPACE_BEGIN
  * FormatterToXMLUnicode formats SAX-style events into XML.
  */
 template<
-    class                                   UnicodeWriter,
-    class                                   ConstantsType,
-    class                                   AttributePredicate,
-    class                                   ContentPredicate,
-    class                                   OutsideRangePredicate,
-    XalanXMLSerializerBase::eXMLVersion     XMLVersion>
+    class                           UnicodeWriter,
+    class                           ConstantsType,
+    class                           AttributePredicate,
+    class                           ContentPredicate,
+    class                           OutsideRangePredicate,
+    class                           IndentHandeler,
+    FormatterListener::eXMLVersion  XMLVersion>
 class XALAN_XMLSUPPORT_EXPORT FormatterToXMLUnicode : public XalanXMLSerializerBase
 {
 public:
 
     typedef typename UnicodeWriter::value_type value_type;
 
+    enum eDummy
+    {
+        eDefaultIndentAmount = 0
+    };
 
     /**
      * Constructor
@@ -74,17 +79,21 @@ public:
      *                          declaration
      * @param standalone        The string the XSLT processor should output for
      *                          the standalone document declaration
+     *
      */
     FormatterToXMLUnicode(
             MemoryManager&          theManager,
             Writer&                 writer,
+            const XalanDOMString&   encoding,
             const XalanDOMString&   doctypeSystem = s_emptyString,
             const XalanDOMString&   doctypePublic = s_emptyString,
             bool                    xmlDecl = true,
-            const XalanDOMString&   standalone = s_emptyString) :
+            const XalanDOMString&   standalone = s_emptyString,
+            size_type               indent = eDefaultIndentAmount) :
         XalanXMLSerializerBase(
             theManager,
             XMLVersion,
+            encoding,
             doctypeSystem,
             doctypePublic,
             xmlDecl,
@@ -94,7 +103,8 @@ public:
         m_constants(),
         m_attributePredicate(),
         m_contentPredicate(),
-        m_outsideRangePredicate()
+        m_outsideRangePredicate(),
+        m_indentHandler(m_writer , indent)
     {
     }
 
@@ -102,22 +112,31 @@ public:
     create(
                 MemoryManagerType&      theManager,
                 Writer&                 writer,
+                const XalanDOMString&   encoding,
                 const XalanDOMString&   doctypeSystem = s_emptyString,
                 const XalanDOMString&   doctypePublic = s_emptyString,
                 bool                    xmlDecl = true,
-                const XalanDOMString&   standalone = s_emptyString)
+                const XalanDOMString&   standalone = s_emptyString,
+                size_type               indent = eDefaultIndentAmount)
     {
-        FormatterToXMLUnicode*   theResult;
 
-        XalanConstruct(
-            theManager,
-            theResult,
+        typedef FormatterToXMLUnicode ThisType;
+
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(
             theManager,
             writer,
+            encoding,
             doctypeSystem,
             doctypePublic,
             xmlDecl,
-            standalone);
+            standalone,
+            indent);
+
+        theGuard.release();
 
         return theResult;
     }
@@ -134,6 +153,17 @@ public:
     }
 
     // These are inherited from XalanXMLSerializerBase...
+
+    virtual void
+    endDocument()
+    {
+        m_indentHandler.setStartNewLine(true);
+
+        m_indentHandler.indent();
+
+        flushBuffer();
+    }
+
     virtual void
     startElement(
             const XMLCh* const  name,
@@ -143,7 +173,14 @@ public:
     
         writeParentTagEnd();
     
+        m_indentHandler.setPreserve(false);
+
+        m_indentHandler.indent();
+
+        m_indentHandler.setStartNewLine(true);
+
         m_writer.write(value_type(XalanUnicode::charLessThanSign));
+
         writeName(name);
     
         const unsigned int  nAttrs = attrs.getLength();
@@ -155,15 +192,23 @@ public:
     
         // Flag the current element as not yet having any children.
         openElementForChildren();
+
+        m_indentHandler.increaseIndent();
+
+        m_indentHandler.setPrevText(false);
     }
 
     virtual void
     endElement(const XMLCh* const   name)
     {
+        m_indentHandler.decreaseIndent();
+
         const bool  hasChildNodes = childNodesWereAdded();
     
         if (hasChildNodes == true) 
         {
+            m_indentHandler.indent();
+
             m_writer.write(value_type(XalanUnicode::charLessThanSign));
             m_writer.write(value_type(XalanUnicode::charSolidus));
     
@@ -178,8 +223,15 @@ public:
     
             m_writer.write(value_type(XalanUnicode::charSolidus));
         }
-    
+
         m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
+ 
+        if (hasChildNodes == true) 
+        {
+            m_indentHandler.pop_preserve();
+        }
+
+        m_indentHandler.setPrevText(false);
     }   
 
     virtual void
@@ -189,6 +241,8 @@ public:
     {
         writeParentTagEnd();
     
+        m_indentHandler.setPreserve(true);
+
         m_writer.write(chars, length);
     }
 
@@ -198,8 +252,12 @@ public:
     {
         writeParentTagEnd();
           
+        m_indentHandler.indent();
+
         m_writer.write(value_type(XalanUnicode::charAmpersand));
+
         writeName(name);
+
         m_writer.write(value_type(XalanUnicode::charSemicolon));
     }
 
@@ -207,6 +265,8 @@ public:
     comment(const XMLCh* const  data)
     {
         writeParentTagEnd();
+
+        m_indentHandler.indent();
 
         m_writer.write(value_type(XalanUnicode::charLessThanSign));
         m_writer.write(value_type(XalanUnicode::charExclamationMark));
@@ -218,6 +278,8 @@ public:
         m_writer.write(value_type(XalanUnicode::charHyphenMinus));
         m_writer.write(value_type(XalanUnicode::charHyphenMinus));
         m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
+
+        m_indentHandler.setStartNewLine(true);
     }
 
     virtual const XalanDOMString&
@@ -232,20 +294,6 @@ protected:
     flushBuffer()
     {
         m_writer.flushBuffer();
-    }
-
-    void
-    writeName1_0(const XalanDOMChar*    theChars)
-    {
-        m_writer.write(theChars);
-    }
-
-    void
-    writeName1_1(const XalanDOMChar*    theChars)
-    {
-        m_writer.writeSafe(
-            theChars,
-            XalanDOMString::length(theChars));
     }
 
     void
@@ -272,7 +320,7 @@ protected:
                 m_constants.s_xmlHeaderEncodingString,
                 m_constants.s_xmlHeaderEncodingStringLength);
 
-        m_writer.write(m_constants.s_encodingString);
+        m_writer.write(m_encoding);
 
         if (length(m_standalone) != 0)
         {
@@ -336,6 +384,8 @@ protected:
     {
         writeParentTagEnd();
 
+        m_indentHandler.indent();
+
         m_writer.write(value_type(XalanUnicode::charLessThanSign));
         m_writer.write(value_type(XalanUnicode::charQuestionMark));
         writeName(target);
@@ -371,6 +421,8 @@ protected:
 
         writeParentTagEnd();
 
+        m_indentHandler.setPreserve(true);
+
         unsigned int    i = 0;
         unsigned int    firstIndex = 0;
 
@@ -382,7 +434,7 @@ protected:
             {
                 safeWriteContent(chars + firstIndex, i - firstIndex);
 
-                i = writeNormalizedCharBig(ch, chars, i, length);
+                i = writeNormalizedCharBig(chars, i, length);
 
                 ++i;
 
@@ -405,6 +457,8 @@ protected:
         }
 
         safeWriteContent(chars + firstIndex, i - firstIndex);
+
+        m_indentHandler.setPrevText(true);
     }
 
 
@@ -417,6 +471,10 @@ protected:
     
         writeParentTagEnd();
     
+        m_indentHandler.setPreserve(true);
+
+        m_indentHandler.indent();
+
         m_writer.write(
             m_constants.s_cdataOpenString,
             m_constants.s_cdataOpenStringLength);
@@ -555,6 +613,11 @@ protected:
         if(markParentForChildren() == true)
         {
             m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
+
+            m_indentHandler.setPrevText(false);
+
+            m_indentHandler.push_preserve();
+
         }
     }
 
@@ -577,7 +640,7 @@ protected:
         }
         else 
         {
-            start = m_writer.write(ch, chars, start, length);
+            start = m_writer.write( chars, start, length);
         }
 
         return start;
@@ -597,11 +660,14 @@ protected:
 
     XalanDOMString::size_type
     writeNormalizedCharBig(
-            XalanDOMChar                ch,
             const XalanDOMChar          chars[],
             XalanDOMString::size_type   start,
             XalanDOMString::size_type   length)
     {
+        assert( start < length);
+
+        XalanDOMChar ch = chars[start];
+
         assert(m_outsideRangePredicate(ch) == true);
 
         if (XalanUnicode::charLSEP == ch)
@@ -610,7 +676,7 @@ protected:
         }
         else 
         {
-            start = m_writer.write(ch, chars, start, length);
+            start = m_writer.write(chars, start, length);
         }
 
         return start;
@@ -637,15 +703,15 @@ protected:
      */
     void
     writeCDATAChars(
-            const XalanDOMChar          ch[],
+            const XalanDOMChar          chars[],
             XalanDOMString::size_type   length)
     {
         XalanDOMString::size_type i = 0;
 
         // enum for a cheezy little state machine.
-        enum eState { eInitialState, eFirstRightSquareBracket, eSecondRightSquareBracket };
+        enum eState { eNormalState = 0, eOutOfCDATA = 1};
 
-        eState  theCurrentState = eInitialState;
+        eState  theCurrentState = eNormalState;
 
         while(i < length)
         {
@@ -654,56 +720,45 @@ protected:
             // in the CDATA section, close the CDATA section, then
             // open a new one and add the last character.
 
-            const XalanDOMChar  theChar = ch[i];
+            const XalanDOMChar  theChar = chars[i];
 
-            if (theChar == XalanUnicode::charRightSquareBracket)
+            if ( theChar == XalanUnicode::charRightSquareBracket && 
+                    XalanUnicode::charRightSquareBracket == chars[i+1] &&
+                    XalanUnicode::charGreaterThanSign    == chars[i+2])
             {
-                if (theCurrentState == eInitialState)
-                {
-                    theCurrentState = eFirstRightSquareBracket;
-                }
-                else if (theCurrentState == eFirstRightSquareBracket)
-                {
-                    theCurrentState = eSecondRightSquareBracket;
-                }
-
                 m_writer.write(value_type(XalanUnicode::charRightSquareBracket));
-            }
-            else if (theChar == XalanUnicode::charGreaterThanSign)
-            {
-                if (theCurrentState != eInitialState)
-                {
-                    if (theCurrentState == eFirstRightSquareBracket)
-                    {
-                        theCurrentState = eInitialState;
-                    }
-                    else
-                    {
-                        theCurrentState = eInitialState;
+                m_writer.write(value_type(XalanUnicode::charRightSquareBracket));
 
-                        m_writer.write(
-                            m_constants.s_cdataCloseString,
-                            m_constants.s_cdataCloseStringLength);
+                m_writer.write(
+                    m_constants.s_cdataCloseString,
+                    m_constants.s_cdataCloseStringLength);
 
-                        m_writer.write(
-                            m_constants.s_cdataOpenString,
-                            m_constants.s_cdataOpenStringLength);
-                    }
-                }
+                m_writer.write(
+                    m_constants.s_cdataOpenString,
+                    m_constants.s_cdataOpenStringLength);
 
                 m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
+
+                i += 2;
             }
             else
             {
-                if (theCurrentState != eInitialState)
+                if (XalanUnicode::charLF == theChar)
                 {
-                    theCurrentState = eInitialState;
+                    outputNewline();
                 }
 
-                i = writeNormalizedChar(theChar, ch, i, length);
+                i = m_writer.writeCDATAChar(chars, i, length, (int&)theCurrentState);
             }
 
             ++i;
+        }
+
+        if( eOutOfCDATA == theCurrentState)
+        {
+                m_writer.write(
+                    m_constants.s_cdataOpenString,
+                    m_constants.s_cdataOpenStringLength);
         }
     }
 
@@ -732,7 +787,7 @@ protected:
             {
                 safeWriteContent(theString + firstIndex, i - firstIndex);
 
-                i = writeNormalizedCharBig(ch, theString, i, theStringLength);
+                i = writeNormalizedCharBig(theString, i, theStringLength);
 
                 ++i;
 
@@ -818,14 +873,9 @@ private:
     void
     writeName(const XalanDOMChar*   theChars)
     {
-        if (XMLVersion == XML_VERSION_1_0)
-        {
-            writeName1_0(theChars);
-        }
-        else
-        {
-            writeName1_1(theChars);
-        }
+        assert( theChars != 0);
+
+        m_writer.writeNameChar(theChars, length(theChars));
     }
 
 private:
@@ -852,6 +902,8 @@ private:
     ContentPredicate        m_contentPredicate;
 
     OutsideRangePredicate   m_outsideRangePredicate;
+
+    IndentHandeler           m_indentHandler;
 };
 
 

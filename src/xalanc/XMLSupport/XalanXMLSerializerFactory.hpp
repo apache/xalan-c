@@ -69,6 +69,12 @@ public:
  
 private:
 
+    static void
+    setEncoding(
+            MemoryManager&          theManager,
+            Writer&            theWriter,
+            XalanDOMString&    theEncoding);
+
     // These are not implemented.
     XalanXMLSerializerFactory(const XalanXMLSerializerFactory&);
 

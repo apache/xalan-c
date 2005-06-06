@@ -23,9 +23,14 @@
 
 #include "xalanc/XMLSupport/FormatterToXML.hpp"
 #include "xalanc/XMLSupport/FormatterToXMLUnicode.hpp"
+
+#include "xalanc/XMLSupport/XalanDummyIndentWriter.hpp"
+#include "xalanc/XMLSupport/XalanIndentWriter.hpp"
+
+#include "xalanc/XMLSupport/XalanOtherEncodingWriter.hpp"
+
 #include "xalanc/XMLSupport/XalanUTF8Writer.hpp"
 #include "xalanc/XMLSupport/XalanUTF16Writer.hpp"
-
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -40,7 +45,7 @@ XalanXMLSerializerFactory::create(
             bool                    doIndent,
             int                     theIndentAmount,
             const XalanDOMString&   theEncoding,
-            const XalanDOMString&   theMediaType,
+            const XalanDOMString&   /*theMediaType*/,
             const XalanDOMString&   theDoctypeSystem,
             const XalanDOMString&   theDoctypePublic,
             bool                    generateXMLDeclaration,
@@ -53,113 +58,400 @@ XalanXMLSerializerFactory::create(
         isVersion1_1 = true;
     }
 
+    XalanDOMString fixedEncoding(theEncoding, theManager);
+
+    setEncoding(theManager, theWriter, fixedEncoding);
+
     FormatterListener*  theFormatter = 0;
 
-    if (doIndent == false &&
-        (theEncoding.empty() == true ||
-         XalanTranscodingServices::encodingIsUTF8(theEncoding)))
+    if (XalanTranscodingServices::encodingIsUTF8(fixedEncoding))
+    {
+
+        if (isVersion1_1 == true)
+        {
+            if(doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF8Writer> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF8Writer> WhiteSpaceWriter;
+
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF8Writer,
+                    XalanXMLSerializerBase::UTF8,
+                    XalanXMLSerializerBase::AttributeFunctor1_1,
+                    XalanXMLSerializerBase::ContentFunctor1_1,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+            else // doIndent == false
+            {      
+                typedef XalanDummyIndentWriter<XalanUTF8Writer> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF8Writer,
+                    XalanXMLSerializerBase::UTF8,
+                    XalanXMLSerializerBase::AttributeFunctor1_1,
+                    XalanXMLSerializerBase::ContentFunctor1_1,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,    
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+
+        }
+        else // XML 1.0 section
+        {
+            if(doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF8Writer> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF8Writer> WhiteSpaceWriter;
+
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF8Writer,
+                    XalanXMLSerializerBase::UTF8,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+            else // doIndent == false
+            {      
+                typedef XalanDummyIndentWriter<XalanUTF8Writer> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF8Writer,
+                    XalanXMLSerializerBase::UTF8,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+
+
+        }
+    }
+    else if (XalanTranscodingServices::encodingIsUTF16(fixedEncoding))
     {
         if (isVersion1_1 == true)
         {
-            typedef FormatterToXMLUnicode<
-                        XalanUTF8Writer,
-                        XalanXMLSerializerBase::UTF8,
-                        XalanXMLSerializerBase::AttributeFunctor1_1,
-                        XalanXMLSerializerBase::ContentFunctor1_1,
-                        XalanXMLSerializerBase::RangeFunctor,
-                        XalanXMLSerializerBase::XML_VERSION_1_1>  Type;
+            if(doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF16Writer> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF16Writer> WhiteSpaceWriter;
 
-            theFormatter =
-                Type::create(
-                    theManager,
-                    theWriter,
-                    theDoctypeSystem,
-                    theDoctypePublic,
-                    generateXMLDeclaration,
-                    theStandaloneString);
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                            XalanUTF16Writer,
+                            XalanXMLSerializerBase::UTF16,
+                            XalanXMLSerializerBase::AttributeFunctor1_1,
+                            XalanXMLSerializerBase::ContentFunctor1_1,
+                            XalanXMLSerializerBase::RangeFunctor,
+                            IdentWriter,
+                            FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
+                        theManager,
+                        theWriter,
+                        fixedEncoding,
+                        theDoctypeSystem,
+                        theDoctypePublic,
+                        generateXMLDeclaration,
+                        theStandaloneString,
+                        theIndentAmount);
+            }
+            else //doIndent == false
+            {
+                typedef XalanDummyIndentWriter<XalanUTF16Writer> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                            XalanUTF16Writer,
+                            XalanXMLSerializerBase::UTF16,
+                            XalanXMLSerializerBase::AttributeFunctor1_1,
+                            XalanXMLSerializerBase::ContentFunctor1_1,
+                            XalanXMLSerializerBase::RangeFunctor,
+                            IdentWriter,
+                            FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
+                        theManager,
+                        theWriter,
+                        fixedEncoding,
+                        theDoctypeSystem,
+                        theDoctypePublic,
+                        generateXMLDeclaration,
+                        theStandaloneString,
+                        theIndentAmount);
+            }
         }
-        else
+        else // XML 1.0 section
         {
-            typedef FormatterToXMLUnicode<
-                        XalanUTF8Writer,
-                        XalanXMLSerializerBase::UTF8,
-                        XalanXMLSerializerBase::AttributeFunctor1_0,
-                        XalanXMLSerializerBase::ContentFunctor1_0,
-                        XalanXMLSerializerBase::RangeFunctor,
-                        XalanXMLSerializerBase::XML_VERSION_1_0>  Type;
+            if(doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF16Writer> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF16Writer> WhiteSpaceWriter;
 
-            theFormatter =
-                Type::create(
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF16Writer,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
                     theManager,
                     theWriter,
+                    fixedEncoding,
                     theDoctypeSystem,
                     theDoctypePublic,
                     generateXMLDeclaration,
-                    theStandaloneString);
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+            else // doIndent == flase
+            {
+                typedef XalanDummyIndentWriter<XalanUTF16Writer> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    XalanUTF16Writer,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+
         }
     }
-    else if (doIndent == false &&
-             XalanTranscodingServices::encodingIsUTF16(theEncoding))
+    else // all other encodings
     {
-        if (isVersion1_1 == true)
-        {
-            typedef FormatterToXMLUnicode<
-                        XalanUTF16Writer,
-                        XalanXMLSerializerBase::UTF16,
-                        XalanXMLSerializerBase::AttributeFunctor1_1,
-                        XalanXMLSerializerBase::ContentFunctor1_1,
-                        XalanXMLSerializerBase::RangeFunctor,
-                        XalanXMLSerializerBase::XML_VERSION_1_1>  Type;
+        typedef XalanOtherEncodingWriter<   XalanFormatterWriter::CommonPresentableCharFunctor,
+                                            XalanXMLSerializerBase::UTF16> WriterType ;
 
-            theFormatter =
-                Type::create(
+        if( isVersion1_1 == true)
+        {
+            if (doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<WriterType> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<WriterType> WhiteSpaceWriter;
+
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+
+                typedef FormatterToXMLUnicode<
+                    WriterType,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_1,
+                    XalanXMLSerializerBase::ContentFunctor1_1,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
                     theManager,
                     theWriter,
+                    fixedEncoding,
                     theDoctypeSystem,
                     theDoctypePublic,
                     generateXMLDeclaration,
-                    theStandaloneString);
-        }
-        else
-        {
-            typedef FormatterToXMLUnicode<
-                        XalanUTF16Writer,
-                        XalanXMLSerializerBase::UTF16,
-                        XalanXMLSerializerBase::AttributeFunctor1_0,
-                        XalanXMLSerializerBase::ContentFunctor1_0,
-                        XalanXMLSerializerBase::RangeFunctor,
-                        XalanXMLSerializerBase::XML_VERSION_1_0>  Type;
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+            else
+            {
+                typedef XalanDummyIndentWriter<WriterType> IdentWriter;
 
-		    theFormatter =
-                Type::create(
+                typedef FormatterToXMLUnicode<
+                    WriterType,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_1,
+                    XalanXMLSerializerBase::ContentFunctor1_1,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_1>  Type;
+
+                theFormatter =
+                    Type::create(
                     theManager,
                     theWriter,
+                    fixedEncoding,
                     theDoctypeSystem,
                     theDoctypePublic,
                     generateXMLDeclaration,
-                    theStandaloneString);
+                    theStandaloneString,
+                    theIndentAmount);
+
+            }
         }
+        else // XML 1.0 section
+        {
+            if(doIndent == true)
+            {
+                typedef XalanFormatterWriter::NewLineWriterFunctor<WriterType> NewLineWriter;
+                typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<WriterType> WhiteSpaceWriter;
+
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    WriterType,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+            }
+            else //doIndent == false
+            {
+                typedef XalanDummyIndentWriter<WriterType> IdentWriter;
+
+                typedef FormatterToXMLUnicode<
+                    WriterType,
+                    XalanXMLSerializerBase::UTF16,
+                    XalanXMLSerializerBase::AttributeFunctor1_0,
+                    XalanXMLSerializerBase::ContentFunctor1_0,
+                    XalanXMLSerializerBase::RangeFunctor,
+                    IdentWriter,
+                    FormatterListener::XML_VERSION_1_0>  Type;
+
+                theFormatter =
+                    Type::create(
+                    theManager,
+                    theWriter,
+                    fixedEncoding,
+                    theDoctypeSystem,
+                    theDoctypePublic,
+                    generateXMLDeclaration,
+                    theStandaloneString,
+                    theIndentAmount);
+
+            }
+        }
+
     }
-    else
-    {
-        theFormatter =
-            FormatterToXML::create(
-                theManager,
-                theWriter,
-                theVersion,
-                doIndent,
-                theIndentAmount,
-                theEncoding,
-                theMediaType,
-                theDoctypeSystem,
-                theDoctypePublic,
-                generateXMLDeclaration,
-                theStandaloneString);
-    }
+
+    assert (theFormatter != 0);
 
     return theFormatter;
+
+
 }
 
+void
+XalanXMLSerializerFactory::setEncoding(
+                             MemoryManager&          theManager,
+                             Writer&            theWriter,
+                             XalanDOMString&    theEncoding)
+{
+    XalanOutputStream* stream = theWriter.getStream();
+
+    if(stream != 0)
+    {
+        if(theEncoding.empty())
+        {
+            // Default to UTF-8 if the requested encoding is not supported...
+            stream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String, theManager));
+
+            theEncoding = XalanTranscodingServices::s_utf8String;
+        }
+        else
+        {
+            try
+            {
+                stream->setOutputEncoding(theEncoding);
+            }
+            catch(const XalanOutputStream::UnsupportedEncodingException&)
+            {
+                // Default to UTF-8 if the requested encoding is not supported...
+                stream->setOutputEncoding(XalanDOMString(XalanTranscodingServices::s_utf8String, theManager));
+
+                theEncoding = XalanTranscodingServices::s_utf8String;
+            }
+        }
+
+    }
+}
 
 
 XALAN_CPP_NAMESPACE_END

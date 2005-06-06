@@ -87,6 +87,7 @@ const char  XalanXMLSerializerBase::s_specialChars1_1[eSpecialsSize] =
 XalanXMLSerializerBase::XalanXMLSerializerBase(
             MemoryManager&              theManager,
             eXMLVersion                 theXMLVersion,
+            const XalanDOMString&       theEncoding,
             const XalanDOMString&       theDoctypeSystem,
             const XalanDOMString&       theDoctypePublic,
             bool                        xmlDecl,
@@ -101,11 +102,14 @@ XalanXMLSerializerBase::XalanXMLSerializerBase(
             s_1_0String :
             s_1_1String),
     m_standalone(theStandalone, theManager),
+    m_encoding(theEncoding, theManager),
     m_needToOutputDoctypeDecl(false),
     // We must write the XML declaration if standalone is specified
     m_shouldWriteXMLHeader(xmlDecl == true ? true : theStandalone.length() != 0),
     m_elemStack(theManager)
 {
+    setXMLVersion(theXMLVersion);
+
     if(isEmpty(m_doctypePublic) == false)
     {
         if(startsWith(
@@ -232,15 +236,6 @@ XalanXMLSerializerBase::startDocument()
     }
 }
 
-
-
-void
-XalanXMLSerializerBase::endDocument()
-{
-    m_needToOutputDoctypeDecl = false;
-
-    flushBuffer();
-}
 
 
 

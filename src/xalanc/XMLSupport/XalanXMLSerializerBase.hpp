@@ -57,13 +57,6 @@ class XALAN_XMLSUPPORT_EXPORT XalanXMLSerializerBase : public FormatterListener
 {
 public:
 
-    enum eXMLVersion
-    {
-        XML_VERSION_1_0 = 0,
-        XML_VERSION_1_1 = 1
-    };
-
-
     /**
      * Perform static initialization.  See class XMLSupportInit.
      */
@@ -94,6 +87,7 @@ public:
     XalanXMLSerializerBase(
                 MemoryManager&              theManager,
                 eXMLVersion                 theXMLVersion,
+                const XalanDOMString&       theEncoding,
                 const XalanDOMString&       theDoctypeSystem,
                 const XalanDOMString&       theDoctypePublic,
                 bool                        xmlDecl,
@@ -116,9 +110,6 @@ public:
 
     virtual void
     startDocument();
-
-    virtual void
-    endDocument();
 
     virtual void
     startElement(
@@ -690,6 +681,8 @@ protected:
      * Text for standalone part of header.
      */
     const XalanDOMString    m_standalone;
+
+    const XalanDOMString  m_encoding;
 
     static bool
     isUTF16HighSurrogate(XalanDOMChar   theChar)

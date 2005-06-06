@@ -78,6 +78,12 @@ public:
 		OUTPUT_METHOD_OTHER = 5
 	};
 
+    enum eXMLVersion
+    {
+        XML_VERSION_1_0 = 0,
+        XML_VERSION_1_1 = 1
+    };
+
 	FormatterListener(eFormat	theFormat);
 
 	virtual
@@ -93,6 +99,29 @@ public:
 	{
 		return m_outputFormat;
 	}
+
+    /**
+	 * Get the version of XML the FormatterListener is
+     * generating.
+	 *
+	 * @return An enum indication the XML version.
+	 */
+    eXMLVersion
+    getXMLVersion() const
+    {
+        return m_XMLVersion;
+    }
+
+    /**
+	 * Determine if the version of XML output is 1.1.
+	 *
+	 * @return true if the output version is 1.1, false if not.
+	 */
+    bool
+    isXML1_1Version() const
+    {
+        return ( XML_VERSION_1_1 == m_XMLVersion );
+    }
 
     /**
 	 * Get the PrefixResolver for the FormatterListener
@@ -253,6 +282,17 @@ protected:
 
 	static const XalanDOMString		s_emptyString;
 
+	/**
+	 * Set the output version during serializing.
+	 *
+	 * @param theVersion XML version of the output
+	 */
+    void
+    setXMLVersion(eXMLVersion   theVersion)
+    {
+        m_XMLVersion = theVersion;
+    }
+
 private:
 
 	// Not implemented...
@@ -266,6 +306,8 @@ private:
 
 	// Data membmers...
 	const eFormat	m_outputFormat;
+
+    eXMLVersion     m_XMLVersion;
 };
 
 

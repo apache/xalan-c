@@ -1313,9 +1313,6 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.cpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp">
 			</File>
 			<File
@@ -1325,6 +1322,9 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanDummyIndentWriter.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp">
 			</File>
 			<File
@@ -1332,6 +1332,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanIndentWriter.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanOtherEncodingWriter.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.cpp">
