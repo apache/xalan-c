@@ -94,7 +94,8 @@ public:
     template<class WriterType>
     class WhiteSpaceWriterFunctor
     {
-        typedef XalanDOMString::size_type   size_type;
+        typedef XalanDOMString::size_type       size_type;
+        typedef typename WriterType::value_type value_type;
     public:
         typedef WriterType                  writer_type;
 
@@ -108,7 +109,7 @@ public:
         {
             for ( size_type i = 0 ; i < count ; i++ ) 
             {
-                m_writer.write(WriterType::value_type(XalanUnicode::charSpace));
+                m_writer.write(value_type(XalanUnicode::charSpace));
             }
         }
     private:

@@ -105,7 +105,7 @@ class XalanOtherEncodingWriter : public XalanFormatterWriter
 
 
 public:
-    typedef typename XalanDOMChar           value_type;
+    typedef XalanDOMChar           value_type;
     typedef PresentableCharacterPredicat    Predicat;
     typedef XalanDOMString::size_type       size_type;
  
