@@ -363,11 +363,7 @@ XalanEXSLTFunctionAbs::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::fabs;
-#endif
-
-    return executionContext.getXObjectFactory().createNumber(fabs(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(DoubleSupport::fabs(args[0]->num()));
 }
 
 

@@ -301,7 +301,21 @@ DoubleSupport::negative(double  theDouble)
     }
 }
 
-
+double
+DoubleSupport::fabs(double theDouble)
+{
+    if (isNaN(theDouble) == true)
+    {
+        return getNaN();
+    }
+    else
+    {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fabs;
+#endif
+        return fabs(theDouble);
+    }
+}
 
 double
 DoubleSupport::toDouble(

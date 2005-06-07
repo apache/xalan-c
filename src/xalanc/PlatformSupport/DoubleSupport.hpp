@@ -319,6 +319,16 @@ public:
     static double
     negative(double theDouble);
 
+    /**
+     * Return  the absolute value of theDouble. If theDouble is NaN,
+     * NaN is returned 
+     *
+     * @param theDouble a number to fabs
+     * @return the result of the fabs
+     */
+    static double
+    fabs(double theDouble);
+
     // Some functors to do the same thing.  This is for
     // STL integration...
     #if defined(XALAN_NO_STD_NAMESPACE)
