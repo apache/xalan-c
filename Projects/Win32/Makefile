@@ -172,7 +172,8 @@ $(XSL_BIN_DEST)\include\xalanc\Include\XalanVersion.hpp: $(XALANCROOT)\src\xalan
 	$(COPY) $(XALANCROOT)\src\xalanc\XPath\*.h* 		$(XSL_BIN_DEST)\include\xalanc\XPath
 	$(COPY) $(XALANCROOT)\src\xalanc\XPathCAPI\*.h* 		$(XSL_BIN_DEST)\include\xalanc\XPathCAPI
 	$(COPY) $(XALANCROOT)\src\xalanc\XSLT\*.h* 		$(XSL_BIN_DEST)\include\xalanc\XSLT
-		
+	$(COPY) $(BIN_SRC_DIR)\Nls\Include\LocalMsgIndex.hpp $(XSL_BIN_DEST)\include\xalanc\PlatformSupport
+			
 icu:
 	$(COPY) $(ICULIB_DLL) $(XSL_BIN_DEST)\bin
 
