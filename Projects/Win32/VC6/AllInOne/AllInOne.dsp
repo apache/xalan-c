@@ -1598,10 +1598,6 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp
 # End Source File
 # Begin Source File
@@ -1614,6 +1610,10 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanDummyIndentWriter.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp
 # End Source File
 # Begin Source File
@@ -1623,6 +1623,14 @@ SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanIndentWriter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanOtherEncodingWriter.hpp
 # End Source File
 # Begin Source File
 

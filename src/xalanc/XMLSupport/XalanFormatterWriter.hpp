@@ -206,8 +206,6 @@ public:
     	m_writer.flush();
     }    
 
-    
-protected:
 
 	static bool
 	isUTF16HighSurrogate(XalanDOMChar	theChar)
@@ -284,6 +282,7 @@ protected:
 	    throw SAXException(c_wstr(theMessage),&theManager);
     }
 
+protected:
 
 	/** 
 	 * The writer.
