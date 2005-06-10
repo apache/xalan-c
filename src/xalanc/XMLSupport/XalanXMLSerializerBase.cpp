@@ -61,10 +61,10 @@ const char  XalanXMLSerializerBase::s_specialChars1_0[eSpecialsSize] =
 
 const char  XalanXMLSerializerBase::s_specialChars1_1[eSpecialsSize] =
 {
- /* 00-07 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 08-0F */    eNone,  eAttr,  eBoth,  eNone,  eNone,  eAttr,  eNone,  eNone,
- /* 10-17 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 18-1F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
+ /* 00-07 */    eNone,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
+ /* 08-0F */    eBoth,  eAttr,  eBoth,  eBoth,  eBoth,  eAttr,  eBoth,  eBoth,
+ /* 10-17 */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
+ /* 18-1F */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
  /* 20-27 */    eNone,  eNone,  eAttr,  eNone,  eNone,  eNone,  eBoth,  eNone,
  /* 28-2F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 30-37 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,

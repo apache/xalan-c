@@ -49,7 +49,7 @@ public:
         m_isprevtext(false),
         m_preserves(writer.getMemoryManager(), 5)
     {
-        assert( m_indent != 0xFFFFFFFF);
+        assert( m_indent != -1);
     }
 
     ~XalanIndentWriter()
@@ -155,12 +155,7 @@ private:
     }
 
 private:
-     //// not implemented
-     //XalanIdentWriter<Writer>(const XalanIdentWriter<Writer>&);
-     //
-     //XalanIdentWriter<Writer>&
-     //operator=(const XalanIdentWriter<Writer>&);
-     //
+
      //data members
      
     WhiteSpaceWriter m_whiteSpaceWriter;
