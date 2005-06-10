@@ -1147,7 +1147,7 @@ private:
 
     /**
      * The factory that will be used to create result tree fragments based on our
-     * proprietary source tree.
+	 * internal source tree.
      */
     mutable XalanMemMgrAutoPtr<XalanSourceTreeDocument, true>   m_sourceTreeResultTreeFactory;
 
