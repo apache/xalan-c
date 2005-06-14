@@ -363,7 +363,7 @@ XalanEXSLTFunctionAbs::execute(
 
     assert(args[0].null() == false);
 
-    return executionContext.getXObjectFactory().createNumber(DoubleSupport::fabs(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(DoubleSupport::abs(args[0]->num()));
 }
 
 

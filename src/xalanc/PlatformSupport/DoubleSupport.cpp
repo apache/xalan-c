@@ -302,7 +302,7 @@ DoubleSupport::negative(double  theDouble)
 }
 
 double
-DoubleSupport::fabs(double theDouble)
+DoubleSupport::abs(double theDouble)
 {
     if (isNaN(theDouble) == true)
     {

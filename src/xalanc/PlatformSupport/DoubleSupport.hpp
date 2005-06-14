@@ -327,7 +327,7 @@ public:
      * @return the result of the fabs
      */
     static double
-    fabs(double theDouble);
+    abs(double theDouble);
 
     // Some functors to do the same thing.  This is for
     // STL integration...
