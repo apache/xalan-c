@@ -22,38 +22,42 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XString::XString(const XalanDOMString&	val,
-                 MemoryManagerType& theManager) :
-	XStringBase(theManager),
-	m_value(val,theManager)
-{
-}
-
-
-
-XString::XString(const XalanDOMChar*	val,
-                 MemoryManagerType& theManager) :
-	XStringBase(theManager),
-	m_value(val, theManager)
+XString::XString(
+            const XalanDOMString&   val,
+            MemoryManagerType&      theManager) :
+    XStringBase(theManager),
+    m_value(val,theManager)
 {
 }
 
 
 
 XString::XString(
-			const XalanDOMChar*		val,
-			unsigned int			len,
+            const XalanDOMChar*     val,
             MemoryManagerType&      theManager) :
-	XStringBase(theManager),
-	m_value(val, theManager, len)
+    XStringBase(theManager),
+    m_value(val, theManager)
 {
 }
 
 
 
-XString::XString(const XString&	source,MemoryManagerType& theManager) :
-	XStringBase(source, theManager),
-	m_value(source.m_value, theManager)
+XString::XString(
+            const XalanDOMChar*     val,
+            unsigned int            len,
+            MemoryManagerType&      theManager) :
+    XStringBase(theManager),
+    m_value(val, theManager, len)
+{
+}
+
+
+
+XString::XString(
+            const XString&      source,
+            MemoryManagerType&  theManager) :
+    XStringBase(source, theManager),
+    m_value(source.m_value, theManager)
 {
 }
 
@@ -64,22 +68,31 @@ XString::~XString()
 }
 
 
+
 const XalanDOMString&
 XString::str() const
 {
-	return m_value;
+    return m_value;
 }
 
 
 
 void
 XString::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function) const
 {
-	assert(length(m_value) == FormatterListener::size_type(length(m_value)));
+    const XalanDOMString::size_type     theLength =
+        m_value.length();
 
-	(formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
+    if (theLength != 0)
+    {
+        assert(theLength == FormatterListener::size_type(theLength));
+
+        (formatterListener.*function)(
+            m_value.c_str(),
+            FormatterListener::size_type(theLength));
+    }
 }
 
 
@@ -87,7 +100,7 @@ XString::str(
 double
 XString::stringLength() const
 {
-	return length(m_value);
+    return m_value.length();
 }
 
 

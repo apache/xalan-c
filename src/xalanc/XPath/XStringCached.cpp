@@ -26,21 +26,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringCached::XStringCached(GetAndReleaseCachedString&		val,
-                             MemoryManagerType&             theManager) :
-	XStringBase(theManager),
-	m_value(val)
+XStringCached::XStringCached(
+            GetAndReleaseCachedString&  val,
+            MemoryManagerType&          theManager) :
+    XStringBase(theManager),
+    m_value(val)
 {
 }
 
 
 
-XStringCached::XStringCached(const XStringCached&	source,
-                             MemoryManagerType&     theManager) :
-	XStringBase(source, theManager),
-	m_value(source.m_value.getExecutionContext())
+XStringCached::XStringCached(
+            const XStringCached&    source,
+            MemoryManagerType&      theManager) :
+    XStringBase(source, theManager),
+    m_value(source.m_value.getExecutionContext())
 {
-	m_value.get() = source.m_value.get();
+    m_value.get() = source.m_value.get();
 }
 
 
@@ -54,19 +56,29 @@ XStringCached::~XStringCached()
 const XalanDOMString&
 XStringCached::str() const
 {
-	return m_value.get();
+    return m_value.get();
 }
 
 
 
 void
 XStringCached::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function) const
 {
-	assert(length(m_value.get()) == FormatterListener::size_type(length(m_value.get())));
+    const XalanDOMString&   theString = m_value.get();
 
-	(formatterListener.*function)(c_wstr(m_value.get()), FormatterListener::size_type(length(m_value.get())));
+    const XalanDOMString::size_type     theLength =
+        theString.length();
+
+    if (theLength != 0)
+    {
+        assert(theLength == FormatterListener::size_type(theLength));
+
+        (formatterListener.*function)(
+            theString.c_str(),
+            FormatterListener::size_type(theLength));
+    }
 }
 
 
@@ -74,7 +86,7 @@ XStringCached::str(
 XStringCached::eObjectType
 XStringCached::getRealType() const
 {
-	return eTypeStringCached;
+    return eTypeStringCached;
 }
 
 
@@ -82,7 +94,7 @@ XStringCached::getRealType() const
 double
 XStringCached::stringLength() const
 {
-	return length(m_value.get());
+    return m_value.get().length();
 }
 
 

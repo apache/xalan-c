@@ -1673,6 +1673,7 @@ XSLTEngineImpl::characters(
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
     assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
+    assert(length != 0);
 
     doFlushPending();
 
@@ -1766,6 +1767,7 @@ XSLTEngineImpl::charactersRaw(
             XalanDOMString::size_type   length)
 {
     assert(ch != 0);
+    assert(length != 0);
 
     doFlushPending();
 
@@ -1828,6 +1830,7 @@ XSLTEngineImpl::ignorableWhitespace(
 {
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
+    assert(length != 0);
 
     doFlushPending();
 
@@ -1920,6 +1923,7 @@ XSLTEngineImpl::cdata(
 {
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
+    assert(length != 0);
 
     setMustFlushPendingStartDocument(true);
 

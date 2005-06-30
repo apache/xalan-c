@@ -124,6 +124,11 @@ FormatterToSourceTree::startDocument()
 void
 FormatterToSourceTree::endDocument()
 {
+    if (m_documentFragment != 0)
+    {
+        processAccumulatedText();
+    }
+
 	// Pop off the dummy value that we pushed in 
 	// startDocument()...
 	m_elementStack.pop_back();
@@ -258,7 +263,7 @@ FormatterToSourceTree::characters(
 {
 	if (m_documentFragment != 0)
 	{
-		doCharacters(chars, length);
+		append(m_textBuffer, chars, length);
 	}
 	else if (m_currentElement == 0)
 	{

@@ -559,9 +559,17 @@ private:
 			MemberFunctionPtr		function,
 			const XalanDOMString&	data)
 	{
-		assert(length(data) == FormatterListener::size_type(length(data)));
+        const XalanDOMString::size_type     theLength =
+            data.length();
 
-		(formatterListener.*function)(c_wstr(data), FormatterListener::size_type(length(data)));
+        if (theLength != 0)
+        {
+	        assert(theLength == FormatterListener::size_type(theLength));
+
+	        (formatterListener.*function)(
+                data.c_str(),
+                FormatterListener::size_type(theLength));
+        }
 	}
 };
 

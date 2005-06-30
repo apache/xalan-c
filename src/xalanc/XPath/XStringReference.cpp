@@ -23,19 +23,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringReference::XStringReference(const XalanDOMString&	val,
-                                   MemoryManagerType&       theManager) :
-	XStringBase(theManager),
-	m_value(val)
+XStringReference::XStringReference(
+            const XalanDOMString&   val,
+            MemoryManagerType&      theManager) :
+    XStringBase(theManager),
+    m_value(val)
 {
 }
 
 
 
-XStringReference::XStringReference(const XStringReference&	source,
-                                   MemoryManagerType&       theManager) :
-	XStringBase(source, theManager),
-	m_value(source.m_value)
+XStringReference::XStringReference(
+            const XStringReference&     source,
+            MemoryManagerType&          theManager) :
+    XStringBase(source, theManager),
+    m_value(source.m_value)
 {
 }
 
@@ -50,19 +52,27 @@ XStringReference::~XStringReference()
 const XalanDOMString&
 XStringReference::str() const
 {
-	return m_value;
+    return m_value;
 }
 
 
 
 void
 XStringReference::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function) const
 {
-	assert(length(m_value) == FormatterListener::size_type(length(m_value)));
+    const XalanDOMString::size_type     theLength =
+        m_value.length();
 
-	(formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
+    if (theLength != 0)
+    {
+        assert(theLength == FormatterListener::size_type(theLength));
+
+        (formatterListener.*function)(
+            m_value.c_str(),
+            FormatterListener::size_type(theLength));
+    }
 }
 
 
@@ -70,7 +80,7 @@ XStringReference::str(
 XStringReference::eObjectType
 XStringReference::getRealType() const
 {
-	return eTypeStringReference;
+    return eTypeStringReference;
 }
 
 
@@ -78,7 +88,7 @@ XStringReference::getRealType() const
 double
 XStringReference::stringLength() const
 {
-	return length(m_value);
+    return length(m_value);
 }
 
 

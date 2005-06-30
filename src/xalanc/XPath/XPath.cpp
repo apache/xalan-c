@@ -1042,7 +1042,16 @@ stringToCharacters(
             FormatterListener&          formatterListener,
             XPath::MemberFunctionPtr    function)
 {
-    (formatterListener.*function)(str.c_str(), str.length());
+    const XalanDOMString::size_type     theLength = str.length();
+
+    if (theLength != 0)
+    {
+	    assert(theLength == FormatterListener::size_type(theLength));
+
+	    (formatterListener.*function)(
+            str.c_str(),
+            FormatterListener::size_type(theLength));
+    }
 }
 
 
