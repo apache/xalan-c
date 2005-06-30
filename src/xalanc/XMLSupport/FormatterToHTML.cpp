@@ -885,41 +885,33 @@ FormatterToHTML::processAttribute(
 			const XalanDOMChar*										value,
 			const XalanHTMLElementsProperties::ElementProperties&	elemProperties)
 {
-	// We add a fake attribute to the source tree to
-	// declare the xml prefix, so we filter it back out
-	// here...
-	// $$$ ToDo: It would be better if we didn't have to do
-	// this here.
 	const XalanDOMString::size_type		nameLength = length(name);
 
-	if (equals(name, nameLength, c_wstr(DOMServices::s_XMLNamespacePrefix), DOMServices::s_XMLNamespacePrefixLength) == false)
+	accumContent(XalanUnicode::charSpace);
+
+	const XalanDOMString::size_type		valueLength = length(value);
+
+	if((valueLength == 0 || equalsIgnoreCaseASCII(name, nameLength, value, valueLength)) &&
+	   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
 	{
-		accumContent(XalanUnicode::charSpace);
+		accumName(name);
+	}
+	else
+	{
+		accumName(name, 0, nameLength);
+		accumContent(XalanUnicode::charEqualsSign);
+		accumContent(XalanUnicode::charQuoteMark);
 
-		const XalanDOMString::size_type		valueLength = length(value);
-
-		if((valueLength == 0 || equalsIgnoreCaseASCII(name, nameLength, value, valueLength)) &&
-		   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
+		if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
 		{
-			accumName(name);
+			writeAttrURI(value, valueLength);
 		}
 		else
 		{
-			accumName(name, 0, nameLength);
-			accumContent(XalanUnicode::charEqualsSign);
-			accumContent(XalanUnicode::charQuoteMark);
-
-			if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
-			{
-				writeAttrURI(value, valueLength);
-			}
-			else
-			{
-				writeAttrString(value, valueLength);
-			}
-
-			accumContent(XalanUnicode::charQuoteMark);
+			writeAttrString(value, valueLength);
 		}
+
+		accumContent(XalanUnicode::charQuoteMark);
 	}
 }
 

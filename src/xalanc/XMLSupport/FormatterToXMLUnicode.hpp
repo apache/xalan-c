@@ -825,20 +825,12 @@ private:
         const XalanDOMChar*     name,
         const XalanDOMChar*     value)
     {
-        // We add a fake attribute to the source tree to
-        // declare the xml prefix, so we filter it back out
-        // here...
-        // $$$ ToDo: It would be better if we didn't have to do
-        // this here.
-        if (equals(name, DOMServices::s_XMLNamespacePrefix) == false)
-        {
-            m_writer.write(value_type(XalanUnicode::charSpace));
-            writeName(name);
-            m_writer.write(value_type(XalanUnicode::charEqualsSign));
-            m_writer.write(value_type(XalanUnicode::charQuoteMark));
-            writeAttrString(value, length(value));
-            m_writer.write(value_type(XalanUnicode::charQuoteMark));
-        }
+        m_writer.write(value_type(XalanUnicode::charSpace));
+        writeName(name);
+        m_writer.write(value_type(XalanUnicode::charEqualsSign));
+        m_writer.write(value_type(XalanUnicode::charQuoteMark));
+        writeAttrString(value, length(value));
+        m_writer.write(value_type(XalanUnicode::charQuoteMark));
     }
 
     /**
