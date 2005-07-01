@@ -122,7 +122,16 @@ FormatterToXercesDOM::startDocument()
 void
 FormatterToXercesDOM::endDocument()
 {
-	// No action for the moment.
+	try
+	{
+        // Process any remaining text, in case we're
+        // appending to a DOMDocumentFragment.
+        processAccumulatedText();
+	}
+	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
+	{
+		throw XercesDOMException(theException);
+	}
 }
 
 
