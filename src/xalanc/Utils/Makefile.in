@@ -54,7 +54,7 @@ INCLUDE_DIR = $(XALANCROOT)/src/xalanc/Include
 	
 ##=================== End of Common for all localization systems area =====
 ## ----------------------------------------------------------------------------
-ifeq ($(MESSAGELOADER),INMEM)
+ifeq ($(MESSAGELOADER),inmem)
 
 
 
@@ -76,11 +76,11 @@ install: doCommonInstall
 prepare: doCommonPrepare
 	
 	
-endif  # end of ($(MESSAGELOADER),INMEM))
+endif  # end of ($(MESSAGELOADER),inmem))
 
 ## ----------------------------------------------------------------------------
 
-ifeq ($(MESSAGELOADER),ICU)
+ifeq ($(MESSAGELOADER),icu)
 ##=============================== Specific for ICU variables ================================
 
 GENRB    = $(ICUROOT)/bin/genrb
@@ -126,10 +126,10 @@ endif ## AIX
 endif ## OS390
 
 	
-endif # end of ($(MESSAGELOADER),ICU)
+endif # end of ($(MESSAGELOADER),icu)
 
 ##=============================== NLS SYSTEM =====================================================
-ifeq ($(MESSAGELOADER),NLS)
+ifeq ($(MESSAGELOADER),nls)
 
 
 locale:  $(XSL_NLS_DIR)/$(LOCALE)/$(CATALOG_NAME).cat 

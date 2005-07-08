@@ -17,6 +17,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2005/07/08 17:30:49  dmitryh
+# Fix for XALANC-526
+#
 # Revision 1.11  2004/04/19 14:54:08  dmitryh
 # Fix for Bugzilla Bug 28452
 #
@@ -411,16 +414,16 @@ if test $localSys; then
 			      echo '***Error*** ICUROOT environment variable not defined. Exiting...'
 	              exit ${ERROR_EXIT_CODE};
 	        fi
-			XALAN_LOCALE_SYSTEM=ICU;;
+			XALAN_LOCALE_SYSTEM=icu;;
 
 		inmem)
-			XALAN_LOCALE_SYSTEM=INMEM;;
+			XALAN_LOCALE_SYSTEM=inmem;;
 
 		nls)
-			XALAN_LOCALE_SYSTEM=NLS;;
+			XALAN_LOCALE_SYSTEM=nls;;
 
 		default)
-			XALAN_LOCALE_SYSTEM=INMEM;;
+			XALAN_LOCALE_SYSTEM=inmem;;
 
 		*)
 			echo "Unknown locale '$localSys'. Using default."

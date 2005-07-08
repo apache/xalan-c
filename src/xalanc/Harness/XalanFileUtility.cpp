@@ -273,7 +273,7 @@ XalanFileUtility::getParams(
     //
     for (int i = 2; i < argc && fSuccess == true; ++i)
     {
-        if(!stricmp("-out", argv[i]))
+        if(!strcmp("-out", argv[i]))
         {
             ++i;
             if(i < argc && argv[i][0] != '-')
@@ -289,7 +289,7 @@ XalanFileUtility::getParams(
                 fSuccess = false;
             }
         }
-        else if(!stricmp("-gold", argv[i]))
+        else if(!strcmp("-gold", argv[i]))
         {
             ++i;
             if(i < argc && argv[i][0] != '-')
@@ -314,17 +314,17 @@ XalanFileUtility::getParams(
                 fSuccess = false;
             }
         }
-        else if(!stricmp("-source", argv[i]))
+        else if(!strcmp("-source", argv[i]))
         {
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                if (stricmp(argv[i],"XPL") == 0)
+                if (strcmp(argv[i],"XPL") == 0)
                 {
                     args.source = 1;
                     outDir = "DOM-XALAN";
                 }
-                else if (stricmp(argv[i], "DOM") == 0)
+                else if (strcmp(argv[i], "DOM") == 0)
                 {
                     args.source = 2;
                     outDir = "DOM-XERCES";
@@ -341,7 +341,7 @@ XalanFileUtility::getParams(
                 fSuccess = false;
             }
         }
-        else if(!stricmp("-sub", argv[i]))
+        else if(!strcmp("-sub", argv[i]))
         {
             ++i;
             if(i < argc && argv[i][0] != '-')
@@ -354,11 +354,11 @@ XalanFileUtility::getParams(
                 fSuccess = false;
             }
         }
-        else if(!stricmp("-i", argv[i]))
+        else if(!strcmp("-i", argv[i]))
         {
             args.skip = false;
         }
-        else if(!stricmp("-iter", argv[i]))
+        else if(!strcmp("-iter", argv[i]))
         {
             ++i;
             

@@ -56,7 +56,7 @@ static void usage()
 		
 		"Options:\n"
 		"   <XML file>   XLIFF file with messages. Required.  \n"
-		"   -TYPE xxx    Type of localization [ICU | NLS | InMem*]\n"
+		"   -TYPE xxx    Type of localization [icu | nls | inmem*]\n"
 		"   -LOCALE      Example: [ fr | fr_FR ]; The default value is 'en_US' \n"
 		"  * = Default if not provided explicitly.\n\n"
 		"    -?          Show this help.\n\n"
@@ -99,29 +99,6 @@ public:
 };
 
 
-#if defined(OS390)
-#include <strings.h>                                             
-
-int
-compareNoCase(
-			  const char*		str1,
-			  const char*		str2)     
-{
-	return strcasecmp(str1, str2);
-}
-
-#else
-
-int
-compareNoCase(
-			  const char*		str1,
-			  const char*		str2)     
-{
-	return stricmp(str1, str2);
-}
-
-#endif
-
 bool
 getArgs(
 		int				argc,
@@ -142,11 +119,11 @@ getArgs(
 
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
-		if (!compareNoCase("-h", argv[i]) || !compareNoCase("-?", argv[i]))
+		if (!strcmp("-h", argv[i]) || !strcmp("-?", argv[i]))
 		{
 			fSuccess = false;
 		}
-		else if (!compareNoCase("-LOCALE", argv[i]) )
+		else if (!strcmp("-LOCALE", argv[i]) )
 		{
 			++i;
 			if( i < argc && argv[i][0] != '-' )
@@ -175,22 +152,22 @@ getArgs(
 				}
 			}
 		}
-		else if (!compareNoCase("-TYPE", argv[i]) )
+		else if (!strcmp("-TYPE", argv[i]) )
 		{
 			++i;
 			
 			if( i < argc && argv[i][0] != '-' )
 			{
-				if( !compareNoCase("ICU",argv[i] ))
+				if( !strcmp("icu",argv[i] ))
 				{
 					p.enTypeOfLocaleMsg = CmdLineParams::ICU_LOCALMSG;
 					
-				}else if( !compareNoCase("NLS",argv[i] ))
+				}else if( !strcmp("nls",argv[i] ))
 				{
 					p.enTypeOfLocaleMsg = CmdLineParams::NLS_LOCALMSG;
 					
 				}
-				else if( !compareNoCase("InMem",argv[i] ))
+				else if( !strcmp("inmem",argv[i] ))
 				{
 					p.enTypeOfLocaleMsg = CmdLineParams::INMEM_LOCALMSG;
 					
