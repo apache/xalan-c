@@ -56,8 +56,9 @@ XALAN_USING_XALAN(compareIgnoreCaseASCII)
 XALAN_USING_XALAN(XalanMemMgrs)
 XALAN_USING_XALAN(MemoryManagerType)
 XALAN_USING_XALAN(XalanFileUtility)
+XALAN_USING_XALAN(XSLTInputSource)
 
-XALAN_USING_STD(endl);
+
 
 
 
@@ -84,8 +85,8 @@ Parameters::Parameters(
 	m_goldDirectory(""),
 	m_reportDirectory(reportDirectory),
 	m_transformer(),
-	m_initialized(false),
-	m_uniqId()
+	m_uniqId(),
+	m_initialized(false)
 {
 	fileUtility.generateUniqRunid(m_uniqId);
 
@@ -163,9 +164,11 @@ Parameters::parseConfigurationFile(
 {
 	// parse the configuration file and get default settings
 
-    XalanParsedSource* theParsedSource;
+    const XalanParsedSource* theParsedSource;
 
-    if (m_transformer.parseSource(runFileName, theParsedSource) < 0)
+    XSLTInputSource confFile(runFileName, m_transformer.getMemoryManager());
+
+    if (m_transformer.parseSource(confFile, theParsedSource) < 0)
 	{
 		logger.error() << "Failed to parse: " 
 				<< runFileName.c_str() 

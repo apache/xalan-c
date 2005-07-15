@@ -20,7 +20,7 @@
 					(verify only operates with 'file' result)
 		input-mode		mode to provide input (file|stream) -->
 	<default-parameter-set 
-		num-iterations="10" 
+		num-iterations="1000" 
 		min-time-to-execute="1"
 		input-mode="stream" 
 		verify-result="no">

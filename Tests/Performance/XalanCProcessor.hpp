@@ -76,21 +76,24 @@ public:
 
     XalanDOMString m_name;
 
-	typedef XalanCompiledStylesheet*	CompiledStylesheetType;
-	typedef XalanParsedSource* 	        ParsedInputSourceType;
+    typedef const XalanCompiledStylesheet*	CompiledStylesheetType;
+    typedef const XalanParsedSource* 	        ParsedInputSourceType;
 
     struct ResultTarget {
+        virtual
+	~ ResultTarget(){}
+
         XSLTResultTarget resultTarget;
 
         virtual ResultTarget* clone(const XalanDOMString&) = 0;
         virtual void reset() = 0;
     };
 
-	typedef ResultTarget*  	        ResultTargetType;
+    typedef ResultTarget*  	        ResultTargetType;
 
     typedef XSLTInputSource::StreamType StreamType;
 
-	XalanCProcessor();
+     XalanCProcessor();
     ~XalanCProcessor();
 
 
@@ -351,3 +354,5 @@ protected:
 };
 
 #endif // XALANCRPROCESSOR_HEADER_GUARD_1357924680
+
+

@@ -46,11 +46,17 @@ endif
 include $(XALANCROOT)/version.incl
 include ../Makefile.incl
 
+PERFSOURCE = \
+    $(wildcard $(TESTS_DIR)/Performance/*.cpp)
+
+PERF_OBJECTS = \
+    $(addprefix $(XSL_OBJ_DIR)/,$(addsuffix .o,$(basename $(notdir $(PERFSOURCE)))))
+
 all: Tests
 
-tests : ThreadTest Conf
+tests : ThreadTest Conf Perf
 
-Tests:   ThreadTest Conf
+Tests: ThreadTest Conf Perf
 
 ThreadTest:  prepare $(XSL_BIN_DIR)/ThreadTest
 
@@ -76,10 +82,21 @@ install: Tests
 	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
 	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/Conf$(EXT) $(DESTDIR)/$(bindir)
 	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/ThreadTest$(EXT) $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/Perf$(EXT) $(DESTDIR)/$(bindir)
+	
 
 install-extras:
 	cp -r $(TESTS_DIR) $(DESTDIR)/$(prefix)
 
+Perf: prepare $(XSL_BIN_DIR)/Perf
+
+$(XSL_BIN_DIR)/Perf: $(PERF_OBJECTS)
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
+	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
+	
+${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Performance/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+	
 clean:
 	rm -rf $(XSL_OBJ_DIR)/*.o
 	rm -rf $(OUTDIR)/so_locations
@@ -87,5 +104,5 @@ clean:
 	rm -rf $(XSL_LIB_DIR)/SunWS_cache
 	rm -f  $(XSL_BIN_DIR)/Conf$(EXT)
 	rm -f  $(XSL_BIN_DIR)/ThreadTest$(EXT)
-
+	rm -f  $(XSL_BIN_DIR)/Perf$(EXT)
 

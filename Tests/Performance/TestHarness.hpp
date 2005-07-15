@@ -62,7 +62,7 @@ XALAN_USING_XALAN(XalanXMLFileReporter)
 
 
 XALAN_USING_STD(istringstream)
-
+XALAN_USING_STD(endl)
 
 
 /**

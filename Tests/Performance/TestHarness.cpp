@@ -59,3 +59,5 @@ TestCase::TestCase(const TestCase& theRhs) :
         processorOptions(theRhs.processorOptions, XalanMemMgrs::getDefaultXercesMemMgr())
 {
 }
+
+

@@ -80,3 +80,5 @@ Logger::log(eLogType logType)
 	m_stream << timeStr << setw(10) << logText[logType] << ": ";
 	return m_stream;
 }
+
+

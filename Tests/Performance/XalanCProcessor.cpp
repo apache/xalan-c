@@ -50,8 +50,15 @@ typedef XalanCProcessor::ResultTarget           ResultTarget;
 
 
 XalanCProcessor::XalanCProcessor() :
+    m_name("Xalan"),
     m_resultOptionsMap(XalanMemMgrs::getDefaultXercesMemMgr()),
-	m_name("Xalan")
+    m_transformer(0),
+    m_nullResult(),
+    m_xalanSourceTreeResult(),
+    m_xercesDOMResult(),
+    m_fileResult(),
+    m_streamResult()
+
 {
 }
 
@@ -137,7 +144,9 @@ XalanCProcessor::compileStylesheet(
     const XalanNode* /* compileOptions */)
 {     
     CompiledStylesheetType theCompiledStylesheet= 0;
+    
     m_transformer->compileStylesheet(fileName, theCompiledStylesheet);
+    
     return theCompiledStylesheet;
 }
 
@@ -169,15 +178,24 @@ XalanCProcessor::parseInputSource(
 	const XalanNode* parseOptions )
 {
     ParsedInputSourceType theParsedSource = 0;
+    
+    XSLTInputSource inpFileName(fileName, m_transformer->getMemoryManager());
+
     switch(getParseOption(parseOptions))
     {
         case eXercesDOM:
-            m_transformer->parseSource(fileName, theParsedSource, true);
-            break;
+            {
+                m_transformer->parseSource(inpFileName, theParsedSource, true);
+                
+                break;
+            }
         case eXalanSourceTree:
         default:
-            m_transformer->parseSource(fileName, theParsedSource);
-            break;
+            {
+                m_transformer->parseSource(inpFileName, theParsedSource);
+                
+                break;
+            }
     }
         
     return theParsedSource;
