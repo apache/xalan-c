@@ -75,6 +75,7 @@ XercesParserLiaison::XercesParserLiaison( XercesDOMSupport& /* theSupport */, Me
     m_externalSchemaLocation(theManager),
     m_externalNoNamespaceSchemaLocation(theManager),
     m_documentMap(theManager),
+    m_buildWrapper(true),
     m_buildBridge(true),
     m_threadSafe(false),
     m_buildMaps(false),
