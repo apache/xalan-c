@@ -701,7 +701,14 @@ doCompareNodeSets(
             const CompareFunction&  theCompareFunction,
             XPathExecutionContext&  executionContext)
 {
-    // From http://www.w3.org/TR/xpath: 
+    // Excerpt from: 
+    //   XML Path Language (XPath) Version 1.0
+    //   W3C Recommendation 16 November 1999
+    //   http://www.w3.org/TR/xpath
+    //   Editors: 
+    //     James Clark <jjc@jclark.com> 
+    //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
+    // 
     // If both objects to be compared are node-sets, then the comparison 
     // will be true if and only if there is a node in the first node-set 
     // and a node in the second node-set such that the result of performing 
@@ -851,19 +858,33 @@ compareNodeSets(
     }
     else if(theRHSType == XObject::eTypeBoolean)
     {
-      // From http://www.w3.org/TR/xpath: 
-      // If one object to be compared is a node-set and the other is a boolean, 
-      // then the comparison will be true if and only if the result of 
-      // performing the comparison on the boolean and on the result of 
-      // converting the node-set to a boolean using the boolean function 
-      // is true.
+        // Excerpt from: 
+        //   XML Path Language (XPath) Version 1.0
+        //   W3C Recommendation 16 November 1999
+        //   http://www.w3.org/TR/xpath
+        //   Editors: 
+        //     James Clark <jjc@jclark.com> 
+        //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
+        //
+        // If one object to be compared is a node-set and the other is a boolean, 
+        // then the comparison will be true if and only if the result of 
+        // performing the comparison on the boolean and on the result of 
+        // converting the node-set to a boolean using the boolean function 
+        // is true.
         const double    num1 = theLHS.boolean() == true ? 1.0 : 0.0;
 
         theResult = theNumberCompareFunction(num1, theRHS.num());
     }
     else if(theRHSType == XObject::eTypeNumber)
     {
-        // From http://www.w3.org/TR/xpath: 
+        // Excerpt from: 
+        //   XML Path Language (XPath) Version 1.0
+        //   W3C Recommendation 16 November 1999
+        //   http://www.w3.org/TR/xpath
+        //   Editors: 
+        //     James Clark <jjc@jclark.com> 
+        //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
+        //
         // If one object to be compared is a node-set and the other is a number, 
         // then the comparison will be true if and only if there is a 
         // node in the node-set such that the result of performing the 
@@ -904,7 +925,14 @@ compareNodeSets(
     }
     else if(theRHSType == XObject::eTypeString)
     {
-        // From http://www.w3.org/TR/xpath: 
+        // Excerpt from: 
+        //   XML Path Language (XPath) Version 1.0
+        //   W3C Recommendation 16 November 1999
+        //   http://www.w3.org/TR/xpath
+        //   Editors: 
+        //     James Clark <jjc@jclark.com> 
+        //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
+        // 
         // If one object to be compared is a node-set and the other is a 
         // string, then the comparison will be true if and only if there 
         // is a node in the node-set such that the result of performing 
