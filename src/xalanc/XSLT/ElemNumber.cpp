@@ -1327,16 +1327,10 @@ ElemNumber::getFormattedNumber(
             {
                 int2alphaCount(listElement, s_alphaCountTable, s_alphaCountTableSize, theResult);
 
-                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-                
-                XalanDOMString& thetmpResult = theGuard.get();
-
-                toLowerCaseASCII(theResult,thetmpResult);
-
-                theResult = thetmpResult;
-
-                break;
+                toLowerCaseASCII(theResult);
             }
+            break;
+
         case XalanUnicode::charLetter_I:
             toRoman(listElement, true, theResult);
             break;
@@ -1345,15 +1339,9 @@ ElemNumber::getFormattedNumber(
             {
                 toRoman(listElement, true, theResult);
 
-                StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-                
-                XalanDOMString& thetmpResult = theGuard.get();
-
-                toLowerCaseASCII(theResult,thetmpResult);
-
-                theResult = thetmpResult;
-                break;
+                toLowerCaseASCII(theResult);
             }
+            break;
 
         case 0x3042:
         case 0x3044:

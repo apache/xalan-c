@@ -523,9 +523,27 @@ TransformXalanDOMString(
 
 
 
+template <class FunctionType>
+XalanDOMString&
+TransformString(
+			FunctionType		theFunction,
+            XalanDOMString&     theString)
+{
+	TransformString(
+			theString.begin(),
+			theString.end(),
+			theString.begin(),
+			theFunction);
+
+	return theString;
+}
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toLowerCaseASCII(const XalanDOMChar*	theString,
-                 XalanDOMString&         theResult)
+toLowerCaseASCII(
+            const XalanDOMChar*     theString,
+            XalanDOMString&         theResult)
 {
     TransformString(theString, length(theString), toLowerASCII, theResult);
 
@@ -535,8 +553,9 @@ toLowerCaseASCII(const XalanDOMChar*	theString,
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toLowerCaseASCII(const XalanDOMString&	theString,
-                 XalanDOMString&         theResult)
+toLowerCaseASCII(
+            const XalanDOMString&	theString,
+            XalanDOMString&         theResult)
 {
     TransformXalanDOMString(theString, toLowerASCII, theResult);
 
@@ -546,8 +565,20 @@ toLowerCaseASCII(const XalanDOMString&	theString,
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toUpperCaseASCII(const XalanDOMChar*	theString,
-                 XalanDOMString&         theResult)
+toLowerCaseASCII(XalanDOMString&    theString)
+{
+    TransformString(toLowerASCII, theString);
+
+	return theString;
+}
+
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(
+            const XalanDOMChar*     theString,
+            XalanDOMString&         theResult)
 {
     TransformString(theString, length(theString), toUpperASCII, theResult);
 
@@ -557,12 +588,23 @@ toUpperCaseASCII(const XalanDOMChar*	theString,
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toUpperCaseASCII(const XalanDOMString&	theString,
-                 XalanDOMString&         theResult)
+toUpperCaseASCII(
+            const XalanDOMString&	theString,
+            XalanDOMString&         theResult)
 {
     TransformXalanDOMString(theString, toUpperASCII, theResult);
 
 	return theResult;
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(XalanDOMString&    theString)
+{
+    TransformString(toUpperASCII, theString);
+
+	return theString;
 }
 
 

@@ -1356,11 +1356,14 @@ toUpperASCII(XalanDOMChar   theChar)
  * lower case.  This function works only with the characters
  * a-z and A-Z.
  *
- * @param theString target string
- * @return string containing lower case characters
+ * @param theString The source string
+ * @param theResult The target string
+ * @return A reference to theResult
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toLowerCaseASCII(const XalanDOMChar*    theString, XalanDOMString&         theResult);
+toLowerCaseASCII(
+            const XalanDOMChar*     theString,
+            XalanDOMString&         theResult);
 
 
 
@@ -1369,11 +1372,27 @@ toLowerCaseASCII(const XalanDOMChar*    theString, XalanDOMString&         theRe
  * lower case.  This function works only with the characters
  * a-z and A-Z.
  *
- * @param theString target string
- * @return string containing lower case characters
+ * @param theString The source string
+ * @param theResult The target string
+ * @return A reference to theResult
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toLowerCaseASCII(const XalanDOMString&  theString, XalanDOMString& theResult);
+toLowerCaseASCII(
+            const XalanDOMString&   theString,
+            XalanDOMString&         theResult);
+
+
+
+/**
+ * Converts ASCII alphabetic characters from upper case to
+ * lower case.  This function works only with the characters
+ * a-z and A-Z.
+ *
+ * @param theString The string to convert
+ * @return A reference to theString
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toLowerCaseASCII(XalanDOMString&    theString);
 
 
 
@@ -1382,11 +1401,14 @@ toLowerCaseASCII(const XalanDOMString&  theString, XalanDOMString& theResult);
  * upper case.  This function works only with the characters
  * a-z and A-Z.
  *
- * @param theString target string
- * @return string containing upper case characters
+ * @param theString The source string
+ * @param theResult The target string
+ * @return A reference to theResult
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toUpperCaseASCII(const XalanDOMChar*    theString, XalanDOMString&  theResult);
+toUpperCaseASCII(
+            const XalanDOMChar*     theString,
+            XalanDOMString&         theResult);
 
 
 
@@ -1395,11 +1417,27 @@ toUpperCaseASCII(const XalanDOMChar*    theString, XalanDOMString&  theResult);
  * upper case.  This function works only with the characters
  * a-z and A-Z.
  *
- * @param theString target string
- * @return string containing upper case characters
+ * @param theString The source string
+ * @param theResult The target string
+ * @return A reference to theResult
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-toUpperCaseASCII(const XalanDOMString&  theString, XalanDOMString&  theResult);
+toUpperCaseASCII(
+            const XalanDOMString&   theString,
+            XalanDOMString&         theResult);
+
+
+
+/**
+ * Converts ASCII alphabetic characters from lower case to
+ * upper case.  This function works only with the characters
+ * a-z and A-Z.
+ *
+ * @param theString The string to convert
+ * @return A reference to theString
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+toUpperCaseASCII(XalanDOMString&    theString);
 
 
 
