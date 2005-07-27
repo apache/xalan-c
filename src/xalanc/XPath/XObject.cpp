@@ -704,7 +704,7 @@ doCompareNodeSets(
     // Excerpt from: 
     //   XML Path Language (XPath) Version 1.0
     //   W3C Recommendation 16 November 1999
-    //   http://www.w3.org/TR/xpath
+    //   http://www.w3.org/TR/xpath#booleans
     //   Editors: 
     //     James Clark <jjc@jclark.com> 
     //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
@@ -861,7 +861,7 @@ compareNodeSets(
         // Excerpt from: 
         //   XML Path Language (XPath) Version 1.0
         //   W3C Recommendation 16 November 1999
-        //   http://www.w3.org/TR/xpath
+        //   http://www.w3.org/TR/xpath#booleans
         //   Editors: 
         //     James Clark <jjc@jclark.com> 
         //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
@@ -880,7 +880,7 @@ compareNodeSets(
         // Excerpt from: 
         //   XML Path Language (XPath) Version 1.0
         //   W3C Recommendation 16 November 1999
-        //   http://www.w3.org/TR/xpath
+        //   http://www.w3.org/TR/xpath#booleans
         //   Editors: 
         //     James Clark <jjc@jclark.com> 
         //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
@@ -928,7 +928,7 @@ compareNodeSets(
         // Excerpt from: 
         //   XML Path Language (XPath) Version 1.0
         //   W3C Recommendation 16 November 1999
-        //   http://www.w3.org/TR/xpath
+        //   http://www.w3.org/TR/xpath#booleans
         //   Editors: 
         //     James Clark <jjc@jclark.com> 
         //     Steve DeRose (Inso Corp. and Brown University) <Steven_DeRose@Brown.edu> 
