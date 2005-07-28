@@ -29,10 +29,6 @@ template<class ExceptionType>
 static XercesDOMException::ExceptionCode
 translateErrorCode(ExceptionType	theException)
 {
-	// Ugly hack for a bug in the Intel v6 compiler...
-#if __INTEL_COMPILER <= 600
-	return XercesDOMException::ExceptionCode(theException.code);
-#else
 	XercesDOMException::ExceptionCode	theXalanCode = XercesDOMException::UNKNOWN_ERR;
 
 	switch(theException.code)
@@ -103,7 +99,6 @@ translateErrorCode(ExceptionType	theException)
 	};
 
 	return theXalanCode;
-#endif
 }
 
 

@@ -22,12 +22,10 @@
 
 
 
-#if XERCES_VERSION_MAJOR >= 2
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 #include <xercesc/dom/deprecated/DOM_DOMException.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#else
-#include <xercesc/dom/DOM_DOMException.hpp>
 #endif
+#include <xercesc/dom/DOMException.hpp>
 
 
 
