@@ -158,7 +158,7 @@ printArgOptions()
 		 << "TestXSLT options: "
 		 << endl
 		 << endl
-		 << "Options are not case-sensitive."
+		 << "Options are case-sensitive."
 		 << endl
 		 << endl
 		 << " [-? Shows this message.]"
@@ -167,65 +167,62 @@ printArgOptions()
 		 << " [-h Shows this message.]"
 		 << endl
 		 << endl
-		 << " [-IN inputXMLURL (If not specified, stdin is used.)]"
+		 << " [-in <source URL> (If not specified, stdin is used.)]"
 		 << endl
 		 << endl
-		 << " [-XSL XSLTransformationURL]"
+		 << " [-xsl <stylesheet URL>]"
 		 << endl
-		 << " [-OUT outputFileName]"
+		 << " [-out <output file>]"
 		 << endl
-		 << " [-V (Show version information only.)]"
+		 << " [-v  Show version information only.]"
 		 << endl
-		 << " [-QC (Quiet pattern conflicts warnings.)]"
+		 << " [-qc  Quiet pattern conflicts warnings.]"
 		 << endl
-		 << " [-Q (Use quiet mode.)]"
+		 << " [-q  Use quiet mode.]"
 		 << endl
-		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
+		 << " [-indent n  Controls how many spaces to indent. (default is 0)]"
 		 << endl
-		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
-		 << endl
-		 << endl
-		 << " [-TT (Trace the templates as they are being called.)]"
-		 << endl
-		 << " [-TG (Trace each generation event.)]"
-		 << endl
-		 << " [-TS (Trace each selection event.)]"
-		 << endl
-		 << " [-TTC (Trace the template children as they are being processed.)]"
+		 << " [-validate  Controls whether validation occurs. Validation is off by default.]"
 		 << endl
 		 << endl
-		 << " [-XML (Use XML formatter and add XML header.)]"
+		 << " [-tt  Trace the templates as they are being called.]"
 		 << endl
-		 << " [-TEXT (Use Text formatter.)]"
+		 << " [-tg  Trace each generation event.]"
 		 << endl
-		 << " [-HTML (Use HTML formatter.)]"
+		 << " [-ts  Trace each selection event.]"
 		 << endl
-		 << " [-DOM (Use DOM formatter.  Formats to DOM, then formats XML for output.)]"
-		 << endl
-		 << " [-XST (Use source tree formatter.  Formats to Xalan source tree, then formats XML for output.)]"
+		 << " [-ttc  Trace the template children as they are being processed.]"
 		 << endl
 		 << endl
-		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
+		 << " [-xml  Use XML formatter.]"
+		 << endl
+		 << " [-text  Use Text formatter.]"
+		 << endl
+		 << " [-html  Use HTML formatter.]"
+		 << endl
+		 << " [-dom  Use DOM formatter.  Generates a DOM instance, then formats XML for output.]"
+		 << endl
+		 << " [-xst  Use source tree formatter.  Generates an instance of the default source tree, then formats XML for output.]"
 		 << endl
 		 << endl
-		 << " [-XD (Use Xerces DOM instead of Xalan source tree.)]"
+		 << " [-param name expression  Sets a stylesheet parameter.]"
 		 << endl
 		 << endl
-		 << " [-DE (Disable built-in extension functions.)]"
-		 << endl
-		 << "The following options are valid only with -HTML or -XML."
+		 << " [-xd  Use Xerces DOM instead of Xalan source tree.]"
 		 << endl
 		 << endl
-		 << "The following option is valid only with -HTML."
+		 << " [-de  Disable built-in extension functions.]"
+		 << endl
+		 << "The following option is valid only with -html."
 		 << endl
 		 << endl
-		 << " [-NOINDENT (Turns off HTML indenting..]"
+		 << " [-noindent  Turns off HTML indenting."
 		 << endl
 		 << endl
-		 << "The following option is valid only with -XML."
+		 << "The following option is valid only with -xml."
 		 << endl
 		 << endl
-		 << " [-NH (Don't write XML header.)]"
+		 << " [-nh  Don't generate the XML declaration.]"
 		 << endl;
 }
 
@@ -330,31 +327,6 @@ warnPreviousOutputMethod(int	outputMethod)
 
 
 
-#if defined(OS390)
-#include <strings.h>                                             
-                                                                  
-int
-compareNoCase(
-			const char*		str1,
-			const char*		str2)     
-{
-	return strcasecmp(str1, str2);
-}
-
-#else
-
-int
-compareNoCase(
-			const char*		str1,
-			const char*		str2)     
-{
-	return stricmp(str1, str2);
-}
-
-#endif
-
-
-
 bool
 getArgs(
 			int				argc,
@@ -365,11 +337,11 @@ getArgs(
 
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
-		if (!compareNoCase("-h", argv[i]) || !compareNoCase("-?", argv[i]))
+		if (!strcmp("-h", argv[i]) || !strcmp("-?", argv[i]))
 		{
 			fSuccess = false;
 		}
-		else if (!compareNoCase("-IN", argv[i]))
+		else if (!strcmp("-in", argv[i]))
 		{
 			++i;
 
@@ -382,7 +354,7 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!compareNoCase("-XSL", argv[i]))
+		else if (!strcmp("-xsl", argv[i]))
 		{
 			++i;
 
@@ -395,7 +367,7 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!compareNoCase("-OUT", argv[i]))
+		else if (!strcmp("-out", argv[i]))
 		{
 			++i;
 
@@ -408,11 +380,11 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if (!compareNoCase("-NOINDENT", argv[i]))
+		else if (!strcmp("-noindent", argv[i]))
 		{
 			p.noIndent = true;
 		} 
-		else if (!compareNoCase("-INDENT", argv[i]))
+		else if (!strcmp("-indent", argv[i]))
 		{
 			++i;
 
@@ -429,11 +401,11 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!compareNoCase("-VALIDATE", argv[i]))
+		else if(!strcmp("-validate", argv[i]))
 		{
 			p.doValidation = true;
 		}
-		else if (!compareNoCase("-PARAM", argv[i])) 
+		else if (!strcmp("-param", argv[i])) 
 		{
 			++i;
 
@@ -461,19 +433,19 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!compareNoCase("-V", argv[i]))
+		else if(!strcmp("-v", argv[i]))
 		{
 			p.versionOnly = true;
 		}
-		else if(!compareNoCase("-QC", argv[i]))
+		else if(!strcmp("-qc", argv[i]))
 		{
 			p.setQuietConflictWarnings = true;
 		}
-		else if(!compareNoCase("-Q", argv[i]))
+		else if(!strcmp("-q", argv[i]))
 		{
 			p.setQuietMode = true;
 		}
-		else if(!compareNoCase("-XML", argv[i]))
+		else if(!strcmp("-xml", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -482,7 +454,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_XML;
 		}
-		else if(!compareNoCase("-TEXT", argv[i]))
+		else if(!strcmp("-text", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -491,7 +463,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
 		}
-		else if(!compareNoCase("-HTML", argv[i]))
+		else if(!strcmp("-html", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -500,7 +472,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
 		}
-		else if(!compareNoCase("-DOM", argv[i]))
+		else if(!strcmp("-dom", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -509,7 +481,7 @@ getArgs(
 
 			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 		}
-		else if(!compareNoCase("-XST", argv[i]))
+		else if(!strcmp("-xst", argv[i]))
 		{
 			if (p.outputType != -1)
 			{
@@ -520,35 +492,35 @@ getArgs(
 
 			p.formatToSourceTree = true;
 		}
-		else if(!compareNoCase("-NULL", argv[i]))
+		else if(!strcmp("-null", argv[i]))
 		{
 			p.formatToNull = true;
 		}
-		else if (!compareNoCase("-NH", argv[i]))
+		else if (!strcmp("-nh", argv[i]))
 		{
 			p.shouldWriteXMLHeader = false;
 		}
-		else if(!compareNoCase("-TT", argv[i]))
+		else if(!strcmp("-tt", argv[i]))
 		{
 			p.traceTemplates = true;
 		}
-		else if(!compareNoCase("-TG", argv[i]))
+		else if(!strcmp("-tg", argv[i]))
 		{
 			p.traceGenerationEvent = true;
 		}
-		else if(!compareNoCase("-TS", argv[i]))
+		else if(!strcmp("-ts", argv[i]))
 		{
 			p.traceSelectionEvent = true;
 		}
-		else if(!compareNoCase("-TTC", argv[i]))
+		else if(!strcmp("-ttc", argv[i]))
 		{
 			p.traceTemplateChildren = true;
 		}
-		else if (!compareNoCase("-XD", argv[i]))
+		else if (!strcmp("-xd", argv[i]))
 		{
 			p.useDOM = true;
 		}
-		else if (!compareNoCase("-DE", argv[i]))
+		else if (!strcmp("-de", argv[i]))
 		{
 			p.disableExtensions = true;
 		}
