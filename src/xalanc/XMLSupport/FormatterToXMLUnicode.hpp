@@ -49,10 +49,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 template<
     class                           UnicodeWriter,
     class                           ConstantsType,
-    class                           AttributePredicate,
-    class                           ContentPredicate,
-    class                           OutsideRangePredicate,
-    class                           IndentHandeler,
+    class                           CharPredicate,
+    class                           IndentHandler,
     FormatterListener::eXMLVersion  XMLVersion>
 class XALAN_XMLSUPPORT_EXPORT FormatterToXMLUnicode : public XalanXMLSerializerBase
 {
@@ -101,9 +99,7 @@ public:
         m_stringBuffer(theManager),
         m_writer(writer, theManager),
         m_constants(),
-        m_attributePredicate(),
-        m_contentPredicate(),
-        m_outsideRangePredicate(),
+        m_charPredicate(),
         m_indentHandler(m_writer , indent)
     {
     }
@@ -430,7 +426,7 @@ protected:
         {
             const XalanDOMChar  ch = chars[i];
 
-            if(m_outsideRangePredicate(ch) == true)
+            if(m_charPredicate.range(ch) == true)
             {
                 safeWriteContent(chars + firstIndex, i - firstIndex);
 
@@ -440,7 +436,7 @@ protected:
 
                 firstIndex = i;
             }
-            else if(m_contentPredicate(ch) == false)
+            else if(m_charPredicate.content(ch) == false)
             {
                 ++i;
             }
@@ -501,15 +497,27 @@ protected:
     void
     writeDefaultEscape(XalanDOMChar     ch)
     {
+        assert(m_charPredicate.content(ch) == true);
+
         if(!writeDefaultEntity(ch))
         {
             if (XalanUnicode::charLF == ch)
             {
                 outputNewline();
             }
-            else if (XMLVersion == XML_VERSION_1_1)
+            else
             {
-                writeXML1_1CharacterReference(ch);
+                if(m_charPredicate.isForbidden(ch) == true)
+                {
+                    XalanXMLSerializerBase::throwInvalidXMLCharacterException(
+                                                            ch,
+                                                            m_version,
+                                                            getMemoryManager());
+                }
+                else
+                {
+                    writeNumericCharacterReference(ch);
+                }
             }
         }
     }
@@ -520,10 +528,22 @@ protected:
     void
     writeDefaultAttributeEscape(XalanDOMChar    ch)
     {
-        if(writeDefaultAttributeEntity(ch) == false &&
-           XMLVersion == XML_VERSION_1_1)
+        assert(m_charPredicate.attribute(ch) == true);
+
+        if(writeDefaultAttributeEntity(ch) == false)
         {
-           writeXML1_1CharacterReference(ch);
+            if(m_charPredicate.isForbidden(ch) == true)
+            {
+                XalanXMLSerializerBase::throwInvalidXMLCharacterException(
+                                                            ch,
+                                                            m_version,
+                                                            getMemoryManager());
+            }
+            else
+            {
+                writeNumericCharacterReference(ch);
+            }
+           
         }
     }
     
@@ -571,29 +591,11 @@ protected:
         {
             return true;
         }
-        else if (XalanUnicode::charLF == ch) 
-        {
-            m_writer.write(
-                m_constants.s_linefeedNCRString,
-                m_constants.s_linefeedNCRStringLength);
-        }
-        else if (XalanUnicode::charCR == ch) 
-        {
-            m_writer.write(
-                m_constants.s_carriageReturnNCRString,
-                m_constants.s_carriageReturnNCRStringLength);
-        }
         else if (XalanUnicode::charQuoteMark == ch) 
         {
             m_writer.write(
                 m_constants.s_quoteEntityString,
                 m_constants.s_quoteEntityStringLength);
-        }
-        else if (XalanUnicode::charHTab == ch) 
-        {
-            m_writer.write(
-                m_constants.s_htabNCRString,
-                m_constants.s_htabNCRStringLength);
         }
         else
         {
@@ -640,14 +642,23 @@ protected:
         }
         else 
         {
-            start = m_writer.write( chars, start, length);
+            if(m_charPredicate.isCharRefForbidden(ch))
+            {
+                XalanXMLSerializerBase::throwInvalidXMLCharacterException(
+                                                            ch,
+                                                            m_version,
+                                                            getMemoryManager());            }
+            else
+            {
+                start = m_writer.write( chars, start, length);
+            }
         }
 
         return start;
     }
 
     void
-    writeNumberedEntityReference(unsigned long  theNumber)
+    writeNumericCharacterReference(unsigned long  theNumber)
     {
         m_writer.write(value_type(XalanUnicode::charAmpersand));
         m_writer.write(value_type(XalanUnicode::charNumberSign));
@@ -666,13 +677,14 @@ protected:
     {
         assert( start < length);
 
-        XalanDOMChar ch = chars[start];
+        const XalanDOMChar  ch = chars[start];
 
-        assert(m_outsideRangePredicate(ch) == true);
+        assert(m_charPredicate.range(ch) == true);
 
-        if (XalanUnicode::charLSEP == ch)
+        if (XMLVersion == XML_VERSION_1_1 &&
+            XalanUnicode::charLSEP == ch)
         {
-            writeNumberedEntityReference(ch);
+            writeNumericCharacterReference(ch);
         }
         else 
         {
@@ -680,19 +692,6 @@ protected:
         }
 
         return start;
-    }
-
-    void
-    writeXML1_1CharacterReference(XalanDOMChar    theChar)
-    {
-        assert(XMLVersion == XML_VERSION_1_1);
-        assert(m_outsideRangePredicate(theChar) == false);
-
-        if(theChar < XalanUnicode::charSpace ||
-           theChar <= 0x97 && theChar >= 0x80)
-        {
-            writeNumberedEntityReference(theChar);
-        }
     }
 
     /**
@@ -747,8 +746,17 @@ protected:
                 {
                     outputNewline();
                 }
-
-                i = m_writer.writeCDATAChar(chars, i, length, (int&)theCurrentState);
+                if(m_charPredicate.isCharRefForbidden(theChar))
+                {
+                     XalanXMLSerializerBase::throwInvalidXMLCharacterException(
+                                                            theChar,
+                                                            m_version,
+                                                            getMemoryManager());                }
+                else
+                {
+                    i = m_writer.writeCDATAChar(chars, i, length, (int&)theCurrentState);
+                }
+                
             }
 
             ++i;
@@ -783,7 +791,7 @@ protected:
         {
             const XalanDOMChar  ch = theString[i];
 
-            if(m_outsideRangePredicate(ch) == true)
+            if(m_charPredicate.range(ch) == true)
             {
                 safeWriteContent(theString + firstIndex, i - firstIndex);
 
@@ -793,7 +801,7 @@ protected:
 
                 firstIndex = i;
             }
-            else if (m_attributePredicate(ch) == false)
+            else if (m_charPredicate.attribute(ch) == false)
             {
                 ++i;
             }
@@ -813,7 +821,6 @@ protected:
     }
 
 private:
-
 
     /**
      * Process an attribute.
@@ -889,13 +896,9 @@ private:
 
     ConstantsType           m_constants;
 
-    AttributePredicate      m_attributePredicate;
+    CharPredicate           m_charPredicate;
 
-    ContentPredicate        m_contentPredicate;
-
-    OutsideRangePredicate   m_outsideRangePredicate;
-
-    IndentHandeler           m_indentHandler;
+    IndentHandler           m_indentHandler;
 };
 
 

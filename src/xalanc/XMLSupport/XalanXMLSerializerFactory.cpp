@@ -74,15 +74,13 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF8Writer> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF8Writer> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF8Writer,
                     XalanXMLSerializerBase::UTF8,
-                    XalanXMLSerializerBase::AttributeFunctor1_1,
-                    XalanXMLSerializerBase::ContentFunctor1_1,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_1,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -98,15 +96,13 @@ XalanXMLSerializerFactory::create(
             }
             else // doIndent == false
             {      
-                typedef XalanDummyIndentWriter<XalanUTF8Writer> IdentWriter;
+                typedef XalanDummyIndentWriter<XalanUTF8Writer> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF8Writer,
                     XalanXMLSerializerBase::UTF8,
-                    XalanXMLSerializerBase::AttributeFunctor1_1,
-                    XalanXMLSerializerBase::ContentFunctor1_1,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_1,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -129,16 +125,14 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF8Writer> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF8Writer> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
 
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF8Writer,
                     XalanXMLSerializerBase::UTF8,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_0,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =
@@ -154,15 +148,13 @@ XalanXMLSerializerFactory::create(
             }
             else // doIndent == false
             {      
-                typedef XalanDummyIndentWriter<XalanUTF8Writer> IdentWriter;
+                typedef XalanDummyIndentWriter<XalanUTF8Writer> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF8Writer,
                     XalanXMLSerializerBase::UTF8,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_0,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =
@@ -194,9 +186,7 @@ XalanXMLSerializerFactory::create(
                 typedef FormatterToXMLUnicode<
                             XalanUTF16Writer,
                             XalanXMLSerializerBase::UTF16,
-                            XalanXMLSerializerBase::AttributeFunctor1_1,
-                            XalanXMLSerializerBase::ContentFunctor1_1,
-                            XalanXMLSerializerBase::RangeFunctor,
+                            XalanXMLSerializerBase::CharFunctor1_1,
                             IdentWriter,
                             FormatterListener::XML_VERSION_1_1>  Type;
 
@@ -218,9 +208,7 @@ XalanXMLSerializerFactory::create(
                 typedef FormatterToXMLUnicode<
                             XalanUTF16Writer,
                             XalanXMLSerializerBase::UTF16,
-                            XalanXMLSerializerBase::AttributeFunctor1_1,
-                            XalanXMLSerializerBase::ContentFunctor1_1,
-                            XalanXMLSerializerBase::RangeFunctor,
+                            XalanXMLSerializerBase::CharFunctor1_1,
                             IdentWriter,
                             FormatterListener::XML_VERSION_1_1>  Type;
 
@@ -248,9 +236,7 @@ XalanXMLSerializerFactory::create(
                 typedef FormatterToXMLUnicode<
                     XalanUTF16Writer,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
+                    XalanXMLSerializerBase::CharFunctor1_0,
                     IdentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
@@ -272,9 +258,7 @@ XalanXMLSerializerFactory::create(
                 typedef FormatterToXMLUnicode<
                     XalanUTF16Writer,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
+                    XalanXMLSerializerBase::CharFunctor1_0,
                     IdentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
@@ -294,7 +278,7 @@ XalanXMLSerializerFactory::create(
     }
     else // all other encodings
     {
-        typedef XalanOtherEncodingWriter<   XalanFormatterWriter::CommonPresentableCharFunctor,
+        typedef XalanOtherEncodingWriter<   XalanFormatterWriter::CommonRepresentableCharFunctor,
                                             XalanXMLSerializerBase::UTF16> WriterType ;
 
         if( isVersion1_1 == true)
@@ -304,16 +288,14 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<WriterType> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<WriterType> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
 
 
                 typedef FormatterToXMLUnicode<
                     WriterType,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_1,
-                    XalanXMLSerializerBase::ContentFunctor1_1,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_1,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -329,15 +311,13 @@ XalanXMLSerializerFactory::create(
             }
             else
             {
-                typedef XalanDummyIndentWriter<WriterType> IdentWriter;
+                typedef XalanDummyIndentWriter<WriterType> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     WriterType,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_1,
-                    XalanXMLSerializerBase::ContentFunctor1_1,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_1,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -360,15 +340,13 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<WriterType> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<WriterType> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     WriterType,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_0,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =
@@ -384,15 +362,13 @@ XalanXMLSerializerFactory::create(
             }
             else //doIndent == false
             {
-                typedef XalanDummyIndentWriter<WriterType> IdentWriter;
+                typedef XalanDummyIndentWriter<WriterType> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     WriterType,
                     XalanXMLSerializerBase::UTF16,
-                    XalanXMLSerializerBase::AttributeFunctor1_0,
-                    XalanXMLSerializerBase::ContentFunctor1_0,
-                    XalanXMLSerializerBase::RangeFunctor,
-                    IdentWriter,
+                    XalanXMLSerializerBase::CharFunctor1_0,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =

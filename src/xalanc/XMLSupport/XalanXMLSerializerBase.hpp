@@ -308,27 +308,6 @@ public:
         static const char                       s_quoteEntityString[];
 
         static const XalanDOMString::size_type  s_quoteEntityStringLength;
-
-        /**
-         * The string "&#10;".
-         */
-        static const char                       s_linefeedNCRString[];
-
-        static const XalanDOMString::size_type  s_linefeedNCRStringLength;
-
-        /**
-         * The string "&#13;".
-         */
-        static const char                       s_carriageReturnNCRString[];
-
-        static const XalanDOMString::size_type  s_carriageReturnNCRStringLength;
-
-        /**
-         * The string "&#9;".
-         */
-        static const char                       s_htabNCRString[];
-
-        static const XalanDOMString::size_type  s_htabNCRStringLength;
     };
 
     class XALAN_XMLSUPPORT_EXPORT UTF16
@@ -444,27 +423,6 @@ public:
         static const XalanDOMChar               s_quoteEntityString[];
 
         static const XalanDOMString::size_type  s_quoteEntityStringLength;
-
-        /**
-         * The string "&#10;".
-         */
-        static const XalanDOMChar               s_linefeedNCRString[];
-
-        static const XalanDOMString::size_type  s_linefeedNCRStringLength;
-
-        /**
-         * The string "&#13;".
-         */
-        static const XalanDOMChar               s_carriageReturnNCRString[];
-
-        static const XalanDOMString::size_type  s_carriageReturnNCRStringLength;
-
-        /**
-         * The string "&#9;".
-         */
-        static const XalanDOMChar               s_htabNCRString[];
-
-        static const XalanDOMString::size_type  s_htabNCRStringLength;
     };
 
     enum
@@ -472,83 +430,125 @@ public:
         eBufferSize = 512       // The size of the buffer
     };
 
-    class XALAN_XMLSUPPORT_EXPORT AttributeFunctor1_0
+    class XALAN_XMLSUPPORT_EXPORT CharFunctor1_0 
     {
     public:
 
         bool
-        operator()(XalanDOMChar  theChar) const
+        attribute(XalanDOMChar  theChar) const
         {
-            return theChar >= eSpecialsSize ?
+            return theChar > s_lastSpecial ?
                         false :
-                        s_specialChars1_0[theChar] > eNone;
+                        s_specialChars[theChar] > eNone;
         }
-    };
-
-    class XALAN_XMLSUPPORT_EXPORT AttributeFunctor1_1
-    {
-    public:
 
         bool
-        operator()(XalanDOMChar  theChar) const
+        content(XalanDOMChar  theChar) const
         {
-            return theChar >= eSpecialsSize ?
+            return theChar > s_lastSpecial ?
                         false :
-                        s_specialChars1_1[theChar] > eNone;
+                        s_specialChars[theChar] > eAttr;
         }
-    };
-
-    class XALAN_XMLSUPPORT_EXPORT ContentFunctor1_0
-    {
-    public:
 
         bool
-        operator()(XalanDOMChar  theChar) const
-        {
-            return theChar >= eSpecialsSize ?
-                        false :
-                        s_specialChars1_0[theChar] > eAttr;
-        }
-    };
-
-    class XALAN_XMLSUPPORT_EXPORT ContentFunctor1_1
-    {
-    public:
-
-        bool
-        operator()(XalanDOMChar  theChar) const
-        {
-            return theChar >= eSpecialsSize ?
-                        false :
-                        s_specialChars1_1[theChar] > eAttr;
-        }
-    };
-
-    class XALAN_XMLSUPPORT_EXPORT RangeFunctor
-    {
-    public:
-
-        bool
-        operator()(XalanDOMChar  theChar) const
+        range(XalanDOMChar  theChar) const
         {
             assert(theChar > 0);
 
-            return theChar > eLastSpecial;
+            return theChar > s_lastSpecial;
         }
+
+        bool
+        isForbidden(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] == eForb;
+        }
+
+        bool
+        isCharRefForbidden(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] == eForb;
+        }
+ 
+
+    private:
+         static const size_t    s_lastSpecial;
+
+         static const char      s_specialChars[];
     };
+
+
+
+    class XALAN_XMLSUPPORT_EXPORT CharFunctor1_1
+    {
+    public:
+
+        bool
+        attribute(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] > eNone;
+        }
+
+        bool
+        content(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] > eAttr;
+        }
+
+        bool
+        range(XalanDOMChar  theChar) const
+        {
+            assert(theChar > 0);
+
+            return theChar > s_lastSpecial;
+        }
+
+        bool
+        isForbidden(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] == eForb;
+        }
+
+        bool
+        isCharRefForbidden(XalanDOMChar  theChar) const
+        {
+            return theChar > s_lastSpecial ?
+                        false :
+                        s_specialChars[theChar] == eCRFb;
+        }
+
+    private:
+        static const size_t     s_lastSpecial;
+
+        static const char       s_specialChars[];
+
+    };
+
+  
+
 
     enum
     {
         eNone = 0u,
         eAttr = 1u,  // A flag to indicate a value in s_specialChars applies to attributes
-        eBoth = 2u,  // A flag t0 indicate a value in s_specialChars applies to both content and attributes
-        eSpecialsSize = 256u,   // The size of s_specialChars
-        eLastSpecial = 0x96u
+        eBoth = 2u,  // A flag to indicate a value in s_specialChars applies to both content and attributes
+        eForb = 4u,  // A flag to indicate a forbidden value in s_specialChars 
+                     // XML1.1 put a requirement to output chars #x1...#x1F and #x7F...#x9F as charRefs only
+                     // In the comments , PI and CDATA usage of charRefs is forbidden, so we will report an error in 
+        eCRFb = 5u   // that case. For the elemets and attributes is should work the same as eBoth
     };
+ 
 
-    static const char   s_specialChars1_0[];
-
-    static const char   s_specialChars1_1[];
 
 protected:
 
@@ -735,6 +735,18 @@ protected:
             unsigned int    ch,
             MemoryManager&  theManager);
 
+
+    /**
+     * Throw an exception when an invalid
+     * character for the specific XML version is encountered.
+     * @param ch The first character in the surrogate
+     * @param next The next character in the surrogate
+     */
+    static void
+    throwInvalidXMLCharacterException(
+            unsigned int                ch,
+            const XalanDOMString&       theXMLversion,
+            MemoryManager&              theManager);
 private:
 
     // These are not implemented.

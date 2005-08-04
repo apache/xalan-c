@@ -960,6 +960,12 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Expected a token but reached the end of the expression instead.</target>
 </trans-unit>
 
+<trans-unit id="ForbiddenXMLCharacter_2Param">
+		<source>The Unicode code point '{0}' is not a legal XML {1} character.</source>
+		<target>The Unicode code point '{0}' is not a legal XML {1} character.</target>
+</trans-unit>
+
+
     </body>
   </file>
 </xliff>

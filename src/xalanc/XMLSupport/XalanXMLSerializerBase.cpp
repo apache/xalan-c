@@ -33,14 +33,14 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+const size_t  XalanXMLSerializerBase::CharFunctor1_0::s_lastSpecial = 0x7fu;
 
-
-const char  XalanXMLSerializerBase::s_specialChars1_0[eSpecialsSize] =
+const char  XalanXMLSerializerBase::CharFunctor1_0::s_specialChars[s_lastSpecial + 1] =
 {
- /* 00-07 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 08-0F */    eNone,  eAttr,  eBoth,  eNone,  eNone,  eAttr,  eNone,  eNone,
- /* 10-17 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 18-1F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
+ /* 00-07 */    eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,
+ /* 08-0F */    eForb,  eAttr,  eBoth,  eForb,  eForb,  eBoth,  eForb,  eForb,
+ /* 10-17 */    eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,
+ /* 18-1F */    eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,  eForb,
  /* 20-27 */    eNone,  eNone,  eAttr,  eNone,  eNone,  eNone,  eBoth,  eNone,
  /* 28-2F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 30-37 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
@@ -52,19 +52,18 @@ const char  XalanXMLSerializerBase::s_specialChars1_0[eSpecialsSize] =
  /* 60-67 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 68-6F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 70-77 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 78-7F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 88-8F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 90-96 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone
+ /* 78-7F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone
 };
 
 
+const size_t  XalanXMLSerializerBase::CharFunctor1_1::s_lastSpecial = 0x9fu;
 
-const char  XalanXMLSerializerBase::s_specialChars1_1[eSpecialsSize] =
+const char  XalanXMLSerializerBase::CharFunctor1_1::s_specialChars[s_lastSpecial + 1] =
 {
- /* 00-07 */    eNone,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
- /* 08-0F */    eBoth,  eAttr,  eBoth,  eBoth,  eBoth,  eAttr,  eBoth,  eBoth,
- /* 10-17 */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
- /* 18-1F */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
+ /* 00-07 */    eNone,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
+ /* 08-0F */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
+ /* 10-17 */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
+ /* 18-1F */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
  /* 20-27 */    eNone,  eNone,  eAttr,  eNone,  eNone,  eNone,  eBoth,  eNone,
  /* 28-2F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 30-37 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
@@ -76,12 +75,12 @@ const char  XalanXMLSerializerBase::s_specialChars1_1[eSpecialsSize] =
  /* 60-67 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 68-6F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
  /* 70-77 */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 78-7F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,
- /* 80-87 */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
- /* 88-8F */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,
- /* 90-96 */    eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth,  eBoth
+ /* 78-7F */    eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eNone,  eCRFb,
+ /* 80-87 */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eBoth,  eCRFb,  eCRFb,
+ /* 88-8F */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
+ /* 90-97 */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,
+ /* 98-9F */    eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb,  eCRFb
 };
-
 
 
 XalanXMLSerializerBase::XalanXMLSerializerBase(
@@ -207,6 +206,23 @@ XalanXMLSerializerBase::throwInvalidCharacterException(
     throw SAXException(theMessage.c_str(), &theManager);
 }
 
+void
+XalanXMLSerializerBase::throwInvalidXMLCharacterException(
+                                  unsigned int                ch,
+                                  const XalanDOMString&       theXMLversion,
+                                  MemoryManager&              theManager)
+{
+    XalanDOMString  theMessage(theManager);
+    XalanDOMString  theBuffer(theManager);  
+
+    XalanMessageLoader::getMessage(
+        theMessage,
+        XalanMessages::ForbiddenXMLCharacter_2Param,
+        UnsignedLongToHexDOMString(ch, theBuffer),
+        theXMLversion);
+
+    throw SAXException(theMessage.c_str(), &theManager);
+}
 
 
 void
@@ -693,46 +709,6 @@ const char  XalanXMLSerializerBase::UTF8::s_quoteEntityString[] =
 const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_quoteEntityStringLength =
         FXML_SIZE(s_quoteEntityString);
 
-const char  XalanXMLSerializerBase::UTF8::s_linefeedNCRString[] =
-{
-    char(XalanUnicode::charAmpersand),
-    char(XalanUnicode::charNumberSign),
-    char(XalanUnicode::charDigit_1),
-    char(XalanUnicode::charDigit_0),
-    char(XalanUnicode::charSemicolon),
-    char(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_linefeedNCRStringLength =
-        FXML_SIZE(s_linefeedNCRString);
-
-const char  XalanXMLSerializerBase::UTF8::s_carriageReturnNCRString[] =
-{
-    char(XalanUnicode::charAmpersand),
-    char(XalanUnicode::charNumberSign),
-    char(XalanUnicode::charDigit_1),
-    char(XalanUnicode::charDigit_3),
-    char(XalanUnicode::charSemicolon),
-    char(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_carriageReturnNCRStringLength =
-        FXML_SIZE(s_carriageReturnNCRString);
-
-const char  XalanXMLSerializerBase::UTF8::s_htabNCRString[] =
-{
-    char(XalanUnicode::charAmpersand),
-    char(XalanUnicode::charNumberSign),
-    char(XalanUnicode::charDigit_9),
-    char(XalanUnicode::charSemicolon),
-    char(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_htabNCRStringLength =
-        FXML_SIZE(s_htabNCRString);
-
-
-
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderStartString[] =
 {
     XalanUnicode::charLessThanSign,
@@ -976,44 +952,6 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_quoteEntityString[] =
 
 const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_quoteEntityStringLength =
         FXML_SIZE(s_quoteEntityString);
-
-const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_linefeedNCRString[] =
-{
-    XalanUnicode::charAmpersand,
-    XalanUnicode::charNumberSign,
-    XalanUnicode::charDigit_1,
-    XalanUnicode::charDigit_0,
-    XalanUnicode::charSemicolon,
-    XalanDOMChar(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_linefeedNCRStringLength =
-        FXML_SIZE(s_linefeedNCRString);
-
-const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_carriageReturnNCRString[] =
-{
-    XalanUnicode::charAmpersand,
-    XalanUnicode::charNumberSign,
-    XalanUnicode::charDigit_1,
-    XalanUnicode::charDigit_3,
-    XalanUnicode::charSemicolon,
-    XalanDOMChar(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_carriageReturnNCRStringLength =
-        FXML_SIZE(s_carriageReturnNCRString);
-
-const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_htabNCRString[] =
-{
-    XalanUnicode::charAmpersand,
-    XalanUnicode::charNumberSign,
-    XalanUnicode::charDigit_9,
-    XalanUnicode::charSemicolon,
-    XalanDOMChar(0)
-};
-
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_htabNCRStringLength =
-        FXML_SIZE(s_htabNCRString);
 
 
 

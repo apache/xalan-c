@@ -116,11 +116,11 @@ public:
         WriterType& m_writer;
     };
 
-    class CommonPresentableCharFunctor
+    class CommonRepresentableCharFunctor
     {
     public:
 
-        CommonPresentableCharFunctor(const XalanOutputStream* stream) :
+        CommonRepresentableCharFunctor(const XalanOutputStream* stream) :
             m_stream(stream)
         {
             assert( stream != 0 );
