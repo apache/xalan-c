@@ -47,7 +47,6 @@
 #define XALAN_HAS_STD_DISTANCE
 
 #if defined(CYGWIN)
-#define XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
 #if defined(WIN32)
 #undef WIN32
 #endif

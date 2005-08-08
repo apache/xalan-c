@@ -372,7 +372,7 @@ OutputString(
 {
     CharVectorType  theVector(theMemoryManager);
 
-    TranscodeToLocalCodePage(theString, theVector);
+    TranscodeToLocalCodePage(theString, theVector, false, '?');
 
 	OutputString(theStream, theVector);
 }

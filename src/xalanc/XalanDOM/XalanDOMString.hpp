@@ -957,6 +957,27 @@ TranscodeToLocalCodePage(
 			bool						terminate = false);
 
 /**
+ * Convert a XalanDOMChar string to C++ standard library
+ * vector, transcoding to the default local code
+ * page. If the source string contines code points, that can't be 
+ * represented in the local code page, the substitution character will be used
+ *
+ * @param sourceString The source string
+ * @param sourceStringLength The source string length.
+ * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
+ * @param theSubstitutionChar The substitution character for code points that are not presentable
+ *                              in the local page
+ */
+XALAN_DOM_EXPORT_FUNCTION(void)
+TranscodeToLocalCodePage(
+            const XalanDOMChar*         theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            CharVectorType&             targetVector,
+            bool                        terminate,
+            char                        theSubstitutionChar);
+
+/**
  * Convert a string to a XalanDOMString, transcoding from
  * the default local code page.
  * 
@@ -992,6 +1013,22 @@ TranscodeToLocalCodePage(
 			bool					terminate = false);
 
 /**
+ * Convert a XalanDOMChar string to C++ standard library
+ * vector, transcoding to the default local code
+ * page.  The string _must_ be null-terminated.
+ * 
+ * @param theSourceString The source string
+ * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
+ */
+XALAN_DOM_EXPORT_FUNCTION(void)
+TranscodeToLocalCodePage(
+            const XalanDOMChar*     theSourceString,
+            CharVectorType&         targetVector,
+            bool                    terminate,
+            char                    theSubstitutionChar);
+
+/**
  * Convert XalanDOMString to C++ standard library
  * vector, transcoding to the default local code
  * page.  Null-terminate the sttring...
@@ -1005,7 +1042,7 @@ TranscodeToLocalCodePage(const XalanDOMChar*	theSourceString)
 {
 	CharVectorType	theResult;
 
-	TranscodeToLocalCodePage(theSourceString, theResult, true);
+	TranscodeToLocalCodePage(theSourceString, theResult, true, '?');
 
 	return theResult;
 }
@@ -1030,7 +1067,25 @@ TranscodeToLocalCodePage(
 	return TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate);
 }
 
-
+/**
+ * Convert XalanDOMString to C++ standard library
+ * vector, transcoding to the default local code
+ * page.
+ * 
+ * @param theSourceString The source string
+ * @param targetVector The target string
+ * @param theSubstitutionChar The substitution character for code points that are not presentable
+ *                              in the local page
+ */
+inline void
+TranscodeToLocalCodePage(
+			const XalanDOMString&	theSourceString,
+			CharVectorType&			targetVector,
+			bool					terminate ,
+            char                    theSubstitutionChar)
+{
+	TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate, theSubstitutionChar);
+}
 
 /**
  * Convert XalanDOMString to C++ standard library
@@ -1046,7 +1101,7 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
 {
 	CharVectorType	theResult;
 
-	TranscodeToLocalCodePage(theSourceString, theResult, true);
+	TranscodeToLocalCodePage(theSourceString.c_str(), theResult, true, '?');
 
 	return theResult;
 }

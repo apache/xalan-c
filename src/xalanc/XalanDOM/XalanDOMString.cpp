@@ -25,14 +25,13 @@
 #include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
 
 
-
 #include <cstdlib>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-//#define XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+
 
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
@@ -808,7 +807,6 @@ XalanDOMString::hash(
 
 
 
-#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
 
 
 
@@ -822,7 +820,119 @@ XALAN_CPP_NAMESPACE_END
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+// The template function should never fail.
+// In case of the unconvertable characters we add the substitution char
+// and in case of too small result vector we resize it 
+template <class SourceType, class TargetType>
+void
+doXercesTranscode(
+            const SourceType*           theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            bool                        theSourceStringIsNullTerminated,
+            XalanVector<TargetType>&    theTargetVector,
+            bool                        terminate,
+            char                        theSubstitutionChar)
+{
 
+	const SourceType*	theRealSourceString = theSourceString;
+
+	XalanDOMString::size_type	theRealSourceStringLength = theSourceStringLength;
+
+	XalanMemMgrAutoPtrArray<SourceType>		theGuard;
+
+	if (theSourceStringIsNullTerminated == true)
+	{
+		theRealSourceStringLength = XalanDOMString::length(theSourceString);
+	}
+	else
+	{
+        typedef XalanMemMngArrayAllocate<SourceType> ArrayAllocateSourceType;
+
+        theGuard.reset( &( theTargetVector.getMemoryManager()), 
+                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()),
+                        theRealSourceStringLength + 1);
+
+        assert(theGuard.get() != 0);
+
+        for (XalanDOMString::size_type index = 0; index < theRealSourceStringLength; ++index)
+        {
+            theGuard[index] = theSourceString[index];
+        }
+
+        theGuard[theRealSourceStringLength] = SourceType(0);
+
+        theRealSourceString = theGuard.get(); 
+    }
+
+    // wild guessing about the size of the result transcoded vector
+    theTargetVector.resize(2*(theRealSourceStringLength + 1), TargetType(0));
+
+    assert(theRealSourceString != 0);
+
+    bool			fSuccess = false;
+
+    XALAN_USING_XERCES(XMLString)
+
+    // $$$ ToDo: We should use the Xerces transcoder interface
+    // instead of XMLString::transcode(), so we can better control
+    // error handling and failures due to inadequate space.
+
+    fSuccess = XMLString::transcode(
+        theRealSourceString,
+        &*theTargetVector.begin(),
+        (unsigned int)(theTargetVector.size() - 1),
+        & (theTargetVector.getMemoryManager()));
+
+    if (fSuccess == false)
+    {
+        // Do the "manual" transcoding. First , clean uo form the previose phase
+        theTargetVector.clear();
+
+        //check if there is illegal caracters for the local code page encoding
+        SourceType oneCharArray[2];
+
+        oneCharArray[1] = SourceType(0);
+
+        const size_t theOneTranslatedWbCharLen = 10;
+
+        TargetType theOneTranslatedWbChar[theOneTranslatedWbCharLen]; 
+
+        for (size_t i = 0 ; i <= theRealSourceStringLength ; ++i)
+        {
+            oneCharArray[0] = theRealSourceString[i];
+
+            theOneTranslatedWbChar[0] = TargetType(0);
+
+            fSuccess = XMLString::transcode(
+                oneCharArray,
+                theOneTranslatedWbChar,
+                theOneTranslatedWbCharLen - 1,
+                & (theTargetVector.getMemoryManager()));
+
+            if( fSuccess == false )
+            {
+                theTargetVector.push_back(theSubstitutionChar);
+            }
+            else
+            {
+                // append the translated set of characters
+                theTargetVector.insert(
+                    theTargetVector.end(),
+                    theOneTranslatedWbChar,
+                    theOneTranslatedWbChar + XalanDOMString::length(theOneTranslatedWbChar));
+            }
+        }
+
+    }
+
+    if (terminate == false)
+	{
+		while(theTargetVector.back() == TargetType(0))
+		{
+			theTargetVector.pop_back();
+		}
+	}
+}
 
 template <class SourceType, class TargetType>
 bool
@@ -882,7 +992,7 @@ doXercesTranscode(
 		fSuccess = XMLString::transcode(
 					theRealSourceString,
 					&*theTargetVector.begin(),
-					theTargetVector.size() - 1,
+					(unsigned int)(theTargetVector.size() - 1),
                     & (theTargetVector.getMemoryManager()));
 
 		if (fSuccess == false)
@@ -915,9 +1025,41 @@ doXercesTranscode(
 	return fSuccess;
 }
 
-#endif
 
+static void
+doTranscodeToLocalCodePage(
+			const XalanDOMChar*			theSourceString,
+			XalanDOMString::size_type	theSourceStringLength,
+			bool						theSourceStringIsNullTerminated,
+			CharVectorType&				theTargetVector,
+			bool						terminate,
+            char                        theSubstitutionChar)
+{
+    // Short circuit if it's a null pointer, or of length 0.
+    if (!theSourceString || (!theSourceString[0]))
+    {
+		if (terminate == true)
+		{
+			theTargetVector.resize(1);
 
+			theTargetVector.back() = '\0';
+		}
+		else
+		{
+			theTargetVector.clear();
+		}
+	}
+	else
+	{
+		doXercesTranscode(
+					theSourceString,
+					theSourceStringLength,
+					theSourceStringIsNullTerminated,
+					theTargetVector,
+					terminate,
+                    theSubstitutionChar);
+	}
+}
 
 static bool
 doTranscodeToLocalCodePage(
@@ -927,10 +1069,6 @@ doTranscodeToLocalCodePage(
 			CharVectorType&				theTargetVector,
 			bool						terminate)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	using std::wcstombs;
-#endif
-
     // Short circuit if it's a null pointer, or of length 0.
     if (!theSourceString || (!theSourceString[0]))
     {
@@ -947,7 +1085,6 @@ doTranscodeToLocalCodePage(
 
         return true;
 	}
-#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
 	else
 	{
 		return doXercesTranscode(
@@ -957,79 +1094,42 @@ doTranscodeToLocalCodePage(
 					theTargetVector,
 					terminate);
 	}
-#else
-	const wchar_t*	theTempSource = 0;
+}
 
-	// If our char sizes are not the same, or the input string is not null-terminated,
-	// we have to use a temporary buffer.
-	XalanMemMgrAutoPtrArray<wchar_t>	theTempSourceJanitor;
-
-#if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-	// This is a short-cut for when the theSourceString is mull-terminated _and_
-	// XalanDOMChar and wchar_t are the same thing.
-	if (theSourceStringIsNullTerminated == true)
-	{
-		theTempSource = theSourceString;
-	}
-	else
-#endif
-	{
-		if (theSourceStringIsNullTerminated == true)
-		{
-			theSourceStringLength = length(theSourceString);
-		}
-
-        theTempSourceJanitor.reset(
-            &(theTargetVector.getMemoryManager()),
-            XalanMemMngArrayAllocate<wchar_t>::allocate( theSourceStringLength + 1, theTargetVector.getMemoryManager()),
-            theSourceStringLength + 1);
-
-        typedef XalanMemMgrAutoPtrArray<wchar_t>::size_type size_type;
-
-		for (size_t	index = 0; index < theSourceStringLength; ++index)
-		{
-			theTempSourceJanitor[size_type(index)] = wchar_t(theSourceString[index]);
-		}
-
-		theTempSourceJanitor[theSourceStringLength] = 0;
-
-		theTempSource = theTempSourceJanitor.get();
-	}
-
-    // See how many chars we need to transcode.
-    const size_t	targetLen = wcstombs(0, theTempSource, 0);
-
-	if (targetLen == ~size_t(0))
-	{
-		return false;
-	}
-	else
-	{
-		// Resize, adding one byte if terminating...
-		theTargetVector.resize(terminate == true ? targetLen + 1 : targetLen);
-
-		//  And transcode our temp source buffer to the local buffer. Terminate
-		//
-		if (wcstombs(&theTargetVector[0], theTempSource, targetLen) == ~size_t(0))
-		{
-			theTargetVector.clear();
-
-			return false;
-		}
-		else
-		{
-			if (terminate == true)
-			{
-				theTargetVector.back() = '\0';
-			}
-
-			return true;
-		}
-	}
-#endif
+XALAN_DOM_EXPORT_FUNCTION(void)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*			theSourceString,
+			XalanDOMString::size_type	theSourceStringLength,
+			CharVectorType&				theTargetVector,
+			bool						terminate,
+            char                        theSubstitutionChar)
+{
+	doTranscodeToLocalCodePage(
+                            theSourceString, 
+                            theSourceStringLength, 
+                            false, 
+                            theTargetVector, 
+                            terminate,
+                            theSubstitutionChar);
 }
 
 
+
+XALAN_DOM_EXPORT_FUNCTION(void)
+TranscodeToLocalCodePage(
+			const XalanDOMChar*		theSourceString,
+			CharVectorType&			theTargetVector,
+			bool					terminate,
+            char                    theSubstitutionChar)
+{
+	doTranscodeToLocalCodePage(
+                            theSourceString, 
+                            0, 
+                            true, 
+                            theTargetVector, 
+                            terminate,
+                            theSubstitutionChar);
+}
 
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeToLocalCodePage(
@@ -1062,10 +1162,6 @@ doTranscodeFromLocalCodePage(
 			XalanDOMCharVectorType&		theTargetVector,
 			bool						terminate)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	using std::mbstowcs;
-#endif
-
 	typedef XalanDOMString::size_type	size_type;
 
     // Short circuit if it's a null pointer, or of length 0.
@@ -1084,7 +1180,6 @@ doTranscodeFromLocalCodePage(
 
         return true;
 	}
-#if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
 	else
 	{
 		return doXercesTranscode(
@@ -1094,83 +1189,6 @@ doTranscodeFromLocalCodePage(
 					theTargetVector,
 					terminate);
 	}
-#else
-    XalanMemMgrAutoPtrArray<char> tempString;
-
-	if (theSourceStringIsNullTerminated == true)
-	{
-		theSourceStringLength = XalanDOMString::length(theSourceString);
-	}
-	else
-	{
-		tempString.reset(
-            &(theTargetVector.getMemoryManager()),
-            XalanMemMngArrayAllocate<char>::allocate( theSourceStringLength + 1, theTargetVector.getMemoryManager()),
-            theSourceStringLength + 1);
-
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-		std::strncpy(tempString.get(), theSourceString, theSourceStringLength);
-#else
-		strncpy(tempString.get(), theSourceString, theSourceStringLength);
-#endif
-
-		tempString[theSourceStringLength] = '\0';
-
-		theSourceString = tempString.get();
-	}
-
-    // See how many chars we need to transcode.
-	const size_t	theTargetLength =
-			mbstowcs(0, theSourceString, size_t(theSourceStringLength));
-
-	if (theTargetLength == ~size_t(0))
-	{
-		return false;
-	}
-	else
-	{
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-		typedef XalanDOMString::WideCharVectorType	WideCharVectorType;
-
-		WideCharVectorType	theTempResult(theTargetVector.getMemoryManager());
-
-		theTempResult.resize(terminate == true ? theTargetLength + 1 : theTargetLength);
-
-		wchar_t* const	theTargetPointer = &theTempResult[0];
-#else
-		theTargetVector.resize(terminate == true ? theTargetLength + 1 : theTargetLength);
-
-		wchar_t* const	theTargetPointer = &theTargetVector[0];
-#endif
-
-		if (mbstowcs(theTargetPointer, theSourceString, size_t(theSourceStringLength)) == ~size_t(0))
-		{
-			theTargetVector.clear();
-
-			return false;
-		}
-		else
-		{
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-			const WideCharVectorType::size_type		theTempSize = theTempResult.size();
-
-			theTargetVector.reserve(theTempSize);
-
-			for(WideCharVectorType::size_type i = 0; i < theTempSize; ++i)
-			{
-				theTargetVector.push_back(theTempResult[i]);
-			}
-#endif
-
-			if (terminate == true)
-			{
-				theTargetVector.back() = '\0';
-			}
-
-			return true;
-		}
-	}
-#endif
 }
 
 
