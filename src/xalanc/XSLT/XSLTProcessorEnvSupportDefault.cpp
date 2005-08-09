@@ -156,20 +156,24 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			EntityResolverType* const	theResolver = 
 				parserLiaison.getEntityResolver();
 
-            XalanDOMString theEmptyString(theManager);
+            const XalanDOMString    theEmptyString(theManager);
 
 			if (theResolver == 0)
 			{
-				const XSLTInputSource	inputSource(c_wstr(urlText), theManager);
+				const XSLTInputSource	inputSource(urlText.c_str(), theManager);
 
                 theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 			}
 			else
 			{
-                typedef XalanMemMgrAutoPtr<InputSourceType, true> AutoPtr;
+                XALAN_USING_XERCES(InputSource)
 
-				const AutoPtr resolverInputSource(theManager, 
-					                        theResolver->resolveEntity(0, c_wstr(urlText)));
+                typedef XalanAutoPtr<InputSource>   AutoPtrType;
+
+				const AutoPtrType   resolverInputSource(
+                                        theResolver->resolveEntity(
+                                            0,
+                                            urlText.c_str()));
 
 				if (resolverInputSource.get() != 0)
 				{
@@ -177,7 +181,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 				}
 				else
 				{
-					const XSLTInputSource	inputSource(c_wstr(urlText), theManager);
+					const XSLTInputSource	inputSource(urlText.c_str(), theManager);
 
 					theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 				}
