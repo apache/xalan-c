@@ -110,7 +110,7 @@ using std::tm;
 
 
 
-#if defined(WIN32) || defined(__DECCXX)
+#if defined(WIN32) || defined(__DECCXX) || defined(OS390)
 
 static struct tm*
 localtime_r(const time_t *clock, struct tm *res)

@@ -17,6 +17,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2005/08/16 01:06:47  dmitryh
+# Fix for XALANC-541
+#
 # Revision 1.12  2005/07/08 17:30:49  dmitryh
 # Fix for XALANC-526
 #
@@ -145,7 +148,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris',
-            'hp-10', 'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os400', 'cygwin')"
+            'hp-10', 'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os390', 'os400', 'cygwin')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
@@ -183,25 +186,22 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Get the command line parameters
-if test -x /bin/getopt -o -x /usr/bin/getopt; then
-set -- `getopt C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h $*`
-else
-set -- `getopts C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h $*`
-fi
-
-if [ $? != 0 ]
-   then
-   usage
-   exit ${ERROR_EXIT_CODE}
-fi
-
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
 transcoder=default       # by default use default transcoder
-localSys=inmem		 # by default use inmem locale
-locale=en_US		 # by default use US locale
+localSys=icu 	         # by default use icu locale system
+locale=en_US             # by default use US locale
+
+# Get the command line parameters
+if test -x /bin/getopt -o -x /usr/bin/getopt; then
+    set -- `getopt C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h $*`
+
+    if [ $? != 0 ]
+        then
+        usage
+        exit ${ERROR_EXIT_CODE}
+    fi
 
 while [ $# -gt 0 ]
    do
@@ -261,6 +261,60 @@ while [ $# -gt 0 ]
        exit ${ERROR_EXIT_CODE};;
    esac
 done
+else
+while getopts "C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h" switch;
+   do
+   case $switch in
+   p)
+	platform=$OPTARG;;
+
+   c)
+        ccompiler=$OPTARG;;
+
+   x)
+        cppcompiler=$OPTARG;;
+
+   d)
+        debug=on;;
+
+   t)
+        transcoder=$OPTARG;;
+
+   r)
+        thread=$OPTARG;;
+
+   b)
+        bitsToBuild=$OPTARG;;
+
+   z)
+        compileroptions="$compileroptions $OPTARG";;
+
+   l)
+        linkeroptions="$linkeroptions $OPTARG";;
+
+   m)
+        localSys=$OPTARG;;
+
+   M)
+        locale=$OPTARG;;
+
+   P)
+        configureoptions="$configureoptions --prefix=$OPTARG";;
+
+   C)
+        configureoptions="$configureoptions $OPTARG";;
+
+   h)
+        usage
+        exit ${ERROR_EXIT_CODE};;
+
+   *)
+        echo "unknown option -$switch $OPTARG"
+        usage
+        exit ${ERROR_EXIT_CODE};;
+   esac
+done
+fi
 
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
@@ -281,7 +335,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | freebsd | netbsd | solaris | hp-11 | hp-11-ia64 | irix | tru64 | macosx | os400 | cygwin)
+   aix | linux | freebsd | netbsd | solaris | hp-11 | hp-11-ia64 | irix | tru64 | macosx | os390 | os400 | cygwin)
        # platform has been recognized
        ;;
    *)
@@ -298,6 +352,8 @@ if test $debug = "off"; then
     echo "Debug is OFF"
     if test $platform = "os400"; then
         debugflag="";
+    elif test $platform = "os390"; then
+        debugflag="-DNDEBUG";
     elif test $platform = "linux"; then
 		if test $cppcompiler = "icpc"; then
 			debugflag="-O3 -DNDEBUG";
@@ -320,7 +376,7 @@ fi
 
 #
 #  aix | linux | hp-11 | hp-11-ia64 | solaris |
-#  freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#  freebsd | netbsd | irix | openserver | unixware | os390 | os400 | ptx | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
     bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
@@ -391,7 +447,9 @@ if test $transcoder; then
 		    exit ${ERROR_EXIT_CODE};
             fi
 	    transcodingDefines="-I${ICUROOT}/include";
-	    transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+            if test $platform != "os390"; then
+	            transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+            fi
 	    TRANSCODER=ICU;;
 
 	default)
@@ -470,6 +528,9 @@ elif test $platform = "netbsd"; then
     threadingLibs="-pthread -lpthread"
 elif test $platform = "os400"; then
     threadingLibs=""
+elif test $platform = "os390"; then
+     threadingLibs=""
+     threadingDefines="-D_OPEN_THREADS"
 fi
 
 

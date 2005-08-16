@@ -10,7 +10,7 @@ AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 
 dnl  Check for gcc problems
 
-if test "$CXX" = "g++" -o "$CXX" = "c++" -o "$CXX" = "g++3"; then
+if test "$CXX" = "g++" -o "$CXX" = "c++"; then
 
   AC_MSG_CHECKING([whether -fno-elide-constructors works correctly])
 

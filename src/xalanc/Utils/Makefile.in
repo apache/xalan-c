@@ -62,6 +62,11 @@ locale: $(MESSAGELIB)
 
 $(MESSAGELIB): $(XSL_NLS_DIR)/include/LocalMsgData.hpp
 	$(MAKE) -C XalanMsgLib 
+ifeq ($(PLATFORM), OS390)
+ifneq (${OS390BATCH},1)
+	@$(MOVE) XalanMsgLib/*.x ../../../lib
+endif
+endif
 
 $(XSL_NLS_DIR)/include/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME)
 	$(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME) -TYPE $(MESSAGELOADER) -LOCALE $(LOCALE)

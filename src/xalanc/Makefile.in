@@ -168,17 +168,17 @@ depend:
 compile:	 $(ALL_OBJECTS) 
 
 ifeq (${OS390BATCH},1)
-XalanExe: lib  "//'$(LOADSAMP)(IXMXAL19)'"
+XalanExe: lib  "//'$(LOADSAMP)(${BATCH_XALAN_UTIL_NAME})'"
 
-"//'$(LOADSAMP)(IXMXAL19)'": ${XSL_OBJ_DIR}/XalanExe.o
+"//'$(LOADSAMP)(${BATCH_XALAN_UTIL_NAME})'": ${XSL_OBJ_DIR}/XalanExe.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
 ${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-testXSLT: lib  "//'$(LOADSAMP)(IXMTST19)'"
+testXSLT: lib  "//'$(LOADSAMP)(${BATCH_TEST_UTIL_NAME})'"
 
-"//'$(LOADSAMP)(IXMTST19)'": ${XSL_OBJ_DIR}/process.o
+"//'$(LOADSAMP)(${BATCH_TEST_UTIL_NAME})'": ${XSL_OBJ_DIR}/process.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
 ${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
@@ -232,7 +232,7 @@ locale:
 $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LINK_SONAME) $(ALLLIBS) $^ -o $@ $(OTHER_LINK_LIB_PARAMERES)
 ifeq ($(PLATFORM), OS390)
-	cp -p *.x  ${XSL_LIB_DIR}        
+	mv *.x  ${XSL_LIB_DIR}        
 else
 	rm -f $(XSL_LIB_DIR)/$(LINK_NAME) && \
 		$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(LINK_NAME)
@@ -287,7 +287,7 @@ doClean:
 	rm -f $(XSL_LIB_DIR)/$(LIB)
 	rm -f $(XSL_LIB_DIR)/$(LINK_NAME)
 	rm -f $(XSL_LIB_DIR)/$(SO_NAME)
-	rm -f $(XSL_LIB_DIR)/$(LIB).$(OS390SIDEDECK)
+	rm -f $(LIBRARY_LINK_NAME)
 	rm -f $(XSL_LIB_DIR)/$(LIB).map1
 	rm -f $(XSL_BIN_DIR)/testXSLT$(EXT)
 	rm -f $(XSL_BIN_DIR)/testXPath$(EXT)

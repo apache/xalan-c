@@ -33,6 +33,7 @@ XALANMSGLIB_SRC=$(XALANCROOT)/src/xalanc/Utils/XalanMsgLib
 
 $(MESSAGELIB) : ${XSL_OBJ_DIR}/XalanMsgLib.o 
 	$(MAKE_SHARED_LOC) $(EXTRA_LOC_LINK_OPTIONS) $^ -o $@
+ifneq ($(PLATFORM), OS390)
 	rm -f $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX) && \
 		$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
 ifeq ($(PLATFORM), AIX)
@@ -43,6 +44,7 @@ else
 		  $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
 endif ## AIX
 
+endif ## ! OS390
 ${XSL_OBJ_DIR}/XalanMsgLib.o : $(XALANMSGLIB_SRC)/XalanMsgLib.cpp $(XALANMSGLIB_SRC)/XalanMsgLib.hpp ${XSL_NLS_DIR}/include/LocalMsgData.hpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(XALANMSGLIB_SRC)/XalanMsgLib.cpp
 
@@ -63,7 +65,7 @@ else
 		  $(DESTDIR)/$(libdir)/$(LOC_LIBNAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
 endif ## AIX	
 
-endif ## OS390
+endif ## ! OS390
 
 
 doClean:
