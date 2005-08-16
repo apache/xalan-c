@@ -78,7 +78,7 @@ public:
     virtual void
     dereferenced()
     {
-        delete this;
+        XalanDestroy(getMemoryManager(), *this);
     }
 
     virtual XalanNode*
