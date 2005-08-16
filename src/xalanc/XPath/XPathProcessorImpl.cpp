@@ -2235,7 +2235,11 @@ XPathProcessorImpl::Step()
 {
     const int   opPos = m_expression->opCodeMapLength();
 
-    if(tokenIs(s_dotString) == true)
+    if (length(m_token) == 0)
+    {
+        error(XalanMessages::ExpectedNodeTest);
+    }
+    else if(tokenIs(s_dotString) == true)
     {
         nextToken();
 
