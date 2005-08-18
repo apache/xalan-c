@@ -229,6 +229,27 @@ ElemTemplate::getXPath(unsigned int index) const
 }
 
 
+
+bool
+ElemTemplate::childTypeAllowed(int  xslToken) const
+{
+    bool    fResult = true;
+    
+    switch(xslToken)
+    {
+    case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
+        fResult = false;
+        break;
+        
+    default:
+        break;
+    }
+    
+    return fResult;
+}
+
+
+
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemTemplate::executeChildren(StylesheetExecutionContext&   executionContext) const

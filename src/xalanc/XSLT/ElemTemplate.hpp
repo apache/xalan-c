@@ -137,17 +137,21 @@ public:
     }
 #endif
 
-    	virtual	const XPath*
+    virtual	const XPath*
 	getXPath(unsigned int	index = 0) const;
 
+protected:
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 
 private:
 
 	// not implemented
-	ElemTemplate(const ElemTemplate &);
+	ElemTemplate(const ElemTemplate&);
 
 	ElemTemplate&
-	operator=(const ElemTemplate &);
+	operator=(const ElemTemplate&);
 
 	// Data members...
 	const XPath*		m_matchPattern;
