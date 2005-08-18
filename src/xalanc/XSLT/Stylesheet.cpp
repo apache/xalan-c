@@ -288,7 +288,9 @@ Stylesheet::processKeyElement(
                     constructionContext.createMatchPattern(
                         0,
                         theBuffer,
-                        nsContext);
+                        nsContext,
+                        false,
+                        false);
         }
         else if(equals(aname, Constants::ATTRNAME_USE))
         {
@@ -296,7 +298,9 @@ Stylesheet::processKeyElement(
                     constructionContext.createXPath(
                         0,
                         atts.getValue(i),
-                        nsContext);
+                        nsContext,
+                        false,
+                        false);
         }
         else if (isAttrOK(aname, atts, i, constructionContext) == false)
         {

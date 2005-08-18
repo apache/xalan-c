@@ -101,7 +101,6 @@ public:
     typedef XalanVector<XalanOutputStream*>             OutputStreamVectorType;
 
     typedef XalanVector<const ElemTemplateElement*> ElementTemplateElementStackType;
-    typedef XalanSet<const KeyDeclaration*> KeyDeclarationSetType;
     typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>       XPathCacheEntry;
     typedef XalanMap <XalanDOMString, XPathCacheEntry>              XPathCacheMapType;
     typedef XalanVector<const ElemTemplate*>            CurrentTemplateStackType;
@@ -771,15 +770,6 @@ public:
     FormatNumberFunctor*
     uninstallFormatNumberFunctor();
 
-    virtual bool
-    getInConstruction(const KeyDeclaration&     keyDeclaration) const;
-
-    virtual void
-    beginConstruction(const KeyDeclaration&     keyDeclaration);
-
-    virtual void
-    endConstruction(const KeyDeclaration&   keyDeclaration);
-
     virtual PrintWriter*
     createPrintWriter(XalanOutputStream*        theTextOutputStream);
 
@@ -1140,8 +1130,6 @@ private:
     XPathCacheMapType                   m_matchPatternCache;
 
     KeyTablesTableType                  m_keyTables;
-
-    KeyDeclarationSetType               m_keyDeclarationSet;
 
     CountersTable                       m_countersTable;
 

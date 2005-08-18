@@ -75,7 +75,6 @@ class ElemVariable;
 class FormatterListener;
 class FormatterToText;
 class GenerateEvent;
-class KeyDeclaration;
 class PrefixResolver;
 class NodeRefListBase;
 class NodeSorter;
@@ -1737,31 +1736,6 @@ public:
             const XalanDOMChar*                 theRHS,
             const XalanDOMChar*                 theLocale,
             XalanCollationServices::eCaseOrder  theCaseOrder = XalanCollationServices::eDefault) = 0;
-
-    /**
-     * Determine if a KeyDeclaration is being constructed.
-     *
-     * @param The KeyDeclaration in question.
-     * @return true if being constructed
-     */
-    virtual bool
-    getInConstruction(const KeyDeclaration&     keyDeclaration) const = 0;
-
-    /**
-     * Add KeyDeclaration to construction list.
-     * 
-     * @param KeyDeclaration being constructed
-     */
-    virtual void
-    beginConstruction(const KeyDeclaration& keyDeclaration) = 0; 
-
-    /**
-     * Remove KeyDeclaration from construction list.
-     * 
-     * @param constructed KeyDeclaration
-     */
-    virtual void
-    endConstruction(const KeyDeclaration& keyDeclaration) = 0;
 
     /**
      * Create a PrintWriter for the provided stream.

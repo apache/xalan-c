@@ -86,7 +86,9 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0);
+            const LocatorType*          locator = 0,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true);
 
     virtual void
     initMatchPattern(
@@ -94,7 +96,9 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0);
+            const LocatorType*          locator = 0,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true);
 
 private:
 
@@ -760,6 +764,9 @@ private:
 
     StringToStringMapType           m_namespaces;
 
+    bool                            m_allowVariableReferences;
+
+    bool                            m_allowKeyFunction;
 
     // Static stuff here...
     static const XalanDOMString     s_emptyString;

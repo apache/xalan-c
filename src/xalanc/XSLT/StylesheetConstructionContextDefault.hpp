@@ -234,32 +234,42 @@ public:
 	createMatchPattern(
 			const LocatorType*		locator,
 			const XalanDOMString&	str,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true);
 
 	virtual XPath*
 	createMatchPattern(
 			const LocatorType*		locator,
 			const XalanDOMChar*		str,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true);
 
 	virtual XPath*
 	createXPath(
 			const LocatorType*		locator,
 			const XalanDOMString&	str,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true);
+
+	virtual XPath*
+	createXPath(
+			const LocatorType*		locator,
+			const XalanDOMChar*		str,
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true);
 
 	virtual XPath*
 	createXPath(
 			const LocatorType*			locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
-			const PrefixResolver&		resolver);
-
-	virtual XPath*
-	createXPath(
-			const LocatorType*		locator,
-			const XalanDOMChar*		str,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&		resolver,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true);
 
 	virtual const LocatorType*
 	getLocatorFromStack() const;

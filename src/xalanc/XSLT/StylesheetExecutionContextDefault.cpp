@@ -120,7 +120,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
     m_paramsVector(theManager),
     m_matchPatternCache(theManager),
     m_keyTables(theManager),
-    m_keyDeclarationSet(theManager),
     m_countersTable(theManager),
     m_sourceTreeResultTreeFactory(),
     m_mode(0),
@@ -184,7 +183,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
     m_paramsVector(theManager),
     m_matchPatternCache(theManager),
     m_keyTables(theManager),
-    m_keyDeclarationSet(theManager),
     m_countersTable(theManager),
     m_sourceTreeResultTreeFactory(),
     m_mode(0),
@@ -770,8 +768,7 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 void
 StylesheetExecutionContextDefault::beginParams()
 {
-    ParamsVectorType  newParamsVector (getMemoryManager());
-    m_paramsVectorStack.push_back(newParamsVector);
+    m_paramsVectorStack.resize(m_paramsVectorStack.size() + 1);
 }
 
 
@@ -786,15 +783,17 @@ StylesheetExecutionContextDefault::endParams()
     m_paramsVectorStack.pop_back();
 }
 
-    
+
 
 void
 StylesheetExecutionContextDefault::pushParam(
         const XalanQName& qName,
         const XObjectPtr& theValue)
 {
-    ParamsVectorType& currentParamVector = m_paramsVectorStack.back();
-    
+    assert(m_paramsVectorStack.empty() == false);
+
+    ParamsVectorType&   currentParamVector = m_paramsVectorStack.back();
+
     currentParamVector.push_back(ParamsVectorType::value_type(&qName, theValue));
 }
 #endif
@@ -1823,30 +1822,6 @@ StylesheetExecutionContextDefault::uninstallFormatNumberFunctor()
 
         return temp;
     }
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration&  keyDeclaration) const
-{
-    return m_keyDeclarationSet.count(&keyDeclaration) != 0 ? true : false;
-}
-
-
-
-void
-StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration&  keyDeclaration)
-{   
-    m_keyDeclarationSet.insert(&keyDeclaration);
-}
-
-    
-
-void
-StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration&    keyDeclaration)
-{
-    m_keyDeclarationSet.erase(&keyDeclaration);
 }
 
 

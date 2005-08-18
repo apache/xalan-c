@@ -58,8 +58,8 @@ XUnknown::XUnknown(
     m_value(theManager)
 {
     XalanMessageLoader::getMessage(
-        const_cast<XalanDOMString&>(m_value),
-        XalanMessages::UnknownVariable_1Param,
+        m_value,
+        XalanMessages::VariableIsNotDefined_1Param,
         name);
 }
 

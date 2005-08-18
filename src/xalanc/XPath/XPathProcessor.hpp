@@ -65,6 +65,8 @@ public:
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
 	 * @param locator		 the LocatorType to use for error report. May be null
+     * @param allowVariableReferences If true, variable references are allowed.
+     * @param allowKeyFunction If true, calls to the key() function are allowed.
 	 */
 	virtual void
 	initXPath(
@@ -72,7 +74,9 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const LocatorType*			locator = 0) = 0;
+			const LocatorType*			locator = 0,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true) = 0;
 
 	/**
 	 * Given a string, create an XSLT Match Pattern object.
@@ -82,6 +86,8 @@ public:
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
 	 * @param locator		 the LocatorType to use for error report. May be null
+     * @param allowVariableReferences If true, variable references are allowed.
+     * @param allowKeyFunction If true, calls to the key() function are allowed.
 	 */
 	virtual void
 	initMatchPattern(
@@ -89,7 +95,9 @@ public:
 			XPathConstructionContext&	constructionContext,
 			const XalanDOMString&		expression,
 			const PrefixResolver&		resolver,
-			const LocatorType*			locator = 0) = 0;
+			const LocatorType*			locator = 0,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true) = 0;
 
 	/**
 	 * Given a string, and a reference to a function object, install the

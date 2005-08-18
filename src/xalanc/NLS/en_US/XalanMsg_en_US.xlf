@@ -234,9 +234,14 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Only 'child' and 'attribute' axes are allowed in match patterns.</target>
 </trans-unit>
 
-<trans-unit id="UnknownVariable_1Param">
-		<source>The variable '{0}' is not bound.</source>
-		<target>The variable '{0}' is not bound.</target>
+<trans-unit id="VariableReferenceNotAllowed">
+		<source>A variable reference is allowed in a match pattern or expression in this context.</source>
+		<target>A variable reference is allowed in a match pattern or expression in this context.</target>
+</trans-unit>
+
+<trans-unit id="KeyFunctionNotAllowed">
+		<source>The value of either the 'use' attribute or the 'match' attribute of xsl:key cannot contain a call to the key() function.</source>
+		<target>The value of either the 'use' attribute or the 'match' attribute of xsl:key cannot contain a call to the key() function.</target>
 </trans-unit>
 
 <trans-unit id="FunctionTakes2ArgsAtLeast_1Param">
@@ -439,11 +444,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 <trans-unit id="FunctionAcceptsOneArgument_1Param">
 		<source>The function '{0}' accepts one argument.</source>
 		<target>The function '{0}' accepts one argument.</target>
-</trans-unit>
-
-<trans-unit id="UseOfFunctionIsIllegal_2Param">
-		<source>The use of '{0}' in the "match" or "use" attribute of '{1}' is illegal.</source>
-		<target>The use of '{0}' in the "match" or "use" attribute of '{1}' is illegal.</target>
 </trans-unit>
 
 <trans-unit id="Error_1Param">

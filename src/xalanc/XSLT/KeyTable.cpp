@@ -100,47 +100,25 @@ KeyTable::KeyTable(
             {
                 const KeyDeclaration&   kd = keyDeclarations[i];
 
-                if (executionContext.getInConstruction(kd) == true)         
-                {
-                    assert(kd.getURI() != 0);
-                    StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+                // See if our node matches the given key declaration according to 
+                // the match attribute on xsl:key.
+                assert(kd.getMatchPattern() != 0);
 
-                    throw XSLTProcessorException(
-                            executionContext.getMemoryManager(),
-                            XalanMessageLoader::getMessage(
-                                theGuard.get(),
-                                XalanMessages::UseOfFunctionIsIllegal_2Param,
-                                "key()",
-                                "xsl:key"),
-                            *kd.getURI(),
-                            kd.getLineNumber(),
-                            kd.getColumnNumber());
-                }
-                else
-                {
-                    executionContext.beginConstruction(kd);
-
-                    // See if our node matches the given key declaration according to 
-                    // the match attribute on xsl:key.
-                    assert(kd.getMatchPattern() != 0);
-
-                    const XPath::eMatchScore    score =
-                            kd.getMatchPattern()->getMatchScore(testNode,
-                                                                resolver,
-                                                                executionContext);
-
-                    if(score != XPath::eMatchScoreNone)
-                    {
-                        processKeyDeclaration(
-                            m_keys,
-                            kd,
+                const XPath::eMatchScore    score =
+                        kd.getMatchPattern()->getMatchScore(
                             testNode,
                             resolver,
                             executionContext);
-                    }
 
-                    executionContext.endConstruction(kd);
-                } // if (kd.getInConstruction() == true)
+                if(score != XPath::eMatchScoreNone)
+                {
+                    processKeyDeclaration(
+                        m_keys,
+                        kd,
+                        testNode,
+                        resolver,
+                        executionContext);
+                }
             } // end for(int i = 0; i < nDeclarations; ++i)
 
             ++nodeIndex;

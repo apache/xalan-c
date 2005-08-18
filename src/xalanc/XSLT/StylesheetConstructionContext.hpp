@@ -272,13 +272,17 @@ public:
 	 * @param locator the locator for the XPath. May be null.
 	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
+     * @param allowVariableReferences If true, variable references are allowed.
+     * @param allowKeyFunction If true, calls to the key() function are allowed.
 	 * @return XPath for match pattern
 	 */
 	virtual XPath*
 	createMatchPattern(
 			const LocatorType*		locator,
 			const XalanDOMString&	str,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true) = 0;
 
 	/**
 	 * Create and initialize an xpath for a match pattern and return it. This
@@ -288,13 +292,17 @@ public:
 	 * @param locator the locator for the XPath. May be null.
 	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
+     * @param allowVariableReferences If true, variable references are allowed.
+     * @param allowKeyFunction If true, calls to the key() function are allowed.
 	 * @return XPath for match pattern
 	 */
 	virtual XPath*
 	createMatchPattern(
 			const LocatorType*		locator,
 			const XalanDOMChar*		str,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used by
@@ -310,7 +318,9 @@ public:
 	createXPath(
 			const LocatorType*		locator,
 			const XalanDOMString&	str,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used by
@@ -326,7 +336,9 @@ public:
 	createXPath(
 			const LocatorType*		locator,
 			const XalanDOMChar*		str,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+            bool                    allowVariableReferences = true,
+            bool                    allowKeyFunction = true) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used by
@@ -343,7 +355,9 @@ public:
 			const LocatorType*			locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
-			const PrefixResolver&		resolver) = 0;
+			const PrefixResolver&		resolver,
+            bool                        allowVariableReferences = true,
+            bool                        allowKeyFunction = true) = 0;
 
 	/**
 	 * Get the locator from the top of the locator stack.

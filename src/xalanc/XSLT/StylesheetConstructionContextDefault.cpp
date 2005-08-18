@@ -403,7 +403,9 @@ XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
             const LocatorType*      locator,
             const XalanDOMString&   str,
-            const PrefixResolver&   resolver)
+            const PrefixResolver&   resolver,
+            bool                    allowVariableReferences,
+            bool                    allowKeyFunction)
 {
     XPath* const    xpath = m_xpathFactory.create();
 
@@ -417,7 +419,9 @@ StylesheetConstructionContextDefault::createMatchPattern(
             *this,
             str,
             resolver,
-            getLocatorFromStack());
+            getLocatorFromStack(),
+            allowVariableReferences,
+            allowKeyFunction);
 
     xpath->setInStylesheet(true);
 
@@ -432,13 +436,20 @@ XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
             const LocatorType*      locator,
             const XalanDOMChar*     str,
-            const PrefixResolver&   resolver)
+            const PrefixResolver&   resolver,
+            bool                    allowVariableReferences,
+            bool                    allowKeyFunction)
 {
     assert(str != 0);
 
     assign(m_tempBuffer, str);
 
-    return createMatchPattern(locator, m_tempBuffer, resolver);
+    return createMatchPattern(
+                locator,
+                m_tempBuffer,
+                resolver,
+                allowVariableReferences,
+                allowKeyFunction);
 }
 
 
@@ -447,7 +458,9 @@ XPath*
 StylesheetConstructionContextDefault::createXPath(
             const LocatorType*      locator,
             const XalanDOMString&   str,
-            const PrefixResolver&   resolver)
+            const PrefixResolver&   resolver,
+            bool                    allowVariableReferences,
+            bool                    allowKeyFunction)
 {
     XPath* const    xpath = m_xpathFactory.create();
 
@@ -461,7 +474,9 @@ StylesheetConstructionContextDefault::createXPath(
             *this,
             str,
             resolver,
-            getLocatorFromStack());
+            getLocatorFromStack(),
+            allowVariableReferences,
+            allowKeyFunction);
 
     xpath->setInStylesheet(true);
 
@@ -476,13 +491,20 @@ XPath*
 StylesheetConstructionContextDefault::createXPath(
             const LocatorType*      locator,
             const XalanDOMChar*     str,
-            const PrefixResolver&   resolver)
+            const PrefixResolver&   resolver,
+            bool                    allowVariableReferences,
+            bool                    allowKeyFunction)
 {
     assert(str != 0);
 
     assign(m_tempBuffer, str);
 
-    return createXPath(locator, m_tempBuffer, resolver);
+    return createXPath(
+                locator,
+                m_tempBuffer,
+                resolver,
+                allowVariableReferences,
+                allowKeyFunction);
 }
 
 
@@ -492,13 +514,20 @@ StylesheetConstructionContextDefault::createXPath(
             const LocatorType*          locator,
             const XalanDOMChar*         str,
             XalanDOMString::size_type   len,
-            const PrefixResolver&       resolver)
+            const PrefixResolver&       resolver,
+            bool                        allowVariableReferences,
+            bool                        allowKeyFunction)
 {
     assert(str != 0);
 
     assign(m_tempBuffer, str, len);
 
-    return createXPath(locator, m_tempBuffer, resolver);
+    return createXPath(
+                locator,
+                m_tempBuffer,
+                resolver,
+                allowVariableReferences,
+                allowKeyFunction);
 }
 
 

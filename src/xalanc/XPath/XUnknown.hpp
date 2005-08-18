@@ -105,7 +105,7 @@ private:
     XUnknown(const XUnknown&	source);
     XUnknown();
 
-	const XalanDOMString	m_value;
+	XalanDOMString  m_value;
 
 	static XalanDOMString	s_unknownString;
 };

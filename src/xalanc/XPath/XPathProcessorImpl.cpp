@@ -60,7 +60,9 @@ XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType&   theManager) :
     m_requireLiterals(false),
     m_isMatchPattern(false),
     m_positionPredicateStack(theManager),
-    m_namespaces(theManager)
+    m_namespaces(theManager),
+    m_allowVariableReferences(true),
+    m_allowKeyFunction(true)
 {
 }
 
@@ -96,11 +98,17 @@ XPathProcessorImpl::initXPath(
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator)
+            const LocatorType*          locator,
+            bool                        allowVariableReferences,
+            bool                        allowKeyFunction)
 {
     m_isMatchPattern = false;
 
     m_requireLiterals = false;
+
+    m_allowVariableReferences = allowVariableReferences;
+
+    m_allowKeyFunction = allowKeyFunction;
 
     m_xpath = &pathObj;
 
@@ -144,9 +152,15 @@ XPathProcessorImpl::initMatchPattern(
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator)
+            const LocatorType*          locator,
+            bool                        allowVariableReferences,
+            bool                        allowKeyFunction)
 {
     m_isMatchPattern = true;
+
+    m_allowVariableReferences = allowVariableReferences;
+
+    m_allowKeyFunction = allowKeyFunction;
 
     m_xpath = &pathObj;
 
@@ -1479,13 +1493,20 @@ XPathProcessorImpl::PrimaryExpr()
     {
         nextToken(); // consume '$'
 
-        m_expression->appendOpCode(XPathExpression::eOP_VARIABLE);
+        if (m_allowVariableReferences == false)
+        {
+            error(XalanMessages::VariableReferenceNotAllowed);
+        }
+        else
+        {
+            m_expression->appendOpCode(XPathExpression::eOP_VARIABLE);
 
-        QName();
+            QName();
 
-        m_expression->updateOpCodeLength(
-            XPathExpression::eOP_VARIABLE,
-            opPos);
+            m_expression->updateOpCodeLength(
+                XPathExpression::eOP_VARIABLE,
+                opPos);
+        }
     }
     else if(tokenIs(XalanUnicode::charLeftParenthesis) == true)
     {
@@ -1701,6 +1722,12 @@ XPathProcessorImpl::FunctionCall()
                 // The position must be at least 1, since
                 // we've looked at a token.
                 assert(m_expression->getTokenPosition() > 0);
+
+                if (m_allowKeyFunction == false &&
+                    m_token == XPathFunctionTable::s_key)
+                {
+                    error(XalanMessages::KeyFunctionNotAllowed);
+                }
 
                 int     theFunctionID =
                     XPath::getFunctionTable().nameToID(m_token);
