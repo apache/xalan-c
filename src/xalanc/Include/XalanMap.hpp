@@ -213,6 +213,10 @@ public:
     typedef XalanVector<typename EntryListType::iterator>	BucketType;
     typedef XalanVector<BucketType, ConstructWithMemoryManagerTraits<BucketType> >      BucketTableType;
 
+    typedef typename EntryListType::iterator       EntryListIterator;
+    typedef typename BucketTableType::iterator     TableIterator;
+    typedef typename BucketType::iterator          BucketIterator;
+
     typedef XalanMapIterator<
                 XalanMapIteratorTraits<value_type>, 
                 typename EntryListType::iterator>           iterator;
@@ -223,33 +227,50 @@ public:
     typedef typename MemoryManagedConstructionTraits<key_type>::Constructor  FirstConstructor;
     typedef typename MemoryManagedConstructionTraits<data_type>::Constructor SecondConstructor;
 
-	XalanMap(
-			MemoryManagerType& theMemoryManager,
-			float loadFactor = 0.75,
-			size_type minBuckets = 10) :
+    enum
+    {
+        eDefaultMinBuckets = 29u,
+        eDefaultEraseThreshold = 50u,
+        eMinimumBucketSize = 5u
+    };
+
+
+    XalanMap(
+			MemoryManagerType&  theMemoryManager,
+			float               loadFactor = 0.75,
+			size_type           minBuckets = eDefaultMinBuckets,
+            size_type           eraseThreshold = eDefaultEraseThreshold) :
 		m_memoryManager(&theMemoryManager),
 		m_loadFactor(loadFactor),
 		m_minBuckets(minBuckets),
 		m_size(0),
 		m_entries(theMemoryManager),
         m_freeEntries(theMemoryManager),
-		m_buckets(theMemoryManager)
+		m_buckets(theMemoryManager),
+        m_eraseCount(0),
+        m_eraseThreshold(eraseThreshold)
 	{
 	}
 
 	XalanMap(
-			const XalanMap &theRhs,
+			const XalanMap&     theRhs,
 			MemoryManagerType&  theMemoryManager) :
         m_memoryManager(&theMemoryManager),
 		m_loadFactor(theRhs.m_loadFactor),
-		m_minBuckets(10),
+		m_minBuckets(theRhs.m_minBuckets),
 		m_size(0),
 		m_entries(theMemoryManager),
         m_freeEntries(theMemoryManager),
-		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, BucketType(*m_memoryManager), theMemoryManager)
+		m_buckets(
+            size_type(m_loadFactor * theRhs.size()) + 1,
+            BucketType(*m_memoryManager),
+            theMemoryManager),
+        m_eraseCount(0),
+        m_eraseThreshold(theRhs.m_eraseThreshold)
 	{
 		const_iterator entry = theRhs.begin();
-		while(entry != theRhs.end())
+
+        while(entry != theRhs.end())
 		{
 			insert(*entry);
 			++entry;
@@ -272,7 +293,8 @@ public:
 
         if (!m_buckets.empty())
         {
-            typename EntryListType::iterator toRemove = m_freeEntries.begin();
+            EntryListIterator   toRemove = m_freeEntries.begin();
+
             while(toRemove != m_freeEntries.end())
             {
                 deallocate(toRemove->value);
@@ -281,11 +303,14 @@ public:
         }
 	}
 
-	XalanMap & operator=(const XalanMap& theRhs) 
+	XalanMap&
+    operator=(const XalanMap&   theRhs) 
 	{
-		XalanMap theTemp(theRhs, *m_memoryManager);
-		swap(theTemp);
-		return *this;
+		XalanMap    theTemp(theRhs, *m_memoryManager);
+
+        swap(theTemp);
+
+        return *this;
 	}
 
 	size_type size() const
@@ -320,13 +345,15 @@ public:
 
 	iterator find(const key_type& key)
 	{
-		if (!m_buckets.empty())
+		if (m_size != 0)
 		{
+            assert(m_buckets.empty() == false);
+
 			const size_type     index = doHash(key);
             assert(index < m_buckets.size());
 
-            BucketType & bucket = m_buckets[index];
-            typename BucketType::iterator pos = bucket.begin();
+            BucketType&     bucket = m_buckets[index];
+            BucketIterator  pos = bucket.begin();
 
 			while (pos != bucket.end())
 			{
@@ -358,12 +385,10 @@ public:
 		return (*pos).second;
 	}
 
-	void insert(const value_type& value)
+	void
+    insert(const value_type&    value)
 	{
-		const key_type& key = value.first;
-		const data_type& data = value.second;
-
-		insert(key, data);
+		insert(value.first, value.second);
 	}
 
     void insert(const key_type& key, const data_type& data)
@@ -380,7 +405,7 @@ public:
 	{
 		if (pos != end())
 		{
-			doRemoveEntry(pos);
+			doErase(pos);
 		}
 	}
 
@@ -390,7 +415,8 @@ public:
 
         if (pos != end())
         {
-		    erase(pos);
+		    doErase(pos);
+
             return 1;
         }
         else
@@ -403,12 +429,15 @@ public:
 	{
         doRemoveEntries();
 
-		typename BucketTableType::iterator bucketPos = m_buckets.begin();
-		while (bucketPos != m_buckets.end())
+		TableIterator   bucketPos = m_buckets.begin();
+
+        while (bucketPos != m_buckets.end())
 		{
 			bucketPos->clear();
 			++bucketPos;
 		}
+
+        m_eraseCount = 0;
 
         assert(0 == m_size);
         assert(m_entries.empty());
@@ -416,13 +445,21 @@ public:
 
 	void swap(XalanMap& theRhs)
 	{
-		size_type tempSize = m_size;
+		const size_type tempSize = m_size;
 		m_size = theRhs.m_size;
 		theRhs.m_size = tempSize;
 
-		MemoryManagerType* tempMemoryManager = m_memoryManager;
+		MemoryManagerType* const    tempMemoryManager = m_memoryManager;
 		m_memoryManager = theRhs.m_memoryManager;
 		theRhs.m_memoryManager = tempMemoryManager;
+
+        const size_type     tempEraseCount = m_eraseCount;
+        m_eraseCount = theRhs.m_eraseCount;
+        theRhs.m_eraseCount = tempEraseCount;
+
+        const size_type     tempEraseTheshold = m_eraseThreshold;
+        m_eraseThreshold = theRhs.m_eraseThreshold;
+        theRhs.m_eraseThreshold = tempEraseTheshold;
 
 		m_entries.swap(theRhs.m_entries);
         m_freeEntries.swap(theRhs.m_freeEntries);
@@ -436,7 +473,10 @@ protected:
 		// if there are no buckets, create initial minimum set of buckets
 		if (m_buckets.empty())
 		{
-			m_buckets.insert(m_buckets.begin(), m_minBuckets, BucketType(*m_memoryManager));
+			m_buckets.insert(
+                m_buckets.begin(),
+                m_minBuckets,
+                BucketType(*m_memoryManager));
 		}
 
 		// if the load factor has been reached, rehash
@@ -445,28 +485,35 @@ protected:
 			rehash();
 		}
 
-		size_type index = doHash(key);
+		const size_type     index = doHash(key);
 
-        
         if (m_freeEntries.empty())
         {
             m_freeEntries.push_back(Entry(allocate(1)));
         }
-        
+
         // insert a new entry as the first position in the bucket
-        Entry& newEntry = m_freeEntries.back();
+        Entry&  newEntry = m_freeEntries.back();
         newEntry.erased = false;
 
-        FirstConstructor::construct(const_cast<key_type*>(&newEntry.value->first), key, *m_memoryManager);
+        FirstConstructor::construct(
+            const_cast<key_type*>(&newEntry.value->first),
+            key,
+            *m_memoryManager);
+
         if (data != 0)
         {
-            SecondConstructor::construct(&newEntry.value->second, *data, *m_memoryManager);
+            SecondConstructor::construct(
+                &newEntry.value->second,
+                *data,
+                *m_memoryManager);
         }
         else
         {
-             SecondConstructor::construct(&newEntry.value->second, *m_memoryManager);
+             SecondConstructor::construct(
+                 &newEntry.value->second,
+                 *m_memoryManager);
         }
-
 
         m_entries.splice(m_entries.end(), m_freeEntries, --m_freeEntries.end());
 
@@ -504,25 +551,64 @@ protected:
         }
     }
 
-	size_type doHash(const Key & key) const
+	void
+    doErase(iterator    pos)
 	{
-		return m_hash(key) % m_buckets.size();
+		assert(pos != end());
+
+        doRemoveEntry(pos);
+
+        ++m_eraseCount;
+
+        if (m_eraseCount == m_eraseThreshold)
+        {
+            compactBuckets();
+
+            m_eraseCount = 0;
+        }
+	}
+
+    size_type
+    doHash(
+            const Key&  key,
+            size_type   modulus) const
+	{
+		return m_hash(key) % modulus;
+	}
+
+    size_type doHash(const Key & key) const
+	{
+		return doHash(key, m_buckets.size());
 	}
 
 	void rehash()
 	{
 		// grow the number of buckets by 60%
-		BucketTableType temp(size_type(1.6 * size()), BucketType(*m_memoryManager), *m_memoryManager);
-		m_buckets.swap(temp);
-	
+        const size_type     theNewSize = size_type(1.6 * size());
+
+		BucketTableType     temp(
+                                theNewSize,
+                                BucketType(*m_memoryManager),
+                                *m_memoryManager);
+
         // rehash each entry assign to bucket and insert into list
-		typename EntryListType::iterator entryPos = m_entries.begin();
-		while (entryPos != m_entries.end())
+		EntryListIterator   entryPos = m_entries.begin();
+
+        while (entryPos != m_entries.end())
 		{
-        	size_type index = doHash(entryPos->value->first);
-			m_buckets[index].push_back(entryPos);
+        	const size_type     index =
+                doHash(
+                    entryPos->value->first,
+                    theNewSize);
+
+            temp[index].push_back(entryPos);
+
             ++entryPos;
 		}
+
+        // Now that we've rebuilt the buckets, swap the rebuilt
+        // buckets with our existing buckets.
+        m_buckets.swap(temp);
 	}
 
     value_type*
@@ -530,25 +616,89 @@ protected:
     {
         const size_type     theBytesNeeded = size * sizeof(value_type);
 
-        assert( m_memoryManager != 0 );
+        assert(m_memoryManager != 0);
 
         void*   pointer = m_memoryManager->allocate(theBytesNeeded);
 
         assert(pointer != 0);
 
-        return (value_type*) pointer;
+        return reinterpret_cast<value_type*>(pointer);
     }
 
     void
     deallocate(value_type*  pointer)
     {
-        if (m_memoryManager == 0)
+        assert(m_memoryManager != 0);
+
+        m_memoryManager->deallocate(pointer);
+    }
+
+    static size_type
+    calculateNewBucketCapacity(
+            size_type   theCurrentSize,
+            size_type   theExtraCapacity)
+    {
+        assert(theExtraCapacity > theCurrentSize);
+
+        // We'll use the current extra capacity a convenient number.
+        // Perhaps a better choice would be to determine how much
+        // of the extra capacity to keep, but we really need to
+        // figure out how to keep the buckets compacted during
+        // removal of an item.
+        return theCurrentSize == 0 ?
+                    eMinimumBucketSize :
+                    theExtraCapacity;
+    }
+
+    void
+    compactBuckets()
+    {
+        for(TableIterator i = m_buckets.begin();
+                i != m_buckets.end();
+                    ++i)
         {
-            ::operator delete(pointer);
-        }
-        else
-        {
-            m_memoryManager->deallocate(pointer);
+            BucketType&     theCurrentBucket = *i;
+
+            BucketIterator  j = theCurrentBucket.begin();
+
+            while(j != theCurrentBucket.end())
+            {
+                if ((*j)->erased == true)
+                {
+                    j = theCurrentBucket.erase(j);
+                }
+                else
+                {
+                    ++j;
+                }
+            }
+
+            // Now we should do something if the
+            // bucket has a much greater capacity
+            // than the number of items in it.
+            const size_type     theCurrentSize =
+                theCurrentBucket.size();
+
+            const size_type     theExtraCapacity =
+                theCurrentBucket.capacity() - theCurrentSize;
+
+            if (theExtraCapacity > theCurrentSize)
+            {
+                const size_type     theNewCapacity =
+                    calculateNewBucketCapacity(
+                        theCurrentSize,
+                        theExtraCapacity);
+
+                // Create a copy of the bucket, and
+                // give it the new capacity of the extra
+                // capacity.
+                BucketType  theTempBucket(
+                                theCurrentBucket,
+                                *m_memoryManager,
+                                theNewCapacity);
+
+                theCurrentBucket.swap(theTempBucket);
+            }
         }
     }
 
@@ -561,7 +711,7 @@ protected:
 
 	float								m_loadFactor;
 
-	size_type							m_minBuckets;
+	const size_type						m_minBuckets;
 
 	size_type							m_size;
 
@@ -571,9 +721,15 @@ protected:
 
     BucketTableType 					m_buckets;
 
+    size_type                           m_eraseCount;
+    
+    size_type                           m_eraseThreshold;
+
 private:
-    // not defined
+
+    // These are not implemented.
     XalanMap();
+
     XalanMap(const XalanMap&);
 };
 
