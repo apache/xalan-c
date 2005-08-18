@@ -3456,6 +3456,7 @@ XPath::findRoot(
             OpCodeMapValueType      /* stepType */,
             MutableNodeRefList&     subQueryResults) const
 {
+    assert(context != 0);
     assert(subQueryResults.empty() == true);
 
     const XPathExpression&  currentExpression = getExpression();
@@ -3463,9 +3464,43 @@ XPath::findRoot(
     const OpCodeMapValueType    argLen =
         currentExpression.getOpCodeArgumentLength(opPos);
 
-    XalanNode* const    docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-                                    context :
-                                    context->getOwnerDocument();
+    XalanNode::NodeType   nodeType =
+                context->getNodeType();
+
+    XalanNode*  docContext =
+        nodeType == XalanNode::DOCUMENT_NODE ?
+            context :
+            context->getOwnerDocument();
+
+    // This is a special case for RTFs, as the "owner document" is
+    // just a factory for the RTF.  Instead, we have to search for
+    // the containing XalanDocumentFragment node.
+#if defined(XALAN_OLD_STYLE_CASTS)
+    if (((const XalanDocument*)docContext)->getDocumentElement() == 0)
+#else
+    if (static_cast<const XalanDocument*>(docContext)->getDocumentElement() == 0)
+#endif
+    {
+        docContext = context;
+
+        for(;;)
+        {
+            if (nodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
+            {
+                break;
+            }
+            else
+            {
+                docContext =
+                    DOMServices::getParentOfNode(*docContext);
+                assert(docContext != 0);
+
+                nodeType = docContext->getNodeType();
+
+            }
+        }
+    }
+
     assert(docContext != 0);
 
     subQueryResults.addNode(docContext);
