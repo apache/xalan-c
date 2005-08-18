@@ -287,10 +287,12 @@ doClean:
 	rm -f $(XSL_LIB_DIR)/$(LIB)
 	rm -f $(XSL_LIB_DIR)/$(LINK_NAME)
 	rm -f $(XSL_LIB_DIR)/$(SO_NAME)
-	rm -f $(LIBRARY_LINK_NAME)
 	rm -f $(XSL_LIB_DIR)/$(LIB).map1
 	rm -f $(XSL_BIN_DIR)/testXSLT$(EXT)
 	rm -f $(XSL_BIN_DIR)/testXPath$(EXT)
 	rm -f $(XSL_BIN_DIR)/Xalan$(EXT)
+ifeq ($(PLATFORM), OS390)
+	rm -f $(LIBRARY_LINK_NAME)
+endif ## OS390
 
 install-package: install
