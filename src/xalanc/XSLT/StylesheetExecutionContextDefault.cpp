@@ -1860,6 +1860,7 @@ StylesheetExecutionContextDefault::reset()
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     m_xobjectPtrStack.clear();
+    m_paramsVectorStack.clear();
 #endif
 
     if (m_xsltProcessor != 0)
@@ -1907,7 +1908,6 @@ StylesheetExecutionContextDefault::reset()
     m_processCurrentAttributeStack.clear();
     m_skipElementAttributesStack.clear();
     m_executeIfStack.clear();
-    m_paramsVectorStack.clear();
     m_elementInvokerStack.clear();
     m_useAttributeSetIndexesStack.clear();
     m_formatterToSourceTreeStack.reset();
