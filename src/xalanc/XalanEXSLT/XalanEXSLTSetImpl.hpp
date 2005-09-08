@@ -232,8 +232,6 @@ protected:
                     theBuffer,
                     XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "distinct()");
-
-        return theBuffer;
     }
 
 private:
@@ -296,8 +294,6 @@ protected:
                     theBuffer,
                     XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
                     "leading()");
-
-        return theBuffer;
     }
 
 private:
