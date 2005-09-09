@@ -420,7 +420,7 @@ XALAN_USING_XERCES(SAXException)
 
 
 
-const XalanDOMString&
+static const XalanDOMString&
 FormatSAXParseException(
             XPathExecutionContext&      theExecutionContext,
             const SAXParseException&    theException,
@@ -498,7 +498,7 @@ FormatXalanDOMException(
 
 
 
-void
+static void
 LoadErrorMessage(
             XPathExecutionContext&      theExecutionContext,
             XalanMessages::Codes        theCode,
@@ -872,7 +872,13 @@ XalanTransformer::setStylesheetParam(
             const char*     expression)
 {
 
-    setStylesheetParam(XalanDOMString(key, m_memoryManager), XalanDOMString(expression, m_memoryManager));
+    setStylesheetParam(
+        XalanDOMString(
+            key,
+            m_memoryManager),
+        XalanDOMString(
+            expression,
+            m_memoryManager));
 }
 
 
