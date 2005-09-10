@@ -5253,7 +5253,7 @@ isNamespaceDeclaration(const XalanNode&     theAttributeNode)
 
 
 // MSVC generates some really horrible code for some of these very simple functions when they're inlined...
-#if defined(_MSC_VER) && _MSC_VER <= 1300
+#if defined(_MSC_VER) && _MSC_VER <= 1300 && !defined(__INTEL_COMPILER)
 #pragma auto_inline(off)
 #endif
 
