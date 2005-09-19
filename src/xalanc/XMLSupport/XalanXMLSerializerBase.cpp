@@ -394,6 +394,7 @@ static const XalanDOMChar   s_1_1VersionString[] =
     XalanUnicode::charDigit_1,
     XalanUnicode::charFullStop,
     XalanUnicode::charDigit_1,
+    XalanDOMChar(0)
 };
 
 
@@ -414,7 +415,7 @@ XalanXMLSerializerBase::initialize(MemoryManager&   theManager)
     }
 
     {
-        XalanDOMString theTmp(UTF8::s_defaultVersionString, theManager);
+        XalanDOMString theTmp(UTF16::s_defaultVersionString, theManager);
 
         s_local1_0String.swap(theTmp);
     }
