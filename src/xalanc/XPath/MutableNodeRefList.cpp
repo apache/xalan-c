@@ -349,7 +349,7 @@ MutableNodeRefList::addNodesInDocOrder(
 
 
 
-bool
+static bool
 findInsertionPointBinarySearch(
 			XalanNode*									node,
 			MutableNodeRefList::NodeListIteratorType	begin,
@@ -451,7 +451,7 @@ findInsertionPointBinarySearch(
 
 
 template<class PredicateType>
-bool
+inline bool
 findInsertionPointLinearSearch(
 			XalanNode*									node,
 			MutableNodeRefList::NodeListIteratorType	begin,

@@ -266,7 +266,7 @@ XalanQNameByValue::set(
 
 
 
-void
+static void
 throwException(
             const XalanDOMString&                   theMessage,
             const XalanQNameByValue::LocatorType*   theLocator,

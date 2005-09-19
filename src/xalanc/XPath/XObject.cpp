@@ -41,13 +41,15 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-XalanDOMString  s_localBooleanString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localFalseString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localNodesetString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localNumberString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localResultTreeFragmentString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localStringString(XalanMemMgrs::getDummyMemMgr());
-XalanDOMString  s_localTrueString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localBooleanString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localFalseString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localNodesetString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localNumberString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localResultTreeFragmentString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localStringString(XalanMemMgrs::getDummyMemMgr());
+static XalanDOMString   s_localTrueString(XalanMemMgrs::getDummyMemMgr());
+
+
 
 const XalanDOMString&   XObject::s_booleanString =
         s_localBooleanString;
@@ -366,7 +368,7 @@ XObject::nodeset() const
 
 
 
-void
+inline void
 getStringFromNode(
             const XalanNode&    theNode,
             XalanDOMString&     theString)
@@ -693,7 +695,7 @@ private:
 
 
 template<class CompareFunction, class TypeFunction>
-bool
+inline bool
 doCompareNodeSets(
             const NodeRefListBase&  theLHSNodeSet,
             const NodeRefListBase&  theRHSNodeSet,
@@ -767,7 +769,7 @@ doCompareNodeSets(
 
 
 template<class CompareFunction, class StringFunction>
-bool
+inline bool
 doCompareString(
             const NodeRefListBase&  theLHSNodeSet,
             const StringFunction&   theStringFunction,
@@ -804,7 +806,7 @@ doCompareString(
 
 
 template<class CompareFunction, class NumberFunction>
-bool
+inline bool
 doCompareNumber(
             const NodeRefListBase&  theLHSNodeSet,
             const NumberFunction&   theNumberFunction,
@@ -834,7 +836,7 @@ doCompareNumber(
 
 
 template<class StringCompareFunction, class NumberCompareFunction>
-bool
+inline bool
 compareNodeSets(
             const XObject&                  theLHS,
             const XObject&                  theRHS,
