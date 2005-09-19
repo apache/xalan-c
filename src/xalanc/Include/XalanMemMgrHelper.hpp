@@ -31,7 +31,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 template <class Type>
-Type*
+inline Type*
 cloneObjWithMemMgr(const Type& other, MemoryManagerType& theManager)
 {
 
@@ -49,7 +49,7 @@ cloneObjWithMemMgr(const Type& other, MemoryManagerType& theManager)
 
 
 template <class Type>
-Type*
+inline Type*
 cloneObj(const Type& other, MemoryManagerType& theManager)
 {
 
@@ -63,6 +63,8 @@ cloneObj(const Type& other, MemoryManagerType& theManager)
     
     return theResult;
 }
+
+
 
 template <class Type>
 class CreateObjFunctor
@@ -85,7 +87,7 @@ public:
 };
 
 template <class Type>
-void
+inline void
 destroyObjWithMemMgr(const Type* ptr, MemoryManagerType& theManager)
 {
     if (ptr != 0)

@@ -53,7 +53,7 @@ FunctionGenerateID::~FunctionGenerateID()
 
 
 // Append the suffix to the provided string.
-void
+inline void
 getSuffix(
         const XalanNode*    theNode,
         XalanDOMString&     theResult)
