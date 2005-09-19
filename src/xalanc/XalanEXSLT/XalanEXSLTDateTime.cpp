@@ -100,8 +100,6 @@ static const XalanDOMChar   s_dateTimeNamespace[] =
 
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-using std::gmtime;
-using std::localtime;
 using std::sprintf;
 using std::time;
 using std::time_t;
@@ -110,7 +108,12 @@ using std::tm;
 
 
 
-#if defined(WIN32) || defined(__DECCXX) || defined(OS390)
+#if defined(XALAN_NO_REENTRANT_TIME_FUNCTIONS)
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::gmtime;
+using std::localtime;
+#endif
 
 static struct tm*
 localtime_r(const time_t *clock, struct tm *res)
@@ -152,7 +155,7 @@ gmtime_r(const time_t *clock, struct tm *res)
     
 }
 
-#endif // defined(WIN32) || defined(__DECCXX)
+#endif
 
 
 
