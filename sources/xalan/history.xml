@@ -14,6 +14,31 @@
  * limitations under the License.
 -->
 
+
+<s3 title="Changes for &xslt4c; version 1.9">
+<p>Major updates since version 1.8 include:</p>
+<ul>
+  <li>Pluggable Memory Management.  This feature allows applications to maintain precise control over memory allocations.  This 
+      will allow users, with knowledge of their application's characteristics, to provide a more efficient allocation method 
+      than the general purpose procedures provided by the system.  for more information on how to use this feature, please see
+      the <link idref="programming" anchor="memory">Pluggable Memory Management</link> section of the Programming page.</li>
+  <li>Improved stability on the execution of large stylesheets and XML documents.  Because the current implementation relies on 
+      function recursion, certain stylesheets/input documents may cause the program stack to overflow and cause the application 
+      to fail.  It also may inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will 
+      prevent these types of failure. </li>
+  <li>Provided a global option to pool all text node strings.  This feature allows developers to set a flag to determine if a 
+      parsed source tree will pool the values of all of the text nodes in the XML document.  By doing so, this can result in a 
+      significant reduction in memory usage, particularly if there are a lot of repeated values in text nodes.  Please see 
+      the class descriptions for <jump href="apiDocs/classXalanSourceTreeDocument.html">XalanSourceTreeDocument</jump>,  
+      <jump href="apiDocs/classXalanDefaultParsedSource.html">XalanDefaultParsedSource</jump>, and
+      <jump href="apiDocs/classXalanTransformer.html">XalanTransformer</jump> in the <jump href="apiDocs/index.html">
+      API Reference</jump> section for more information.</li> 
+  <li>Added support for Microsoft Studio .NET V7.1.  Project files for Microsoft Studio .NET V7.1 have been provided under the 
+      directory xml-xalan\c\Projects\Win32\VC7.1.</li>
+  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+ </ul>  
+</s3>
+
    <s3 title="Changes for &xslt4c; version 1.8">
      <p>Major updates since version 1.7 include:</p>
      <ul>
@@ -38,7 +63,7 @@
      </ul>  
    </s3>  
    <s3 title="Changes for &xslt4c; version 1.7">
-     <p>Major updates since version 1.7 include:</p>
+     <p>Major updates since version 1.6 include:</p>
      <ul>
       <li>Message Localization Support. This feature enables &xslt4c; to issue diagnostic messages 
       in languages other than the default language (English). In order to utilize this feature, 
