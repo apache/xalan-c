@@ -19,7 +19,7 @@
 <!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN"
   "../xliff.dtd" > 
 <xliff version="1.1">
-  <file source-language="en_US" target-language="en_US" datatype="cpp" original="XalanC source files" product-name="XalanC" product-version="1.9.0">
+  <file source-language="en_US" target-language="en_US" datatype="cpp" original="XalanC source files" product-name="XalanC" product-version="1.10.0">
     <header></header>
     <body>    
 
