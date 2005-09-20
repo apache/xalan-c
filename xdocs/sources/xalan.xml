@@ -21,13 +21,14 @@
 
   <resources source="sbk:/sources/xalan/resources.xml"/>
     
-  <external href="../index.html"  label="Home"/>
+  <external href="http:/xalan.apache.org/"  label="Home"/>
   
   <separator/>
   
   <document id="index"
-            label="Xalan-C++ 1.9"
+            label="Xalan-C++ 1.10"
             source="xalan/index.xml"/>
+  <external href="http://xml.apache.org/xalan-j/charter.html" label="Charter"/>
             
  <separator/>            
   

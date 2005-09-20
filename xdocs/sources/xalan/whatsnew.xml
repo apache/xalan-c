@@ -29,34 +29,21 @@
 <anchor name="status"/>
 <s2 title="Status">
   <ul>
-    <li><link anchor="done">Changes for &xslt4c; version 1.9</link></li>
+    <li><link anchor="done">Changes for &xslt4c; version 1.10</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
   </ul>
 
 <anchor name="done"/>
-<s3 title="Changes for &xslt4c; version 1.9">
-<p>Major updates since version 1.8 include:</p>
+<s3 title="Changes for &xslt4c; version 1.10">
+<p>Major updates since version 1.9 include:</p>
 <ul>
-  <li>Pluggable Memory Management.  This feature allows applications to maintain precise control over memory allocations.  This 
-      will allow users, with knowledge of their application's characteristics, to provide a more efficient allocation method 
-      than the general purpose procedures provided by the system.  for more information on how to use this feature, please see
-      the <link idref="programming" anchor="memory">Pluggable Memory Management</link> section of the Programming page.</li>
-  <li>Improved stability on the execution of large stylesheets and XML documents.  Because the current implementation relies on 
-      function recursion, certain stylesheets/input documents may cause the program stack to overflow and cause the application 
-      to fail.  It also may inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will 
-      prevent these types of failure. </li>
-  <li>Provided a global option to pool all text node strings.  This feature allows developers to set a flag to determine if a 
-      parsed source tree will pool the values of all of the text nodes in the XML document.  By doing so, this can result in a 
-      significant reduction in memory usage, particularly if there are a lot of repeated values in text nodes.  Please see 
-      the class descriptions for <jump href="apiDocs/classXalanSourceTreeDocument.html">XalanSourceTreeDocument</jump>,  
-      <jump href="apiDocs/classXalanDefaultParsedSource.html">XalanDefaultParsedSource</jump>, and
-      <jump href="apiDocs/classXalanTransformer.html">XalanTransformer</jump> in the <jump href="apiDocs/index.html">
-      API Reference</jump> section for more information.</li> 
-  <li>Added support for Microsoft Studio .NET V7.1.  Project files for Microsoft Studio .NET V7.1 have been provided under the 
-      directory xml-xalan\c\Projects\Win32\VC7.1.</li>
-  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+  <li>Support for XML 1.1 and Namespaces in XML 1.1.</li>
+  <li>Added support for IBM XLC 7.0 compiler on Linux.</li>
+  <li>Improved and stabilized C pluggable memory management functionality.</li> 
+  <li>Various improvements in Xalan XML serializers for better performance and stability.</li>
+  <li>Upgrade from Xerces-C 2.6 to Xerces-C 2.7.</li>
   <li><link anchor="bugfixes">Bugs fixed in this release</link>.</li>
  </ul>  
 </s3>  
@@ -65,64 +52,46 @@
 <s2 title="Bugs Fixed in this Release">
 <p>The bugs fixed in this release include:</p>
 <ul>
-   <li>Fixed bug in binary operators. Failed to detect a missing term. (XPathProcessorImpl.cpp, XPathProcessorImpl.hpp)</li>
-   <li>Fixed threadsafe issues in XalanEXSLTDateTime. (Bugzilla 28818) (XalanEXSLTDateTime.cpp)</li>
-   <li>Fixed incorrect linefeed serialization after an XML declaration. (various files) </li>
-   <li>Fixed behaviour of xsl:number to conform to XSLT erratum E24 (See http://www.w3.org/1999/11/REC-xslt-19991116-errata/). 
-       (ElemNumber.cpp) </li>
-   <li>Fixed memory corruption when encoding of the output is set to UTF-16. (Jira XALANC-438) (FormatterToXML_UTF16.cpp)</li>
-   <li>Fixed InvalidStackContextException exception. endExecuteChildren() not being called. (ElemVariable.cpp, ElemWithParam.cpp) </li>
-   <li>Fixed problem with global variables. (Bugzilla 27959) (VariablesStack.cpp) </li>
-   <li>Fixed bug in capacity(). (XalanDOMString.hpp) </li>
-   <li>Fixed bug in creation/deletion of key maps (key-value/node-list pairs) for tree-fragments. (Jira XALANC-425) 
-       (StylesheetExecutionContextDefault.cpp) </li>
-   <li>Fixed leakage of DOMStringPrintWriter instances. (StylesheetExecutionContextDefault.cpp)</li>
-   <li>Fixed bug in reset(). (StylesheetExecutionContextDefault.hpp)</li>
-   <li>Fixed bug in with the omit-xml-declaration attribute (xsl:output). (Bugzilla 29545) (FormatterToXMLBase.cpp)</li>
-   <li>Calling a named template should not change the current template rule. (Bugzilla 27841) (various files)</li>
-   <li>Fixed conflict resolution problem for unique attributes with the same qname. (Bugzilla 23955) (ElemAttribute.cpp)</li>
-   <li>Fixed problem with out-of-scope xsl:variable's not being detected in certain circumstances. 
-      (Bugzilla 29079) (ElemTemplateElement.cpp)</li>
-   <li>Fixed bug in exslt extension function date-time().  Wrong GMT offsets were being reported. 
-      (Bugzilla 27365) (XalanEXSLTDateTime.cpp)</li>
-   <li>Fixed bug in XalanSourceTreeElementNA::getLocalName(). (Bugzilla 27982) (XalanSourceTreeElementNA.cpp)</li>
-   <li>Fixed bug in XalanTransformer::initialize() (Bugzilla 22350)  (XalanTransformer.cpp)</li>
-   <li>Cleaned up whitespace stripping. Fixed bug with whitespace stripping and xsl:copy-of. (various files)</li>
-   <li>Cleaned up embedded string literals and unnecessary copies. (various files)</li>  
-   <li>Removed createDOMFactory() call, because we cannot truly support it. (XMLParserLiaison.hpp)</li>
-   <li>Cleaned up minor spelling problems in XalanMsg_en_US.xlf. (Bugzilla 30750)</li>
-   <li>Fixed compilation problems with cygwin, gcc 2.95.3 and Tru64.</li>
-   <li>Fixed compilation problems with HP aCC v3.52. (Bugzilla 29983)</li>
-   <li>Fixed compilation problem with gcc 3.4.0 (Jira XALANC-423)</li>   
-   <li>Fixed Win64 linkage problem.  Do not link with the Intel's default libmmd.lib library.</li>
-   <li>Fixed problem with INSTALL_{PROGRAM->DATA}. (Bugzilla 27404)</li>
-   <li>Build fails if no ICUROOT is set. (Jira XALANC-422)</li>
-   <li>FreeBSD configure changes for threading.  (Bugzilla 27406)</li>
-   <li>Update runConfigure to include new HP Itanium platform (hp-11-ia64). (Bugzilla 28452)</li>
-   <li>Fixed AIX packaging bug. ICU on AIX now produces archives instead of shared objects.</li>
-   <li>Fixed bug in CompileStylesheet.dsp that prevented building the sample on Win32.</li>
-   <li>Fixed spelling errors in usagepatterns.xml. (JIRA XALANC-428)</li>
-   <li>Fixed bug involving exporting the Harness symbols in Win64 with ICU dll. (AllInOneWithICU.dsp)</li>
-   <li>Fixed bug to enable build on HP-UX/aCC - workaround symbol length limit.(Makefile.incl.in)</li>
-   <li>Enabled build of PerfT/Performance tests as well as direct conf's intermediate build files to the correct location. (conf.vcproj, PerfT.vcproj, perf.vcproj)</li>
-   <li>Added status value error checking and included an example of the ICU memory management feature by altering SimpleTransform sample.</li>
-   <li>Updated Makefiles for zOS build (Makefile.in)</li>
-   <li>Corrected initialization of XalanMap with XalanVector as a data value</li>
-   <li>Modified XalanFileUtility.cpp by commenting out system call to bring up results html file in a browser.</li>
-   <li>Improved XalanMap implementation (XalanMap.hpp)</li>
-   <li>Right configuation for XalanVector , preventing memory allocation from the global heap (XalanMap.hpp)</li>
-   <li>Avoid trying to resolve against a base URI which is relative. (XalanParsedURI.cpp)</li>
-   <li>Simplified boolean expressions. (XalanParsedURI.hpp)</li>
-   <li>Use std::vector instead of XalanVector, since we cannot use the former until Xerces-C is initialized. (process.cpp) </li>
-   <li>Added code to ensured that ICU cleanup code is called. (process.cpp)</li>
-   <li>Fixed bug for providing backward API compatibility for Formatter* classes. (various files)</li>
-   <li>Fixed build bug for Solaris platform. (XPath.cpp)</li>
-   <li>Fixed bug in iterative stylesheet processing.  Execution was corrupted if &lt;xsl:for-each&gt; contained a single &lt;xsl:call-template&gt; and the invoked template was not the last template in the stylesheet. (ElemForEach.cpp)</li>
-   <li>Fixed bug where incorrect template was chosen when checking for conflicts. (Stylesheet.cpp)</li>
-   <li>Fixed bug to set proper document source URI (fixes testXSLT when inputs are specified with a relative path).  (XSLTEngineImpl.cpp)</li>
-   <li>Fixed bug where XML identifier was getting clobbered. (XSLTEngineImpl.cpp)</li>
-   <li>Provided an option to pool all text node strings. (various files) </li>
-   <li>Updated docs in anticipation of 1.9 release (various files)</li>
+  <li>XALANC-115: Need to catch use of variables in xsl:key attributes </li>
+  <li>XALANC-540: XPath absolute location path does not work when the context node was obtained from a result tree fragment through exsl:node-set() </li>
+  <li>XALANC-544: Assert failure, then crash, during "variable undefined" error recovery in certain circumstances. </li>
+  <li>XALANC-543: Crash when calling a template that wrongly uses xsl:with-param instead of xsl:param to declare its parameter. </li>
+  <li>XALANC-539: XalanMap needs to compact buckets to prevent long search times and ever-increasing memory usage. </li>
+  <li>XALANC-542: XalanDocumentFragmentXNodeSetBaseProxy::dereferenced() is not implemented properly </li>
+  <li>XALANC-538: Better handling for non-existent node test </li>
+  <li>XALANC-541: Fixes for zOS build </li>
+  <li>XALANC-455: Problem when releasing InputSource obtained through an EntityResolver </li>
+  <li>XALANC-538: Better handling for non-existent node test </li>
+  <li>XALANC-535: If an error/warning message contains not-displayable character for the local encoding , no message is shown at all </li>
+  <li>XALANC-532: FormatterToXMLUnicode does not serialize UTF-8 </li>
+  <li>XALANC-536: ElemNumber uses extra temporary strings </li>
+  <li>XALANC-537: XalanC source code quotes incorrectly license protected documents </li>
+  <li>XALANC-526: Use of undefined stricmp breaks compilation on Linux </li>
+  <li>XALANC-513: ICUFormatNumberFunctor has some MemoryManager issues </li>
+  <li>XALANC-507: Safety improvements for XalanVector::insert() </li>
+  <li>XALANC-506: Remove references to stlport directory in Makefile.incl.in </li>
+  <li>XALANC-505: DirectoryEnumerator.hpp will not build on Solaris 10 with Sun Workshop 10 </li>
+  <li>XALANC-502: XalanDOMStringCache has initializer list out of order </li>
+  <li>XALANC-501: Creation of comments and PIs needs to detect illegal values </li>
+  <li>XALANC-500: Remove old "diagnostic" output from StylesheetRoot and XSLTEngineImpl </li>
+  <li>XALANC-497: Local variables or parameters in EXSLT-functions are interpreted as global </li>
+  <li>XALANC-496: Glitches in header files </li>
+  <li>XALANC-493: Problem with XALAN_STATIC_CHECK on HP-UX IA64 </li>
+  <li>XALANC-492: Various pluggable memory management bugs. </li>
+  <li>XALANC-490: XalanFileReporter is inconsistent in its usage of pluggable memory management </li>
+  <li>XALANC-489: XalanMemMgrs has a thread-safety issue </li>
+  <li>XALANC-488: XSLTInputSource does not support pluggable memory management </li>
+  <li>XALANC-487: URISupport does not provide explicit MemoryManager </li>
+  <li>XALANC-485: GCC warns about order of members in initializer list </li>
+  <li>XALANC-484: Remove compiler warnings about placement delete for HP's aCC compiler </li>
+  <li>XALANC-483: XercesParserLiaison does not create Xerces-C DOM instances with namespaces support enabled. </li>
+  <li>XALANC-482: Remove compiler warnings </li>
+  <li>XALANC-470: runConfigure does not pass link options to Makefile for AIX platform </li>
+  <li>XALANC-465: Add alt tag to footer.html page under html/apiDocs tree. </li>
+  <li>XALANC-463: Transforming an XML DOM document encapsulated within an XercesDOMWrapperParsedSource object triggers an invalid heap pointer exception if XSL opens other XML document with 'document()' function. </li>
+  <li>XALANC-460: Linux/xlC port </li>
+  <li>XALANC-448: TestXSLT/process.cpp compilation fails, interface broken in FormatterToText.hpp </li>
+  <li>XALANC-445: generate-id() inserts periods into name which limits usage </li>
 </ul>
 </s2>
 
