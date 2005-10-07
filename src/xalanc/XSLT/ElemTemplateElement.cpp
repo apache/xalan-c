@@ -1460,36 +1460,33 @@ ElemTemplateElement::getNamespaceForPrefixInternal(const XalanDOMString&    pref
 {
     const XalanDOMString*   nameSpace = 0;
 
-    if (isEmpty(prefix) == false)
+    if(getFinishedConstruction() == false)
     {
-        if(getFinishedConstruction() == true)
+        nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+    }
+    else
+    {
+        if (equals(prefix, DOMServices::s_XMLString) == true)
         {
-            if (equals(prefix, DOMServices::s_XMLString) == true)
-            {
-                nameSpace = &DOMServices::s_XMLNamespaceURI;
-            }
-            else
-            {
-                nameSpace = getNamespacesHandler().getNamespace(prefix);
-
-                if(nameSpace == 0)
-                {
-                    if (m_parentNode != 0)
-                    {
-                        nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix);
-                    }
-
-                    // Try one last time with the stylesheet...
-                    if (nameSpace == 0)
-                    {
-                        nameSpace = getStylesheet().getNamespaceForPrefix(prefix);
-                    }
-                }
-            }
+            nameSpace = &DOMServices::s_XMLNamespaceURI;
         }
         else
         {
-            nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+            nameSpace = getNamespacesHandler().getNamespace(prefix);
+
+            if(nameSpace == 0)
+            {
+                if (m_parentNode != 0)
+                {
+                    nameSpace = m_parentNode->getNamespaceForPrefixInternal(prefix);
+                }
+
+                // Try one last time with the stylesheet...
+                if (nameSpace == 0)
+                {
+                   nameSpace = getStylesheet().getNamespaceForPrefix(prefix);
+                }
+            }
         }
     }
 

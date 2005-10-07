@@ -652,8 +652,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
     const XalanDOMString::size_type     fragIndex =
         indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
-    const XalanDocument*    stylesheetDoc = 0;
-
     if(fragIndex == 0)
     {
         const CCGetAndReleaseCachedString theGuard(constructionContext);
@@ -820,8 +818,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         }
         else
         {
-            stylesheetDoc = 0;
-
             const CCGetAndReleaseCachedString theGuard(constructionContext);
 
             error(
@@ -1370,7 +1366,10 @@ void
 XSLTEngineImpl::addResultAttribute(
             AttributeListImpl&          attList,
             const XalanDOMString&       aname,
-            const XalanDOMChar*         value)
+            const XalanDOMChar*         value,
+            XalanDOMString::size_type   theLength,
+            bool                        fromCopy,
+			const LocatorType*	        locator)
 {
     assert(value != 0);
 
@@ -1389,8 +1388,6 @@ XSLTEngineImpl::addResultAttribute(
             const XalanDOMString* const     currentDefaultNamespace =
                         getNamespaceForPrefix(s_emptyString);
 
-            const XalanDOMString::size_type     theLength = length(value);
-
             // Note that we use an empty string for the prefix, instead of "xmlns", since the
             // prefix really is "".
             if (theLength != 0)
@@ -1398,11 +1395,19 @@ XSLTEngineImpl::addResultAttribute(
                 if (currentDefaultNamespace != 0 &&
                     equals(*currentDefaultNamespace, value, theLength) == true)
                 {
-                    fExcludeAttribute = true;
+                        fExcludeAttribute = true;
                 }
                 else
                 {
-                    addResultNamespaceDecl(s_emptyString, value, theLength);
+                    if (fromCopy == false /* ||
+                        m_resultNamespacesStack.prefixIsPresentLocal(s_emptyString) == false */)
+                    {
+                        addResultNamespaceDecl(s_emptyString, value, theLength);
+                    }
+                    else
+                    {
+                        reportDuplicateNamespaceNodeError(s_emptyString, locator);
+                    }
                 }
             }
             else
@@ -1434,9 +1439,21 @@ XSLTEngineImpl::addResultAttribute(
 
             const XalanDOMString::size_type     theLength = length(value);
 
-            if (theNamespace == 0 || equals(*theNamespace, value, theLength) == false)
+            if (theNamespace == 0)
             {
                 addResultNamespaceDecl(prefix, value, theLength);
+            }
+            else if (equals(*theNamespace, value, theLength) == false)
+            {
+                if (fromCopy == false /* ||
+                    m_resultNamespacesStack.prefixIsPresentLocal(prefix) == false */)
+                {
+                    addResultNamespaceDecl(prefix, value, theLength);
+                }
+                else
+                {
+                    reportDuplicateNamespaceNodeError(prefix, locator);
+                }
             }
             else
             {
@@ -1451,6 +1468,44 @@ XSLTEngineImpl::addResultAttribute(
                 c_wstr(Constants::ATTRTYPE_CDATA),
                 c_wstr(value));
         }
+    }
+}
+
+
+
+void
+XSLTEngineImpl::reportDuplicateNamespaceNodeError(
+            const XalanDOMString&   theName,
+            const LocatorType*      locator)
+{
+    assert(m_executionContext != 0);
+
+    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+
+    XalanDOMString&     theMessage =
+            theGuard.get();
+
+    if (theName.length() == 0)
+    {
+        XalanMessageLoader::getMessage(
+            theMessage,
+            XalanMessages::ErrorCopyingNamespaceNodeForDefault);
+    }
+    else
+    {
+        XalanMessageLoader::getMessage(
+            theMessage,
+            XalanMessages::ErrorCopyingNamespaceNode_1Param,
+            theName);
+    }
+
+    if (locator != 0)
+    {
+        error(theMessage, *locator);
+    }
+    else
+    {
+        error(theMessage);
     }
 }
 
@@ -1894,6 +1949,7 @@ XSLTEngineImpl::comment(const XalanDOMChar*     data)
 }
 
 
+
 void
 XSLTEngineImpl::entityReference(const XalanDOMChar*     name)
 {
@@ -1958,7 +2014,7 @@ XSLTEngineImpl::checkDefaultNamespace(
         // will also "turn-off" the default namespace, if necessary.
         if (theResultNamespace != 0 && theElementNamespaceURI != *theResultNamespace)
         {
-            addResultAttribute(DOMServices::s_XMLNamespace, theElementNamespaceURI);
+            addResultAttribute(DOMServices::s_XMLNamespace, theElementNamespaceURI, false, 0);
         }
     }
 }
@@ -1972,7 +2028,7 @@ XSLTEngineImpl::warnCopyTextNodesOnly(
 {
     assert(m_executionContext != 0);
 
-    ECGetAndReleaseCachedString     theGuard(*m_executionContext);
+    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
 
     const XalanDOMString&   theMessage =
         XalanMessageLoader::getMessage(
@@ -2191,7 +2247,9 @@ XSLTEngineImpl::cloneToResultTree(
                 addResultAttribute(
                         getPendingAttributesImpl(),
                         node.getNodeName(),
-                        node.getNodeValue());
+                        node.getNodeValue(),
+                        true,
+                        locator);
             }
             else
             {
@@ -2502,10 +2560,10 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName) const
         }
         else
         {
-            typedef const ECGetAndReleaseCachedString   GetAndReleaseCachedString;
+            typedef ECGetAndReleaseCachedString     GetAndReleaseCachedString;
 
-            GetAndReleaseCachedString   elemLocalNameGuard(*m_executionContext);
-            GetAndReleaseCachedString   prefixGuard(*m_executionContext);
+            const GetAndReleaseCachedString     elemLocalNameGuard(*m_executionContext);
+            const GetAndReleaseCachedString     prefixGuard(*m_executionContext);
 
             XalanDOMString&     elemLocalName = elemLocalNameGuard.get();
             XalanDOMString&     prefix = prefixGuard.get();
@@ -2736,7 +2794,7 @@ XSLTEngineImpl::addResultNamespace(
 
         if(desturi == 0 || equals(srcURI, *desturi) == false)
         {
-            addResultAttribute(thePendingAttributes, theName, srcURI);
+            addResultAttribute(thePendingAttributes, theName, srcURI, false, 0);
             addResultNamespaceDecl(thePrefix, srcURI);
         }
     }
@@ -2926,7 +2984,7 @@ XSLTEngineImpl::copyAttributeToTarget(
             const XalanDOMString&   attrValue,
             AttributeListImpl&      attrList)
 {
-    addResultAttribute(attrList, attrName, attrValue);
+    addResultAttribute(attrList, attrName, attrValue, false, 0);
 }
 
 

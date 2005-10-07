@@ -731,6 +731,16 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Invalid argument type in the function '{0}'.</target>
 </trans-unit>
 
+<trans-unit id="ErrorCopyingNamespaceNodeForDefault">
+		<source>A namespace node for the default namespace already exists in the result tree.</source>
+		<target>A namespace node for the default namespace already exists in the result tree.</target>
+</trans-unit>
+
+<trans-unit id="ErrorCopyingNamespaceNode_1Param">
+		<source>A namespace node with the name '{0}' already exists in the result tree.</source>
+		<target>A namespace node with the name '{0}' already exists in the result tree.</target>
+</trans-unit>
+
 <trans-unit id="InvalidHighSurrogate_1Param">
 		<source>Invalid UTF-16 high surrogate detected: {0}.</source>
 		<target>Invalid UTF-16 high surrogate detected: {0}.</target>

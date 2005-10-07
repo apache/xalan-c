@@ -440,17 +440,23 @@ public:
 	 * @param attList attribute list added to
 	 * @param aname   name of attribute
 	 * @param value   value of attribute
+     * @param fromCopy true if the attribute is being copied from the source tree
+     * @param locator The Locator for reporting errors.
 	 */
 	void
 	addResultAttribute(
 			AttributeListImpl&		attList,
 			const XalanDOMString&	aname,
-			const XalanDOMString&	value)
+			const XalanDOMString&	value,
+            bool                    fromCopy = false,
+			const LocatorType*	    locator = 0)
 	{
 		addResultAttribute(
 			attList,
 			aname,
-			value.c_str());
+			value.c_str(),
+            fromCopy,
+            locator);
 	}
 
 	/**
@@ -460,12 +466,45 @@ public:
 	 * @param attList attribute list added to
 	 * @param aname name of attribute
 	 * @param value value of attribute
+     * @param fromCopy true if the attribute is being copied from the source tree
+     * @param locator The Locator for reporting errors.
+	 */
+	void
+	addResultAttribute(
+			AttributeListImpl&		attList,
+			const XalanDOMString&	aname,
+			const XalanDOMChar*	    value,
+            bool                    fromCopy = false,
+			const LocatorType*	    locator = 0)
+    {
+	    addResultAttribute(
+			attList,
+			aname,
+            value,
+            length(value),
+            fromCopy,
+            locator);
+    }
+
+	/**
+	 * Add attribute to attribute list, and if it is a namespace, add it to the
+	 * namespaces stack.
+	 *
+	 * @param attList attribute list added to
+	 * @param aname name of attribute
+	 * @param value value of attribute
+     * @param theLength The length of the value
+     * @param fromCopy true if the attribute is being copied from the source tree
+     * @param locator The Locator for reporting errors.
 	 */
 	void
 	addResultAttribute(
 			AttributeListImpl&			attList,
 			const XalanDOMString&		aname,
-			const XalanDOMChar*			value);
+			const XalanDOMChar*			value,
+            XalanDOMString::size_type   theLength,
+            bool                        fromCopy = false,
+			const LocatorType*	        locator = 0);
 
 	/**
 	 * Add attribute to pending attributes list, and if it is a namespace, add
@@ -473,18 +512,24 @@ public:
 	 *
 	 * @param aname name of attribute
 	 * @param value value of attribute
+     * @param fromCopy true if the attribute is being copied from the source tree
+     * @param locator The Locator for reporting errors.
 	 */
 	void
 	addResultAttribute(
 			const XalanDOMString&		aname,
-			const XalanDOMChar*			value)
+			const XalanDOMChar*			value,
+            bool                        fromCopy = false,
+			const LocatorType*	        locator = 0)
 	{
 		assert(m_outputContextStack.empty() == false);
 
 		addResultAttribute(
 				getPendingAttributesImpl(),
 				aname,
-				value);
+				value,
+                fromCopy,
+                locator);
 	}
 
 	/**
@@ -493,19 +538,35 @@ public:
 	 *
 	 * @param aname   name of attribute
 	 * @param value   value of attribute
+     * @param fromCopy true if the attribute is being copied from the source tree
+     * @param locator The Locator for reporting errors.
 	 */
 	void
 	addResultAttribute(
 			const XalanDOMString&	aname,
-			const XalanDOMString&	value)
+			const XalanDOMString&	value,
+            bool                    fromCopy = false,
+			const LocatorType*	    locator = 0)
 	{
 		assert(m_outputContextStack.empty() == false);
 
 		addResultAttribute(
 				getPendingAttributesImpl(),
 				aname,
-				value);
+				value,
+                fromCopy,
+                locator);
 	}
+
+	/**
+	 * Report an error copying a duplicate namespace node.
+	 *
+	 * @param theName The name of the node.
+	 */
+    void
+    reportDuplicateNamespaceNodeError(
+            const XalanDOMString&   theName,
+			const LocatorType*	    locator);
 
 	void
 	setDocumentLocator(const LocatorType*	locator);

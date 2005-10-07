@@ -1170,9 +1170,8 @@ private:
     FormatterToSourceTreeCacheType      m_formatterToSourceTreeCache;
 
     NodeSorterCacheType                 m_nodeSorterCache;
-#endif
+#else
 
-#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     class FormatterToTextDOMString : public FormatterToText
     {
     public:
@@ -1190,6 +1189,17 @@ private:
 
     private:
 
+        // These are not defined...
+        FormatterToTextDOMString(const FormatterToTextDOMString&);
+
+        FormatterToTextDOMString&
+        operator=(const FormatterToTextDOMString&);
+
+        bool
+        operator==(const FormatterToTextDOMString&) const;
+
+
+        // Data members...
         DOMStringPrintWriter    m_printWriter;
 
         static XalanDOMString   s_dummyString;
