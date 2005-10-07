@@ -605,6 +605,16 @@ protected:
     }
 
     /**
+     * Determine if it a DOCTYPE declaration needs to
+     * be written.
+     */
+    bool
+    getNeedToOutputDoctypeDecl() const
+    {
+        return m_needToOutputDoctypeDecl;
+    }
+
+    /**
      * Open an element for possibile children
      */
     void

@@ -58,7 +58,7 @@ public:
 
     typedef typename UnicodeWriter::value_type value_type;
 
-    enum eDummy
+    enum
     {
         eDefaultIndentAmount = 0
     };
@@ -330,6 +330,11 @@ protected:
         m_writer.write(
             m_constants.s_xmlHeaderEndString,
             m_constants.s_xmlHeaderEndStringLength);
+
+        if (getNeedToOutputDoctypeDecl() == false)
+        {
+            m_indentHandler.outputLineSep();
+        }
     }
 
 
@@ -475,11 +480,16 @@ protected:
             m_constants.s_cdataOpenString,
             m_constants.s_cdataOpenStringLength);
     
-        writeCDATAChars(chars, length);
+        bool    outsideCDATA = false;
+
+        writeCDATAChars(chars, length, outsideCDATA);
     
-        m_writer.write(
-            m_constants.s_cdataCloseString,
-            m_constants.s_cdataCloseStringLength);
+        if (outsideCDATA == false)
+        {
+            m_writer.write(
+                m_constants.s_cdataCloseString,
+                m_constants.s_cdataCloseStringLength);
+        }
     }
 
     /**
@@ -509,10 +519,10 @@ protected:
             {
                 if(m_charPredicate.isForbidden(ch) == true)
                 {
-                    XalanXMLSerializerBase::throwInvalidXMLCharacterException(
-                                                            ch,
-                                                            m_version,
-                                                            getMemoryManager());
+                    throwInvalidXMLCharacterException(
+                        ch,
+                        m_version,
+                        getMemoryManager());
                 }
                 else
                 {
@@ -534,10 +544,10 @@ protected:
         {
             if(m_charPredicate.isForbidden(ch) == true)
             {
-                XalanXMLSerializerBase::throwInvalidXMLCharacterException(
-                                                            ch,
-                                                            m_version,
-                                                            getMemoryManager());
+                throwInvalidXMLCharacterException(
+                    ch,
+                    m_version,
+                    getMemoryManager());
             }
             else
             {
@@ -619,7 +629,6 @@ protected:
             m_indentHandler.setPrevText(false);
 
             m_indentHandler.push_preserve();
-
         }
     }
 
@@ -644,10 +653,11 @@ protected:
         {
             if(m_charPredicate.isCharRefForbidden(ch))
             {
-                XalanXMLSerializerBase::throwInvalidXMLCharacterException(
-                                                            ch,
-                                                            m_version,
-                                                            getMemoryManager());            }
+                throwInvalidXMLCharacterException(
+                    ch,
+                    m_version,
+                    getMemoryManager());
+            }
             else
             {
                 start = m_writer.write( chars, start, length);
@@ -703,14 +713,10 @@ protected:
     void
     writeCDATAChars(
             const XalanDOMChar          chars[],
-            XalanDOMString::size_type   length)
+            XalanDOMString::size_type   length,
+            bool&                       outsideCDATA)
     {
         XalanDOMString::size_type i = 0;
-
-        // enum for a cheezy little state machine.
-        enum eState { eNormalState = 0, eOutOfCDATA = 1};
-
-        eState  theCurrentState = eNormalState;
 
         while(i < length)
         {
@@ -721,10 +727,18 @@ protected:
 
             const XalanDOMChar  theChar = chars[i];
 
-            if ( theChar == XalanUnicode::charRightSquareBracket && 
-                    XalanUnicode::charRightSquareBracket == chars[i+1] &&
-                    XalanUnicode::charGreaterThanSign    == chars[i+2])
+            if (theChar == XalanUnicode::charRightSquareBracket &&
+                i - length > 2 &&
+                XalanUnicode::charRightSquareBracket == chars[i + 1] &&
+                XalanUnicode::charGreaterThanSign == chars[i + 2])
             {
+                if (outsideCDATA == true)
+                {
+                    m_writer.write(
+                        m_constants.s_cdataCloseString,
+                        m_constants.s_cdataCloseStringLength);
+                }
+
                 m_writer.write(value_type(XalanUnicode::charRightSquareBracket));
                 m_writer.write(value_type(XalanUnicode::charRightSquareBracket));
 
@@ -738,6 +752,8 @@ protected:
 
                 m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
 
+                outsideCDATA = false;
+
                 i += 2;
             }
             else
@@ -746,27 +762,27 @@ protected:
                 {
                     outputNewline();
                 }
-                if(m_charPredicate.isCharRefForbidden(theChar))
+                else if(m_charPredicate.isCharRefForbidden(theChar))
                 {
-                     XalanXMLSerializerBase::throwInvalidXMLCharacterException(
-                                                            theChar,
-                                                            m_version,
-                                                            getMemoryManager());                }
+                     throwInvalidXMLCharacterException(
+                            theChar,
+                            m_version,
+                            getMemoryManager());
+                }
                 else
                 {
-                    i = m_writer.writeCDATAChar(chars, i, length, (int&)theCurrentState);
+                    i = m_writer.writeCDATAChar(chars, i, length, outsideCDATA);
                 }
-                
             }
 
             ++i;
         }
 
-        if( eOutOfCDATA == theCurrentState)
+        if(outsideCDATA == true)
         {
-                m_writer.write(
-                    m_constants.s_cdataOpenString,
-                    m_constants.s_cdataOpenStringLength);
+            m_writer.write(
+                m_constants.s_cdataOpenString,
+                m_constants.s_cdataOpenStringLength);
         }
     }
 
@@ -890,15 +906,15 @@ private:
     
 
     // Data members...
-    XalanDOMString          m_stringBuffer;
+    XalanDOMString  m_stringBuffer;
 
-    UnicodeWriter           m_writer;
+    UnicodeWriter   m_writer;
 
-    ConstantsType           m_constants;
+    ConstantsType   m_constants;
 
-    CharPredicate           m_charPredicate;
+    CharPredicate   m_charPredicate;
 
-    IndentHandler           m_indentHandler;
+    IndentHandler   m_indentHandler;
 };
 
 

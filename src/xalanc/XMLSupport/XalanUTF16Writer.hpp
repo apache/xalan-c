@@ -27,8 +27,7 @@ class XalanUTF16Writer : public XalanFormatterWriter
 {
 public:
 
-    typedef XalanDOMChar                value_type;
-    typedef XalanDOMString::size_type   size_type;
+    typedef XalanDOMChar    value_type;
  
 
     XalanUTF16Writer(
@@ -56,11 +55,11 @@ public:
 
 
     size_type
-    writeCDATAChar(    
-                            const XalanDOMChar          chars[],
-                            size_type                   start,
-                            size_type                   /*length*/,
-                            int&                        /*state*/)
+    writeCDATAChar(
+                const XalanDOMChar  chars[],
+                size_type           start,
+                size_type           /*length*/,
+                bool&               /* outsideCDATA */)
     {
         assert( chars != 0 );
 
@@ -98,16 +97,16 @@ public:
 
     void
     safeWriteContent(
-            const XalanDOMChar*         theChars,
-            XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theChars,
+            size_type               theLength)
     {
         write(theChars, theLength);
     }
 
     void
     write(
-            const value_type*           theChars,
-            XalanDOMString::size_type   theLength)
+            const value_type*   theChars,
+            size_type           theLength)
     {
         if (theLength > sizeof(m_buffer))
         {
@@ -158,9 +157,9 @@ public:
 
     size_type
     write(
-            const value_type            chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   /*length*/)
+            const value_type    chars[],
+            size_type           start,
+            size_type           /*length*/)
     {
         write(chars[start]);
         
@@ -169,8 +168,8 @@ public:
 
     void
     writeSafe(
-            const XalanDOMChar*         theChars,
-            XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theChars,
+            size_type               theLength)
     {
         write(theChars, theLength);   
     }
@@ -204,11 +203,11 @@ private:
 
 
     // Data members...
-    value_type              m_buffer[kBufferSize];
+    value_type      m_buffer[kBufferSize];
 
-    value_type*             m_bufferPosition;
+    value_type*     m_bufferPosition;
 
-    XalanDOMString::size_type   m_bufferRemaining;
+    size_type       m_bufferRemaining;
 };
 
 

@@ -66,7 +66,6 @@ XalanXMLSerializerFactory::create(
 
     if (XalanTranscodingServices::encodingIsUTF8(fixedEncoding))
     {
-
         if (isVersion1_1 == true)
         {
             if(doIndent == true)
@@ -116,7 +115,6 @@ XalanXMLSerializerFactory::create(
                     theStandaloneString,
                     theIndentAmount);
             }
-
         }
         else // XML 1.0 section
         {
@@ -126,7 +124,6 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF8Writer> WhiteSpaceWriter;
 
                 typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
-
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF8Writer,
@@ -168,8 +165,6 @@ XalanXMLSerializerFactory::create(
                     theStandaloneString,
                     theIndentAmount);
             }
-
-
         }
     }
     else if (XalanTranscodingServices::encodingIsUTF16(fixedEncoding))
@@ -181,13 +176,13 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF16Writer> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF16Writer> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter, NewLineWriter> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                             XalanUTF16Writer,
                             XalanXMLSerializerBase::UTF16,
                             XalanXMLSerializerBase::CharFunctor1_1,
-                            IdentWriter,
+                            IndentWriter,
                             FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -203,13 +198,13 @@ XalanXMLSerializerFactory::create(
             }
             else //doIndent == false
             {
-                typedef XalanDummyIndentWriter<XalanUTF16Writer> IdentWriter;
+                typedef XalanDummyIndentWriter<XalanUTF16Writer> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                             XalanUTF16Writer,
                             XalanXMLSerializerBase::UTF16,
                             XalanXMLSerializerBase::CharFunctor1_1,
-                            IdentWriter,
+                            IndentWriter,
                             FormatterListener::XML_VERSION_1_1>  Type;
 
                 theFormatter =
@@ -231,49 +226,48 @@ XalanXMLSerializerFactory::create(
                 typedef XalanFormatterWriter::NewLineWriterFunctor<XalanUTF16Writer> NewLineWriter;
                 typedef XalanFormatterWriter::WhiteSpaceWriterFunctor<XalanUTF16Writer> WhiteSpaceWriter;
 
-                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IdentWriter;
+                typedef XalanIndentWriter<WhiteSpaceWriter,NewLineWriter> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF16Writer,
                     XalanXMLSerializerBase::UTF16,
                     XalanXMLSerializerBase::CharFunctor1_0,
-                    IdentWriter,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =
                     Type::create(
-                    theManager,
-                    theWriter,
-                    fixedEncoding,
-                    theDoctypeSystem,
-                    theDoctypePublic,
-                    generateXMLDeclaration,
-                    theStandaloneString,
-                    theIndentAmount);
+                        theManager,
+                        theWriter,
+                        fixedEncoding,
+                        theDoctypeSystem,
+                        theDoctypePublic,
+                        generateXMLDeclaration,
+                        theStandaloneString,
+                        theIndentAmount);
             }
-            else // doIndent == flase
+            else // doIndent == false
             {
-                typedef XalanDummyIndentWriter<XalanUTF16Writer> IdentWriter;
+                typedef XalanDummyIndentWriter<XalanUTF16Writer> IndentWriter;
 
                 typedef FormatterToXMLUnicode<
                     XalanUTF16Writer,
                     XalanXMLSerializerBase::UTF16,
                     XalanXMLSerializerBase::CharFunctor1_0,
-                    IdentWriter,
+                    IndentWriter,
                     FormatterListener::XML_VERSION_1_0>  Type;
 
                 theFormatter =
                     Type::create(
-                    theManager,
-                    theWriter,
-                    fixedEncoding,
-                    theDoctypeSystem,
-                    theDoctypePublic,
-                    generateXMLDeclaration,
-                    theStandaloneString,
-                    theIndentAmount);
+                        theManager,
+                        theWriter,
+                        fixedEncoding,
+                        theDoctypeSystem,
+                        theDoctypePublic,
+                        generateXMLDeclaration,
+                        theStandaloneString,
+                        theIndentAmount);
             }
-
         }
     }
     else // all other encodings
@@ -330,7 +324,6 @@ XalanXMLSerializerFactory::create(
                     generateXMLDeclaration,
                     theStandaloneString,
                     theIndentAmount);
-
             }
         }
         else // XML 1.0 section
@@ -381,10 +374,8 @@ XalanXMLSerializerFactory::create(
                     generateXMLDeclaration,
                     theStandaloneString,
                     theIndentAmount);
-
             }
         }
-
     }
 
     assert (theFormatter != 0);

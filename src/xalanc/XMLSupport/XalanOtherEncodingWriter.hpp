@@ -26,89 +26,59 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-template <class PresentableCharacterPredicat,
+template <class Predicate,
           class ConstantsType>
 class XalanOtherEncodingWriter : public XalanFormatterWriter
 {
-    typedef XalanOtherEncodingWriter<PresentableCharacterPredicat, ConstantsType> ThisType;
+public:
+
+    typedef XalanOtherEncodingWriter<Predicate, ConstantsType>  ThisType;
 
     class WriteCharRef
     {
     public:
-        WriteCharRef(ThisType& writer) :
-            m_wasCalled(false),
-            m_writer(writer),
-            m_stringBuffer(5, 0, m_writer.getMemoryManager())
-        {
-        }
 
-        void
-        operator()(unsigned int value)
-        {
-            m_wasCalled = true;
-
-            m_writer.write(XalanDOMChar(XalanUnicode::charAmpersand));
-            m_writer.write(XalanDOMChar(XalanUnicode::charNumberSign));
-            
-            clear(m_stringBuffer);
-
-            m_writer.write(UnsignedLongToDOMString(value, m_stringBuffer));
-
-            m_writer.write(XalanDOMChar(XalanUnicode::charSemicolon));
-        }
-
-        bool
-        wasCalled()const
-        {
-            return m_wasCalled;
-        }
-
-    private:
-        bool m_wasCalled;
-
-        ThisType& m_writer;
-
-        XalanDOMString m_stringBuffer;
-
-    };
-
-    class ThrowTranscodingException
-    {
-    public:
-        ThrowTranscodingException(ThisType& writer) : 
-            m_wasCalled(false),
+        WriteCharRef(ThisType&  writer) :
             m_writer(writer)
         {
         }
 
         void
-        operator()(unsigned int  value)
+        operator()(unsigned int value) const
         {
-            m_wasCalled = true;
-
-            m_writer.throwInvalidCharacterException(value, m_writer.getMemoryManager());
-
-        }
-
-        bool
-        wasCalled()const
-        {
-            return m_wasCalled;
+            m_writer.writeNumericCharacterReference(value);
         }
 
     private:
-        bool m_wasCalled;
 
-        ThisType& m_writer;
-
+        ThisType&   m_writer;
     };
 
+    class ThrowTranscodingException
+    {
+    public:
 
-public:
-    typedef XalanDOMChar           value_type;
-    typedef PresentableCharacterPredicat    Predicat;
-    typedef XalanDOMString::size_type       size_type;
- 
+        ThrowTranscodingException(ThisType&     writer) :
+            m_writer(writer)
+        {
+        }
+
+        void
+        operator()(unsigned int  value) const
+        {
+            m_writer.throwInvalidCharacterException(value, m_writer.getMemoryManager());
+        }
+
+    private:
+
+        ThisType&   m_writer;
+    };
+
+    friend class WriteCharRef;
+    friend class ThrowTranscodingException;
+
+    typedef XalanDOMChar    value_type;
+
     XalanOtherEncodingWriter(
                 Writer&         writer,
                 MemoryManager&  theMemoryManager) :
@@ -118,9 +88,10 @@ public:
         m_buffer(),
         m_bufferPosition(m_buffer),
         m_bufferRemaining(kBufferSize),
-        m_stringBuffer(5, 0, theMemoryManager),
-        m_isPresentable(writer.getStream()),
-        m_constants()
+        m_predicate(writer.getStream()),
+        m_constants(),
+        m_charRefFunctor(*this),
+        m_exceptionFunctor(*this)
     {
     }
 
@@ -148,83 +119,76 @@ public:
      * with addition CDATA sections
      */
     size_type
-    writeCDATAChar(    
-                            const XalanDOMChar          chars[],
-                            size_type                   start,
-                            size_type                   length,
-                            int&                        state)
+    writeCDATAChar(
+                const XalanDOMChar  chars[],
+                size_type           start,
+                size_type           length,
+                bool&               outsideCDATA)
     {
         assert(chars != 0 && length > 0 && start < length);
 
-        // enum for a cheezy little state machine.
-        enum eState { eNormalState = 0, eOutOfCDATA = 1};
+        const XalanDOMChar  theChar = chars[start];
 
-        const XalanDOMChar          theChar = chars[start];
-
-        unsigned int value = 0;
+        unsigned int value = theChar;
 
         size_type result = start;
 
-        if (XalanFormatterWriter::isUTF16HighSurrogate(theChar) == false)
-        {
-            value = theChar;
-        }
-        else
+        if (isUTF16HighSurrogate(theChar) == true)
         {
             if (start + 1 >= length)
             {
-                XalanFormatterWriter::throwInvalidUTF16SurrogateException(
+                throwInvalidUTF16SurrogateException(
                     theChar, 
                     0,
                     getMemoryManager());
             }
             else 
             {
-                value = XalanFormatterWriter::decodeUTF16SurrogatePair(theChar, chars[start+1],  getMemoryManager());
+                value = decodeUTF16SurrogatePair(theChar, chars[start+1],  getMemoryManager());
 
                 ++result;
             }
         }
 
-        WriteCharRef   charRefsWriter(*this);
-
-        if(m_isPresentable(value))
+        if(m_predicate(value))
         {
-            if( eNormalState == state)
+            if (outsideCDATA == false)
             {
-                // we have a presentable char in the normal state - just print it
+                // We have a representable char in the normal state,
+                // so just print it.
                 write(value);
             }
             else
             {
-                // previose char was a non-presentable one . Open CDATA section again,
-                // change the state to normal and print the char
+                // The previous character was a not representable.
+                // Open the CDATA section again, print the character,
+                // then change the flag.
                 write(
                     m_constants.s_cdataOpenString,
                     m_constants.s_cdataOpenStringLength);
 
                 write(value);
 
-                state = eNormalState;
+                outsideCDATA = false;
             }
         }
-        else // not presentable chracter
+        else
         {
-            if( eNormalState == state)
+            if(outsideCDATA == false)
             {
-                // we have a non presentable char in the normal state - 
+                // we have a non-representable char in the normal state - 
                 // close the CDATA section and print the value
                 write(
                     m_constants.s_cdataCloseString,
                     m_constants.s_cdataCloseStringLength);
 
-                charRefsWriter( value );
+                writeNumericCharacterReference(value);
 
-                state = eOutOfCDATA;   
+                outsideCDATA = true;   
             }
             else
             {
-                charRefsWriter( value );
+                writeNumericCharacterReference(value);
             }
         }        
 
@@ -232,44 +196,48 @@ public:
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name characters.  If a character is not representable,
+     * an exception is thrown.
      */
-    void writeNameChar(const XalanDOMChar*            data,
-                       size_type                theLength)
+    void
+    writeNameChar(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
-        ThrowTranscodingException functor(*this);
-
         for( size_type i = 0; i < theLength; ++i)
         { 
-            i = write(data, i , theLength, functor); 
+            i = write(data, i , theLength, m_exceptionFunctor); 
         }
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes PI characters.  If a character is not representable,
+     * an exception is thrown.
      */
-    void writePIChars(const XalanDOMChar*       data,
-                        size_type               theLength)
+    void
+    writePIChars(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
-        ThrowTranscodingException functor(*this);
-
         for( size_type i = 0; i < theLength; )
         { 
-            i = write(data, i , theLength, functor); 
+            i = write(data, i , theLength, m_exceptionFunctor); 
         }
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes comment characters.  If a character is not representable,
+     * or must be written as a character reference for compatibility with
+     * XML 1.1, an exception is thrown.
      */
-    void writeCommentChars(const XalanDOMChar*      data,
-                           size_type                theLength)
+    void
+    writeCommentChars(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
-        ThrowTranscodingException functor(*this);
-
         for( size_type i = 0; i < theLength; )
         { 
-            i = write(data, i , theLength, functor); 
+            i = write(data, i , theLength, m_exceptionFunctor); 
         }
     }
 
@@ -278,12 +246,10 @@ public:
             const XalanDOMChar*     theChars,
             size_type               theLength)
     {
-
-        for(XalanDOMString::size_type i = 0; i < theLength; ++i)
+        for(size_type i = 0; i < theLength; ++i)
         {
             write(theChars[i]);
         }
-
     }
 
     void
@@ -293,64 +259,63 @@ public:
     }
 
     /**
-     * Writes writes a code point that isn't a part of the surrogate pair 
+     * Writes writes a UTF-16 code unit that isn't 
+     * part of the surrogate pair 
      */
     void
     write(XalanDOMChar    theChar)
     {
-  
+        assert(
+            isUTF16HighSurrogate(theChar) == false &&
+            isUTF16LowSurrogate(theChar) == false);
+
         if (m_bufferRemaining == 0)
         {
             flushBuffer();
         }
-    
-        if(m_isPresentable(theChar))
+
+        if(m_predicate(theChar))
         {
             *m_bufferPosition = theChar;
-    
+
             ++m_bufferPosition;
             --m_bufferRemaining;
         }
         else
         {
-            writeNumberedEntityReference(theChar);
+            writeNumericCharacterReference(theChar);
         }
     }
 
-
     size_type
     write(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
     {
 
-        WriteCharRef functor(*this);
-
-        return write(chars, start, length, functor);
+        return write(chars, start, length, m_charRefFunctor);
     }
 
     void
     writeSafe(
-        const XalanDOMChar*         theChars,
-        XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theChars,
+            size_type               theLength)
     {
-        XalanDOMChar ch = 0;
-
         for(size_type i = 0; i < theLength; ++i)
         {
-            ch = theChars[i];
+            const XalanDOMChar  ch = theChars[i];
 
-            if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == true)
+            if (isUTF16HighSurrogate(ch) == true)
             {
                 if (i + 1 >= theLength)
                 {
-                    XalanFormatterWriter::throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
+                    throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
                 }
                 else 
                 {
-                    unsigned int value = XalanFormatterWriter::decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
-                    
+                    unsigned int value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
+
                     if(m_isPresentable(value))
                     {
                         write(value);
@@ -359,7 +324,7 @@ public:
                     {
                         writeNumberedEntityReference(value);
                     }
-                    
+
                     ++i;
                 }
             }
@@ -368,7 +333,6 @@ public:
                 write((unsigned int)ch);
             }
         }
-        
     }
 
     void
@@ -382,20 +346,20 @@ public:
     {
         m_writer.flush();
     }    
-    
+
     void
     flushBuffer()
     {
-        m_writer.write(m_buffer, 0, XalanDOMChar(m_bufferPosition - m_buffer));
-    
+        m_writer.write(m_buffer, 0, m_bufferPosition - m_buffer);
+
         m_bufferPosition = m_buffer;
         m_bufferRemaining = kBufferSize;
     }
-    
+
 private:
 
     /**
-     * Writes a presentable code point
+     * Writes a representable code point
      *
      * @param chars        Array of the characters for transcoding
      *    
@@ -403,7 +367,7 @@ private:
      *    
      * @param length       The length of the array
      *    
-     * @param failreHandeler  The functor handeles the non-representable characters
+     * @param failureHandler  The functor handles the non-representable characters
      *    
      * @return              Place int the array of the next character
      */
@@ -414,71 +378,48 @@ private:
             const XalanDOMChar          chars[],
             size_type                   start,
             size_type                   length,
-            TranscodingFailureFunctor&  failreHandeler)
+            TranscodingFailureFunctor&  failureHandler)
     {
-        assert( chars != 0 && length > 0 );
-        assert( start <= length);
-        
+        assert(chars != 0 && length > 0);
+        assert(start <= length);
+
         size_type result = start;
 
-        XalanDOMChar ch = chars[start];
+        const XalanDOMChar  ch = chars[start];
 
-        unsigned int value = 0;
+        unsigned int value = ch;
 
-        if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == false)
-        {
-            value = ch;
-        }
-        else
+        if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == true)
         {
             if (start + 1 >= length)
             {
-                XalanFormatterWriter::throwInvalidUTF16SurrogateException(
+                throwInvalidUTF16SurrogateException(
                     ch, 
                     0,
                     getMemoryManager());
             }
             else 
             {
-                value = XalanFormatterWriter::decodeUTF16SurrogatePair(ch, chars[start+1],  getMemoryManager());
+                value = decodeUTF16SurrogatePair(ch, chars[start+1],  getMemoryManager());
 
                 ++result;
             }
         }
 
-        if(m_isPresentable(value))
+        if(m_predicate(value))
         {
             write(value);
         }
         else
         {
-            failreHandeler(value);
+            failureHandler(value);
         }
 
         return result;
     }
 
     /**
-     * Writes a presentable code point
-     *
-     * @param theChar        UTF-32 code point . For passing it to the Xerces 
-     *                       transcoder, we convert it back to UTF-16                         
-     */
-
-    void
-    writeNumberedEntityReference(unsigned long  theNumber)
-    {
-        m_writer.write(XalanDOMChar(XalanUnicode::charAmpersand));
-        m_writer.write(XalanDOMChar(XalanUnicode::charNumberSign));
-
-        m_writer.write(UnsignedLongToDOMString(theNumber, m_stringBuffer));
-        clear(m_stringBuffer);
-
-        m_writer.write(XalanDOMChar(XalanUnicode::charSemicolon));
-    }
- 
-    /**
-     * Writes a presentable code point
+     * Writes a representable code point
      *
      * @param theChar        UTF-32 code point . For passing it to the Xerces 
      *                       transcoder, we convert it back to UTF-16                         
@@ -487,7 +428,7 @@ private:
     write(unsigned int  theChar)
     {
         // encode back UTF-32 into UTF-16 
-        
+
         if( theChar > 0xFFFF )
         {
             if (m_bufferRemaining < 2)
@@ -502,7 +443,7 @@ private:
             *m_bufferPosition = (XalanDOMChar((theChar &  0x03FF) + 0xDC00));
 
             ++m_bufferPosition;
-                
+
             m_bufferRemaining = m_bufferRemaining - size_type(2);
         }   
         else
@@ -519,26 +460,32 @@ private:
         }  
     }
 
+    void
+    writeNumericCharacterReference(unsigned int     theNumber)
+    {
+        write(formatNumericCharacterReference(theNumber));
+    }
+
     enum
     {
-        kBufferSize = 512       // The size of the buffer
+        kBufferSize = 512u  // The size of the buffer
     };
 
 
     // Data members...
-    XalanDOMChar                m_buffer[kBufferSize];
+    XalanDOMChar            m_buffer[kBufferSize];
 
-    XalanDOMChar*               m_bufferPosition;
+    XalanDOMChar*           m_bufferPosition;
 
-    size_type                   m_bufferRemaining;
-    
-    XalanDOMString              m_stringBuffer;
-    
-    Predicat                    m_isPresentable;
+    size_type               m_bufferRemaining;
 
-    ConstantsType               m_constants;          
-    
-    
+    const Predicate         m_predicate;
+
+    const ConstantsType     m_constants;
+
+    const WriteCharRef                  m_charRefFunctor;
+
+    const ThrowTranscodingException     m_exceptionFunctor;
 };
 
 

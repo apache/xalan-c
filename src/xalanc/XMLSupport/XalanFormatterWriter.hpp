@@ -46,7 +46,8 @@ public:
     class NewLineWriterFunctor
     {
     public:
-        typedef WriterType              writer_type;
+
+        typedef WriterType  writer_type;
 
         NewLineWriterFunctor(WriterType& writer) :
           m_writer(writer),
@@ -78,7 +79,8 @@ public:
         }
 
     private:
-        WriterType& m_writer;
+
+        WriterType&     m_writer;
 
         /**
         * The string of characters that represents the newline
@@ -112,7 +114,9 @@ public:
                 m_writer.write(value_type(XalanUnicode::charSpace));
             }
         }
+
     private:
+
         WriterType& m_writer;
     };
 
@@ -123,7 +127,7 @@ public:
         CommonRepresentableCharFunctor(const XalanOutputStream* stream) :
             m_stream(stream)
         {
-            assert( stream != 0 );
+            assert(stream != 0);
         }
 
         bool
@@ -139,18 +143,22 @@ public:
             return result;
         }
 
-
     private:
-        const XalanOutputStream* m_stream;
+
+        const XalanOutputStream* const  m_stream;
     };
 
 public:
-  
+
+    typedef XalanDOMString::size_type   size_type;
+
+
     XalanFormatterWriter(
                 Writer&	        theWriter, 
                 MemoryManager&  theMemoryManager) :
         m_writer(theWriter),
-        m_memoryManager(theMemoryManager)
+        m_memoryManager(theMemoryManager),
+        m_stringBuffer(5, 0, theMemoryManager)
     {
         const XalanOutputStream* const  theStream =
             theWriter.getStream();
@@ -255,9 +263,9 @@ public:
 
     static void
     throwInvalidUTF16SurrogateException(
-			    XalanDOMChar	ch,
-			    XalanDOMChar	next,
-                MemoryManagerType& theManager)
+			    XalanDOMChar	    ch,
+			    XalanDOMChar	    next,
+                MemoryManagerType&  theManager)
     {
 
 	    XalanDOMString  chStr(theManager); 
@@ -295,6 +303,8 @@ protected:
      */
     MemoryManager&              m_memoryManager;
 
+    XalanDOMString          m_stringBuffer;
+
     /**
      * The string of characters that represents the newline
      */
@@ -304,6 +314,26 @@ protected:
      * The length of the the string of characters that represents the newline
      */
     XalanDOMString::size_type   m_newlineStringLength;
+
+    /**
+     * Format a code point as a numeric character reference.
+     *
+     * @param theChar A Unicode code point.
+     */
+    const XalanDOMString&
+    formatNumericCharacterReference(unsigned int     theNumber)
+    {
+        clear(m_stringBuffer);
+
+        m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charAmpersand));
+        m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charNumberSign));
+
+        UnsignedLongToDOMString(theNumber, m_stringBuffer);
+
+        m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charSemicolon));
+
+        return m_stringBuffer;
+    }
 
 private:
 

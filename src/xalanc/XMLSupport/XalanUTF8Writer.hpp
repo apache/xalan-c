@@ -109,8 +109,7 @@ class XalanUTF8Writer : public XalanFormatterWriter
 {
 public:
 
-    typedef char                        value_type;
-    typedef XalanDOMString::size_type   size_type;
+    typedef char    value_type;
  
 
     XalanUTF8Writer(
@@ -137,20 +136,21 @@ public:
     }
 
     size_type
-    writeCDATAChar(    
-                            const XalanDOMChar          chars[],
-                            size_type                   start,
-                            size_type                   length,
-                            int&                        /*state*/)
+    writeCDATAChar(
+                const XalanDOMChar  chars[],
+                size_type           start,
+                size_type           length,
+                bool&               /* outsideCDATA */)
     {
-        assert( chars != 0 && length != 0 && start < length);
+        assert(chars != 0 && length != 0 && start < length);
 
         return write(chars, start, length);
     }
+
     /**
      * Writes name chars , if not presentable, throws 
      */
-    void writeNameChar(const XalanDOMChar*            data,
+    void writeNameChar(const XalanDOMChar*      data,
                        size_type                theLength)
     {
         write(data, theLength);
