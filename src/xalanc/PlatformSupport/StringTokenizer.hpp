@@ -138,7 +138,18 @@ protected:
 
 private:
 
-	const XalanDOMChar* const			m_string;
+    // These are not implemented...
+    StringTokenizer(const StringTokenizer&);
+
+    StringTokenizer&
+    operator=(const StringTokenizer&);
+
+    bool
+    operator==(const StringTokenizer&) const;
+
+
+    // Data members...
+    const XalanDOMChar* const			m_string;
 
 	const XalanDOMChar*	const			m_tokens;
 
