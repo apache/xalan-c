@@ -19,7 +19,9 @@
 
 #include <clocale>
 #include <cmath>
-
+#if !defined(XALAN_NO_STD_NUMERIC_LIMITS)
+#include <limits>
+#endif
 
 
 #include "DOMStringHelper.hpp"
@@ -31,7 +33,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
 DoubleSupport::NumberUnion          DoubleSupport::s_NaN;
+#else
+const DoubleSupport::NumberUnion    DoubleSupport::s_NaN =
+{
+#if defined(XALAN_NO_STD_NAMESPACE)
+    numeric_limits<double>::quiet_NaN()
+#else
+    std::numeric_limits<double>::quiet_NaN()
+#endif
+};
+#endif
 
 const DoubleSupport::NumberUnion    DoubleSupport::s_positiveInfinity = { HUGE_VAL };
 
@@ -46,6 +59,7 @@ const DoubleSupport::NumberUnion    DoubleSupport::s_negativeZero = { -s_positiv
 void
 DoubleSupport::initialize()
 {
+#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
     // We initialize this at here because some
     // platforms have had issues with signals
     // if we call sqrt(-2.01) during static
@@ -55,6 +69,13 @@ DoubleSupport::initialize()
 #else
     s_NaN.d = sqrt(-2.01);
 #endif
+#else
+    #if defined(XALAN_NO_STD_NAMESPACE)
+        XALAN_STATIC_ASSERT(numeric_limits<double>::is_iec559);
+    #else
+        XALAN_STATIC_ASSERT(std::numeric_limits<double>::is_iec559);
+    #endif
+#endif
 }
 
 
@@ -62,7 +83,9 @@ DoubleSupport::initialize()
 void
 DoubleSupport::terminate()
 {
+#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
     s_NaN.d = 0.0L;
+#endif
 }
 
 
@@ -301,6 +324,8 @@ DoubleSupport::negative(double  theDouble)
     }
 }
 
+
+
 double
 DoubleSupport::abs(double theDouble)
 {
@@ -316,6 +341,8 @@ DoubleSupport::abs(double theDouble)
         return fabs(theDouble);
     }
 }
+
+
 
 double
 DoubleSupport::toDouble(
@@ -482,7 +509,7 @@ doValidate(const XalanDOMChar*  theString)
 
 
 #if defined(XALAN_NON_ASCII_PLATFORM)
-void
+static void
 translateWideString(
             const XalanDOMChar*         theWideString,
             char*                       theNarrowString,
@@ -642,7 +669,7 @@ convertHelper(
 
 
 
-double
+inline double
 doConvert(
             const XalanDOMChar*     theString,
             MemoryManager&          theManager)
