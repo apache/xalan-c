@@ -316,13 +316,13 @@ public:
                 {
                     unsigned int value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
 
-                    if(m_isPresentable(value))
+                    if(this->m_isPresentable(value))
                     {
                         write(value);
                     }
                     else
                     {
-                        writeNumberedEntityReference(value);
+                        this->writeNumberedEntityReference(value);
                     }
 
                     ++i;
