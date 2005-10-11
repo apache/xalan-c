@@ -1105,6 +1105,7 @@ Stylesheet::locateMatchPatternDataList(
         break;
 
     case XalanNode::DOCUMENT_NODE:
+    case XalanNode::DOCUMENT_FRAGMENT_NODE:
         return &m_rootPatternList;
         break;
 
