@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 
-<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"> 
 <s1 title="&xslt4c; Samples">
 <ul>
   <li><link anchor="getstarted">Samples to help you get started</link></li>
@@ -37,7 +37,6 @@
   <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
   <li><link anchor="xalantransform">XalanTransform</link></li>
   <li><link anchor="xalantransformercallback">XalanTransformerCallback</link></li>
-  <li><link anchor="xpathwrapper">XPathWrapper</link></li>
 </ul>
 
 <anchor name="getstarted"/>
@@ -89,7 +88,7 @@ package. </p>
    <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  
    <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, 
    <code>ThreadSafe</code>, <code>TraceListen</code>, <code>TransformToXercesDOM</code>, 
-   <code>UseStylesheetParam</code>, <code>XPathWrapper</code>, <code>XalanTransform</code>, or 
+   <code>UseStylesheetParam</code>, <code>XalanTransform</code>, or 
    <code>XalanTransformerCallback</code>.</p>
 <p>To rebuild the samples from the UNIX binary package, go to the ../samples directory of your installation,
    run the runConfigure utility for your target platform, and then run gmake.  For example, AIX users would 
@@ -376,22 +375,6 @@ theProcessor.addTraceListener(&amp;theTraceListener);
 <p>You can run it from the XalanTransformerCallback subdirectory with</p>
 <p><code>XalanTransformerCallback foo.xml foo.xsl [foo.out]</code></p>
 <note>If you omit the third argument, the transformation result is written to the console.</note>
-</s2>
-  
-<anchor name="xpathwrapper"/>
-<s2 title="XPathWrapper">
-<note>For a more streamlined sample that uses the XPathEvaluator interface, see 
-<link anchor="simplexpathapi">SimpleXPathAPI</link>.</note>
-<p>This sample uses an executable (TestDriver in Windows, XPathWrapper in Linux and AIX), and two classes: XPathWrapper and
-   XPathWrapperImpl.</p>
-<p>What it does: The executable passes XPathWrapper an XML file name, a context node location path, and an XPath
-   expression. XPathWrapper in turn passes these arguments to the XPathWrapperImpl evaluate() method, which executes the
-   XPath expression from specified context node in the XML document and returns the nodes it finds (if any).</p>
-<note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
-      given context node in an XML file.</note>
-<p>Run this sample from the XPathWrapper subdirectory with the same command line arguments described for <link
-   anchor="simplexpathapi">SimpleXPathAPI</link>. Under Windows, the executable is TestDriver; under UNIX, the 
-   executable is XPathWrapper.</p> 
 </s2>
   
 </s1>

@@ -111,7 +111,6 @@ ALL_SAMPLES =  $(XSL_BIN_DEST)\bin\CompileStylesheet.exe \
                   $(XSL_BIN_DEST)\bin\UseStylesheetParam.exe \
                   $(XSL_BIN_DEST)\bin\XalanTransform.exe \
                   $(XSL_BIN_DEST)\bin\XalanTransformerCallback.exe \
-                  $(XSL_BIN_DEST)\bin\XPathWrapper.exe \
 				  $(XSL_BIN_DEST)\bin\ThreadSafe.exe \
 				  $(XSL_BIN_DEST)\bin\Xalan.exe
 
@@ -130,7 +129,6 @@ SAMPLES_DIRS= $(XSL_BIN_DEST)\samples\ApacheModuleXSLT 			\
 				$(XSL_BIN_DEST)\samples\UseStylesheetParam 		\
 				$(XSL_BIN_DEST)\samples\XalanTransform 			\
 				$(XSL_BIN_DEST)\samples\XalanTransformerCallback \
-				$(XSL_BIN_DEST)\samples\XPathWrapper 			\
 				$(XSL_BIN_DEST)\samples\ThreadSafe 							
 
 SAMPLE_PROJ= $(XSL_BIN_DEST)\samples\Projects
