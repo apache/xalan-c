@@ -205,7 +205,7 @@ parseWithXerces(
 
     h.data.xmlFormat = XalanDOMString("Xerces_DOM", mgr);
 
-    XercesDOMParser  theParser;
+    XercesDOMParser  theParser(0, &mgr);
 
     theParser.setDoValidation(true);
     theParser.setDoNamespaces(true);
