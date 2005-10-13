@@ -69,12 +69,8 @@ DoubleSupport::initialize()
 #else
     s_NaN.d = sqrt(-2.01);
 #endif
-#else
-    #if defined(XALAN_NO_STD_NAMESPACE)
-        XALAN_STATIC_ASSERT(numeric_limits<double>::is_iec559);
-    #else
-        XALAN_STATIC_ASSERT(std::numeric_limits<double>::is_iec559);
-    #endif
+#elif !defined(XALAN_NO_STD_NAMESPACE)
+    XALAN_STATIC_ASSERT(std::numeric_limits<double>::has_quiet_NaN);
 #endif
 }
 
