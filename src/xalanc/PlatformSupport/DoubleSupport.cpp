@@ -70,7 +70,11 @@ DoubleSupport::initialize()
     s_NaN.d = sqrt(-2.01);
 #endif
 #elif !defined(XALAN_NO_STD_NAMESPACE)
-    XALAN_STATIC_ASSERT(std::numeric_limits<double>::has_quiet_NaN);
+    // There seems to be problems with various standard libraries, so
+    // this is disabled for now.  We need to revisit this when we
+    // update our autoconf/automake system to detect the right value
+    // for NaN at configuration time.
+    // XALAN_STATIC_ASSERT(std::numeric_limits<double>::has_quiet_NaN);
 #endif
 }
 
