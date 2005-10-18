@@ -52,6 +52,18 @@
 <s2 title="Bugs Fixed in this Release">
 <p>The bugs fixed in this release include:</p>
 <ul>
+  <li>XALANC-572: Compile failure on SuSE80AMD_64b_GCC322 </li>
+  <li>XALANC-569: Compile-time assert on 32-bit Solaris & HPUX due to IEEE754 issue </li>
+  <li>XALANC-568: Pattern "/" does not match the pseudo root document of a node-set obtained from a result-tree fragment via exsl:node-set </li>
+  <li>XALANC-511: Crash during XalanTransformer::initialize on AIX </li>
+  <li>XALANC-554: Xalan-C does not implement erratum 25 </li>
+  <li>XALANC-552: Problems with the new serializers with CDATA and unrepresentable or special characters </li>
+  <li>XALANC-558: Latest source code does not build with the Intel compiler on Windows </li>
+  <li>XALANC-555: XalanEXSLTDateTime.cpp has too many platform-specifc ifdefs </li>
+  <li>XALANC-421: omit-xml-declaration ignored </li>
+  <li>XALANC-529: Xalan-C sometimes creates empty text nodes in RTFs or sends empty characters() events to FormatterListeners </li>
+  <li>XALANC-530: Serializers filter attributes unnecessarily </li>
+  <li>XALANC-245: substring-before and substring-after </li>
   <li>XALANC-115: Need to catch use of variables in xsl:key attributes </li>
   <li>XALANC-540: XPath absolute location path does not work when the context node was obtained from a result tree fragment through exsl:node-set() </li>
   <li>XALANC-544: Assert failure, then crash, during "variable undefined" error recovery in certain circumstances. </li>
@@ -61,7 +73,6 @@
   <li>XALANC-538: Better handling for non-existent node test </li>
   <li>XALANC-541: Fixes for zOS build </li>
   <li>XALANC-455: Problem when releasing InputSource obtained through an EntityResolver </li>
-  <li>XALANC-538: Better handling for non-existent node test </li>
   <li>XALANC-535: If an error/warning message contains not-displayable character for the local encoding , no message is shown at all </li>
   <li>XALANC-532: FormatterToXMLUnicode does not serialize UTF-8 </li>
   <li>XALANC-536: ElemNumber uses extra temporary strings </li>

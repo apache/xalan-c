@@ -24,11 +24,15 @@
   <document id="index" 
             label="Xalan-C++ 1.10" 
             source="xalan/index.xml"/>   
-  <external href="http://xml.apache.org/xalan-j/charter.html" label="Charter"/> 
 
   <document id="overview" 
             label="Overview" 
             source="xalan/overview.xml"/>   
+
+  <document id="charter" 
+            label="Charter" 
+            source="xalan/charter.xml"/>   
+
                         
   <document id="whatsnew" 
             label="What's New" 

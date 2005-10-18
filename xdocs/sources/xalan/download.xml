@@ -22,7 +22,7 @@
 <ul>
   <li>32-bit and 64-bit AIX 5.1 builds with the xlC_r v6.0 compiler</li> 
   <li>32-bit and 64-bit HP-UX 11 builds with the aCC v3.52 compiler</li>
-  <li>32-bit Red Hat Linux 8.0 build with the gcc 3.2 compiler</li>
+  <li>32-bit Red Hat Linux AS4 build with the gcc 3.4.3 compiler</li>
   <li>32-bit and 64-bit Solaris 2.8 builds with the Forte C++ 6 Update 2 compiler</li>
   <li>64-bit SuSE Linux 8.1 for AMD-64 build with the gcc 3.2.2 compiler</li>
   <li>32-bit Windows build with the Microsoft Visual C++ 6.0 compiler with Service Pack 5</li>
@@ -69,9 +69,9 @@
   <td>HP-UX 11.i (64 bit)</td>
   </tr>    
   <tr>
-  <td>&xslt4c-redhat80-dist;</td>
-  <td>&xml4c-redhat80-dist;</td>
-  <td>RedHat 8.0 IA (32-bit)</td>
+  <td>&xslt4c-redhatAS4-dist;</td>
+  <td>&xml4c-redhatAS4-dist;</td>
+  <td>RedHat AS4 IA (32-bit)</td>
   </tr>
   <tr>
   <td>&xslt4c-solaris28-dist;</td>
@@ -119,8 +119,8 @@
          <td>aCC A.03.52</td>
        </tr>
        <tr>
-         <td>RedHat Linux 8.0</td>
-         <td>gcc Compiler, version 3.2</td>
+         <td>RedHat Linux AS4</td>
+         <td>gcc Compiler, version 3.4.3</td>
        </tr>
        <tr>
          <td>Solaris 2.8</td>

@@ -38,7 +38,7 @@
   
   <property name="build.dir"            value="./build"/>
   <property name="build.docs"           value="${build.dir}/docs"/>
-  <property name="build.apidocs"        value="${build.docs}/apidocs"/>  
+  <property name="build.apidocs"        value="${build.docs}/apiDocs"/>  
   <property name="site.dir"             value="./xml-site"/>
     
   <property name="package.name"         value="Xalan-C"/>
@@ -52,7 +52,7 @@
     <untar src="${doc.generator.styletar}" dest="${xdocs.dir}"/>
 	<delete file="${doc.generator.styletar}"/>
     <mkdir dir="${build.apidocs}"/>
-    <mkdir dir="${site.dir}/apidocs"/>
+    <mkdir dir="${site.dir}/apiDocs"/>
     <!--echo message="Transform commits.xml and put the result in ${xdocs.dir}/DONE"/>
     <java fork="yes" classname="org.apache.xalan.xslt.Process" classpath="${java.class.path}">
       <arg line="-in commits.xml -xsl ${xdocs.style}/stylesheets/done-c.xsl -out xdocs/sources/xalan/DONE"/>
@@ -79,7 +79,7 @@
     <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
       <arg line="targetDirectory=${site.dir} ${xdocs.site} ${xdocs.style}"/>    
     </java>
-    <copy todir="${site.dir}/apidocs">
+    <copy todir="${site.dir}/apiDocs">
       <fileset dir="${build.apidocs}"/>
     </copy>      
       
