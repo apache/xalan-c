@@ -37,7 +37,7 @@
 <!ENTITY aix51v6_64-dist "-aix_510_64-xlc_60_050623">
 <!ENTITY redhat_72_icc-dist "-redhat_72-icc_71">
 <!ENTITY redhat_72_ecc-dist "-redhat_72_64-ecc_71">
-<!ENTITY redhat_80_gcc-dist "-redhat_80-gcc_32">
+<!ENTITY redhat_AS4_gcc-dist "-redhat_AS4-gcc_343">
 <!ENTITY hpux11a-dist "-hpux_11-acc_a03">
 <!ENTITY hpux11a_64-dist "-hpux_11_64-acc_a03">
 <!ENTITY hpux11c-dist "-hpux_11-acc_c03">
@@ -67,7 +67,7 @@
 <!ENTITY xslt4c-hpux11i_64-dist "&xslt4c-dist;&hpux11i_64-dist;&unix_ext;">
 <!ENTITY xslt4c-redhat72_icc-dist "&xslt4c-dist;&redhat_72_icc-dist;&unix_ext;">
 <!ENTITY xslt4c-redhat72_ecc-dist "&xslt4c-dist;&redhat_72_ecc-dist;&unix_ext;">
-<!ENTITY xslt4c-redhat80-dist "&xslt4c-dist;&redhat_80_gcc-dist;&unix_ext;">
+<!ENTITY xslt4c-redhatAS4-dist "&xslt4c-dist;&redhat_AS4_gcc-dist;&unix_ext;">
 <!ENTITY xslt4c-solaris28-dist "&xslt4c-dist;&solaris_28-dist;&unix_ext;">
 <!ENTITY xslt4c-solaris28_64-dist "&xslt4c-dist;&solaris_28_64-dist;&unix_ext;">
 <!ENTITY xslt4c-suse72_zOS-dist "&xslt4c-dist;&suse_72_zOS-dist;&unix_ext;">
@@ -102,7 +102,7 @@
 <!ENTITY xml4c-hpux11i_64-dist "&xml4c-dist;&hpux11i_64-dist;&unix_ext;">
 <!ENTITY xml4c-redhat72_icc-dist "&xml4c-dist;&redhat_72_icc-dist;&unix_ext;">
 <!ENTITY xml4c-redhat72_ecc-dist "&xml4c-dist;&redhat_72_ecc-dist;&unix_ext;">
-<!ENTITY xml4c-redhat80-dist "&xml4c-dist;&redhat_80_gcc-dist;&unix_ext;">
+<!ENTITY xml4c-redhatAS4-dist "&xml4c-dist;&redhat_AS4_gcc-dist;&unix_ext;">
 <!ENTITY xml4c-solaris28-dist "&xml4c-dist;&solaris_28-dist;&unix_ext;">
 <!ENTITY xml4c-solaris28_64-dist "&xml4c-dist;&solaris_28_64-dist;&unix_ext;">
 <!ENTITY xml4c-suse72_zOS-dist "&xml4c-dist;&suse_72_zOS-dist;&unix_ext;">

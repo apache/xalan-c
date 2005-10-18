@@ -5,10 +5,8 @@
 </s3><anchor name="to-do"/>
 <s3 title="To-do tasks for future &xslt4c; releases">
     <ul>
-       <li>XML 1.1 and Namespaces in XML 1.1 Support</li>
        <li>Performance improvements</li>
        <li>Add support for extension elements<br/><br/></li>
-       <li>Support for XSLT 2.0 and XPath 2.0<br/><br/></li>
        <li>Fix any conformance bugs we or our users find<br/><br/></li>
     </ul>
     <p>Watch the <human-resource-ref idref="xalandev"/> for more information and for ideas about how you can get involved.</p>    
