@@ -53,7 +53,7 @@
 <p>The bugs fixed in this release include:</p>
 <ul>
   <li>XALANC-572: Compile failure on SuSE80AMD_64b_GCC322 </li>
-  <li>XALANC-569: Compile-time assert on 32-bit Solaris & HPUX due to IEEE754 issue </li>
+  <li>XALANC-569: Compile-time assert on 32-bit Solaris and HPUX due to IEEE754 issue </li>
   <li>XALANC-568: Pattern "/" does not match the pseudo root document of a node-set obtained from a result-tree fragment via exsl:node-set </li>
   <li>XALANC-511: Crash during XalanTransformer::initialize on AIX </li>
   <li>XALANC-554: Xalan-C does not implement erratum 25 </li>
