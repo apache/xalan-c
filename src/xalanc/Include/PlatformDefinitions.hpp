@@ -113,12 +113,8 @@
 
 
 XALAN_CPP_NAMESPACE_BEGIN
-#if defined(XALAN_USE_NATIVE_WCHAR_T)
-typedef wchar_t			XalanDOMChar;
-#else
-// UTF-16 character...
-typedef unsigned short	XalanDOMChar;
-#endif
+
+typedef XMLCh   XalanDOMChar;
 
 template<bool value>
 struct XalanCompileErrorBoolean
