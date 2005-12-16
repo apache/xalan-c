@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * @author David Bertoni (david_n_bertoni@us.ibm.com)
- * @author Matthew Hoyt (mhoyt@ca.ibm.com)
- */
-
 #if !defined(XALANVECTOR_HEADER_GUARD_1357924680)
 #define XALANVECTOR_HEADER_GUARD_1357924680
 
@@ -910,7 +905,9 @@ private:
     invariants() const
     {
         assert(m_allocation >= m_size);
-        assert(m_data == 0 && m_allocation == 0 || m_data != 0 && m_allocation != 0);
+        assert(
+            m_data == 0 && m_allocation == 0 ||
+            m_data != 0 && m_allocation != 0);
     }
 #endif
 
@@ -926,7 +923,7 @@ private:
 #if defined(XALAN_HAS_STD_DISTANCE)
         return XALAN_STD_QUALIFIER distance(theFirst, theLast);
 #else
-        size_type   theDistance;
+        size_type   theDistance = size_type(0);
 
         XALAN_STD_QUALIFIER distance(theFirst, theLast, theDistance);
 
