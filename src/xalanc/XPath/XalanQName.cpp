@@ -403,7 +403,12 @@ XalanQName::InvalidQNameException::InvalidQNameException(
             int                         theLineNumber,
             int                         theColumnNumber,
             XalanDOMString&             theResult) :
-XSLException(format(theQName, theQNameLength,theResult), theURI, theLineNumber, theColumnNumber, theResult.getMemoryManager())
+    XSLException(
+        format(theQName, theQNameLength, theResult),
+        theURI,
+        theLineNumber,
+        theColumnNumber,
+        theResult.getMemoryManager())
 {
 }
 
@@ -414,7 +419,10 @@ XalanQName::InvalidQNameException::InvalidQNameException(
             const XalanDOMChar*         theQName,
             XalanDOMString::size_type   theQNameLength,
             XalanDOMString&             theResult) :
-    XSLException(theLocator, format(theQName, theQNameLength, theResult), theResult.getMemoryManager())
+    XSLException(
+        theLocator, 
+        format(theQName, theQNameLength, theResult),
+        theResult.getMemoryManager())
 {
 }
 
@@ -424,7 +432,33 @@ XalanQName::InvalidQNameException::InvalidQNameException(
             const XalanDOMChar*         theQName,
             XalanDOMString::size_type   theQNameLength,
             XalanDOMString&             theResult) :
-    XSLException(format(theQName, theQNameLength, theResult), theResult.getMemoryManager())
+    XSLException(
+        format(theQName, theQNameLength, theResult),
+        theResult.getMemoryManager())
+{
+}
+
+
+
+XalanQName::InvalidQNameException::InvalidQNameException(
+            const XalanDOMString&   theMessage,
+            MemoryManager&          theManager) :
+    XSLException(
+        theMessage,
+        theManager)
+{
+}
+
+
+
+XalanQName::InvalidQNameException::InvalidQNameException(
+            const Locator&          theLocator,
+            const XalanDOMString&   theMessage,
+            MemoryManager&          theManager) :
+    XSLException(
+        theLocator,
+        theMessage,
+        theManager)
 {
 }
 
@@ -442,11 +476,14 @@ XalanQName::InvalidQNameException::format(
             XalanDOMString::size_type   theQNameLength,
             XalanDOMString&             theResult )
 {
-    theResult.append(theQName, theQNameLength);
+    XalanDOMString  theParameter(theResult.getMemoryManager());
+
+    theParameter.append(theQName, theQNameLength);
 
     return XalanMessageLoader::getMessage(
                 theResult,
-                XalanMessages::IsNotValidQName_1Param);
+                XalanMessages::IsNotValidQName_1Param,
+                theParameter);
 }
 
 
