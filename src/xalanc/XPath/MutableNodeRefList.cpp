@@ -40,8 +40,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 MutableNodeRefList::MutableNodeRefList(MemoryManagerType& theManager) :
-	NodeRefList(theManager),
-	m_order(eUnknownOrder)
+    NodeRefList(theManager),
+    m_order(eUnknownOrder)
 {
 }
 MutableNodeRefList*
@@ -61,24 +61,24 @@ MutableNodeRefList::create(MemoryManagerType& theManager)
 }
 
 
-MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource,
+MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&    theSource,
                                        MemoryManagerType& theManager) :
-	NodeRefList(theSource, theManager),
-	m_order(theSource.m_order)
+    NodeRefList(theSource, theManager),
+    m_order(theSource.m_order)
 {
 }
 
 
 
-MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource,
+MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&   theSource,
                                        MemoryManagerType& theManager) :
-	NodeRefList(theSource, theManager),
-	m_order(eUnknownOrder)
+    NodeRefList(theSource, theManager),
+    m_order(eUnknownOrder)
 {
 }
 
 
-	
+    
 MutableNodeRefList::~MutableNodeRefList()
 {
 }
@@ -86,118 +86,118 @@ MutableNodeRefList::~MutableNodeRefList()
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const MutableNodeRefList&		theRHS)
+MutableNodeRefList::operator=(const MutableNodeRefList&     theRHS)
 {
-	if (this != &theRHS)
-	{
-		// Chain up...
-		NodeRefList::operator=(theRHS);
+    if (this != &theRHS)
+    {
+        // Chain up...
+        NodeRefList::operator=(theRHS);
 
-		m_order = theRHS.m_order;
-	}
+        m_order = theRHS.m_order;
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const NodeRefList&	theRHS)
+MutableNodeRefList::operator=(const NodeRefList&    theRHS)
 {
-	if (this != &theRHS)
-	{
-		// Chain up...
-		NodeRefList::operator=(theRHS);
+    if (this != &theRHS)
+    {
+        // Chain up...
+        NodeRefList::operator=(theRHS);
 
-		m_order = eUnknownOrder;
-	}
+        m_order = eUnknownOrder;
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const NodeRefListBase&	theRHS)
+MutableNodeRefList::operator=(const NodeRefListBase&    theRHS)
 {
-	if (this != &theRHS)
-	{
-		// Chain up...
-		NodeRefList::operator=(theRHS);
+    if (this != &theRHS)
+    {
+        // Chain up...
+        NodeRefList::operator=(theRHS);
 
-		m_order = eUnknownOrder;
-	}
+        m_order = eUnknownOrder;
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const XalanNodeList*	theRHS)
+MutableNodeRefList::operator=(const XalanNodeList*  theRHS)
 {
-	clear();
+    clear();
 
-	if (theRHS != 0)
-	{
-		addNodes(*theRHS);
-	}
+    if (theRHS != 0)
+    {
+        addNodes(*theRHS);
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 void
-MutableNodeRefList::addNode(XalanNode*	n)
+MutableNodeRefList::addNode(XalanNode*  n)
 {
-	if (n != 0)
-	{
-		m_nodeList.push_back(n);
-	}
+    if (n != 0)
+    {
+        m_nodeList.push_back(n);
+    }
 }
 
 
 
 void
 MutableNodeRefList::insertNode(
-			XalanNode*	n,
-			size_type	pos)
+            XalanNode*  n,
+            size_type   pos)
 {
- 	assert(m_nodeList.size() >= pos);
+    assert(m_nodeList.size() >= pos);
 
-	if (n != 0)
-	{
-		m_nodeList.insert(m_nodeList.begin() + pos, n);
-	}
+    if (n != 0)
+    {
+        m_nodeList.insert(m_nodeList.begin() + pos, n);
+    }
 }
 
 
 
 void
-MutableNodeRefList::removeNode(const XalanNode*		n)
+MutableNodeRefList::removeNode(const XalanNode*     n)
 {
-	XALAN_USING_STD(find)
+    XALAN_USING_STD(find)
 
-	NodeListVectorType::iterator	i =
-		find(m_nodeList.begin(),
-			 m_nodeList.end(),
-			 n);
+    NodeListVectorType::iterator    i =
+        find(m_nodeList.begin(),
+             m_nodeList.end(),
+             n);
 
-	if (i != m_nodeList.end())
-	{
-		m_nodeList.erase(i);
-	}
+    if (i != m_nodeList.end())
+    {
+        m_nodeList.erase(i);
+    }
 }
 
 
 
 void
-MutableNodeRefList::removeNode(size_type	pos)
+MutableNodeRefList::removeNode(size_type    pos)
 {
-	assert(pos < m_nodeList.size());
+    assert(pos < m_nodeList.size());
 
-	m_nodeList.erase(m_nodeList.begin() + pos);
+    m_nodeList.erase(m_nodeList.begin() + pos);
 }
 
 
@@ -205,247 +205,249 @@ MutableNodeRefList::removeNode(size_type	pos)
 void
 MutableNodeRefList::clear()
 {
-	m_nodeList.clear();
+    m_nodeList.clear();
 
-	m_order = eUnknownOrder;
+    m_order = eUnknownOrder;
 }
 
 
 
 void
 MutableNodeRefList::setNode(
-			size_type	pos,
-			XalanNode*	theNode)
+            size_type   pos,
+            XalanNode*  theNode)
 {
-	assert(pos < m_nodeList.size());
+    assert(pos < m_nodeList.size());
 
-	m_nodeList[pos] = theNode;
+    m_nodeList[pos] = theNode;
 }
 
 
 
 void
-MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
+MutableNodeRefList::addNodes(const XalanNodeList&   nodelist)
 {
-	const size_type		theLength = nodelist.getLength();
+    const size_type     theLength = nodelist.getLength();
 
-	for (size_type i = 0; i < theLength; i++)
-	{
-		assert(unsigned(i) == i);
+    for (size_type i = 0; i < theLength; i++)
+    {
+        assert(unsigned(i) == i);
 
-		XalanNode* const	theNode = nodelist.item(unsigned(i));
+        XalanNode* const    theNode = nodelist.item(unsigned(i));
 
-		if (theNode != 0)
-		{
+        if (theNode != 0)
+        {
 
-			m_nodeList.push_back(theNode);
-		}
-	}
+            m_nodeList.push_back(theNode);
+        }
+    }
 }
 
 
 
 void
-MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
+MutableNodeRefList::addNodes(const NodeRefListBase&     nodelist)
 {
-	const size_type	theLength = nodelist.getLength();
+    const size_type theLength = nodelist.getLength();
 
-	for (size_type i = 0; i < theLength; i++)
-	{
-		XalanNode* const	theNode = nodelist.item(i);
+    for (size_type i = 0; i < theLength; i++)
+    {
+        XalanNode* const    theNode = nodelist.item(i);
 
-		if (theNode != 0)
-		{
+        if (theNode != 0)
+        {
 
-			m_nodeList.push_back(theNode);
-		}
-	}
-}
-
-
-
-void
-MutableNodeRefList::addNodesInDocOrder(
-			const XalanNodeList&	nodelist,
-			XPathExecutionContext&	executionContext)
-{
-	const unsigned int	theOtherLength = nodelist.getLength();
-
-	for(unsigned int i = 0; i < theOtherLength; i++)
-	{
-		addNodeInDocOrder(nodelist.item(i), executionContext);
-	}
+            m_nodeList.push_back(theNode);
+        }
+    }
 }
 
 
 
 void
 MutableNodeRefList::addNodesInDocOrder(
-			const NodeRefListBase&	nodelist,
-			XPathExecutionContext&	executionContext)
+            const XalanNodeList&    nodelist,
+            XPathExecutionContext&  executionContext)
 {
-	const size_type		theOtherLength = nodelist.getLength();
+    const unsigned int  theOtherLength = nodelist.getLength();
 
-	for(size_type i = 0; i < theOtherLength; i++)
-	{
-		addNodeInDocOrder(nodelist.item(i), executionContext);
-	}
+    for(unsigned int i = 0; i < theOtherLength; i++)
+    {
+        addNodeInDocOrder(nodelist.item(i), executionContext);
+    }
 }
 
 
 
 void
 MutableNodeRefList::addNodesInDocOrder(
-			const MutableNodeRefList&	nodelist,
-			XPathExecutionContext&		executionContext)
+            const NodeRefListBase&  nodelist,
+            XPathExecutionContext&  executionContext)
 {
-	XALAN_USING_STD(back_inserter);
-	XALAN_USING_STD(copy);
-	XALAN_USING_STD(for_each);
+    const size_type     theOtherLength = nodelist.getLength();
 
-	const eOrder		theOtherOrder = nodelist.m_order;
+    for(size_type i = 0; i < theOtherLength; i++)
+    {
+        addNodeInDocOrder(nodelist.item(i), executionContext);
+    }
+}
 
-	if (theOtherOrder == eUnknownOrder)
-	{
-		for_each(
-			nodelist.m_nodeList.begin(),
-			nodelist.m_nodeList.end(),
-			addNodeInDocOrderFunctor(*this, executionContext));
-	}
-	else if (theOtherOrder == eDocumentOrder)
-	{
-		if (m_nodeList.empty() == true)
-		{
-			m_nodeList = nodelist.m_nodeList;
-		}
-		else
-		{
-			for_each(
-				nodelist.m_nodeList.begin(),
-				nodelist.m_nodeList.end(),
-				addNodeInDocOrderFunctor(*this, executionContext));
-		}
-	}
-	else
-	{
-		assert(theOtherOrder == eReverseDocumentOrder);
 
-		if (m_nodeList.empty() == true)
-		{
-			copy(
-				nodelist.m_nodeList.rbegin(),
-				nodelist.m_nodeList.rend(),
-				back_inserter(m_nodeList));
-		}
-		else
-		{
-			for_each(
-				nodelist.m_nodeList.rbegin(),
-				nodelist.m_nodeList.rend(),
-				addNodeInDocOrderFunctor(*this, executionContext));
-		}
-	}
+
+void
+MutableNodeRefList::addNodesInDocOrder(
+            const MutableNodeRefList&   nodelist,
+            XPathExecutionContext&      executionContext)
+{
+    XALAN_USING_STD(back_inserter);
+    XALAN_USING_STD(copy);
+    XALAN_USING_STD(for_each);
+
+    const eOrder        theOtherOrder = nodelist.m_order;
+
+    if (theOtherOrder == eUnknownOrder)
+    {
+        for_each(
+            nodelist.m_nodeList.begin(),
+            nodelist.m_nodeList.end(),
+            addNodeInDocOrderFunctor(*this, executionContext));
+    }
+    else if (theOtherOrder == eDocumentOrder)
+    {
+        if (m_nodeList.empty() == true)
+        {
+            m_nodeList = nodelist.m_nodeList;
+        }
+        else
+        {
+            for_each(
+                nodelist.m_nodeList.begin(),
+                nodelist.m_nodeList.end(),
+                addNodeInDocOrderFunctor(*this, executionContext));
+        }
+    }
+    else
+    {
+        assert(theOtherOrder == eReverseDocumentOrder);
+
+        if (m_nodeList.empty() == true)
+        {
+            copy(
+                nodelist.m_nodeList.rbegin(),
+                nodelist.m_nodeList.rend(),
+                back_inserter(m_nodeList));
+        }
+        else
+        {
+            for_each(
+                nodelist.m_nodeList.rbegin(),
+                nodelist.m_nodeList.rend(),
+                addNodeInDocOrderFunctor(*this, executionContext));
+        }
+    }
 }
 
 
 
 static bool
 findInsertionPointBinarySearch(
-			XalanNode*									node,
-			MutableNodeRefList::NodeListIteratorType	begin,
-			MutableNodeRefList::NodeListIteratorType	end,
-			MutableNodeRefList::NodeListIteratorType&	insertionPoint)
+            XalanNode*                                  node,
+            MutableNodeRefList::NodeListIteratorType    begin,
+            MutableNodeRefList::NodeListIteratorType    end,
+            MutableNodeRefList::NodeListIteratorType&   insertionPoint)
 {
-	assert(node != 0);
-	assert(node->getNodeType() == XalanNode::DOCUMENT_NODE ||
-		   (node->getOwnerDocument() != 0 && node->getOwnerDocument()->isIndexed() == true));
+    assert(node != 0);
+    assert(
+        node->getNodeType() == XalanNode::DOCUMENT_NODE ||
+        node->getNodeType() == XalanNode::DOCUMENT_FRAGMENT_NODE ||
+        (node->getOwnerDocument() != 0 && node->getOwnerDocument()->isIndexed() == true));
 
-	bool	fInsert = true;
+    bool    fInsert = true;
 
-	// At this point, we are guaranteed that the range is only for this
-	// document, and that the range is indexed...
-	const XalanNode::IndexType	theIndex = node->getIndex();
+    // At this point, we are guaranteed that the range is only for this
+    // document, and that the range is indexed...
+    const XalanNode::IndexType  theIndex = node->getIndex();
 
-	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
+    typedef MutableNodeRefList::NodeListIteratorType    NodeListIteratorType;
 
-	// End points to one past the last valid point,
-	// so subtract 1.
-	NodeListIteratorType	last(end - 1);
-	assert(*last != 0);
+    // End points to one past the last valid point,
+    // so subtract 1.
+    NodeListIteratorType    last(end - 1);
+    assert(*last != 0);
 
-	// Do a quick check to see if we just need to append...
-	if ((*last)->getIndex() < theIndex)
-	{
-		insertionPoint = end;
-	}
-	else
-	{
-		// Do a binary search for the insertion point...
-		NodeListIteratorType	first(begin);
-		NodeListIteratorType	current(end);
+    // Do a quick check to see if we just need to append...
+    if ((*last)->getIndex() < theIndex)
+    {
+        insertionPoint = end;
+    }
+    else
+    {
+        // Do a binary search for the insertion point...
+        NodeListIteratorType    first(begin);
+        NodeListIteratorType    current(end);
 
-		XalanNode::IndexType	theCurrentIndex = 0;
+        XalanNode::IndexType    theCurrentIndex = 0;
 
-		while (first <= last)
-		{
-			current = first + (last - first) / 2;
-			assert(*current != 0);
+        while (first <= last)
+        {
+            current = first + (last - first) / 2;
+            assert(*current != 0);
 
-			theCurrentIndex = (*current)->getIndex();
+            theCurrentIndex = (*current)->getIndex();
 
-			if (theIndex < theCurrentIndex)
-			{
-				if (current == begin)
-				{
-					break;
-				}
-				else
-				{
-					last = current - 1;
-				}
-			}
-			else if (theIndex > theCurrentIndex)
-			{
-				first = current + 1;
-			}
-			else if (theIndex == theCurrentIndex)
-			{
-				// Duplicate, don't insert...
-				fInsert = false;
+            if (theIndex < theCurrentIndex)
+            {
+                if (current == begin)
+                {
+                    break;
+                }
+                else
+                {
+                    last = current - 1;
+                }
+            }
+            else if (theIndex > theCurrentIndex)
+            {
+                first = current + 1;
+            }
+            else if (theIndex == theCurrentIndex)
+            {
+                // Duplicate, don't insert...
+                fInsert = false;
 
-				break;
-			}
-		}
+                break;
+            }
+        }
 
-		if (theIndex != theCurrentIndex)
-		{
-			if (current == end || first == end)
-			{
-				// We either didn't search, or we're
-				// at the end...
-				insertionPoint = end;
-			}
-			else if (theCurrentIndex < theIndex)
-			{
-				// We're inserting after the current position...
-				assert((*current)->getIndex() < theIndex &&
-					   (current + 1 == end || (*(current + 1))->getIndex() > theIndex));
+        if (theIndex != theCurrentIndex)
+        {
+            if (current == end || first == end)
+            {
+                // We either didn't search, or we're
+                // at the end...
+                insertionPoint = end;
+            }
+            else if (theCurrentIndex < theIndex)
+            {
+                // We're inserting after the current position...
+                assert((*current)->getIndex() < theIndex &&
+                       (current + 1 == end || (*(current + 1))->getIndex() > theIndex));
 
-				insertionPoint = current + 1;
-			}
-			else
-			{
-				// We're inserting before the current position...
-				assert(theCurrentIndex > theIndex);
-				assert((*current)->getIndex() > theIndex &&
-					   (current == begin || (*(current))->getIndex() > theIndex));
+                insertionPoint = current + 1;
+            }
+            else
+            {
+                // We're inserting before the current position...
+                assert(theCurrentIndex > theIndex);
+                assert((*current)->getIndex() > theIndex &&
+                       (current == begin || (*(current))->getIndex() > theIndex));
 
-				insertionPoint = current;
-			}
-		}
-	}
+                insertionPoint = current;
+            }
+        }
+    }
 
-	return fInsert;
+    return fInsert;
 }
 
 
@@ -453,82 +455,96 @@ findInsertionPointBinarySearch(
 template<class PredicateType>
 inline bool
 findInsertionPointLinearSearch(
-			XalanNode*									node,
-			MutableNodeRefList::NodeListIteratorType	begin,
-			MutableNodeRefList::NodeListIteratorType	end,
-			MutableNodeRefList::NodeListIteratorType&	insertionPoint,
-			const PredicateType							isNodeAfterPredicate)
+            XalanNode*                                  node,
+            MutableNodeRefList::NodeListIteratorType    begin,
+            MutableNodeRefList::NodeListIteratorType    end,
+            MutableNodeRefList::NodeListIteratorType&   insertionPoint,
+            const PredicateType                         isNodeAfterPredicate)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	bool	fInsert = true;
+    bool    fInsert = true;
 
-	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
+    typedef MutableNodeRefList::NodeListIteratorType    NodeListIteratorType;
 
-	NodeListIteratorType	current(begin);
+    NodeListIteratorType    current(begin);
 
-	// Loop, looking for the node, or for a
-	// node that's before the one we're adding...
-	while(current != end)
-	{
-		const XalanNode*	child = *current;
-		assert(child != 0);
+    // Loop, looking for the node, or for a
+    // node that's before the one we're adding...
+    while(current != end)
+    {
+        const XalanNode*    child = *current;
+        assert(child != 0);
 
-		if(child == node)
-		{
-			// Duplicate, don't insert...
-			fInsert = false;
+        if(child == node)
+        {
+            // Duplicate, don't insert...
+            fInsert = false;
 
-			break;
-		}
-		else if (isNodeAfterPredicate(*node, *child) == false)
-		{
-			// We found the insertion point...
-			break;
-		}
-		else
-		{
-			++current;
-		}
-	}
+            break;
+        }
+        else if (isNodeAfterPredicate(*node, *child) == false)
+        {
+            // We found the insertion point...
+            break;
+        }
+        else
+        {
+            ++current;
+        }
+    }
 
-	insertionPoint = current;
+    insertionPoint = current;
 
-	return fInsert;
+    return fInsert;
 }
 
 
 
 struct DocumentPredicate
 {
-	bool
-	operator()(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
-	{
-		// Always order a document node, or a node from another
-		// document after another node...
-		return node1.getNodeType() == XalanNode::DOCUMENT_NODE &&
-			   node2.getNodeType() == XalanNode::DOCUMENT_NODE ? true :
-					node1.getOwnerDocument() != node2.getOwnerDocument() ? true : false;
-	}
+    bool
+    operator()(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
+    {
+        // Always order a document node, or a node from another
+        // document after another node...
+        const XalanNode::NodeType   node1Type =
+            node1.getNodeType();
+
+        const XalanNode::NodeType   node2Type =
+            node2.getNodeType();
+
+        if ((node1Type == XalanNode::DOCUMENT_NODE ||
+             node1Type == XalanNode::DOCUMENT_FRAGMENT_NODE) &&
+            (node2Type == XalanNode::DOCUMENT_NODE ||
+             node2Type == XalanNode::DOCUMENT_FRAGMENT_NODE))
+        {
+            return true;
+        }
+        else
+        {
+            return node1.getOwnerDocument() != node2.getOwnerDocument();
+        }
+    }
 };
 
 
 
 struct IndexPredicate
 {
-	bool
-	operator()(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
-	{
-		assert(node1.getOwnerDocument() == node2.getOwnerDocument());
+    bool
+    operator()(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
+    {
+        assert(node1.getOwnerDocument() == node2.getOwnerDocument());
 
-		return m_documentPredicate(node1, node2) == true ? true : node1.getIndex() > node2.getIndex() ? true : false;
-	}
+        return m_documentPredicate(node1, node2) == true ? true : node1.getIndex() > node2.getIndex() ? true : false;
+    }
 
-	DocumentPredicate	m_documentPredicate;
+    DocumentPredicate   m_documentPredicate;
 };
 
 
@@ -536,33 +552,36 @@ struct IndexPredicate
 
 struct ExecutionContextPredicate
 {
-	ExecutionContextPredicate(XPathExecutionContext&	executionContext) :
-		m_executionContext(executionContext)
-	{
-	}
+    ExecutionContextPredicate(XPathExecutionContext&    executionContext) :
+        m_executionContext(executionContext)
+    {
+    }
 
-	bool
-	operator()(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
-	{
-		if (m_documentPredicate(node1, node2) == true)
-		{
-			return true;
-		}
-		else
-		{
-			assert(node1.getOwnerDocument() == node2.getOwnerDocument());
-			assert(node1.getNodeType() != XalanNode::DOCUMENT_NODE &&
-				   node2.getNodeType() != XalanNode::DOCUMENT_NODE);
+    bool
+    operator()(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
+    {
+        if (m_documentPredicate(node1, node2) == true)
+        {
+            return true;
+        }
+        else
+        {
+            assert(node1.getOwnerDocument() == node2.getOwnerDocument());
+            assert(
+                node1.getNodeType() != XalanNode::DOCUMENT_NODE &&
+                node1.getNodeType() != XalanNode::DOCUMENT_FRAGMENT_NODE &&
+                node2.getNodeType() != XalanNode::DOCUMENT_NODE &&
+                node2.getNodeType() != XalanNode::DOCUMENT_FRAGMENT_NODE);
 
-			return  m_executionContext.isNodeAfter(node1, node2);
-		}
-	}
+            return  m_executionContext.isNodeAfter(node1, node2);
+        }
+    }
 
-	XPathExecutionContext&	m_executionContext;
+    XPathExecutionContext&  m_executionContext;
 
-	DocumentPredicate		m_documentPredicate;
+    DocumentPredicate       m_documentPredicate;
 };
 
 
@@ -570,93 +589,100 @@ struct ExecutionContextPredicate
 
 void
 MutableNodeRefList::addNodeInDocOrder(
-			XalanNode*				node,
-			XPathExecutionContext&	executionContext)
+            XalanNode*              node,
+            XPathExecutionContext&  executionContext)
 {
-	if (node != 0)
-	{
-		if (m_nodeList.size() == 0)
-		{
-			addNode(node);
-		}
-		else
-		{
-			assert(m_nodeList[0] != 0);
+    if (node != 0)
+    {
+        if (m_nodeList.size() == 0)
+        {
+            addNode(node);
+        }
+        else
+        {
+            assert(m_nodeList[0] != 0);
 
-			// Do some quick optimizations, since we tend to append
-			// the same node a lot.
-			const XalanNode* const	theLastNode = m_nodeList.back();
-			assert(theLastNode != 0);
+            // Do some quick optimizations, since we tend to append
+            // the same node a lot.
+            const XalanNode* const  theLastNode = m_nodeList.back();
+            assert(theLastNode != 0);
 
-			// Is it a duplicate?
-			if (theLastNode != node)
-			{
-				bool					fInsert = false;
+            // Is it a duplicate?
+            if (theLastNode != node)
+            {
+                bool                    fInsert = false;
 
-				NodeListIteratorType	insertionPoint;
+                NodeListIteratorType    insertionPoint;
 
-				const XalanNode* const	theFirstNode = m_nodeList.front();
-				assert(theFirstNode != 0);
+                const XalanNode* const  theFirstNode = m_nodeList.front();
+                assert(theFirstNode != 0);
 
-				// Normalize so that if we have a document node, it owns
-				// itself, which is not how DOM works...
-				const XalanNode* const	theFirstNodeOwner =
-					theFirstNode->getNodeType() == XalanNode::DOCUMENT_NODE ?
-							theFirstNode : theFirstNode->getOwnerDocument();
-				assert(theFirstNodeOwner != 0);
+                // Normalize so that if we have a document node, it owns
+                // itself, which is not how DOM works...
+                const XalanNode::NodeType   theFirstNodeType =
+                    theFirstNode->getNodeType();
 
-				if (node->isIndexed() == true &&
-					node->getOwnerDocument() == theFirstNodeOwner)
-				{
-					// If it's indexed, then see if the entire list consists of
-					// nodes from the same document.
-					// Normalize so that if we have a document node, it owns
-					// itself, which is not how DOM works...
-					const XalanNode* const	theLastNodeOwner =
-						theLastNode->getNodeType() == XalanNode::DOCUMENT_NODE ?
-								theLastNode : theLastNode->getOwnerDocument();
-					assert(theLastNodeOwner != 0);
+                const XalanNode* const  theFirstNodeOwner =
+                     theFirstNodeType == XalanNode::DOCUMENT_NODE ||
+                     theFirstNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE ?
+                            theFirstNode : theFirstNode->getOwnerDocument();
+                assert(theFirstNodeOwner != 0);
 
-					// If the owner document is 0, then it's a document node, so there's not
-					// much we can do except a linear search...
-					if (theFirstNodeOwner == theLastNodeOwner)
-					{
-						fInsert =
-							findInsertionPointBinarySearch(
-									node,
-									m_nodeList.begin(),
-									m_nodeList.end(),
-									insertionPoint);
-					}
-					else
-					{
-						fInsert =
-							findInsertionPointLinearSearch(
-									node,
-									m_nodeList.begin(),
-									m_nodeList.end(),
-									insertionPoint,
-									IndexPredicate());
-					}
-				}
-				else
-				{
-					fInsert =
-							findInsertionPointLinearSearch(
-									node,
-									m_nodeList.begin(),
-									m_nodeList.end(),
-									insertionPoint,
-									ExecutionContextPredicate(executionContext));
-				}
+                if (node->isIndexed() == true &&
+                    node->getOwnerDocument() == theFirstNodeOwner)
+                {
+                    // If it's indexed, then see if the entire list consists of
+                    // nodes from the same document.
+                    // Normalize so that if we have a document node, it owns
+                    // itself, which is not how DOM works...
+                    const XalanNode::NodeType   theLastNodeType =
+                            theLastNode->getNodeType();
+                    const XalanNode* const  theLastNodeOwner =
+                        theLastNodeType == XalanNode::DOCUMENT_NODE ||
+                        theLastNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE ?
+                                theLastNode : theLastNode->getOwnerDocument();
+                    assert(theLastNodeOwner != 0);
 
-				if (fInsert == true)
-				{
-					m_nodeList.insert(insertionPoint, node);
-				}
-			}
-		}
-	}
+                    // If the owner document is 0, then it's a document node, so there's not
+                    // much we can do except a linear search...
+                    if (theFirstNodeOwner == theLastNodeOwner)
+                    {
+                        fInsert =
+                            findInsertionPointBinarySearch(
+                                    node,
+                                    m_nodeList.begin(),
+                                    m_nodeList.end(),
+                                    insertionPoint);
+                    }
+                    else
+                    {
+                        fInsert =
+                            findInsertionPointLinearSearch(
+                                    node,
+                                    m_nodeList.begin(),
+                                    m_nodeList.end(),
+                                    insertionPoint,
+                                    IndexPredicate());
+                    }
+                }
+                else
+                {
+                    fInsert =
+                            findInsertionPointLinearSearch(
+                                    node,
+                                    m_nodeList.begin(),
+                                    m_nodeList.end(),
+                                    insertionPoint,
+                                    ExecutionContextPredicate(executionContext));
+                }
+
+                if (fInsert == true)
+                {
+                    m_nodeList.insert(insertionPoint, node);
+                }
+            }
+        }
+    }
 }
 
 
@@ -664,21 +690,21 @@ MutableNodeRefList::addNodeInDocOrder(
 void
 MutableNodeRefList::clearNulls()
 {
-	XALAN_USING_STD(remove);
+    XALAN_USING_STD(remove);
 
-	m_nodeList.erase(
-		remove(
-			m_nodeList.begin(),
-			m_nodeList.end(), 
-			NodeListVectorType::value_type(0)),
-		m_nodeList.end());
+    m_nodeList.erase(
+        remove(
+            m_nodeList.begin(),
+            m_nodeList.end(), 
+            NodeListVectorType::value_type(0)),
+        m_nodeList.end());
 
-	if (m_nodeList.empty() == true)
-	{
-		m_order = eUnknownOrder;
-	}
+    if (m_nodeList.empty() == true)
+    {
+        m_order = eUnknownOrder;
+    }
 
-	assert(checkForDuplicates(getMemoryManager()) == false);
+    assert(checkForDuplicates(getMemoryManager()) == false);
 }
 
 
@@ -687,21 +713,21 @@ void
 MutableNodeRefList::reverse()
 {
 #if defined(XALAN_NO_STD_NAMESPACE)
-	::reverse(
+    ::reverse(
 #else
-	std::reverse(
+    std::reverse(
 #endif
-		m_nodeList.begin(),
-		m_nodeList.end());
+        m_nodeList.begin(),
+        m_nodeList.end());
 
-	if (m_order == eDocumentOrder)
-	{
-		m_order = eReverseDocumentOrder;
-	}
-	else if (m_order == eReverseDocumentOrder)
-	{
-		m_order = eDocumentOrder;
-	}
+    if (m_order == eDocumentOrder)
+    {
+        m_order = eReverseDocumentOrder;
+    }
+    else if (m_order == eReverseDocumentOrder)
+    {
+        m_order = eDocumentOrder;
+    }
 }
 
 
