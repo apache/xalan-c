@@ -270,12 +270,28 @@ private:
 	accumHexNumber(XalanDOMChar		theChar);
 
 	bool
-	popHasNamespace();
+	popHasNamespace()
+    {
+        return m_prefixResolver == 0 ?
+                    false :
+                    doPopHasNamespace();
+    }
 
 	bool
-	pushHasNamespace(const XalanDOMChar*	theElementName);
+	pushHasNamespace(const XalanDOMChar*	theElementName)
+    {
+        return m_prefixResolver == 0 ?
+                    false :
+                    doPushHasNamespace(theElementName);
+    }
 
-	// Data members...
+	bool
+	doPopHasNamespace();
+
+	bool
+	doPushHasNamespace(const XalanDOMChar*  theElementName);
+
+    // Data members...
 	XalanDOMString			m_currentElementName;
 
 	bool					m_inBlockElem;

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
- /**
- * @author David N. Bertoni <david_n_bertoni@lotus.com>
- */
-
 
 
 // Class header file.
@@ -102,6 +98,8 @@ FormatterToHTML::FormatterToHTML(
     m_shouldWriteXMLHeader = false;
 }
 
+
+
 FormatterToHTML*
 FormatterToHTML::create(
             MemoryManagerType&      theManager,
@@ -138,6 +136,8 @@ FormatterToHTML::create(
     return theResult;
 }
 
+
+
 FormatterToHTML::~FormatterToHTML()
 {
 }
@@ -170,21 +170,17 @@ FormatterToHTML::initCharsMap()
 	initAttrCharsMap();
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	std::memset(m_charsMap, 0, sizeof(m_charsMap));
-#else
-	memset(m_charsMap, 0, sizeof(m_charsMap));
+    using std::memset;
 #endif
+
+	memset(m_charsMap, 0, sizeof(m_charsMap));
 
 	m_charsMap[XalanUnicode::charLF] = 'S';
 	m_charsMap[XalanUnicode::charLessThanSign] = 'S';
 	m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
 	m_charsMap[XalanUnicode::charAmpersand] = 'S';
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	std::memset(m_charsMap, 'S', 10);
-#else
 	memset(m_charsMap, 'S', 10);
-#endif
 
 	m_charsMap[0x0A] = 'S';
 	m_charsMap[0x0D] = 'S';
@@ -265,9 +261,14 @@ FormatterToHTML::startDocument()
 void
 FormatterToHTML::endDocument()
 {
+	assert(m_isRawStack.empty() == true);
+	assert(m_inScriptElemStack.empty() == false);
+	assert(m_hasNamespaceStack.empty() == true);
+	assert(m_elementPropertiesStack.empty() == true);
 	assert(m_elementLevel == 0);
 
 	m_inScriptElemStack.pop_back();
+	assert(m_inScriptElemStack.empty() == true);
 
 	FormatterToXML::endDocument();
 }
@@ -285,11 +286,14 @@ FormatterToHTML::startElement(
 	}
 	else
 	{
-		writeParentTagEnd();
+        writeParentTagEnd();
 
 		const XalanHTMLElementsProperties::ElementProperties&	elemProperties =
 			XalanHTMLElementsProperties::find(name);
 		assert(elemProperties.null() == false);
+        assert(
+            length(elemProperties.getName()) == 0 ||
+            compareIgnoreCaseASCII(name, elemProperties.getName()) == 0);
 
 		// Push a copy onto the stack for endElement().  Don't worry --
 		// the copy is cheap!
@@ -392,7 +396,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 	{
 		m_currentIndent -= m_indent;
 
-		const bool	hasChildNodes = childNodesWereAdded();
+        const bool	hasChildNodes = childNodesWereAdded();
 
 		assert(m_isRawStack.empty() == false);
 		assert(m_inScriptElemStack.empty() == false);
@@ -404,6 +408,9 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		const XalanHTMLElementsProperties::ElementProperties	elemProperties =
 				m_elementPropertiesStack.back();
 		assert(elemProperties.null() == false);
+        assert(
+            length(elemProperties.getName()) == 0 ||
+            compareIgnoreCaseASCII(name, elemProperties.getName()) == 0);
 
 		m_elementPropertiesStack.pop_back();
 
@@ -1098,58 +1105,63 @@ FormatterToHTML::accumHexNumber(XalanDOMChar	theChar)
 
 
 bool
-FormatterToHTML::popHasNamespace()
+FormatterToHTML::doPopHasNamespace()
 {
-	if (m_hasNamespaceStack.empty() == true)
-	{
-		return false;
-	}
-	else
-	{
-		const bool	theValue = m_hasNamespaceStack.back();
+    assert(m_prefixResolver != 0);
 
-		m_hasNamespaceStack.pop_back();
+	assert(m_hasNamespaceStack.empty() == false);
+
+    const bool	theValue = m_hasNamespaceStack.back();
+
+	m_hasNamespaceStack.pop_back();
 			
-		return theValue;
-	}
+	return theValue;
 }
 
 
 
 bool
-FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
+FormatterToHTML::doPushHasNamespace(const XalanDOMChar*     theElementName)
 {
+    assert(m_prefixResolver != 0);
+
 	bool	fHasNamespace = false;
 
-	if (m_prefixResolver != 0)
-	{
-		const XalanDOMString::size_type		theLength = length(theElementName);
-		const XalanDOMString::size_type		theColonIndex = indexOf(theElementName, XalanUnicode::charColon);
+    const XalanDOMString::size_type		theLength =
+        length(theElementName);
 
-		const XalanDOMString*	thePrefix = &s_emptyString;
+    const XalanDOMString::size_type		theColonIndex =
+        indexOf(
+            theElementName,
+            XalanUnicode::charColon);
 
-		if (theColonIndex < theLength)
-		{
-			substring(theElementName, m_stringBuffer, 0, theColonIndex);
+    const XalanDOMString*	thePrefix = &s_emptyString;
 
-			thePrefix = &m_stringBuffer;
-		}
+    if (theColonIndex < theLength)
+    {
+        substring(
+            theElementName,
+            m_stringBuffer,
+            0,
+            theColonIndex);
 
-		assert(thePrefix != 0);
+        thePrefix = &m_stringBuffer;
+    }
 
-		// Check for the namespace...
-		const XalanDOMString* const		theNamespace =
-				m_prefixResolver->getNamespaceForPrefix(*thePrefix);
+    assert(thePrefix != 0);
 
-		if (theNamespace != 0 && length(*theNamespace) != 0)
-		{
-			m_hasNamespaceStack.push_back(true);
+    // Check for the namespace...
+    const XalanDOMString* const		theNamespace =
+        m_prefixResolver->getNamespaceForPrefix(*thePrefix);
 
-			fHasNamespace = true;
-		}
+    if (theNamespace != 0 && theNamespace->length() != 0)
+    {
+        fHasNamespace = true;
+    }
 
-		clear(m_stringBuffer);
-	}
+    m_stringBuffer.clear();
+
+    m_hasNamespaceStack.push_back(fHasNamespace);
 
 	return fHasNamespace;
 }

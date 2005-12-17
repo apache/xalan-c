@@ -144,7 +144,7 @@ public:
 	};
 
 	/**
-	 * This class acts as a proxy for and InternalElementProperties
+	 * This class acts as a proxy for an InternalElementProperties
 	 * instance.
 	 */
 	class XALAN_XMLSUPPORT_EXPORT ElementProperties
@@ -215,6 +215,17 @@ public:
 		{
 			return m_properties->isAttribute(theAttributeName, theFlags);
 		}
+
+		/**
+		 * Get the name of the element.
+		 *
+		 * @return The name of the element.
+		 */
+        const XalanDOMChar*
+        getName() const
+        {
+            return m_properties->m_name;
+        }
 
 	private:
 
