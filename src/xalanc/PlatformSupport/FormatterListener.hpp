@@ -16,14 +16,6 @@
 #if !defined(FORMATTERLISTENER_HEADER_GUARD_1357924680)
 #define FORMATTERLISTENER_HEADER_GUARD_1357924680
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
-
 
 
 // Base include file.  Must be first.
