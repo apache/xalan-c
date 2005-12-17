@@ -16,12 +16,7 @@
 #if !defined(XALAN_SPACENODETESTER_HEADER_GUARD_1357924680)
 #define XALAN_SPACENODETESTER_HEADER_GUARD_1357924680
 
-/**
- * $Id$
- * 
- * $State$
- * 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
