@@ -16,13 +16,6 @@
 #if !defined(XALAN_KEYTABLE_HEADER_GUARD)
 #define XALAN_KEYTABLE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- */
-
 
 
 // Base include file.  Must be first.

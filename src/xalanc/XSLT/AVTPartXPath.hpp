@@ -16,12 +16,7 @@
 #if !defined(XALAN_AVTPARTXPATH_HEADER_GUARD)
 #define XALAN_AVTPARTXPATH_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- */
+
 
 // Base include file.  Must be first.
 #include <xalanc/XSLT/XSLTDefinitions.hpp>
