@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * $Id$
- */
 #if !defined(XALAN_PROBLEMLISTENER_HEADER_GUARD)
 #define XALAN_PROBLEMLISTENER_HEADER_GUARD
 
