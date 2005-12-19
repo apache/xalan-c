@@ -267,7 +267,7 @@ ifdef XALAN_USE_ICU
 	$(INSTALL_PROGRAM) $(ICUROOT)/lib/$(ICU_LIBI18N_LIB) \
                            $(DESTDIR)/$(libdir)
   ifneq ($PLATFORM), OS390)
-	rm -f $(DESTIDR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME) && \
+	rm -f $(DESTDIR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME) && \
 		$(LN) -fs $(ICU_LIBI18N_LIB) \
 			$(DESTDIR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME)
 	rm -f $(DESTDIR)/$(libdir)/$(ICU_LIBI18N_SO_NAME) && \
