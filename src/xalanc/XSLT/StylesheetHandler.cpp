@@ -541,7 +541,7 @@ StylesheetHandler::startElement(
                     // stylesheet.  We should examine this strategy, because
                     // an xml:space attribute on an xsl:text element results
                     // in building a stylesheet that tries to parent an
-                    // ElenTextLiteral instance to an ElemText instance, which
+                    // ElemTextLiteral instance to an ElemText instance, which
                     // should not ever happen.
                     fSpaceAttrProcessed = true;
                     break;
