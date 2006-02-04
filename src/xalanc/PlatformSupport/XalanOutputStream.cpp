@@ -248,6 +248,8 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
 
     XalanTranscodingServices::destroyTranscoder(m_transcoder);
 
+    m_transcoder = 0;
+
     XalanTranscodingServices::eCode     theCode = XalanTranscodingServices::OK;
 
     // This turns on an optimization that we can only do if
@@ -437,6 +439,8 @@ XalanOutputStream::getNewlineString() const
 #endif
 }
 
+
+
 const XalanDOMChar  XalanOutputStream::XalanOutputStreamException::m_type[] = 
 {   
     XalanUnicode::charLetter_X,
@@ -471,6 +475,7 @@ const XalanDOMChar  XalanOutputStream::XalanOutputStreamException::m_type[] =
     XalanUnicode::charLetter_n,
     0
 };
+
 
 
 XalanOutputStream::XalanOutputStreamException::XalanOutputStreamException(
