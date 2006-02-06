@@ -160,7 +160,7 @@ public:
     getDoctypePublic() const;
 
     virtual const XalanDOMString&
-    getEncoding() const = 0;
+    getEncoding() const;
 
     const XalanDOMString&
     getVersion() const

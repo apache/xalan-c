@@ -348,6 +348,14 @@ XalanXMLSerializerBase::getDoctypePublic() const
 
 
 
+const XalanDOMString&
+XalanXMLSerializerBase::getEncoding() const
+{
+    return m_encoding;
+}
+
+
+
 void
 XalanXMLSerializerBase::resetDocument()
 {

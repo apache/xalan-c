@@ -278,12 +278,6 @@ public:
         m_indentHandler.setStartNewLine(true);
     }
 
-    virtual const XalanDOMString&
-    getEncoding() const
-    {
-        return m_constants.s_encodingString;
-    }
-
 protected:
 
     virtual void
