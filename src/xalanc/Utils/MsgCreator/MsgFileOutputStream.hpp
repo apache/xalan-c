@@ -16,19 +16,14 @@
 
 // This file is simplified version of XalanFileOutputStream.hpp / .cpp
 
-#if !defined(XALANOUTPUTFILE_1357924680)
-#define XALANOUTPUTFILE_1357924680
+#if !defined(MSGFILEOUTPUTSTREAM_1357924680)
+#define MSGFILEOUTPUTSTREAM_1357924680
 
-#include <xercesc/util/XMLUniDefs.hpp>
+#include "xalanc/Include/PlatformDefinitions.hpp"
 
 
-#if defined(WIN32)
-#include <windows.h>
-#else
+
 #include <cstdio>
-#endif
-
-#include <vector>
 
 
 
@@ -37,120 +32,121 @@ XERCES_CPP_NAMESPACE_USE
 
 
 
-// Class responcible for printing into file with UTF16
+// Class responsible for printing into file with UTF16
 
 
-class  XalanFileOutputStream 
+class  MsgFileOutputStream
 {
 public :
 
-#if defined(WIN32)
-	typedef HANDLE		HandleType;
-#else
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::FILE*	HandleType;
+    typedef std::FILE*  HandleType;
 #else
-	typedef FILE*		HandleType;
-#endif
+    typedef FILE*       HandleType;
 #endif
 
-	/**
-	 * Construct an XalanFileOutputStream object.
-	 * 
-	 * @param theFileName name of file
-	 * @param theBufferSize The size of the transcoding buffer
-	 */
-    XalanFileOutputStream(
-			const char*	theFileName);
+    /**
+     * Construct an MsgFileOutputStream object.
+     * 
+     * @param theFileName name of file
+     * @param theBufferSize The size of the transcoding buffer
+     */
+    MsgFileOutputStream(const char*     theFileName);
 
     virtual
-	~XalanFileOutputStream();
+    ~MsgFileOutputStream();
 
 
-	class  XalanFileOutputStreamOpenException 
-	{
-	public:
+    class OpenException
+    {
+    public:
 
-		/**
-		 * Construct an XalanFileOutputStreamOpen exception object for an exception
-		 * that occurred on opening a text file stream.
-		 * 
-		 * @param theFileName  name of file causing the exception
-		 * @param theErrorCode number of error encountered
-		 */
-		XalanFileOutputStreamOpenException(
-			const char*		theFileName,
-			int				theErrorCode);
+        /**
+         * Construct an OpenException exception object for an exception
+         * that occurred when opening a file.
+         * 
+         * @param theFileName  The name of file.
+         * @param theErrorCode The errno for the error encountered
+         */
+        OpenException(
+            const char*     theFileName,
+            int             theErrorCode);
 
-		virtual
-		~XalanFileOutputStreamOpenException();
-		
-		char*	m_pMessage;
-	};
+        ~OpenException();
 
-	class XalanFileOutputStreamWriteException 
-	{
-	public:
+        char    m_message[1200];
+    };
 
-		/**
-		 * Construct an XalanFileOutputStreamOpen exception object for an exception
-		 * that occurred while writing to a text file stream.
-		 * 
-		 * @param theFileName  name of file causing the exception
-		 * @param theErrorCode number of error encountered
-		 */
-		XalanFileOutputStreamWriteException(
-			const char*			theFileName,
-			int						theErrorCode);
+    class WriteException
+    {
+    public:
 
-		virtual
-		~XalanFileOutputStreamWriteException();
+        /**
+         * Construct an WriteException exception object for an exception
+         * that occurred while writing to a file.
+         * 
+         * @param theFileName  The name of file.
+         * @param theErrorCode The errno for the error encountered
+         */
+        WriteException(
+                const char*     theFileName,
+                int             theErrorCode);
 
-		char* m_pMessage;
-	};
+        ~WriteException();
 
+        char    m_message[1200];
+    };
 
-	void 
-	write(const UTF16Ch*	theString, unsigned int		theLength);
-	void 
-	write(const char*	theString, unsigned int		theLength);
+    void
+    write(
+            const XMLCh*    theString,
+            unsigned int    theLength);
 
-	void 
-	writeAsASCII(const char*	theString, unsigned int		theLengts);
+    void 
+    write(
+            const char*     theString,
+            unsigned int    theLength);
 
-	void
-	writeAsASCII(const UTF16Ch*	theString, unsigned int		theLengts);
-	void
-	writeUTFprefix();
+    void 
+    writeAsASCII(
+            const char*     theString,
+            unsigned int    theLength);
+
+    void
+    writeAsASCII(
+            const XMLCh*    theString,
+            unsigned int    theLength);
+
+    void
+    writeUTFPrefix();
+
 protected:
 
-	void
-	writeData(
-			const char*		theBuffer,
-			unsigned int	theBufferLength);
+    void
+    writeData(
+            const char*     theBuffer,
+            unsigned int    theBufferLength);
 
-	void
-	doFlush();
+    void
+    doFlush();
 
 private:
 
     // These are not implemented...
-    XalanFileOutputStream(const XalanFileOutputStream&);
+    MsgFileOutputStream(const MsgFileOutputStream&);
 
-    XalanFileOutputStream&
-	operator=(const XalanFileOutputStream&);
+    MsgFileOutputStream&
+    operator=(const MsgFileOutputStream&);
 
     bool
-	operator==(const XalanFileOutputStream&) const;
+    operator==(const MsgFileOutputStream&) const;
 
 
-	// Data members...
-	const char*			m_fileName;
+    // Data members...
+    const char* const   m_fileName;
 
-	const HandleType	m_handle;
+    const HandleType    m_handle;
 };
 
 
-#endif //XALANOUTPUTFILE_1357924680
-
-
+#endif //   MSGFILEOUTPUTSTREAM_1357924680

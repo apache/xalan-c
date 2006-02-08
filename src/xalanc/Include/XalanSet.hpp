@@ -45,6 +45,9 @@ struct XalanSetIterator
     typedef Value& reference;
     typedef Value* pointer;
 
+    typedef ptrdiff_t		                    difference_type;
+    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+
     XalanSetIterator(const MapIterator & iter) :
         m_mapIterator(iter)
     {
@@ -153,7 +156,7 @@ public:
 
     void insert(const value_type& value)
     {
-	typedef typename SetMapType::value_type MapValueType;
+    typedef typename SetMapType::value_type MapValueType;
         m_map.insert(value, true);
     }
 

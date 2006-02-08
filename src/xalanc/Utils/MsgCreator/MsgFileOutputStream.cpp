@@ -17,6 +17,7 @@
 #include "MsgFileOutputStream.hpp"
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 #include <cassert>
@@ -24,223 +25,207 @@
 #include <cstdio>
 
 
-static  XalanFileOutputStream::HandleType
-openFile(const char*	theFileName)
+static  MsgFileOutputStream::HandleType
+openFile(const char*    theFileName)
 {
-	typedef XalanFileOutputStream::HandleType	HandleType;
+    assert(theFileName != 0);
 
-#if defined(WIN32)
-
-	
-			return CreateFile(
-					theFileName,
-					GENERIC_WRITE,
-					0,
-					0,
-					CREATE_ALWAYS,
-					FILE_ATTRIBUTE_NORMAL,
-					0);
-				
-				
-#else
-
-			return fopen(theFileName, "wb");
-
-#endif
+    return fopen(theFileName, "wb");
 }
 
 
 
-XalanFileOutputStream::XalanFileOutputStream(
-			const char*	theFileName) :
-			m_fileName(theFileName),
-			m_handle(openFile(theFileName))
+MsgFileOutputStream::MsgFileOutputStream(const char*    theFileName) :
+            m_fileName(theFileName),
+            m_handle(openFile(theFileName))
 {
-#if defined(WIN32)
-    if (m_handle == INVALID_HANDLE_VALUE)
-#else
     if (m_handle == 0)
-#endif
-	{
-		throw XalanFileOutputStreamOpenException(
-					theFileName,
-					errno);
-	}
+    {
+        throw OpenException(
+                    theFileName,
+                    errno);
+    }
 }
 
 
 
-XalanFileOutputStream::~XalanFileOutputStream()
+MsgFileOutputStream::~MsgFileOutputStream()
 {
-#if defined(WIN32)
-    if (m_handle != INVALID_HANDLE_VALUE)
-	{
-		CloseHandle(m_handle);
-	}
-#else
     if (m_handle != 0)
-	{
-		fclose(m_handle);
-	}
-#endif
+    {
+        fclose(m_handle);
+    }
 }
 
 
 
 void
-XalanFileOutputStream::doFlush()
+MsgFileOutputStream::doFlush()
 {
-#if !defined(WIN32)
-	if (fflush(m_handle) != 0)
-	{
-		throw XalanFileOutputStreamWriteException(
-			m_fileName,
-			errno);
-	}
-#endif
+    if (fflush(m_handle) != 0)
+    {
+        throw WriteException(
+                m_fileName,
+                errno);
+    }
 }
 
 
 
 void
-XalanFileOutputStream::writeData(
-			const char*		theBuffer,
-			unsigned int		theBufferLength)
+MsgFileOutputStream::writeData(
+            const char*     theBuffer,
+            unsigned int    theBufferLength)
 {
-#if defined(WIN32)
-	DWORD			theBytesWritten;
+    const size_t    theBytesWritten =
+        fwrite(theBuffer,
+               1,
+               theBufferLength,
+               m_handle);
 
-	if (WriteFile(m_handle, theBuffer, DWORD(theBufferLength), &theBytesWritten, 0) == false ||
-	    theBytesWritten != theBufferLength)
-	{
-		throw XalanFileOutputStreamWriteException(
-			m_fileName,
-			GetLastError());
-	}
-#else
-	const size_t	theBytesWritten =
-		fwrite(theBuffer,
-			   1,
-			   theBufferLength,
-			   m_handle);
-
-	if (theBytesWritten != theBufferLength)
-	{
-		throw XalanFileOutputStreamWriteException(
-			m_fileName,
-			errno);
-	}
-#endif
+    if (theBytesWritten != theBufferLength)
+    {
+        throw WriteException(
+                m_fileName,
+                errno);
+    }
 }
 
 
 
-static char*
+void
 FormatMessageLocal(
-			const char*				theMessage,
-			const char*				theFileName,
-			int						theErrorCode)
+            const char*     theMessage,
+            const char*     theFileName,
+            int             theErrorCode,
+            char*           theResult)
 {
-	assert( theMessage != 0 );
+    assert(theMessage != 0);
+    assert(theFileName != 0);
+    assert(theResult != 0);
 
-	assert( theFileName != 0);
-
-	char*		strtoBuild = new char[256];
-	strtoBuild[0] = '\0';
-
-	strncat(strtoBuild,theMessage, 100);
-	strtoBuild[100] = 0; // in case that lenght(theMessage) > 100 
-
-	strcat(strtoBuild,".  The C++ run-time error code (errno) is ");
-
-	char szNumb[20];
-	szNumb[0] = 0;
-	sprintf(szNumb,"%d",theErrorCode);
-
-	strncat(strtoBuild,szNumb,18);
-
-	strcat(strtoBuild,".");
-
-	return strtoBuild;
+    sprintf(
+        theResult,
+        "%.100s %.1000s.  The C++ run-time error code (errno) is %d.",
+        theMessage,
+        theFileName,
+        theErrorCode);
 }
 
 
 
-XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
-		const char*		theFileName,
-		int					theErrorCode) :
-		m_pMessage( FormatMessageLocal(
-				"Error opening file: ",
-				theFileName,
-				theErrorCode))
-			
+MsgFileOutputStream::OpenException::OpenException(
+        const char*     theFileName,
+        int             theErrorCode) :
+    m_message()
 {
+    FormatMessageLocal(
+        "Error opening file: ",
+        theFileName,
+        theErrorCode,
+        m_message);    
 }
 
 
 
-XalanFileOutputStream::XalanFileOutputStreamOpenException::~XalanFileOutputStreamOpenException()
-{
-	delete [] m_pMessage;
-}
-
-
-
-XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStreamWriteException(
-		const char*		theFileName,
-		int				theErrorCode) :
-		m_pMessage(FormatMessageLocal(
-					"Error writing file: ",
-					theFileName,
-					theErrorCode))
+MsgFileOutputStream::OpenException::~OpenException()
 {
 }
 
 
 
-XalanFileOutputStream::XalanFileOutputStreamWriteException::~XalanFileOutputStreamWriteException()
+MsgFileOutputStream::WriteException::WriteException(
+        const char*     theFileName,
+        int             theErrorCode) :
+    m_message()
 {
-	delete [] m_pMessage;
+    FormatMessageLocal(
+        "Error writing file: ",
+        theFileName,
+        theErrorCode,
+        m_message);
 }
 
 
-void 	XalanFileOutputStream::write(const UTF16Ch*	theString, unsigned int		theLength)
+
+MsgFileOutputStream::WriteException::~WriteException()
 {
-	assert ( theString != 0 );
-	writeData((const char*)theString,theLength * sizeof(UTF16Ch) );
 }
 
-void 	XalanFileOutputStream::write(const char*	theString, unsigned int		theLength)
+
+
+void
+MsgFileOutputStream::write(
+            const XMLCh*    theString,
+            unsigned int    theLength)
 {
-	assert ( theString != 0 );
+    assert(theString != 0);
 
-	UTF16Ch* theUTFString = XMLString::transcode(theString);
-
-	write(theUTFString,theLength);
-
-	XMLString::release(&theUTFString);
+    writeData(
+        (const char*)theString,
+        theLength * sizeof(XMLCh));
 }
 
-void XalanFileOutputStream::writeAsASCII(const UTF16Ch*	theString, unsigned int		theLengts)
-{
-	char* szString = XMLString::transcode(theString);
-	writeData( szString, theLengts );
-	XMLString::release(&szString);
 
+
+void
+MsgFileOutputStream::write(
+            const char*     theString,
+            unsigned int    theLength)
+{
+    assert (theString != 0);
+
+    XMLCh*  theUTFString =
+        XMLString::transcode(theString);
+
+    write(
+        theUTFString,
+        theLength);
+
+    XMLString::release(&theUTFString);
 }
 
-void XalanFileOutputStream::writeAsASCII(const char*	theString, unsigned int		theLengts)
+
+
+void
+MsgFileOutputStream::writeAsASCII(
+            const XMLCh*    theString,
+            unsigned int    theLength)
 {
-	writeData( theString, theLengts );
+    char*   szString =
+        XMLString::transcode(theString);
+
+    writeData(
+        szString,
+        theLength);
+
+    XMLString::release(&szString);
 }
 
-const UTF16Ch	s_UTF16ByteOrderMark[] =
+
+
+void
+MsgFileOutputStream::writeAsASCII(
+            const char*     theString,
+            unsigned int    theLength)
 {
-	UTF16Ch(0xFEFF),
-	UTF16Ch(0)
+    writeData(
+        theString,
+        theLength);
+}
+
+
+
+static const XMLCh s_UTF16ByteOrderMark[] =
+{
+    XMLCh(0xFEFF)
 };
 
-void 	XalanFileOutputStream::writeUTFprefix()
+
+void
+MsgFileOutputStream::writeUTFPrefix()
 {
-	write(s_UTF16ByteOrderMark,1);
+    write(
+        s_UTF16ByteOrderMark,
+        1);
 }

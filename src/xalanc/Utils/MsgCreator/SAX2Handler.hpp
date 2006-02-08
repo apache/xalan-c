@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#if !defined(SAX2HANDLER_MSGCREATOR_1357924680)
-#define SAX2HANDLER_MSGCREATOR_1357924680
+#if !defined(SAX2HANDLER_1357924680)
+#define SAX2HANDLER_1357924680
 
 #include "MsgFileOutputStream.hpp"
 
@@ -29,76 +29,76 @@ XERCES_CPP_NAMESPACE_USE
 
 static const XMLCh s_transUnitXMLCh[] = 
 { 
-	chLatin_t, 
-	chLatin_r,
-	chLatin_a,	
-	chLatin_n, 
-	chLatin_s, 
-	chDash, 
-	chLatin_u, 
-	chLatin_n,
-	chLatin_i, 
-	chLatin_t,
+    chLatin_t, 
+    chLatin_r,
+    chLatin_a,  
+    chLatin_n, 
+    chLatin_s, 
+    chDash, 
+    chLatin_u, 
+    chLatin_n,
+    chLatin_i, 
+    chLatin_t,
 
-	chNull
+    chNull
 };
 
 
 static const XMLCh s_sourceXMLCh[] = 
 { 
-	chLatin_s, 
-	chLatin_o,
-	chLatin_u,	
-	chLatin_r, 
-	chLatin_c, 
-	chLatin_e, 
+    chLatin_s, 
+    chLatin_o,
+    chLatin_u,  
+    chLatin_r, 
+    chLatin_c, 
+    chLatin_e, 
 
-	chNull
+    chNull
 };
 
 
 static const XMLCh s_targetXMLCh[] = 
 { 
-	chLatin_t, 
-	chLatin_a,
-	chLatin_r,	
-	chLatin_g, 
-	chLatin_e, 
-	chLatin_t, 
+    chLatin_t, 
+    chLatin_a,
+    chLatin_r,  
+    chLatin_g, 
+    chLatin_e, 
+    chLatin_t, 
 
-	chNull
+    chNull
 };
 
 
 static const XMLCh s_xmlLangXMLCh[] = 
 { 
-	chLatin_x, 
-	chLatin_m,
-	chLatin_l,	
-	chColon, 
-	chLatin_l, 
-	chLatin_a, 
-	chLatin_n, 
-	chLatin_g,
-	chNull
+    chLatin_x, 
+    chLatin_m,
+    chLatin_l,  
+    chColon, 
+    chLatin_l, 
+    chLatin_a, 
+    chLatin_n, 
+    chLatin_g,
+    chNull
 };
 
 
 
 static const XMLCh s_idXMLCh[] =
 {
-	chLatin_i,
-	chLatin_d,
-	chNull
+    chLatin_i,
+    chLatin_d,
+    chNull
 };
 
 static const XMLCh s_textXMLCh[] = 
 { 
-	chLatin_T, 
-	chLatin_e, 
-	chLatin_x, 
-	chLatin_t, 
-	chNull
+    chLatin_T, 
+    chLatin_e, 
+    chLatin_x, 
+    chLatin_t, 
+    chNull
 };
 
 
@@ -112,83 +112,93 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
-    SAX2Handler();
+    SAX2Handler(const char*     indexFileName);
     virtual ~SAX2Handler();
 
 public:
     virtual void 
     startElement(const   XMLCh* const    ,
-									const   XMLCh* const    localname,
-									const   XMLCh* const    ,
-                                    const   Attributes&		attributes);
+                                    const   XMLCh* const    localname,
+                                    const   XMLCh* const    ,
+                                    const   Attributes&     attributes);
 
-	virtual void 
-	startDocument();
+    virtual void 
+    startDocument();
 
-	virtual void 
-	endDocument();
+    virtual void 
+    endDocument();
 
    // -----------------------------------------------------------------------
     //  Implementations of the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
-	virtual void 
-	error(const SAXParseException& e); 
-	
-	virtual void 
-	fatalError(const SAXParseException& e);
-	
-	virtual void 
-	warning(const SAXParseException& e);
+    virtual void 
+    error(const SAXParseException& e); 
+    
+    virtual void 
+    fatalError(const SAXParseException& e);
+    
+    virtual void 
+    warning(const SAXParseException& e);
 
-	void 
-	setLocale( const char* localeName);
+    void 
+    setLocale(const char*   localeName);
 
-	const XMLCh*
-	getLocale () const
-	{
-		return m_locale;
-	}
+    const XMLCh*
+    getLocale () const
+    {
+        return m_locale;
+    }
 
 protected:
-	bool translateCharToXMLByteArr ( XMLByte* buffer, int iBufLen, const char* szSource)const;
 
-	virtual void 
-	createHeaderForDataFile ()=0;
-	
-	virtual void 
-	createBottomForDataFile ()=0;
+    bool
+    translateCharToXMLByteArray(
+        XMLByte*        buffer,
+        int             iBufLen,
+        const char*     szSource) const;
 
-	virtual void 
-	printBeginOfDataLine ()=0;
-	
-	virtual void 
-	printEndOfDataLine ()=0;
+    virtual void
+    createHeaderForDataFile() = 0;
 
-	virtual void 
-	printToDataFile( const char* sArrayOfStrins[] ) = 0;
-	
-	void 
-	printToIndexFile( const char* sArrayOfStrins[] );
+    virtual void
+    createBottomForDataFile() = 0;
 
-	void 
-	printNumbOfRecords ();
+    virtual void
+    printBeginOfDataLine() = 0;
 
+    virtual void
+    printEndOfDataLine() = 0;
 
+    virtual void
+    printToDataFile(const char*     sArrayOfStrings[]) = 0;
+
+    void
+    printToIndexFile(const char*    sArrayOfStrings[]);
+
+    void
+    printNumbOfRecords();
 
 private:
 
-	void createHeaderForIndexFile ();
-	void createBottomForIndexFile ();
+    void
+    createHeaderForIndexFile();
 
-	void printBeginOfIndexLine ();
-	void printEndOfIndexLine ();
+    void
+    createBottomForIndexFile();
 
-protected :
-	int	m_numberOfRecords;
+    void
+    printBeginOfIndexLine();
 
-	XMLCh* m_locale;
+    void
+    printEndOfIndexLine();
 
-	bool m_startCollectingCharacters;
+protected:
+
+    int     m_numberOfRecords;
+
+    XMLCh*  m_locale;
+
+    bool    m_startCollectingCharacters;
 
     // -----------------------------------------------------------------------
     //  SAX2 Handler is responsible for creating index file, so keep
@@ -196,20 +206,18 @@ protected :
     // -----------------------------------------------------------------------
 
 private:
-	XalanFileOutputStream    m_fIndexOutputStream;
 
-	// Not implemented...
-	SAX2Handler&
-	operator=(const SAX2Handler&);
+    MsgFileOutputStream     m_indexOutputStream;
 
-	SAX2Handler(const SAX2Handler&);
+    // Not implemented...
+    SAX2Handler&
+    operator=(const SAX2Handler&);
 
-	bool
-	operator==(const SAX2Handler&) const;
+    SAX2Handler(const SAX2Handler&);
 
+    bool
+    operator==(const SAX2Handler&) const;
 };
 
 
-#endif //SAX2HANDLER_MSGCREATOR_1357924680
-
-
+#endif //SAX2HANDLER_1357924680

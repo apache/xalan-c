@@ -18,119 +18,138 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include "SAX2Handler.hpp"
+
 #include <cassert>
 #include <cstdio>
 
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-#include "ICUResHandler.hpp"
 #include "IndexFileData.hpp"
 #include "MsgCreator.hpp"
-
-
-
-static const char* INDEX_FILE_NAME="LocalMsgIndex.hpp";
 
 
 
 // ---------------------------------------------------------------------------
 //  SAX2Handler: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAX2Handler::SAX2Handler( ) :
-							m_numberOfRecords(0),
-							m_locale(0),
-							m_startCollectingCharacters(false),
-							m_fIndexOutputStream(INDEX_FILE_NAME)
+SAX2Handler::SAX2Handler(const char*     indexFileName) :
+    m_numberOfRecords(0),
+    m_locale(0),
+    m_startCollectingCharacters(false),
+    m_indexOutputStream(indexFileName)
 {
-
 }
+
+
 
 SAX2Handler::~SAX2Handler()
 {
-	if (m_locale != 0)
-	{
-		XMLString::release(&m_locale);
-	}
-}
-
-void SAX2Handler::createHeaderForIndexFile ()
-{
-	printToIndexFile( szApacheLicense );
-	
-	printToIndexFile ( szStartIndexFile );
-}
-
-void SAX2Handler::printBeginOfIndexLine ()
-{
-	printToIndexFile ( szBeginIndexLine );
-}
-
-	
-void SAX2Handler::printEndOfIndexLine ()
-{
+    if (m_locale != 0)
+    {
+        XMLString::release(&m_locale);
+    }
 }
 
 
 
-void SAX2Handler::createBottomForIndexFile ()
+void
+SAX2Handler::createHeaderForIndexFile()
 {
-	printToIndexFile ( szEndIndexFile );
-}
+    printToIndexFile(szApacheLicense);
 
-
-void SAX2Handler::printToIndexFile( const char* sArrayOfStrins[] )
-{
-	if ( sArrayOfStrins == NULL)
-		return;
-
-	for (int i = 0; sArrayOfStrins[i] != NULL; i++)
-	{
-		m_fIndexOutputStream.writeAsASCII(sArrayOfStrins[i],XMLString::stringLen(sArrayOfStrins[i]));
-	}
+    printToIndexFile(szStartIndexFile);
 }
 
 
 
-void SAX2Handler::startElement(const   XMLCh* const    ,
-									const   XMLCh* const    localname,
-									const   XMLCh* const    ,
-                                    const   Attributes&		attributes)
+void
+SAX2Handler::printBeginOfIndexLine()
 {
-	if(!XMLString::compareString(localname,s_transUnitXMLCh))
-	{
-		unsigned int len = attributes.getLength();
-		
-		++m_numberOfRecords;
-		
-		for (unsigned int index = 0; index < len; index++)
-		{
-			const XMLCh* name = attributes.getQName(index) ;
-			
-			if (name != NULL && !XMLString::compareString(name,s_idXMLCh)	)
-			{
-				const XMLCh* val = attributes.getValue(index);
-				if ( val != NULL )
-				{
-					if ( m_numberOfRecords != 1)
-						printBeginOfIndexLine();
-										
-					m_fIndexOutputStream.writeAsASCII(val,XMLString::stringLen(val));
-					
-					char buff[100];
-					
-					sprintf( buff, "		 = %d \n",(m_numberOfRecords - 1));
-					
-					m_fIndexOutputStream.writeAsASCII(buff,XMLString::stringLen(buff));
-					
-					printEndOfIndexLine ();
-				}
-			}
-			
-			
-		}
-		
-	}
+    printToIndexFile(szBeginIndexLine);
+}
+
+
+void
+SAX2Handler::printEndOfIndexLine()
+{
+}
+
+
+
+void
+SAX2Handler::createBottomForIndexFile()
+{
+    printToIndexFile(szEndIndexFile);
+}
+
+
+
+void
+SAX2Handler::printToIndexFile(const char*   sArrayOfStrings[])
+{
+    if (sArrayOfStrings != 0)
+    {
+        for (unsigned int i = 0; sArrayOfStrings[i] != 0; ++i)
+        {
+            m_indexOutputStream.writeAsASCII(
+                sArrayOfStrings[i],
+                XMLString::stringLen(sArrayOfStrings[i]));
+        }
+    }
+}
+
+
+
+void
+SAX2Handler::startElement(
+            const   XMLCh* const,
+            const   XMLCh* const    localname,
+            const   XMLCh* const,
+            const   Attributes&     attributes)
+{
+    if(!XMLString::compareString(localname, s_transUnitXMLCh))
+    {
+        const unsigned int  len =
+            attributes.getLength();
+
+        ++m_numberOfRecords;
+
+        for (unsigned int index = 0; index < len; index++)
+        {
+            const XMLCh* const  name =
+                attributes.getQName(index);
+            assert(name != 0);
+
+            if (!XMLString::compareString(name, s_idXMLCh))
+            {
+                const XMLCh* const  val =
+                    attributes.getValue(index);
+                assert(val != 0);
+
+                if ( m_numberOfRecords !=  1)
+                    printBeginOfIndexLine();
+
+                m_indexOutputStream.writeAsASCII(
+                    val,
+                    XMLString::stringLen(val));
+
+                char buff[100];
+
+                sprintf(
+                    buff,
+                    "\t\t = %d \n",
+                    m_numberOfRecords - 1);
+
+                m_indexOutputStream.writeAsASCII(
+                    buff,
+                    XMLString::stringLen(buff));
+
+                printEndOfIndexLine();
+            }
+        }
+    }
 }
 
 
@@ -141,54 +160,68 @@ XALAN_USING_STD(endl)
 // ---------------------------------------------------------------------------
 //  
 // ---------------------------------------------------------------------------
-void SAX2Handler::error(const SAXParseException& e)
+void
+SAX2Handler::error(const SAXParseException&     e)
 {
     cerr << "\nError at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
+
+    throw e;
 }
 
-void SAX2Handler::fatalError(const SAXParseException& e)
+
+
+void
+SAX2Handler::fatalError(const SAXParseException&    e)
 {
     cerr << "\nFatal Error at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
+
+    throw e;
 }
 
-void SAX2Handler::warning(const SAXParseException& e)
+
+
+void
+SAX2Handler::warning(const SAXParseException&   e)
 {
     cerr << "\nWarning at file " << StrX(e.getSystemId())
-		 << ", line " << e.getLineNumber()
-		 << ", char " << e.getColumnNumber()
+         << ", line " << e.getLineNumber()
+         << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
 
-void SAX2Handler::setLocale( const char* localName)
+
+void
+SAX2Handler::setLocale(const char*  localName)
 {
-	assert(localName != 0);
+    assert(localName != 0);
 
-	if (m_locale != 0)
-	{
-		XMLString::release(&m_locale);
-	}
+    if (m_locale != 0)
+    {
+        XMLString::release(&m_locale);
+    }
 
-	m_locale = XMLString::transcode(localName);
-}
-
-
-void SAX2Handler::startDocument()
-{
-	createHeaderForIndexFile ( );
+    m_locale = XMLString::transcode(localName);
 }
 
 
 
-void SAX2Handler::endDocument()
+void
+SAX2Handler::startDocument()
 {
-	createBottomForIndexFile ( );
+    createHeaderForIndexFile();
 }
 
 
+
+void
+SAX2Handler::endDocument()
+{
+    createBottomForIndexFile();
+}

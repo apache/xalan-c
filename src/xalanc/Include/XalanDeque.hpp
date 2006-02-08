@@ -149,6 +149,11 @@ struct  XalanDequeIterator
         return !(theRhs == *this);
     }
 
+    bool operator<(const XalanDequeIterator & theRhs) const
+    {
+        return m_pos < theRhs.m_pos;
+    }
+
     XalanDeque* m_deque;
     size_type   m_pos;
 };

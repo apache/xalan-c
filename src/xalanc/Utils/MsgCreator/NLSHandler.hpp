@@ -17,6 +17,8 @@
 #if !defined(NLSHANDLER_MSGCREATOR_1357924680)
 #define NLSHANDLER_MSGCREATOR_1357924680
 
+#include "xalanc/Include/PlatformDefinitions.hpp"
+
 #include "ICUResHandler.hpp"
 
 
@@ -25,53 +27,58 @@ XERCES_CPP_NAMESPACE_USE
 class NLSHandler : public ICUResHandler 
 {
 public:
-	NLSHandler(const char* fileName, bool bCreateUnicode = false);
 
-	virtual 
-	~NLSHandler(){}
+    NLSHandler(
+            const char*     fileName,
+            const char*     indexFileName,
+            bool            createUnicode = false);
 
-	virtual void 
-	createHeaderForDataFile ();
-	
-	virtual void 
-	createBottomForDataFile ();
+    virtual 
+    ~NLSHandler(){}
 
-	virtual void 
-	printBeginOfDataLine ();
-	
-	virtual void 
-	printEndOfDataLine ();
+    virtual void 
+    createHeaderForDataFile();
 
-	void 
-	characters(	const   XMLCh* const    chars
-						, const unsigned int    length);
-	void 
-	startDocument();
+    virtual void 
+    createBottomForDataFile();
+
+    virtual void 
+    printBeginOfDataLine();
+
+    virtual void 
+    printEndOfDataLine();
+
+    void 
+    characters(
+            const XMLCh* const    chars,
+            const unsigned int    length);
+
+    void 
+    startDocument();
 
 protected:
 
-	// ASCII version of print
-	void 
-	printToDataFileasASCII( const char* sArrayOfStrins[] );
+    // ASCII version of print
+    void 
+    printToDataFileAsASCII(const char*  sArrayOfStrings[]);
 
 private:
-	int m_RunningNumber;
-	
-	bool m_bCreateUnicode;
 
-	// Not implemented...
-	NLSHandler&
-	operator=(const NLSHandler&);
+    int         m_runningNumber;
 
-	NLSHandler(const NLSHandler&);
+    const bool  m_createUnicode;
 
-	bool
-	operator==(const NLSHandler&) const;
+
+    // Not implemented...
+    NLSHandler&
+    operator=(const NLSHandler&);
+
+    NLSHandler(const NLSHandler&);
+
+    bool
+    operator==(const NLSHandler&) const;
 };
 
 
 
-
 #endif  //NLSHANDLER_MSGCREATOR_1357924680
-
-

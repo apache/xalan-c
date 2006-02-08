@@ -203,7 +203,7 @@ public:
 	virtual
 	~XSLTEngineImpl();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_xpathConstructionContext.getMemoryManager();

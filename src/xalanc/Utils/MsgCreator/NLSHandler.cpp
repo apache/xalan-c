@@ -22,109 +22,141 @@
 
 #include <cstdio>
 
+
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
-NLSHandler::NLSHandler(const char* fileName, bool bCreateUnicode ):
-	ICUResHandler(fileName),
-	m_RunningNumber(2),
-	m_bCreateUnicode(bCreateUnicode)
+NLSHandler::NLSHandler(
+            const char*     fileName,
+            const char*     indexFileName,
+            bool            createUnicode ):
+    ICUResHandler(fileName, indexFileName),
+    m_runningNumber(2),
+    m_createUnicode(createUnicode)
 {
 }
 
-void NLSHandler::startDocument()
+
+
+void
+NLSHandler::startDocument()
 {
-	if (m_bCreateUnicode)
-	{
-		ICUResHandler::startDocument();
-	}
-	else
-	{
-		createHeaderForDataFile ( );
-		
-		SAX2Handler::startDocument();
-	}
-
-}
-
-void NLSHandler::characters(	const   XMLCh* const    chars
-						, const unsigned int    length)
-{
-
-	if ( m_startCollectingCharacters == true )
-	{
-		if( m_bCreateUnicode)
-		{
-			m_fStream.write(chars,length);
-		}
-		else
-		{
-			m_fStream.writeAsASCII(chars,length);
-		}
-	}
-}
-
-void NLSHandler::createHeaderForDataFile ()
-{
-	if (m_bCreateUnicode )
-	{
-		printToDataFile( szApacheLicense );
-		printToDataFile( szStartDataFile );
-	}
-	else
-	{
-		printToDataFileasASCII( szApacheLicense );
-		printToDataFileasASCII( szStartDataFile );
-	}
-
-}
-
-void NLSHandler::printToDataFileasASCII( const char* sArrayOfStrins[] )
-{
-	if ( sArrayOfStrins == NULL)
-		return;
-
-	for (int i = 0; sArrayOfStrins[i] != NULL; i++)
-	{
-		m_fStream.writeAsASCII(sArrayOfStrins[i],strlen(sArrayOfStrins[i]));
-	}
-}
-
-void NLSHandler::printBeginOfDataLine ()
-{
-	char szNumb[20];
-
-	sprintf(szNumb,"%d ^", m_RunningNumber);
-
-	m_RunningNumber++;
-
-	if ( m_bCreateUnicode )
-	{
-		m_fStream.write(szNumb,strlen(szNumb));
-	}
-	else
-	{
-		m_fStream.writeAsASCII(szNumb,strlen(szNumb));
-	}
+    if (m_createUnicode)
+    {
+        ICUResHandler::startDocument();
+    }
+    else
+    {
+        createHeaderForDataFile();
+        
+        SAX2Handler::startDocument();
+    }
 }
 
 
 
-void NLSHandler::createBottomForDataFile ()
+void
+NLSHandler::characters(
+            const XMLCh* const    chars,
+            const unsigned int    length)
 {
+    if (m_startCollectingCharacters == true)
+    {
+        if (m_createUnicode)
+        {
+            m_stream.write(chars, length);
+        }
+        else
+        {
+            m_stream.writeAsASCII(chars, length);
+        }
+    }
+}
 
+
+
+void
+NLSHandler::createHeaderForDataFile()
+{
+    if (m_createUnicode)
+    {
+        printToDataFile(szApacheLicense);
+        printToDataFile(szStartDataFile);
+    }
+    else
+    {
+        printToDataFileAsASCII(szApacheLicense);
+        printToDataFileAsASCII(szStartDataFile);
+    }
 
 }
 
 
-void NLSHandler::printEndOfDataLine ()
+
+void
+NLSHandler::printToDataFileAsASCII(const char*  sArrayOfStrings[])
 {
-	if ( m_bCreateUnicode )
-	{
-		m_fStream.write("^\n",2);
-	}
-	else
-	{
-		m_fStream.writeAsASCII("^\n",2);
-	}
+    if (sArrayOfStrings != 0)
+    {
+        for (unsigned int i = 0; sArrayOfStrings[i] != 0; ++i)
+        {
+            m_stream.writeAsASCII(
+                sArrayOfStrings[i],
+                XMLString::stringLen(sArrayOfStrings[i]));
+        }
+    }
+}
+
+
+
+void
+NLSHandler::printBeginOfDataLine()
+{
+    char szNumb[20];
+
+    sprintf(
+        szNumb,
+        "%d ^",
+        m_runningNumber);
+
+    ++m_runningNumber;
+
+    if (m_createUnicode)
+    {
+        m_stream.write(
+            szNumb,
+            XMLString::stringLen(szNumb));
+    }
+    else
+    {
+        m_stream.writeAsASCII(
+            szNumb,
+            XMLString::stringLen(szNumb));
+    }
+}
+
+
+
+void
+NLSHandler::createBottomForDataFile()
+{
+}
+
+
+
+void
+NLSHandler::printEndOfDataLine()
+{
+    if (m_createUnicode)
+    {
+        m_stream.write(
+            "^\n",
+            2);
+    }
+    else
+    {
+        m_stream.writeAsASCII(
+            "^\n",
+            2);
+    }
 }

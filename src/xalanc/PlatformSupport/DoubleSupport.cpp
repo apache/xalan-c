@@ -79,7 +79,7 @@ DoubleSupport::initialize()
 }
 
 
- 
+
 void
 DoubleSupport::terminate()
 {

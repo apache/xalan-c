@@ -47,6 +47,12 @@
 
 #ifdef WIN32
 
+#if _MSC_VER >= 1400
+
+#define ENTRY_POINT_SUFFIX _dat
+#define PACKAGE_NAME_SUFFIX
+
+#else
 #ifdef  NDEBUG_SYMBOLS // release with symbols
 
 #define ENTRY_POINT_SUFFIX S_dat
@@ -63,16 +69,16 @@
 #define PACKAGE_NAME_SUFFIX D
 
 #endif // NDEBUG_SYMBOLS
+#endif // _MSC_VER >= 1400
 
+#define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
+									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
+									PACKAGE_NAME_SUFFIX)
 
 #define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
 									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
 									ENTRY_POINT_SUFFIX)
 
-#define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
-									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
-									PACKAGE_NAME_SUFFIX)
-												   
 #else // NON-WIN32 systems
 
 #define ICUDLL_ENTRYPOINT_NAME INVK_CAT2_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,dat)
@@ -127,7 +133,7 @@ XalanICUMessageLoader::XalanICUMessageLoader(MemoryManagerType &theManager):
 	const char* szLocal = XMLMsgLoader::getLocale();
 	if ( szLocal == 0 )
 	{
-		// Opps , we failed to get local from Xerces, let's try our
+		// We failed to get local from Xerces, let's try our own default.
 		szLocal="en_US";
 	}
 

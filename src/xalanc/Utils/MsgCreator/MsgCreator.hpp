@@ -17,7 +17,7 @@
 #if !defined(MSG_CREATOR_1357924680)
 #define MSG_CREATOR_1357924680
 
-#include <xalanc/Include/PlatformDefinitions.hpp>
+#include "xalanc/Include/PlatformDefinitions.hpp"
 
 #include <xercesc/util/XMLString.hpp>
 

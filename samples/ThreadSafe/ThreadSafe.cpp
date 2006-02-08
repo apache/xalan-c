@@ -138,15 +138,15 @@ theThread(LPVOID	param)
 
 	int	theResult = 0;
   
-   #if defined(_MSC_VER)
-	const int	number = reinterpret_cast<int>(param);
-        const theThreadIDType         theThreadID = GetCurrentThreadId();
+	const size_t	number = reinterpret_cast<size_t>(param);
 
-   #elif defined(XALAN_POSIX2_AVAILABLE)
-        const int       number = *(int *)(param);
-        const theThreadIDType         theThreadID = pthread_self();
+#if defined(_MSC_VER)
+    const theThreadIDType         theThreadID = GetCurrentThreadId();
 
-   #endif
+#elif defined(XALAN_POSIX2_AVAILABLE)
+    const theThreadIDType         theThreadID = pthread_self();
+
+#endif
 
 	outputMessage(theThreadID, "Starting ");
 
@@ -196,15 +196,14 @@ theThread(LPVOID	param)
 // Print messages tracking the progress of each thread and of the 
 // overall operation...
 void
-doThreads(int	nThreads)
+doThreads(size_t    nThreads)
 {
-      int   i=0;
-      cout << endl << "Clock before starting threads: " << clock() << endl;
-      
+    size_t   i=0;
+    cout << endl << "Clock before starting threads: " << clock() << endl;
 
 	XALAN_USING_STD(vector)
 
-        vector<theThreadType>   hThreads;
+    vector<theThreadType>   hThreads;
 
 	hThreads.reserve(nThreads);
 

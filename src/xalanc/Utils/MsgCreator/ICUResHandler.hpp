@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-#if !defined(ICURESHANDLER_MSGCREATOR_1357924680)
-#define ICURESHANDLER_MSGCREATOR_1357924680
+#if !defined(ICURESHANDLER_1357924680)
+#define ICURESHANDLER_1357924680
+
+
+
+#include "xalanc/Include/PlatformDefinitions.hpp"
 
 #include "SAX2Handler.hpp"
 
@@ -25,64 +29,76 @@ XERCES_CPP_NAMESPACE_USE
 class ICUResHandler : public SAX2Handler
 {
 public:
+
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
-    ICUResHandler(const char* fileName);
+    ICUResHandler(
+            const char*     fileName,
+            const char*     indexFileName);
 
-    virtual 
+    virtual
     ~ICUResHandler();
-	// -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
     //  Implementations of the SAX DocumentHandler interface
     // -----------------------------------------------------------------------
-	virtual void 
-	endDocument();
-	virtual void 
-	endElement(const XMLCh* const ,
-								 const XMLCh* const localname,
-								 const XMLCh* const )	;
-	virtual void 
-	startDocument();
+    virtual void
+    endDocument();
 
-	virtual void 
-	startElement(const   XMLCh* const    uri,
-								const   XMLCh* const    localname,
-								const   XMLCh* const    qname,
-                                const   Attributes&		attributes);
+    virtual void
+    endElement(
+            const XMLCh* const,
+            const XMLCh* const  localname,
+            const XMLCh* const);
 
-	virtual void 
-	characters(	const   XMLCh* const    chars
-						, const unsigned int    length);
+    virtual void
+    startDocument();
+
+    virtual void
+    startElement(
+            const XMLCh* const  uri,
+            const XMLCh* const  localname,
+            const XMLCh* const  qname,
+            const Attributes&   attributes);
+
+    virtual void
+    characters(
+            const XMLCh* const  chars,
+            const unsigned int  length);
 
 protected:
-	virtual void 
-	createHeaderForDataFile ();
-	
-	virtual void 
-	createBottomForDataFile ();
 
-	virtual void 
-	printBeginOfDataLine ();
-	
-	virtual void 
-	printEndOfDataLine ();
+    virtual void
+    createHeaderForDataFile();
+    
+    virtual void
+    createBottomForDataFile();
 
-	void 
-	printToDataFile( const char* sArrayOfStrins[] );
+    virtual void
+    printBeginOfDataLine();
+    
+    virtual void
+    printEndOfDataLine();
+
+    void
+    printToDataFile(const char*     sArrayOfStrings[]);
 
 
-	XalanFileOutputStream	m_fStream;
+    MsgFileOutputStream     m_stream;
 
 private:
-	// Not implemented...
-	ICUResHandler&
-	operator=(const ICUResHandler&);
 
-	ICUResHandler(const ICUResHandler&);
+    // Not implemented...
+    ICUResHandler&
+    operator=(const ICUResHandler&);
 
-	bool
-	operator==(const ICUResHandler&) const;
+    ICUResHandler(const ICUResHandler&);
+
+    bool
+    operator==(const ICUResHandler&) const;
 };
 
-#endif // ICURESHANDLER_MSGCREATOR_1357924680
 
+
+#endif // ICURESHANDLER_1357924680

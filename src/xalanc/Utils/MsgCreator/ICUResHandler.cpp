@@ -32,11 +32,15 @@
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
-ICUResHandler::ICUResHandler(const char* fileName):
-	SAX2Handler(),
-	m_fStream(fileName)
+ICUResHandler::ICUResHandler(
+            const char*     fileName,
+            const char*     indexFileName) :
+    SAX2Handler(indexFileName),
+    m_stream(fileName)
 {
 }
+
+
 
 ICUResHandler::~ICUResHandler()
 {
@@ -45,155 +49,170 @@ ICUResHandler::~ICUResHandler()
 
 
 
-
-void ICUResHandler::endDocument()
+void
+ICUResHandler::endDocument()
 {
-	createBottomForDataFile ( );
+    createBottomForDataFile();
 
-	SAX2Handler::endDocument( );
-}
-
-
-// ICU genrb doesnt' like " and {} chars
-// change tham with \", \{ and \}
-
-void ICUResHandler::characters(	const   XMLCh* const    chars
-						, const unsigned int    length)
-{
-
-	if ( m_startCollectingCharacters == true )
-	{
-		XMLCh buffer[512];
-
-		assert( length < 512); 
-
-		int j = 0;
-
-		for ( unsigned int i=0 ; i < length ; i++ , j++)
-		{
-			if( chars[i] == chDoubleQuote || chars[i] == chOpenCurly || chars[i] == chCloseCurly)
-			{
-				buffer[j] = chBackSlash;
-
-				j++;
-
-				buffer[j] = chars[i]; 
-			}
-			else
-			{
-				buffer[j] = chars[i];
-			}
-		}
-
-		buffer[j] = chNull;
-		m_fStream.write(buffer,j);	
-	}
-}
-
-void ICUResHandler::startDocument()
-{
-	m_fStream.writeUTFprefix();
-
-	createHeaderForDataFile ( );
-
-	SAX2Handler::startDocument();
-
-}
-
-void ICUResHandler::endElement(const XMLCh* const ,
-					const XMLCh* const localname,
-					const XMLCh* const )
-{
-	if ( m_startCollectingCharacters == false)
-		return;
-
-
-    if(!XMLString::compareString(localname,s_targetXMLCh))
-	{
-		m_startCollectingCharacters = false;
-
-		printEndOfDataLine();
-	}
-}
-
-void ICUResHandler::startElement(const   XMLCh* const    uri,
-								const   XMLCh* const    localname,
-								const   XMLCh* const    qname,
-								const   Attributes&		attributes)
-{
-	
-	if(!XMLString::compareString(localname,s_transUnitXMLCh))
-	{
-		// this is an elemente, SAX2Handler class is responsible to handle:
-		// creating Index file, commom for all localization styles
-		SAX2Handler::startElement(uri, localname, qname, attributes);
-	}
-	else if(!XMLString::compareString(localname,s_targetXMLCh))
-	{
-		if ( m_locale != 0 )
-		{
-			m_startCollectingCharacters = true;	
-			
-			printBeginOfDataLine();
-		
-		}
-	}
-	
-}
-
-void ICUResHandler::createHeaderForDataFile ()
-{
-	printToDataFile( szApacheLicense );
-
-	if ( m_locale != 0)
-	{
-		m_fStream.write(m_locale,XMLString::stringLen(m_locale));
-
-	}
-
-	printToDataFile( szStartDataFile );
-
-
+    SAX2Handler::endDocument();
 }
 
 
 
-void ICUResHandler::printBeginOfDataLine ()
+void
+ICUResHandler::characters(
+            const XMLCh* const  chars,
+            const unsigned int  length)
 {
-//	if ( m_isTheFirstLineInArray ){
-//		m_isTheFirstLineInArray = false;
-//	}
-//	else
-	{
-		printToDataFile( szBeginOfLineInDataFile );
-	}
+    if (m_startCollectingCharacters == true)
+    {
+        // We limit lines to 512 characters. Since
+        // we need to acount for the terminating null,
+        // and the possibility of escaping each character,
+        // 1025 is the maximum buffer size.
+        const unsigned int  theMaxChars = 512;
+        assert(length <= theMaxChars); 
+
+        XMLCh   buffer[(theMaxChars * 2) + 1];
+
+        unsigned int    j = 0;
+
+        // ICU genrb doesn't like " and {} chars
+        // change tham with \", \{ and \}.
+        for (unsigned int i = 0 ; i < length ; ++i , ++j)
+        {
+            if (chars[i] == chDoubleQuote ||
+                chars[i] == chOpenCurly ||
+                chars[i] == chCloseCurly)
+            {
+                buffer[j] = chBackSlash;
+
+                ++j;
+
+                buffer[j] = chars[i]; 
+            }
+            else
+            {
+                buffer[j] = chars[i];
+            }
+        }
+
+        buffer[j] = chNull;
+
+        m_stream.write(buffer, j);  
+    }
 }
 
 
 
-void ICUResHandler::createBottomForDataFile ()
+void
+ICUResHandler::startDocument()
 {
+    m_stream.writeUTFPrefix();
 
-	printToDataFile( szEndDataFile );
+    createHeaderForDataFile();
 
-}
-
-
-void ICUResHandler::printEndOfDataLine ()
-{
-	printToDataFile( szEndOfLineInDataFile  );
-}
-
-void ICUResHandler::printToDataFile( const char* sArrayOfStrins[] )
-{
-	if ( sArrayOfStrins == 0)
-		return;
-
-	for (int i = 0; sArrayOfStrins[i] != 0; i++)
-	{
-		m_fStream.write(sArrayOfStrins[i],strlen(sArrayOfStrins[i]));
-	}
+    SAX2Handler::startDocument();
 }
 
 
 
+void
+ICUResHandler::endElement(
+            const XMLCh* const,
+            const XMLCh* const  localname,
+            const XMLCh* const)
+{
+    if (m_startCollectingCharacters == true)
+    {
+        if(!XMLString::compareString(localname, s_targetXMLCh))
+        {
+            m_startCollectingCharacters = false;
+
+            printEndOfDataLine();
+        }
+    }
+}
+
+
+
+void
+ICUResHandler::startElement(
+            const XMLCh* const  uri,
+            const XMLCh* const  localname,
+            const XMLCh* const  qname,
+            const Attributes&   attributes)
+{
+    if(!XMLString::compareString(localname, s_transUnitXMLCh))
+    {
+        // this is an elemente, SAX2Handler class is responsible to handle:
+        // creating Index file, commom for all localization styles
+        SAX2Handler::startElement(uri, localname, qname, attributes);
+    }
+    else if(!XMLString::compareString(localname, s_targetXMLCh))
+    {
+        if (m_locale != 0)
+        {
+            m_startCollectingCharacters = true; 
+
+            printBeginOfDataLine();
+        }
+    }
+}
+
+
+
+void
+ICUResHandler::createHeaderForDataFile()
+{
+    printToDataFile(szApacheLicense);
+
+    if (m_locale != 0)
+    {
+        m_stream.write(
+            m_locale,
+            XMLString::stringLen(m_locale));
+    }
+
+    printToDataFile(szStartDataFile);
+}
+
+
+
+void
+ICUResHandler::printBeginOfDataLine()
+{
+    printToDataFile(szBeginOfLineInDataFile);
+}
+
+
+
+void
+ICUResHandler::createBottomForDataFile()
+{
+    printToDataFile(szEndDataFile);
+}
+
+
+
+void
+ICUResHandler::printEndOfDataLine()
+{
+    printToDataFile(szEndOfLineInDataFile);
+}
+
+
+
+void
+ICUResHandler::printToDataFile(const char*  sArrayOfStrings[])
+{
+    if ( sArrayOfStrings != 0)
+    {
+        for (int i = 0; sArrayOfStrings[i] != 0; ++i)
+        {
+            m_stream.write(
+                sArrayOfStrings[i],
+                XMLString::stringLen(sArrayOfStrings[i]));
+        }
+    }
+}

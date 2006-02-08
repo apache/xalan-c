@@ -61,7 +61,11 @@ extern "C"
 	/**
 	 * This is a typedef for characters encoded in UTF-16.
 	 */
-	typedef unsigned short	XalanUTF16Char;
+#if defined(_NATIVE_WCHAR_T_DEFINED)
+    typedef wchar_t	        XalanUTF16Char;
+#else
+    typedef unsigned short	XalanUTF16Char;
+#endif
 
 	/**
 	 * Initialize Xerces and Xalan.

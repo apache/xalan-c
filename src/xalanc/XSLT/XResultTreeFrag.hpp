@@ -27,13 +27,6 @@
 
 
 
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
-#endif
-
-
-
-
 // Base class header file.
 #include <xalanc/XPath/NodeRefListBase.hpp>
 #include <xalanc/XPath/XObject.hpp>

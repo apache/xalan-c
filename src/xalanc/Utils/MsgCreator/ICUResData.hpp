@@ -16,9 +16,9 @@
 #if !defined(ICUMSG_DATA1357924680)
 #define ICUMSG_DATA1357924680
 
-#include <xercesc/util/XercesDefs.hpp>
+#include "xalanc/Include/PlatformDefinitions.hpp"
 
-#include "../../Include/XalanVersion.hpp"
+#include <xercesc/util/XercesDefs.hpp>
 
 #define MAKE_STRING(a) #a
 #define INVK_MAKE_STRING(a) MAKE_STRING(a)

@@ -86,32 +86,72 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
     StylesheetConstructionContext(theManager),
     m_processor(processor),
     m_xpathFactory(xpathFactory),
-    m_xpathProcessor(theManager, XPathProcessorImpl::create(theManager)),
+    m_xpathProcessor(
+        theManager,
+        XPathProcessorImpl::create(theManager)),
     m_stylesheets(theManager),
     m_stringPool(theManager),
-    m_xalanDOMCharVectorAllocator(theManager, theXalanDOMCharVectorAllocatorBlockSize),
+    m_xalanDOMCharVectorAllocator(
+        theManager,
+        theXalanDOMCharVectorAllocatorBlockSize),
     m_tempBuffer(theManager),
     m_scratchQName(theManager),
     m_stringCache(theManager),
-    m_avtAllocator(theManager, theAVTAllocatorBlockSize),
-    m_avtPartSimpleAllocator(theManager, theAVTPartSimpleAllocatorBlockSize),
-    m_avtPartXPathAllocator(theManager, theAVTPartXPathAllocatorBlockSize),
-    m_xalanQNameByValueAllocator(theManager, theXalanQNameByValueAllocatorBlockSize),
-    m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
-    m_pointerVectorAllocator(theManager, thePointerVectorAllocatorBlockSize),
+    m_avtAllocator(
+        theManager,
+        theAVTAllocatorBlockSize),
+    m_avtPartSimpleAllocator(
+        theManager,
+        theAVTPartSimpleAllocatorBlockSize),
+    m_avtPartXPathAllocator(
+        theManager,
+        theAVTPartXPathAllocatorBlockSize),
+    m_xalanQNameByValueAllocator(
+        theManager,
+        theXalanQNameByValueAllocatorBlockSize),
+    m_useAttributeSetsQName(
+        XSLTEngineImpl::getXSLNameSpaceURL(),
+        Constants::ATTRNAME_USEATTRIBUTESETS),
+    m_pointerVectorAllocator(
+        theManager,
+        thePointerVectorAllocatorBlockSize),
     m_allocatedElements(theManager),
-    m_elemApplyTemplatesAllocator(theManager, eDefaultElemApplyTemplatesBlockSize),
-    m_elemAttributeAllocator(theManager, eDefaultElemAttributeBlockSize),
-    m_elemAttributeSetAllocator(theManager, eDefaultElemAttributeSetBlockSize),
-    m_elemCallTemplateAllocator(theManager, eDefaultElemCallTemplateBlockSize),
-    m_elemElementAllocator(theManager, eDefaultElemElementBlockSize),
-    m_elemLiteralResultAllocator(theManager, eDefaultElemLiteralResultBlockSize),
-    m_elemTemplateAllocator(theManager, eDefaultElemTemplateBlockSize),
-    m_elemTextLiteralAllocator(theManager, eDefaultElemTextLiteralBlockSize),
-    m_elemValueOfAllocator(theManager, eDefaultElemValueOfBlockSize),
-    m_elemVariableAllocator(theManager, eDefaultElemVariableBlockSize),
-    m_matchPatternDataAllocator(theManager,eDefaultMatchPatternDataBlockSize),
-    m_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE)
+    m_elemApplyTemplatesAllocator(
+        theManager,
+        eDefaultElemApplyTemplatesBlockSize),
+    m_elemAttributeAllocator(
+        theManager,
+        eDefaultElemAttributeBlockSize),
+    m_elemAttributeSetAllocator(
+        theManager,
+        eDefaultElemAttributeSetBlockSize),
+    m_elemCallTemplateAllocator(
+        theManager,
+        eDefaultElemCallTemplateBlockSize),
+    m_elemElementAllocator(
+        theManager,
+        eDefaultElemElementBlockSize),
+    m_elemLiteralResultAllocator(
+        theManager,
+        eDefaultElemLiteralResultBlockSize),
+    m_elemTemplateAllocator(
+        theManager,
+        eDefaultElemTemplateBlockSize),
+    m_elemTextLiteralAllocator(
+        theManager,
+        eDefaultElemTextLiteralBlockSize),
+    m_elemValueOfAllocator(
+        theManager,
+        eDefaultElemValueOfBlockSize),
+    m_elemVariableAllocator(
+        theManager,
+        eDefaultElemVariableBlockSize),
+    m_matchPatternDataAllocator(
+        theManager,
+        eDefaultMatchPatternDataBlockSize),
+    m_spaceAttrQName(
+        DOMServices::s_XMLNamespaceURI,
+        Constants::ATTRNAME_SPACE)
 {
 }
 
@@ -218,14 +258,14 @@ StylesheetConstructionContextDefault::reset()
     for_each(
             m_stylesheets.begin(),
             m_stylesheets.end(),
-            DeleteFunctor<StylesheetRoot>( getMemoryManager()));
+            DeleteFunctor<StylesheetRoot>(getMemoryManager()));
 
     m_stylesheets.clear();
 
     for_each(
             m_allocatedElements.begin(),
             m_allocatedElements.end(),
-            DeleteFunctor<ElemTemplateElement>( getMemoryManager()));
+            DeleteFunctor<ElemTemplateElement>(getMemoryManager()));
 
     m_allocatedElements.clear();
 
@@ -276,7 +316,10 @@ StylesheetConstructionContextDefault::create(const XalanDOMString&  theBaseIdent
     m_stylesheets.reserve(m_stylesheets.size() + 1);
 
     StylesheetRoot* const   theStylesheetRoot =
-        StylesheetRoot::create( getMemoryManager(), theBaseIdentifier, *this);
+        StylesheetRoot::create(
+            getMemoryManager(),
+            theBaseIdentifier,
+            *this);
 
     m_stylesheets.push_back(theStylesheetRoot);
 
@@ -352,7 +395,9 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*   theStylesheetRoo
 StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&    urlString)
 {
-    return URISupport::getURLFromString(urlString,  getMemoryManager());
+    return URISupport::getURLFromString(
+                urlString,
+                getMemoryManager());
 }
 
 
@@ -361,7 +406,9 @@ XalanDOMString&
 StylesheetConstructionContextDefault::getURLStringFromString(const XalanDOMString&  urlString,
                                                              XalanDOMString&        theResult)
 {
-    URISupport::getURLStringFromString(urlString, theResult);
+    URISupport::getURLStringFromString(
+            urlString,
+            theResult);
 
     return theResult;
 }
@@ -373,7 +420,10 @@ StylesheetConstructionContextDefault::getURLFromString(
             const XalanDOMString&   urlString,
             const XalanDOMString&   base)
 {
-    return URISupport::getURLFromString(urlString, base,  getMemoryManager());
+    return URISupport::getURLFromString(
+                urlString,
+                base,
+                getMemoryManager());
 }
 
 
@@ -384,7 +434,10 @@ StylesheetConstructionContextDefault::getURLStringFromString(
             const XalanDOMString&   base,
             XalanDOMString&         theResult)
 {
-    URISupport::getURLStringFromString(urlString, base, theResult);
+    URISupport::getURLStringFromString(
+            urlString,
+            base,
+            theResult);
 
     return theResult;
 }
@@ -570,7 +623,10 @@ StylesheetConstructionContextDefault::parseXML(
             DocumentHandlerType*    docHandler,
             XalanDocument*          docToRegister)
 {
-    return m_processor.parseXML(urlString, docHandler, docToRegister);
+    return m_processor.parseXML(
+                urlString,
+                docHandler,
+                docToRegister);
 }
 
 
@@ -583,7 +639,11 @@ StylesheetConstructionContextDefault::isXMLSpaceAttribute(
 {
     assert(theAttributeName != 0);
 
-    m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
+    m_scratchQName.set(
+        theAttributeName,
+        theStylesheet.getNamespaces(),
+        theLocator,
+        true);
 
     return m_spaceAttrQName == m_scratchQName;
 }
@@ -598,7 +658,11 @@ StylesheetConstructionContextDefault::isXSLUseAttributeSetsAttribute(
 {
     assert(theAttributeName != 0);
 
-    m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
+    m_scratchQName.set(
+        theAttributeName,
+        theStylesheet.getNamespaces(),
+        theLocator,
+        true);
 
     return m_useAttributeSetsQName == m_scratchQName;
 }
@@ -613,7 +677,11 @@ StylesheetConstructionContextDefault::isValidQName(
 {
     assert(theName != 0);
 
-    m_scratchQName.set(theName, theStylesheet.getNamespaces(), theLocator, false);
+    m_scratchQName.set(
+        theName,
+        theStylesheet.getNamespaces(),
+        theLocator,
+        false);
 
     return m_scratchQName.isValid();
 }
@@ -656,8 +724,11 @@ StylesheetConstructionContextDefault::createElement(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber = XalanLocator::getLineNumber(locator);
-    const XalanLocator::size_type   columnNumber = XalanLocator::getColumnNumber(locator);
+    const XalanLocator::size_type   lineNumber =
+        XalanLocator::getLineNumber(locator);
+
+    const XalanLocator::size_type   columnNumber =
+        XalanLocator::getColumnNumber(locator);
 
     ElemTemplateElement*    theElement = 0;
 
@@ -975,8 +1046,11 @@ StylesheetConstructionContextDefault::createElement(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber = XalanLocator::getLineNumber(locator);
-    const XalanLocator::size_type   columnNumber = XalanLocator::getColumnNumber(locator);
+    const XalanLocator::size_type   lineNumber =
+        XalanLocator::getLineNumber(locator);
+
+    const XalanLocator::size_type   columnNumber =
+        XalanLocator::getColumnNumber(locator);
 
     ElemTemplateElement*    theElement = 0;
 
@@ -1007,14 +1081,16 @@ StylesheetConstructionContextDefault::createElement(
     }
     else
     {
-        GetAndReleaseCachedString theGuard(*this);
-        GetAndReleaseCachedString theGuard1(*this);
+        const GetAndReleaseCachedString     theGuard1(*this);
+        const GetAndReleaseCachedString     theGuard2(*this);
 
         error(
             XalanMessageLoader::getMessage(
-                theGuard.get(),
+                theGuard1.get(),
                 XalanMessages::UnknownXSLTToken_1Param,
-                LongToDOMString(token, theGuard1.get())),
+                LongToDOMString(
+                    token,
+                    theGuard2.get())),
             0,
             locator);
     }
@@ -1032,8 +1108,11 @@ StylesheetConstructionContextDefault::createElement(
             ExtensionNSHandler&         handler,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber = XalanLocator::getLineNumber(locator);
-    const XalanLocator::size_type   columnNumber = XalanLocator::getColumnNumber(locator);
+    const XalanLocator::size_type   lineNumber =
+        XalanLocator::getLineNumber(locator);
+
+    const XalanLocator::size_type   columnNumber =
+        XalanLocator::getColumnNumber(locator);
 
     m_allocatedElements.push_back(0);
 
@@ -1061,8 +1140,11 @@ StylesheetConstructionContextDefault::createElement(
             bool                        disableOutputEscaping,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber = XalanLocator::getLineNumber(locator);
-    const XalanLocator::size_type   columnNumber = XalanLocator::getColumnNumber(locator);
+    const XalanLocator::size_type   lineNumber =
+        XalanLocator::getLineNumber(locator);
+
+    const XalanLocator::size_type   columnNumber =
+        XalanLocator::getColumnNumber(locator);
 
     return m_elemTextLiteralAllocator.create(
             *this,
@@ -1118,7 +1200,8 @@ StylesheetConstructionContextDefault::getElementNameToken(const XalanDOMString& 
         const ElementTokenTableEntry* const 
             theCurrent = theFirst + (theLast - theFirst) / 2;
 
-        const int   theResult = compareIgnoreCaseASCII(name, theCurrent->m_name);
+        const int   theResult =
+            compareIgnoreCaseASCII(name, theCurrent->m_name);
 
         if (theResult < 0)
         {
@@ -1198,13 +1281,19 @@ StylesheetConstructionContextDefault::allocateXalanDOMCharVector(
     assert(theString != 0);
 
     const XalanDOMString::size_type     theActualLength =
-        theLength == XalanDOMString::npos ? XalanDOMString::length(theString) : theLength;
+        theLength == XalanDOMString::npos ?
+            XalanDOMString::length(theString) :
+            theLength;
 
     XalanDOMChar*   theVector =
-        m_xalanDOMCharVectorAllocator.allocate(fTerminate == true ? theActualLength + 1 : theActualLength);
+        m_xalanDOMCharVectorAllocator.allocate(
+            fTerminate == true ? theActualLength + 1 : theActualLength);
 
     XalanDOMChar* const     theEnd =
-        XalanCopy(theString, theString + theActualLength, theVector);
+        XalanCopy(
+            theString,
+            theString + theActualLength,
+            theVector);
 
     if (fTerminate == true)
     {
@@ -1223,7 +1312,12 @@ StylesheetConstructionContextDefault::createAVT(
             const XalanDOMChar*             stringedValue,
             const PrefixResolver&           resolver)
 {
-    return m_avtAllocator.create(*this, locator, name, stringedValue, resolver);
+    return m_avtAllocator.create(
+                *this,
+                locator,
+                name,
+                stringedValue,
+                resolver);
 }
 
 
@@ -1233,7 +1327,10 @@ StylesheetConstructionContextDefault::createAVTPart(
             const XalanDOMChar*         theString,
             XalanDOMString::size_type   theLength)
 {
-    return m_avtPartSimpleAllocator.create(*this, theString, theLength);
+    return m_avtPartSimpleAllocator.create(
+                *this,
+                theString,
+                theLength);
 }
 
 
@@ -1282,8 +1379,11 @@ StylesheetConstructionContextDefault::createXalanQName(
             const LocatorType*          locator,
             bool                        fUseDefault)
 {
-    return  m_xalanQNameByValueAllocator.create(qname, namespaces, locator, fUseDefault);
-
+    return  m_xalanQNameByValueAllocator.create(
+                qname,
+                namespaces,
+                locator,
+                fUseDefault);
 }
 
 
@@ -1295,8 +1395,11 @@ StylesheetConstructionContextDefault::createXalanQName(
             const LocatorType*          locator,
             bool                        fUseDefault)
 {
-    return  m_xalanQNameByValueAllocator.create(qname, namespaces, locator, fUseDefault);
-
+    return  m_xalanQNameByValueAllocator.create(
+                qname,
+                namespaces,
+                locator,
+                fUseDefault);
 }
 
 
@@ -1321,7 +1424,8 @@ StylesheetConstructionContextDefault::tokenizeQNames(
     }
     else
     {
-        const XalanQName**  theResult = doAllocateXalanQNamePointerVector(count);
+        const XalanQName**  theResult =
+            doAllocateXalanQNamePointerVector(count);
         assert(theResult != 0);
 
         const GetAndReleaseCachedString     theGuard(*this);

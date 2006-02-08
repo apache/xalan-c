@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-#if !defined(INMEMHANDLER_MSGCREATOR_1357924680)
-#define INMEMHANDLER_MSGCREATOR_1357924680
+#if !defined(INMEMHANDLER_1357924680)
+#define INMEMHANDLER_1357924680
+
+
+
+#include "xalanc/Include/PlatformDefinitions.hpp"
 
 #include "SAX2Handler.hpp"
 
@@ -28,72 +32,76 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
-    InMemHandler(const char* fileName);
+    InMemHandler(
+            const char*     fileName,
+            const char*     indexFileName);
 
     virtual 
     ~InMemHandler();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Implementations of the SAX DocumentHandler interface
     // -----------------------------------------------------------------------
-	virtual void 
-	endDocument();
-	
-	virtual void 
-	endElement(const XMLCh* const ,
-								 const XMLCh* const localname,
-								 const XMLCh* const )	;
-	virtual void 
-	startDocument();
+    virtual void
+    endDocument();
 
-	virtual void 
-	startElement(const   XMLCh* const    uri,
-									const   XMLCh* const    localname,
-									const   XMLCh* const    qname,
-                                    const   Attributes&		attributes);
+    virtual void
+    endElement(
+            const XMLCh* const,
+            const XMLCh* const  localname,
+            const XMLCh* const);
 
-	virtual void 
-	characters(	const   XMLCh* const    chars
-						, const unsigned int    length);
+    virtual void
+    startDocument();
 
+    virtual void 
+    startElement(
+            const XMLCh* const  uri,
+            const XMLCh* const  localname,
+            const XMLCh* const  qname,
+            const Attributes&   attributes);
 
-
+    virtual void 
+    characters(
+            const XMLCh* const  chars,
+            const unsigned int  length);
 
 protected:
 
-	XalanFileOutputStream	m_fStream;
+    MsgFileOutputStream     m_stream;
+
     // -----------------------------------------------------------------------
     //  functions for formatting the output file
     // -----------------------------------------------------------------------
-	virtual void 
-	createHeaderForDataFile ();
-	
-	virtual void 
-	createBottomForDataFile ();
+    virtual void
+    createHeaderForDataFile();
+    
+    virtual void
+    createBottomForDataFile();
 
-	virtual void 
-	printBeginOfDataLine ();
-	
-	virtual void 
-	printEndOfDataLine ();
+    virtual void
+    printBeginOfDataLine();
+    
+    virtual void
+    printEndOfDataLine();
 
-	void 
-	printToDataFile( const char* sArrayOfStrins[] );
-
+    void
+    printToDataFile(const char*     sArrayOfStrings[]);
 
 private:
 
-	bool m_isTheFirstLineInArray;
+    bool    m_isTheFirstLineInArray;
 
-	// Not implemented...
-	InMemHandler&
-	operator=(const InMemHandler&);
+    // Not implemented...
+    InMemHandler&
+    operator=(const InMemHandler&);
 
-	InMemHandler(const InMemHandler&);
+    InMemHandler(const InMemHandler&);
 
-	bool
-	operator==(const InMemHandler&) const;
-
+    bool
+    operator==(const InMemHandler&) const;
 };
 
-#endif /// INMEMHANDLER_MSGCREATOR_1357924680
+
+
+#endif /// INMEMHANDLER_1357924680

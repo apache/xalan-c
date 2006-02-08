@@ -40,15 +40,16 @@
 
 class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER MemoryManagerType
 {
-    enum { npos = -1 }; 
 public:
-    XalanMemoryManagerImpl( size_t defSize = npos ) :
+
+    XalanMemoryManagerImpl( DWORD defSize = 0 ) :
 	    m_heapHandle(NULL)
 	{
 		m_heapHandle = HeapCreate(	HEAP_NO_SERIALIZE,
 		                            0, // dwInitialSize
-		                            ( defSize == npos) ? 0 : defSize  /* dwMaximumSize*/);
-		if( m_heapHandle == NULL )
+		                            defSize);
+
+        if( m_heapHandle == NULL )
 		{
             XALAN_USING_STD(runtime_error)
 
@@ -58,7 +59,6 @@ public:
             _ultoa( GetLastError(), buffer, 10);
 
             throw runtime_error(buffer);
-
 		}
 	}
 
@@ -70,6 +70,7 @@ public:
                         0,              //DWORD dwFlags
                         size            //SIZE_T dwBytes
                         );
+
         if( ptr == 0)
         {
             XALAN_USING_STD(bad_alloc)
@@ -78,7 +79,6 @@ public:
         }
 
         return ptr;
-
     }
 
 	virtual void
@@ -93,7 +93,6 @@ public:
 
             throw bad_alloc();
         }
-
     }
 
 	virtual 
@@ -113,14 +112,15 @@ public:
 	}
 
 private:
-	// Not implemented
+
+    // Not implemented
 	XalanMemoryManagerImpl&
 	operator=(const XalanMemoryManagerImpl&);
-	
+
 	XalanMemoryManagerImpl(const XalanMemoryManagerImpl&);
-	
+
 	//Data
-	HANDLE m_heapHandle;	
+	HANDLE  m_heapHandle;	
 };
 
 #else
@@ -128,15 +128,16 @@ private:
 class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER MemoryManagerType
 {
 public:
-	virtual 
+
+    virtual
 	~XalanMemoryManagerImpl()
 	{
 	}
-	
+
 	virtual void*
 	allocate( size_t 	size )
 	{
-	     void* memptr = ::operator new(size);
+	    void* memptr = ::operator new(size);
 
 	    if (memptr != NULL) 
 	    {
@@ -150,19 +151,12 @@ public:
 	virtual void
 	deallocate(  void* 		pDataPointer  )
 	{
-		operator delete(pDataPointer);		
-		
-	}	
+		operator delete(pDataPointer);
+	}
 };
 
 #endif
 
 
 
-
-
-
-
 #endif  // MEMORYMANAGERIMPL_HEADER_GUARD_1357924680
-
-

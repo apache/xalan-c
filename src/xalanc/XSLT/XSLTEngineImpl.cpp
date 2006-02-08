@@ -1060,12 +1060,16 @@ XSLTEngineImpl::problem(
 {
     const XalanDOMChar*     id = 0;
 
-    MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
+    MemoryManager& theManager =
+        const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
 
-    XalanDOMString          uri( theManager );
+    XalanDOMString  uri(theManager);
 
-    int                     lineNumber = XalanLocator::getUnknownValue();
-    int                     columnNumber = XalanLocator::getUnknownValue();
+    XalanLocator::size_type     lineNumber =
+        XalanLocator::getUnknownValue();
+
+    XalanLocator::size_type     columnNumber =
+        XalanLocator::getUnknownValue();
 
     const LocatorType*      locator = getLocatorFromStack();
 
@@ -1114,7 +1118,12 @@ XSLTEngineImpl::problem(
 
     if (classification == ProblemListener::eERROR)
     {
-        throw XSLTProcessorException(theManager, msg, uri, lineNumber, columnNumber);
+        throw XSLTProcessorException(
+                theManager,
+                msg,
+                uri,
+                lineNumber,
+                columnNumber);
     }
 }
 

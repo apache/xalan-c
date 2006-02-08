@@ -17,7 +17,7 @@
 #define VCPPDEFINITIONS_HEADER_GUARD_1357924680
 
 
-#pragma warning(disable: 4127 4251 4511 4512 4514 4702 4710 4711 4786 4097 4503 4786; error: 4150 4172 4238 4239 4715)
+#pragma warning(disable: 4127 4251 4351 4511 4512 4514 4702 4710 4711 4786 4097 4503 4786; error: 4150 4172 4238 4239 4715)
 
 
 // ---------------------------------------------------------------------------
@@ -36,6 +36,9 @@
   #define XALAN_INLINE_INITIALIZATION
   #if !defined(__INTEL_COMPILER)
     #define XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG
+    #if _MSC_VER >= 1400
+      #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
+    #endif
    #endif
   #define XALAN_NEW_STD_ALLOCATOR
   #define XALAN_HAS_STD_ITERATORS
