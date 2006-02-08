@@ -49,46 +49,12 @@
 
 
 
-#if defined(_MSC_VER) && !defined(_WIN64)
+#if defined(_MSC_VER)
 #define XALAN_USE_WINDOWS_TIMING
 #endif
 
 #if defined(XALAN_USE_WINDOWS_TIMING)
-
 #include "windows.h"
-#if (_MSC_VER < 1300)
-#include "largeint.h"
-#else
-
-// For whatever reason, these are no longer in the Windows
-// header files, although they still exist.  And no word as
-// to why they disappeared or how to replace them.
-extern "C"
-{
-LARGE_INTEGER
-WINAPI
-LargeIntegerDivide (
-    LARGE_INTEGER Dividend,
-    LARGE_INTEGER Divisor,
-    PLARGE_INTEGER Remainder
-    );
-
-LARGE_INTEGER
-WINAPI
-ExtendedLargeIntegerDivide (
-    LARGE_INTEGER Dividend,
-    ULONG Divisor,
-    PULONG Remainder
-    );
-
-LARGE_INTEGER
-WINAPI
-LargeIntegerSubtract (
-    LARGE_INTEGER Minuend,
-    LARGE_INTEGER Subtrahend
-    );
-};
-#endif
 #else
 #include <ctime>
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -127,13 +93,11 @@ Usage()
     XALAN_USING_XALAN(XalanMessageLoader)
     XALAN_USING_XALAN(XalanMessages)
     XALAN_USING_XALAN(XalanMemMgrs)
-    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XERCES(MemoryManager)
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-
-
-    bool    bErrorState = true ; // means OK
+    bool    bErrorState = true; // means OK
 
     XalanDOMString  szXalanVersion(theManager);
     XalanMessageLoader::getMessage(
@@ -156,20 +120,24 @@ Usage()
         szXercesVersion.transcode(cvtXercesVersion);
 
         cerr << &cvtXalanVersion[0] << endl;
-        cerr << &cvtXercesVersion[0]<< endl;
+        cerr << &cvtXercesVersion[0] << endl;
     }
     catch(const XalanDOMString::TranscodingError&) 
     {
-        cerr << endl << "Transcoding error: wrong XalanC or XercesC versions." <<endl;
+        cerr << endl
+             << "Transcoding error: wrong XalanC or XercesC versions."
+             << endl;
 
         bErrorState = false;
     } 
 
     XalanDOMString::CharVectorType  cvtXalanExeHelpMenu(theManager);
-    
+
     XalanDOMString theBuffer(theManager);
 
-    for (int i = XalanMessages::XalanExeHelpMenu; bErrorState && ( i <=  XalanMessages::XalanExeHelpMenu12 );  ++i)
+    for (int i = XalanMessages::XalanExeHelpMenu;
+            bErrorState && (i <=  XalanMessages::XalanExeHelpMenu12);
+                ++i)
     {
         try
         {
@@ -184,7 +152,11 @@ Usage()
         }
         catch(const XalanDOMString::TranscodingError&) 
         {
-            cerr << endl << "Cannot read help message " << i << "." << endl;
+            cerr << endl
+                 << "Cannot read help message "
+                 << i
+                 << "."
+                 << endl;
 
             bErrorState = false;
         }
@@ -288,6 +260,12 @@ public:
     const char*     m_outFileName;
 
     const char*     m_encoding;
+
+    unsigned long
+    getMaxParams() const
+    {
+        return m_maxParams;
+    }
 
 private:
 
@@ -409,7 +387,10 @@ getArgs(
 
                         if (params.addParam(name, value) == false)
                         {
-                            cerr << "Maximum numbers of stylesheets params has been exceeded!" << endl;
+                            cerr << "The maximum number of parameters is "
+                                 << params.getMaxParams()
+                                 << "."
+                                 << endl;
 
                             fSuccess = false;
                         }
@@ -519,11 +500,11 @@ getPerformanceFrequencyInMilliseconds()
 {
     ClockType   theInterval;
 
-    ULONG       theDummy;
-
     QueryPerformanceFrequency(&theInterval);
 
-    return ExtendedLargeIntegerDivide(theInterval, 1000UL, &theDummy);
+    theInterval.QuadPart /= 1000UL;
+
+    return theInterval;
 }
 #endif
 
@@ -536,21 +517,35 @@ writeElapsedMilliseconds(
             OstreamType&    theStream)
 {
 #if defined(XALAN_USE_WINDOWS_TIMING)
-    static const ClockType  theInterval = getPerformanceFrequencyInMilliseconds();
+    static const ClockType  theInterval =
+        getPerformanceFrequencyInMilliseconds();
 
     char        theBuffer[1000];
 
-    const ClockType     theDiff = LargeIntegerSubtract(theEndClock, theStartClock);
+    ClockType     theDiff;
+    
+    theDiff.QuadPart =
+        theEndClock.QuadPart - theStartClock.QuadPart;
 
-    ClockType   theRemainder;
+    ClockType     theResult;
+    ClockType     theRemainder;
+    
+    theResult.QuadPart =
+        theDiff.QuadPart / theInterval.QuadPart;
 
-    const ClockType     theResult = LargeIntegerDivide(theDiff, theInterval, &theRemainder);
+    theRemainder.QuadPart =
+        theDiff.QuadPart % theInterval.QuadPart;
 
-    sprintf(theBuffer, "%I64d.%I64d", theResult, theRemainder);
+    sprintf(
+        theBuffer,
+        "%I64d.%I64d",
+        theResult.QuadPart,
+        theRemainder.QuadPart);
 
     theStream << theBuffer;
 #else
-    theStream << (double(theEndClock - theStartClock) / CLOCKS_PER_SEC) * 1000.0;
+    theStream << (double(theEndClock - theStartClock) /
+                        CLOCKS_PER_SEC) * 1000.0;
 #endif
 }
 
@@ -565,10 +560,22 @@ reportElapsedMilliseconds(
 {
     theStream << theString;
 
-    writeElapsedMilliseconds(theStartClock, theEndClock, theStream);
+    writeElapsedMilliseconds(
+        theStartClock,
+        theEndClock,
+        theStream);
 
     theStream << " milliseconds.\n";
 }
+
+
+
+XALAN_USING_XALAN(XalanParsedSource)
+XALAN_USING_XALAN(XalanCompiledStylesheet)
+
+
+typedef XalanTransformer::EnsureDestroyParsedSource         SourceGuard;
+typedef XalanTransformer::EnsureDestroyCompiledStylesheet   StylesheetGuard;
 
 
 
@@ -587,8 +594,6 @@ transform(
     }
     else
     {
-        XALAN_USING_XALAN(XalanParsedSource)
-
         ClockType   theStartClock = getClock();
 
         const XalanParsedSource*    theParsedSource = 0;
@@ -605,7 +610,7 @@ transform(
                 theEndClock,
                 cerr);
 
-            const XalanTransformer::EnsureDestroyParsedSource   theGuard(theTransformer, theParsedSource);
+            const SourceGuard   theGuard(theTransformer, theParsedSource);
 
             theStartClock = getClock();
 
@@ -643,13 +648,14 @@ transform(
     }
     else
     {
-        XALAN_USING_XALAN(XalanParsedSource)
-
         ClockType   theStartClock = getClock();
 
         const XalanParsedSource*    theParsedSource = 0;
 
-        int     theResult = theTransformer.parseSource(theSource, theParsedSource);
+        int     theResult =
+            theTransformer.parseSource(
+                                theSource,
+                                theParsedSource);
 
         if (theResult == 0)
         {
@@ -661,15 +667,16 @@ transform(
                 theEndClock,
                 cerr);
 
-            const XalanTransformer::EnsureDestroyParsedSource   theSourceGuard(theTransformer, theParsedSource);
+            const SourceGuard   theGuard(theTransformer, theParsedSource);
 
-            XALAN_USING_XALAN(XalanCompiledStylesheet)
-
-            const XalanCompiledStylesheet*  theCompiledStylesheet = 0;
+            const XalanCompiledStylesheet*  theStylesheet = 0;
 
             theStartClock = getClock();
 
-            theResult = theTransformer.compileStylesheet(theStylesheetSource, theCompiledStylesheet);
+            theResult =
+                theTransformer.compileStylesheet(
+                    theStylesheetSource,
+                    theStylesheet);
 
             if (theResult == 0)
             {
@@ -681,13 +688,17 @@ transform(
                     theEndClock,
                     cerr);
 
-                assert(theCompiledStylesheet != 0);
+                assert(theStylesheet != 0);
 
-                const XalanTransformer::EnsureDestroyCompiledStylesheet     theStylesheetGuard(theTransformer, theCompiledStylesheet);
+                const StylesheetGuard   theGuard(theTransformer, theStylesheet);
 
                 theStartClock = getClock();
 
-                theResult = theTransformer.transform(*theParsedSource, theCompiledStylesheet, theTarget);
+                theResult =
+                    theTransformer.transform(
+                        *theParsedSource,
+                        theStylesheet,
+                        theTarget);
 
                 theEndClock = getClock();
 
@@ -714,15 +725,17 @@ transform(
 {
     XALAN_USING_XALAN(XalanDOMString)
     XALAN_USING_XALAN(XSLTResultTarget)
-    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XERCES(MemoryManager)
 
-    MemoryManagerType& theManager = theTransformer.getMemoryManager();
+    MemoryManager&  theManager = theTransformer.getMemoryManager();
 
     XSLTResultTarget    theTarget(theManager);
 
     if (theParams.m_encoding != 0)
     {
-        theTarget.setEncoding(XalanDOMString(theParams.m_encoding, theManager));
+        const XalanDOMString    theEncoding(theParams.m_encoding, theManager);
+
+        theTarget.setEncoding(theEncoding);
     }
 
     if (theParams.m_outFileName != 0)
@@ -736,11 +749,20 @@ transform(
 
     if (theParams.m_useStylesheetPI == true)
     {
-        return transform(theTransformer, theParams, theSource, theTarget);
+        return transform(
+                    theTransformer,
+                    theParams,
+                    theSource,
+                    theTarget);
     }
     else
     {
-        return transform(theTransformer, theParams, theSource, theStylesheetSource, theTarget);
+        return transform(
+                    theTransformer,
+                    theParams,
+                    theSource,
+                    theStylesheetSource,
+                    theTarget);
     }
 }
 
@@ -752,7 +774,9 @@ transform(
             const Params&           theParams,
             const XSLTInputSource&  theSource)
 {
-    assert(theParams.m_useStylesheetPI == true || theParams.m_xslFileName != 0);
+    assert(
+        theParams.m_useStylesheetPI == true ||
+        theParams.m_xslFileName != 0);
 
     if (theParams.m_useStylesheetPI == true ||
         (theParams.m_xslFileName[0] == '-' &&
@@ -786,11 +810,17 @@ transform(
     if (theParams.m_inFileName[0] == '-' &&
         theParams.m_inFileName[1] == '\0')
     {
-        return transform(theTransformer, theParams, &cin);
+        return transform(
+                    theTransformer,
+                    theParams,
+                    &cin);
     }
     else
     {
-        return transform(theTransformer, theParams, theParams.m_inFileName);
+        return transform(
+                    theTransformer,
+                    theParams,
+                    theParams.m_inFileName);
     }
 }
 
@@ -805,16 +835,17 @@ xsltMain(
     int theResult = -1;
 
     XALAN_USING_XERCES(XMLPlatformUtils)
-        
+
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize();
-    
+
     // Initialize Xalan...
     XalanTransformer::initialize();
-    
+
     {
-        // we need to read the params after the XMLPlatformUtils::Initialize(), because we may
-        // need the local and the local dlls for usage of the Usage function
+        // we need to read the params after the XMLPlatformUtils::Initialize(),
+        // because we may need the local and the local dlls for usage of the
+        // Usage function.
         
         // Set the maximum number of params as half of argc - 1.
         // It's actually argc - 2, but that could get us into negative
@@ -842,13 +873,13 @@ xsltMain(
             }
         }
     }
-    
+
     // Terminate Xalan...
     XalanTransformer::terminate();
-    
+
     // Terminate Xerces...
     XMLPlatformUtils::Terminate();
-    
+
     // Clean up the ICU, if it's integrated...
     XalanTransformer::ICUCleanUp();
 
@@ -863,7 +894,8 @@ main(
             char*   argv[])
  {
 #if !defined(NDEBUG) && defined(_MSC_VER)
-    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(
+        _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
@@ -875,5 +907,4 @@ main(
 #endif
 
     return xsltMain(argc, argv);
-
-    }
+}
