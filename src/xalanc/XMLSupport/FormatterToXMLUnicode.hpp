@@ -398,13 +398,6 @@ protected:
 
         m_writer.write(value_type(XalanUnicode::charQuestionMark));
         m_writer.write(value_type(XalanUnicode::charGreaterThanSign));
-
-        // If outside of an element, then put in a new line.  This whitespace
-        // is not significant.
-        if (outsideDocumentElement() == true)
-        {
-            outputNewline();
-        }
     }
 
     void

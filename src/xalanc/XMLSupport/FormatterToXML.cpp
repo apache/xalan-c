@@ -387,9 +387,9 @@ FormatterToXML::initAttrCharsMap()
         }
     }
 
-	m_attrCharsMap[XalanUnicode::charHTab] = 'S';
-	m_attrCharsMap[XalanUnicode::charLF] = 'S';
-	m_attrCharsMap[XalanUnicode::charCR] = 'S';
+    m_attrCharsMap[XalanUnicode::charHTab] = 'S';
+    m_attrCharsMap[XalanUnicode::charLF] = 'S';
+    m_attrCharsMap[XalanUnicode::charCR] = 'S';
 
     for(size_t i = 1; i < 0x20; i++)
     {
@@ -430,7 +430,7 @@ FormatterToXML::initCharsMap()
         m_charsMap[j] = 'S';
     }
 
-	m_charsMap[9] = '\0';
+    m_charsMap[9] = '\0';
 
     assert(m_maxCharacter != 0);
 
@@ -812,11 +812,11 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 }
 
 void
-FormatterToXML::throwInvalidCharacterException( unsigned int		ch,
+FormatterToXML::throwInvalidCharacterException( unsigned int        ch,
                                                 MemoryManagerType&  theManager)
 {
-    XalanDOMString	theMessage(theManager);
-    XalanDOMString	theBuffer(theManager);  
+    XalanDOMString  theMessage(theManager);
+    XalanDOMString  theBuffer(theManager);  
 
     XalanMessageLoader::getMessage(
             theMessage,
@@ -885,11 +885,11 @@ FormatterToXML::accumDefaultEscape(
                 next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
             }
 
-			writeNumberedEntityReference(next);
-		}
-		else 
-		{
-			if(ch > m_maxCharacter)
+            writeNumberedEntityReference(next);
+        }
+        else 
+        {
+            if(ch > m_maxCharacter)
             {
                 if( !m_isXML1_1 && XalanUnicode::charLSEP == ch ) 
                 {
@@ -901,7 +901,7 @@ FormatterToXML::accumDefaultEscape(
                 }
             }
             else if(ch < SPECIALSSIZE && m_attrCharsMap[ch] == 'S')
-			{
+            {
                 if(ch < 0x20 )
                 {
                     if(m_isXML1_1)
@@ -928,13 +928,13 @@ FormatterToXML::accumDefaultEscape(
                 {
                     writeNumberedEntityReference(ch);
                 }
-			}
-			else
-			{
-				accumContent(ch);
-			}
-		}
-	}
+            }
+            else
+            {
+                accumContent(ch);
+            }
+        }
+    }
 
     return i;
 }
@@ -1080,9 +1080,9 @@ FormatterToXML::startDocument()
 
         if(m_doIndent)
         {
-		    outputLineSep();
+            outputLineSep();
         }
-	}	   
+    }      
 
 }
 
@@ -1240,13 +1240,6 @@ FormatterToXML::processingInstruction(
 
         accumName(XalanUnicode::charQuestionMark);
         accumName(XalanUnicode::charGreaterThanSign);
-
-        // If outside of an element, then put in a new line.  This whitespace
-        // is not significant.
-        if (m_elemStack.empty() == true)
-        {
-            outputLineSep();
-        }
 
         m_startNewLine = true;
     }
