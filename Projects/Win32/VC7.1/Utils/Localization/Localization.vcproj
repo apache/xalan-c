@@ -57,9 +57,21 @@
 	<References>
 	</References>
 	<Files>
+			<Filter
+			Name="Resource Files"
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			
+		<File
+			RelativePath="..\..\..\Res\Localization\Localization.rc">
+		</File>
+		<File
+			RelativePath="..\..\..\Res\Localization\resource.h">
+		</File>
+		</Filter>
 		<File
 			RelativePath="..\..\..\..\..\src\xalanc\NLS\en_US\XalanMsg_en_US.xlf">
 		</File>
+
 	</Files>
 	<Globals>
 	</Globals>
