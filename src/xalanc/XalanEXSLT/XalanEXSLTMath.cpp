@@ -1460,7 +1460,7 @@ static const XalanEXSLTFunctionAbs          s_absFunction;
 static const XalanEXSLTFunctionAcos         s_acosFunction;
 static const XalanEXSLTFunctionAsin         s_asinFunction;
 static const XalanEXSLTFunctionAtan         s_atanFunction;
-static const XalanEXSLTFunctionAtan         s_atan2Function;
+static const XalanEXSLTFunctionAtan2        s_atan2Function;
 static const XalanEXSLTFunctionConstant     s_constantFunction;
 static const XalanEXSLTFunctionCos          s_cosFunction;
 static const XalanEXSLTFunctionExp          s_expFunction;
