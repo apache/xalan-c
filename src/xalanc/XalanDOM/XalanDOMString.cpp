@@ -820,6 +820,10 @@ XALAN_CPP_NAMESPACE_END
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+
+const size_t    theOneTranslatedWbCharLen = 10;
+
+
 // The template function should never fail.
 // In case of the unconvertable characters we add the substitution char
 // and in case of too small result vector we resize it 
@@ -885,15 +889,15 @@ doXercesTranscode(
 
     if (fSuccess == false)
     {
-        // Do the "manual" transcoding. First , clean uo form the previose phase
+        // Do the "manual" transcoding.  But first, clean up from the
+        // previous phase
         theTargetVector.clear();
 
-        //check if there is illegal caracters for the local code page encoding
+        // See if there are any unrepresentable characters for the
+        // local code page.
         SourceType oneCharArray[2];
 
         oneCharArray[1] = SourceType(0);
-
-        const size_t theOneTranslatedWbCharLen = 10;
 
         TargetType theOneTranslatedWbChar[theOneTranslatedWbCharLen]; 
 

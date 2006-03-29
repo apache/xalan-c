@@ -40,19 +40,19 @@ XALAN_CPP_NAMESPACE_BEGIN
 template <class Value>
 struct XalanDequeIteratorTraits
 {
-	typedef Value	        value_type;
-	typedef Value&	        reference;
-	typedef Value*	        pointer;
+    typedef Value           value_type;
+    typedef Value&          reference;
+    typedef Value*          pointer;
     typedef const Value&    const_reference;
 };
 
 template <class Value>
 struct XalanDequeConstIteratorTraits
 {
-	typedef Value	        value_type;
-	typedef const Value&	reference;
-	typedef const Value*	pointer;
-    typedef const Value&	const_reference;
+    typedef Value           value_type;
+    typedef const Value&    reference;
+    typedef const Value*    pointer;
+    typedef const Value&    const_reference;
 };
 
 template <class XalanDequeTraits, class XalanDeque>
@@ -63,11 +63,11 @@ struct  XalanDequeIterator
     typedef typename XalanDequeTraits::reference        reference;
     typedef typename XalanDequeTraits::pointer          pointer;
     typedef typename XalanDequeTraits::const_reference  const_reference;
-    typedef ptrdiff_t		                            difference_type;
+    typedef ptrdiff_t                                   difference_type;
 
     typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, XalanDeque> Iterator;
 
-	typedef XALAN_STD_QUALIFIER random_access_iterator_tag iterator_category;
+    typedef XALAN_STD_QUALIFIER random_access_iterator_tag iterator_category;
 
     XalanDequeIterator(XalanDeque*  deque,
                        size_type    pos) :
@@ -173,13 +173,13 @@ public:
     typedef Type&           reference;
     typedef const Type&     const_reference;
 
-    typedef XalanVector<Type, ConstructionTraits>	    BlockType;
+    typedef XalanVector<Type, ConstructionTraits>       BlockType;
 
     typedef XalanVector<BlockType*> BlockIndexType;
 
-    typedef XalanDeque<Type, ConstructionTraits>							ThisType;		
-    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType> 		iterator;
-    typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, ThisType> 	const_iterator;
+    typedef XalanDeque<Type, ConstructionTraits>                            ThisType;       
+    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType>      iterator;
+    typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, ThisType>     const_iterator;
 
 #if defined(XALAN_HAS_STD_ITERATORS)
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
@@ -201,8 +201,11 @@ public:
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;
 
+    typedef typename ConstructionTraits::Constructor    Constructor;
+    typedef typename Constructor::ConstructableType     ConstructibleType;
+
     XalanDeque(
-    		MemoryManagerType& memoryManager,
+            MemoryManagerType& memoryManager,
             size_type initialSize = 0,
             size_type blockSize = 10) :
         m_memoryManager(&memoryManager),
@@ -211,7 +214,7 @@ public:
                     initialSize / blockSize + (initialSize % blockSize == 0 ? 0 : 1)),                    
         m_freeBlockVector(memoryManager)
     {
-        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
+        typename Constructor::ConstructableType  defaultValue(*m_memoryManager);
 
         XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, defaultValue.value);
     }
@@ -244,18 +247,12 @@ public:
 
         return theResult;
     }
-     
+
     ~XalanDeque()
     {
-        clear();
-        typename BlockIndexType::iterator iter = m_freeBlockVector.begin();
+        destroyBlockList(m_freeBlockVector);
 
-        while (iter != m_freeBlockVector.end())
-        {
-            (*iter)->~XalanVector<Type, ConstructionTraits>();
-            deallocate(*iter);
-            ++iter;
-        }
+        destroyBlockList(m_blockIndex);
     }
 
     iterator begin()
@@ -363,7 +360,8 @@ public:
 
     void resize(size_type newSize)
     {
-        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
+        typename Constructor::ConstructableType  defaultValue(*m_memoryManager);
+
         if (newSize > size())
         {
             for (size_type i = 0; i < newSize - size(); ++i)
@@ -404,6 +402,7 @@ public:
 
         return *m_memoryManager;
     }
+
 protected:
 
     BlockType* getNewBlock()
@@ -436,12 +435,26 @@ protected:
         assert(pointer != 0);
         
         return pointer;
-     }
+    }
+
+    void
+    destroyBlockList(BlockIndexType&    theBlockIndex)
+    {
+        typename BlockIndexType::iterator iter =
+            theBlockIndex.begin();
+
+        while (iter != theBlockIndex.end())
+        {
+            XalanDestroy(*m_memoryManager, *(*iter));
+
+            ++iter;
+        }
+    }
 
     void
     deallocate(BlockType*  pointer)
     {
-    	m_memoryManager->deallocate(pointer);
+        m_memoryManager->deallocate(pointer);
     }
 
     MemoryManagerType*  m_memoryManager;
@@ -449,12 +462,13 @@ protected:
 
     BlockIndexType     m_blockIndex; 
     BlockIndexType     m_freeBlockVector;
-    
+
 private:
-	// Not implemented
-	XalanDeque();
-	XalanDeque(const XalanDeque&);
-	
+
+    // These are not implemented
+    XalanDeque();
+
+    XalanDeque(const XalanDeque&);
 };
 
 
