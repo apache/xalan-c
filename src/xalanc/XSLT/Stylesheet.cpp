@@ -76,6 +76,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 const XalanDOMString            Stylesheet::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
+const Stylesheet::PatternTableVectorType    Stylesheet::s_emptyTemplateList(XalanMemMgrs::getDummyMemMgr());
+
 const XalanQNameByReference     Stylesheet::s_emptyQName;
 
 
@@ -1088,11 +1090,17 @@ Stylesheet::locateMatchPatternDataList(
 
     case XalanNode::ATTRIBUTE_NODE:
 #if defined(XALAN_OLD_STYLE_CASTS)
-        assert(DOMServices::isNamespaceDeclaration((const XalanAttr&)theNode) == false);
+        if (DOMServices::isNamespaceDeclaration((const XalanAttr&)theNode) == true)
 #else
-        assert(DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theNode)) == false);
+        if ((DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theNode)) == true))
 #endif
-        return locateAttributeMatchPatternDataList(DOMServices::getLocalNameOfNode(theNode));
+        {
+            return &s_emptyTemplateList;
+        } 
+        else
+        {
+            return locateAttributeMatchPatternDataList(DOMServices::getLocalNameOfNode(theNode));
+        }
         break;
 
     case XalanNode::CDATA_SECTION_NODE:

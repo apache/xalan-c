@@ -867,6 +867,8 @@ private:
 	NamespacesHandler						m_namespacesHandler;
 
 	static const XalanDOMString				s_emptyString;
+
+    static const PatternTableVectorType     s_emptyTemplateList;
 };
 
 
