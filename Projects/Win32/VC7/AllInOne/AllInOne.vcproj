@@ -1297,9 +1297,6 @@
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.cpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp">
 			</File>
 			<File
