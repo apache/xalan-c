@@ -92,7 +92,7 @@ private:
     // Data members...
     MemoryManager&  m_memoryManager;
 
-    void*               m_pointer;
+    void*           m_pointer;
 };
 
 

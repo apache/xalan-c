@@ -61,19 +61,38 @@ public:
 	virtual
 	~XMLParserLiaison();
 
-	// These interfaces are inherited from Resettable...
 
+    // These interfaces are new to XMLParserLiaison
+
+	/**
+	 * Reset the instance, freeing any XalanDocument instances created
+     * through parseXMLStream().
+	 */
 	virtual void
 	reset() = 0;
 
-	// These interfaces are new to XMLParserLiaison
-
+	/**
+	 * Get a pointer to the current ExecutionContext instance, which
+     * may be null.
+     *
+	 * @return A pointer to the current ExecutionContext, if any.
+	 */
 	virtual ExecutionContext*
 	getExecutionContext() const = 0;
 
-    virtual MemoryManagerType&
+	/**
+	 * Get a reference to the current MemoryManager instance.
+     *
+	 * @return A pointer to the current ExecutionContext, if any.
+	 */
+    virtual MemoryManager&
     getMemoryManager() = 0;
 
+	/**
+	 * Set the current ExecutionContext instance.
+     *
+	 * @parameter theContext A reference to the new ExecutionContext instance.
+	 */
 	virtual void
 	setExecutionContext(ExecutionContext&	theContext) = 0;
 
@@ -205,6 +224,52 @@ public:
 	  */
 	virtual void
 	setErrorHandler(ErrorHandlerType*	handler) = 0;
+
+protected:
+
+    // A utility class for derived classes to use.
+    class EnsureDestroyDocument
+    {
+    public:
+
+        EnsureDestroyDocument(
+                XMLParserLiaison&   theLiaison,
+                XalanDocument*      theDocument) :
+            m_liaison(theLiaison),
+            m_document(theDocument)
+        {
+        }
+
+        ~EnsureDestroyDocument()
+        {
+            if (m_document != 0)
+            {
+                m_liaison.destroyDocument(m_document);
+            }
+        }
+
+        XalanDocument*
+        get() const
+        {
+            return m_document;
+        }
+
+        XalanDocument*
+        release()
+        {
+            XalanDocument*  theDocument = m_document;
+
+            m_document = 0;
+
+            return theDocument;
+        }
+
+    private:
+
+        XMLParserLiaison&   m_liaison;
+
+        XalanDocument*      m_document;
+    };
 
 private:
 
