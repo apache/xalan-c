@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool(MemoryManagerType& theManager) :
 	ParentType(theManager),
-	m_mutex()
+	m_mutex(&theManager)
 {
 }
 
