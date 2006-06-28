@@ -34,6 +34,7 @@
 
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 
 
@@ -826,6 +827,74 @@ transform(
 
 
 
+#if defined(_WINDOWS)
+
+class WindowsMemoryManager : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
+{
+public:
+
+    WindowsMemoryManager() :
+        MemoryManager(),
+        m_handle(HeapCreate(HEAP_NO_SERIALIZE, 0, 0))
+    {
+        assert(m_handle != 0);
+    }
+
+    virtual
+    ~WindowsMemoryManager()
+    {
+        HeapDestroy(m_handle);
+    }
+
+    /**
+      * This method allocates requested memory.
+      *
+      * size The requested memory size
+      *
+      * Returns a pointer to the allocated memory
+      */
+    virtual void*
+    allocate(size_t  size)
+    {
+        void* const     value =
+                HeapAlloc(m_handle, HEAP_NO_SERIALIZE, size);
+
+        if (value == 0)
+        {
+            throw XERCES_CPP_NAMESPACE_QUALIFIER OutOfMemoryException();
+        }
+
+        return value;
+    }
+
+    /**
+      * This method deallocates memory
+      *
+      */
+    virtual void
+    deallocate(void*    pointer)
+    {
+        HeapFree(m_handle, HEAP_NO_SERIALIZE, pointer);
+    }
+
+protected:
+
+private:
+
+    // These are not implemented.
+    WindowsMemoryManager(const WindowsMemoryManager&);
+
+    WindowsMemoryManager&
+    operator=(const WindowsMemoryManager&);
+
+
+    // Data members.
+    const HANDLE    m_handle;
+};
+#endif
+
+
+
 int
 xsltMain(
             int     argc,
@@ -836,23 +905,39 @@ xsltMain(
 
     XALAN_USING_XERCES(XMLPlatformUtils)
 
+#if defined(_WINDOWS) && defined(NDEBUG)
+    WindowsMemoryManager  theMemoryManager;
+
+    // Call the static initializer for Xerces...
+    XMLPlatformUtils::Initialize(
+        XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescDefaultLocale,
+        0,
+        0,
+        &theMemoryManager);
+#else
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize();
 
+    XALAN_USING_XERCES(MemoryManager)
+ 
+    MemoryManager&  theMemoryManager =
+            *XMLPlatformUtils::fgMemoryManager;
+#endif
+
     // Initialize Xalan...
-    XalanTransformer::initialize();
+    XalanTransformer::initialize(theMemoryManager);
 
     {
         // we need to read the params after the XMLPlatformUtils::Initialize(),
         // because we may need the local and the local dlls for usage of the
         // Usage function.
-        
+
         // Set the maximum number of params as half of argc - 1.
         // It's actually argc - 2, but that could get us into negative
         // numbers, so don't bother.  Also, always add 1, in case
         // (argc - 1) / 2 is 0.
         Params  theParams((argc - 1) / 2 + 1);
-        
+
         if (getArgs(argc, argv, theParams) == false)
         {
             Usage();
@@ -860,11 +945,11 @@ xsltMain(
         else
         {
             // Create a XalanTransformer instance...
-            XalanTransformer    theTransformer;
-            
+            XalanTransformer    theTransformer(theMemoryManager);
+
             // Set any options...
             theParams.setParams(theTransformer);
-            
+
             theResult = transform(theTransformer, theParams);
 
             if (theResult != 0)
