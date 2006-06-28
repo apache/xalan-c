@@ -16,13 +16,6 @@
 #if !defined(XALAN_ELEMVARIABLE_HEADER_GUARD)
 #define XALAN_ELEMVARIABLE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
 
 
 // Base include file.  Must be first.
