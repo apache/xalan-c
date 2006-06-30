@@ -38,6 +38,9 @@
 #include "TRU64Definitions.hpp"
 #elif defined(__INTEL_COMPILER)
 #include "IntelDefinitions.hpp"
+#elif defined(__IBMCPP__) && defined(__TOS_LINUX__)
+// This is for Linux PPC using the IBM xlC compiler.
+#include "AIXDefinitions.hpp"
 #else
 #error Unknown compiler!
 #endif
