@@ -743,7 +743,12 @@ XercesParserLiaison::createDOMParser()
     DOMParserType* const    theParser =
         new (&theMemoryManager) DOMParserType(0, &theMemoryManager);
 
+#if XERCES_VERSION_MAJOR < 3
     theParser->setExpandEntityReferences(true);
+#else
+    theParser->setCreateEntityReferenceNodes(false);
+#endif
+
     theParser->setDoNamespaces(m_doNamespaces);
     theParser->setEntityResolver(m_entityResolver);
 
@@ -761,7 +766,11 @@ XercesParserLiaison::createSAXParser()
     SAXParserType* const    theParser =
         new (&theMemoryManager) SAXParserType(0, &theMemoryManager);
 
+#if XERCES_VERSION_MAJOR < 3
     theParser->setDoValidation(false);
+#else
+    theParser->setValidationScheme(SAXParserType::Val_Never);
+#endif
 
     theParser->setDoNamespaces(false);
 

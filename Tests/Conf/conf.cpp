@@ -209,7 +209,12 @@ parseWithXerces(
 
     XercesDOMParser  theParser(0, &mgr);
 
+#if XERCES_VERSION_MAJOR < 3
     theParser.setDoValidation(true);
+#else
+    theParser.setValidationScheme(XercesDOMParser::Val_Auto);
+#endif
+
     theParser.setDoNamespaces(true);
 
     theParser.parse(xmlInput);
@@ -310,7 +315,9 @@ runTests(
                 //
                 const XalanDOMString&   currentDir = dirs[j];
 
-                if (length(h.args.sub) == 0 || equals(currentDir, h.args.sub) == true)
+                if ((length(h.args.sub) == 0 ||
+                     equals(currentDir, h.args.sub) == true) &&
+                    currentDir[0] != XalanUnicode::charFullStop)
                 {
                     // Check that output directory is there.
                     //
