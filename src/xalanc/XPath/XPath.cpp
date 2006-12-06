@@ -2994,6 +2994,8 @@ XPath::step(
         if (subQueryResults->empty() == true)
         {
             queryResults.clear();
+
+            queryResults.setDocumentOrder();
         }
         else if (subQueryResults->getReverseDocumentOrder() == true)
         {

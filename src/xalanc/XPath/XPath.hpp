@@ -1962,7 +1962,12 @@ protected:
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
 	{
-		executeMore(context, opPos + 2, executionContext, formatterListener, function);
+		executeMore(
+            context,
+            opPos + 2,
+            executionContext,
+            formatterListener,
+            function);
 	}
 
 	/**
@@ -1979,7 +1984,20 @@ protected:
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
-		executeMore(context, opPos + 2, executionContext, theResult);
+		const XObjectPtr    theValue(executeMore(
+                                        context,
+                                        opPos + 2,
+                                        executionContext,
+                                        theResult));
+
+        if (theValue.null() == false)
+        {
+            theResult.addNodesInDocOrder(
+                theValue->nodeset(),
+                executionContext);
+
+            theResult.setDocumentOrder();
+        }
 	}
 
 	/**
