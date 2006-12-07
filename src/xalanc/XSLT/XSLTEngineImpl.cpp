@@ -3060,7 +3060,9 @@ XSLTEngineImpl::setStylesheetParam(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    m_stylesheetParams[theName] = XalanParamHolder(theManager, theExpression);
+    const XalanParamHolder  theHolder(theManager, theExpression);
+
+    m_stylesheetParams[theName] = theHolder;
 }
 
 
@@ -3072,7 +3074,9 @@ XSLTEngineImpl::setStylesheetParam(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    m_stylesheetParams[theName] = XalanParamHolder(theManager, theValue);
+    const XalanParamHolder  theHolder(theManager, theValue);
+
+    m_stylesheetParams[theName] = theHolder;
 }
 
 
@@ -3109,19 +3113,21 @@ XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&   executionCon
 
         if (theExpression.length() > 0)
         {
-            m_topLevelParams.push_back(
-                TopLevelArg(
-                    theManager,
-                    theQName,
-                    theExpression));
+            const TopLevelArg   theArg(
+                                    theManager,
+                                    theQName,
+                                    theExpression);
+
+            m_topLevelParams.push_back(theArg);
         }
         else
         {
-            m_topLevelParams.push_back(
-                TopLevelArg(
-                    theManager,
-                    theQName,
-                    theCurrent.m_value));
+            const TopLevelArg   theArg(
+                                    theManager,
+                                    theQName,
+                                    theCurrent.m_value);
+
+            m_topLevelParams.push_back(theArg);
         }
     }
 
