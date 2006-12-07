@@ -49,77 +49,77 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStre
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream				StreamType;
+    typedef ostream         StreamType;
 #else
-	typedef std::ostream		StreamType;
+    typedef std::ostream    StreamType;
 #endif
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
-	typedef int					StreamSizeType;
+    typedef int                 StreamSizeType;
 #else
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef streamsize			StreamSizeType;
+    typedef streamsize          StreamSizeType;
 #else
-	typedef std::streamsize		StreamSizeType;
+    typedef std::streamsize     StreamSizeType;
 #endif
 #endif
 
-	/**
-	 * Construct a XalanStdOutputStream instance for output to the
-	 * standard output device.
-	 *
-	 * @param theOutputStream output stream to use
-	 */
-    XalanStdOutputStream(StreamType&	theOutputStream,
+    /**
+     * Construct a XalanStdOutputStream instance for output to the
+     * standard output device.
+     *
+     * @param theOutputStream output stream to use
+     */
+    XalanStdOutputStream(StreamType&    theOutputStream,
                          MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
 
     static XalanStdOutputStream*
-    create( StreamType&	theOutputStream,
+    create( StreamType& theOutputStream,
             MemoryManagerType&  theManager);
 
     virtual
-	~XalanStdOutputStream();
+    ~XalanStdOutputStream();
 
 #if defined(XALAN_NEWLINE_IS_CRLF)
-	virtual void
-	newline();
+    virtual void
+    newline();
 
-	virtual const XalanDOMChar*
-	getNewlineString() const;
+    virtual const XalanDOMChar*
+    getNewlineString() const;
 #endif
 
 
-	class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
+    {
+    public:
 
-		XalanStdOutputStreamWriteException(int	theErrorCode,
-                                            XalanDOMString&		theResult);
+        XalanStdOutputStreamWriteException(int  theErrorCode,
+                                            XalanDOMString&     theResult);
 
-		virtual
-		~XalanStdOutputStreamWriteException();
+        virtual
+        ~XalanStdOutputStreamWriteException();
 
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
 
-	private:
+    private:
 
-		static const XalanDOMChar	m_type[];
+        static const XalanDOMChar   m_type[];
 
-	};
+    };
 
 protected:
 
-	virtual void
-	writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength);
+    virtual void
+    writeData(
+            const char*     theBuffer,
+            size_type       theBufferLength);
 
-	virtual void
-	doFlush();
+    virtual void
+    doFlush();
 
 private:
 
@@ -127,15 +127,15 @@ private:
     XalanStdOutputStream(const XalanStdOutputStream&);
 
     XalanStdOutputStream&
-	operator=(const XalanStdOutputStream&);
+    operator=(const XalanStdOutputStream&);
 
-	// Data members...
-	StreamType&					m_outputStream;
+    // Data members...
+    StreamType&                 m_outputStream;
 
 #if defined(XALAN_NEWLINE_IS_CRLF)
-	const XalanDOMChar*			m_newlineString;
+    const XalanDOMChar*         m_newlineString;
 
-	XalanDOMString::size_type	m_newlineStringLength;
+    XalanDOMString::size_type   m_newlineStringLength;
 #endif
 };
 
@@ -145,4 +145,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESSTDTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // XERCESSTDTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680

@@ -3050,6 +3050,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanParamHolder.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.cpp"
 				>
 			</File>

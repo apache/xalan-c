@@ -1,9 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApacheModuleXSLT", "ApacheModuleXSLT\ApacheModuleXSLT.vcproj", "{59F906AA-E1F0-46C4-9F08-97DFD1466396}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompileStylesheet", "CompileStylesheet\CompileStylesheet.vcproj", "{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD} = {2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}
@@ -120,12 +115,6 @@ Global
 		Release with symbols = Release with symbols
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Debug.ActiveCfg = Debug|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Debug.Build.0 = Debug|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release.ActiveCfg = Release|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release.Build.0 = Release|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release with symbols.ActiveCfg = Release|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release with symbols.Build.0 = Release|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Debug.ActiveCfg = Debug|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Debug.Build.0 = Debug|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Release.ActiveCfg = Release|Win32
@@ -247,8 +236,11 @@ Global
 		{E18F5989-80D9-46E7-9588-F5411C1DA8DE}.Release with symbols.ActiveCfg = Release with symbols|Win32
 		{E18F5989-80D9-46E7-9588-F5411C1DA8DE}.Release with symbols.Build.0 = Release with symbols|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Debug.ActiveCfg = Debug|Win32
+		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Debug.Build.0 = Debug|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Release.ActiveCfg = Release|Win32
+		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Release.Build.0 = Release|Win32
 		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Release with symbols.ActiveCfg = Release with symbols|Win32
+		{2D6A569C-3EB7-4C39-9AD7-11DF57444FFD}.Release with symbols.Build.0 = Release with symbols|Win32
 		{058582AA-14DE-43A9-975E-6F36DB74924E}.Debug.ActiveCfg = Debug|Win32
 		{058582AA-14DE-43A9-975E-6F36DB74924E}.Debug.Build.0 = Debug|Win32
 		{058582AA-14DE-43A9-975E-6F36DB74924E}.Release.ActiveCfg = Release|Win32

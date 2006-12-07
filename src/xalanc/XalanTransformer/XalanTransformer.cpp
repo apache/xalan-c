@@ -109,8 +109,8 @@ XalanTransformer::XalanTransformer(MemoryManagerType& theManager):
     m_memoryManager(theManager),
     m_compiledStylesheets(m_memoryManager),
     m_parsedSources(m_memoryManager),
-    m_paramPairs(m_memoryManager),
-    m_functionPairs(m_memoryManager),
+    m_params(m_memoryManager),
+    m_functions(m_memoryManager),
     m_traceListeners(m_memoryManager),
     m_errorMessage(1, '\0', m_memoryManager),
     m_useValidation(false),
@@ -148,34 +148,23 @@ XalanTransformer::~XalanTransformer()
 {
     XALAN_USING_STD(for_each)
 
-    // Clean up all entries in the compliledStylesheets vector.
-    for_each(m_compiledStylesheets.begin(),
-             m_compiledStylesheets.end(),
-             DeleteFunctor<XalanCompiledStylesheet>(m_memoryManager));
+    // Clean up the XalanCompiledStylesheet vector.
+    for_each(
+        m_compiledStylesheets.begin(),
+        m_compiledStylesheets.end(),
+        DeleteFunctor<XalanCompiledStylesheet>(m_memoryManager));
 
-    // Clean up all entries in the compliledStylesheets vector.
-    for_each(m_parsedSources.begin(),
-             m_parsedSources.end(),
-             DeleteFunctor<XalanParsedSource>(m_memoryManager));
+    // Clean up the XalanParsedSource vector.
+    for_each(
+        m_parsedSources.begin(),
+        m_parsedSources.end(),
+        DeleteFunctor<XalanParsedSource>(m_memoryManager));
 
-    for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
-    {
-        if(m_functionPairs[i].second!= 0)
-        {
-            destroyObjWithMemMgr(
-                m_functionPairs[i].second,
-                m_memoryManager);
-        }
-    }
-
-    typedef ParamPairVectorType::iterator iterator;
-
-    for (iterator j = m_paramPairs.begin(); j != m_paramPairs.end(); ++j)
-    {
-
-        destroyObjWithMemMgr((*j).first, m_memoryManager);
-        destroyObjWithMemMgr((*j).second, m_memoryManager);
-    }
+    // Clean up the Function map.
+    for_each(
+        m_functions.begin(),
+        m_functions.end(),
+        MapValueDeleteFunctor<FunctionMapType>(m_memoryManager));
 
 #if defined(XALAN_USE_ICU)
     // Uninstall the ICU collation compare functor, and destroy it...
@@ -216,7 +205,7 @@ XalanTransformer::terminate()
     assert( s_initMemoryManager!= 0 );
 
     {
-        EnsureFunctionsInstallation     uninstalGuard(*s_initMemoryManager);
+        const EnsureFunctionsInstallation   uninstallGuard(*s_initMemoryManager);
     }
 
     delete s_emptyInputSource;
@@ -226,10 +215,6 @@ XalanTransformer::terminate()
     s_emptyInputSource = 0;
     s_xsltInit = 0;
     s_initMemoryManager = 0;
-
-#if defined(XALAN_USE_ICU)
-    ICUBridgeCleanup::cleanup();
-#endif
 }
 
 
@@ -853,30 +838,12 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*  theParsedSource)
 
 void
 XalanTransformer::setStylesheetParam(
-            const XalanDOMString&   key,
-            const XalanDOMString&   expression)
-{
-    m_paramPairs.push_back(
-        ParamPairType(
-            cloneObjWithMemMgr(
-                key,
-                m_memoryManager),
-            cloneObjWithMemMgr(
-                expression,
-                m_memoryManager)));
-}
-
-
-
-void
-XalanTransformer::setStylesheetParam(
-            const char*     key,
+            const char*     qname,
             const char*     expression)
 {
-
     setStylesheetParam(
         XalanDOMString(
-            key,
+            qname,
             m_memoryManager),
         XalanDOMString(
             expression,
@@ -939,13 +906,19 @@ XalanTransformer::installExternalFunction(
             const XalanDOMString&   functionName,
             const Function&         function)
 {
-    m_functionPairs.push_back(
-        FunctionPairType(
-            XalanQNameByValue::create(
-                theNamespace,
-                functionName,
-                m_memoryManager),
-            function.clone(m_memoryManager)));
+    const XalanQNameByValue     theQName(theNamespace, functionName, m_memoryManager);
+
+    Function*&  theFunction =
+        m_functions[theQName];
+
+    Function* const     theOldFunction =
+        theFunction;
+
+    theFunction = function.clone(m_memoryManager);
+
+    XalanDestroy(
+        m_memoryManager,
+        theOldFunction);
 }
 
 
@@ -969,18 +942,22 @@ XalanTransformer::uninstallExternalFunction(
             const XalanDOMString&   theNamespace,
             const XalanDOMString&   functionName)
 {
-    for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
+    const XalanQNameByValue     theQName(theNamespace, functionName, m_memoryManager);
+
+    FunctionMapType::iterator   i =
+        m_functions.find(theQName);
+
+    if (i != m_functions.end())
     {
-        if(m_functionPairs[i].first != 0 &&
-            XalanQNameByReference(theNamespace, functionName).equals(* (m_functionPairs[i].first)))
-        {
-            destroyObjWithMemMgr( m_functionPairs[i].first, m_memoryManager);
+        Function* const     theFunction = (*i).second;
+        assert(theFunction != 0);
 
-            destroyObjWithMemMgr( m_functionPairs[i].second, m_memoryManager);
+        m_functions.erase(i);
 
-            m_functionPairs.erase(m_functionPairs.begin() + i);     
-        }
-    }   
+        XalanDestroy(
+            m_memoryManager,
+            *theFunction);
+    }
 }
 
 
@@ -1143,23 +1120,7 @@ XalanTransformer::reset()
 
         m_stylesheetExecutionContext->reset();
 
-        // Clear the ParamPairVectorType.
-        XALAN_USING_STD(for_each)
-
-/*        for_each(m_paramPairs.begin(),
-                m_paramPairs.end(),
-                DeleteParamPairFunctor<ParamPairType>(m_memoryManager));
-*/
-        typedef ParamPairVectorType::iterator iterator;
-
-        for (iterator j = m_paramPairs.begin(); j != m_paramPairs.end(); ++j)
-        {
-    
-            destroyObjWithMemMgr((*j).first, m_memoryManager);
-            destroyObjWithMemMgr((*j).second, m_memoryManager);
-        }     
-
-        m_paramPairs.clear();
+        clearStylesheetParams();
     }
     catch(...)
     {
@@ -1224,15 +1185,15 @@ XalanTransformer::doTransform(
 
         // Set the functions if any.
         {
-            for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
+            for (FunctionMapType::const_iterator i = m_functions.begin();
+                    i != m_functions.end(); ++i)
             {
-                assert( m_functionPairs[i].first != 0);
-                assert( m_functionPairs[i].second != 0);
+                assert((*i).second != 0);
 
                 theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-                        m_functionPairs[i].first->getNamespace(),
-                        m_functionPairs[i].first->getLocalPart(),
-                        *m_functionPairs[i].second);
+                        (*i).first.getNamespace(),
+                        (*i).first.getLocalPart(),
+                        *(*i).second);
             }
         }
 
@@ -1278,15 +1239,18 @@ XalanTransformer::doTransform(
         }
 
         {
-            // Set the parameters if any.
-            for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
-            {
-                assert ( m_paramPairs[i].first != 0);
-                assert ( m_paramPairs[i].second != 0);
+            typedef ParamMapType::const_iterator    const_iterator;
 
+            theProcessor.clearStylesheetParams();
+
+            // Set the parameters if any.
+            for (const_iterator i = m_params.begin();
+                    i != m_params.end();
+                        ++i)
+            {
                 theProcessor.setStylesheetParam(
-                        * (m_paramPairs[i].first),
-                        * (m_paramPairs[i].second));
+                        (*i).first,
+                        (*i).second);
             }
         }
 

@@ -406,25 +406,69 @@ struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function
 
 
 
-template <class T>
-struct hash_null_terminated_arrays : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+template <class ScalarType>
+inline size_t
+XalanScalarHash(
+            ScalarType  theValue,
+            size_t      theResult)
 {
-    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>        BaseClassType;
+    return (theResult * 37) + (theResult >> 24) + size_type(theValue);
+}
 
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::argument_type       argument_type;
+
+
+template <class T>
+struct hash_non_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+{
+    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
+
+    typedef typename BaseClassType::result_type     result_type;
+    typedef typename BaseClassType::argument_type   argument_type;
 
     result_type
-    operator() (argument_type   theKey) const
+    operator() (
+        argument_type   theKey,
+        result_type     theLength,
+        result_type     theInitialValue = 0) const
     {
-        const T*        theRawBuffer = theKey;
+        result_type     theHashValue = theInitialValue; 
 
-        result_type     theHashValue = 0; 
+        const argument_type     theEnd =
+                theKey + theLength;
 
-        while (*theRawBuffer)
+        while (theKey != theEnd)
         {
-            theHashValue = 5 * theHashValue + *theRawBuffer;
-            ++theRawBuffer;
+            theHashValue += XalanScalarHash(*theKey, theHashValue);
+
+            ++theKey;
+        }
+
+        return ++theHashValue;
+    }
+};
+
+
+
+template <class T>
+struct hash_null_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+{
+    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
+
+    typedef typename BaseClassType::result_type     result_type;
+    typedef typename BaseClassType::argument_type   argument_type;
+
+    result_type
+    operator() (
+        argument_type   theKey,
+        result_type     theInitialValue = 0) const
+    {
+        result_type     theHashValue = theInitialValue; 
+
+        while (*theKey)
+        {
+            theHashValue += XalanScalarHash(*theKey, theHashValue);
+
+            ++theKey;
         }
 
         return ++theHashValue;
@@ -436,7 +480,7 @@ struct hash_null_terminated_arrays : public XALAN_STD_QUALIFIER unary_function<c
 template<>
 struct XalanMapKeyTraits<const XalanDOMChar*>
 {
-    typedef hash_null_terminated_arrays<XalanDOMChar>   Hasher;
+    typedef hash_null_terminated_array<XalanDOMChar>   Hasher;
     typedef equal_null_terminated_arrays<XalanDOMChar>  Comparator;
 };
 

@@ -28,6 +28,7 @@
 
 
 
+#include <xalanc/Include/STLHelper.hpp>
 #include <xalanc/Include/XalanMemoryManagement.hpp>
 #include <xalanc/Include/XalanVector.hpp>
 
@@ -44,618 +45,618 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XALAN_DOM_EXPORT XalanDOMString
 {
 public:
-	typedef XalanVector<XalanDOMChar>		XalanDOMCharVectorType;
-	typedef XalanVector<char>				CharVectorType;
-	typedef XalanVector<wchar_t>			WideCharVectorType;
+    typedef XalanVector<XalanDOMChar>       XalanDOMCharVectorType;
+    typedef XalanVector<char>               CharVectorType;
+    typedef XalanVector<wchar_t>            WideCharVectorType;
 
-	typedef XalanDOMChar				value_type;
-	typedef XalanDOMChar&				reference;
-	typedef const XalanDOMChar&			const_reference;
+    typedef XalanDOMChar                value_type;
+    typedef XalanDOMChar&               reference;
+    typedef const XalanDOMChar&         const_reference;
 
     typedef unsigned int    size_type;
 
-	typedef XalanDOMCharVectorType::iterator				iterator;
-	typedef XalanDOMCharVectorType::const_iterator			const_iterator;
-	typedef XalanDOMCharVectorType::reverse_iterator		reverse_iterator;
-	typedef XalanDOMCharVectorType::const_reverse_iterator	const_reverse_iterator;
+    typedef XalanDOMCharVectorType::iterator                iterator;
+    typedef XalanDOMCharVectorType::const_iterator          const_iterator;
+    typedef XalanDOMCharVectorType::reverse_iterator        reverse_iterator;
+    typedef XalanDOMCharVectorType::const_reverse_iterator  const_reverse_iterator;
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const size_type	npos = ~0u;
+    static const size_type  npos = ~0u;
 #else
-	enum { npos = -1 };
+    enum { npos = -1 };
 #endif
 
-	XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR );
+    XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR );
 
-	explicit
-	XalanDOMString(
-			const char*		    theString,
+    explicit
+    XalanDOMString(
+            const char*         theString,
             MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR,
-			size_type		    theCount = size_type(npos));
+            size_type           theCount = size_type(npos));
 
-	XalanDOMString(
-			const XalanDOMString&	theSource,
+    XalanDOMString(
+            const XalanDOMString&   theSource,
             MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
-			size_type				theStartPosition = 0,
-			size_type				theCount = size_type(npos));
+            size_type               theStartPosition = 0,
+            size_type               theCount = size_type(npos));
 
-	explicit
-	XalanDOMString(
-			const XalanDOMChar*		theString,
+    explicit
+    XalanDOMString(
+            const XalanDOMChar*     theString,
             MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR,
-			size_type				theCount = size_type(npos));
+            size_type               theCount = size_type(npos));
 
-	XalanDOMString(
-			size_type		theCount,
-			XalanDOMChar	theChar,
+    XalanDOMString(
+            size_type       theCount,
+            XalanDOMChar    theChar,
             MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
 
     XalanDOMString*
     clone(MemoryManagerType&  theManager);
 
-	~XalanDOMString()
-	{
-	}
+    ~XalanDOMString()
+    {
+    }
 
-	XalanDOMString&
-	operator=(const XalanDOMString&	theRHS)
-	{
-		return assign(theRHS);
-	}
+    XalanDOMString&
+    operator=(const XalanDOMString& theRHS)
+    {
+        return assign(theRHS);
+    }
 
-	XalanDOMString&
-	operator=(const XalanDOMChar*	theRHS)
-	{
-		return assign(theRHS);
-	}
+    XalanDOMString&
+    operator=(const XalanDOMChar*   theRHS)
+    {
+        return assign(theRHS);
+    }
 
-	XalanDOMString&
-	operator=(const char*	theRHS)
-	{
-		return assign(theRHS);
-	}
+    XalanDOMString&
+    operator=(const char*   theRHS)
+    {
+        return assign(theRHS);
+    }
 
-	XalanDOMString&
-	operator=(XalanDOMChar	theRHS)
-	{
-		return assign(1, theRHS);
-	}
+    XalanDOMString&
+    operator=(XalanDOMChar  theRHS)
+    {
+        return assign(1, theRHS);
+    }
 
-	iterator
-	begin()
-	{
-		invariants();
+    iterator
+    begin()
+    {
+        invariants();
 
-		return m_data.begin();
-	}
+        return m_data.begin();
+    }
 
-	const_iterator
-	begin() const
-	{
-		invariants();
+    const_iterator
+    begin() const
+    {
+        invariants();
 
-		return m_data.begin();
-	}
+        return m_data.begin();
+    }
 
-	iterator
-	end()
-	{
-		invariants();
+    iterator
+    end()
+    {
+        invariants();
 
-		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
-	}
+        return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
+    }
 
-	const_iterator
-	end() const
-	{
-		invariants();
+    const_iterator
+    end() const
+    {
+        invariants();
 
-		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
-	}
+        return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
+    }
 
-	reverse_iterator
-	rbegin()
-	{
-		invariants();
+    reverse_iterator
+    rbegin()
+    {
+        invariants();
 
-		reverse_iterator	i = m_data.rbegin();
+        reverse_iterator    i = m_data.rbegin();
 
-		if (m_data.empty() == false)
-		{
-			++i;
-		}
+        if (m_data.empty() == false)
+        {
+            ++i;
+        }
 
-		return i;
-	}
+        return i;
+    }
 
-	const_reverse_iterator
-	rbegin() const
-	{
-		invariants();
+    const_reverse_iterator
+    rbegin() const
+    {
+        invariants();
 
-		const_reverse_iterator	i = m_data.rbegin();
+        const_reverse_iterator  i = m_data.rbegin();
 
-		if (m_data.empty() == false)
-		{
-			++i;
-		}
+        if (m_data.empty() == false)
+        {
+            ++i;
+        }
 
-		return i;
-	}
+        return i;
+    }
 
-	reverse_iterator
-	rend()
-	{
-		invariants();
+    reverse_iterator
+    rend()
+    {
+        invariants();
 
-		return m_data.rend();
-	}
+        return m_data.rend();
+    }
 
-	const_reverse_iterator
-	rend() const
-	{
-		invariants();
+    const_reverse_iterator
+    rend() const
+    {
+        invariants();
 
-		return m_data.rend();
-	}
+        return m_data.rend();
+    }
 
-	size_type
-	size() const
-	{
-		invariants();
+    size_type
+    size() const
+    {
+        invariants();
 
-		return m_size;
-	}
+        return m_size;
+    }
 
-	size_type
-	length() const
-	{
-		invariants();
+    size_type
+    length() const
+    {
+        invariants();
 
-		return size();
-	}
+        return size();
+    }
 
-	size_type
-	max_size() const
-	{
-		invariants();
+    size_type
+    max_size() const
+    {
+        invariants();
 
-		return ~size_type(0);
-	}
+        return ~size_type(0);
+    }
 
-	void
-	resize(
-			size_type		theCount,
-			XalanDOMChar	theChar);
+    void
+    resize(
+            size_type       theCount,
+            XalanDOMChar    theChar);
 
-	void
-	resize(size_type	theCount)
-	{
-		invariants();
+    void
+    resize(size_type    theCount)
+    {
+        invariants();
 
-		resize(theCount, XalanDOMChar(0));
-	}
+        resize(theCount, XalanDOMChar(0));
+    }
 
-	size_type
-	capacity() const
-	{
-		invariants();
+    size_type
+    capacity() const
+    {
+        invariants();
 
         const XalanDOMCharVectorType::size_type     theCapacity =
                 m_data.capacity();
 
         return theCapacity == 0 ? 0 : size_type(theCapacity - 1);
-	}
+    }
 
-	void
-	reserve(size_type	theCount = 0)
-	{
-		invariants();
+    void
+    reserve(size_type   theCount = 0)
+    {
+        invariants();
 
-		m_data.reserve(theCount + 1);
-	}
+        m_data.reserve(theCount + 1);
+    }
 
-	void
-	clear()
-	{
-		invariants();
+    void
+    clear()
+    {
+        invariants();
 
-		m_data.erase(m_data.begin(), m_data.end());
+        m_data.erase(m_data.begin(), m_data.end());
 
-		m_size = 0;
+        m_size = 0;
 
-		invariants();
-	}
+        invariants();
+    }
 
-	void
-	erase(
-			size_type	theStartPosition = 0,
-			size_type	theCount = size_type(npos));
+    void
+    erase(
+            size_type   theStartPosition = 0,
+            size_type   theCount = size_type(npos));
 
-	bool
-	empty() const
-	{
-		invariants();
+    bool
+    empty() const
+    {
+        invariants();
 
-		return m_size == 0 ? true : false;
-	}
+        return m_size == 0 ? true : false;
+    }
 
-	const_reference
-	operator[](size_type	theIndex) const
-	{
-		invariants();
+    const_reference
+    operator[](size_type    theIndex) const
+    {
+        invariants();
 
-		return m_data[theIndex];
-	}
+        return m_data[theIndex];
+    }
 
-	reference
-	operator[](size_type	theIndex)
-	{
-		invariants();
+    reference
+    operator[](size_type    theIndex)
+    {
+        invariants();
 
-		return m_data[theIndex];
-	}
+        return m_data[theIndex];
+    }
 
-	const_reference
-	at(size_type	theIndex) const
-	{
-		invariants();
+    const_reference
+    at(size_type    theIndex) const
+    {
+        invariants();
 
-		return m_data.at(theIndex);
-	}
+        return m_data.at(theIndex);
+    }
 
-	reference
-	at(size_type	theIndex)
-	{
-		invariants();
+    reference
+    at(size_type    theIndex)
+    {
+        invariants();
 
-		return m_data.at(theIndex);
-	}
+        return m_data.at(theIndex);
+    }
 
-	const XalanDOMChar*
-	c_str() const
-	{
-		invariants();
+    const XalanDOMChar*
+    c_str() const
+    {
+        invariants();
 
-		return m_data.empty() == true ? &s_empty : &m_data[0];
-	}
+        return m_data.empty() == true ? &s_empty : &m_data[0];
+    }
 
-	const XalanDOMChar*
-	data() const
-	{
-		invariants();
+    const XalanDOMChar*
+    data() const
+    {
+        invariants();
 
-		return c_str();
-	}
+        return c_str();
+    }
 
-	void
-	swap(XalanDOMString&	theOther)
-	{
-		invariants();
+    void
+    swap(XalanDOMString&    theOther)
+    {
+        invariants();
 
-		m_data.swap(theOther.m_data);
+        m_data.swap(theOther.m_data);
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-		::swap(m_size, theOther.m_size);
+        ::swap(m_size, theOther.m_size);
 #else
-		std::swap(m_size, theOther.m_size);
+        std::swap(m_size, theOther.m_size);
 #endif
-	}
+    }
 
-	XalanDOMString&
-	operator+=(const XalanDOMString&	theSource)
-	{
-		return append(theSource);
-	}
+    XalanDOMString&
+    operator+=(const XalanDOMString&    theSource)
+    {
+        return append(theSource);
+    }
 
-	XalanDOMString&
-	operator+=(const XalanDOMChar*	theString)
-	{
-		return append(theString);
-	}
+    XalanDOMString&
+    operator+=(const XalanDOMChar*  theString)
+    {
+        return append(theString);
+    }
 
-	XalanDOMString&
-	operator+=(XalanDOMChar theChar)
-	{
-		append(1, theChar);
+    XalanDOMString&
+    operator+=(XalanDOMChar theChar)
+    {
+        append(1, theChar);
 
-		return *this;
-	}
+        return *this;
+    }
 
-	XalanDOMString&
-	assign(const XalanDOMChar*	theSource)
-	{
-		invariants();
+    XalanDOMString&
+    assign(const XalanDOMChar*  theSource)
+    {
+        invariants();
 
-		erase();
+        erase();
 
-		invariants();
+        invariants();
 
-		return append(theSource);
-	}
+        return append(theSource);
+    }
 
-	XalanDOMString&
-	assign(
-			const XalanDOMChar*		theSource,
-			size_type				theCount)
-	{
-		invariants();
+    XalanDOMString&
+    assign(
+            const XalanDOMChar*     theSource,
+            size_type               theCount)
+    {
+        invariants();
 
-		erase();
+        erase();
 
-		invariants();
+        invariants();
 
-		return append(theSource, theCount);
-	}
+        return append(theSource, theCount);
+    }
 
-	XalanDOMString&
-	assign(const char*	theSource)
-	{
-		invariants();
+    XalanDOMString&
+    assign(const char*  theSource)
+    {
+        invariants();
 
-		erase();
+        erase();
 
-		invariants();
+        invariants();
 
-		return append(theSource);
-	}
+        return append(theSource);
+    }
 
-	XalanDOMString&
-	assign(
-			const char*		theSource,
-			size_type		theCount)
-	{
-		invariants();
+    XalanDOMString&
+    assign(
+            const char*     theSource,
+            size_type       theCount)
+    {
+        invariants();
 
-		erase();
+        erase();
 
-		invariants();
+        invariants();
 
-		return append(theSource, theCount);
-	}
+        return append(theSource, theCount);
+    }
 
-	XalanDOMString&
-	assign(
-			const XalanDOMString&	theSource,
-			size_type				thePosition,
-			size_type				theCount);
+    XalanDOMString&
+    assign(
+            const XalanDOMString&   theSource,
+            size_type               thePosition,
+            size_type               theCount);
 
-	XalanDOMString&
-	assign(const XalanDOMString&	theSource)
-	{
-		invariants();
+    XalanDOMString&
+    assign(const XalanDOMString&    theSource)
+    {
+        invariants();
 
-		if (&theSource != this)
-		{
-			m_data = theSource.m_data;
+        if (&theSource != this)
+        {
+            m_data = theSource.m_data;
 
-			m_size = theSource.m_size;
-		}
+            m_size = theSource.m_size;
+        }
 
-		invariants();
+        invariants();
 
-		return *this;
-	}
+        return *this;
+    }
 
-	XalanDOMString&
-	assign(
-			size_type		theCount,
-			XalanDOMChar	theChar)
-	{
-		invariants();
+    XalanDOMString&
+    assign(
+            size_type       theCount,
+            XalanDOMChar    theChar)
+    {
+        invariants();
 
-		erase();
+        erase();
 
-		invariants();
+        invariants();
 
-		return append(theCount, theChar);
-	}
+        return append(theCount, theChar);
+    }
 
-	XalanDOMString&
-	assign(
-		iterator	theFirstPosition,
-		iterator	theLastPosition);
+    XalanDOMString&
+    assign(
+        iterator    theFirstPosition,
+        iterator    theLastPosition);
 
-	XalanDOMString&
-	append(const XalanDOMString&	theSource)
-	{
-		return append(theSource.c_str(), theSource.length());
-	}
+    XalanDOMString&
+    append(const XalanDOMString&    theSource)
+    {
+        return append(theSource.c_str(), theSource.length());
+    }
 
-	XalanDOMString&
-	append(
-			const XalanDOMString&	theSource,
-			size_type				thePosition,
-			size_type				theCount)
-	{
-		assert(thePosition < theSource.length() &&
-			   (theCount == size_type(npos) || thePosition + theCount <= theSource.length()));
+    XalanDOMString&
+    append(
+            const XalanDOMString&   theSource,
+            size_type               thePosition,
+            size_type               theCount)
+    {
+        assert(thePosition < theSource.length() &&
+               (theCount == size_type(npos) || thePosition + theCount <= theSource.length()));
 
-		return append(theSource.c_str() + thePosition, theCount);
-	}
+        return append(theSource.c_str() + thePosition, theCount);
+    }
 
-	XalanDOMString&
-	append(
-			const XalanDOMChar*		theString,
-			size_type				theCount);
+    XalanDOMString&
+    append(
+            const XalanDOMChar*     theString,
+            size_type               theCount);
 
-	XalanDOMString&
-	append(const XalanDOMChar*	theString)
-	{
-		return append(theString, length(theString));
-	}
+    XalanDOMString&
+    append(const XalanDOMChar*  theString)
+    {
+        return append(theString, length(theString));
+    }
 
-	XalanDOMString&
-	append(
-			const char*		theString,
-			size_type		theCount);
+    XalanDOMString&
+    append(
+            const char*     theString,
+            size_type       theCount);
 
-	XalanDOMString&
-	append(const char*	theString)
-	{
-		return append(theString, length(theString));
-	}
+    XalanDOMString&
+    append(const char*  theString)
+    {
+        return append(theString, length(theString));
+    }
 
-	XalanDOMString&
-	append(
-			size_type		theCount,
-			XalanDOMChar	theChar);
+    XalanDOMString&
+    append(
+            size_type       theCount,
+            XalanDOMChar    theChar);
 
-	void
-	push_back(XalanDOMChar	theChar)
-	{
-		invariants();
+    void
+    push_back(XalanDOMChar  theChar)
+    {
+        invariants();
 
-		append(1, theChar);
+        append(1, theChar);
 
-		invariants();
-	}
+        invariants();
+    }
 
-	XalanDOMString&
-	insert(
-			size_type				thePosition,
-			const XalanDOMString&	theString)
-	{
-		return insert(thePosition, theString.c_str(), theString.length());
-	}
+    XalanDOMString&
+    insert(
+            size_type               thePosition,
+            const XalanDOMString&   theString)
+    {
+        return insert(thePosition, theString.c_str(), theString.length());
+    }
 
-	XalanDOMString&
-	insert(
-			size_type				thePosition1,
-			const XalanDOMString&	theString,
-			size_type				thePosition2,
-			size_type				theCount)
-	{
-		return insert(thePosition1, theString.c_str() + thePosition2, theCount);
-	}
+    XalanDOMString&
+    insert(
+            size_type               thePosition1,
+            const XalanDOMString&   theString,
+            size_type               thePosition2,
+            size_type               theCount)
+    {
+        return insert(thePosition1, theString.c_str() + thePosition2, theCount);
+    }
 
-	XalanDOMString&
-	insert(
-			size_type				thePosition,
-			const XalanDOMChar*		theString,
-			size_type				theCount);
+    XalanDOMString&
+    insert(
+            size_type               thePosition,
+            const XalanDOMChar*     theString,
+            size_type               theCount);
 
-	XalanDOMString&
-	insert(
-			size_type				thePosition,
-			const XalanDOMChar*		theString)
-	{
-		return insert(thePosition, theString, length(theString));
-	}
+    XalanDOMString&
+    insert(
+            size_type               thePosition,
+            const XalanDOMChar*     theString)
+    {
+        return insert(thePosition, theString, length(theString));
+    }
 
-	XalanDOMString&
-	insert(
-			size_type		thePosition,
-			size_type		theCount,
-			XalanDOMChar	theChar);
+    XalanDOMString&
+    insert(
+            size_type       thePosition,
+            size_type       theCount,
+            XalanDOMChar    theChar);
 
-	iterator
-	insert(
-			iterator		thePosition,
-			XalanDOMChar	theChar);
+    iterator
+    insert(
+            iterator        thePosition,
+            XalanDOMChar    theChar);
 
-	void
-	insert(
-			iterator		thePosition,
-			size_type		theCount,
-			XalanDOMChar	theChar);
+    void
+    insert(
+            iterator        thePosition,
+            size_type       theCount,
+            XalanDOMChar    theChar);
 
-	void
-	insert(
-		iterator		theInsertPosition,
-		iterator	theFirstPosition,
-		iterator	theLastPosition);
+    void
+    insert(
+        iterator    theInsertPosition,
+        iterator    theFirstPosition,
+        iterator    theLastPosition);
 
 
-	XalanDOMString&
-	substr(
-			XalanDOMString&		theSubstring,
-			size_type			thePosition = 0,
-			size_type			theCount = size_type(npos)) const
-	{
-		assert(theCount == size_type(npos) && thePosition < length() ||
-			   thePosition + theCount <= length());
+    XalanDOMString&
+    substr(
+            XalanDOMString&     theSubstring,
+            size_type           thePosition = 0,
+            size_type           theCount = size_type(npos)) const
+    {
+        assert(theCount == size_type(npos) && thePosition < length() ||
+               thePosition + theCount <= length());
 
-		invariants();
+        invariants();
 
-		return theSubstring.assign(*this, thePosition, theCount);
-	}
+        return theSubstring.assign(*this, thePosition, theCount);
+    }
 
-	int
-	compare(const XalanDOMString&	theString) const
-	{
-		invariants();
+    int
+    compare(const XalanDOMString&   theString) const
+    {
+        invariants();
 
-		return compare(theString.c_str());
-	}
+        return compare(theString.c_str());
+    }
 
-	int
-	compare(
-			size_type				thePosition1,
-			size_type				theCount1,
-			const XalanDOMString&	theString) const
-	{
-		invariants();
+    int
+    compare(
+            size_type               thePosition1,
+            size_type               theCount1,
+            const XalanDOMString&   theString) const
+    {
+        invariants();
 
-		return compare(thePosition1, theCount1, theString.c_str(), theString.length());
-	}
+        return compare(thePosition1, theCount1, theString.c_str(), theString.length());
+    }
 
-	int
-	compare(
-			size_type				thePosition1,
-			size_type				theCount1,
-			const XalanDOMString&	theString,
-			size_type				thePosition2,
-			size_type				theCount2) const
-	{
-		invariants();
+    int
+    compare(
+            size_type               thePosition1,
+            size_type               theCount1,
+            const XalanDOMString&   theString,
+            size_type               thePosition2,
+            size_type               theCount2) const
+    {
+        invariants();
 
-		return compare(thePosition1, theCount1, theString.c_str() + thePosition2, theCount2);
-	}
+        return compare(thePosition1, theCount1, theString.c_str() + thePosition2, theCount2);
+    }
 
-	int
-	compare(const XalanDOMChar*		theString) const;
+    int
+    compare(const XalanDOMChar*     theString) const;
 
-	int
-	compare(
-			size_type				thePosition1,
-			size_type				theCount1,
-			const XalanDOMChar*		theString,
-			size_type				theCount2 = size_type(npos)) const;
+    int
+    compare(
+            size_type               thePosition1,
+            size_type               theCount1,
+            const XalanDOMChar*     theString,
+            size_type               theCount2 = size_type(npos)) const;
 
 
     void 
-    reset(MemoryManagerType& theManager, const char*	theString);
+    reset(MemoryManagerType& theManager, const char*    theString);
 
     void 
     reset(MemoryManagerType& theManager, const XalanDOMChar* theString);
 
-	class TranscodingError : public XalanDOMException
-	{
-	public:
+    class TranscodingError : public XalanDOMException
+    {
+    public:
 
-		TranscodingError() :
-			XalanDOMException(TRANSCODING_ERR)
-		{
-		}
+        TranscodingError() :
+            XalanDOMException(TRANSCODING_ERR)
+        {
+        }
 
-		virtual
-		~TranscodingError()
-		{
-		}
-	};
+        virtual
+        ~TranscodingError()
+        {
+        }
+    };
 
 
 
-	/**
-	 * Transcode the string to the local code page.  If the string
-	 * cannot be properly transcoded, and the transcoder can detect
-	 * the error a TranscodingError exception is thrown.
-	 *
-	 * @param theResult A CharVectorType instance for the transcoded string.  The string is null-terminated.
-	 */
-	void
-	transcode(CharVectorType&	theResult) const;
+    /**
+     * Transcode the string to the local code page.  If the string
+     * cannot be properly transcoded, and the transcoder can detect
+     * the error a TranscodingError exception is thrown.
+     *
+     * @param theResult A CharVectorType instance for the transcoded string.  The string is null-terminated.
+     */
+    void
+    transcode(CharVectorType&   theResult) const;
 
     MemoryManagerType&
     getMemoryManager()
@@ -663,125 +664,130 @@ public:
         return m_data.getMemoryManager();
     }
 
-	size_type
-	hash() const
-	{
-		return hash(c_str(), size());
-	}
+    size_t
+    hash() const
+    {
+        return hash(c_str(), length());
+    }
 
-	static bool
-	equals(
-			const XalanDOMChar*		theLHS,
-			size_type				theLHSLength,
-			const XalanDOMChar*		theRHS,
-			size_type				theRHSLength);
+    static size_t
+    hash(
+            const XalanDOMChar*     theString,
+            size_type               theLength)
+    {
+        assert(theString != 0);
 
-	static bool
-	equals(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-	{
-		return equals(theLHS, length(theLHS), theRHS, length(theRHS));
-	}
+        return hash_non_terminated_array<XalanDOMChar>()(theString, theLength);
+    }
 
-	static bool
-	equals(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+    static bool
+    equals(
+            const XalanDOMChar*     theLHS,
+            size_type               theLHSLength,
+            const XalanDOMChar*     theRHS,
+            size_type               theRHSLength);
 
-	static bool
-	equals(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-	{
-		return equals(theLHS.c_str(), theRHS);
-	}
+    static bool
+    equals(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMChar*     theRHS)
+    {
+        return equals(theLHS, length(theLHS), theRHS, length(theRHS));
+    }
 
-	static bool
-	equals(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-	{
-		return equals(theLHS, theRHS.c_str());
-	}
+    static bool
+    equals(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS);
 
-	/*
-	 * Helper function to determine the length of a null-
-	 * terminated string.
-	 *
-	 * @theString The string
-	 * @return the length
-	 */
-	static size_type
-	length(const XalanDOMChar*	theString);
+    static bool
+    equals(
+            const XalanDOMString&   theLHS,
+            const XalanDOMChar*     theRHS)
+    {
+        return equals(theLHS.c_str(), theRHS);
+    }
 
-	/*
-	 * Helper function to determine the length of a null-
-	 * terminated string.
-	 *
-	 * @theString The string
-	 * @return the length
-	 */
-	static size_type
-	length(const char*	theString);
+    static bool
+    equals(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMString&   theRHS)
+    {
+        return equals(theLHS, theRHS.c_str());
+    }
 
-	static size_type
-	hash(
-			const XalanDOMChar*		theString,
-			size_type				theLength);
+    /*
+     * Helper function to determine the length of a null-
+     * terminated string.
+     *
+     * @theString The string
+     * @return the length
+     */
+    static size_type
+    length(const XalanDOMChar*  theString);
+
+    /*
+     * Helper function to determine the length of a null-
+     * terminated string.
+     *
+     * @theString The string
+     * @return the length
+     */
+    static size_type
+    length(const char*  theString);
 
 protected:
 
-	/*
-	 * Function to assert invariant conditions for the class.
-	 *
-	 * @return the iterator
-	 */
-	void
-	invariants() const
-	{
+    /*
+     * Function to assert invariant conditions for the class.
+     *
+     * @return the iterator
+     */
+    void
+    invariants() const
+    {
 #if !defined(NDEBUG)
-		assert((m_data.empty() == true && m_size == 0) || m_size == m_data.size() - 1);
-		assert(m_data.empty() == true || m_data.back() == 0);
+        assert((m_data.empty() == true && m_size == 0) || m_size == m_data.size() - 1);
+        assert(m_data.empty() == true || m_data.back() == 0);
 #endif
-	}
+    }
 
-	/*
-	 * Get an iterator to the position of the terminating null.
-	 *
-	 * @return the iterator
-	 */
-	iterator
-	getBackInsertIterator()
-	{
-		invariants();
+    /*
+     * Get an iterator to the position of the terminating null.
+     *
+     * @return the iterator
+     */
+    iterator
+    getBackInsertIterator()
+    {
+        invariants();
 
-		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
-	}
+        return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
+    }
 
-	const_iterator
-	getBackInsertIterator() const
-	{
-		invariants();
+    const_iterator
+    getBackInsertIterator() const
+    {
+        invariants();
 
-		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
-	}
+        return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
+    }
 
-	iterator
-	getIteratorForPosition(size_type	thePosition)
-	{
-		invariants();
+    iterator
+    getIteratorForPosition(size_type    thePosition)
+    {
+        invariants();
 
-		return m_data.begin() + thePosition;
-	}
+        return m_data.begin() + thePosition;
+    }
 
-	const_iterator
-	getIteratorForPosition(size_type	thePosition) const
-	{
-		invariants();
+    const_iterator
+    getIteratorForPosition(size_type    thePosition) const
+    {
+        invariants();
 
-		return m_data.begin() + thePosition;
-	}
+        return m_data.begin() + thePosition;
+    }
 
 #if defined (XALAN_DEVELOPMENT)
     // not defined
@@ -792,149 +798,322 @@ protected:
 private:
 
 
-	XalanDOMCharVectorType		m_data;
+    XalanDOMCharVectorType      m_data;
 
-	size_type					m_size;
+    size_type                   m_size;
 
-	static const XalanDOMChar	s_empty;
+    static const XalanDOMChar   s_empty;
+};
+
+
+
+/**
+ * Hash functor for DOMStrings
+ * 
+ * @param theKey XalanDOMString to be hashed
+ * @return hash value for XalanDOMString
+ */
+struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString&, size_t>
+{
+    result_type
+    operator() (argument_type   theKey) const
+    {
+        return theKey.hash();
+    }
+};
+
+
+
+/**
+ * Hash functor for DOMStrings
+ * 
+ * @param theKey XalanDOMString to be hashed
+ * @return hash value for XalanDOMString
+ */
+struct DOMStringPointerHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString*, size_t>
+{
+    result_type
+    operator() (argument_type   theKey) const
+    {
+        assert (theKey != 0);
+
+        return theKey->hash();
+    }
+};
+
+
+
+template<>
+struct XalanMapKeyTraits<XalanDOMString*>
+{
+    typedef DOMStringPointerHashFunction    Hasher;
+    typedef pointer_equal<XalanDOMString>   Comparator;
+};
+
+template<>
+struct XalanMapKeyTraits<const XalanDOMString*>
+{
+    typedef DOMStringPointerHashFunction    Hasher;
+    typedef pointer_equal<XalanDOMString>   Comparator;
+};
+
+
+/**
+ * Equals functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_STD_NAMESPACE)
+struct DOMStringEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+    result_type
+    operator() (first_argument_type     theLHS,
+                second_argument_type    theRHS) const
+    {
+        return XalanDOMString::equals(theLHS, theRHS);
+    }
+};
+
+
+
+/**
+ * Not equals functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the contents of both strings are identical
+ */
+#if defined(XALAN_NO_STD_NAMESPACE)
+struct DOMStringNotEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+    result_type
+    operator() (first_argument_type     theLHS,
+                second_argument_type    theRHS) const
+    {
+        return !XalanDOMString::equals(theLHS, theRHS);
+    }
+};
+
+
+
+/**
+ * Less than functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is less than theRHSl
+ */
+#if defined(XALAN_NO_STD_NAMESPACE)
+struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#else
+struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
+#endif
+{
+    result_type
+    operator() (first_argument_type     theLHS,
+                second_argument_type    theRHS) const
+    {
+        return theLHS.compare(theRHS) < 0 ? true : false;
+    }
+};
+
+
+/**
+ * Equal to functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is equal to theRHS
+ */
+struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+{
+    result_type
+    operator() (first_argument_type     theLHS,
+                second_argument_type    theRHS) const
+    {
+        assert(theLHS != 0 && theRHS != 0);
+
+        return XalanDOMString::equals(*theLHS, *theRHS);
+    }
+};
+
+
+/**
+ * Less than functor for DOMStrings
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return true if the theLHS is less than theRHSl
+ */
+#if defined(XALAN_NO_STD_NAMESPACE)
+struct DOMStringPointerLessThanFunction : public binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+#else
+struct DOMStringPointerLessThanFunction : public std::binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+#endif
+{
+    result_type
+    operator() (first_argument_type     theLHS,
+                second_argument_type    theRHS) const
+    {
+        assert(theLHS != 0 && theRHS != 0);
+
+        return theLHS->compare(*theRHS) < 0 ? true : false;
+    }
+};
+
+
+
+template<>
+struct XalanMapKeyTraits<XalanDOMString>
+{
+    typedef DOMStringHashFunction                           Hasher;
+    typedef XALAN_STD_QUALIFIER equal_to<XalanDOMString>    Comparator;
 };
 
 
 
 inline bool
 operator==(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS)
 {
-	return XalanDOMString::equals(theLHS, theRHS);
+    return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
 
 inline bool
 operator==(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
+            const XalanDOMString&   theLHS,
+            const XalanDOMChar*     theRHS)
 {
-	return XalanDOMString::equals(theLHS, theRHS);
+    return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
 
 inline bool
 operator==(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
+            const XalanDOMChar*     theLHS,
+            const XalanDOMString&   theRHS)
 {
-	// Note reversing of operands...
-	return XalanDOMString::equals(theLHS, theRHS);
+    // Note reversing of operands...
+    return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
 
 inline bool
 operator!=(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS)
 {
-	return !(theLHS == theRHS);
+    return !(theLHS == theRHS);
 }
 
 
 
 inline bool
 operator!=(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
+            const XalanDOMChar*     theLHS,
+            const XalanDOMString&   theRHS)
 {
-	return !(theLHS == theRHS);
+    return !(theLHS == theRHS);
 }
 
 
 
 inline bool
 operator!=(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
+            const XalanDOMString&   theLHS,
+            const XalanDOMChar*     theRHS)
 {
-	return !(theRHS == theLHS);
+    return !(theRHS == theLHS);
 }
 
 
 
 inline XalanDOMString&
 add(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS,
             XalanDOMString&         result)
 {
     result.assign(theLHS);
 
-	return result += theRHS;
+    return result += theRHS;
 }
 
 
 
 inline XalanDOMString&
 add(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS,
+            const XalanDOMString&   theLHS,
+            const XalanDOMChar*     theRHS,
             XalanDOMString&         result)
 {
     result.assign(theLHS);
 
-	return result += theRHS;
+    return result += theRHS;
 }
 
 
 
 inline XalanDOMString&
 add(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS,
+            const XalanDOMChar*     theLHS,
+            const XalanDOMString&   theRHS,
             XalanDOMString&         result)
 {
     result.assign(theLHS);
 
-	return result += theRHS;
+    return result += theRHS;
 }
 
 
 
 inline const XalanDOMString&
 add(
-			const char*				theLHS,
-			const XalanDOMString&	theRHS,
+            const char*             theLHS,
+            const XalanDOMString&   theRHS,
             XalanDOMString&         result)
 {
     result.assign(theLHS);
 
     result.append(theRHS);
 
-	return result;
+    return result;
 }
 
 
 
 inline const XalanDOMString&
 add(
-			const XalanDOMString&	theLHS,
-			const char*				theRHS,
+            const XalanDOMString&   theLHS,
+            const char*             theRHS,
             XalanDOMString&         result)
 {
     result.assign(theLHS);
     
     result.append(theRHS);
 
-	return result;
+    return result;
 }
 
 
 
 // Standard vector of XalanDOMChars and chars
-typedef XalanVector<XalanDOMChar>	XalanDOMCharVectorType;
+typedef XalanVector<XalanDOMChar>   XalanDOMCharVectorType;
 
-typedef XalanVector<char>			CharVectorType;
+typedef XalanVector<char>           CharVectorType;
 
 
 
@@ -953,10 +1132,10 @@ typedef XalanVector<char>			CharVectorType;
  */
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeToLocalCodePage(
-			const XalanDOMChar*			theSourceString,
-			XalanDOMString::size_type	theSourceStringLength,
-			CharVectorType&				targetVector,
-			bool						terminate = false);
+            const XalanDOMChar*         theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            CharVectorType&             targetVector,
+            bool                        terminate = false);
 
 /**
  * Convert a XalanDOMChar string to C++ standard library
@@ -990,10 +1169,10 @@ TranscodeToLocalCodePage(
 #if !defined(XALAN_DEVELOPMENT)
 inline const XalanDOMString
 TranscodeFromLocalCodePage(
-			const char*					theSourceString,
-			XalanDOMString::size_type	theSourceStringLength = XalanDOMString::npos)
+            const char*                 theSourceString,
+            XalanDOMString::size_type   theSourceStringLength = XalanDOMString::npos)
 {
-	return XalanDOMString(theSourceString,XalanMemMgrs::getDefaultXercesMemMgr(), theSourceStringLength);
+    return XalanDOMString(theSourceString,XalanMemMgrs::getDefaultXercesMemMgr(), theSourceStringLength);
 }
 #endif
 
@@ -1010,9 +1189,9 @@ TranscodeFromLocalCodePage(
  */
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeToLocalCodePage(
-			const XalanDOMChar*		theSourceString,
-			CharVectorType&			targetVector,
-			bool					terminate = false);
+            const XalanDOMChar*     theSourceString,
+            CharVectorType&         targetVector,
+            bool                    terminate = false);
 
 /**
  * Convert a XalanDOMChar string to C++ standard library
@@ -1040,13 +1219,13 @@ TranscodeToLocalCodePage(
  */
 #if !defined(XALAN_DEVELOPMENT)
 inline const CharVectorType
-TranscodeToLocalCodePage(const XalanDOMChar*	theSourceString)
+TranscodeToLocalCodePage(const XalanDOMChar*    theSourceString)
 {
-	CharVectorType	theResult;
+    CharVectorType  theResult;
 
-	TranscodeToLocalCodePage(theSourceString, theResult, true, '?');
+    TranscodeToLocalCodePage(theSourceString, theResult, true, '?');
 
-	return theResult;
+    return theResult;
 }
 #endif
 
@@ -1062,11 +1241,11 @@ TranscodeToLocalCodePage(const XalanDOMChar*	theSourceString)
  */
 inline bool
 TranscodeToLocalCodePage(
-			const XalanDOMString&	theSourceString,
-			CharVectorType&			targetVector,
-			bool					terminate = false)
+            const XalanDOMString&   theSourceString,
+            CharVectorType&         targetVector,
+            bool                    terminate = false)
 {
-	return TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate);
+    return TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate);
 }
 
 /**
@@ -1081,12 +1260,12 @@ TranscodeToLocalCodePage(
  */
 inline void
 TranscodeToLocalCodePage(
-			const XalanDOMString&	theSourceString,
-			CharVectorType&			targetVector,
-			bool					terminate ,
+            const XalanDOMString&   theSourceString,
+            CharVectorType&         targetVector,
+            bool                    terminate ,
             char                    theSubstitutionChar)
 {
-	TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate, theSubstitutionChar);
+    TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate, theSubstitutionChar);
 }
 
 /**
@@ -1099,13 +1278,13 @@ TranscodeToLocalCodePage(
  */
 #if !defined(XALAN_DEVELOPMENT)
 inline const CharVectorType
-TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
+TranscodeToLocalCodePage(const XalanDOMString&  theSourceString)
 {
-	CharVectorType	theResult;
+    CharVectorType  theResult;
 
-	TranscodeToLocalCodePage(theSourceString.c_str(), theResult, true, '?');
+    TranscodeToLocalCodePage(theSourceString.c_str(), theResult, true, '?');
 
-	return theResult;
+    return theResult;
 }
 #endif
 
@@ -1120,13 +1299,13 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
  */
 inline const XalanDOMString&
 TranscodeFromLocalCodePage(
-			const char*					theSourceString,
+            const char*                 theSourceString,
              XalanDOMString&            result,
-			XalanDOMString::size_type	theSourceStringLength = XalanDOMString::npos)
+            XalanDOMString::size_type   theSourceStringLength = XalanDOMString::npos)
 {
     result.assign(theSourceString, theSourceStringLength);
 
-	return result;
+    return result;
 }
 
 
@@ -1144,10 +1323,10 @@ TranscodeFromLocalCodePage(
  */
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeFromLocalCodePage(
-			const char*					theSourceString,
-			XalanDOMString::size_type	theSourceStringLength,
-			XalanDOMCharVectorType&		theTargetVector,
-			bool						terminate = false);
+            const char*                 theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            XalanDOMCharVectorType&     theTargetVector,
+            bool                        terminate = false);
 
 /**
  * Convert a string to a C++ standard library
@@ -1161,9 +1340,9 @@ TranscodeFromLocalCodePage(
  */
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeFromLocalCodePage(
-			const char*					theSourceString,
-			XalanDOMCharVectorType&		theTargetVector,
-			bool						terminate = false);
+            const char*                 theSourceString,
+            XalanDOMCharVectorType&     theTargetVector,
+            bool                        terminate = false);
 
 /**
  * Convert a vector of characters to a XalanDOMString,
@@ -1173,7 +1352,7 @@ TranscodeFromLocalCodePage(
  * @return The transcoded string.
  */
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString&)
-TranscodeFromLocalCodePage(const CharVectorType&	theSourceString,
+TranscodeFromLocalCodePage(const CharVectorType&    theSourceString,
                            XalanDOMString&          result);
 
 
@@ -1185,4 +1364,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANDOMSTRING_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANDOMSTRING_HEADER_GUARD_1357924680)

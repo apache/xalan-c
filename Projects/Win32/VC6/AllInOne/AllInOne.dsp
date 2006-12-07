@@ -3118,6 +3118,10 @@ SOURCE=..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanParamHolder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.cpp
 # End Source File
 # Begin Source File

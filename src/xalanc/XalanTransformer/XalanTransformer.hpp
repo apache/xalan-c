@@ -91,18 +91,18 @@ public:
     typedef std::ostream    StreamType;
 #endif
 
-    XalanTransformer(MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr());
+    XalanTransformer(MemoryManager&     theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
     virtual
     ~XalanTransformer();
 
-    MemoryManagerType& 
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
     }
 
-    const MemoryManagerType& 
+    const MemoryManager& 
     getMemoryManager() const
     {
         return m_memoryManager;
@@ -117,7 +117,7 @@ public:
      * initialization state, so you do not call it more than once.
      */
     static void
-    initialize(MemoryManagerType&  theManager = XalanMemMgrs::getDefaultXercesMemMgr());
+    initialize(MemoryManager&   theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
     /**
      * Terminate Xalan.
@@ -157,7 +157,7 @@ public:
 
 
     static void
-    ICUStartUp(MemoryManagerType&  theManager = XalanMemMgrs::getDefaultXercesMemMgr());
+    ICUStartUp(MemoryManager&   theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
     /**
      * Transform will apply the stylesheet source to the parsed xml source
@@ -476,28 +476,42 @@ public:
             const XalanDOMString&   functionName);
 
     /**
-     * Set a top-level stylesheet parameter.  This value can be evaluated via
-     * xsl:param-variable.  These values are cleared after a call to transform().
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
      *
      * @param key name of the param
      * @param expression expression that will be evaluated
      */
     void
     setStylesheetParam(
-            const XalanDOMString&   key,
-            const XalanDOMString&   expression);
+            const XalanDOMString&   qname,
+            const XalanDOMString&   expression)
+    {
+        m_params[qname] = expression;
+    }
 
     /**
-     * Set a top-level stylesheet parameter.  This value can be evaluated via
-     * xsl:param-variable.  These values are cleared after a call to transform().
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
      *
      * @param key name of the param
      * @param expression expression that will be evaluated
      */
     void
     setStylesheetParam(
-            const char*     key,
+            const char*     qname,
             const char*     expression);
+
+    /**
+     * Clear any stylesheet params.
+     */
+    void
+    clearStylesheetParams()
+    {
+        m_params.clear();
+    }
 
     /**
      * Add a TraceListener instance.  TraceListeners instances are preserved
@@ -846,19 +860,19 @@ public:
 
     typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
     typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;
-    typedef XALAN_STD_QUALIFIER pair<XalanDOMString*, XalanDOMString*>      ParamPairType;
-    typedef XalanVector<ParamPairType>                  ParamPairVectorType;
-    typedef XALAN_STD_QUALIFIER pair<XalanQNameByValue*, Function*>         FunctionPairType;
-    typedef XalanVector<FunctionPairType>               FunctionParamPairVectorType;
-    typedef XalanVector<TraceListener*>                 TraceListenerVectorType;
+
+    typedef XalanMap<XalanDOMString, XalanDOMString>    ParamMapType;
+
+    typedef XalanMap<XalanQNameByValue, Function*>  FunctionMapType;
+    typedef XalanVector<TraceListener*>             TraceListenerVectorType;
 
     class EnsureFunctionsInstallation
     {
     public:
-        
-        EnsureFunctionsInstallation(MemoryManagerType& theManager) : 
-          m_memoryManagement(theManager),
-          m_release(false)
+
+        EnsureFunctionsInstallation(MemoryManager&  theManager) : 
+            m_memoryManagement(theManager),
+            m_release(false)
         {    
         }
 
@@ -874,9 +888,10 @@ public:
         }
 
     private:
-        MemoryManagerType& m_memoryManagement;
 
-        bool m_release;
+        MemoryManager&  m_memoryManagement;
+
+        bool            m_release;
     };
 
     class EnsureDestroyParsedSource
@@ -946,66 +961,7 @@ public:
 
         XalanDocumentBuilder* const m_documentBuilder;
     };
-    template <class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-    struct DeleteParamPairFunctor : public unary_function<T&, void>
-#else
-    struct DeleteParamPairFunctor : public std::unary_function<T&, void>
-#endif
-    {
-#if defined(XALAN_NO_STD_NAMESPACE)
-        typedef unary_function<T&, void>    BaseClassType;
-#else
-        typedef std::unary_function<T&, void>   BaseClassType;
-#endif
 
-        typedef typename BaseClassType::result_type     result_type;
-        typedef typename BaseClassType::argument_type   argument_type;
-
-        DeleteParamPairFunctor(MemoryManagerType&      theManager) :
-        m_memoryManager(theManager)
-        {
-        }
-
-        template<class PtrT>
-    void
-        deletePtr(PtrT* ptr)const
-        {
-            ptr->~PtrT();
-        }
-
-        /**
-        * Delete the object pointed to by argument.
-        *
-        * @param thePointer pointer to object to be deleted
-        */
-        result_type
-            operator()(argument_type    thePair) const
-        {
-            T&  tmpPair = const_cast<T&>(thePair);
-
-            if (tmpPair.first != 0)
-            {
-                deletePtr(tmpPair.first);
-                
-                m_memoryManager.deallocate((void*)tmpPair.first);
-            }
-
-            if (tmpPair.second != 0)
-            {
-                deletePtr(tmpPair.second);
-                
-                m_memoryManager.deallocate((void*)tmpPair.second);
-            }            
-
-            
-        }
-
-    private:
-
-        MemoryManagerType& m_memoryManager;
-
-    };
 protected:
 
 private:
@@ -1040,15 +996,15 @@ private:
 
 
     // Data members...
-    MemoryManagerType&                      m_memoryManager;
+    MemoryManager&                          m_memoryManager;
 
     CompiledStylesheetPtrVectorType         m_compiledStylesheets;
 
     ParsedSourcePtrVectorType               m_parsedSources;
 
-    ParamPairVectorType                     m_paramPairs;
+    ParamMapType                            m_params;
 
-    FunctionParamPairVectorType             m_functionPairs;
+    FunctionMapType                         m_functions;
 
     TraceListenerVectorType                 m_traceListeners;
 

@@ -144,7 +144,7 @@ public:
                getNamespace() == theRHS.getNamespace();
     }
 
-    XalanDOMString::size_type
+    size_t
     hash() const
     {
         return getLocalPart().hash() % (getNamespace().hash() + 1);

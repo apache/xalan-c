@@ -158,7 +158,8 @@ XSLTEngineImpl::XSLTEngineImpl(
     m_scratchString(theManager),
     m_attributeNamesVisited(theManager),
     m_hasCDATASectionElements(false),
-    m_xpathConstructionContext(theManager)
+    m_xpathConstructionContext(theManager),
+    m_stylesheetParams(theManager)
 {
     m_outputContextStack.pushContext();
 }
@@ -1380,7 +1381,7 @@ XSLTEngineImpl::addResultAttribute(
             const XalanDOMChar*         value,
             XalanDOMString::size_type   theLength,
             bool                        fromCopy,
-			const LocatorType*	        locator)
+            const LocatorType*          locator)
 {
     assert(value != 0);
 
@@ -3055,13 +3056,11 @@ XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&     theValue)
 void
 XSLTEngineImpl::setStylesheetParam(
             const XalanDOMString&   theName,
-            const XalanDOMString&   expression)
+            const XalanDOMString&   theExpression)
 {
-    const XalanQNameByValue     qname(theName, 0, m_xpathEnvSupport, m_domSupport, getMemoryManager());
+    MemoryManager&  theManager = getMemoryManager();
 
-    const ParamVectorType::value_type   temp(getMemoryManager(), qname, expression);
-
-    m_topLevelParams.push_back(temp);
+    m_stylesheetParams[theName] = XalanParamHolder(theManager, theExpression);
 }
 
 
@@ -3071,11 +3070,17 @@ XSLTEngineImpl::setStylesheetParam(
             const XalanDOMString&   theName,
             XObjectPtr              theValue)
 {
-    const XalanQNameByValue     qname(theName, 0, m_xpathEnvSupport, m_domSupport,  getMemoryManager());
+    MemoryManager&  theManager = getMemoryManager();
 
-    const ParamVectorType::value_type   temp(getMemoryManager(), qname, theValue);
+    m_stylesheetParams[theName] = XalanParamHolder(theManager, theValue);
+}
 
-    m_topLevelParams.push_back(temp);
+
+
+void
+XSLTEngineImpl::clearStylesheetParams()
+{
+    m_stylesheetParams.clear();
 }
 
 
@@ -3083,6 +3088,43 @@ XSLTEngineImpl::setStylesheetParam(
 void
 XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&   executionContext)
 {
+    typedef ParamMapType::const_iterator    const_iterator;
+
+    MemoryManager&  theManager = getMemoryManager();
+
+    assert(m_topLevelParams.size() == 0);
+
+    m_topLevelParams.reserve(m_stylesheetParams.size());
+
+    for (const_iterator i = m_stylesheetParams.begin();
+            i != m_stylesheetParams.end();
+                ++i)
+    {
+        const XalanDOMString&   theName = (*i).first;
+        const XalanParamHolder& theCurrent = (*i).second;
+
+        const XalanQNameByValue     theQName(theName, theManager, m_stylesheetRoot);
+
+        const XalanDOMString&   theExpression = theCurrent.m_expression;
+
+        if (theExpression.length() > 0)
+        {
+            m_topLevelParams.push_back(
+                TopLevelArg(
+                    theManager,
+                    theQName,
+                    theExpression));
+        }
+        else
+        {
+            m_topLevelParams.push_back(
+                TopLevelArg(
+                    theManager,
+                    theQName,
+                    theCurrent.m_value));
+        }
+    }
+
     executionContext.pushTopLevelVariables(m_topLevelParams);
 }
 
