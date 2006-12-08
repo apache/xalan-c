@@ -3058,11 +3058,7 @@ XSLTEngineImpl::setStylesheetParam(
             const XalanDOMString&   theName,
             const XalanDOMString&   theExpression)
 {
-    MemoryManager&  theManager = getMemoryManager();
-
-    const XalanParamHolder  theHolder(theManager, theExpression);
-
-    m_stylesheetParams[theName] = theHolder;
+    m_stylesheetParams[theName].m_expression = theExpression;;
 }
 
 
@@ -3072,11 +3068,7 @@ XSLTEngineImpl::setStylesheetParam(
             const XalanDOMString&   theName,
             XObjectPtr              theValue)
 {
-    MemoryManager&  theManager = getMemoryManager();
-
-    const XalanParamHolder  theHolder(theManager, theValue);
-
-    m_stylesheetParams[theName] = theHolder;
+    m_stylesheetParams[theName].m_value = theValue;
 }
 
 
