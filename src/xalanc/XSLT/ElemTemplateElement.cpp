@@ -1130,11 +1130,14 @@ ElemTemplateElement::findTemplateToTransformChild(
 
         case XalanNode::CDATA_SECTION_NODE:
         case XalanNode::TEXT_NODE:
+            theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
+            break;
+
         case XalanNode::ATTRIBUTE_NODE:
             if (DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(*child)) == false)
             {
                 theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
-            } 
+            }
             break;
 
         case XalanNode::DOCUMENT_NODE:
