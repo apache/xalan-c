@@ -160,6 +160,8 @@ public:
         m_indentHandler.indent();
 
         flushBuffer();
+
+        flushWriter();
     }
 
     virtual void
@@ -288,7 +290,13 @@ protected:
         m_writer.flushBuffer();
     }
 
-    void
+    virtual void
+    flushWriter()
+    {
+        m_writer.flushWriter();
+    }
+
+    virtual void
     writeXMLHeader()
     {
             // "<?xml version=\""
