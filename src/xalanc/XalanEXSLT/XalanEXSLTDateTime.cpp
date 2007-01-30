@@ -236,11 +236,17 @@ XalanEXSLTFunctionDateTime::execute(
 
                 if(offset == 100)
                 {
-                    sprintf(timeZone, "%s", "z");
+                    sprintf(timeZone, "%s", "Z");
                 }
                 else
                 {
-                    sprintf(timeZone, "%2.2d:00", offset);
+                    if(offset < 0)
+                    {
+                        sprintf(timeZone, "%2.2d:00", offset);
+                    }
+                    else
+                        sprintf(timeZone, "+%2.2d:00", offset);
+                    
                 }
 
                 theResult.append(timeZone);
