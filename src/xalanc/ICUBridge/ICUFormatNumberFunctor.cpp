@@ -317,6 +317,8 @@ ICUFormatNumberFunctor::createDecimalFormat(
     } 
     else 
     {
+        assert(false);
+
         return 0;
     }
 }
