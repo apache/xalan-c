@@ -60,18 +60,18 @@ FunctionKey::~FunctionKey()
 inline void
 getNodeSet(
             XPathExecutionContext&  executionContext,
-            XalanDocument*          document,
+            XalanNode*              context,
             const XalanDOMString&   keyname,
             const XalanDOMString&   ref,
             const LocatorType*      locator,
             MutableNodeRefList&     theNodeRefList)
 {
-    assert(document != 0);
+    assert(context != 0);
 
     if (indexOf(keyname, XalanUnicode::charColon) < length(keyname))
     {
         executionContext.getNodeSetByKey(
-                document,
+                context,
                 keyname,
                 ref,
                 locator,
@@ -82,7 +82,7 @@ getNodeSet(
         const XalanQNameByReference     theQName(keyname);
 
         executionContext.getNodeSetByKey(
-                document,
+                context,
                 theQName,
                 ref,
                 theNodeRefList);
@@ -117,16 +117,6 @@ FunctionKey::execute(
     }
     else
     {
-        XalanDocument* const    docContext = 
-                XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-                        (XalanDocument*)context :
-#else
-                        static_cast<XalanDocument*>(context) :
-#endif
-                            context->getOwnerDocument();
-
-        assert(docContext != 0);
         assert(executionContext.getPrefixResolver() != 0);
 
         const XalanDOMString&   keyname = arg1->str();
@@ -138,11 +128,11 @@ FunctionKey::execute(
         // This list will hold the nodes...
         BorrowReturnMutableNodeRefList  theNodeRefList(executionContext);
 
-        if(arg2->getType() != XObject::eTypeNodeSet)
+        if (arg2->getType() != XObject::eTypeNodeSet)
         {
             getNodeSet(
                 executionContext,
-                docContext,
+                context,
                 keyname,
                 arg2->str(),
                 locator,
@@ -158,7 +148,7 @@ FunctionKey::execute(
             {
                 getNodeSet(
                     executionContext,
-                    docContext,
+                    context,
                     keyname,
                     arg2->str(),
                     locator,
@@ -176,18 +166,18 @@ FunctionKey::execute(
 
                     DOMServices::getNodeData(*theNodeSet.item(i), ref);
 
-                    if(0 != length(ref))
+                    if (0 != ref.length())
                     {
                         getNodeSet(
                             executionContext,
-                            docContext,
+                            context,
                             keyname,
                             ref,
                             locator,
                             *theNodeRefList.get());
                     }
 
-                    clear(ref);
+                    ref.clear();
                 }
             }
         }
@@ -203,7 +193,7 @@ Function*
 #else
 FunctionKey*
 #endif
-FunctionKey::clone(MemoryManagerType& theManager) const
+FunctionKey::clone(MemoryManager&   theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }
@@ -211,12 +201,12 @@ FunctionKey::clone(MemoryManagerType& theManager) const
 
 
 const XalanDOMString&
-FunctionKey::getError(XalanDOMString& theResult) const
+FunctionKey::getError(XalanDOMString&   theResult) const
 {
     return XalanMessageLoader::getMessage(
                 theResult,
                 XalanMessages::FunctionTakesTwoArguments_1Param,
-                "key");
+                "key()");
 }
 
 

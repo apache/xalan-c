@@ -384,7 +384,7 @@ public:
 	/**
 	 * Given a valid element key, return the corresponding node list.
 	 *
-	 * @param doc			   source document
+	 * @param context		   context node
 	 * @param name			   qname of the key, which must match the 'name'
 	 *						   attribute on xsl:key
 	 * @param ref			   value that must match the value found by the
@@ -395,7 +395,7 @@ public:
 	 */
 	void
 	getNodeSetByKey(
-			XalanDocument*					doc,
+            XalanNode*                      context,
 			const XalanQName&				qname,
 			const XalanDOMString&			ref,
 			const PrefixResolver&			resolver,
@@ -472,7 +472,7 @@ private:
 	void 
 	initDefaultRule(StylesheetConstructionContext&	constructionContext);
 
-	/**
+    /**
 	 * The version tells the version of XML to be used for outputting the result tree,
 	 * as specified in xsl:output.
 	 */

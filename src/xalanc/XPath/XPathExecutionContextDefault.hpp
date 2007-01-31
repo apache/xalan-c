@@ -264,14 +264,14 @@ public:
 
 	virtual void
 	getNodeSetByKey(
-			XalanDocument*			doc,
+            XalanNode*              context,
 			const XalanQName&		qname,
 			const XalanDOMString&	ref,
 			MutableNodeRefList&		nodelist);
 
 	virtual void
 	getNodeSetByKey(
-			XalanDocument*			doc,
+            XalanNode*              context,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
 			const LocatorType*		locator,

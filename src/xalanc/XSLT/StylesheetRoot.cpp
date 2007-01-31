@@ -169,7 +169,8 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&     construction
 
     // We may need to build keys, since we may have inherited them from
     // our imports.
-    if (m_needToBuildKeysTable == false && m_keyDeclarations.empty() == false)
+    if (m_needToBuildKeysTable == false &&
+        m_keyDeclarations.empty() == false)
     {
         m_needToBuildKeysTable = true;
     }
@@ -642,9 +643,10 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&  constructionCont
 
         AttributeListImpl       attrs(constructionContext.getMemoryManager());
 
-        attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-                           c_wstr(Constants::ATTRTYPE_CDATA),
-                           XPath::PSEUDONAME_ANY);
+        attrs.addAttribute(
+            Constants::ATTRNAME_MATCH.c_str(),
+            Constants::ATTRTYPE_CDATA.c_str(),
+            XPath::PSEUDONAME_ANY);
 
         m_defaultRule =
             constructionContext.createElement(
@@ -669,9 +671,10 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&  constructionCont
         // -----------------------------
 
         attrs.clear();
-        attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-                           c_wstr(Constants::ATTRTYPE_CDATA),
-                           c_wstr(Constants::ATTRVAL_DEFAULT_TEXT_RULE));
+        attrs.addAttribute(
+            Constants::ATTRNAME_MATCH.c_str(),
+            Constants::ATTRTYPE_CDATA.c_str(),
+            Constants::ATTRVAL_DEFAULT_TEXT_RULE.c_str());
 
         m_defaultTextRule =
             constructionContext.createElement(
@@ -681,9 +684,10 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&  constructionCont
         assert(m_defaultTextRule != 0);
 
         attrs.clear();
-        attrs.addAttribute(c_wstr(Constants::ATTRNAME_SELECT),
-                           c_wstr(Constants::ATTRTYPE_CDATA),
-                           c_wstr(Constants::ATTRVAL_THIS));
+        attrs.addAttribute(
+            Constants::ATTRNAME_SELECT.c_str(),
+            Constants::ATTRTYPE_CDATA.c_str(),
+            Constants::ATTRVAL_THIS.c_str());
 
         childrenElement =
             constructionContext.createElement(
@@ -699,9 +703,10 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&  constructionCont
         //--------------------------------
     
         attrs.clear();
-        attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-                           c_wstr(Constants::ATTRTYPE_CDATA),
-                           XPath::PSEUDONAME_ROOT);
+        attrs.addAttribute(
+            Constants::ATTRNAME_MATCH.c_str(),
+            Constants::ATTRTYPE_CDATA.c_str(),
+            XPath::PSEUDONAME_ROOT);
 
         m_defaultRootRule =
             constructionContext.createElement(
@@ -745,52 +750,58 @@ StylesheetRoot::isCDATASectionElementName(const XalanQName&     theQName) const
 
 
 inline XalanNode*
-getKeyNode(
-            XalanNode*                      startNode,
-            StylesheetExecutionContext&     executionContext)
+getKeyNode(XalanNode*   context)
 {
+    assert(context != 0);
+
+    XalanDocument* const    docNode = 
+            XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+                    (XalanDocument*)context :
+#else
+                    static_cast<XalanDocument*>(context) :
+#endif
+                        context->getOwnerDocument();
+
+    assert(docNode != 0);
+
     // This is a big hack for dealing with result tree fragments coerced to node-sets using the
     // node-set extension function.  For such cases, the "document" is really the
     // XalanDocumentFragment instance that owns the nodes, not the owner document.
-    if (startNode->getFirstChild() == 0)
+    if (docNode->getFirstChild() != 0)
     {
-        XalanNode*  currentNode = executionContext.getCurrentNode();
-        assert(currentNode != 0);
+        return docNode;
+    }
+    else
+    {
+        XalanNode*  currentNode = context;
 
-        if (currentNode->getOwnerDocument() == startNode)
+        // OK, the current node belongs to the document, but the document
+        // is just a factory for fragments.  This loop will find the
+        // parent document fragment.
+        for(;;)
         {
-            // OK, the current node belongs to the document, but the document
-            // is just a factory for fragments...
-            for(;;)
+            if (currentNode->getNodeType() == XalanNode::DOCUMENT_FRAGMENT_NODE)
             {
-                XalanNode*  parentNode = DOMServices::getParentOfNode(*currentNode);
+                break;
+            }
+            else
+            {
+                currentNode = DOMServices::getParentOfNode(*currentNode);
 
-                if (parentNode == 0)
-                {
-                    break;
-                }
-                else if (parentNode->getNodeType() == XalanNode::DOCUMENT_FRAGMENT_NODE)
-                {
-                    startNode = parentNode;
-
-                    break;
-                }
-                else
-                {
-                    currentNode = parentNode;
-                }
+                assert(currentNode != 0);
             }
         }
-    }
 
-    return startNode;
+        return currentNode;
+    }
 }
 
 
 
 void
 StylesheetRoot::getNodeSetByKey(
-            XalanDocument*                  doc,
+            XalanNode*                      context,
             const XalanQName&               qname,
             const XalanDOMString&           ref,
             const PrefixResolver&           resolver,
@@ -798,12 +809,14 @@ StylesheetRoot::getNodeSetByKey(
             StylesheetExecutionContext&     executionContext,
             KeyTablesTableType&             theKeysTable) const
 {
-    assert(nodelist.empty() == true || nodelist.getDocumentOrder() == true);
+    assert(
+        nodelist.empty() == true ||
+        nodelist.getDocumentOrder() == true);
 
-    XalanNode* const    theKeyNode = getKeyNode(doc, executionContext);
+    XalanNode* const    theKeyNode = getKeyNode(context);
     assert(theKeyNode != 0);
 
-    if(m_needToBuildKeysTable == true)
+    if (m_needToBuildKeysTable == true)
     {
         assert(m_keyDeclarations.empty() == false);
 
@@ -812,7 +825,8 @@ StylesheetRoot::getNodeSetByKey(
 
         if (i != theKeysTable.end())
         {
-            const MutableNodeRefList&   nl = (*i).second->getNodeSetByKey(qname, ref);
+            const MutableNodeRefList&   nl =
+                i->second->getNodeSetByKey(qname, ref);
 
             if (nodelist.empty() == true)
             {
@@ -838,7 +852,8 @@ StylesheetRoot::getNodeSetByKey(
 
             const KeyTable* const   theNewTable = kt.releasePtr();
 
-            const MutableNodeRefList&   nl = theNewTable->getNodeSetByKey(qname, ref);
+            const MutableNodeRefList&   nl =
+                theNewTable->getNodeSetByKey(qname, ref);
 
             if (nodelist.empty() == true)
             {
@@ -895,7 +910,9 @@ StylesheetRoot::addAttributeSet(ElemAttributeSet&   theAttributeSet)
 }
 
 
+
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+
 const ElemAttributeSet*
 StylesheetRoot::getAttributeSet(
             StylesheetExecutionContext&     executionContext,
@@ -920,7 +937,7 @@ StylesheetRoot::getAttributeSet(
     }
     else
     {
-        const AttributeSetVectorType&                   theAttributeSets = (*i).second;
+        const AttributeSetVectorType&   theAttributeSets = i->second;
 
         if (matchingIndex < theAttributeSets.size())
         {
@@ -931,11 +948,9 @@ StylesheetRoot::getAttributeSet(
     return 0;
 
 }
-#endif
 
+#else
 
-
-#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetRoot::executeAttributeSet(
             StylesheetExecutionContext&     theExecutionContext,

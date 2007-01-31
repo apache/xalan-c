@@ -399,7 +399,7 @@ XPathExecutionContextDefault::releaseCachedString(XalanDOMString&   theString)
 
 void
 XPathExecutionContextDefault::getNodeSetByKey(
-            XalanDocument*          /* doc */,
+            XalanNode*              /* context */,
             const XalanQName&       /* qname */,
             const XalanDOMString&   /* ref */,
             MutableNodeRefList&     /* nodelist */)
@@ -410,7 +410,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 void
 XPathExecutionContextDefault::getNodeSetByKey(
-            XalanDocument*          /* doc */,
+            XalanNode*              /* context */,
             const XalanDOMString&   /* name */,
             const XalanDOMString&   /* ref */,
             const LocatorType*      /* locator */,

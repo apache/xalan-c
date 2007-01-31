@@ -495,7 +495,7 @@ public:
     /**
      * Given a valid element key, return the corresponding node list.
      *
-     * @param doc              source document
+     * @param context          context node
      * @param name             qname of the key, which must match the 'name'
      *                         attribute on xsl:key
      * @param ref              value that must match the value found by the
@@ -504,7 +504,7 @@ public:
      */
     virtual void
     getNodeSetByKey(
-            XalanDocument*          doc,
+            XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
             MutableNodeRefList&     nodelist) = 0;
@@ -512,7 +512,7 @@ public:
     /**
      * Given a valid element key, return the corresponding node list.
      *
-     * @param doc              source document
+     * @param context          context node
      * @param name             name of the key, which must match the 'name'
      *                         attribute on xsl:key.  Will be resolved to a
      *                         qname using the provided resolver.
@@ -523,7 +523,7 @@ public:
      */
     virtual void
     getNodeSetByKey(
-            XalanDocument*          doc,
+            XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
             const LocatorType*      locator,

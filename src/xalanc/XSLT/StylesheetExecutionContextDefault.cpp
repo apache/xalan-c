@@ -2070,13 +2070,16 @@ StylesheetExecutionContextDefault::pushCopyTextNodesOnly(bool copyTextNodesOnly)
 }
 
 
+
 bool
 StylesheetExecutionContextDefault::popCopyTextNodesOnly()
 {
     assert (m_copyTextNodesOnlyStack.size() > 0);
 
     bool copyTextNodesOnly = m_copyTextNodesOnlyStack.back();
+
     m_copyTextNodesOnlyStack.pop_back();
+
     return copyTextNodesOnly;
 }
 
@@ -2108,7 +2111,7 @@ StylesheetExecutionContextDefault::releaseCachedString(XalanDOMString&  theStrin
 
 void
 StylesheetExecutionContextDefault::getNodeSetByKey(
-            XalanDocument*          doc,
+            XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
             MutableNodeRefList&     nodelist)
@@ -2116,7 +2119,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
     assert(m_stylesheetRoot != 0);
 
     m_stylesheetRoot->getNodeSetByKey(
-        doc,
+        context,
         qname,
         ref,
         *getPrefixResolver(),
@@ -2129,7 +2132,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 void
 StylesheetExecutionContextDefault::getNodeSetByKey(
-            XalanDocument*          doc,
+            XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
             const LocatorType*      locator,
@@ -2141,12 +2144,13 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
                 getPrefixResolver();
     assert(resolver != 0);
 
-    XalanQNameByValue&  theQName = m_xpathExecutionContextDefault.getScratchQName();
+    XalanQNameByValue&  theQName =
+        m_xpathExecutionContextDefault.getScratchQName();
 
     theQName.set(name, resolver, locator);
 
     m_stylesheetRoot->getNodeSetByKey(
-        doc,
+        context,
         theQName,
         ref,
         *resolver,
@@ -2174,7 +2178,7 @@ StylesheetExecutionContextDefault::getVariable(
     }
     else
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(*this);
+        const GetAndReleaseCachedString     theGuard(*this);
 
         error(
             XalanMessageLoader::getMessage(
@@ -2242,7 +2246,7 @@ StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanText&   node
     else
     {
         assert(m_stylesheetRoot->hasPreserveOrStripSpaceElements() == true);
-        assert(length(node.getData()) != 0);
+        assert(node.getData().length() != 0);
 
         return m_stylesheetRoot->shouldStripSourceNode(node);
     }
