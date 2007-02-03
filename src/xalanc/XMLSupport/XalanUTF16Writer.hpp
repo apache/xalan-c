@@ -186,9 +186,9 @@ public:
     flushBuffer()
     {
         m_writer.write(
-            reinterpret_cast<const char*>(m_buffer),
+            m_buffer,
             0,
-            (m_bufferPosition - m_buffer) * sizeof m_buffer[0]);
+            m_bufferPosition - m_buffer);
     
         
         m_bufferPosition = m_buffer;
