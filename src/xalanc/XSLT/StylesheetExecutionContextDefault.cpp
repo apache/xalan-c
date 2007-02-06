@@ -1831,13 +1831,16 @@ StylesheetExecutionContextDefault::uninstallFormatNumberFunctor()
 void
 StylesheetExecutionContextDefault::reset()
 {
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     assert(m_elementRecursionStack.empty() == true);
+#endif
 
     m_variablesStack.reset();
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     m_xobjectPtrStack.clear();
     m_paramsVectorStack.clear();
+    m_elementRecursionStack.clear();
 #endif
 
     if (m_xsltProcessor != 0)
