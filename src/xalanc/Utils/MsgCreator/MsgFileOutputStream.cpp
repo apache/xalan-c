@@ -32,6 +32,10 @@ openFile(const char*    theFileName)
 {
     assert(theFileName != 0);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fopen;
+#endif
+
     return fopen(theFileName, "wb");
 }
 
@@ -53,6 +57,10 @@ MsgFileOutputStream::MsgFileOutputStream(const char*    theFileName) :
 
 MsgFileOutputStream::~MsgFileOutputStream()
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fclose;
+#endif
+
     if (m_handle != 0)
     {
         fclose(m_handle);
@@ -64,6 +72,10 @@ MsgFileOutputStream::~MsgFileOutputStream()
 void
 MsgFileOutputStream::doFlush()
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fflush;
+#endif
+
     if (fflush(m_handle) != 0)
     {
         throw WriteException(
@@ -79,6 +91,10 @@ MsgFileOutputStream::writeData(
             const char*     theBuffer,
             unsigned int    theBufferLength)
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fwrite;
+#endif
+
     const size_t    theBytesWritten =
         fwrite(theBuffer,
                1,
@@ -105,6 +121,10 @@ FormatMessageLocal(
     assert(theMessage != 0);
     assert(theFileName != 0);
     assert(theResult != 0);
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::sprintf;
+#endif
 
     sprintf(
         theResult,

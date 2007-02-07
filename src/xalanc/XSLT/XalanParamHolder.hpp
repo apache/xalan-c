@@ -86,7 +86,7 @@ private:
     XalanParamHolder(const XalanParamHolder&    theRHS);
 };
 
-XALAN_USES_MEMORY_MANAGER(XalanParamHolder);
+XALAN_USES_MEMORY_MANAGER(XalanParamHolder)
 
 
 
