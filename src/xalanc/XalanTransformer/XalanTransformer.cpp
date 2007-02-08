@@ -916,7 +916,7 @@ XalanTransformer::installExternalFunction(
 
     theFunction = function.clone(m_memoryManager);
 
-    XalanDestroy(
+    XalanDestroy<Function>(
         m_memoryManager,
         theOldFunction);
 }
