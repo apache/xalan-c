@@ -182,7 +182,7 @@ public:
     }
 
     // This routine will add an attribute to the attribute list.
-    void addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs);
+    void addMetricToAttrs(const char* desc, double theMetric, Hashtable& attrs);
 
     /**
     * Logs out a element to results with specified severity.

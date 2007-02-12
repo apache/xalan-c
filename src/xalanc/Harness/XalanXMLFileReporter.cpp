@@ -334,7 +334,7 @@ XalanXMLFileReporter::logMessage(int level, const XalanDOMString& msg)
 }
 
 void 
-XalanXMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
+XalanXMLFileReporter::addMetricToAttrs(const char* desc, double theMetric, Hashtable& attrs)
 {
     XalanDOMString  temp(getMemoryManager());
 
