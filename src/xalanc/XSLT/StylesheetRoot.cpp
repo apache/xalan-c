@@ -104,7 +104,8 @@ StylesheetRoot::StylesheetRoot(
     m_indentAmount(-1),
     m_omitMETATag(false),
     m_elemNumberNextID(0),
-    m_attributeSetsMap(constructionContext.getMemoryManager())
+    m_attributeSetsMap(constructionContext.getMemoryManager()),
+    m_hasStripOrPreserveSpace(false)
 {
     // Our base class has already resolved the URI and pushed it on
     // the back of the include stack, so get it from there...
@@ -192,6 +193,8 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&     construction
 
         m_hasCDATASectionElems = true;
     }
+
+    m_hasStripOrPreserveSpace = m_whitespaceElements.empty() == false;
 }
 
 
@@ -870,13 +873,16 @@ StylesheetRoot::getNodeSetByKey(
 
 
 bool
-StylesheetRoot::shouldStripSourceNode(const XalanText&  textNode) const
+StylesheetRoot::internalShouldStripSourceNode(const XalanText&  textNode) const
 {
+    assert(
+        textNode.isIgnorableWhitespace() == true &&
+        hasPreserveOrStripSpaceElements() == true);
+
     const XalanNode* const  parent = textNode.getParentNode();
     assert(parent != 0);
 
-    if (textNode.isIgnorableWhitespace() == true &&
-        parent->getNodeType() == XalanNode::ELEMENT_NODE)
+    if (parent->getNodeType() == XalanNode::ELEMENT_NODE)
     {
         const XalanElement* const   theElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -887,15 +893,19 @@ StylesheetRoot::shouldStripSourceNode(const XalanText&  textNode) const
 
         typedef WhitespaceElementsVectorType::const_iterator    const_iterator;
 
-        for (const_iterator i = m_whitespaceElements.begin();
-                i != m_whitespaceElements.end();
-                    ++i)
+        const_iterator i = m_whitespaceElements.begin();
+
+        do
         {
-            if ((*i)(*theElement) != XPath::eMatchScoreNone)
+            const XalanSpaceNodeTester&     theTester = *i;
+
+            if (theTester(*theElement) != XPath::eMatchScoreNone)
             {
-                return (*i).getType() == XalanSpaceNodeTester::eStrip;
+                return theTester.getType() == XalanSpaceNodeTester::eStrip;
             }
-        }
+
+            ++i;
+        } while (i != m_whitespaceElements.end());
     }
 
     return false;

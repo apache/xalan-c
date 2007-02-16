@@ -1137,7 +1137,7 @@ private:
 
     /**
      * The factory that will be used to create result tree fragments based on our
-	 * internal source tree.
+     * internal source tree.
      */
     mutable XalanMemMgrAutoPtr<XalanSourceTreeDocument, true>   m_sourceTreeResultTreeFactory;
 
@@ -1285,14 +1285,11 @@ private:
     // Determines whether or not to override the property in the stylesheet.
     eOmitMETATag                        m_omitMETATag;
 
-    bool                                m_hasStripOrPreserveSpace;
-
     static XalanNumberFormatFactory     s_defaultXalanNumberFormatFactory;
 
     static XalanNumberFormatFactory*    s_xalanNumberFormatFactory;
 
     static const DefaultCollationCompareFunctor     s_defaultCollationFunctor;
-
 };
 
 

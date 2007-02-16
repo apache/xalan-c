@@ -3166,7 +3166,6 @@ XPath::stepPattern(
                     {
                         score =
                             theTester(*context, context->getNodeType());
-                            assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
                         if(eMatchScoreNone != score)
                             break;
@@ -3190,14 +3189,6 @@ XPath::stepPattern(
                             opPos,
                             argLen,
                             XPathExpression::eFROM_ATTRIBUTES)(*context, context->getNodeType());
-
-            assert(score == nodeTest(
-                             executionContext,
-                             context,
-                             context->getNodeType(),
-                             opPos,
-                             argLen,
-                             XPathExpression::eFROM_ATTRIBUTES));
         }
         break;
 
@@ -3222,7 +3213,6 @@ XPath::stepPattern(
                 for(;;)
                 {
                     score = theTester(*context, nodeType);
-                    assert(score == nodeTest(executionContext, context, nodeType, opPos, argLen, stepType));
 
                     if(eMatchScoreNone != score)
                         break;
@@ -3254,14 +3244,6 @@ XPath::stepPattern(
                                 opPos,
                                 argLen,
                                 XPathExpression::eMATCH_IMMEDIATE_ANCESTOR)(*context, nodeType);
-
-                assert(score == nodeTest(
-                                 executionContext,
-                                 context,
-                                 nodeType,
-                                 opPos,
-                                 argLen,
-                                 XPathExpression::eMATCH_IMMEDIATE_ANCESTOR));
             }
         }
         break;
@@ -3548,7 +3530,6 @@ XPath::findParent(
                             stepType);
 
             const eMatchScore   score = theTester(*theParent, theParent->getNodeType());
-            assert(score == nodeTest(executionContext, theParent, theParent->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -3601,7 +3582,6 @@ XPath::findSelf(
 
         const eMatchScore   score =
             theTester(*context, context->getNodeType());
-            assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
         if(eMatchScoreNone != score)
         {
@@ -3649,7 +3629,6 @@ XPath::findAncestors(
         {
             const eMatchScore   score =
                 theTester(*context, context->getNodeType());
-                assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -3696,7 +3675,6 @@ XPath::findAncestorsOrSelf(
     {
         const eMatchScore   score =
                 theTester(*context, context->getNodeType());
-                assert(score == nodeTest(executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
         if(eMatchScoreNone != score)
         {
@@ -3755,7 +3733,6 @@ XPath::findAttributes(
 
                     const eMatchScore   score =
                         theTester(*theNode, XalanNode::ATTRIBUTE_NODE);
-                        assert(score == nodeTest(executionContext, theNode, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
 
                     if(eMatchScoreNone != score)
                     {
@@ -3806,7 +3783,6 @@ XPath::findChildren(
         {
             const eMatchScore   score =
                     theTester(*child, child->getNodeType());
-                    assert(score == nodeTest(executionContext, child, child->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -3859,7 +3835,6 @@ XPath::findDescendants(
         {
             const eMatchScore   score =
                 theTester(*pos, pos->getNodeType());
-                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
             if(score != eMatchScoreNone)
             {
@@ -3936,7 +3911,6 @@ XPath::findFollowing(
         {
             const eMatchScore   score =
                 theTester(*pos, pos->getNodeType());
-                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -4026,7 +4000,6 @@ XPath::findFollowingSiblings(
         {
             const eMatchScore   score =
                     theTester(*pos, pos->getNodeType());
-                    assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -4140,7 +4113,6 @@ XPath::findPreceeding(
 
         const eMatchScore   score =
                 theTester(*pos, pos->getNodeType());
-                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
         if(eMatchScoreNone != score)
         {
@@ -4246,7 +4218,6 @@ XPath::findPreceedingSiblings(
         {
             const eMatchScore   score = 
                 theTester(*pos, pos->getNodeType());
-                assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
             if(eMatchScoreNone != score)
             {
@@ -4278,7 +4249,6 @@ XPath::findPreceedingSiblings(
             {
                 const eMatchScore   score = 
                     theTester(*pos, pos->getNodeType());
-                    assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
                 if(eMatchScoreNone != score)
                 {
@@ -4359,13 +4329,12 @@ XPath::findNamespace(
                     const XalanDOMString&   theNodeName = attr->getNodeName();
 
                     // This is an optimization to keep non-namespace attributes out of
-                    // the call to nodeTest().
+                    // the call to the NodeTester.
                     if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
                         theNodeName == DOMServices::s_XMLNamespace)
                     {
                         const eMatchScore   score =
                             theTester(*attr, XalanNode::ATTRIBUTE_NODE);
-                            assert(score == nodeTest(executionContext, attr, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
 
                         if(score != eMatchScoreNone)
                         {
@@ -4446,304 +4415,6 @@ XPath::findNodesOnUnknownAxis(
 
     return opPos + argLen + 3;
 }
-
-
-
-#if !defined(NDEBUG)
-XPath::eMatchScore
-XPath::nodeTest(
-            XPathExecutionContext&  executionContext,
-            XalanNode*              context,
-            XalanNode::NodeType     nodeType,
-            OpCodeMapPositionType   opPos,
-            OpCodeMapValueType      argLen,
-            OpCodeMapValueType      stepType) const
-{
-    assert(context->getNodeType() == nodeType);
-
-    const XPathExpression&  currentExpression = getExpression();
-
-    eMatchScore     score = eMatchScoreNone;
-
-    const OpCodeMapValueType    testType = currentExpression.getOpCodeMapValue(opPos);
-
-    switch(testType)
-    {
-    case XPathExpression::eNODETYPE_COMMENT:
-        if (XalanNode::COMMENT_NODE == nodeType)
-        {
-            score = eMatchScoreNodeTest;
-        }
-        break;
-
-    case XPathExpression::eNODETYPE_TEXT:
-        if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
-             XalanNode::TEXT_NODE == nodeType) &&
-#if defined(XALAN_OLD_STYLE_CASTS)
-            executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
-#else
-            executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
-#endif          
-        {
-              score = eMatchScoreNodeTest;
-        }
-      break;
-
-    case XPathExpression::eNODETYPE_PI:
-        if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
-        {
-            if(argLen == 1)
-            {
-                score = eMatchScoreNodeTest;
-            }
-            else if(argLen == 2)
-            {
-                opPos++;
-
-                const OpCodeMapValueType    tokenPosition =
-                    currentExpression.getOpCodeMapValue(opPos);
-
-                const XObject* const    name =
-                    currentExpression.getToken(tokenPosition);
-                assert(name != 0);
-
-                if (context->getNodeName() == name->str())
-                {
-                    score = eMatchScoreQName;
-                }
-            }
-            else
-            {
-                XalanDOMString  theBuffer(executionContext.getMemoryManager());
-
-                executionContext.error(
-                    XalanMessageLoader::getMessage(
-                        theBuffer,
-                        XalanMessages::ArgLengthNodeTestIsIncorrect_1Param, 
-                        "processing-instruction()"),
-                    context,
-                    getLocator());
-            }
-        }
-
-        break;
-
-    case XPathExpression::eNODETYPE_NODE:
-        if (nodeType == XalanNode::CDATA_SECTION_NODE ||
-            nodeType == XalanNode::TEXT_NODE)
-        {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            if (executionContext.shouldStripSourceNode((const XalanText&)*context) == false)
-#else
-            if (executionContext.shouldStripSourceNode(static_cast<const XalanText&>(*context)) == false)
-#endif
-            {
-                score = eMatchScoreNodeTest;
-            }
-        }
-        else
-        {
-            score = eMatchScoreNodeTest;
-        }
-        break;
-
-    case XPathExpression::eNODETYPE_ROOT:
-        if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
-            XalanNode::DOCUMENT_NODE == nodeType)
-        {
-            score =  eMatchScoreOther;
-        }
-        break;
-
-    case XPathExpression::eNODENAME:
-        {
-            opPos++;
-
-            if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
-            {
-                bool                    test = false;
-
-                OpCodeMapValueType      queueIndex = currentExpression.getOpCodeMapValue(opPos);
-                assert(queueIndex == XPathExpression::eEMPTY ||
-                       queueIndex < currentExpression.tokenQueueSize());
-
-                const XalanDOMString&   targetNS = queueIndex != XPathExpression::eEMPTY ?
-                                        currentExpression.getToken(queueIndex)->str() :
-                                            s_emptyString;
-
-                opPos++;
-
-                // From the draft: "Two expanded names are equal if they 
-                // have the same local part, and either both have no URI or 
-                // both have the same URI."
-                // "A node test * is true for any node of the principal node type. 
-                // For example, child::* will select all element children of the 
-                // context node, and attribute::* will select all attributes of 
-                // the context node."
-                // "A node test can have the form NCName:*. In this case, the prefix 
-                // is expanded in the same way as with a QName using the context 
-                // namespace declarations. The node test will be true for any node 
-                // of the principal type whose expanded name has the URI to which 
-                // the prefix expands, regardless of the local part of the name."
-                const bool  isTotallyWild =
-                            0 == length(targetNS) &&
-                            currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
-
-                bool        didMatchNS = false;
-
-                if(isTotallyWild == false)
-                {
-                    const XalanDOMString&   contextNS = DOMServices::getNamespaceOfNode(*context);
-
-                    if(0 != length(targetNS) && 0 != length(contextNS))
-                    {
-                        test = contextNS == targetNS;
-
-                        didMatchNS = true;
-                    }
-                    else
-                    {
-                        test = XPathExpression::eELEMWILDCARD == queueIndex || 
-                           (0 == length(contextNS) && 0 == length(targetNS));
-                    }
-                }
-                else
-                {
-                    test = true;
-                }
-
-                queueIndex = currentExpression.getOpCodeMapValue(opPos);
-
-                if(test == true)
-                {
-                    switch(nodeType)
-                    {
-                    case XalanNode::ATTRIBUTE_NODE:
-                        if(stepType == XPathExpression::eFROM_ATTRIBUTES ||
-                            stepType == XPathExpression::eFROM_NAMESPACE)
-                        {
-                            assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
-
-                            const XalanDOMString&   attrName =
-                                        context->getNodeName();
-
-                            const bool              isNamespace =
-                                    startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
-                                    attrName == DOMServices::s_XMLNamespace;
-
-                            if(XPathExpression::eELEMWILDCARD == queueIndex)
-                            {
-                                if(stepType == XPathExpression::eFROM_ATTRIBUTES)
-                                {
-                                    if (isNamespace == false)
-                                    {
-                                        if (isTotallyWild == true)
-                                        {
-                                            score = eMatchScoreNodeTest;
-                                        }
-                                        else
-                                        {
-                                            score = eMatchScoreNSWild;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (isNamespace == true)
-                                    {
-                                        score = eMatchScoreNodeTest;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if(stepType == XPathExpression::eFROM_ATTRIBUTES)
-                                {
-                                    if (isNamespace == false)
-                                    {
-                                        assert(queueIndex >= 0);
-
-                                        const XalanDOMString&   targetLocalName =
-                                                            currentExpression.getToken(queueIndex)->str();
-
-                                        const XalanDOMString&   localAttrName =
-                                                DOMServices::getLocalNameOfNode(*context);
-
-                                        if (localAttrName == targetLocalName)
-                                        {
-                                            score = eMatchScoreQName;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (isNamespace == true)
-                                    {
-                                        const XalanAttr* const  theAttrNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                                            (const XalanAttr*)context;
-#else
-                                            static_cast<const XalanAttr*>(context);
-#endif
-                                        assert(theAttrNode != 0);
-
-                                        const XalanDOMString&   theNamespace =
-                                                    theAttrNode->getLocalName();
-
-                                        assert(queueIndex >= 0);
-
-                                        const XalanDOMString&   targetLocalName =
-                                                            currentExpression.getToken(queueIndex)->str();
-
-                                        if (theNamespace == targetLocalName)
-                                        {
-                                            score = eMatchScoreQName;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
-                    case XalanNode::ELEMENT_NODE:
-                        if(stepType != XPathExpression::eFROM_ATTRIBUTES)
-                        {
-                            if(XPathExpression::eELEMWILDCARD == queueIndex)
-                            {
-                                score = didMatchNS == true ?
-                                    eMatchScoreNSWild : eMatchScoreNodeTest;
-                            }
-                            else
-                            {
-                                assert(queueIndex >= 0);
-
-                                const XalanDOMString&   targetLocalName =
-                                                            currentExpression.getToken(queueIndex)->str();
-
-                                if (DOMServices::getLocalNameOfNode(*context) == targetLocalName)
-                                {
-                                    score = eMatchScoreQName;
-                                }
-                            }
-                        }
-                        break;
-
-                    default:
-                        // Trying to match on anything else causes nasty bugs.
-                        break;
-                    } // end switch(nodeType)
-                } // end if(test)
-            } // end if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
-        } // end case XPathExpression::eNODENAME
-        break;
-
-    default:
-        break;
-    } // end switch(testType)
-
-    return score;
-}
-#endif  // !defined(NDEBUG)
 
 
 
@@ -5256,7 +4927,7 @@ isNamespaceDeclaration(const XalanNode&     theAttributeNode)
 
 
 
-// MSVC generates some really horrible code for some of these very simple functions when they're inlined...
+// MSVC 6 generates some really horrible code for some of these very simple functions when they're inlined...
 #if defined(_MSC_VER) && _MSC_VER <= 1300 && !defined(__INTEL_COMPILER)
 #pragma auto_inline(off)
 #endif
@@ -5283,7 +4954,7 @@ XPath::NodeTester::testText(
             const XalanNode&        context,
             XalanNode::NodeType     nodeType) const
 {
-    if ((XalanNode::TEXT_NODE == nodeType || XalanNode::CDATA_SECTION_NODE == nodeType) &&
+    if (XalanNode::TEXT_NODE == nodeType &&
 #if defined(XALAN_OLD_STYLE_CASTS)
         shouldStripSourceNode((const XalanText&)context) == false)
 #else
@@ -5342,7 +5013,7 @@ XPath::NodeTester::testNode(
             const XalanNode&        context,
             XalanNode::NodeType     nodeType) const
 {
-    if ((nodeType != XalanNode::TEXT_NODE && nodeType != XalanNode::CDATA_SECTION_NODE) ||
+    if (nodeType != XalanNode::TEXT_NODE ||
 #if defined(XALAN_OLD_STYLE_CASTS)
         shouldStripSourceNode((const XalanText&)context) == false)
 #else

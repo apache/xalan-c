@@ -154,8 +154,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 #endif
     m_usePerInstanceDocumentFactory(false),
     m_escapeURLs(eEscapeURLsDefault),
-    m_omitMETATag(eOmitMETATagDefault),
-    m_hasStripOrPreserveSpace(false)
+    m_omitMETATag(eOmitMETATagDefault)
 {
     m_currentTemplateStack.push_back(0);
 }
@@ -217,8 +216,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 #endif
     m_usePerInstanceDocumentFactory(false),
     m_escapeURLs(eEscapeURLsDefault),
-    m_omitMETATag(eOmitMETATagDefault),
-    m_hasStripOrPreserveSpace(false)
+    m_omitMETATag(eOmitMETATagDefault)
 {
     m_currentTemplateStack.push_back(0);
 }
@@ -316,8 +314,6 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*  theS
     else
     {
         m_xsltProcessor->setExecutionContext(this);
-
-        m_hasStripOrPreserveSpace = theStylesheet->hasPreserveOrStripSpaceElements();
 
         m_countersTable.resize(theStylesheet->getElemNumberCount());
     }
@@ -1895,8 +1891,6 @@ StylesheetExecutionContextDefault::reset()
     m_mutableNodeRefListStack.reset();
     m_formatterToTextStack.reset();
 #endif
-
-    m_hasStripOrPreserveSpace = false;
 }
 
 
@@ -2242,17 +2236,10 @@ StylesheetExecutionContextDefault::getUnparsedEntityURI(
 bool
 StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanText&   node)
 {
-    if (m_hasStripOrPreserveSpace == false || m_stylesheetRoot == 0)
-    {
-        return false;
-    }
-    else
-    {
-        assert(m_stylesheetRoot->hasPreserveOrStripSpaceElements() == true);
-        assert(node.getData().length() != 0);
+    assert(m_stylesheetRoot != 0);
+    assert(node.getData().length() != 0);
 
-        return m_stylesheetRoot->shouldStripSourceNode(node);
-    }
+    return m_stylesheetRoot->shouldStripSourceNode(node);
 }
 
 

@@ -90,6 +90,10 @@ public:
     {
     }
 
+    XalanQName(const XalanQName&)
+    {
+    }
+
     /**
      * Retrieve the local part of qualified name.
      * 
