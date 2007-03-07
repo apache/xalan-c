@@ -25,7 +25,12 @@
 
 
 
-#include <iostream>
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iosfwd>
+//#include <ios>
+#endif
 
 
 
@@ -33,30 +38,42 @@
 
 
 
-XALAN_USING_STD(ostream)
-XALAN_USING_XALAN(XalanDOMString)
-
-
-
 class Logger
 {
 public:
 
-	Logger(ostream & stream);
+#if defined(XALAN_NO_STD_NAMESPACE)
+    typedef ostream         StreamType;
+#else
+    typedef std::ostream    StreamType;
+#endif
 
-	typedef enum { eMessage = 0, eWarning = 1, eError = 2} eLogType;
+    Logger(StreamType&  stream);
 
-	ostream& message();
-	ostream& warning();
-	ostream& error();
-	
-	ostream& log(eLogType logType);
+	enum eLogType
+    {
+        eMessage = 0,
+        eWarning = 1,
+        eError = 2
+    };
+
+	StreamType&
+    message();
+
+    StreamType&
+    warning();
+
+    StreamType&
+    error();
+
+	StreamType&
+    log(eLogType    logType);
 
 protected:
 
-	char * logText[3];
+	const char*     logText[3];
 
-	ostream& m_stream;
+	StreamType&        m_stream;
 };
 
 

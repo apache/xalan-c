@@ -15,7 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
+// Base header file.  Must be first.
+#include <xalanc/Include/PlatformDefinitions.hpp>
+
+
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iomanip.h>
+#else
+#include <iomanip>
+#endif
 
 
 
@@ -64,17 +73,23 @@ XALAN_USING_XALAN(XSLTInputSource)
 
 
 
+#if !defined(XALAN_NO_STD_NAMESPACE)
+using std::endl;
+#endif
+
+
+
 /**
  * Processes parameters for the test harness
  */
 Parameters::Parameters(
-        const XalanDOMString& runFileName,
-        const XalanDOMString& testDirectory,
-        const XalanDOMString& resultDirectory,
-		const XalanDOMString& baselineDirectory,
-		const XalanDOMString& reportDirectory,
+        const XalanDOMString&   runFileName,
+        const XalanDOMString&   testDirectory,
+        const XalanDOMString&   resultDirectory,
+		const XalanDOMString&   baselineDirectory,
+		const XalanDOMString&   reportDirectory,
 		XalanFileUtility&		fileUtility,
-		Logger & logger) :
+		Logger&                 logger) :
 	m_name("default"),
 	m_description(""),
 	m_resultDirectory(resultDirectory),
@@ -161,8 +176,8 @@ Parameters::getTestCases()
 
 bool
 Parameters::parseConfigurationFile(
-        const XalanDOMString& runFileName,
-		Logger& logger)
+        const XalanDOMString&   runFileName,
+		Logger&                 logger)
 {
 	// parse the configuration file and get default settings
 
@@ -177,7 +192,8 @@ Parameters::parseConfigurationFile(
 				<< ", error: " 
 				<< m_transformer.getLastError() 
 				<< endl;
-		return false;
+
+        return false;
 	}
 
     XalanDocument* document = theParsedSource->getDocument();
@@ -193,7 +209,8 @@ Parameters::parseConfigurationFile(
 				<< runFileName.c_str() 
 				<< ", error: no <testconfig> found"
 				<< endl;
-			return false;
+
+            return false;
 		}
 	}
 
@@ -203,6 +220,7 @@ Parameters::parseConfigurationFile(
 				<< runFileName.c_str()
 				<< ", error: Missing <testconfig> tag" 
 				<< endl;
+
         return false;
     }
 
@@ -223,7 +241,8 @@ Parameters::parseConfigurationFile(
 				<< runFileName.c_str()
 				<< ", error: Missing name attribute" 
 				<< endl;
-			return false;
+
+            return false;
 		}
     }
 

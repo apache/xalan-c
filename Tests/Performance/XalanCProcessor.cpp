@@ -16,18 +16,21 @@
  * limitations under the License.
  */
 
+// Base header file.  Must be first.
+#include <xalanc/Include/PlatformDefinitions.hpp>
+
+
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
 #include <iostream>
-
-
-
-using namespace std;
+#endif
 
 
 
 #include <xalanc/XMLSupport/FormatterToNull.hpp>
 #include <xalanc/XalanSourceTree/FormatterToSourceTree.hpp>
-
-
 
 
 

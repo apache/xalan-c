@@ -20,7 +20,11 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
 #include <iostream>
+#endif
 
 
 
@@ -71,9 +75,9 @@ void usage()
          << " [options]"
          << " -test [test directory ]"
          << " -result [result directory ]"
-		 << " -baseline [baseline directory]"
-		 << " -report [report directory ]"
-		 << " configfile" << endl
+         << " -baseline [baseline directory]"
+         << " -report [report directory ]"
+         << " configfile" << endl
          << "Options:" << endl
          << "        -?    Display this message" << endl;
 }
@@ -81,243 +85,243 @@ void usage()
 
 
 void generateReports(
-		Parameters&				params,
-		const XalanDOMString&	reportFile,
-		Logger&					logger)
+        Parameters&             params,
+        const XalanDOMString&   reportFile,
+        Logger&                 logger)
 {
-	XalanTransformer transformer;
+    XalanTransformer transformer;
 
-	// report XSL file
-	XalanDOMString reportFileXSL = params.getReportDirectory();
-	reportFileXSL += XalanDOMString("report.xsl");
+    // report XSL file
+    XalanDOMString reportFileXSL = params.getReportDirectory();
+    reportFileXSL += XalanDOMString("report.xsl");
 
-	// html result
-	XalanDOMString htmlReport = params.getResultDirectory();
-	htmlReport += params.getResultFile();
-	htmlReport += params.getUniqId();
-	htmlReport += XalanDOMString(".html");
+    // html result
+    XalanDOMString htmlReport = params.getResultDirectory();
+    htmlReport += params.getResultFile();
+    htmlReport += params.getUniqId();
+    htmlReport += XalanDOMString(".html");
 
-	if (checkFileExists(reportFileXSL))
-	{
-		if (transformer.transform(reportFile, reportFileXSL, htmlReport) < 0)
-		{
-			logger.warning() 
-				<< "Failed to generate HTML report: " 
-				<< htmlReport.c_str()
-				<< ", error: " 
-				<< transformer.getLastError() << endl;
-		}
-		else
-		{
-			logger.message() << "Generated HTML report: " << htmlReport.c_str() << endl;
-		}
-	}
-	else
-	{
-		logger.warning()
-			<< "Could not generate HTML report, stylesheet: "
-			<< reportFileXSL.c_str()
-			<< ", file not found" << endl;
-	}
+    if (checkFileExists(reportFileXSL))
+    {
+        if (transformer.transform(reportFile, reportFileXSL, htmlReport) < 0)
+        {
+            logger.warning() 
+                << "Failed to generate HTML report: "
+                << htmlReport.c_str()
+                << ", error: " 
+                << transformer.getLastError() << endl;
+        }
+        else
+        {
+            logger.message() << "Generated HTML report: " << htmlReport.c_str() << endl;
+        }
+    }
+    else
+    {
+        logger.warning()
+            << "Could not generate HTML report, stylesheet: "
+            << reportFileXSL.c_str()
+            << ", file not found" << endl;
+    }
 
-	XalanDOMString baselineFile = params.getBaselineDirectory();
-	baselineFile += params.getBaselineFile();
+    XalanDOMString baselineFile = params.getBaselineDirectory();
+    baselineFile += params.getBaselineFile();
 
-	if (checkFileExists(baselineFile))
-	{
-		// comparison report XSL file
-		XalanDOMString compareReportFileXSL = params.getReportDirectory();
-		compareReportFileXSL += XalanDOMString("comparereport.xsl");
+    if (checkFileExists(baselineFile))
+    {
+        // comparison report XSL file
+        XalanDOMString compareReportFileXSL = params.getReportDirectory();
+        compareReportFileXSL += XalanDOMString("comparereport.xsl");
 
-		// html result
-		XalanDOMString htmlCompareReport = params.getResultDirectory();
-		htmlCompareReport += XalanDOMString("compare");
-		htmlCompareReport += params.getResultFile();
-		htmlCompareReport += params.getUniqId();
-		htmlCompareReport += XalanDOMString(".html");
+        // html result
+        XalanDOMString htmlCompareReport = params.getResultDirectory();
+        htmlCompareReport += XalanDOMString("compare");
+        htmlCompareReport += params.getResultFile();
+        htmlCompareReport += params.getUniqId();
+        htmlCompareReport += XalanDOMString(".html");
 
-		XalanDOMString baselineFileStr = XalanDOMString("'");
-					baselineFileStr += baselineFile;
-					baselineFileStr += XalanDOMString("'");
+        XalanDOMString baselineFileStr = XalanDOMString("'");
+                    baselineFileStr += baselineFile;
+                    baselineFileStr += XalanDOMString("'");
 
-		transformer.setStylesheetParam(XalanDOMString("threshold"),params.getThreshold());
-		transformer.setStylesheetParam(XalanDOMString("baseline"), baselineFileStr);
+        transformer.setStylesheetParam(XalanDOMString("threshold"),params.getThreshold());
+        transformer.setStylesheetParam(XalanDOMString("baseline"), baselineFileStr);
 
-		if (checkFileExists(compareReportFileXSL))
-		{
-			if (transformer.transform(reportFile, compareReportFileXSL, htmlCompareReport) < 0)
-			{
-				logger.warning() 
-					<< "Failed to generate HTML report: " 
-					<< htmlCompareReport.c_str()
-					<< ", error: " 
-					<< transformer.getLastError() << endl;
-			}
-			else
-			{
-				logger.message() << "Generated HTML report: " << htmlCompareReport.c_str() << endl;
-			}
-		}
-		else
-		{
-			logger.warning()
-				<< "Could not generate HTML report, stylesheet: "
-				<< compareReportFileXSL.c_str()
-				<< ", file not found" << endl;
-		}
-	}
-	else
-	{
-		logger.warning()
-			<< "No baseline file found: "
-			<< baselineFile.c_str() 
-			<< endl;
-	}
+        if (checkFileExists(compareReportFileXSL))
+        {
+            if (transformer.transform(reportFile, compareReportFileXSL, htmlCompareReport) < 0)
+            {
+                logger.warning() 
+                    << "Failed to generate HTML report: " 
+                    << htmlCompareReport.c_str()
+                    << ", error: " 
+                    << transformer.getLastError() << endl;
+            }
+            else
+            {
+                logger.message() << "Generated HTML report: " << htmlCompareReport.c_str() << endl;
+            }
+        }
+        else
+        {
+            logger.warning()
+                << "Could not generate HTML report, stylesheet: "
+                << compareReportFileXSL.c_str()
+                << ", file not found" << endl;
+        }
+    }
+    else
+    {
+        logger.warning()
+            << "No baseline file found: "
+            << baselineFile.c_str()
+            << endl;
+    }
 }
 
 
 int main(int argc, char* argv[])
 {
-	XMLPlatformUtils::Initialize();
+    XMLPlatformUtils::Initialize();
     XalanTransformer::initialize();
 
-	Logger logger(cerr);
+    Logger logger(cerr);
 
-	if (argc < 2 ||
+    if (argc < 2 ||
         XalanDOMString("-?").compare(XalanDOMString(argv[1])) == 0)
     {
         usage();
     }
     else
-    { 
+    {
         XalanDOMString testDirectory;
         XalanDOMString resultDirectory;
-		XalanDOMString baselineDirectory;
-		XalanDOMString reportDirectory;
+        XalanDOMString baselineDirectory;
+        XalanDOMString reportDirectory;
         XalanDOMString runFileName;
 
-		// process command line parameters
+        // process command line parameters
         int i = 1;
         while (i < argc)
         {
-            if (stricmp(argv[i],"-test") == 0)
+            if (strcmp(argv[i],"-test") == 0)
             {
                 ++i;
                 if (i >= argc)
                 {
-					logger.error() << "Test directory missing" << endl;
-					usage();
+                    logger.error() << "Test directory missing" << endl;
+                    usage();
                     exit(1);
                 }
                 testDirectory.assign(argv[i]);
             }
-            else if (stricmp(argv[i],"-result") == 0)
+            else if (strcmp(argv[i],"-result") == 0)
             {
                 ++i;
                 if (i >= argc)
                 {
                     logger.error() << "Result directory missing" << endl;
-					usage();
-					exit(1);
+                    usage();
+                    exit(1);
                 }
                 resultDirectory.assign(argv[i]);
             }
-			else if (stricmp(argv[i],"-baseline") == 0)
+            else if (strcmp(argv[i],"-baseline") == 0)
             {
                 ++i;
                 if (i >= argc)
                 {
                     logger.error() << "Baseline directory missing" << endl;
-					usage();
-					exit(1);
+                    usage();
+                    exit(1);
                 }
                 baselineDirectory.assign(argv[i]);
             }
-			else if (stricmp(argv[i],"-report") == 0)
+            else if (strcmp(argv[i],"-report") == 0)
             {
                 ++i;
                 if (i >= argc)
                 {
-					logger.error() << "Report directory missing" << endl;
-					usage();
-					exit(1);
+                    logger.error() << "Report directory missing" << endl;
+                    usage();
+                    exit(1);
                 }
                 reportDirectory.assign(argv[i]);
             }
             else
             {
-				break;
-			}
+                break;
+            }
 
-			++i;
+            ++i;
         }
 
         if (i >= argc)
         {
             logger.error() << "Run file not specified" << endl;
-			usage();
-			exit(1);
+            usage();
+            exit(1);
         }
-		else
-		{
-			runFileName.assign(argv[i]);
-		}
+        else
+        {
+            runFileName.assign(argv[i]);
+        }
 
 
-		logger.message() << "Loading configuration file: " << runFileName.c_str() << endl;
+        logger.message() << "Loading configuration file: " << runFileName.c_str() << endl;
 
-		XalanFileUtility fileUtility(XalanMemMgrs::getDefaultXercesMemMgr());
+        XalanFileUtility fileUtility(XalanMemMgrs::getDefaultXercesMemMgr());
 
-		// setup testing parameters
+        // setup testing parameters
         Parameters params(
-				runFileName,
-				testDirectory,
-				resultDirectory,
-				baselineDirectory,
-				reportDirectory,
-				fileUtility,
-				logger);
+                runFileName,
+                testDirectory,
+                resultDirectory,
+                baselineDirectory,
+                reportDirectory,
+                fileUtility,
+                logger);
 
-		if (!params.initialized())
-		{
-			exit(1);
-		}
+        if (!params.initialized())
+        {
+            exit(1);
+        }
 
-		// create report file 
-		XalanDOMString reportFile = params.getResultDirectory();
-		reportFile += params.getResultFile();
-		reportFile += params.getUniqId();
-		reportFile += XalanDOMString(".xml");
+        // create report file 
+        XalanDOMString reportFile = params.getResultDirectory();
+        reportFile += params.getResultFile();
+        reportFile += params.getUniqId();
+        reportFile += XalanDOMString(".xml");
 
-		XalanXMLFileReporter reporter(XalanMemMgrs::getDefaultXercesMemMgr(), reportFile);
+        XalanXMLFileReporter reporter(XalanMemMgrs::getDefaultXercesMemMgr(), reportFile);
 
-		reporter.logTestFileInit(params.getDescription());
+        reporter.logTestFileInit(params.getDescription());
 
-		// run test harness
-		typedef TestHarness<XalanCProcessor> XalanCTestHarness;
+        // run test harness
+        typedef TestHarness<XalanCProcessor> XalanCTestHarness;
 
-		XalanCTestHarness testHarness;
+        XalanCTestHarness testHarness;
 
         testHarness.init(fileUtility, reporter, logger);
 
-		testHarness.executeTestCases(params.getTestCases());
+        testHarness.executeTestCases(params.getTestCases());
 
-		reporter.logTestFileClose("","");
+        reporter.logTestFileClose("","");
 
-		reporter.close();
+        reporter.close();
 
-		// generate reports
-		generateReports(params, reportFile, logger);
-		
-		// create latest copy for baseline testing
-		XalanDOMString latestReportFile = params.getResultDirectory();
-		latestReportFile += params.getResultFile();
-		latestReportFile += XalanDOMString("_latest.xml");
-		copyFile(latestReportFile, reportFile);
-	}
+        // generate reports
+        generateReports(params, reportFile, logger);
 
-	XalanTransformer::terminate();
+        // create latest copy for baseline testing
+        XalanDOMString latestReportFile = params.getResultDirectory();
+        latestReportFile += params.getResultFile();
+        latestReportFile += XalanDOMString("_latest.xml");
+        copyFile(latestReportFile, reportFile);
+    }
+
+    XalanTransformer::terminate();
     XMLPlatformUtils::Terminate();
 
-	return 0;
+    return 0;
 }

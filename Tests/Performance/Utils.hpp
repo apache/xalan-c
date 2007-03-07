@@ -25,8 +25,11 @@
 
 
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <fstream.h>
+#else
 #include <fstream>
-
+#endif
 
 
 #include <xalanc/Harness/XalanFileUtility.hpp>
@@ -40,8 +43,6 @@
 XALAN_USING_XALAN(XalanDOMChar)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanFileUtility)
-
-XALAN_USING_STD(istringstream)
 
 
 
@@ -69,17 +70,23 @@ const XalanDOMChar* getPathSep();
 /**
  * Reads file into a stream
  */
-void fileToStream(
-        const XalanDOMString&   fileName,
-        istringstream&          resultStream);
+void
+fileToStream(
+            const XalanDOMString&                           fileName,
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+            XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType&   resultStream);
+#else
+            XALAN_STD_QUALIFIER istringstream&              resultStream);
+#endif
 
 
 /**
  * Copies a file
  */
-void copyFile(
-		const XalanDOMString&	destFile,
-		const XalanDOMString&	sourceFile);
+void
+copyFile(
+		    const XalanDOMString&	destFile,
+		    const XalanDOMString&	sourceFile);
 
         
 

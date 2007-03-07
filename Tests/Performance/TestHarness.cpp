@@ -27,7 +27,6 @@
 
 XALAN_USING_XALAN(XalanMemMgrs)
 XALAN_USING_XALAN(CharVectorType)
-XALAN_USING_XALAN(c_str)
 
 
 XALAN_USING_STD(ostringstream)

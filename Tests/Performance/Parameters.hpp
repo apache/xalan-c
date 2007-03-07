@@ -58,7 +58,7 @@ public:
 		const XalanDOMString&   baselineDirectory,
 		const XalanDOMString&	reportDirectory,
 		XalanFileUtility&		fileUtility,
-		Logger& log);
+		Logger&                 log);
 /*
     const XalanDOMString& 
     getRunName() { return m_name;}

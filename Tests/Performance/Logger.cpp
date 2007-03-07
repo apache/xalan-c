@@ -23,22 +23,28 @@
 
 
 
-#include <ctime>
-#include <iomanip>
-
-
-
 #include "Logger.hpp"
 
 
+#include <ctime>
 
-using namespace std;
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#include <iomanip.h>
+#else
+#include <iostream>
+#include <iomanip>
+#endif
+
+
+XALAN_USING_XALAN(XalanDOMString)
 
 
 
-Logger::Logger(ostream & stream) :
-		m_stream(stream)
-{	
+
+Logger::Logger(StreamType&  stream) :
+    m_stream(stream)
+{
 	logText[eMessage] = "Message";
 	logText[eWarning] = "Warning";
 	logText[eError] = "Error";
@@ -46,7 +52,7 @@ Logger::Logger(ostream & stream) :
 
 
 
-ostream& 
+Logger::StreamType&
 Logger::message()
 {
 	return log(eMessage);
@@ -54,7 +60,7 @@ Logger::message()
 
 
 
-ostream& 
+Logger::StreamType& 
 Logger::warning()
 {
 	return log(eWarning);
@@ -62,25 +68,33 @@ Logger::warning()
 
 
 
-ostream& 
+Logger::StreamType& 
 Logger::error()
 {
 	return log(eError);
 }
 
 
-ostream& 
-Logger::log(eLogType logType)
+Logger::StreamType& 
+Logger::log(eLogType    logType)
 {
-	time_t theTime;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::ctime;
+    using std::time;
+    using std::time_t;
+#endif
+
+    time_t theTime;
 	time(&theTime);
 
 	// Not thread safe
-	char * timeStr = ctime(&theTime);
+	char* const timeStr = ctime(&theTime);
 	timeStr[24] = '\0';
 
-	m_stream << timeStr << setw(10) << logText[logType] << ": ";
-	return m_stream;
+	m_stream << timeStr
+             << XALAN_STD_QUALIFIER setw(10)
+             << logText[logType]
+             << ": ";
+
+    return m_stream;
 }
-
-

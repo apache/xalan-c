@@ -23,7 +23,11 @@
 
 
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <fstream.h>
+#else
 #include <fstream>
+#endif
 
 
 
@@ -61,10 +65,6 @@ XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanFileUtility)
 XALAN_USING_XALAN(XalanXMLFileReporter)
 
-
-
-XALAN_USING_STD(istringstream)
-XALAN_USING_STD(endl)
 
 
 /**
@@ -118,8 +118,8 @@ public:
 
 
 
-typedef TestCase					TestCaseType;
-typedef XalanVector<TestCaseType>	TestCasesType;
+typedef TestCase                    TestCaseType;
+typedef XalanVector<TestCaseType>   TestCasesType;
 
 
 
@@ -132,35 +132,34 @@ class TestHarness
 public:
 
     typedef typename Processor::CompiledStylesheetType  CompiledStylesheetType;
-	typedef typename Processor::ParsedInputSourceType   ParsedInputSourceType;
+    typedef typename Processor::ParsedInputSourceType   ParsedInputSourceType;
     typedef typename Processor::ResultTargetType        ResultTargetType;
 
-	typedef typename XalanXMLFileReporter::Hashtable	TestAttributesType;
+    typedef typename XalanXMLFileReporter::Hashtable    TestAttributesType;
 
     TestHarness();
 
     void init(
-			XalanFileUtility&		fileUtility,
-			XalanXMLFileReporter&	reporter,
-			Logger&					logger);
+            XalanFileUtility&       fileUtility,
+            XalanXMLFileReporter&   reporter,
+            Logger&                 logger);
 
     void terminate();
 
-	void executeTestCase(const TestCaseType& testCase);
-	
+    void executeTestCase(const TestCaseType& testCase);
 
-	void executeTestCases(const TestCasesType& testCases);
+    void executeTestCases(const TestCasesType& testCases);
 
 
 protected:
 
-	Processor m_processor;
+    Processor m_processor;
 
-	XalanFileUtility*		m_fileUtility;
+    XalanFileUtility*       m_fileUtility;
 
-	XalanXMLFileReporter*	m_reporter;
+    XalanXMLFileReporter*   m_reporter;
 
-	Logger*					m_logger;
+    Logger*                 m_logger;
 };
 
 
@@ -170,11 +169,11 @@ void
 TestHarness<Processor>::executeTestCases(const TestCasesType& testCases)
 {
     TestCasesType::const_iterator testCaseIter = testCases.begin();
-	while (testCaseIter != testCases.end())
-	{
-		executeTestCase(*testCaseIter);
-		++testCaseIter;
-	}
+    while (testCaseIter != testCases.end())
+    {
+        executeTestCase(*testCaseIter);
+        ++testCaseIter;
+    }
 }
 
 
@@ -183,114 +182,141 @@ template <class Processor>
 void
 TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
 {
-	TestAttributesType testAttributes(XalanMemMgrs::getDefaultXercesMemMgr());
-	
-	testAttributes.insert(TestAttributesType::value_type(XalanDOMString("stylesheet"), testCase.stylesheet));
-	testAttributes.insert(TestAttributesType::value_type(XalanDOMString("input-document"), testCase.inputDocument));
+    TestAttributesType testAttributes(XalanMemMgrs::getDefaultXercesMemMgr());
+    
+    testAttributes.insert(TestAttributesType::value_type(XalanDOMString("stylesheet"), testCase.stylesheet));
+    testAttributes.insert(TestAttributesType::value_type(XalanDOMString("input-document"), testCase.inputDocument));
 
-	try {
+    try {
 
-		CompiledStylesheetType  compiledStylesheet;
-		ParsedInputSourceType   parsedInputSource;
-		ResultTargetType        resultTarget;
+        CompiledStylesheetType  compiledStylesheet;
+        ParsedInputSourceType   parsedInputSource;
+        ResultTargetType        resultTarget;
 
-		static const ProcessorOptions defaultProcessor;
-		
-		TestCase::ProcessorOptionsMap::const_iterator iter = testCase.processorOptions.find(m_processor.getName());
+        static const ProcessorOptions defaultProcessor;
+        
+        TestCase::ProcessorOptionsMap::const_iterator iter = testCase.processorOptions.find(m_processor.getName());
 
-		const ProcessorOptions&  processor = iter != testCase.processorOptions.end() ? iter->second : defaultProcessor;
-		
+        const ProcessorOptions&  processor = iter != testCase.processorOptions.end() ? iter->second : defaultProcessor;
+
         m_fileUtility->checkAndCreateDir(testCase.resultDirectory);
 
-	    Timer timeCompile;
-		
-		if (testCase.inputMode == XalanDOMString("stream"))
-		{
+        Timer timeCompile;
+
+        if (testCase.inputMode == XalanDOMString("stream"))
+        {
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+            XALAN_USING_XALAN(CharVectorType)
+            XALAN_USING_XALAN(c_str)
+
+            XALAN_USING_STD(istringstream)
+
+            CharVectorType  buffer;
+            fileToStream(testCase.stylesheet, buffer);
+
+            istrstream      compilerStream(c_str(buffer));
+#else
+            XALAN_USING_STD(istringstream)
+
             istringstream compilerStream; 
             fileToStream(testCase.stylesheet, compilerStream);
-
-			timeCompile.start();
-			compiledStylesheet = m_processor.compileStylesheet(
-					compilerStream,
-					processor.compileOptions);
-			timeCompile.stop();
-		}
+#endif
+            timeCompile.start();
+            compiledStylesheet = m_processor.compileStylesheet(
+                    compilerStream,
+                    processor.compileOptions);
+            timeCompile.stop();
+        }
         else if (testCase.inputMode == XalanDOMString("file"))
-		{
+        {
             timeCompile.start();
             compiledStylesheet = m_processor.compileStylesheet(
                     testCase.stylesheet,
                     processor.compileOptions);
             timeCompile.stop();
         }
-		else 
-		{
-			m_logger->error() 
-					<< "Mode: " 
-					<< testCase.inputMode.c_str()
-					<< " is inavlid for stylesheet: "
-					<< testCase.stylesheet
-					<< endl;
-		}
+        else 
+        {
+            m_logger->error() 
+                    << "Mode: " 
+                    << testCase.inputMode.c_str()
+                    << " is inavlid for stylesheet: "
+                    << testCase.stylesheet
+                    << endl;
+        }
 
-		m_reporter->addMetricToAttrs("compile-xsl", timeCompile.getElapsedTime(), testAttributes);
+        m_reporter->addMetricToAttrs("compile-xsl", timeCompile.getElapsedTime(), testAttributes);
 
         long numIterations = 0;
 
-		long totalParseInputTime = 0;
-		long minParseInputTime = LONG_MAX;
-		long maxParseInputTime = 0 ;
+        long totalParseInputTime = 0;
+        long minParseInputTime = LONG_MAX;
+        long maxParseInputTime = 0 ;
 
-		long totalTransformTime = 0;
-		long minTransformTime = LONG_MAX;
-		long maxTransformTime = 0;
+        long totalTransformTime = 0;
+        long minTransformTime = LONG_MAX;
+        long maxTransformTime = 0;
 
-		
+
         Timer timeTotalRun;
         timeTotalRun.start();
 
         while (numIterations < testCase.numIterations 
             && timeTotalRun.getElapsedTime() < testCase.minTimeToExecute)
-        {       
-			Timer timeInput;
+        {
+            Timer timeInput;
             if (testCase.inputMode == XalanDOMString("stream"))
             {
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+                XALAN_USING_XALAN(CharVectorType)
+                XALAN_USING_XALAN(c_str)
+
+                XALAN_USING_STD(istringstream)
+
+                CharVectorType  buffer;
+                fileToStream(testCase.inputDocument, buffer);
+
+                istrstream      inputStream(c_str(buffer));
+#else
+                XALAN_USING_STD(istringstream)
+
                 istringstream inputStream;
                 fileToStream(testCase.inputDocument, inputStream);
-    		
-			    timeInput.start();
+#endif
+
+                timeInput.start();
                 parsedInputSource = m_processor.parseInputSource(
                         inputStream, 
                         processor.parseOptions);
-			    timeInput.stop();
-		    }
-		    else if (testCase.inputMode == XalanDOMString("file"))
-		    {
+                timeInput.stop();
+            }
+            else if (testCase.inputMode == XalanDOMString("file"))
+            {
                 timeInput.start();
                 parsedInputSource = m_processor.parseInputSource(
                         testCase.inputDocument, 
                         processor.parseOptions);
-    		    timeInput.stop();
-		    }
-		    else 
-		    {
-			   	m_logger->error() 
-					<< "Mode: " 
-					<< testCase.inputMode.c_str()
-					<< " is inavlid for input document: "
-					<< testCase.inputDocument
-					<< endl;
-		    }
-			
-			totalParseInputTime += timeInput.getElapsedTime();
-			minParseInputTime = timeInput.getElapsedTime() < minParseInputTime ? timeInput.getElapsedTime() : minParseInputTime;
-			maxParseInputTime = timeInput.getElapsedTime() > maxParseInputTime ? timeInput.getElapsedTime() : maxParseInputTime;
+                timeInput.stop();
+            }
+            else
+            {
+                m_logger->error() 
+                    << "Mode: " 
+                    << testCase.inputMode.c_str()
+                    << " is inavlid for input document: "
+                    << testCase.inputDocument
+                    << endl;
+            }
+
+            totalParseInputTime += timeInput.getElapsedTime();
+            minParseInputTime = timeInput.getElapsedTime() < minParseInputTime ? timeInput.getElapsedTime() : minParseInputTime;
+            maxParseInputTime = timeInput.getElapsedTime() > maxParseInputTime ? timeInput.getElapsedTime() : maxParseInputTime;
 
 
             resultTarget = m_processor.createResultTarget(
                     testCase.resultDocument, 
                     processor.resultOptions);
-  
+
             Timer timeTransform;
             timeTransform.start();
             m_processor.transform(
@@ -299,82 +325,81 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
                     resultTarget);
             timeTransform.stop();
 
-			totalTransformTime += timeTransform.getElapsedTime();
-			minTransformTime = timeTransform.getElapsedTime() < minTransformTime ? timeTransform.getElapsedTime() : minTransformTime;
-			maxTransformTime = timeTransform.getElapsedTime() > maxTransformTime ? timeTransform.getElapsedTime() : maxTransformTime;
+            totalTransformTime += timeTransform.getElapsedTime();
+            minTransformTime = timeTransform.getElapsedTime() < minTransformTime ? timeTransform.getElapsedTime() : minTransformTime;
+            maxTransformTime = timeTransform.getElapsedTime() > maxTransformTime ? timeTransform.getElapsedTime() : maxTransformTime;
 
-			++numIterations;
+            ++numIterations;
         }
 
-		timeTotalRun.stop();
+        timeTotalRun.stop();
 
-		m_processor.releaseStylesheet(compiledStylesheet);
-		m_processor.releaseInputSource(parsedInputSource);
-		m_processor.releaseResultTarget(resultTarget);
+        m_processor.releaseStylesheet(compiledStylesheet);
+        m_processor.releaseInputSource(parsedInputSource);
+        m_processor.releaseResultTarget(resultTarget);
 
-	
-		if (true == testCase.verifyResult)
-		{
-			testAttributes.insert(TestAttributesType::value_type(XalanDOMString("verify"), XalanDOMString("yes")));
-			if (checkFileExists(testCase.resultDocument))
-			{
-				if (checkFileExists(testCase.goldResult))
-				{
-					if (m_fileUtility->compareSerializedResults(
-							testCase.resultDocument,
-							testCase.goldResult))
-					{
-						testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("pass")));
-					}
-					else
-					{
-						testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("fail")));
-					}     
-				}
-				else
-				{
-					testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("incomplete")));
-				}
-			}
-			else
-			{
-				testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("incomplete")));
-			}
-		}
-		else
-		{
-			testAttributes.insert(TestAttributesType::value_type(XalanDOMString("verify"), XalanDOMString("no")));
-		}
+        if (true == testCase.verifyResult)
+        {
+            testAttributes.insert(TestAttributesType::value_type(XalanDOMString("verify"), XalanDOMString("yes")));
+            if (checkFileExists(testCase.resultDocument))
+            {
+                if (checkFileExists(testCase.goldResult))
+                {
+                    if (m_fileUtility->compareSerializedResults(
+                            testCase.resultDocument,
+                            testCase.goldResult))
+                    {
+                        testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("pass")));
+                    }
+                    else
+                    {
+                        testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("fail")));
+                    }
+                }
+                else
+                {
+                    testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("incomplete")));
+                }
+            }
+            else
+            {
+                testAttributes.insert(TestAttributesType::value_type(XalanDOMString("result"), XalanDOMString("incomplete")));
+            }
+        }
+        else
+        {
+            testAttributes.insert(TestAttributesType::value_type(XalanDOMString("verify"), XalanDOMString("no")));
+        }
 
 
-		m_reporter->addMetricToAttrs("num-iterations", numIterations, testAttributes);
-		m_reporter->addMetricToAttrs("elapsed-time", timeTotalRun.getElapsedTime(), testAttributes);
-		m_reporter->addMetricToAttrs("min-parse-input", minParseInputTime, testAttributes);
-		m_reporter->addMetricToAttrs("max-parse-input", maxParseInputTime, testAttributes);
-		m_reporter->addMetricToAttrs("avg-parse-input", totalParseInputTime / numIterations, testAttributes);
-		m_reporter->addMetricToAttrs("min-transform", minTransformTime, testAttributes);
-		m_reporter->addMetricToAttrs("max-transform", maxTransformTime, testAttributes);
-		m_reporter->addMetricToAttrs("avg-transform", totalTransformTime / numIterations, testAttributes);
-		
-		testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("yes")));
-		
+        m_reporter->addMetricToAttrs("num-iterations", numIterations, testAttributes);
+        m_reporter->addMetricToAttrs("elapsed-time", timeTotalRun.getElapsedTime(), testAttributes);
+        m_reporter->addMetricToAttrs("min-parse-input", minParseInputTime, testAttributes);
+        m_reporter->addMetricToAttrs("max-parse-input", maxParseInputTime, testAttributes);
+        m_reporter->addMetricToAttrs("avg-parse-input", totalParseInputTime / numIterations, testAttributes);
+        m_reporter->addMetricToAttrs("min-transform", minTransformTime, testAttributes);
+        m_reporter->addMetricToAttrs("max-transform", maxTransformTime, testAttributes);
+        m_reporter->addMetricToAttrs("avg-transform", totalTransformTime / numIterations, testAttributes);
+
+        testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("yes")));
+
     }
     catch (XalanDOMString exception)
-	{
-		m_logger->error()  
-				<< "Error encountered during transformation: " 
-				<< testCase.stylesheet.c_str()
-				<< ", error: "
-				<< exception.c_str()
-				<< endl;
+    {
+        m_logger->error()  
+                << "Error encountered during transformation: "
+                << testCase.stylesheet.c_str()
+                << ", error: "
+                << exception.c_str()
+                << endl;
 
-		testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("no")));
-	}
-	
-	m_reporter->logElementWAttrs(1, "testcase", testAttributes, "");
+        testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("no")));
+    }
+
+    m_reporter->logElementWAttrs(1, "testcase", testAttributes, "");
 }
-  
-  
+
+
 
 template <class Processor>
 TestHarness<Processor>::TestHarness()
@@ -386,17 +411,17 @@ TestHarness<Processor>::TestHarness()
 template <class Processor>
 void 
 TestHarness<Processor>::init(
-		XalanFileUtility&		fileUtility,
-		XalanXMLFileReporter&	reporter,
-		Logger&					logger)
+        XalanFileUtility&       fileUtility,
+        XalanXMLFileReporter&   reporter,
+        Logger&                 logger)
 {
     m_processor.init();
 
-	m_fileUtility = &fileUtility;
+    m_fileUtility = &fileUtility;
 
-	m_reporter = &reporter;		
+    m_reporter = &reporter;
 
-	m_logger = &logger;
+    m_logger = &logger;
 }
 
 
