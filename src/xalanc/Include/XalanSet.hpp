@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-/**
- * @author Matthew Hoyt (mhoyt@ca.ibm.com)
- */
-
 #if !defined(XALANSET_HEADER_GUARD_1357924680)
 #define XALANSET_HEADER_GUARD_1357924680
 
@@ -42,15 +38,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 template <class Value, class MapIterator>
 struct XalanSetIterator
 {
-    typedef Value  value_type;
+    typedef Value   value_type;
 
-    typedef Value& reference;
-    typedef Value* pointer;
+    typedef Value&  reference;
+    typedef Value*  pointer;
 
-    typedef ptrdiff_t		                    difference_type;
-    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+    typedef ptrdiff_t                                       difference_type;
+    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag  iterator_category;
 
-    XalanSetIterator(const MapIterator & iter) :
+    XalanSetIterator(const MapIterator&     iter) :
         m_mapIterator(iter)
     {
     }
@@ -73,18 +69,22 @@ struct XalanSetIterator
     XalanSetIterator operator++()
     {
         ++m_mapIterator;
+
         return *this;
     }
 
     XalanSetIterator operator++(int)
     {
         XalanSetIterator orig(m_mapIterator);
+
         ++(*this);
+
         return orig;
     }
 
 protected:
-    MapIterator m_mapIterator;
+
+    MapIterator     m_mapIterator;
 };
 
 
@@ -99,7 +99,7 @@ class XalanSet
 {
 public:
 
-    typedef Value	value_type;
+    typedef Value   value_type;
 
     typedef size_t  size_type;
 
@@ -108,71 +108,74 @@ public:
     typedef XalanSetIterator<value_type, typename SetMapType::iterator>             iterator;
     typedef XalanSetIterator<const value_type, typename SetMapType::const_iterator> const_iterator;
 
-    XalanSet(MemoryManagerType& theMemoryManager) :
+    XalanSet(MemoryManager&     theMemoryManager) :
         m_map(theMemoryManager)
     {
     }
 
-    XalanSet(const XalanSet&    other,
-             MemoryManagerType& theMemoryManager) :
+    XalanSet(
+            const XalanSet&    other,
+            MemoryManager&     theMemoryManager) :
         m_map(other.m_map, theMemoryManager)
     {
     }
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_map.getMemoryManager();
     }
 
-    const_iterator begin() const
+    const_iterator
+    begin() const
     {
         return m_map.begin();
     }
 
-    const_iterator end() const
+    const_iterator
+    end() const
     {
         return m_map.end();
     }
 
-    size_type size() const {
+    size_type
+    size() const {
         return m_map.size();
     }
 
-    size_type count(const value_type & value) const 
+    size_type
+    count(const value_type&     value) const 
     {
-        if (find(value) != end())
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
+        return find(value) != end() ? 1 : 0;
     }
 
-    const_iterator find(const value_type& value) const
+    const_iterator
+    find(const value_type&  value) const
     {
         return m_map.find(value);
     }
 
-    void insert(const value_type& value)
+    void
+    insert(const value_type&    value)
     {
-    typedef typename SetMapType::value_type MapValueType;
         m_map.insert(value, true);
     }
 
-    size_type erase(const value_type& value)
+    size_type
+    erase(const value_type&     value)
     {
         return m_map.erase(value);
     }
 
-    void clear()
+    void
+    clear()
     {
         m_map.clear();
     }
 
-    SetMapType m_map;
+private:
+
+    SetMapType  m_map;
 };
 
 
