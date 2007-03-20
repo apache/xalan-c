@@ -297,14 +297,10 @@ XalanTranscodingServices::destroyTranscoder(XalanOutputTranscoder*  theTranscode
 {
     if( theTranscoder!= 0)
     {
-
-        MemoryManagerType& theManager = theTranscoder->getMemoryManager();
-
-        theTranscoder->~XalanOutputTranscoder();
-
-        theManager.deallocate((void*)theTranscoder);
+        XalanDestroy(
+            theTranscoder->getMemoryManager(),
+            *theTranscoder);
     }
-   
 }
 
 
@@ -433,13 +429,17 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&  theEncoding)
 }
 
 
-const XalanDOMChar  XalanTranscodingServices::UnrepresentableCharacterException::m_type[] = 
-{   
+
+const XalanDOMChar  XalanTranscodingServices::UnrepresentableCharacterException::s_type[] =
+{
     XalanUnicode::charLetter_U,
     XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
     XalanUnicode::charLetter_p,
     XalanUnicode::charLetter_r,
     XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
     XalanUnicode::charLetter_e,
     XalanUnicode::charLetter_n,
     XalanUnicode::charLetter_t,
@@ -484,20 +484,33 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
             theEncoding),
         theBuffer.getMemoryManager()),
     m_badCharacter(theCharacter),
-    m_encoding(theEncoding, theBuffer.getMemoryManager())
+    m_encoding(
+        theEncoding,
+        theBuffer.getMemoryManager())
 {
 }
 
 
 
-XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCharacterException()
+XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(const UnrepresentableCharacterException&     theSource) :
+    XSLException(theSource),
+    m_badCharacter(theSource.m_badCharacter),
+    m_encoding(
+        theSource.m_encoding,
+        theSource.getMemoryManager())
 {
 }
 
 
 
-XalanOutputTranscoder::XalanOutputTranscoder(MemoryManagerType& theManager) :
-m_memoryManager(theManager)
+    XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCharacterException()
+{
+}
+
+
+
+XalanOutputTranscoder::XalanOutputTranscoder(MemoryManager&     theManager) :
+    m_memoryManager(theManager)
 {
 }
 
@@ -510,7 +523,7 @@ XalanOutputTranscoder::~XalanOutputTranscoder()
 
 
 void
-XalanTranscodingServices::initialize(MemoryManagerType&    /*  theManager */)
+XalanTranscodingServices::initialize(MemoryManager&     /*  theManager */)
 {
 }
 
