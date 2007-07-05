@@ -628,7 +628,6 @@ void
 FormatterToXML::accumCharUTF(XalanDOMChar   ch)
 {
     assert(m_maxCharacter >= 65535);
-    assert(m_stream != 0);
 
     m_charBuf[m_pos++] = ch;
 
