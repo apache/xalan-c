@@ -899,11 +899,21 @@ doXercesTranscode(
             }
             else
             {
+                XalanDOMString::size_type theRealCharLength = XalanDOMString::length(theOneTranslatedWbChar);
+
+                /* When we transcode the character '\0', that looks like "\0\0", 
+                   XalanDOMString::length returns a size of 0.
+                   It's incorrect and the real size should be 1*/
+                if (theRealCharLength == 0)
+		        {
+	                theRealCharLength = 1;
+		        }
+
                 // append the translated set of characters
                 theTargetVector.insert(
                     theTargetVector.end(),
                     theOneTranslatedWbChar,
-                    theOneTranslatedWbChar + XalanDOMString::length(theOneTranslatedWbChar));
+                    theOneTranslatedWbChar + theRealCharLength);
             }
         }
 
