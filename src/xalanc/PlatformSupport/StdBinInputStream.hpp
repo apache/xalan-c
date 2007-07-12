@@ -60,13 +60,13 @@ public:
 	virtual
 	~StdBinInputStream();
 
-	virtual unsigned int
+	virtual XMLFilePos
 	curPos() const;
 
-	virtual unsigned int
+	virtual XMLSize_t
 	readBytes(
 			XMLByte* const      toFill,
-			const unsigned int	maxToRead);
+			const XMLSize_t	    maxToRead);
 
 private:
 

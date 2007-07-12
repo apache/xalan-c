@@ -47,7 +47,7 @@ public:
 
     typedef Locator     ParentType;
 
-    typedef XMLSSize_t  size_type;
+    typedef unsigned long   size_type;
 
     XalanLocator() {}
 

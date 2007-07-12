@@ -59,7 +59,7 @@ public:
     terminate();
 
     typedef unsigned char   XalanXMLByte;
-    typedef unsigned int    size_type;
+    typedef XMLSize_t       size_type;
     typedef unsigned int    UnicodeCharType;
 
     static size_type

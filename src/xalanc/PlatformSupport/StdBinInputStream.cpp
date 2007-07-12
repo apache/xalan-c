@@ -45,7 +45,7 @@ StdBinInputStream::~StdBinInputStream()
 
 
 
-unsigned int
+XMLFilePos
 StdBinInputStream::curPos() const
 {
 	return m_stream.tellg();
@@ -53,10 +53,10 @@ StdBinInputStream::curPos() const
 
 
 
-unsigned int
+XMLSize_t
 StdBinInputStream::readBytes(
 			XMLByte* const      toFill,
-			const unsigned int	maxToRead)
+			const XMLSize_t	    maxToRead)
 {
 	assert(sizeof(XMLByte) == sizeof(char));
 
