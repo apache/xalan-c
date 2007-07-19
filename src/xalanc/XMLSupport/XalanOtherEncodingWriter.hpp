@@ -391,7 +391,7 @@ private:
 
         unsigned int value = ch;
 
-        if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == true)
+        if (isUTF16HighSurrogate(ch) == true)
         {
             if (start + 1 >= length)
             {
@@ -465,12 +465,36 @@ private:
     void
     writeNumericCharacterReference(unsigned int     theNumber)
     {
-        write(formatNumericCharacterReference(theNumber));
+        const XalanDOMString&   theString =
+            formatNumericCharacterReference(theNumber);
+
+        const XalanDOMString::size_type     theLength =
+            theString.length();
+
+        if (m_bufferRemaining < theLength)
+        {
+            flushBuffer();
+        }
+
+        XALAN_USING_STD(copy)
+
+        assert(theString.size() <= m_bufferRemaining);
+
+        m_bufferPosition =
+            copy(
+                theString.begin(),
+                theString.end(),
+                m_bufferPosition);
+
+        m_bufferRemaining -= theLength;
     }
 
     enum
     {
-        kBufferSize = 512u  // The size of the buffer
+        // The size of the buffer.  The minimum for this
+        // is the length of the longest numeric character
+        // reference that can be written.
+        kBufferSize = 512u
     };
 
 
