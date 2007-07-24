@@ -934,7 +934,7 @@ XPathProcessorImpl::error(
 
     const GetCachedString   theGuard(*m_constructionContext);
 
-    XalanDOMString  theResult = theGuard.get();
+    XalanDOMString&     theResult = theGuard.get();
 
     error(
             XalanMessageLoader::getMessage(
