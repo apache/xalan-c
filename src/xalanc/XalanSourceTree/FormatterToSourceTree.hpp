@@ -83,8 +83,9 @@ public:
 	 * @param theDocument The document for nodes
 	 */
 	explicit
-	FormatterToSourceTree(  MemoryManagerType&          theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
-                            XalanSourceTreeDocument*	theDocument = 0);
+	FormatterToSourceTree(
+            MemoryManagerType&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
+            XalanSourceTreeDocument*	theDocument = 0);
 
 	/**
 	 * Construct a FormatterToSourceTree instance.  it will add the nodes 

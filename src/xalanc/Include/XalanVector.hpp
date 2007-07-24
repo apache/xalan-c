@@ -115,7 +115,7 @@ public:
     typedef typename Constructor::ConstructableType     ConstructibleType;
 
     XalanVector(
-            MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR,
+            MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
             size_type           initialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
@@ -145,7 +145,7 @@ public:
 
     XalanVector(
             const ThisType&     theSource,
-            MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMORY_MGR,
+            MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
             size_type           theInitialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),

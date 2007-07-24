@@ -156,7 +156,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR) const;
+	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

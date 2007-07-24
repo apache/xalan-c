@@ -41,7 +41,7 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportDefault : public DOMSupport
 {
 public:
 
-	DOMSupportDefault(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
+	DOMSupportDefault(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	virtual
 	~DOMSupportDefault();

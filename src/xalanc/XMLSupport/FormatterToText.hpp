@@ -53,7 +53,7 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 */
-	FormatterToText(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
+	FormatterToText(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	/**
 	 * FormatterToText instance constructor.

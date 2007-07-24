@@ -66,7 +66,7 @@ public:
     enum { npos = -1 };
 #endif
 
-    XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR );
+    XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
     explicit
     XalanDOMString(
@@ -76,7 +76,7 @@ public:
 
     XalanDOMString(
             const XalanDOMString&   theSource,
-            MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
+            MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
             size_type               theStartPosition = 0,
             size_type               theCount = size_type(npos));
 
