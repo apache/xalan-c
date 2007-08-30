@@ -322,19 +322,41 @@ public:
 	/**
 	 * Static conversion function.
 	 *
-	 * @return The string value of the number
+	 * @return The string value of the boolean
 	 */
 	static const XalanDOMString&
-	string(bool		theBool)
+	string(bool     theBool)
 	{
 		return theBool == true ? s_trueString : s_falseString;
 	}
 
+	/**
+	 * Static conversion function.
+	 *
+	 * @param theBool The boolean value to convert.
+	 * @param theString The string value of the provided boolean value.
+	 */
 	static void
 	string(
-			bool				theBool,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function)
+			bool                theBool,
+			XalanDOMString&     theString)
+	{
+		theString = theBool == true ? s_trueString : s_falseString;
+	}
+
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the boolean.
+	 *
+	 * @param theBool The boolean value to convert.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
+	static void
+	string(
+			bool                theBool,
+			FormatterListener&  formatterListener,
+			MemberFunctionPtr   function)
 	{
 		if(theBool == true)
 		{
@@ -353,8 +375,8 @@ public:
 	 */
 	static void
 	string(
-			double				theNumber,
-			XalanDOMString&		theString)
+			double              theNumber,
+			XalanDOMString&	    theString)
 	{
 		DoubleToDOMString(theNumber, theString);
 	}
