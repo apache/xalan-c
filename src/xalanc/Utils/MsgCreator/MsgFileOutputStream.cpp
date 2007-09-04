@@ -27,6 +27,11 @@
 #include <cstdio>
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static  MsgFileOutputStream::HandleType
 openFile(const char*    theFileName)
 {
@@ -89,7 +94,7 @@ MsgFileOutputStream::doFlush()
 void
 MsgFileOutputStream::writeData(
             const char*     theBuffer,
-            unsigned int    theBufferLength)
+            XalanSize_t     theBufferLength)
 {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::fwrite;
@@ -179,7 +184,7 @@ MsgFileOutputStream::WriteException::~WriteException()
 void
 MsgFileOutputStream::write(
             const XMLCh*    theString,
-            unsigned int    theLength)
+            XalanSize_t     theLength)
 {
     assert(theString != 0);
 
@@ -193,7 +198,7 @@ MsgFileOutputStream::write(
 void
 MsgFileOutputStream::write(
             const char*     theString,
-            unsigned int    theLength)
+            XalanSize_t     theLength)
 {
     assert (theString != 0);
 
@@ -212,7 +217,7 @@ MsgFileOutputStream::write(
 void
 MsgFileOutputStream::writeAsASCII(
             const XMLCh*    theString,
-            unsigned int    theLength)
+            XalanSize_t     theLength)
 {
     char*   szString =
         XMLString::transcode(theString);
@@ -229,7 +234,7 @@ MsgFileOutputStream::writeAsASCII(
 void
 MsgFileOutputStream::writeAsASCII(
             const char*     theString,
-            unsigned int    theLength)
+            XalanSize_t     theLength)
 {
     writeData(
         theString,
@@ -251,3 +256,7 @@ MsgFileOutputStream::writeUTFPrefix()
         s_UTF16ByteOrderMark,
         1);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

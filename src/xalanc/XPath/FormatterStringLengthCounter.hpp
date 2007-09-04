@@ -43,8 +43,6 @@ class XALAN_XPATH_EXPORT FormatterStringLengthCounter : public FormatterListener
 {
 public:
 
-	typedef unsigned long	size_type;
-
 	/**
 	 * FormatterStringLengthCounter instance constructor.
 	 */
@@ -83,12 +81,12 @@ public:
     virtual void
 	characters(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
     virtual void
 	charactersRaw(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	entityReference(const XMLCh* const	name);
@@ -96,7 +94,7 @@ public:
 	virtual void
 	ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	processingInstruction(
@@ -112,7 +110,7 @@ public:
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length);
+			const size_type     length);
 
 private:
 

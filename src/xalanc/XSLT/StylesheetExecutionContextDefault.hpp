@@ -473,15 +473,15 @@ public:
 
     virtual void
     characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length);
 
     virtual void
     charactersRaw(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length);
 
     virtual void
     comment(const XalanDOMChar*     data);
@@ -517,8 +517,7 @@ public:
     endCreateXResultTreeFrag();
 
     virtual void
-    beginFormatToText(
-            XalanDOMString&             theResult);
+    beginFormatToText(XalanDOMString&   theResult);
 
     virtual void
     endFormatToText();

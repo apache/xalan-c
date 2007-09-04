@@ -29,14 +29,15 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XERCES_CPP_NAMESPACE_USE
 
 
 
-
 // Class responsible for printing into file with UTF16
-
-
 class  MsgFileOutputStream
 {
 public :
@@ -102,22 +103,22 @@ public :
     void
     write(
             const XMLCh*    theString,
-            unsigned int    theLength);
+            XalanSize_t     theLength);
 
     void 
     write(
             const char*     theString,
-            unsigned int    theLength);
+            XalanSize_t     theLength);
 
     void 
     writeAsASCII(
             const char*     theString,
-            unsigned int    theLength);
+            XalanSize_t     theLength);
 
     void
     writeAsASCII(
             const XMLCh*    theString,
-            unsigned int    theLength);
+            XalanSize_t     theLength);
 
     void
     writeUTFPrefix();
@@ -127,7 +128,7 @@ protected:
     void
     writeData(
             const char*     theBuffer,
-            unsigned int    theBufferLength);
+            XalanSize_t     theBufferLength);
 
     void
     doFlush();
@@ -149,6 +150,11 @@ private:
 
     const HandleType    m_handle;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif //   MSGFILEOUTPUTSTREAM_1357924680

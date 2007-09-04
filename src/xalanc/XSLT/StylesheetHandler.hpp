@@ -131,7 +131,10 @@ public:
      * @see #ignorableWhitespace 
      * @see org.xml.sax.Locator
      */
-    virtual void characters (const XMLCh* const chars, const unsigned int length);
+    virtual void
+    characters(
+            const XMLCh* const  chars,
+            const size_type     length);
 
     /**
      * Receive notification of character data. If available, when the
@@ -143,7 +146,10 @@ public:
      * @param length number of characters to read from the array
      * @exception SAXException
      */
-    virtual void charactersRaw(const XMLCh* const chars, const unsigned int length);
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const size_type     length);
 
     /**
      * Receive notification of cdata.
@@ -168,7 +174,10 @@ public:
      * @exception SAXException
      * @see #ignorableWhitespace 
      */
-    virtual void cdata(const XMLCh* const ch, const unsigned int length);
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const size_type     length);
 
     /**
      * Receive notification of ignorable whitespace in element content.
@@ -193,7 +202,10 @@ public:
      * @exception SAXException
      * @see #characters
      */
-    virtual void ignorableWhitespace (const XMLCh* const chars, const unsigned int length);
+    virtual void
+    ignorableWhitespace(
+            const XMLCh* const  chars,
+            const size_type     length);
 
     /**
      * Receive notification of a processing instruction.
@@ -469,13 +481,13 @@ private:
 
     void
     processText(
-            const XMLCh*                chars,
-            XalanDOMString::size_type   length);
+            const XMLCh*    chars,
+            size_type       length);
 
     void
     accumulateText(
-            const XMLCh*                chars,
-            XalanDOMString::size_type   length);
+            const XMLCh*    chars,
+            size_type       length);
 
     void
     processAccumulatedText();

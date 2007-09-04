@@ -158,7 +158,7 @@ FormatterToHTML::initAttrCharsMap()
 	m_attrCharsMap[XalanUnicode::charLessThanSign] = 0;
 	m_attrCharsMap[XalanUnicode::charGreaterThanSign] = 0;
 
-	for(XalanDOMString::size_type i = 160; i < SPECIALSSIZE; i++)
+	for(size_type i = 160; i < SPECIALSSIZE; i++)
 	{
 		m_attrCharsMap[i] = 'S';
 	}
@@ -490,7 +490,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 void
 FormatterToHTML::characters(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type 	length)
 {
 	if(length != 0)
 	{
@@ -599,7 +599,7 @@ FormatterToHTML::entityReference(const XMLCh* const		name)
 void
 FormatterToHTML::cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const size_type 	length)
 {
 	if(m_isScriptOrStyleElem == true)
 	{
@@ -641,7 +641,7 @@ FormatterToHTML::processingInstruction(
 		const XMLCh* const	data)
 
 {
-	const XalanDOMString::size_type		dataLength = length(data);
+	const size_type		dataLength = length(data);
 
 	// Use a fairly nasty hack to tell if the next node is supposed to be 
 	// unescaped text.
@@ -698,13 +698,13 @@ FormatterToHTML::writeCharacters(const XalanDOMString&	theString)
 
 void
 FormatterToHTML::writeCharacters(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
+			const XalanDOMChar*		theString,
+			size_type	            theLength)
 {
 	assert(theString != 0);
 
-	XalanDOMString::size_type	i = 0;
-	XalanDOMString::size_type	firstIndex = 0;
+	size_type	i = 0;
+	size_type	firstIndex = 0;
 
     while(i < theLength)
 	{
@@ -777,13 +777,13 @@ FormatterToHTML::writeCharacters(
 
 void
 FormatterToHTML::writeAttrString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStringLength)
+			const XalanDOMChar*		theString,
+			size_type	            theStringLength)
 {
 	assert(theString != 0);
 
-	XalanDOMString::size_type	i = 0;
-	XalanDOMString::size_type	firstIndex = 0;
+	size_type	i = 0;
+	size_type	firstIndex = 0;
 
     while(i < theStringLength)
     {
@@ -862,8 +862,8 @@ FormatterToHTML::accumCommentData(const XalanDOMChar*	data)
 
 void
 FormatterToHTML::copyEntityIntoBuffer(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength)
+			const XalanDOMChar*		s,
+			size_type	            theLength)
 {
 	assert(s != 0);
 
@@ -894,11 +894,11 @@ FormatterToHTML::processAttribute(
 			const XalanDOMChar*										value,
 			const XalanHTMLElementsProperties::ElementProperties&	elemProperties)
 {
-	const XalanDOMString::size_type		nameLength = length(name);
+	const size_type		nameLength = length(name);
 
 	accumContent(XalanUnicode::charSpace);
 
-	const XalanDOMString::size_type		valueLength = length(value);
+	const size_type     valueLength = length(value);
 
 	if((valueLength == 0 || equalsIgnoreCaseASCII(name, nameLength, value, valueLength)) &&
 	   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
@@ -928,8 +928,8 @@ FormatterToHTML::processAttribute(
 
 void
 FormatterToHTML::writeAttrURI(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStringLength)
+			const XalanDOMChar*		theString,
+			size_type	            theStringLength)
 {
 	assert(theString != 0);
 
@@ -948,7 +948,7 @@ FormatterToHTML::writeAttrURI(
 	// causing damage.	If the URL is already properly escaped, in theory, this 
 	// function should not change the string value.
 
-    for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
+    for (size_type i = 0; i < theStringLength; ++i)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1129,10 +1129,10 @@ FormatterToHTML::doPushHasNamespace(const XalanDOMChar*     theElementName)
 
 	bool	fHasNamespace = false;
 
-    const XalanDOMString::size_type		theLength =
+    const size_type		theLength =
         length(theElementName);
 
-    const XalanDOMString::size_type		theColonIndex =
+    const size_type		theColonIndex =
         indexOf(
             theElementName,
             XalanUnicode::charColon);

@@ -78,7 +78,7 @@ FormatterToNull::endElement(
 void
 FormatterToNull::characters(
 			const XMLCh* const	/* chars */,
-			const unsigned int	/* length */)
+			const size_type	    /* length */)
 {
 }
 
@@ -87,7 +87,7 @@ FormatterToNull::characters(
 void
 FormatterToNull::charactersRaw(
 		const XMLCh* const	/* chars */,
-		const unsigned int	/*length */)
+		const size_type	    /*length */)
 {
 }
 
@@ -102,7 +102,7 @@ FormatterToNull::entityReference(const XMLCh* const	/* name */)
 void
 FormatterToNull::ignorableWhitespace(
 			const XMLCh* const	/* chars */,
-			const unsigned int	/* length */)
+			const size_type	    /* length */)
 {
 }
 
@@ -133,8 +133,8 @@ FormatterToNull::comment(const XMLCh* const	/* data */)
 
 void
 FormatterToNull::cdata(
-			const XMLCh* const	 /* ch */,
-			const unsigned int 	/* length */)
+			const XMLCh* const  /* ch */,
+			const size_type	    /* length */)
 {
 }
 

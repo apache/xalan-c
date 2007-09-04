@@ -707,7 +707,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT DOMStringHelper
 {
 public:
 
-    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
     static void
     DoubleToCharacters(

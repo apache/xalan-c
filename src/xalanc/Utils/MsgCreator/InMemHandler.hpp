@@ -26,7 +26,13 @@
 #include "SAX2Handler.hpp"
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XERCES_CPP_NAMESPACE_USE
+
 
 class InMemHandler : public SAX2Handler
 {
@@ -66,7 +72,7 @@ public:
     virtual void 
     characters(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const XalanSize_t   length);
 
 protected:
 
@@ -103,6 +109,10 @@ private:
     bool
     operator==(const InMemHandler&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

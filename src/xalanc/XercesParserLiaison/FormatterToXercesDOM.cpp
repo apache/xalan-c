@@ -193,7 +193,7 @@ FormatterToXercesDOM::endElement(const	XMLCh* const	/* name */)
 void
 FormatterToXercesDOM::characters(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	m_textBuffer.append(chars, length);
 }
@@ -203,7 +203,7 @@ FormatterToXercesDOM::characters(
 void
 FormatterToXercesDOM::charactersRaw(
 		const XMLCh* const	chars,
-		const unsigned int	length)
+		const size_type	    length)
 {
 	try
 	{
@@ -239,7 +239,7 @@ FormatterToXercesDOM::entityReference(const XMLCh* const	name)
 void
 FormatterToXercesDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	try
 	{
@@ -303,7 +303,7 @@ FormatterToXercesDOM::comment(const XMLCh* const	data)
 void
 FormatterToXercesDOM::cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const size_type	    length)
 {
 	try
 	{

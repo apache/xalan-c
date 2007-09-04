@@ -78,8 +78,8 @@ FormatterStringLengthCounter::endElement(
 
 void
 FormatterStringLengthCounter::characters(
-			const XMLCh* const	/* chars */,
-			const unsigned int	length)
+			const XMLCh* const  /* chars */,
+			const size_type     length)
 {
 	m_count += length;
 }
@@ -88,8 +88,8 @@ FormatterStringLengthCounter::characters(
 
 void
 FormatterStringLengthCounter::charactersRaw(
-		const XMLCh* const	/* chars */,
-		const unsigned int	/*length */)
+		const XMLCh* const  /* chars */,
+		const size_type	    /*length */)
 {
 }
 
@@ -103,8 +103,8 @@ FormatterStringLengthCounter::entityReference(const XMLCh* const	/* name */)
 
 void
 FormatterStringLengthCounter::ignorableWhitespace(
-			const XMLCh* const	/* chars */,
-			const unsigned int	/* length */)
+			const XMLCh* const  /* chars */,
+			const size_type	    /* length */)
 {
 }
 
@@ -135,8 +135,8 @@ FormatterStringLengthCounter::comment(const XMLCh* const	/* data */)
 
 void
 FormatterStringLengthCounter::cdata(
-			const XMLCh* const	 /* ch */,
-			const unsigned int 	/* length */)
+			const XMLCh* const  /* ch */,
+			const size_type     /* length */)
 {
 }
 

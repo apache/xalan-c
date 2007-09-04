@@ -76,7 +76,8 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler :
 public:
 
 	typedef XalanVector<XalanSourceTreeElement*> 		ElementStackType;
-	typedef XalanVector<XalanNode*> 						LastChildStackType;
+	typedef XalanVector<XalanNode*> 					LastChildStackType;
+    typedef XalanSize_t                                 size_type;
 
 	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
 
@@ -96,7 +97,7 @@ public:
 	virtual void
 	characters(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	endDocument();
@@ -110,7 +111,7 @@ public:
 	virtual void
 	ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	processingInstruction(
@@ -167,7 +168,7 @@ public:
 	virtual void
 	comment(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	endCDATA();
@@ -227,8 +228,8 @@ private:
 
 	void
 	doCharacters(
-			const XMLCh*				chars,
-			XalanDOMString::size_type	length);
+			const XMLCh*	chars,
+			size_type	    length);
 
 	// Data members...
 

@@ -261,7 +261,7 @@ FormatterToSourceTree::endElement(const	XMLCh* const	/* name */)
 void
 FormatterToSourceTree::characters(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	if (m_documentFragment != 0)
 	{
@@ -285,7 +285,7 @@ FormatterToSourceTree::characters(
 void
 FormatterToSourceTree::charactersRaw(
 		const XMLCh* const	chars,
-		const unsigned int	length)
+		const size_type	    length)
 {
 	assert(m_document != 0);
 
@@ -308,7 +308,7 @@ FormatterToSourceTree::entityReference(const XMLCh* const	/* name */)
 void
 FormatterToSourceTree::ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assert(m_document != 0);
 
@@ -383,7 +383,7 @@ FormatterToSourceTree::comment(const XMLCh* const	data)
 void
 FormatterToSourceTree::cdata(
 			const XMLCh* const	/* ch */,
-			const unsigned int 	/* length */)
+			const size_type 	/* length */)
 {
 }
 
@@ -404,8 +404,8 @@ FormatterToSourceTree::processAccumulatedText()
 
 void
 FormatterToSourceTree::doCharacters(
-			const XMLCh*				chars,
-			XalanDOMString::size_type	length)
+			const XMLCh*	chars,
+			size_type	    length)
 {
 	if (m_currentElement != 0)
 	{

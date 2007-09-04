@@ -339,7 +339,9 @@ int main(int argC, char* argV[])
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
-    
+
+    XALAN_CPP_NAMESPACE_USE
+
     CmdLineParams   theParams;
 
     int iReturnValue = 0;

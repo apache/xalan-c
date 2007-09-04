@@ -25,6 +25,11 @@
 #include <cstdio>
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
@@ -59,8 +64,8 @@ NLSHandler::startDocument()
 
 void
 NLSHandler::characters(
-            const XMLCh* const    chars,
-            const unsigned int    length)
+            const XMLCh* const  chars,
+            const XalanSize_t   length)
 {
     if (m_startCollectingCharacters == true)
     {
@@ -166,3 +171,7 @@ NLSHandler::printEndOfDataLine()
             2);
     }
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

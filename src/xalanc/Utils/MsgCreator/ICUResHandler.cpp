@@ -30,6 +30,9 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
 
 // -----------------------------------------------------------------------
 //  Constructors
@@ -64,7 +67,7 @@ ICUResHandler::endDocument()
 void
 ICUResHandler::characters(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const XalanSize_t   length)
 {
     if (m_startCollectingCharacters == true)
     {
@@ -218,3 +221,7 @@ ICUResHandler::printToDataFile(const char*  sArrayOfStrings[])
         }
     }
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

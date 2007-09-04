@@ -696,13 +696,13 @@ FormatterToXML::accumContentString(const XalanDOMChar*  chars)
 
 void
 FormatterToXML::accumNameArray(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
 {
-    const XalanDOMString::size_type     n = start + length;
+    const size_type     n = start + length;
 
-    for(XalanDOMString::size_type i = start; i < n; ++i)
+    for(size_type i = start; i < n; ++i)
     {
         accumName(chars[i]);
     }
@@ -712,13 +712,13 @@ FormatterToXML::accumNameArray(
 
 void
 FormatterToXML::accumContentArray(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
 {
-    const XalanDOMString::size_type     n = start + length;
+    const size_type     n = start + length;
 
-    for(XalanDOMString::size_type i = start; i < n; ++i)
+    for(size_type i = start; i < n; ++i)
     {
         accumContent(chars[i]);
     }
@@ -728,13 +728,13 @@ FormatterToXML::accumContentArray(
 
 void
 FormatterToXML::accumArrayUTF(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
 {
-    const XalanDOMString::size_type     n = start + length;
+    const size_type     n = start + length;
 
-    for(XalanDOMString::size_type i = start; i < n; ++i)
+    for(size_type i = start; i < n; ++i)
     {
         accumCharUTF(chars[i]);
     }
@@ -744,9 +744,9 @@ FormatterToXML::accumArrayUTF(
 
 void
 FormatterToXML::accumArrayUTFDirect(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
 {
     assert(m_maxCharacter >= 65535);
     assert(m_stream != 0);
@@ -855,13 +855,13 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 
 
 
-XalanDOMString::size_type
+FormatterToXML::size_type
 FormatterToXML::accumDefaultEscape(
-            XalanDOMChar                ch,
-            XalanDOMString::size_type   i,
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   len,
-            bool                        escLF)
+            XalanDOMChar        ch,
+            size_type           i,
+            const XalanDOMChar  chars[],
+            size_type           len,
+            bool                escLF)
 {
     if(!accumDefaultEntity(ch, escLF))
     {
@@ -1252,7 +1252,7 @@ FormatterToXML::processingInstruction(
 void
 FormatterToXML::characters(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
     if(length != 0)
     {
@@ -1272,8 +1272,8 @@ FormatterToXML::characters(
 
             m_ispreserve = true;
 
-            unsigned int    i = 0;
-            unsigned int    firstIndex = 0;
+            size_type    i = 0;
+            size_type   firstIndex = 0;
 
             while(i < length) 
             {
@@ -1312,7 +1312,7 @@ FormatterToXML::characters(
 void
 FormatterToXML::charactersRaw(
         const XMLCh* const  chars,
-        const unsigned int  length)
+        const size_type     length)
 {
     writeParentTagEnd();
 
@@ -1372,13 +1372,13 @@ FormatterToXML::getIndent() const
 
 void
 FormatterToXML::writeAttrString(
-            const XalanDOMChar*         theString,
-            XalanDOMString::size_type   theStringLength)
+            const XalanDOMChar*     theString,
+            size_type               theStringLength)
 {
     assert(theString != 0);
 
-    XalanDOMString::size_type   i = 0;
-    XalanDOMString::size_type   firstIndex = 0;
+    size_type   i = 0;
+    size_type   firstIndex = 0;
 
     while(i < theStringLength)
     {
@@ -1417,14 +1417,14 @@ FormatterToXML::accumCommentData(const XalanDOMChar*    data)
 
 void
 FormatterToXML::writeNormalizedChars(
-            const XalanDOMChar          ch[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length,
-            bool                        isCData)
+            const XalanDOMChar  ch[],
+            size_type           start,
+            size_type           length,
+            bool                isCData)
 {
-    XalanDOMString::size_type   end = start + length;
+    size_type   end = start + length;
 
-    for(XalanDOMString::size_type i = start; i < end; i++)
+    for(size_type i = start; i < end; ++i)
     {
         const XalanDOMChar  c = ch[i];
 
@@ -1589,7 +1589,7 @@ FormatterToXML::entityReference(const XMLCh* const  name)
 void
 FormatterToXML::ignorableWhitespace(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
 #if 1
     // We need to do normalization, which is slower,
@@ -1672,7 +1672,7 @@ FormatterToXML::comment(const XMLCh* const  data)
 void
 FormatterToXML::cdata(
             const XMLCh* const  ch,
-            const unsigned int  length)
+            const size_type     length)
 {
     if(m_nextIsRaw == true)
     {
@@ -1833,10 +1833,10 @@ FormatterToXML::indent(int  n)
 
 void
 FormatterToXML::accumNormalizedPIData(
-            const XalanDOMChar*         theData,
-            XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theData,
+            size_type               theLength)
 {
-    for (XalanDOMString::size_type i = 0; i < theLength; ++i)
+    for (size_type i = 0; i < theLength; ++i)
     {
         accumContent(theData[i]);
     }

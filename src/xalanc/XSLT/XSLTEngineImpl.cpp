@@ -695,7 +695,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 #if defined(XALAN_OLD_STYLE_CASTS)
                 nsNode = (const XalanElement*)&fragBase;
 #else
-                nsNode = static_cast<XalanElement*>(node);
+                nsNode = static_cast<const XalanElement*>(node);
 #endif
             }
             else
@@ -1376,12 +1376,12 @@ XSLTEngineImpl::endDocument()
 
 void
 XSLTEngineImpl::addResultAttribute(
-            AttributeListImpl&          attList,
-            const XalanDOMString&       aname,
-            const XalanDOMChar*         value,
-            XalanDOMString::size_type   theLength,
-            bool                        fromCopy,
-            const LocatorType*          locator)
+            AttributeListImpl&      attList,
+            const XalanDOMString&   aname,
+            const XalanDOMChar*     value,
+            size_type               theLength,
+            bool                    fromCopy,
+            const LocatorType*      locator)
 {
     assert(value != 0);
 
@@ -1720,8 +1720,8 @@ XSLTEngineImpl::endElement(const XalanDOMChar*  name)
 
 void
 XSLTEngineImpl::characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            size_type               length)
 {
     characters(
         ch,
@@ -1733,9 +1733,9 @@ XSLTEngineImpl::characters(
 
 void
 XSLTEngineImpl::characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length)
 {
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
@@ -1829,9 +1829,9 @@ XSLTEngineImpl::characters(const XObjectPtr&    xobject)
 
 void 
 XSLTEngineImpl::charactersRaw(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length)
 {
     assert(ch != 0);
     assert(length != 0);
@@ -1892,8 +1892,8 @@ XSLTEngineImpl::resetDocument()
 
 void
 XSLTEngineImpl::ignorableWhitespace(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            size_type               length)
 {
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
@@ -1985,9 +1985,9 @@ XSLTEngineImpl::entityReference(const XalanDOMChar*     name)
 
 void
 XSLTEngineImpl::cdata(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length)
 {
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
@@ -3192,10 +3192,10 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 
 void
 XSLTEngineImpl::fireCharacterGenerateEvent(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length,
-            bool                        isCDATA)
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length,
+            bool                    isCDATA)
 {
     const GenerateEvent     ge(
         isCDATA == true ? GenerateEvent::EVENTTYPE_CDATA : GenerateEvent::EVENTTYPE_CHARACTERS,

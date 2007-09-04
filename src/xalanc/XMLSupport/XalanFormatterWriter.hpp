@@ -26,6 +26,7 @@
 #include <xercesc/sax/SAXException.hpp>
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/FormatterListener.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
@@ -43,6 +44,9 @@ XALAN_USING_XERCES(MemoryManager)
 class XalanFormatterWriter
 {
 public:
+
+    typedef FormatterListener::size_type    size_type;
+
 
     template <class WriterType>
     class NewLineWriterFunctor
@@ -92,14 +96,14 @@ public:
         /**
         * The length of the the string of characters that represents the newline
         */
-        XalanDOMString::size_type   m_newlineStringLength;
+        size_type   m_newlineStringLength;
     };
 
     template<class WriterType>
     class WhiteSpaceWriterFunctor
     {
-        typedef XalanDOMString::size_type       size_type;
         typedef typename WriterType::value_type value_type;
+
     public:
         typedef WriterType                  writer_type;
 
@@ -151,9 +155,6 @@ public:
     };
 
 public:
-
-    typedef XalanDOMString::size_type   size_type;
-
 
     XalanFormatterWriter(
                 Writer&	        theWriter, 
@@ -315,7 +316,7 @@ protected:
     /**
      * The length of the the string of characters that represents the newline
      */
-    XalanDOMString::size_type   m_newlineStringLength;
+    size_type   m_newlineStringLength;
 
     /**
      * Format a code point as a numeric character reference.

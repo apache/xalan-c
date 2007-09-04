@@ -120,7 +120,7 @@ public:
     virtual void
 	characters(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type 	length);
 
 	// These methods are inherited from FormatterToXML...
 
@@ -137,7 +137,7 @@ public:
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length);
+			const size_type 	length);
 
 	virtual void
 	processingInstruction(
@@ -161,19 +161,19 @@ public:
 	{
 		enum { eMaxLength = 8 };
 
-		XalanDOMChar				m_char;
+		XalanDOMChar	m_char;
 
-		XalanDOMString::size_type	m_length;
+		size_type	    m_length;
 
-		XalanDOMChar				m_string[eMaxLength + 1];
+		XalanDOMChar	m_string[eMaxLength + 1];
 	};
 
 protected:
 
 	virtual void
 	writeAttrString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStringLength);
+			const XalanDOMChar*		theString,
+			size_type	            theStringLength);
 
 	virtual void
 	accumCommentData(const XalanDOMChar*	data);
@@ -183,12 +183,10 @@ protected:
 
 	void
 	writeCharacters(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength);
+			const XalanDOMChar*		theString,
+			size_type	            theLength);
 
 private:
-
-	typedef XalanDOMString::size_type	size_type;
 
 	/**
 	 * The string "<!DOCTYPE  HTML".
@@ -232,8 +230,8 @@ private:
 
 	void
 	copyEntityIntoBuffer(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength);
+			const XalanDOMChar*		s,
+			size_type	            theLength);
 
 	void
 	copyEntityIntoBuffer(const XalanDOMString&	s);
@@ -258,8 +256,8 @@ private:
 	 */
 	void
 	writeAttrURI(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theStringLength);
+			const XalanDOMChar*		theString,
+			size_type	            theStringLength);
 
 	/**
 	 * Accumulate the specified character by converting its numeric value to

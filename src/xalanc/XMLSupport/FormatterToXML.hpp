@@ -148,12 +148,12 @@ public:
     virtual void
     characters(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual void
     charactersRaw(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual void
     entityReference(const XMLCh* const  name);
@@ -161,7 +161,7 @@ public:
     virtual void
     ignorableWhitespace(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual void
     processingInstruction(
@@ -178,7 +178,7 @@ public:
     virtual void
     cdata(
             const XMLCh* const  ch,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual Writer*
     getWriter() const;
@@ -296,8 +296,8 @@ protected:
 
     typedef void (FormatterToXML::*AccumArrayFunctionType)(
                         const XalanDOMChar[],
-                        XalanDOMString::size_type,
-                        XalanDOMString::size_type);
+                        size_type,
+                        size_type);
 
     typedef void (FormatterToXML::*FlushFunctionType)();
 
@@ -376,9 +376,9 @@ protected:
      */
     void
     accumName(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
     {
         assert(m_accumNameArrayFunction != 0);
 
@@ -394,9 +394,9 @@ protected:
      */
     void
     accumContent(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
     {
         assert(m_accumContentArrayFunction != 0);
 
@@ -436,13 +436,13 @@ protected:
     /**
      * Escape and accum a character.
      */
-    XalanDOMString::size_type
+    size_type
     accumDefaultEscape(
-            XalanDOMChar                ch,
-            XalanDOMString::size_type   i,
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   len,
-            bool                        escLF);
+            XalanDOMChar        ch,
+            size_type           i,
+            const XalanDOMChar  chars[],
+            size_type           len,
+            bool                escLF);
 
     /**
      * Handle one of the default entities, return false if it 
@@ -515,10 +515,10 @@ protected:
      */
     virtual void
     writeNormalizedChars(
-            const XalanDOMChar          ch[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length,
-            bool                        isCData);
+            const XalanDOMChar  ch[],
+            size_type           start,
+            size_type           length,
+            bool                isCData);
 
     /**
      * Write a number into the buffer as an entity
@@ -536,8 +536,8 @@ protected:
      */
     virtual void
     writeAttrString(
-            const XalanDOMChar*         theString,
-            XalanDOMString::size_type   theStringLength);
+            const XalanDOMChar*     theString,
+            size_type               theStringLength);
 
     /**
      * Write the data for a comment
@@ -855,9 +855,9 @@ private:
      */
     void
     accumNameArray(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length);
 
     /**
      * Append an array of wide character to the buffer.
@@ -870,9 +870,9 @@ private:
      */
     void
     accumContentArray(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length);
 
     /**
      * Append an array of wide character to the buffer.
@@ -885,9 +885,9 @@ private:
      */
     void
     accumArrayUTF(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length);
 
     /**
      * Append an array of wide character to the output.
@@ -900,9 +900,9 @@ private:
      */
     void
     accumArrayUTFDirect(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length);
 
     /**
      * Append a string to the buffer.
@@ -976,8 +976,8 @@ private:
      */
     void
     accumNormalizedPIData(
-            const XalanDOMChar*         theData,
-            XalanDOMString::size_type   theLength);
+            const XalanDOMChar*     theData,
+            size_type               theLength);
 
 
     // Data members...
@@ -1020,7 +1020,7 @@ private:
      */
     const XalanDOMString    m_attrSpecialChars;
 
-    typedef XalanDOMString::size_type   size_type;
+    //typedef XalanDOMString::size_type   size_type;
 
     /**
      * The string "<!DOCTYPE ".

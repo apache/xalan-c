@@ -58,6 +58,7 @@
 
 
 #include <xalanc/PlatformSupport/AttributeListImpl.hpp>
+#include <xalanc/PlatformSupport/FormatterListener.hpp>
 #include <xalanc/PlatformSupport/XalanCollationServices.hpp>
 
 
@@ -107,11 +108,9 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContext : public XPathExecutionContex
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    typedef std::size_t     tl_size_type;
-#else
-    typedef size_t          tl_size_type;
-#endif
+    typedef XalanSize_t     tl_size_type;
+
+    typedef FormatterListener::size_type    fl_size_type;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
     typedef ostream         StreamType;
@@ -1071,9 +1070,9 @@ public:
      */
     virtual void
     characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length) = 0;
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length) = 0;
 
     /**
      * Receive notification of character data. If available, when the
@@ -1086,9 +1085,9 @@ public:
      */
     virtual void
     charactersRaw(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length) = 0;
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length) = 0;
 
     /**
      * Called when a Comment is to be constructed.

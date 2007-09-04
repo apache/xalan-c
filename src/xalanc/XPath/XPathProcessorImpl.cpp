@@ -214,16 +214,16 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
     m_expression->setCurrentPattern(m_constructionContext->getPooledString(pat));
 
-    const int   nChars = length(pat);
+    const t_size_type   nChars = length(pat);
 
-    int         startSubstring = -1;
-    int         posOfNSSep = -1;
+    t_size_type     startSubstring = XalanDOMString::npos;
+    t_size_type     posOfNSSep = XalanDOMString::npos;
 
     const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
 
     XalanDOMString&     theToken = theGuard.get();
 
-    for(int i = 0; i < nChars; i++)
+    for(t_size_type i = 0; i < nChars; i++)
     {
         XalanDOMChar    c = charAt(pat, i);
 
@@ -231,9 +231,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
         {
         case XalanUnicode::charQuoteMark: 
             {
-                if(startSubstring != -1)
+                if(startSubstring != XalanDOMString::npos)
                 {
-                    if(-1 != posOfNSSep)
+                    if(XalanDOMString::npos != posOfNSSep)
                     {      
                         posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
                     }
@@ -255,7 +255,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
                     addToTokenQueue(theToken);
 
-                    startSubstring = -1;
+                    startSubstring = XalanDOMString::npos;
                 }
                 else
                 {
@@ -266,9 +266,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
         case XalanUnicode::charApostrophe:
             {
-                if(startSubstring != -1)
+                if(startSubstring != XalanDOMString::npos)
                 {
-                    if(-1 != posOfNSSep)
+                    if(XalanDOMString::npos != posOfNSSep)
                     {    
                         posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
                     }
@@ -290,7 +290,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
                     addToTokenQueue(theToken);
 
-                    startSubstring = -1;
+                    startSubstring = XalanDOMString::npos;
                 }
                 else
                 {
@@ -304,9 +304,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
         case XalanUnicode::charSpace:
         case XalanUnicode::charHTab:
             {
-                if(startSubstring != -1)
+                if(startSubstring != XalanDOMString::npos)
                 {
-                    if(-1 != posOfNSSep)
+                    if(XalanDOMString::npos != posOfNSSep)
                     {    
                         posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
                     }
@@ -317,14 +317,14 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
                         addToTokenQueue(theToken);
                     }
 
-                    startSubstring = -1;
+                    startSubstring = XalanDOMString::npos;
                 }
             }
             break;
         
         case XalanUnicode::charHyphenMinus:
             {
-                if(!(startSubstring == -1))
+                if(!(startSubstring == XalanDOMString::npos))
                 {
                     break;
                 }
@@ -349,9 +349,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
         case XalanUnicode::charLessThanSign:
         case XalanUnicode::charGreaterThanSign:
             {
-                if(startSubstring != -1)
+                if(startSubstring != XalanDOMString::npos)
                 {
-                    if(-1 != posOfNSSep)
+                    if(XalanDOMString::npos != posOfNSSep)
                     {    
                         posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
                     }
@@ -362,7 +362,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
                         addToTokenQueue(theToken);
                     }
 
-                    startSubstring = -1;
+                    startSubstring = XalanDOMString::npos;
                 }
 
                 substring(pat, theToken, i, i + 1);
@@ -375,7 +375,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
             {
                 if(posOfNSSep == i - 1 && i > 0)
                 { 
-                    if(startSubstring != -1)
+                    if(startSubstring != XalanDOMString::npos)
                     {
                         if (startSubstring < i - 1)
                         {
@@ -385,8 +385,8 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
                         }
                     }
 
-                    startSubstring = -1;
-                    posOfNSSep = -1;
+                    startSubstring = XalanDOMString::npos;
+                    posOfNSSep = XalanDOMString::npos;
 
                     substring(pat, theToken, i - 1, i + 1);
 
@@ -403,7 +403,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
         
         default:
             {
-                if(-1 == startSubstring)
+                if(XalanDOMString::npos == startSubstring)
                 {
                     startSubstring = i;
 
@@ -442,16 +442,16 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
                         addToTokenQueue(theToken);
 
-                        startSubstring = -1;
+                        startSubstring = XalanDOMString::npos;
                     }
                 }
             }
         }
     }
 
-    if(startSubstring != -1)
+    if(startSubstring != XalanDOMString::npos)
     {
-        if(-1 != posOfNSSep)
+        if(XalanDOMString::npos != posOfNSSep)
         {    
             posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, nChars);
         }
@@ -506,12 +506,12 @@ XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 
 
 
-int
+XPathProcessorImpl::t_size_type
 XPathProcessorImpl::mapNSTokens(
             const XalanDOMString&   pat,
-            int                     startSubstring,
-            int                     posOfNSSep,
-            int                     posOfScan)
+            t_size_type             startSubstring,
+            t_size_type             posOfNSSep,
+            t_size_type             posOfScan)
 {
     assert(m_prefixResolver != 0);
 
@@ -577,7 +577,7 @@ XPathProcessorImpl::mapNSTokens(
         }
     }
 
-    return -1;
+    return XalanDOMString::npos;
 }
 
 
@@ -2940,14 +2940,16 @@ XPathProcessorImpl::isValidFunction(const XalanDOMString&   key)
 bool
 XPathProcessorImpl::isCurrentLiteral() const
 {
-    const int last = length(m_token) - 1;
+    const t_size_type   theLength = m_token.length();
 
-    if (last <= 0)
+    if (theLength <= 1)
     {
         return false;
     }
     else
     {
+        const t_size_type   last = theLength - 1;
+
         const XalanDOMChar  c0 = m_tokenChar;
         const XalanDOMChar  cX = charAt(m_token, last);
 

@@ -37,9 +37,6 @@
 
 
 
-/**
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
- */
 // Base class header file...
 #include <xalanc/PlatformSupport/ExecutionContext.hpp>
 
@@ -472,6 +469,10 @@ public:
     private:
 
         // Not implemented...
+        GetAndReleaseCachedString();
+
+        GetAndReleaseCachedString(const GetAndReleaseCachedString&);
+
         GetAndReleaseCachedString&
         operator=(const GetAndReleaseCachedString&);
 

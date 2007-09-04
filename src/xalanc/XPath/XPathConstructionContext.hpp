@@ -125,20 +125,11 @@ public:
         {
         }
 
-        // Note non-const copy semantics...
-        GetAndReleaseCachedString(GetAndReleaseCachedString&    theSource) :
-            m_constructionContext(theSource.m_constructionContext),
-            m_string(theSource.m_string)
-        {
-            theSource.m_string = 0;
-        }
-
         ~GetAndReleaseCachedString()
         {
-            if (m_string != 0)
-            {
-                m_constructionContext->releaseCachedString(*m_string);
-            }
+            assert(m_string != 0);
+
+            m_constructionContext->releaseCachedString(*m_string);
         }
 
         XalanDOMString&
@@ -152,13 +143,18 @@ public:
         XPathConstructionContext&
         getConstructionContext() const
         {
+            assert(m_constructionContext != 0);
+
             return *m_constructionContext;
         }
-
 
     private:
 
         // Not implemented...
+        GetAndReleaseCachedString();
+
+        GetAndReleaseCachedString(const GetAndReleaseCachedString&);
+
         GetAndReleaseCachedString&
         operator=(const GetAndReleaseCachedString&);
 

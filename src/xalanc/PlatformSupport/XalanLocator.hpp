@@ -47,7 +47,11 @@ public:
 
     typedef Locator     ParentType;
 
+#if XERCES_VERSION_MAJOR < 3
+    typedef XMLSSize_t      size_type;
+#else
     typedef unsigned long   size_type;
+#endif
 
     XalanLocator() {}
 

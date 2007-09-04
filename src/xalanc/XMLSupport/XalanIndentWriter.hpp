@@ -24,18 +24,21 @@
 
 #include <xalanc/Include/XalanVector.hpp>
 
+#include <xalanc/PlatformSupport/FormatterListener.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-template<class WhiteSpaceWriter,
-         class NewLineWriter>
+template<
+    class WhiteSpaceWriter,
+    class NewLineWriter>
 class XalanIndentWriter
 {
 public:
-    typedef typename XalanDOMString::size_type       size_type;
+ 
+    typedef FormatterListener::size_type    size_type;
     typedef XalanVector<bool>               BoolStackType;
     typedef typename WhiteSpaceWriter::writer_type   writer_type;
 

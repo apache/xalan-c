@@ -152,34 +152,40 @@ public:
     /**
      * Writes name chars , if not presentable, throws 
      */
-    void writeNameChar(const XalanDOMChar*      data,
-                       size_type                theLength)
+    void
+    writeNameChar(
+            const XalanDOMChar*      data,
+            size_type                theLength)
     {
         write(data, theLength);
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name chars, if not representable, throws 
      */
-    void writePIChars(const XalanDOMChar*       data,
-                        size_type               theLength)
+    void
+    writePIChars(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
         write(data, theLength);
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name chars, if not representable, throws 
      */
-    void writeCommentChars(const XalanDOMChar*      data,
-                           size_type                theLength)
+    void
+    writeCommentChars(
+            const XalanDOMChar*      data,
+            size_type                theLength)
     {
         write(data, theLength);
     }
 
     void
     safeWriteContent(
-            const XalanDOMChar*         theChars,
-            XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theChars,
+            size_type               theLength)
     {
         for(size_type i = 0; i < theLength; ++i)
         { 
@@ -189,8 +195,8 @@ public:
 
     void
     write(
-            const value_type*           theChars,
-            XalanDOMString::size_type   theLength)
+            const value_type*   theChars,
+            size_type           theLength)
     {
     #if defined(NDEBUG)
         if (theLength > sizeof(m_buffer))
@@ -216,7 +222,7 @@ public:
             m_bufferRemaining -= theLength;
         }
     #else
-        for(XalanDOMString::size_type i = 0; i < theLength; ++i)
+        for(size_type i = 0; i < theLength; ++i)
         {
             write(theChars[i]);
         }
@@ -253,8 +259,8 @@ public:
 
     void
     write(
-                const XalanDOMChar*         theChars,
-                XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theChars,
+            size_type               theLength)
     {
         for(size_type i = 0; i < theLength; ++i)
         {
@@ -264,13 +270,13 @@ public:
 
     size_type
     write(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
     {
         XalanDOMChar ch = chars[start];
 
-        if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == false)
+        if (isUTF16HighSurrogate(ch) == false)
         {
             write((unsigned int)ch);
         }
@@ -278,7 +284,7 @@ public:
         {
             if (start + 1 >= length)
             {
-                XalanFormatterWriter::throwInvalidUTF16SurrogateException(
+                throwInvalidUTF16SurrogateException(
                     ch, 
                     0,
                     getMemoryManager());
@@ -286,7 +292,7 @@ public:
             else 
             {
                 write(
-                    XalanFormatterWriter::decodeUTF16SurrogatePair(
+                    decodeUTF16SurrogatePair(
                         ch,
                         chars[++start],
                         getMemoryManager()));
@@ -298,8 +304,8 @@ public:
 
     void
     writeSafe(
-        const XalanDOMChar*         theChars,
-        XalanDOMString::size_type   theLength)
+        const XalanDOMChar*     theChars,
+        size_type               theLength)
     {
         XalanDOMChar ch = 0;
 
@@ -307,15 +313,15 @@ public:
         {
             ch = theChars[i];
 
-            if (XalanFormatterWriter::isUTF16HighSurrogate(ch) == true)
+            if (isUTF16HighSurrogate(ch) == true)
             {
                 if (i + 1 >= theLength)
                 {
-                    XalanFormatterWriter::throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
+                    throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
                 }
                 else 
                 {
-                    write(XalanFormatterWriter::decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager()));
+                    write(decodeUTF16SurrogatePair(ch, theChars[i + 1],  getMemoryManager()));
 
                     ++i;
                 }
@@ -412,7 +418,7 @@ private:
         }
         else
         {
-            XalanFormatterWriter::throwInvalidCharacterException(theChar, getMemoryManager());
+            throwInvalidCharacterException(theChar, getMemoryManager());
         }
     }
 
@@ -423,11 +429,11 @@ private:
 
 
     // Data members...
-    value_type                  m_buffer[kBufferSize];
+    value_type      m_buffer[kBufferSize];
 
-    value_type*                 m_bufferPosition;
+    value_type*     m_bufferPosition;
 
-    XalanDOMString::size_type   m_bufferRemaining;
+    size_type       m_bufferRemaining;
 };
 
 

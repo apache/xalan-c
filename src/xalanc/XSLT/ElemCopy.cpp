@@ -96,6 +96,7 @@ ElemCopy::getElementName() const
 }
 
 
+
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemCopy::startElement(StylesheetExecutionContext&  executionContext) const
@@ -122,7 +123,6 @@ ElemCopy::startElement(StylesheetExecutionContext&  executionContext) const
             executionContext.copyNamespaceAttributes(*sourceNode);
 
             return beginExecuteChildren(executionContext);
-
         }
         else
         {

@@ -1527,7 +1527,7 @@ StylesheetHandler::endElement(const XMLCh* const    /* name */)
 void
 StylesheetHandler::characters(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
     if (m_inTemplate == false &&
         inExtensionElement() == false &&
@@ -1553,7 +1553,7 @@ StylesheetHandler::characters(
 void
 StylesheetHandler::cdata(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
     accumulateText(chars, length);
 
@@ -1567,7 +1567,7 @@ StylesheetHandler::cdata(
 void
 StylesheetHandler::ignorableWhitespace(
             const XMLCh* const  /*chars*/,
-            const unsigned int  /*length*/)
+            const size_type     /*length*/)
 {
     // Ignore!
     m_lastPopped = 0;
@@ -1619,7 +1619,7 @@ StylesheetHandler::resetDocument()
 void
 StylesheetHandler::charactersRaw(
             const XMLCh* const  /* chars */,
-            const unsigned int  /* length */)
+            const size_type     /* length */)
 {
 }
 
@@ -1627,8 +1627,8 @@ StylesheetHandler::charactersRaw(
 
 void
 StylesheetHandler::processText(
-            const XMLCh*                chars,
-            XalanDOMString::size_type   length)
+            const XMLCh*    chars,
+            size_type       length)
 {
     if(m_inTemplate)
     {
@@ -1721,8 +1721,8 @@ StylesheetHandler::processText(
 
 void
 StylesheetHandler::accumulateText(
-            const XMLCh*                chars,
-            XalanDOMString::size_type   length)
+            const XMLCh*    chars,
+            size_type       length)
 {   
     if(m_inTemplate)
     {

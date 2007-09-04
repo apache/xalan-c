@@ -28,6 +28,11 @@
 #include "InMemData.hpp"
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // -----------------------------------------------------------------------
 //  Constructors
 // -----------------------------------------------------------------------
@@ -77,8 +82,8 @@ InMemHandler::endDocument()
 
 void
 InMemHandler::characters(
-            const XMLCh* const    chars,
-            const unsigned int    length)
+            const XMLCh* const  chars,
+            const XalanSize_t   length)
 {
     if (m_startCollectingCharacters == true)
     {
@@ -240,3 +245,7 @@ InMemHandler::createBottomForDataFile()
 
     printToDataFile(szEndDataFile);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

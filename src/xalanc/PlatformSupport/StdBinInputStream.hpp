@@ -60,13 +60,13 @@ public:
 	virtual
 	~StdBinInputStream();
 
-	virtual XMLFilePos
+	virtual XalanFilePos
 	curPos() const;
 
-	virtual XMLSize_t
+	virtual XalanSize_t
 	readBytes(
 			XMLByte* const      toFill,
-			const XMLSize_t	    maxToRead);
+			const XalanSize_t   maxToRead);
 
 private:
 

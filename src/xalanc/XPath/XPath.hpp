@@ -243,7 +243,7 @@ public:
             XPathExecutionContext&	executionContext,
             XalanDOMString&			result) const;
 
-    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
     /**
      * Execute the XPath from the provided context.

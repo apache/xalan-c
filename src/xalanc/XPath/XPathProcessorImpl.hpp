@@ -72,6 +72,8 @@ public:
 
     typedef XalanVector<bool>               BoolVectorType;
 
+    typedef XalanDOMString::size_type   t_size_type;
+
     XPathProcessorImpl(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
     virtual
@@ -123,12 +125,12 @@ private:
      * When a separator token is found, see if there's a element name or the
      * like to map.
      */
-    int
+    t_size_type
     mapNSTokens(
             const XalanDOMString&   pat,
-            int                     startSubstring,
-            int                     posOfNSSep,
-            int                     posOfScan);
+            t_size_type             startSubstring,
+            t_size_type             posOfNSSep,
+            t_size_type             posOfScan);
 
     /**
      * Check if m_token==s. If m_token is null, this won't throw

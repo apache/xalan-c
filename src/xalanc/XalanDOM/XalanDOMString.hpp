@@ -45,6 +45,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XALAN_DOM_EXPORT XalanDOMString
 {
 public:
+
     typedef XalanVector<XalanDOMChar>       XalanDOMCharVectorType;
     typedef XalanVector<char>               CharVectorType;
     typedef XalanVector<wchar_t>            WideCharVectorType;
@@ -53,7 +54,7 @@ public:
     typedef XalanDOMChar&               reference;
     typedef const XalanDOMChar&         const_reference;
 
-    typedef unsigned int    size_type;
+    typedef XalanSize_t     size_type;
 
     typedef XalanDOMCharVectorType::iterator                iterator;
     typedef XalanDOMCharVectorType::const_iterator          const_iterator;
@@ -63,7 +64,7 @@ public:
 #if defined(XALAN_INLINE_INITIALIZATION)
     static const size_type  npos = ~0u;
 #else
-    enum { npos = -1 };
+    enum { npos = ~0u };
 #endif
 
     XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);

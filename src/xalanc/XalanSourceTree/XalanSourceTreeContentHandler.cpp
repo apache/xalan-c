@@ -67,7 +67,7 @@ XalanSourceTreeContentHandler::~XalanSourceTreeContentHandler()
 void
 XalanSourceTreeContentHandler::characters(
 			const	XMLCh* const	chars,
-			const unsigned int		length)
+			const size_type		    length)
 {
 	assert(m_inDTD == false);
 
@@ -196,7 +196,7 @@ doAppendChildNode(
 void
 XalanSourceTreeContentHandler::ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assert(m_inDTD == false);
 
@@ -372,7 +372,7 @@ XalanSourceTreeContentHandler::resetDocType()
 void
 XalanSourceTreeContentHandler::comment(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assert(m_document != 0);
 
@@ -501,8 +501,8 @@ XalanSourceTreeContentHandler::processAccumulatedText()
 
 void
 XalanSourceTreeContentHandler::doCharacters(
-			const XMLCh*				chars,
-			XalanDOMString::size_type	length)
+			const XMLCh*	chars,
+			size_type	    length)
 {
 	assert(m_inDTD == false);
 

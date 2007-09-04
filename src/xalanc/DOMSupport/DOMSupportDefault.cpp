@@ -92,18 +92,14 @@ DOMSupportDefault::getUnparsedEntityURI(
 
 			if (theNode != 0 && theNode->getNodeType() == XalanNode::ENTITY_NODE)
 			{
-				const XalanEntity*	theEntity =
+				const XalanEntity* const    theEntity =
 #if defined(XALAN_OLD_STYLE_CASTS)
 					(const XalanEntity*)theNode;
 #else
 					static_cast<const XalanEntity*>(theNode);
 #endif
 
-                const XalanDOMString    theNotationName(
-                                            theEntity->getNotationName(),
-                                            theMemoryManager);
-
-				if(isEmpty(theNotationName) == false) // then it's unparsed
+				if(length(theEntity->getNotationName()) != 0) // then it's unparsed
 				{
 					// The draft says: "The XSLT processor may use the public
 					// identifier to generate a URI for the entity instead of the URI
@@ -116,7 +112,7 @@ DOMSupportDefault::getUnparsedEntityURI(
 					// So I'm falling a bit short here.
 					theURI = theEntity->getSystemId();
 
-					if(isEmpty(theURI) == true)
+                    if(theURI.length() == 0)
 					{
 						theURI = theEntity->getPublicId();
 					}

@@ -189,7 +189,7 @@ FormatterToText::endElement(
 void
 FormatterToText::characters(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assert(m_writer != 0);
 
@@ -247,7 +247,7 @@ FormatterToText::characters(
 void
 FormatterToText::charactersRaw(
 		const XMLCh* const	chars,
-		const unsigned int	length)
+		const size_type	    length)
 {
 	characters(chars, length);
 }
@@ -264,7 +264,7 @@ FormatterToText::entityReference(const XMLCh* const	/* name */)
 void
 FormatterToText::ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	if (m_handleIgnorableWhitespace == true)
 	{
@@ -303,7 +303,7 @@ FormatterToText::comment(const XMLCh* const	/* data */)
 void
 FormatterToText::cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const size_type 	length)
 {
 	characters(ch, length);
 }

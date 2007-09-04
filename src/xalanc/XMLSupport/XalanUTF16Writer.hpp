@@ -58,10 +58,10 @@ public:
 
     size_type
     writeCDATAChar(
-                const XalanDOMChar  chars[],
-                size_type           start,
-                size_type           /*length*/,
-                bool&               /* outsideCDATA */)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           /*length*/,
+            bool&               /* outsideCDATA */)
     {
         assert( chars != 0 );
 
@@ -71,28 +71,34 @@ public:
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name chars, if not representable, throws 
      */
-    void writeNameChar(const XalanDOMChar*            data,
-                       size_type                theLength)
+    void
+    writeNameChar(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
         write(data, theLength);
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name chars, if not representable, throws 
      */
-    void writePIChars(const XalanDOMChar*       data,
-                        size_type               theLength)
+    void
+    writePIChars(
+            const XalanDOMChar*     data,
+            size_type               theLength)
     {
         write(data, theLength);
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name chars, if not representable, throws 
      */
-    void writeCommentChars(const XalanDOMChar*      data,
-                           size_type                theLength)
+    void
+    writeCommentChars(
+            const XalanDOMChar*      data,
+            size_type                theLength)
     {
         write(data, theLength);
     }

@@ -60,7 +60,7 @@ public:
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	ParentType;
 
 	// A handy typedef...  Must match DocumentHandler's type for characters(), etc...
-	typedef unsigned int	size_type;
+	typedef XalanSize_t     size_type;
 
 	enum eFormat
 	{

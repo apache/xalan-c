@@ -431,9 +431,9 @@ public:
      */
     void
     addResultNamespaceDecl(
-            const XalanDOMString&       prefix, 
-            const XalanDOMChar*         namespaceVal,
-            XalanDOMString::size_type   len)
+            const XalanDOMString&   prefix, 
+            const XalanDOMChar*     namespaceVal,
+            size_type               len)
     {
         m_resultNamespacesStack.addDeclaration(
             prefix,
@@ -507,12 +507,12 @@ public:
      */
     void
     addResultAttribute(
-            AttributeListImpl&          attList,
-            const XalanDOMString&       aname,
-            const XalanDOMChar*         value,
-            XalanDOMString::size_type   theLength,
-            bool                        fromCopy = false,
-            const LocatorType*          locator = 0);
+            AttributeListImpl&      attList,
+            const XalanDOMString&   aname,
+            const XalanDOMChar*     value,
+            size_type               theLength,
+            bool                    fromCopy = false,
+            const LocatorType*      locator = 0);
 
     /**
      * Add attribute to pending attributes list, and if it is a namespace, add
@@ -595,13 +595,13 @@ public:
 
     void
     characters (
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            size_type               length);
 
     void
     ignorableWhitespace(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            size_type               length);
 
     void
     processingInstruction(
@@ -620,9 +620,9 @@ public:
      */
     void
     characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length);
 
     /**
      * Send character data from the node to the result tree.
@@ -660,9 +660,9 @@ public:
      */
     void
     charactersRaw(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length);
 
     /**
      * Send raw character data from the node to the result tree.
@@ -706,9 +706,9 @@ public:
      */
     void
     cdata(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length);
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length);
 
     /**
      * Clone a node to the result tree
@@ -1610,10 +1610,10 @@ private:
 
     void
     fireCharacterGenerateEvent(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length,
-            bool                        isCDATA);
+            const XalanDOMChar*     ch,
+            size_type               start,
+            size_type               length,
+            bool                    isCDATA);
 
     void
     checkDefaultNamespace(

@@ -24,7 +24,14 @@
 #include "ICUResHandler.hpp"
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XERCES_CPP_NAMESPACE_USE
+
+
 
 class NLSHandler : public ICUResHandler 
 {
@@ -52,8 +59,8 @@ public:
 
     void 
     characters(
-            const XMLCh* const    chars,
-            const unsigned int    length);
+            const XMLCh* const  chars,
+            const XalanSize_t   length);
 
     void 
     startDocument();
@@ -80,6 +87,10 @@ private:
     bool
     operator==(const NLSHandler&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

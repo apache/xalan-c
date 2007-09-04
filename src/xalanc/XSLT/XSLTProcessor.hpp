@@ -82,7 +82,7 @@ class XALAN_XSLT_EXPORT XSLTProcessor
 {
 public:
 
-    typedef size_t  size_type;
+    typedef XalanSize_t     size_type;
 
     XSLTProcessor();
 

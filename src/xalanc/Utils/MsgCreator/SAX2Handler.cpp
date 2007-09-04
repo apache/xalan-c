@@ -33,6 +33,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // ---------------------------------------------------------------------------
 //  SAX2Handler: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -227,3 +231,7 @@ SAX2Handler::endDocument()
 {
     createBottomForIndexFile();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

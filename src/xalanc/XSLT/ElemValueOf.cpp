@@ -187,7 +187,7 @@ public:
     void
     characters(
                 const XMLCh* const  chars,
-                const unsigned int  length)
+                const size_type     length)
     {
         m_executionContext.characters(chars, 0, length);
     }
@@ -195,7 +195,7 @@ public:
     void
     charactersRaw(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
     {
         m_executionContext.charactersRaw(chars, 0, length);
     }
@@ -208,7 +208,7 @@ public:
     void
     ignorableWhitespace(
                 const XMLCh* const  /* chars */,
-                const unsigned int  /* length */)
+                const size_type     /* length */)
     {
     }
 
@@ -234,7 +234,7 @@ public:
     void
     cdata(
                 const XMLCh* const  /* ch */,
-                const unsigned int  /* length */)
+                const size_type     /* length */)
     {
     }
 

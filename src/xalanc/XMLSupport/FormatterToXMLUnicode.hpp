@@ -237,7 +237,7 @@ public:
     virtual void
     charactersRaw(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
     {
         writeParentTagEnd();
     
@@ -395,7 +395,7 @@ protected:
         m_writer.write(value_type(XalanUnicode::charQuestionMark));
         writeName(target);
 
-        const XalanDOMString::size_type     len = length(data);
+        const size_type     len = length(data);
 
         // We need to make sure there is a least one whitespace character
         // between the target and the data.
@@ -413,7 +413,7 @@ protected:
     void
     writeCharacters(
             const XMLCh*    chars,
-            unsigned int    length)
+            size_type       length)
     {
         assert(length != 0);
 
@@ -421,8 +421,8 @@ protected:
 
         m_indentHandler.setPreserve(true);
 
-        unsigned int    i = 0;
-        unsigned int    firstIndex = 0;
+        size_type   i = 0;
+        size_type   firstIndex = 0;
 
         while(i < length) 
         {
@@ -463,7 +463,7 @@ protected:
     void
     writeCDATA(
             const XMLCh*    chars,
-            unsigned int    length)
+            size_type       length)
     {
         assert(length != 0);
     
@@ -635,12 +635,12 @@ protected:
     * @param start the start offset into the string.
     * @param length the length of the string.
     */
-    XalanDOMString::size_type
+    size_type
     writeNormalizedChar(
-        XalanDOMChar                ch,
-        const XalanDOMChar          chars[],
-        XalanDOMString::size_type   start,
-        XalanDOMString::size_type   length)
+        XalanDOMChar        ch,
+        const XalanDOMChar  chars[],
+        size_type           start,
+        size_type           length)
     {
         if (XalanUnicode::charLF == ch)
         {
@@ -676,11 +676,11 @@ protected:
         m_writer.write(value_type(XalanUnicode::charSemicolon));
     }
 
-    XalanDOMString::size_type
+    size_type
     writeNormalizedCharBig(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar  chars[],
+            size_type           start,
+            size_type           length)
     {
         assert( start < length);
 
@@ -709,11 +709,11 @@ protected:
      */
     void
     writeCDATAChars(
-            const XalanDOMChar          chars[],
-            XalanDOMString::size_type   length,
-            bool&                       outsideCDATA)
+            const XalanDOMChar  chars[],
+            size_type           length,
+            bool&               outsideCDATA)
     {
-        XalanDOMString::size_type i = 0;
+        size_type   i = 0;
 
         while(i < length)
         {
@@ -792,13 +792,13 @@ protected:
      */
     void
     writeAttrString(
-            const XalanDOMChar*         theString,
-            XalanDOMString::size_type   theStringLength)
+            const XalanDOMChar*     theString,
+            size_type               theStringLength)
     {
         assert(theString != 0);
 
-        XalanDOMString::size_type   i = 0;
-        XalanDOMString::size_type   firstIndex = 0;
+        size_type   i = 0;
+        size_type   firstIndex = 0;
 
         while(i < theStringLength)
         {
@@ -860,10 +860,10 @@ private:
      */
     void
     writeNormalizedData(
-            const XalanDOMChar*         theData,
-            XalanDOMString::size_type   theLength)
+            const XalanDOMChar*     theData,
+            size_type               theLength)
     {
-        for (XalanDOMString::size_type i = 0; i < theLength; ++i)
+        for (size_type i = 0; i < theLength; ++i)
         {
             const XalanDOMChar  theChar = theData[i];
 
@@ -873,8 +873,8 @@ private:
 
     void
     safeWriteContent(
-                const XalanDOMChar*         theChars,
-                XalanDOMString::size_type   theLength)
+                const XalanDOMChar*     theChars,
+                size_type               theLength)
     {
         for(size_type i = 0; i < theLength; ++i)
         {

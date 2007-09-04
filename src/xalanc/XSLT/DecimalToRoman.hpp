@@ -40,7 +40,7 @@ struct XALAN_XSLT_EXPORT DecimalToRoman
 {
 	enum { eMaxLetter = 2 };
 
-	typedef unsigned long	ValueType;
+	typedef XalanSize_t     ValueType;
 
 	ValueType		m_postValue;
 

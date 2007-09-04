@@ -260,7 +260,7 @@ XalanXMLSerializerBase::startDocument()
 void
 XalanXMLSerializerBase::characters(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
     if(length != 0)
     {
@@ -282,7 +282,7 @@ XalanXMLSerializerBase::characters(
 void
 XalanXMLSerializerBase::cdata(
             const XMLCh* const  ch,
-            const unsigned int  length)
+            const size_type     length)
 {
     if (length != 0)
     {
@@ -324,7 +324,7 @@ XalanXMLSerializerBase::processingInstruction(
 void
 XalanXMLSerializerBase::ignorableWhitespace(
             const XMLCh* const  chars,
-            const unsigned int  length)
+            const size_type     length)
 {
     if (length > 0)
     {
@@ -390,7 +390,7 @@ const XalanDOMChar  XalanXMLSerializerBase::s_xhtmlDocTypeString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::s_xhtmlDocTypeStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::s_xhtmlDocTypeStringLength =
         FXML_SIZE(s_xhtmlDocTypeString);
 
 
@@ -491,7 +491,7 @@ const char  XalanXMLSerializerBase::UTF8::s_doctypeHeaderStartString[] =
     char(0)
 };
 
-const XalanDOMString::size_type XalanXMLSerializerBase::UTF8::s_doctypeHeaderStartStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_doctypeHeaderStartStringLength =
         FXML_SIZE(s_doctypeHeaderStartString);
 
 const char  XalanXMLSerializerBase::UTF8::s_doctypeHeaderPublicString[] =
@@ -508,7 +508,7 @@ const char  XalanXMLSerializerBase::UTF8::s_doctypeHeaderPublicString[] =
     char(0)
 };
 
-const XalanDOMString::size_type XalanXMLSerializerBase::UTF8::s_doctypeHeaderPublicStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_doctypeHeaderPublicStringLength =
         FXML_SIZE(s_doctypeHeaderPublicString);
 
 const char  XalanXMLSerializerBase::UTF8::s_doctypeHeaderSystemString[] =
@@ -525,7 +525,7 @@ const char  XalanXMLSerializerBase::UTF8::s_doctypeHeaderSystemString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_doctypeHeaderSystemStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_doctypeHeaderSystemStringLength =
         FXML_SIZE(s_doctypeHeaderSystemString);
 
 const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderStartString[] =
@@ -548,7 +548,7 @@ const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderStartString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderStartStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderStartStringLength =
         FXML_SIZE(s_xmlHeaderStartString);
 
 const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderEncodingString[] =
@@ -568,7 +568,7 @@ const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderEncodingString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderEncodingStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderEncodingStringLength =
         FXML_SIZE(s_xmlHeaderEncodingString);
 
 const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderStandaloneString[] =
@@ -590,7 +590,7 @@ const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderStandaloneString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderStandaloneStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderStandaloneStringLength =
         FXML_SIZE(s_xmlHeaderStandaloneString);
 
 const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderEndString[] =
@@ -601,7 +601,7 @@ const char  XalanXMLSerializerBase::UTF8::s_xmlHeaderEndString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderEndStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_xmlHeaderEndStringLength =
         FXML_SIZE(s_xmlHeaderEndString);
 
 const char  XalanXMLSerializerBase::UTF8::s_defaultVersionString[] =
@@ -612,7 +612,7 @@ const char  XalanXMLSerializerBase::UTF8::s_defaultVersionString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_defaultVersionStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_defaultVersionStringLength =
         FXML_SIZE(s_defaultVersionString);
 
 const char  XalanXMLSerializerBase::UTF8::s_cdataOpenString[] =
@@ -629,7 +629,7 @@ const char  XalanXMLSerializerBase::UTF8::s_cdataOpenString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_cdataOpenStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_cdataOpenStringLength =
         FXML_SIZE(s_cdataOpenString);
 
 const char  XalanXMLSerializerBase::UTF8::s_cdataCloseString[] =
@@ -640,7 +640,7 @@ const char  XalanXMLSerializerBase::UTF8::s_cdataCloseString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_cdataCloseStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_cdataCloseStringLength =
         FXML_SIZE(s_cdataCloseString);
 
 
@@ -666,7 +666,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF8::s_xhtmlDocTypeString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_xhtmlDocTypeStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_xhtmlDocTypeStringLength =
         FXML_SIZE(s_xhtmlDocTypeString);
 
 const char  XalanXMLSerializerBase::UTF8::s_lessThanEntityString[] =
@@ -678,7 +678,7 @@ const char  XalanXMLSerializerBase::UTF8::s_lessThanEntityString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_lessThanEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_lessThanEntityStringLength =
         FXML_SIZE(s_lessThanEntityString);
 
 const char  XalanXMLSerializerBase::UTF8::s_greaterThanEntityString[] =
@@ -690,7 +690,7 @@ const char  XalanXMLSerializerBase::UTF8::s_greaterThanEntityString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_greaterThanEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_greaterThanEntityStringLength =
         FXML_SIZE(s_greaterThanEntityString);
 
 const char  XalanXMLSerializerBase::UTF8::s_ampersandEntityString[] =
@@ -703,7 +703,7 @@ const char  XalanXMLSerializerBase::UTF8::s_ampersandEntityString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_ampersandEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_ampersandEntityStringLength =
         FXML_SIZE(s_ampersandEntityString);
 
 const char  XalanXMLSerializerBase::UTF8::s_quoteEntityString[] =
@@ -717,7 +717,7 @@ const char  XalanXMLSerializerBase::UTF8::s_quoteEntityString[] =
     char(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF8::s_quoteEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF8::s_quoteEntityStringLength =
         FXML_SIZE(s_quoteEntityString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderStartString[] =
@@ -735,7 +735,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderStartString[] 
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type XalanXMLSerializerBase::UTF16::s_doctypeHeaderStartStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_doctypeHeaderStartStringLength =
         FXML_SIZE(s_doctypeHeaderStartString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderPublicString[] =
@@ -752,7 +752,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderPublicString[]
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type XalanXMLSerializerBase::UTF16::s_doctypeHeaderPublicStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_doctypeHeaderPublicStringLength =
         FXML_SIZE(s_doctypeHeaderPublicString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderSystemString[] =
@@ -769,7 +769,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_doctypeHeaderSystemString[]
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_doctypeHeaderSystemStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_doctypeHeaderSystemStringLength =
         FXML_SIZE(s_doctypeHeaderSystemString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderStartString[] =
@@ -792,7 +792,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderStartString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderStartStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderStartStringLength =
         FXML_SIZE(s_xmlHeaderStartString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderEncodingString[] =
@@ -812,7 +812,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderEncodingString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderEncodingStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderEncodingStringLength =
         FXML_SIZE(s_xmlHeaderEncodingString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderStandaloneString[] =
@@ -834,7 +834,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderStandaloneString[]
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderStandaloneStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderStandaloneStringLength =
         FXML_SIZE(s_xmlHeaderStandaloneString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderEndString[] =
@@ -845,7 +845,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xmlHeaderEndString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderEndStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_xmlHeaderEndStringLength =
         FXML_SIZE(s_xmlHeaderEndString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_defaultVersionString[] =
@@ -856,7 +856,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_defaultVersionString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_defaultVersionStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_defaultVersionStringLength =
         FXML_SIZE(s_defaultVersionString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_cdataOpenString[] =
@@ -873,7 +873,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_cdataOpenString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_cdataOpenStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_cdataOpenStringLength =
         FXML_SIZE(s_cdataOpenString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_cdataCloseString[] =
@@ -884,7 +884,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_cdataCloseString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_cdataCloseStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_cdataCloseStringLength =
         FXML_SIZE(s_cdataCloseString);
 
 
@@ -910,7 +910,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_xhtmlDocTypeString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_xhtmlDocTypeStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_xhtmlDocTypeStringLength =
         FXML_SIZE(s_xhtmlDocTypeString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_lessThanEntityString[] =
@@ -922,7 +922,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_lessThanEntityString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_lessThanEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_lessThanEntityStringLength =
         FXML_SIZE(s_lessThanEntityString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_greaterThanEntityString[] =
@@ -934,7 +934,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_greaterThanEntityString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_greaterThanEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_greaterThanEntityStringLength =
         FXML_SIZE(s_greaterThanEntityString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_ampersandEntityString[] =
@@ -947,7 +947,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_ampersandEntityString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_ampersandEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_ampersandEntityStringLength =
         FXML_SIZE(s_ampersandEntityString);
 
 const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_quoteEntityString[] =
@@ -961,7 +961,7 @@ const XalanDOMChar  XalanXMLSerializerBase::UTF16::s_quoteEntityString[] =
     XalanDOMChar(0)
 };
 
-const XalanDOMString::size_type     XalanXMLSerializerBase::UTF16::s_quoteEntityStringLength =
+const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_quoteEntityStringLength =
         FXML_SIZE(s_quoteEntityString);
 
 

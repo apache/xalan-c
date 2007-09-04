@@ -34,9 +34,6 @@
 
 
 
-/**
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
- */
 // Base class include file.
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 
@@ -348,7 +345,11 @@ public:
 
 protected:
 
-	typedef XalanObjectCache<MutableNodeRefList, DefaultCacheCreateFunctorMemMgr<MutableNodeRefList>, DeleteFunctor<MutableNodeRefList>, ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
+	typedef XalanObjectCache<
+                MutableNodeRefList,
+                DefaultCacheCreateFunctorMemMgr<MutableNodeRefList>,
+                DeleteFunctor<MutableNodeRefList>,
+                ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
 
 	enum { eNodeListCacheListSize = 50 };
 

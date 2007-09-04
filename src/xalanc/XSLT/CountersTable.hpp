@@ -52,7 +52,7 @@ class StylesheetExecutionContext;
  */
 struct Counter
 {
-	typedef unsigned long	CountType;
+	typedef XalanSize_t     CountType;
 
 	typedef XalanVector<XalanNode*>			NodeVectorType;
 

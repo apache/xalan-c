@@ -926,9 +926,9 @@ StylesheetExecutionContextDefault::endDocument()
 
 void
 StylesheetExecutionContextDefault::characters(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length)
 {
     assert(m_xsltProcessor != 0);
 
@@ -939,9 +939,9 @@ StylesheetExecutionContextDefault::characters(
 
 void
 StylesheetExecutionContextDefault::charactersRaw(
-            const XalanDOMChar*         ch,
-            XalanDOMString::size_type   start,
-            XalanDOMString::size_type   length)
+            const XalanDOMChar*     ch,
+            fl_size_type            start,
+            fl_size_type            length)
 {
     assert(m_xsltProcessor != 0);
 

@@ -124,12 +124,12 @@ public:
     virtual void
     characters(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual void
     charactersRaw(
             const XMLCh* const  chars,
-            const unsigned int  length) = 0;
+            const size_type     length) = 0;
 
     virtual void
     entityReference(const XMLCh* const  name) = 0;
@@ -137,7 +137,7 @@ public:
     virtual void
     ignorableWhitespace(
             const XMLCh* const  chars,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual void
     processingInstruction(
@@ -153,7 +153,7 @@ public:
     virtual void
     cdata(
             const XMLCh* const  ch,
-            const unsigned int  length);
+            const size_type     length);
 
     virtual const XalanDOMString&
     getDoctypeSystem() const;
@@ -209,107 +209,107 @@ public:
         /**
          * The string "<!DOCTYPE ".
          */
-        static const char                       s_doctypeHeaderStartString[];
+        static const char           s_doctypeHeaderStartString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderStartStringLength;
+        static const size_type      s_doctypeHeaderStartStringLength;
 
         /**
          * The string " PUBLIC \"".
          */
-        static const char                       s_doctypeHeaderPublicString[];
+        static const char       s_doctypeHeaderPublicString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderPublicStringLength;
+        static const size_type  s_doctypeHeaderPublicStringLength;
 
         /**
          * The string " SYSTEM \"".
          */
-        static const char                       s_doctypeHeaderSystemString[];
+        static const char       s_doctypeHeaderSystemString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderSystemStringLength;
+        static const size_type  s_doctypeHeaderSystemStringLength;
 
         /**
          * The string "<?xml version=\"".
          */
-        static const char                       s_xmlHeaderStartString[];
+        static const char       s_xmlHeaderStartString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderStartStringLength;
+        static const size_type  s_xmlHeaderStartStringLength;
 
         /**
          * The string "\" encoding=\"".
          */
-        static const char                       s_xmlHeaderEncodingString[];
+        static const char       s_xmlHeaderEncodingString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderEncodingStringLength;
+        static const size_type  s_xmlHeaderEncodingStringLength;
 
         /**
          * The string "\" standalone=\"".
          */
-        static const char                       s_xmlHeaderStandaloneString[];
+        static const char       s_xmlHeaderStandaloneString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderStandaloneStringLength;
+        static const size_type  s_xmlHeaderStandaloneStringLength;
 
         /**
          * The string "\"?>".
          */
-        static const char                       s_xmlHeaderEndString[];
+        static const char       s_xmlHeaderEndString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderEndStringLength;
+        static const size_type  s_xmlHeaderEndStringLength;
 
         /**
          * The string "1.0".
          */
-        static const char                       s_defaultVersionString[];
+        static const char       s_defaultVersionString[];
 
-        static const XalanDOMString::size_type  s_defaultVersionStringLength;
+        static const size_type  s_defaultVersionStringLength;
 
         /**
          * The string "-//W3C//DTD XHTML".
          */
-        static const XalanDOMChar               s_xhtmlDocTypeString[];
+        static const XalanDOMChar   s_xhtmlDocTypeString[];
 
-        static const XalanDOMString::size_type  s_xhtmlDocTypeStringLength;
+        static const size_type      s_xhtmlDocTypeStringLength;
 
         /**
          * The string "<![CDATA[".
          */
-        static const char                       s_cdataOpenString[];
+        static const char       s_cdataOpenString[];
 
-        static const XalanDOMString::size_type  s_cdataOpenStringLength;
+        static const size_type  s_cdataOpenStringLength;
 
         /**
          * The string "]]>".
          */
-        static const char                       s_cdataCloseString[];
+        static const char       s_cdataCloseString[];
 
-        static const XalanDOMString::size_type  s_cdataCloseStringLength;
+        static const size_type  s_cdataCloseStringLength;
 
         /**
          * The string "&lt;".
          */
-        static const char                       s_lessThanEntityString[];
+        static const char       s_lessThanEntityString[];
 
-        static const XalanDOMString::size_type  s_lessThanEntityStringLength;
+        static const size_type  s_lessThanEntityStringLength;
 
         /**
          * The string "&gt;".
          */
-        static const char                       s_greaterThanEntityString[];
+        static const char       s_greaterThanEntityString[];
 
-        static const XalanDOMString::size_type  s_greaterThanEntityStringLength;
+        static const size_type  s_greaterThanEntityStringLength;
 
         /**
          * The string "&amp;".
          */
-        static const char                       s_ampersandEntityString[];
+        static const char       s_ampersandEntityString[];
 
-        static const XalanDOMString::size_type  s_ampersandEntityStringLength;
+        static const size_type  s_ampersandEntityStringLength;
 
         /**
          * The string "&quot;".
          */
-        static const char                       s_quoteEntityString[];
+        static const char       s_quoteEntityString[];
 
-        static const XalanDOMString::size_type  s_quoteEntityStringLength;
+        static const size_type  s_quoteEntityStringLength;
     };
 
     class XALAN_XMLSUPPORT_EXPORT UTF16
@@ -324,107 +324,107 @@ public:
         /**
          * The string "<!DOCTYPE ".
          */
-        static const XalanDOMChar               s_doctypeHeaderStartString[];
+        static const XalanDOMChar   s_doctypeHeaderStartString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderStartStringLength;
+        static const size_type      s_doctypeHeaderStartStringLength;
 
         /**
          * The string " PUBLIC \"".
          */
-        static const XalanDOMChar               s_doctypeHeaderPublicString[];
+        static const XalanDOMChar   s_doctypeHeaderPublicString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderPublicStringLength;
+        static const size_type      s_doctypeHeaderPublicStringLength;
 
         /**
          * The string " SYSTEM \"".
          */
-        static const XalanDOMChar               s_doctypeHeaderSystemString[];
+        static const XalanDOMChar   s_doctypeHeaderSystemString[];
 
-        static const XalanDOMString::size_type  s_doctypeHeaderSystemStringLength;
+        static const size_type      s_doctypeHeaderSystemStringLength;
 
         /**
          * The string "<?xml version=\"".
          */
-        static const XalanDOMChar               s_xmlHeaderStartString[];
+        static const XalanDOMChar   s_xmlHeaderStartString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderStartStringLength;
+        static const size_type      s_xmlHeaderStartStringLength;
 
         /**
          * The string "\" encoding=\"".
          */
-        static const XalanDOMChar               s_xmlHeaderEncodingString[];
+        static const XalanDOMChar   s_xmlHeaderEncodingString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderEncodingStringLength;
+        static const size_type      s_xmlHeaderEncodingStringLength;
 
         /**
          * The string "\" standalone=\"".
          */
-        static const XalanDOMChar               s_xmlHeaderStandaloneString[];
+        static const XalanDOMChar   s_xmlHeaderStandaloneString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderStandaloneStringLength;
+        static const size_type      s_xmlHeaderStandaloneStringLength;
 
         /**
          * The string "\"?>".
          */
-        static const XalanDOMChar               s_xmlHeaderEndString[];
+        static const XalanDOMChar   s_xmlHeaderEndString[];
 
-        static const XalanDOMString::size_type  s_xmlHeaderEndStringLength;
+        static const size_type      s_xmlHeaderEndStringLength;
 
         /**
          * The string "1.0".
          */
-        static const XalanDOMChar               s_defaultVersionString[];
+        static const XalanDOMChar   s_defaultVersionString[];
 
-        static const XalanDOMString::size_type  s_defaultVersionStringLength;
+        static const size_type      s_defaultVersionStringLength;
 
         /**
          * The string "-//W3C//DTD XHTML".
          */
-        static const XalanDOMChar               s_xhtmlDocTypeString[];
+        static const XalanDOMChar   s_xhtmlDocTypeString[];
 
-        static const XalanDOMString::size_type  s_xhtmlDocTypeStringLength;
+        static const size_type      s_xhtmlDocTypeStringLength;
 
         /**
          * The string "<![CDATA[".
          */
-        static const XalanDOMChar               s_cdataOpenString[];
+        static const XalanDOMChar   s_cdataOpenString[];
 
-        static const XalanDOMString::size_type  s_cdataOpenStringLength;
+        static const size_type      s_cdataOpenStringLength;
 
         /**
          * The string "]]>".
          */
-        static const XalanDOMChar               s_cdataCloseString[];
+        static const XalanDOMChar   s_cdataCloseString[];
 
-        static const XalanDOMString::size_type  s_cdataCloseStringLength;
+        static const size_type      s_cdataCloseStringLength;
 
         /**
          * The string "&lt;".
          */
-        static const XalanDOMChar               s_lessThanEntityString[];
+        static const XalanDOMChar   s_lessThanEntityString[];
 
-        static const XalanDOMString::size_type  s_lessThanEntityStringLength;
+        static const size_type      s_lessThanEntityStringLength;
 
         /**
          * The string "&gt;".
          */
-        static const XalanDOMChar               s_greaterThanEntityString[];
+        static const XalanDOMChar   s_greaterThanEntityString[];
 
-        static const XalanDOMString::size_type  s_greaterThanEntityStringLength;
+        static const size_type      s_greaterThanEntityStringLength;
 
         /**
          * The string "&amp;".
          */
-        static const XalanDOMChar               s_ampersandEntityString[];
+        static const XalanDOMChar   s_ampersandEntityString[];
 
-        static const XalanDOMString::size_type  s_ampersandEntityStringLength;
+        static const size_type      s_ampersandEntityStringLength;
 
         /**
          * The string "&quot;".
          */
-        static const XalanDOMChar               s_quoteEntityString[];
+        static const XalanDOMChar   s_quoteEntityString[];
 
-        static const XalanDOMString::size_type  s_quoteEntityStringLength;
+        static const size_type      s_quoteEntityStringLength;
     };
 
     enum
@@ -571,12 +571,12 @@ protected:
     virtual void
     writeCharacters(
             const XMLCh*    chars,
-            unsigned int    length) = 0;
+            size_type       length) = 0;
 
     virtual void
     writeCDATA(
             const XMLCh*    chars,
-            unsigned int    length) = 0;
+            size_type       length) = 0;
 
     virtual void
     outputNewline() = 0;
@@ -694,7 +694,7 @@ protected:
      */
     const XalanDOMString    m_standalone;
 
-    const XalanDOMString  m_encoding;
+    const XalanDOMString    m_encoding;
 
     static bool
     isUTF16HighSurrogate(XalanDOMChar   theChar)
@@ -792,9 +792,9 @@ private:
     /**
      * The string "-//W3C//DTD XHTML".
      */
-    static const XalanDOMChar               s_xhtmlDocTypeString[];
+    static const XalanDOMChar   s_xhtmlDocTypeString[];
 
-    static const XalanDOMString::size_type  s_xhtmlDocTypeStringLength;
+    static const size_type      s_xhtmlDocTypeStringLength;
 };
 
 

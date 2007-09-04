@@ -143,7 +143,7 @@ public:
 	virtual const XalanDOMString&
 	str() const;
 
-	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
 	/**
 	 * Send the string value to a FormatterListener instance.

@@ -25,6 +25,10 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XERCES_CPP_NAMESPACE_USE
 
 
@@ -220,6 +224,11 @@ private:
     bool
     operator==(const SAX2Handler&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif //SAX2HANDLER_1357924680
