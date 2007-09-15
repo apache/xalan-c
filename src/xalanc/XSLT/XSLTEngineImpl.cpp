@@ -2176,6 +2176,73 @@ XSLTEngineImpl::cloneToResultTree(
 
 
 
+inline void
+createAndAddNamespaceResultAttribute(
+            StylesheetExecutionContext&     theExecutionContext,
+            const XalanDOMString&           thePrefix,
+            const XalanDOMString&           theNamespaceURI,
+            XalanDOMString&                 theTempString)
+{
+    theTempString = DOMServices::s_XMLNamespaceWithSeparator;
+    theTempString.append(thePrefix);
+
+    theExecutionContext.addResultAttribute(
+        theTempString,
+        theNamespaceURI);
+}
+
+
+
+inline void
+createAndAddNamespaceResultAttribute(
+            StylesheetExecutionContext&     theExecutionContext,
+            const XalanDOMString&           thePrefix,
+            const XalanDOMString&           theNamespaceURI)
+{
+    typedef StylesheetExecutionContext::GetAndReleaseCachedString   GetAndReleaseCachedString;
+
+    const GetAndReleaseCachedString     theCachedString(theExecutionContext);
+
+    createAndAddNamespaceResultAttribute(
+        theExecutionContext,
+        thePrefix,
+        theNamespaceURI,
+        theCachedString.get());
+}
+
+
+
+inline void
+createFixedUpResultAttribute(
+            StylesheetExecutionContext&     theExecutionContext,
+            const XalanDOMString&           theLocalPart,
+            const XalanDOMString&           theNamespaceURI,
+            const XalanDOMString&           theValue)
+{
+    typedef StylesheetExecutionContext::GetAndReleaseCachedString   GetAndReleaseCachedString;
+
+    const GetAndReleaseCachedString     theCachedString(theExecutionContext);
+
+    XalanDOMString&     theBuffer = theCachedString.get();
+
+    theExecutionContext.getUniqueNamespaceValue(theBuffer);
+
+    createAndAddNamespaceResultAttribute(
+        theExecutionContext,
+        theBuffer,
+        theNamespaceURI);
+
+    theBuffer += XalanUnicode::charColon;
+
+    theBuffer += theLocalPart;
+
+    theExecutionContext.addResultAttribute(
+        theBuffer,
+        theValue);
+}
+
+
+
 void
 XSLTEngineImpl::cloneToResultTree(
             const XalanNode&        node,
