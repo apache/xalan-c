@@ -175,8 +175,6 @@ public:
 		}
 
 		return bResult;
-
-		assert ( bResult );
 	}
 
 	/*
