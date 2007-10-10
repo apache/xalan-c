@@ -237,6 +237,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
         }
         else 
         {
+            XALAN_USING_STD(endl)
+
             m_logger->error() 
                     << "Mode: " 
                     << testCase.inputMode.c_str()
@@ -300,6 +302,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             }
             else
             {
+                XALAN_USING_STD(endl)
+
                 m_logger->error() 
                     << "Mode: " 
                     << testCase.inputMode.c_str()
@@ -384,8 +388,10 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
         testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("yes")));
 
     }
-    catch (XalanDOMString exception)
+    catch (const XalanDOMString& exception)
     {
+        XALAN_USING_STD(endl)
+
         m_logger->error()  
                 << "Error encountered during transformation: "
                 << testCase.stylesheet.c_str()
