@@ -23,11 +23,11 @@
 
 
 
-#include <xercesc/sax/AttributeList.hpp>
+#include "xercesc/sax/AttributeList.hpp"
 
 
 
-#include <xalanc/PlatformSupport/StringTokenizer.hpp>
+#include "xalanc/PlatformSupport/StringTokenizer.hpp"
 
 
 
@@ -48,18 +48,18 @@ XALAN_CPP_NAMESPACE_BEGIN
  * shared behavior the use-attribute-sets attribute.
  */
 ElemUse::ElemUse(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
-			int								xslToken) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						xslToken),
-	m_attributeSetsNames(0),
-	m_attributeSetsNamesCount(0)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            int                             lineNumber,
+            int                             columnNumber,
+            int                             xslToken) :
+    ElemTemplateElement(constructionContext,
+                        stylesheetTree,
+                        lineNumber,
+                        columnNumber,
+                        xslToken),
+    m_attributeSetsNames(0),
+    m_attributeSetsNamesCount(0)
 {
 }
 
@@ -74,157 +74,161 @@ ElemUse::~ElemUse()
 const XalanDOMString&
 ElemUse::getElementName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
 
 void
 ElemUse::postConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler)
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler)
 {
-	if (m_attributeSetsNamesCount > 0)
-	{
-		canGenerateAttributes(true);
-	}
+    if (m_attributeSetsNamesCount > 0)
+    {
+        canGenerateAttributes(true);
+    }
 
-	// OK, now we can chain-up...
-	ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
+    // OK, now we can chain-up...
+    ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemUse::startElement(StylesheetExecutionContext&	executionContext) const
+ElemUse::startElement(StylesheetExecutionContext&   executionContext) const
 {
+    if (m_attributeSetsNamesCount > 0)
+    {
+        assert(canGenerateAttributes() == true);
 
-	if (m_attributeSetsNamesCount > 0)
-	{
-		assert(canGenerateAttributes() == true);
+        executionContext.pushInvoker(this);
 
-		executionContext.pushInvoker(this);
+        executionContext.createUseAttributeSetIndexesOnStack();
 
-		executionContext.createUseAttributeSetIndexesOnStack();
+        return getNextAttributeSet(executionContext);
+    }
 
-		return getNextAttributeSet(executionContext);
-	}
-
-	return 0;
+    return 0;
 
 }
 
 
 
 void
-ElemUse::endElement(StylesheetExecutionContext&	executionContext) const
+ElemUse::endElement(StylesheetExecutionContext&     executionContext) const
 {
-	if (m_attributeSetsNamesCount > 0)
-	{
-		executionContext.popInvoker();
+    if (m_attributeSetsNamesCount > 0)
+    {
+        executionContext.popInvoker();
 
-		executionContext.popUseAttributeSetIndexesFromStack();
-	}
+        executionContext.popUseAttributeSetIndexesFromStack();
+    }
 }
 
 
 
 const ElemTemplateElement*
 ElemUse::getNextChildElemToExecute(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement* currentElem) const
-{	
-	const ElemTemplateElement* nextElement = 0;
-	
-	if (m_attributeSetsNamesCount > 0)
-	{
-		nextElement = getNextAttributeSet(executionContext);
-	}
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      currentElem) const
+{
+    const ElemTemplateElement* nextElement = 0;
+    
+    if (m_attributeSetsNamesCount > 0)
+    {
+        nextElement = getNextAttributeSet(executionContext);
+    }
 
-	// no more attribute sets,  check for next child element
-	if (0 == nextElement)
-	{
-		nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext, currentElem);
-	}
+    // no more attribute sets,  check for next child element
+    if (0 == nextElement)
+    {
+        nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext, currentElem);
+    }
 
-	// if next element to execute is the first child after executing attribute set(s),  
-	// evalute the element's AVTs first
-	if (0 == nextElement && currentElem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET)
-	{
-		evaluateAVTs(executionContext);
-		nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
-	}
+    // if next element to execute is the first child after executing attribute set(s),  
+    // evalute the element's AVTs first
+    if (0 == nextElement && currentElem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET)
+    {
+        evaluateAVTs(executionContext);
+        nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+    }
 
-	return nextElement;
+    return nextElement;
 }
 
 
 
 const ElemTemplateElement*
-ElemUse::getFirstChildElemToExecute(
-			StylesheetExecutionContext& executionContext) const
+ElemUse::getFirstChildElemToExecute(StylesheetExecutionContext&     executionContext) const
 {
-	const ElemTemplateElement* nextElement = 0;
-	
-	if (m_attributeSetsNamesCount > 0)
-	{
-		// reset
-		executionContext.getUseAttributeSetIndexes().attributeSetNameIndex = 0;
-		executionContext.getUseAttributeSetIndexes().matchingAttributeSetIndex = 0;
+    assert(executionContext.getCurrentNode() != 0);
 
-		nextElement = getNextAttributeSet(executionContext);
-	} 
-	else 
-	{
-		evaluateAVTs(executionContext);
-	}
+    const ElemTemplateElement* nextElement = 0;
 
-	if (0 == nextElement)
-	{
-		nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
-	}
+    if (getXSLToken() != StylesheetConstructionContext::ELEMNAME_COPY ||
+        executionContext.getCurrentNode()->getNodeType() == XalanNode::ELEMENT_NODE)
+    {
+        if (m_attributeSetsNamesCount > 0)
+        {
+            // reset
+            executionContext.getUseAttributeSetIndexes().attributeSetNameIndex = 0;
+            executionContext.getUseAttributeSetIndexes().matchingAttributeSetIndex = 0;
 
-	return nextElement;
+            nextElement = getNextAttributeSet(executionContext);
+        } 
+        else 
+        {
+            evaluateAVTs(executionContext);
+        }
+    }
+
+    if (0 == nextElement)
+    {
+        nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+    }
+
+    return nextElement;
 }
 
 
 
 const ElemTemplateElement*
 ElemUse::getNextAttributeSet(
-			StylesheetExecutionContext& executionContext) const
+            StylesheetExecutionContext& executionContext) const
 {
-	const StylesheetRoot& theStylesheetRoot = getStylesheet().getStylesheetRoot();
+    const StylesheetRoot& theStylesheetRoot = getStylesheet().getStylesheetRoot();
 
-	StylesheetExecutionContext::UseAttributeSetIndexes& useAttributeSetIndexes = executionContext.getUseAttributeSetIndexes();
-	
-	const ElemTemplateElement* attributeSet = 0;
+    StylesheetExecutionContext::UseAttributeSetIndexes&     useAttributeSetIndexes =
+        executionContext.getUseAttributeSetIndexes();
 
-	while (0 == attributeSet &&
-		   useAttributeSetIndexes.attributeSetNameIndex < m_attributeSetsNamesCount)
-	{
-		attributeSet = theStylesheetRoot.getAttributeSet(
-				executionContext,
-				*m_attributeSetsNames[useAttributeSetIndexes.attributeSetNameIndex],
-				 useAttributeSetIndexes.matchingAttributeSetIndex++,
-				getLocator());
+    const ElemTemplateElement* attributeSet = 0;
 
-		if (0 == attributeSet)
-		{
+    while (0 == attributeSet &&
+           useAttributeSetIndexes.attributeSetNameIndex < m_attributeSetsNamesCount)
+    {
+        attributeSet = theStylesheetRoot.getAttributeSet(
+                executionContext,
+                *m_attributeSetsNames[useAttributeSetIndexes.attributeSetNameIndex],
+                 useAttributeSetIndexes.matchingAttributeSetIndex++,
+                getLocator());
 
-			useAttributeSetIndexes.attributeSetNameIndex++;
-			useAttributeSetIndexes.matchingAttributeSetIndex = 0;
-		}
-	}
+        if (0 == attributeSet)
+        {
 
-	return attributeSet;
+            useAttributeSetIndexes.attributeSetNameIndex++;
+            useAttributeSetIndexes.matchingAttributeSetIndex = 0;
+        }
+    }
+
+    return attributeSet;
 
 }
 
 
 
 void
-ElemUse::evaluateAVTs(
-		StylesheetExecutionContext&			/*executionContext*/) const
+ElemUse::evaluateAVTs(StylesheetExecutionContext&   /*executionContext*/) const
 {
 }
 #endif
@@ -232,34 +236,34 @@ ElemUse::evaluateAVTs(
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemUse::execute(StylesheetExecutionContext&	executionContext) const
+ElemUse::execute(StylesheetExecutionContext&    executionContext) const
 {
-	doExecute(executionContext, true);
+    doExecute(executionContext, true);
 }
 
 
 
 void
 ElemUse::doExecute(
-			StylesheetExecutionContext&		executionContext,
-			bool							applyAttributeSets) const
+            StylesheetExecutionContext&     executionContext,
+            bool                            applyAttributeSets) const
 {
-	assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
+    assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
 
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
-	if(applyAttributeSets == true && m_attributeSetsNamesCount > 0)
-	{
-		assert(canGenerateAttributes() == true);
+    if(applyAttributeSets == true && m_attributeSetsNamesCount > 0)
+    {
+        assert(canGenerateAttributes() == true);
 
-		const StylesheetRoot&		theStylesheetRoot = getStylesheet().getStylesheetRoot();
-		const LocatorType* const	theLocator = getLocator();
+        const StylesheetRoot&       theStylesheetRoot = getStylesheet().getStylesheetRoot();
+        const LocatorType* const    theLocator = getLocator();
 
-		for(size_type i = 0; i < m_attributeSetsNamesCount; ++i)
-		{
-			theStylesheetRoot.executeAttributeSet(executionContext, *m_attributeSetsNames[i], theLocator);
-		}
-	}
+        for(size_type i = 0; i < m_attributeSetsNamesCount; ++i)
+        {
+            theStylesheetRoot.executeAttributeSet(executionContext, *m_attributeSetsNames[i], theLocator);
+        }
+    }
 }
 #endif
 
@@ -267,37 +271,37 @@ ElemUse::doExecute(
 
 bool
 ElemUse::processUseAttributeSets(
-			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMChar*				attrName,
-			const AttributeListType&		atts,
-			int								which)
+            StylesheetConstructionContext&  constructionContext,
+            const XalanDOMChar*             attrName,
+            const AttributeListType&        atts,
+            int                             which)
 {
-	bool isUAS = false;
+    bool isUAS = false;
 
-	if(StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT == getXSLToken())
-	{
-		isUAS = constructionContext.isXSLUseAttributeSetsAttribute(
-			attrName,
-			getStylesheet(),
-			getLocator());
-	}
-	else
-	{
-		isUAS = equals(attrName, Constants::ATTRNAME_USEATTRIBUTESETS);
-	}
+    if(StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT == getXSLToken())
+    {
+        isUAS = constructionContext.isXSLUseAttributeSetsAttribute(
+            attrName,
+            getStylesheet(),
+            getLocator());
+    }
+    else
+    {
+        isUAS = equals(attrName, Constants::ATTRNAME_USEATTRIBUTESETS);
+    }
 
-	if(isUAS == true)
-	{
-		m_attributeSetsNames =
-			constructionContext.tokenizeQNames(
-				m_attributeSetsNamesCount,
-				atts.getValue(which),
-				getStylesheet().getNamespaces(),
-				getLocator());
-		assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
-	}
+    if(isUAS == true)
+    {
+        m_attributeSetsNames =
+            constructionContext.tokenizeQNames(
+                m_attributeSetsNamesCount,
+                atts.getValue(which),
+                getStylesheet().getNamespaces(),
+                getLocator());
+        assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
+    }
 
-	return isUAS;
+    return isUAS;
 }
 
 
