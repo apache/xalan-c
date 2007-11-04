@@ -37,7 +37,10 @@ class ElemFallback : public ElemTemplateElement
 {
 public:
 
-	/**
+    typedef ElemTemplateElement     ParentType;
+
+
+    /**
 	 * Construct an object corresponding to an xsl:fallback element
 	 * 
 	 * @param constructionContext   context for construction of object
@@ -64,8 +67,12 @@ public:
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual const ElemTemplateElement*
 	startElement(StylesheetExecutionContext&	executionContext) const;
-	
-	virtual const ElemTemplateElement*
+
+    virtual const ElemTemplateElement*
+    getFirstChildElemToExecute(
+            StylesheetExecutionContext& executionContext) const;
+
+    virtual const ElemTemplateElement*
 	getNextChildElemToExecute(
 			StylesheetExecutionContext& executionContext,
 			const ElemTemplateElement* currentElem) const;

@@ -101,11 +101,31 @@ ElemFallback::startElement(StylesheetExecutionContext&      executionContext) co
 {
     ElemTemplateElement::startElement(executionContext);
 
-    return getFirstChildElem();
+    return beginExecuteChildren(executionContext);
 }
 
 
     
+const ElemTemplateElement*
+ElemFallback::getFirstChildElemToExecute(
+            StylesheetExecutionContext& executionContext) const
+{
+    const int   parentXSLToken =
+        getParentNodeElem()->getXSLToken();
+
+    if (parentXSLToken == StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE ||
+        parentXSLToken == StylesheetConstructionContext::ELEMNAME_EXTENSION_CALL)
+    {
+        return ParentType::getFirstChildElemToExecute(executionContext);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+
 const ElemTemplateElement*
 ElemFallback::getNextChildElemToExecute(StylesheetExecutionContext& /*executionContext*/,
                                  const ElemTemplateElement*         currentElem) const
