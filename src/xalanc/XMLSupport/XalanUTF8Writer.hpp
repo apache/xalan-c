@@ -150,7 +150,8 @@ public:
     }
 
     /**
-     * Writes name chars , if not presentable, throws 
+     * Writes name characters.  If characters that are not
+     * representable are encountered, an exception is thrown.
      */
     void
     writeNameChar(
@@ -161,7 +162,8 @@ public:
     }
 
     /**
-     * Writes name chars, if not representable, throws 
+     * Writes PI characters.  If characters that are not
+     * representable are encountered, an exception is thrown.
      */
     void
     writePIChars(
@@ -172,7 +174,8 @@ public:
     }
 
     /**
-     * Writes name chars, if not representable, throws 
+     * Writes comment characters.  If characters that are not
+     * representable are encountered, an exception is thrown.
      */
     void
     writeCommentChars(
@@ -250,9 +253,9 @@ public:
         {
             flushBuffer();
         }
-    
+
         *m_bufferPosition = theChar;
-    
+
         ++m_bufferPosition;
         --m_bufferRemaining;
     }
@@ -264,7 +267,27 @@ public:
     {
         for(size_type i = 0; i < theLength; ++i)
         {
-            write((unsigned int)theChars[i]);
+            if (isUTF16HighSurrogate(theChars[i]) == false)
+            {
+                write((unsigned int)theChars[i]);
+            }
+            else if (i + 1 >= theLength)
+            {
+                throwInvalidUTF16SurrogateException(
+                    theChars[i], 
+                    0,
+                    getMemoryManager());
+            }
+            else 
+            {
+                write(
+                    decodeUTF16SurrogatePair(
+                        theChars[i],
+                        theChars[i + 1],
+                        getMemoryManager()));
+
+                ++i;
+            }
         }
     }
 
@@ -274,29 +297,26 @@ public:
             size_type           start,
             size_type           length)
     {
-        XalanDOMChar ch = chars[start];
+        const XalanDOMChar  ch = chars[start];
 
         if (isUTF16HighSurrogate(ch) == false)
         {
             write((unsigned int)ch);
         }
+        else if (start + 1 >= length)
+        {
+            throwInvalidUTF16SurrogateException(
+                ch, 
+                0,
+                getMemoryManager());
+        }
         else
         {
-            if (start + 1 >= length)
-            {
-                throwInvalidUTF16SurrogateException(
-                    ch, 
-                    0,
-                    getMemoryManager());
-            }
-            else 
-            {
-                write(
-                    decodeUTF16SurrogatePair(
-                        ch,
-                        chars[++start],
-                        getMemoryManager()));
-            }
+            write(
+                decodeUTF16SurrogatePair(
+                    ch,
+                    chars[++start],
+                    getMemoryManager()));
         }
 
         return start;
@@ -307,21 +327,26 @@ public:
         const XalanDOMChar*     theChars,
         size_type               theLength)
     {
-        XalanDOMChar ch = 0;
-
         for(size_type i = 0; i < theLength; ++i)
         {
-            ch = theChars[i];
+            const XalanDOMChar  ch = theChars[i];
 
             if (isUTF16HighSurrogate(ch) == true)
             {
                 if (i + 1 >= theLength)
                 {
-                    throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
+                    throwInvalidUTF16SurrogateException(
+                        ch,
+                        0,
+                        getMemoryManager());
                 }
                 else 
                 {
-                    write(decodeUTF16SurrogatePair(ch, theChars[i + 1],  getMemoryManager()));
+                    write(
+                        decodeUTF16SurrogatePair(
+                            ch,
+                            theChars[i + 1],
+                            getMemoryManager()));
 
                     ++i;
                 }
@@ -345,7 +370,7 @@ public:
     {
         m_writer.flush();
     }    
-    
+
     void
     flushBuffer()
     {
@@ -354,7 +379,7 @@ public:
         m_bufferPosition = m_buffer;
         m_bufferRemaining = kBufferSize;
     }
-    
+
 private:
 
     void
@@ -370,12 +395,12 @@ private:
             {
                 flushBuffer();
             }
-    
+
             *m_bufferPosition = leadingByteOf2(bits7to11(theChar));
             ++m_bufferPosition;
             *m_bufferPosition = trailingByte(bits1to6(theChar));
             ++m_bufferPosition;
-    
+
             m_bufferRemaining -= 2;
         }
         else if (theChar <= 0xFFFF)
@@ -383,19 +408,19 @@ private:
             // We should never get a high or low surrogate here...
             assert(theChar < 0xD800 || theChar > 0xDBFF);
             assert(theChar < 0xDC00 || theChar > 0xDFFF);
-    
+
             if (m_bufferRemaining < 3)
             {
                 flushBuffer();
             }
-    
+
             *m_bufferPosition = leadingByteOf3(bits13to16(theChar));
             ++m_bufferPosition;
             *m_bufferPosition = trailingByte(bits7to12(theChar));
             ++m_bufferPosition;
             *m_bufferPosition = trailingByte(bits1to6(theChar));
             ++m_bufferPosition;
-    
+
             m_bufferRemaining -= 3;
         }
         else if (theChar <= 0x10FFFF)
@@ -404,7 +429,7 @@ private:
             {
                 flushBuffer();
             }
-    
+
             *m_bufferPosition = leadingByteOf4(bits19to21(theChar));
             ++m_bufferPosition;
             *m_bufferPosition = trailingByte(bits13to18(theChar));
@@ -413,7 +438,7 @@ private:
             ++m_bufferPosition;
             *m_bufferPosition = trailingByte(bits1to6(theChar));
             ++m_bufferPosition;
-    
+
             m_bufferRemaining -= 4;
         }
         else
