@@ -1,0 +1,49 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="&xslt4c-current;">
+<s2 title="What is it?">
+<p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML document types.</p>
+<p>&xslt4c-current; is a robust implementation of the W3C Recommendations for XSL Transformations (XSLT) and the XML Path 
+   Language (XPath). It works with a compatible release of the &xml4c; XML parser: &xml4c-used;. The focus for this release is on 
+   bug fixes, pluggable memory management, and enhanced stability improvements in stylesheet execution.  For the details, see 
+   <link idref="whatsnew">What's New In This Release</link>.</p>
+</s2>
+
+  
+<s2 title="How do I get it?">
+<p>Download and unzip the &xslt4c; distribution file and the corresponding &xml4c; distributions file for your platform. For the 
+   details, see <link idref="download">Downloading &xslt4c;</link>. The &xslt4c; distribution includes 
+   source-only distribution, documentation, sample applications, the complete &xslt4c; source tree.</p>
+<p>Binary distributions are also available for a limited set of platforms.</p>
+</s2>
+
+<s2 title="How about support for internationalization?">
+<p>To extend Unicode support for encoding, number formatting, and sorting, you can download, build, and integrate the 
+   <resource-ref idref="icu"/> with &xslt4c;. See <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
+</s2>
+
+<s2 title="For more information...">
+<p>For more information, go to the <link idref="overview">&xslt4c; Overview</link> and <link idref="whatsnew">What's New In this 
+   Release</link>.  All of the Xalan documentation on this website is included in the Xalan downloads, as are a number of samples 
+   to help you start using Xalan to transform XML documents.</p>
+</s2>   
+</s1>

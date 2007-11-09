@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="LocalizationWithICU"
+	ProjectGUID="{058582AA-14DE-43A9-975E-6F36DB74924E}"
+	SccProjectName=""
+	SccLocalPath=""
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
+				ReBuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US /a"
+				CleanCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US CLEAN"
+				Output="LocalizationWithICU"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu LOCALE=en_US CLEAN"
+				Output="LocalizationWithICU"/>
+		</Configuration>
+		<Configuration
+			Name="Release with symbols|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu CFG=Release.symbols LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu CFG=Release.symbols LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=icu CFG=Release.symbols LOCALE=en_US CLEAN"
+				Output="LocalizationWithICU"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+			<Filter
+			Name="Resource Files"
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			
+		<File
+			RelativePath="..\..\..\Res\Localization\Localization.rc">
+		</File>
+		<File
+			RelativePath="..\..\..\Res\Localization\resource.h">
+		</File>
+		</Filter>
+		<File
+			RelativePath="..\..\..\..\..\src\xalanc\NLS\en_US\XalanMsg_en_US.xlf">
+		</File>
+
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -1,0 +1,104 @@
+README for XalanC project at xalan.apache.org
+
+
+	Steps for doing a UNIX build	
+		
+ 	
+
+For users who want to build in the UNIX environment,
+
+   1. The Xalan build files are written for GNU make, and will not work with other make utilities.
+
+   2. Set the XERCESCROOT environment variable to the path to the root directory of Xerces-C++.
+
+   3. Set the XALANCROOT environment variable to the path to the c directory in the root directory of the Xalan-C++ distribution. For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to "/home/mydir/xml-xalan/c".
+
+   4. (Optional) If you decide to build with ICU, integrate the build with ICU by installing the ICU (see Using the ICU) and defining XALAN_USE_ICU to a value, for example: export XALAN_USE_ICU=true. Set the ICUROOT environment variable to the path to the root directory of ICU. Note that building Xalan with ICU requires that Xerces must also be built with ICU.
+
+   5. Change directory to XALANCROOT. You can also build Xalan-C outside of the source tree, but you will need to adjust the path to the runConfigure script in the next step.
+
+   6. Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as indicated below. The runConfigure utility is used to generate the appropriate Makefile for the desired build platform based on the options specified by the user. Valid options for the runConfigure utility are:
+
+      ./runConfigure -p <value> -c <value> -x <value> [-[flag] <value>]
+
+      flag  	Description 
+      p  	Build platform. Option must be provided by user. Valid values
+      include: aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,
+      tru64, macosx, cygwin.  
+      c  	C compiler name. Example: gcc, cc, c89, xlc_r, etc. 
+      x  	C++ compiler name. Example: g++, xlC_r, CC, etc. 
+      d  	Indicates build is a debug build. Takes no values. Default is no
+      debug. 
+      t  	Transcoder to use. Valid value is 'icu'. Default is null. 
+      m  	Type of localization support method. Valid values include: inmem,
+      icu, and nls. Default is inmem. 
+      M  	Locale for Message Localization Support. Default is "en_US" 
+      r  	Threads option. Valid values include: pthread or dce. Default is
+      pthread. (valid on HP-UX only) 
+      b  	Specify whether it is a 32-bit or 64-bit build. Valid values are 32
+      and 64. Default is 32-bit 
+      P  	Install root directory. Used if invoking build with gmake install or
+      gmake install-package. Default install root directory is /usr/local 
+      l  	Extra link options other than the default. Default is null 
+      z  	Extra compiler options other than the default. Default is null 
+      C  	Extra configuration options. 
+      h  	To get help on the above commands. Default is no help. 
+
+      Linux using GCC:  ./runConfigure -p linux -c gcc -x g++
+      Linux using the Intel compiler:  ./runConfigure -p linux -c icc -x icc
+      AIX (32-bit):    ./runConfigure -p aix -c xlc_r -x xlC_r
+
+      AIX (64-bit):    ./runConfigure -p aix -c xlc_r -x xlC_r -b 64
+
+      Cygwin (32-bit):  ./runConfigure -p cygwin -c gcc -x g++
+
+      HP-UX 11 (32-bit):  ./runConfigure -p hp-11 -c cc -x aCC
+
+      HP-UX 11 (64-bit):  ./runConfigure -p hp-11 -c cc -x aCC -b 64
+
+      HP-UX 11 for Itanium (32-bit):  ./runConfigure -p hp-11-ia64 -c cc -x aCC
+
+      HP-UX 11 for Itanium (64-bit):  ./runConfigure -p hp-11-ia64 -c cc -x aCC -b 64
+
+      Solaris (32-bit):  ./runConfigure -p solaris -c cc -x CC
+
+      Solaris (64-bit):  ./runConfigure -p solaris -c cc -x CC -b 64
+
+      if you choose to install the distribution after building the libraries and executables, then you will need to indicate where you would like the distribution to be installed. To specify the install directory for your distribution, specify the flag -P <install directory>. for example, building and installing on the AIX platform:
+
+      ./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan
+
+      Note	The standard binary directories bin, lib, and include are created in the specified directory only if the install or install-package option is specified in the build process.
+
+      To see the other runConfigure flags you may include, use the help flag:
+
+           ./runConfigure -h
+
+   7. Purge the previous build:
+
+           make clean
+
+   8. Run the new build:
+
+           make
+      or
+           make targ
+
+      where targ can be one of:
+      targ  	Description 
+      all  	Build the libraries and Xalan executable. This is the default target
+      if no targ is specified. 
+      clean  	Deletes existing binaries, executables, libraries, tests, and
+      samples. 
+      install  	Build the library, executables, and samples, and copy them (along with
+      the header files) the specified install location. 
+      install-package  	Installs the library, executables, and samples to the
+      specified location. 
+      Samples  	Builds the samples. 
+      Tests  	Builds the tests. 
+
+
+
+
+
+
