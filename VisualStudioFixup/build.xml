@@ -1,0 +1,166 @@
+
+<!--                                                                             
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the  "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at                                      
+                                                                            
+     http://www.apache.org/licenses/LICENSE-2.0                             
+
+ Unless required by applicable law or agreed to in writing, software        
+ distributed under the License is distributed on an "AS IS" BASIS,          
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   
+ See the License for the specific language governing permissions and        
+ limitations under the License.                                             
+ -->
+
+
+<project name="XalanC" default="docs" basedir=".">
+
+  <property name="name" value="xalan"/>
+  <property name="Name" value="Xalan-C++"/>
+  <property name="year" value="2004"/>
+  
+  <property name="version.VERSION" value="1"/>
+  <property name="version.RELEASE" value="10"/>
+  <property name="version.MINOR"   value="0"/>
+
+  <property name="xdocs.dir" value="./xdocs"/>
+  <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
+  <property name="xdocs.site" value="${xdocs.dir}/sources/xalan.xml"/>  
+  <property name="xdocs.style" value="${xdocs.dir}/style"/>
+  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apiDocs"/>  
+
+  <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
+  <property name="doc.generator.styletargz" value="${xdocs.dir}/xml-site-style.tar.gz"/>
+  <property name="doc.generator.styletar" value="${xdocs.dir}/xml-site-style.tar"/>
+  
+  <property name="build.dir"            value="./build"/>
+  <property name="build.docs"           value="${build.dir}/docs"/>
+  <property name="build.apidocs"        value="${build.docs}/apiDocs"/>  
+  <property name="site.dir"             value="./xml-site"/>
+    
+  <property name="package.name"         value="Xalan-C"/>
+  <property name="package.version"      value="${version.VERSION}_${version.RELEASE}_${version.MINOR}"/>  
+  <property name="docs.package.name"    value="${package.name}_${package.version}-docs"/>
+  <property name="webdocs.package.name" value="${package.name}_${package.version}-webdocs"/>
+  <property name="src.package.name"     value="${package.name}_${package.version}-src"/>  
+
+  <target name="prepare">
+    <gunzip src="${doc.generator.styletargz}"/>
+    <untar src="${doc.generator.styletar}" dest="${xdocs.dir}"/>
+	<delete file="${doc.generator.styletar}"/>
+    <mkdir dir="${build.apidocs}"/>
+    <mkdir dir="${site.dir}/apiDocs"/>
+    <!--echo message="Transform commits.xml and put the result in ${xdocs.dir}/DONE"/>
+    <java fork="yes" classname="org.apache.xalan.xslt.Process" classpath="${java.class.path}">
+      <arg line="-in commits.xml -xsl ${xdocs.style}/stylesheets/done-c.xsl -out xdocs/sources/xalan/DONE"/>
+    </java-->        
+    
+  </target>
+
+  <target name="docs" depends="prepare, apidocs">
+    <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
+      <arg line="targetDirectory=${build.docs} ${xdocs.book} ${xdocs.style}"/>    
+    </java>  
+  </target>
+
+  <target name="apidocs" depends="prepare">
+    <copy todir="${build.apidocs}">
+      <fileset dir="${xdocs.apidocs}"/>
+    </copy>
+    <exec executable="doxygen" dir="${xdocs.dir}">
+      <arg value="DoxyfileXalan"/>
+    </exec>  
+  </target>
+    
+  <target name="site" depends="prepare">
+    <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
+      <arg line="targetDirectory=${site.dir} ${xdocs.site} ${xdocs.style}"/>    
+    </java>
+    <copy todir="${site.dir}/apiDocs">
+      <fileset dir="${build.apidocs}"/>
+    </copy>      
+      
+  </target>
+  
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${site.dir}"/>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Use FOP to create preliminary print (pdf) doc                       -->
+  <!-- Note: fop.jar and xml.jar (from xml-fop) must be on classpath       -->
+
+  <!-- This is VERY preliminary, not yet for inclusion in distribution     -->
+  <!-- =================================================================== -->
+
+  <!--Collate the xml sources into a single xml source with a litle extra structure -->
+  <target name="print.docs" depends="prepare">
+    <echo message="fop.jar and xml.jar must be on the classpath"/>
+    <java fork="yes" classname="org.apache.xalan.xslt.Process"
+      classpath="${java.class.path}:${build.dir}/xalan.jar">
+      <arg line="-xsl ${xdocs.dir}/sources/xalan-c-collate.xsl 
+                 -out ${xdocs.dir}/sources/xalan/xalan-c-collate.xml"/>
+    </java>
+    
+    <!-- Transform collation into Formatting Objects 
+         (with a little work on links along the way) -->    
+    <java fork="yes" classname="org.apache.xalan.xslt.Process"
+      classpath="${java.class.path}:${build.dir}/xalan.jar">
+      <arg line="-in  ${xdocs.dir}/sources/xalan/xalan-c-collate.xml
+                 -param resourceFile '../../sources/xalan/resources.xml'
+                 -param project ${Name}
+                 -xsl ${xdocs.style}/stylesheets/xml2fo.xsl 
+                 -out ${build.docs}/xalan-c-collate.fo"/>
+    </java>
+    
+    <!-- Use FOP to generate a pdf file -->
+    <java fork="yes" classname="org.apache.fop.apps.CommandLine"
+      classpath="${java.class.path}:${build.dir}/xalan.jar:${bin.dir}/fop.jar:${bin.dir}/w3c.jar">
+      <arg line="${build.docs}/xalan-c-collate.fo build/docs/xalan-c.pdf"/>
+    </java>
+  </target>
+
+  <!-- package documentation (user guide and apidocs) for distribution -->
+  <target name="pack.docs">
+    <mkdir dir="${build.dir}/${docs.package.name}"/>
+    <copy todir="${build.dir}/${docs.package.name}">
+      <fileset dir="${build.docs}"/>
+    </copy>     
+      
+    <tar tarfile="${build.dir}/${docs.package.name}.tar" basedir="${build.dir}" includes="${docs.package.name}/**"/>
+    <gzip src="${build.dir}/${docs.package.name}.tar" zipfile="${build.dir}/${docs.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${docs.package.name}.tar"/>
+    
+    <zip zipfile="${build.dir}/${docs.package.name}.zip" basedir="${build.dir}" includes="${docs.package.name}/**"/>
+  </target>
+
+  <!-- package documentation (user guide and apidocs) for transfer to website -->
+  <target name="pack.webdocs">
+    <tar tarfile="${build.dir}/${webdocs.package.name}.tar" basedir="${site.dir}" includes="**"/>
+    <gzip src="${build.dir}/${webdocs.package.name}.tar" zipfile="${build.dir}/${webdocs.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${webdocs.package.name}.tar"/>
+    
+    <zip zipfile="${build.dir}/${webdocs.package.name}.zip" basedir="${site.dir}" includes="**"/>
+  </target>
+
+  <!-- package source code for distribution -->
+  <target name="pack.src">
+    <mkdir dir="${build.dir}/${src.package.name}"/>
+    <copy todir="${build.dir}/${src.package.name}">
+      <fileset dir="../.." excludes="xml-xalan/c/build/** xml-xalan/c/xml-site/**"/>
+    </copy> 
+      
+    <tar tarfile="${build.dir}/${src.package.name}.tar" basedir="${build.dir}/${src.package.name}" includes="**" defaultexcludes="no"/>
+    <gzip src="${build.dir}/${src.package.name}.tar" zipfile="${build.dir}/${src.package.name}.tar.gz"/>
+    <delete file="${build.dir}/${src.package.name}.tar"/>
+    
+    <zip zipfile="${build.dir}/${src.package.name}.zip" basedir="${build.dir}/${src.package.name}" includes="**" defaultexcludes="no"/>
+  </target>
+  
+</project>

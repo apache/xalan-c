@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Class xmlns:LXT="www.bogus.com">
+<Order Name="TINAMIFORMES">
+        <Family Name="TINAMIDAE">
+            <Species Scientific_Name="Tinamus major">  Great Tinamou.</Species>
+            <Species Scientific_Name="Nothocercus">Highland Tinamou.</Species>
+            <Species Scientific_Name="Crypturellus soui">Little Tinamou.</Species>
+            <Species Scientific_Name="Crypturellus cinnamomeus">Thicket Tinamou.</Species>
+            <Species Scientific_Name="Crypturellus boucardi">Slaty-breasted Tinamou.</Species>
+            <Species Scientific_Name="Crypturellus kerriae">Choco Tinamou.</Species>
+        </Family>
+    </Order>
+<Order Name="GAVIIFORMES">
+        <Family Name="GAVIIDAE">
+            <Species Scientific_Name="Gavia stellata">Red-throated Loon.</Species>
+            <Species Scientific_Name="Gavia arctica">Arctic Loon.</Species>
+            <Species Scientific_Name="Gavia pacifica">Pacific Loon.</Species>
+            <Species Scientific_Name="Gavia immer">Common Loon.</Species>
+            <Species Scientific_Name="Gavia adamsii">Yellow-billed Loon.</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="PODICIPEDIFORMES">
+        <Family Name="PODICIPEDIDAE">
+            <Species Scientific_Name="Tachybaptus dominicus">Least Grebe.</Species>
+            <Species Scientific_Name="Podilymbus podiceps">Pied-billed Grebe.</Species>
+            <Species Scientific_Name="">Atitlan Grebe.</Species>
+            <Species Scientific_Name="">Horned Grebe.</Species>
+            <Species Scientific_Name="">Red-necked Grebe.</Species>
+            <Species Scientific_Name="">Eared Grebe.</Species>
+            <Species Scientific_Name="">Western Grebe.</Species>
+            <Species Scientific_Name="">Clark's Grebe.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+    </Order>
+
+
+<Order Name="PROCELLARIIFORMES">
+        <Family Name="DIOMEDEIDAE">
+            <Species Scientific_Name="Thalassarche chlororhynchos">Yellow-nosed Albatross. (A)</Species>
+            <Species Scientific_Name="Thalassarche cauta">Shy Albatross. (A)</Species>
+            <Species Scientific_Name="Thalassarche melanophris">Black-browed Albatross. (A)</Species>
+            <Species Scientific_Name="Phoebetria palpebrata">Light-mantled Albatross. (A)</Species>
+            <Species Scientific_Name="Diomedea exulans">Wandering Albatross. (A)</Species>
+            <Species Scientific_Name="Phoebastria immutabilis">Laysan Albatross.</Species>
+            <Species Scientific_Name="Phoebastria nigripes">Black-footed Albatross.</Species>
+            <Species Scientific_Name="Phoebastria albatrus">Short-tailed Albatross. (N)</Species>
+        </Family>
+        <Family Name="PROCELLARIIDAE">
+            <Species Scientific_Name="Fulmarus glacialis">Northern Fulmar.</Species>
+            <Species Scientific_Name="Pterodroma neglecta">Kermadec Petrel. (A)</Species>
+            <Species Scientific_Name="Pterodroma arminjoniana">Herald Petrel. (A)</Species>
+            <Species Scientific_Name="Pterodroma ultima">Murphy's Petrel. (N)</Species>
+            <Species Scientific_Name="Pterodroma inexpectata">Mottled Petrel. (A)</Species>
+            <Species Scientific_Name="Pterodroma cahow">Bermuda Petrel.</Species>
+            <Species Scientific_Name="Pterodroma hasitata">Black-capped Petrel.</Species>
+            <Species Scientific_Name="Pterodroma externa">Juan Fernandez Petrel. (N)</Species>
+            <Species Scientific_Name="Pterodroma phaeopygia">Dark-rumped Petrel.</Species>
+            <Species Scientific_Name="Pterodroma cervicalis">White-necked Petrel. (H)</Species>
+            <Species Scientific_Name="Pterodroma hypoleuca">Bonin Petrel. (H)</Species>
+            <Species Scientific_Name="Pterodroma nigripennis">Black-winged Petrel. (H, A)</Species>
+            <Species Scientific_Name="Pterodroma cookii">Cook's Petrel. (N)</Species>
+            <Species Scientific_Name="Pterodroma longirostris">Stejneger's Petrel. (A)</Species>
+            <Species Scientific_Name="Bulweria bulwerii">Bulwer's Petrel. (H)</Species>
+            <Species Scientific_Name="Bulweria fallax">Jouanin's Petrel. (H, A)</Species>
+            <Species Scientific_Name="Procellaria parkinsoni">Parkinson's Petrel. (N)</Species>
+            <Species Scientific_Name="Calonectris leucomelas">Streaked Shearwater. (A)</Species>
+            <Species Scientific_Name="Calonectris diomedea">Cory's Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus creatopus">Pink-footed Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus carneipes">Flesh-footed Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus gravis">Greater Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus pacificus">Wedge-tailed Shearwater.</Species>
+            <Species Scientific_Name="Puffinus bulleri">Buller's Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus griseus">Sooty Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus tenuirostris">Short-tailed Shearwater. (N)</Species>
+            <Species Scientific_Name="Puffinus nativitatis">Christmas Shearwater. (H)</Species>
+            <Species Scientific_Name="Puffinus puffinus">Manx Shearwater.</Species>
+            <Species Scientific_Name="Puffinus auricularis">Townsend's Shearwater.</Species>
+            <Species Scientific_Name="Puffinus opisthomelas">Black-vented Shearwater.</Species>
+            <Species Scientific_Name="Puffinus lherminieri">Audubon's Shearwater.</Species>
+            <Species Scientific_Name="Puffinus assimilis">Little Shearwater. (A)</Species>
+        </Family>
+        <Family Name="HYDROBATIDAE">
+            <Species Scientific_Name="Oceanites oceanicus">Wilson's Storm-Petrel. (N)</Species>
+            <Species Scientific_Name="Pelagodroma marina">White-faced Storm-Petrel. (A)</Species>
+            <Species Scientific_Name="Hydrobates pelagicus">European Storm-Petrel. (A)</Species>
+            <Species Scientific_Name="Oceanodroma furcata">Fork-tailed Storm-Petrel.</Species>
+            <Species Scientific_Name="Oceanodroma leucorhoa">Leach's Storm-Petrel.</Species>
+            <Species Scientific_Name="Oceanodroma homochroa">Ashy Storm-Petrel.</Species>
+            <Species Scientific_Name="Oceanodroma castro">Band-rumped Storm-Petrel. (N)</Species>
+            <Species Scientific_Name="Oceanodroma tethys">Wedge-rumped Storm-Petrel. (N)</Species>
+            <Species Scientific_Name="Oceanodroma melania">Black Storm-Petrel.</Species>
+            <Species Scientific_Name="Oceanodroma macrodactyla">Guadalupe Storm-Petrel.</Species>
+            <Species Scientific_Name="Oceanodroma markhami">Markham's Storm-Petrel. (A)</Species>
+            <Species Scientific_Name="Oceanodroma tristrami">Tristram's Storm-Petrel. (H)</Species>
+            <Species Scientific_Name="Oceanodroma microsoma">Least Storm-Petrel.</Species>
+        </Family>
+    </Order>
+
+<Order Name="PELECANIFORMES">
+        <Family Name="PHAETHONTIDAE">
+            <Species Scientific_Name="Phaethon lepturus">White-tailed Tropicbird.</Species>
+            <Species Scientific_Name="Phaethon aethereus">Red-billed Tropicbird.</Species>
+            <Species Scientific_Name="Phaethon rubricauda">Red-tailed Tropicbird.</Species>
+        </Family>
+        <Family Name="SULIDAE">
+            <Species Scientific_Name="Sula dactylatra">Masked Booby.</Species>
+            <Species Scientific_Name="Sula nebouxii">Blue-footed Booby.</Species>
+            <Species Scientific_Name="Sula variegata">Peruvian Booby. (A)</Species>
+            <Species Scientific_Name="Sula leucogaster">Brown Booby.</Species>
+            <Species Scientific_Name="Sula sula">Red-footed Booby.</Species>
+            <Species Scientific_Name="Morus bassanus">Northern Gannet.</Species>
+        </Family>
+        <Family Name="PELECANIDAE">
+            <Species Scientific_Name="Pelecanus erythrorhynchos">American White Pelican.</Species>
+            <Species Scientific_Name="Pelecanus occidentalis">Brown Pelican.</Species>
+        </Family>
+        <Family Name="PHALACROCORACIDAE">
+            <Species Scientific_Name="Phalacrocorax penicillatus">Brandt's Cormorant.</Species>
+            <Species Scientific_Name="Phalacrocorax brasilianus">Neotropic Cormorant.</Species>
+            <Species Scientific_Name="Phalacrocorax auritus">Double-crested Cormorant.</Species>
+            <Species Scientific_Name="Phalacrocorax carbo">Great Cormorant.</Species>
+            <Species Scientific_Name="Phalacrocorax urile">Red-faced Cormorant.</Species>
+            <Species Scientific_Name="Phalacrocorax pelagicus">Pelagic Cormorant.</Species>
+        </Family>
+        <Family Name="ANHINGIDAE">
+            <Species Scientific_Name="Anhinga anhinga">Anhinga.</Species>
+        </Family>
+        <Family Name="FREGATIDAE">
+            <Species Scientific_Name="Fregata magnificens">Magnificent Frigatebird.</Species>
+            <Species Scientific_Name="Fregata minor">Great Frigatebird.</Species>
+            <Species Scientific_Name="Fregata ariel">Lesser Frigatebird. (A)</Species>
+        </Family>
+    </Order>
+
+
+
+<Order Name="CICONIIFORMES">
+        <Family Name="ARDEIDAE">
+            <Species Scientific_Name="Botaurus pinnatus">Pinnated Bittern.</Species>
+            <Species Scientific_Name="Botaurus lentiginosus">American Bittern.</Species>
+            <Species Scientific_Name="Ixobrychus sinensis ">Yellow Bittern. (A)</Species>
+            <Species Scientific_Name="Ixobrychus exilis">Least Bittern.</Species>
+            <Species Scientific_Name="Tigrisoma lineatum">Rufescent Tiger-Heron.</Species>
+            <Species Scientific_Name="Tigrisoma fasciatum">Fasciated Tiger-Heron.</Species>
+            <Species Scientific_Name="Tigrisoma mexicanum">Bare-throated Tiger-Heron.</Species>
+            <Species Scientific_Name="Ardea herodias">Great Blue Heron.</Species>
+            <Species Scientific_Name="Ardea cinerea">Gray Heron. (A)</Species>
+            <Species Scientific_Name="Ardea cocoi">Cocoi Heron.</Species>
+            <Species Scientific_Name="Ardea alba">Great Egret.</Species>
+            <Species Scientific_Name="Egretta eulophotes">Chinese Egret. (A)</Species>
+            <Species Scientific_Name="Egretta garzetta">Little Egret. (A)</Species>
+            <Species Scientific_Name="Egretta gularis">Western Reef-Heron. (A)</Species>
+            <Species Scientific_Name="Egretta thula">Snowy Egret.</Species>
+            <Species Scientific_Name="Egretta caerulea">Little Blue Heron.</Species>
+            <Species Scientific_Name="Egretta tricolor">Tricolored Heron.</Species>
+            <Species Scientific_Name="Egretta rufescens">Reddish Egret.</Species>
+            <Species Scientific_Name="Bubulcus ibis">Cattle Egret.</Species>
+            <Species Scientific_Name="Butorides virescens">Green Heron.</Species>
+            <Species Scientific_Name="Butorides striatus">Striated Heron.</Species>
+            <Species Scientific_Name="Agamia agami">Agami Heron.</Species>
+            <Species Scientific_Name="Pilherodius pileatus">Capped Heron.</Species>
+            <Species Scientific_Name="Nycticorax nycticorax">Black-crowned Night-Heron. </Species>
+            <Species Scientific_Name="Nyctanassa violacea">Yellow-crowned Night-Heron.</Species>
+            <Species Scientific_Name="Cochlearius cochlearius">Boat-billed Heron.</Species>
+        </Family>
+        <Family Name="THRESKIORNITHIDAE">
+            <SubFamily Name="Threskiornithinae">
+                <Species Scientific_Name="Eudocimus albus">White Ibis.</Species>
+                <Species Scientific_Name="Eudocimus ruber">Scarlet Ibis. (A)</Species>
+                <Species Scientific_Name="Plegadis falcinellus">Glossy Ibis.</Species>
+                <Species Scientific_Name="Plegadis chihi">White-faced Ibis.</Species>
+                <Species Scientific_Name="Mesembrinibis cayennensis">Green Ibis.</Species>
+                <Species Scientific_Name="Theristicus caudatus">Buff-necked Ibis. (A)</Species>
+            </SubFamily>
+            <SubFamily Name="Plataleinae">
+                <Species Scientific_Name="Ajaia ajaja">Roseate Spoonbill.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="CICONIIDAE">
+            <Species Scientific_Name="Jabiru mycteria">Jabiru.</Species>
+            <Species Scientific_Name="Mycteria americana">Wood Stork.</Species>
+        </Family>
+        <Family Name="CATHARTIDAE">
+            <Species Scientific_Name="Coragyps atratus">Black Vulture.</Species>
+            <Species Scientific_Name="Cathartes aura">Turkey Vulture.</Species>
+            <Species Scientific_Name="Cathartes burrovianus">Lesser Yellow-headed Vulture.</Species>
+            <Species Scientific_Name="Gymnogyps californianus">California Condor.</Species>
+            <Species Scientific_Name="Sarcoramphus papa">King Vulture.</Species>
+        </Family>
+    </Order>
+
+
+
+<Order Name="PHOENICOPTERIFORMES">
+        <Family Name="PHOENICOPTERIDAE">
+            <Species Scientific_Name="Phoenicopterus ruber">Greater Flamingo.</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="ANSERIFORMES">
+        <Family Name="ANATIDAE">
+            <SubFamily Name="Dendrocygninae">
+                <Species Scientific_Name="Dendrocygna viduata">White-faced Whistling-Duck.</Species>
+                <Species Scientific_Name="Dendrocygna autumnalis">Black-bellied Whistling-Duck.</Species>
+                <Species Scientific_Name="Dendrocygna arborea">West Indian Whistling-Duck.</Species>
+                <Species Scientific_Name="Dendrocygna bicolor">Fulvous Whistling-Duck.</Species>
+            </SubFamily>
+            <SubFamily Name="Anserinae">
+                <Species Scientific_Name="Anser fabalis">Bean Goose. (A)</Species>
+                <Species Scientific_Name="Anser brachyrhynchus">Pink-footed Goose. (A)</Species>
+                <Species Scientific_Name="Anser albifrons">Greater White-fronted Goose.</Species>
+                <Species Scientific_Name="Anser erythropus">Lesser White-fronted Goose. (A)</Species>
+                <Species Scientific_Name="Chen canagica">Emperor Goose.</Species>
+                <Species Scientific_Name="Chen caerulescens">Snow Goose.</Species>
+                <Species Scientific_Name="Chen rossii">Ross's Goose.</Species>
+                <Species Scientific_Name="Branta canadensis">Canada Goose.</Species>
+                <Species Scientific_Name="Branta sandvicensis">Hawaiian Goose. (H)</Species>
+                <Species Scientific_Name="Branta bernicla">Brant.</Species>
+                <Species Scientific_Name="Branta leucopsis">Barnacle Goose. (A)</Species>
+                <Species Scientific_Name="Cygnus olor">Mute Swan. (I)</Species>
+                <Species Scientific_Name="Cygnus buccinator">Trumpeter Swan.</Species>
+                <Species Scientific_Name="Cygnus columbianus">Tundra Swan.</Species>
+                <Species Scientific_Name="Cygnus cygnus">Whooper Swan.</Species>
+            </SubFamily>
+            <SubFamily Name="Tadorninae">
+                <Species Scientific_Name="Sarkidiornis melanotos">Comb Duck.</Species>
+                <Species Scientific_Name="Neochen jubata">Orinoco Goose. (A)</Species>
+            </SubFamily>
+            <SubFamily Name="Anatinae">
+                <Species Scientific_Name="Cairina moschata">Muscovy Duck.</Species>
+                <Species Scientific_Name="Aix sponsa">Wood Duck.</Species>
+                <Species Scientific_Name="Anas strepera">Gadwall.</Species>
+                <Species Scientific_Name="Anas falcata">Falcated Duck. (A)</Species>
+                <Species Scientific_Name="Anas penelope">Eurasian Wigeon. (N)</Species>
+                <Species Scientific_Name="Anas americana">American Wigeon.</Species>
+                <Species Scientific_Name="Anas rubripes">American Black Duck.</Species>
+                <Species Scientific_Name="Anas platyrhynchos">Mallard.</Species>
+                <Species Scientific_Name="Anas fulvigula">Mottled Duck.</Species>
+                <Species Scientific_Name="Anas wyvilliana">Hawaiian Duck. (H)</Species>
+                <Species Scientific_Name="Anas laysanensis">Laysan Duck. (H)</Species>
+                <Species Scientific_Name="Anas poecilorhyncha">Spot-billed Duck. (A)</Species>
+                <Species Scientific_Name="Anas discors">Blue-winged Teal.</Species>
+                <Species Scientific_Name="Anas cyanoptera">Cinnamon Teal.</Species>
+                <Species Scientific_Name="Anas clypeata">Northern Shoveler.</Species>
+                <Species Scientific_Name="Anas bahamensis">White-cheeked Pintail.</Species>
+                <Species Scientific_Name="Anas acuta">Northern Pintail.</Species>
+                <Species Scientific_Name="Anas querquedula">Garganey. (N)</Species>
+                <Species Scientific_Name="Anas formosa">Baikal Teal. (A)</Species>
+                <Species Scientific_Name="Anas crecca">Green-winged Teal.</Species>
+                <Species Scientific_Name="Aythya valisineria">Canvasback.</Species>
+                <Species Scientific_Name="Aythya americana">Redhead.</Species>
+                <Species Scientific_Name="Aythya ferina">Common Pochard. (A)</Species>
+                <Species Scientific_Name="Aythya collaris">Ring-necked Duck.</Species>
+                <Species Scientific_Name="Aythya fuligula">Tufted Duck.</Species>
+                <Species Scientific_Name="Aythya marila">Greater Scaup.</Species>
+                <Species Scientific_Name="Aythya affinis">Lesser Scaup.</Species>
+                <Species Scientific_Name="Polysticta stelleri">Steller's Eider.</Species>
+                <Species Scientific_Name="Somateria fischeri">Spectacled Eider.</Species>
+                <Species Scientific_Name="Somateria spectabilis">King Eider.</Species>
+                <Species Scientific_Name="Somateria mollissima">Common Eider.</Species>
+                <Species Scientific_Name="Histrionicus histrionicus">Harlequin Duck.</Species>
+                <Species Scientific_Name="Camptorhynchus labradorius">Labrador Duck.</Species>
+                <Species Scientific_Name="Melanitta perspicillata">Surf Scoter.</Species>
+                <Species Scientific_Name="Melanitta fusca">White-winged Scoter.</Species>
+                <Species Scientific_Name="Melanitta nigra">Black Scoter.</Species>
+                <Species Scientific_Name="Clangula hyemalis">Oldsquaw.</Species>
+                <Species Scientific_Name="Bucephala albeola">Bufflehead.</Species>
+                <Species Scientific_Name="Bucephala clangula">Common Goldeneye.</Species>
+                <Species Scientific_Name="Bucephala islandica">Barrow's Goldeneye.</Species>
+                <Species Scientific_Name="Mergellus albellus">Smew. (N)</Species>
+                <Species Scientific_Name="Lophodytes cucullatus">Hooded Merganser.</Species>
+                <Species Scientific_Name="Mergus merganser">Common Merganser.</Species>
+                <Species Scientific_Name="Mergus serrator">Red-breasted Merganser.</Species>
+                <Species Scientific_Name="Nomonyx">Masked Duck.</Species>
+                <Species Scientific_Name="Oxyura jamaicensis">Ruddy Duck.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+<Order Name="FALCONIFORMES">
+        <Family Name="ACCIPITRIDAE">
+            <SubFamily Name="Pandioninae">
+                <Species Scientific_Name="Pandion haliaetus">Osprey.</Species>
+            </SubFamily>
+            <SubFamily Name="Accipitrinae">
+                <Species Scientific_Name="Leptodon cayanensis">Gray-headed Kite.</Species>
+                <Species Scientific_Name="Chondrohierax uncinatus">Hook-billed Kite.</Species>
+                <Species Scientific_Name="Elanoides forficatus">Swallow-tailed Kite.</Species>
+                <Species Scientific_Name="Gampsonyx swainsonii">Pearl Kite.</Species>
+                <Species Scientific_Name="Elanus leucurus">White-tailed Kite.</Species>
+                <Species Scientific_Name="Rostrhamus sociabilis">Snail Kite.</Species>
+                <Species Scientific_Name="Rostrhamus hamatus">Slender-billed Kite.</Species>
+                <Species Scientific_Name="Harpagus bidentatus">Double-toothed Kite.</Species>
+                <Species Scientific_Name="Ictinia mississippiensis">Mississippi Kite.</Species>
+                <Species Scientific_Name="Ictinia plumbea">Plumbeous Kite.</Species>
+                <Species Scientific_Name="Haliaeetus leucocephalus">Bald Eagle.</Species>
+                <Species Scientific_Name="Haliaeetus albicilla">White-tailed Eagle.</Species>
+                <Species Scientific_Name="Haliaeetus pelagicus">Steller's Sea-Eagle. (A)</Species>
+                <Species Scientific_Name="Busarellus nigricollis">Black-collared Hawk.</Species>
+                <Species Scientific_Name="Circus cyaneus">Northern Harrier.</Species>
+                <Species Scientific_Name="Accipiter soloensis">Gray Frog-Hawk. (H, A)</Species>
+                <Species Scientific_Name="Accipiter superciliosus">Tiny Hawk.</Species>
+                <Species Scientific_Name="Accipiter striatus">Sharp-shinned Hawk.</Species>
+                <Species Scientific_Name="Accipiter cooperii">Cooper's Hawk.</Species>
+                <Species Scientific_Name="Accipiter gundlachi">Gundlach's Hawk.</Species>
+                <Species Scientific_Name="Accipiter bicolor">Bicolored Hawk.</Species>
+                <Species Scientific_Name="Accipiter gentilis">Northern Goshawk.</Species>
+                <Species Scientific_Name="Geranospiza caerulescens">Crane Hawk.</Species>
+                <Species Scientific_Name="Leucopternis plumbea">Plumbeous Hawk.</Species>
+                <Species Scientific_Name="Leucopternis princeps">Barred Hawk.</Species>
+                <Species Scientific_Name="Leucopternis semiplumbea">Semiplumbeous Hawk.</Species>
+                <Species Scientific_Name="Leucopternis albicollis">White Hawk.</Species>
+                <Species Scientific_Name="Asturina nitida">Gray Hawk.</Species>
+                <Species Scientific_Name="Buteogallus anthracinus">Common Black-Hawk.</Species>
+                <Species Scientific_Name="Buteogallus subtilis">Mangrove Black-Hawk.</Species>
+                <Species Scientific_Name="Buteogallus urubitinga">Great Black-Hawk.</Species>
+                <Species Scientific_Name="Buteogallus meridionalis">Savanna Hawk.</Species>
+                <Species Scientific_Name="Parabuteo unicinctus">Harris's Hawk.</Species>
+                <Species Scientific_Name="Harpyhaliaetus solitarius">Solitary Eagle.</Species>
+                <Species Scientific_Name="Buteo magnirostris">Roadside Hawk.</Species>
+                <Species Scientific_Name="Buteo lineatus">Red-shouldered Hawk.</Species>
+                <Species Scientific_Name="Buteo ridgwayi">Ridgway's Hawk.</Species>
+                <Species Scientific_Name="Buteo platypterus">Broad-winged Hawk.</Species>
+                <Species Scientific_Name="Buteo brachyurus">Short-tailed Hawk.</Species>
+                <Species Scientific_Name="Buteo swainsoni">Swainson's Hawk.</Species>
+                <Species Scientific_Name="Buteo albicaudatus">White-tailed Hawk.</Species>
+                <Species Scientific_Name="Buteo albonotatus">Zone-tailed Hawk.</Species>
+                <Species Scientific_Name="Buteo solitarius">Hawaiian Hawk. (H)</Species>
+                <Species Scientific_Name="Buteo jamaicensis">Red-tailed Hawk.</Species>
+                <Species Scientific_Name="Buteo regalis">Ferruginous Hawk.</Species>
+                <Species Scientific_Name="Buteo lagopus">Rough-legged Hawk.</Species>
+                <Species Scientific_Name="Morphnus guianensis">Crested Eagle.</Species>
+                <Species Scientific_Name="Harpia harpyja">Harpy Eagle.</Species>
+                <Species Scientific_Name="Aquila chrysaetos">Golden Eagle.</Species>
+                <Species Scientific_Name="Spizastur melanoleucus">Black-and-white Hawk-Eagle.</Species>
+                <Species Scientific_Name="Spizaetus tyrannus">Black Hawk-Eagle.</Species>
+                <Species Scientific_Name="Spizaetus ornatus">Ornate Hawk-Eagle.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="FALCONIDAE">
+            <SubFamily Name="Micrasturinae">
+                <Species Scientific_Name="Micrastur ruficollis">Barred Forest-Falcon.</Species>
+                <Species Scientific_Name="Micrastur mirandollei">Slaty-backed Forest-Falcon.</Species>
+                <Species Scientific_Name="Micrastur semitorquatus">Collared Forest-Falcon.</Species>
+            </SubFamily>
+            <SubFamily Name="Caracarinae">
+                <Species Scientific_Name="Daptrius americanus">Red-throated Caracara.</Species>
+                <Species Scientific_Name="Caracara plancus">Crested Caracara.</Species>
+                <Species Scientific_Name="Milvago chimachima">Yellow-headed Caracara.</Species>
+            </SubFamily>
+            <SubFamily Name="Falconinae">
+                <Species Scientific_Name="Herpetotheres cachinnans">Laughing Falcon.</Species>
+                <Species Scientific_Name="Falco tinnunculus">Eurasian Kestrel. (A)</Species>
+                <Species Scientific_Name="Falco sparverius">American Kestrel.</Species>
+                <Species Scientific_Name="Falco columbarius">Merlin.</Species>
+                <Species Scientific_Name="Falco subbuteo">Eurasian Hobby. (A)</Species>
+                <Species Scientific_Name="Falco femoralis">Aplomado Falcon.</Species>
+                <Species Scientific_Name="Falco rufigularis">Bat Falcon.</Species>
+                <Species Scientific_Name="Falco deiroleucus">Orange-breasted Falcon.</Species>
+                <Species Scientific_Name="Falco rusticolus">Gyrfalcon.</Species>
+                <Species Scientific_Name="Falco peregrinus">Peregrine Falcon.</Species>
+                <Species Scientific_Name="Falco mexicanus">Prairie Falcon.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+<Order Name="GALLIFORMES">
+        <Family Name="CRACIDAE">
+            <Species Scientific_Name="Ortalis vetula">Plain Chachalaca.</Species>
+            <Species Scientific_Name="Ortalis cinereiceps">Gray-headed Chachalaca.</Species>
+            <Species Scientific_Name="Ortalis ruficauda">Rufous-vented Chachalaca.</Species>
+            <Species Scientific_Name="Ortalis wagleri">Rufous-bellied Chachalaca.</Species>
+            <Species Scientific_Name="Ortalis poliocephala">West Mexican Chachalaca.</Species>
+            <Species Scientific_Name="Ortalis leucogastra">White-bellied Chachalaca.</Species>
+            <Species Scientific_Name="Penelope purpurascens">Crested Guan.</Species>
+            <Species Scientific_Name="Chamaepetes unicolor">Black Guan.</Species>
+            <Species Scientific_Name="Penelopina nigra">Highland Guan.</Species>
+            <Species Scientific_Name="Oreophasis derbianus">Horned Guan.</Species>
+            <Species Scientific_Name="Crax rubra">Great Curassow.</Species>
+        </Family>
+        <Family Name="PHASIANIDAE">
+            <SubFamily Name="Phasianinae">
+                <Species Scientific_Name="Alectoris chukar">Chukar. (I)</Species>
+                <Species Scientific_Name="Francolinus pondicerianus">Gray Francolin. (H, I)</Species>
+                <Species Scientific_Name="Francolinus francolinus">Black Francolin. (H, I)</Species>
+                <Species Scientific_Name="Francolinus erckelii">Erckel's Francolin. (H, I)</Species>
+                <Species Scientific_Name="Tetraogallus himalayensis">Himalayan Snowcock. (I)</Species>
+                <Species Scientific_Name="Perdix perdix">Gray Partridge. (I)</Species>
+                <Species Scientific_Name="Coturnix japonica">Japanese Quail. (H, I)</Species>
+                <Species Scientific_Name="Gallus gallus">Red Junglefowl. (H, I)</Species>
+                <Species Scientific_Name="Lophura leucomelanos">Kalij Pheasant. (H, I)</Species>
+                <Species Scientific_Name="Phasianus colchicus">Ring-necked Pheasant. (I)</Species>
+                <Species Scientific_Name="Pavo cristatus">Common Peafowl. (I)</Species>
+            </SubFamily>
+            <SubFamily Name="Tetraoninae">
+                <Species Scientific_Name="Bonasa umbellus">Ruffed Grouse.</Species>
+                <Species Scientific_Name="Centrocercus urophasianus">Sage Grouse.</Species>
+                <Species Scientific_Name="Falcipennis canadensis">Spruce Grouse.</Species>
+                <Species Scientific_Name="Lagopus lagopus">Willow Ptarmigan.</Species>
+                <Species Scientific_Name="Lagopus mutus">Rock Ptarmigan.</Species>
+                <Species Scientific_Name="Lagopus leucurus">White-tailed Ptarmigan.</Species>
+                <Species Scientific_Name="Dendragapus obscurus">Blue Grouse.</Species>
+                <Species Scientific_Name="Tympanuchus phasianellus">Sharp-tailed Grouse.</Species>
+                <Species Scientific_Name="Tympanuchus cupido">Greater Prairie-Chicken.</Species>
+                <Species Scientific_Name="Tympanuchus pallidicinctus">Lesser Prairie-Chicken.</Species>
+            </SubFamily>
+            <SubFamily Name="Meleagridinae">
+                <Species Scientific_Name="Meleagris gallopavo">Wild Turkey.</Species>
+                <Species Scientific_Name="Meleagris ocellata">Ocellated Turkey.</Species>
+            </SubFamily>
+            <SubFamily Name="Numidinae">
+                <Species Scientific_Name="Numida meleagris ">Helmeted Guineafowl. (I)</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="ODONTOPHORIDAE">
+            <Species Scientific_Name="Dendrortyx barbatus">Bearded Wood-Partridge.</Species>
+            <Species Scientific_Name="Dendrortyx macroura">Long-tailed Wood-Partridge.</Species>
+            <Species Scientific_Name="Dendrortyx leucophrys">Buffy-crowned Wood-Partridge.</Species>
+            <Species Scientific_Name="Oreortyx pictus">Mountain Quail.</Species>
+            <Species Scientific_Name="Callipepla squamata">Scaled Quail.</Species>
+            <Species Scientific_Name="Callipepla douglasii">Elegant Quail.</Species>
+            <Species Scientific_Name="Callipepla californica">California Quail.</Species>
+            <Species Scientific_Name="Callipepla gambelii">Gambel's Quail.</Species>
+            <Species Scientific_Name="Philortyx fasciatus">Banded Quail.</Species>
+            <Species Scientific_Name="Colinus virginianus">Northern Bobwhite.</Species>
+            <Species Scientific_Name="Colinus nigrogularis">Black-throated Bobwhite.</Species>
+            <Species Scientific_Name="Colinus cristatus">Crested Bobwhite.</Species>
+            <Species Scientific_Name="Odontophorus gujanensis">Marbled Wood-Quail.</Species>
+            <Species Scientific_Name="Odontophorus melanotis">Black-eared Wood-Quail.</Species>
+            <Species Scientific_Name="Odontophorus dialeucos">Tacarcuna Wood-Quail.</Species>
+            <Species Scientific_Name="Odontophorus leucolaemus">Black-breasted Wood-Quail.</Species>
+            <Species Scientific_Name="Odontophorus guttatus">Spotted Wood-Quail.</Species>
+            <Species Scientific_Name="Dactylortyx thoracicus">Singing Quail.</Species>
+            <Species Scientific_Name="Cyrtonyx montezumae">Montezuma Quail.</Species>
+            <Species Scientific_Name="Cyrtonyx ocellatus">Ocellated Quail.</Species>
+            <Species Scientific_Name="Rhynchortyx cinctus">Tawny-faced Quail.</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="GRUIFORMES">
+        <Family Name="RALLIDAE">
+            <Species Scientific_Name="Coturnicops noveboracensis">Yellow Rail.</Species>
+            <Species Scientific_Name="Micropygia schomburgkii">Ocellated Crake. (A)</Species>
+            <Species Scientific_Name="Laterallus ruber">Ruddy Crake.</Species>
+            <Species Scientific_Name="Laterallus albigularis">White-throated Crake.</Species>
+            <Species Scientific_Name="Laterallus exilis">Gray-breasted Crake.</Species>
+            <Species Scientific_Name="Laterallus jamaicensis">Black Rail.</Species>
+            <Species Scientific_Name="Crex crex">Corn Crake. (A)</Species>
+            <Species Scientific_Name="Rallus longirostris">Clapper Rail.</Species>
+            <Species Scientific_Name="Rallus elegans">King Rail.</Species>
+            <Species Scientific_Name="Rallus limicola">Virginia Rail.</Species>
+            <Species Scientific_Name="Aramides axillaris">Rufous-necked Wood-Rail.</Species>
+            <Species Scientific_Name="Aramides cajanea">Gray-necked Wood-Rail.</Species>
+            <Species Scientific_Name="Amaurolimnas concolor">Uniform Crake.</Species>
+            <Species Scientific_Name="">Laysan Rail. (H)</Species>
+            <Species Scientific_Name="">Spotted Crake. (A)</Species>
+            <Species Scientific_Name="">Sora.</Species>
+            <Species Scientific_Name="">Hawaiian Rail. (H)</Species>
+            <Species Scientific_Name="Porzana sandwichensis">Hawaiian Rail. (H)</Species>
+            <Species Scientific_Name="Porzana flaviventer">Yellow-breasted Crake.</Species>
+            <Species Scientific_Name="Neocrex colombianus">Colombian Crake.</Species>
+            <Species Scientific_Name="Neocrex erythrops">Paint-billed Crake.</Species>
+            <Species Scientific_Name="Cyanolimnas cerverai">Zapata Rail.</Species>
+            <Species Scientific_Name="Pardirallus maculatus">Spotted Rail.</Species>
+            <Species Scientific_Name="Porphyrula martinica">Purple Gallinule.</Species>
+            <Species Scientific_Name="Porphyrula flavirostris">Azure Gallinule. (A)</Species>
+            <Species Scientific_Name="Gallinula chloropus">Common Moorhen.</Species>
+            <Species Scientific_Name="Fulica atra">Eurasian Coot. (A)</Species>
+            <Species Scientific_Name="Fulica alai">Hawaiian Coot. (H)</Species>
+            <Species Scientific_Name="Fulica americana">American Coot.</Species>
+            <Species Scientific_Name="Fulica caribaea">Caribbean Coot.</Species>
+        </Family>
+        <Family Name="HELIORNITHIDAE">
+            <Species Scientific_Name="Heliornis fulica">Sungrebe.</Species>
+        </Family>
+        <Family Name="EURYPYGIDAE">
+            <Species Scientific_Name="Eurypyga helias">Sunbittern.</Species>
+        </Family>
+        <Family Name="ARAMIDAE">
+            <Species Scientific_Name="Aramus guarauna">Limpkin.</Species>
+        </Family>
+        <Family Name="GRUIDAE">
+            <Species Scientific_Name="">Sandhill Crane.</Species>
+            <Species Scientific_Name="">Common Crane. (A)</Species>
+            <Species Scientific_Name="">Whooping Crane.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+    </Order>
+
+
+<Order Name="CHARADRIIFORMES">
+        <Family Name="BURHINIDAE">
+            <Species Scientific_Name="Burhinus bistriatus">Double-striped Thick-knee.</Species>
+        </Family>
+        <Family Name="CHARADRIIDAE">
+            <SubFamily Name="Vanellinae">
+                <Species Scientific_Name="Vanellus vanellus">Northern Lapwing. (A)</Species>
+                <Species Scientific_Name="Vanellus chilensis">Southern Lapwing. (N)</Species>
+            </SubFamily>
+            <SubFamily Name="Charadriinae">
+                <Species Scientific_Name="Pluvialis squatarola">Black-bellied Plover.</Species>
+                <Species Scientific_Name="Pluvialis apricaria">European Golden-Plover. (A)</Species>
+                <Species Scientific_Name="Pluvialis dominica">American Golden-Plover.</Species>
+                <Species Scientific_Name="Pluvialis fulva">Pacific Golden-Plover.</Species>
+                <Species Scientific_Name="Charadrius mongolus">Mongolian Plover. (N)</Species>
+                <Species Scientific_Name="Charadrius collaris">Collared Plover.</Species>
+                <Species Scientific_Name="Charadrius alexandrinus">Snowy Plover.</Species>
+                <Species Scientific_Name="Charadrius wilsonia">Wilson's Plover.</Species>
+                <Species Scientific_Name="Charadrius hiaticula">Common Ringed Plover.</Species>
+                <Species Scientific_Name="Charadrius semipalmatus">Semipalmated Plover.</Species>
+                <Species Scientific_Name="Charadrius melodus">Piping Plover.</Species>
+                <Species Scientific_Name="Charadrius dubius">Little Ringed Plover. (A)</Species>
+                <Species Scientific_Name="Charadrius vociferus">Killdeer.</Species>
+                <Species Scientific_Name="Charadrius montanus">Mountain Plover.</Species>
+                <Species Scientific_Name="Charadrius morinellus">Eurasian Dotterel.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="HAEMATOPODIDAE">
+            <Species Scientific_Name="Haematopus ostralegus">Eurasian Oystercatcher. (A)</Species>
+            <Species Scientific_Name="Haematopus palliatus">American Oystercatcher.</Species>
+            <Species Scientific_Name="Haematopus bachmani">Black Oystercatcher.</Species>
+        </Family>
+        <Family Name="RECURVIROSTRIDAE">
+            <Species Scientific_Name="Himantopus himantopus">Black-winged Stilt. (A)</Species>
+            <Species Scientific_Name="Himantopus mexicanus">Black-necked Stilt.</Species>
+            <Species Scientific_Name="Recurvirostra americana">American Avocet.</Species>
+        </Family>
+        <Family Name="JACANIDAE">
+            <Species Scientific_Name="Jacana spinosa">Northern Jacana.</Species>
+            <Species Scientific_Name="Jacana jacana">Wattled Jacana.</Species>
+        </Family>
+        <Family Name="SCOLOPACIDAE">
+            <SubFamily Name="Scolopacinae">
+                <Species Scientific_Name="Tringa nebularia">Common Greenshank. (N)</Species>
+                <Species Scientific_Name="Tringa melanoleuca">Greater Yellowlegs.</Species>
+                <Species Scientific_Name="Tringa flavipes">Lesser Yellowlegs.</Species>
+                <Species Scientific_Name="Tringa stagnatilis">Marsh Sandpiper. (A)</Species>
+                <Species Scientific_Name="Tringa totanus">Common Redshank. (A)</Species>
+                <Species Scientific_Name="Tringa erythropus">Spotted Redshank. (N)</Species>
+                <Species Scientific_Name="Tringa glareola">Wood Sandpiper.</Species>
+                <Species Scientific_Name="Tringa ochropus">Green Sandpiper. (A)</Species>
+                <Species Scientific_Name="Tringa solitaria">Solitary Sandpiper.</Species>
+                <Species Scientific_Name="Catoptrophorus semipalmatus">Willet.</Species>
+                <Species Scientific_Name="Heteroscelus incanus">Wandering Tattler.</Species>
+                <Species Scientific_Name="Heteroscelus brevipes">Gray-tailed Tattler. (N)</Species>
+                <Species Scientific_Name="Actitis hypoleucos">Common Sandpiper. (N)</Species>
+                <Species Scientific_Name="Actitis macularia">Spotted Sandpiper.</Species>
+                <Species Scientific_Name="Xenus cinereus">Terek Sandpiper. (N)</Species>
+                <Species Scientific_Name="Bartramia longicauda">Upland Sandpiper.</Species>
+                <Species Scientific_Name="Numenius minutus">Little Curlew. (A)</Species>
+                <Species Scientific_Name="Numenius borealis">Eskimo Curlew.</Species>
+                <Species Scientific_Name="Numenius phaeopus">Whimbrel.</Species>
+                <Species Scientific_Name="Numenius tahitiensis">Bristle-thighed Curlew.</Species>
+                <Species Scientific_Name="Numenius madagascariensis">Far Eastern Curlew. (N)</Species>
+                <Species Scientific_Name="Numenius tenuirostris">Slender-billed Curlew. (A)</Species>
+                <Species Scientific_Name="Numenius arquata">Eurasian Curlew. (A)</Species>
+                <Species Scientific_Name="Numenius americanus">Long-billed Curlew.</Species>
+                <Species Scientific_Name="Limosa limosa">Black-tailed Godwit. (N)</Species>
+                <Species Scientific_Name="Limosa haemastica">Hudsonian Godwit.</Species>
+                <Species Scientific_Name="Limosa lapponica">Bar-tailed Godwit.</Species>
+                <Species Scientific_Name="Limosa fedoa">Marbled Godwit.</Species>
+                <Species Scientific_Name="Arenaria interpres">Ruddy Turnstone.</Species>
+                <Species Scientific_Name="Arenaria melanocephala">Black Turnstone.</Species>
+                <Species Scientific_Name="Aphriza virgata">Surfbird.</Species>
+                <Species Scientific_Name="Calidris tenuirostris">Great Knot. (A)</Species>
+                <Species Scientific_Name="Calidris canutus">Red Knot.</Species>
+                <Species Scientific_Name="Calidris alba">Sanderling.</Species>
+                <Species Scientific_Name="Calidris pusilla">Semipalmated Sandpiper.</Species>
+                <Species Scientific_Name="Calidris mauri">Western Sandpiper.</Species>
+                <Species Scientific_Name="Calidris ruficollis">Red-necked Stint.</Species>
+                <Species Scientific_Name="Calidris minuta">Little Stint. (N)</Species>
+                <Species Scientific_Name="Calidris temminckii">Temminck's Stint. (A)</Species>
+                <Species Scientific_Name="Calidris subminuta">Long-toed Stint. (N)</Species>
+                <Species Scientific_Name="Calidris minutilla">Least Sandpiper.</Species>
+                <Species Scientific_Name="Calidris fuscicollis">White-rumped Sandpiper.</Species>
+                <Species Scientific_Name="Calidris bairdii">Baird's Sandpiper.</Species>
+                <Species Scientific_Name="Calidris melanotos">Pectoral Sandpiper.</Species>
+                <Species Scientific_Name="Calidris acuminata">Sharp-tailed Sandpiper. (N)</Species>
+                <Species Scientific_Name="Calidris maritima">Purple Sandpiper.</Species>
+                <Species Scientific_Name="Calidris ptilocnemis">Rock Sandpiper.</Species>
+                <Species Scientific_Name="Calidris alpina">Dunlin.</Species>
+                <Species Scientific_Name="Calidris ferruginea">Curlew Sandpiper.</Species>
+                <Species Scientific_Name="Calidris himantopus">Stilt Sandpiper.</Species>
+                <Species Scientific_Name="Eurynorhynchus pygmeus">Spoonbill Sandpiper. (A)</Species>
+                <Species Scientific_Name="Limicola falcinellus">Broad-billed Sandpiper. (A)</Species>
+                <Species Scientific_Name="Tryngites subruficollis">Buff-breasted Sandpiper.</Species>
+                <Species Scientific_Name="Philomachus pugnax">Ruff.</Species>
+                <Species Scientific_Name="Limnodromus griseus">Short-billed Dowitcher.</Species>
+                <Species Scientific_Name="Limnodromus scolopaceus">Long-billed Dowitcher.</Species>
+                <Species Scientific_Name="Lymnocryptes minimus">Jack Snipe. (A)</Species>
+                <Species Scientific_Name="Gallinago gallinago">Common Snipe.</Species>
+                <Species Scientific_Name="Gallinago stenura">Pin-tailed Snipe. (A)</Species>
+                <Species Scientific_Name="Scolopax rusticola">Eurasian Woodcock. (A)</Species>
+                <Species Scientific_Name="Scolopax minor">American Woodcock.</Species>
+            </SubFamily>
+            <SubFamily Name="Phalaropodinae">
+                <Species Scientific_Name="Phalaropus tricolor">Wilson's Phalarope.</Species>
+                <Species Scientific_Name="Phalaropus lobatus">Red-necked Phalarope.</Species>
+                <Species Scientific_Name="Phalaropus fulicaria">Red Phalarope.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="GLAREOLIDAE">
+            <Species Scientific_Name="">Oriental Pratincole. (A)</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+        <Family Name="LARIDAE">
+            <SubFamily Name="Stercorariinae">
+                <Species Scientific_Name="Catharacta skua">Great Skua. (N)</Species>
+                <Species Scientific_Name="Catharacta maccormicki">South Polar Skua. (N)</Species>
+                <Species Scientific_Name="Stercorarius pomarinus">Pomarine Jaeger.</Species>
+                <Species Scientific_Name="Stercorarius parasiticus">Parasitic Jaeger.</Species>
+                <Species Scientific_Name="Stercorarius longicaudus">Long-tailed Jaeger.</Species>
+            </SubFamily>
+            <SubFamily Name="Larinae">
+                <Species Scientific_Name="Larus atricilla">Laughing Gull.</Species>
+                <Species Scientific_Name="Larus pipixcan">Franklin's Gull.</Species>
+                <Species Scientific_Name="Larus minutus">Little Gull.</Species>
+                <Species Scientific_Name="Larus ridibundus">Black-headed Gull.</Species>
+                <Species Scientific_Name="Larus philadelphia">Bonaparte's Gull.</Species>
+                <Species Scientific_Name="Larus heermanni">Heermann's Gull.</Species>
+                <Species Scientific_Name="Larus modestus">Gray Gull. (A)</Species>
+                <Species Scientific_Name="Larus belcheri">Band-tailed Gull. (A)</Species>
+                <Species Scientific_Name="Larus crassirostris">Black-tailed Gull. (A)</Species>
+                <Species Scientific_Name="Larus canus">Mew Gull.</Species>
+                <Species Scientific_Name="Larus delawarensis">Ring-billed Gull.</Species>
+                <Species Scientific_Name="Larus californicus">California Gull.</Species>
+                <Species Scientific_Name="Larus argentatus">Herring Gull.</Species>
+                <Species Scientific_Name="Larus cachinnans">Yellow-legged Gull. (A)</Species>
+                <Species Scientific_Name="Larus thayeri">Thayer's Gull.</Species>
+                <Species Scientific_Name="Larus glaucoides">Iceland Gull.</Species>
+                <Species Scientific_Name="Larus fuscus">Lesser Black-backed Gull. (N)</Species>
+                <Species Scientific_Name="Larus schistisagus">Slaty-backed Gull.</Species>
+                <Species Scientific_Name="Larus livens">Yellow-footed Gull.</Species>
+                <Species Scientific_Name="Larus occidentalis">Western Gull.</Species>
+                <Species Scientific_Name="Larus glaucescens">Glaucous-winged Gull.</Species>
+                <Species Scientific_Name="Larus hyperboreus">Glaucous Gull.</Species>
+                <Species Scientific_Name="Larus marinus">Great Black-backed Gull.</Species>
+                <Species Scientific_Name="Xema sabini">Sabine's Gull.</Species>
+                <Species Scientific_Name="Rissa tridactyla">Black-legged Kittiwake.</Species>
+                <Species Scientific_Name="Rissa brevirostris">Red-legged Kittiwake.</Species>
+                <Species Scientific_Name="Rhodostethia rosea">Ross's Gull.</Species>
+                <Species Scientific_Name="Pagophila eburnea">Ivory Gull.</Species>
+            </SubFamily>
+            <SubFamily Name="Sterninae">
+                <Species Scientific_Name="Sterna nilotica">Gull-billed Tern.</Species>
+                <Species Scientific_Name="Sterna caspia">Caspian Tern.</Species>
+                <Species Scientific_Name="Sterna maxima">Royal Tern.</Species>
+                <Species Scientific_Name="Sterna elegans">Elegant Tern.</Species>
+                <Species Scientific_Name="Sterna bergii">Great Crested Tern. (H, A)</Species>
+                <Species Scientific_Name="Sterna sandvicensis">Sandwich Tern.</Species>
+                <Species Scientific_Name="Sterna dougallii">Roseate Tern.</Species>
+                <Species Scientific_Name="Sterna hirundo">Common Tern.</Species>
+                <Species Scientific_Name="Sterna paradisaea">Arctic Tern.</Species>
+                <Species Scientific_Name="Sterna forsteri">Forster's Tern.</Species>
+                <Species Scientific_Name="Sterna albifrons">Little Tern. (H, A)</Species>
+                <Species Scientific_Name="Sterna antillarum">Least Tern.</Species>
+                <Species Scientific_Name="Sterna superciliaris">Yellow-billed Tern. (A)</Species>
+                <Species Scientific_Name="Sterna aleutica">Aleutian Tern.</Species>
+                <Species Scientific_Name="Sterna lunata">Gray-backed Tern. (H)</Species>
+                <Species Scientific_Name="Sterna anaethetus">Bridled Tern.</Species>
+                <Species Scientific_Name="Sterna fuscata">Sooty Tern.</Species>
+                <Species Scientific_Name="Phaetusa simplex">Large-billed Tern. (A)</Species>
+                <Species Scientific_Name="Chlidonias leucopterus">White-winged Tern. (A)</Species>
+                <Species Scientific_Name="Chlidonias hybridus">Whiskered Tern. (A)</Species>
+                <Species Scientific_Name="Chlidonias niger">Black Tern.</Species>
+                <Species Scientific_Name="Larosterna inca">Inca Tern. (A)</Species>
+                <Species Scientific_Name="Anous stolidus">Brown Noddy.</Species>
+                <Species Scientific_Name="Anous minutus">Black Noddy.</Species>
+                <Species Scientific_Name="Procelsterna cerulea">Blue-gray Noddy. (H)</Species>
+                <Species Scientific_Name="Gygis alba">Common White-Tern. (H)</Species>
+            </SubFamily>
+            <SubFamily Name="Rynchopinae">
+                <Species Scientific_Name="Rynchops niger">Black Skimmer.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="ALCIDAE">
+            <Species Scientific_Name="Alle alle">Dovekie.</Species>
+            <Species Scientific_Name="Uria aalge">Common Murre.</Species>
+            <Species Scientific_Name="Uria lomvia">Thick-billed Murre.</Species>
+            <Species Scientific_Name="Alca torda">Razorbill.</Species>
+            <Species Scientific_Name="">Great Auk.</Species>
+            <Species Scientific_Name="">Black Guillemot.</Species>
+            <Species Scientific_Name="">Pigeon Guillemot.</Species>
+            <Species Scientific_Name="">Long-billed Murrelet. (A)</Species>
+            <Species Scientific_Name="">Marbled Murrelet.</Species>
+            <Species Scientific_Name="">Kittlitz's Murrelet.</Species>
+            <Species Scientific_Name="">Xantus's Murrelet.</Species>
+            <Species Scientific_Name="">Craveri's Murrelet.</Species>
+            <Species Scientific_Name="">Ancient Murrelet.</Species>
+            <Species Scientific_Name="">Cassin's Auklet.</Species>
+            <Species Scientific_Name="">Parakeet Auklet.</Species>
+            <Species Scientific_Name="">Least Auklet.</Species>
+            <Species Scientific_Name="">Whiskered Auklet.</Species>
+            <Species Scientific_Name="">Crested Auklet.</Species>
+            <Species Scientific_Name="">Rhinoceros Auklet.</Species>
+            <Species Scientific_Name="">Atlantic Puffin.</Species>
+            <Species Scientific_Name="">Horned Puffin.</Species>
+            <Species Scientific_Name="">Tufted Puffin.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+        <Family Name="PTEROCLIDIDAE">
+            <Species Scientific_Name="Pterocles exustus">Chestnut-bellied Sandgrouse. (H, I)</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="COLUMBIFORMES">
+        <Family Name="COLUMBIDAE">
+            <Species Scientific_Name="Columba livia">Rock Dove. (I)</Species>
+            <Species Scientific_Name="Columba cayennensis">Pale-vented Pigeon.</Species>
+            <Species Scientific_Name="Columba speciosa">Scaled Pigeon.</Species>
+            <Species Scientific_Name="Columba squamosa">Scaly-naped Pigeon.</Species>
+            <Species Scientific_Name="Columba leucocephala">White-crowned Pigeon.</Species>
+            <Species Scientific_Name="Columba flavirostris">Red-billed Pigeon.</Species>
+            <Species Scientific_Name="Columba inornata">Plain Pigeon.</Species>
+            <Species Scientific_Name="Columba fasciata">Band-tailed Pigeon.</Species>
+            <Species Scientific_Name="Columba caribaea">Ring-tailed Pigeon.</Species>
+            <Species Scientific_Name="Columba subvinacea">Ruddy Pigeon.</Species>
+            <Species Scientific_Name="Columba nigrirostris">Short-billed Pigeon.</Species>
+            <Species Scientific_Name="Streptopelia orientalis">Oriental Turtle-Dove. (A)</Species>
+            <Species Scientific_Name="Streptopelia risoria">Ringed Turtle-Dove. (I)</Species>
+            <Species Scientific_Name="Streptopelia turtur">European Turtle-Dove. (A)</Species>
+            <Species Scientific_Name="Streptopelia decaocto">Eurasian Collared-Dove. (I)</Species>
+            <Species Scientific_Name="Streptopelia chinensis">Spotted Dove. (I)</Species>
+            <Species Scientific_Name="Geopelia striata">Zebra Dove. (H, I)</Species>
+            <Species Scientific_Name="Zenaida asiatica">White-winged Dove.</Species>
+            <Species Scientific_Name="Zenaida aurita">Zenaida Dove.</Species>
+            <Species Scientific_Name="Zenaida auriculata">Eared Dove.</Species>
+            <Species Scientific_Name="Zenaida macroura">Mourning Dove.</Species>
+            <Species Scientific_Name="Zenaida graysoni">Socorro Dove.</Species>
+            <Species Scientific_Name="">Passenger Pigeon.</Species>
+            <Species Scientific_Name="">Inca Dove.</Species>
+            <Species Scientific_Name="">Common Ground-Dove.</Species>
+            <Species Scientific_Name="">Plain-breasted Ground-Dove.</Species>
+            <Species Scientific_Name="">Ruddy Ground-Dove.</Species>
+            <Species Scientific_Name="">Blue Ground-Dove.</Species>
+            <Species Scientific_Name="">Maroon-chested Ground-Dove.</Species>
+            <Species Scientific_Name="">White-tipped Dove.</Species>
+            <Species Scientific_Name="">Gray-fronted Dove.</Species>
+            <Species Scientific_Name="">Grenada Dove.</Species>
+            <Species Scientific_Name="">Caribbean Dove.</Species>
+            <Species Scientific_Name="">Gray-chested Dove.</Species>
+            <Species Scientific_Name="">Olive-backed Quail-Dove.</Species>
+            <Species Scientific_Name="">Key West Quail-Dove.</Species>
+            <Species Scientific_Name="">Bridled Quail-Dove.</Species>
+            <Species Scientific_Name="">White-faced Quail-Dove.</Species>
+            <Species Scientific_Name="">Chiriqui Quail-Dove.</Species>
+            <Species Scientific_Name="">Tuxtla Quail-Dove.</Species>
+            <Species Scientific_Name="">Purplish-backed Quail-Dove.</Species>
+            <Species Scientific_Name="">Buff-fronted Quail-Dove.</Species>
+            <Species Scientific_Name="">Russet-crowned Quail-Dove.</Species>
+            <Species Scientific_Name="">Gray-headed Quail-Dove.</Species>
+            <Species Scientific_Name="">Crested Quail-Dove.</Species>
+            <Species Scientific_Name="">Violaceous Quail-Dove.</Species>
+            <Species Scientific_Name="">Ruddy Quail-Dove.</Species>
+            <Species Scientific_Name="">Blue-headed Quail-Dove.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+    </Order>
+
+
+<Order Name="PSITTACIFORMES">
+        <Family Name="PSITTACIDAE">
+            <SubFamily Name="Platycercinae">
+                <Species Scientific_Name="Melopsittacus undulatus">Budgerigar. (I)</Species>
+            </SubFamily>
+            <SubFamily Name="Psittacinae">
+                <Species Scientific_Name="Psittacula krameri">Rose-ringed Parakeet. (I)</Species>
+            </SubFamily>
+            <SubFamily Name="Arinae">
+                <Species Scientific_Name="Pyrrhura picta">Painted Parakeet.</Species>
+                <Species Scientific_Name="Pyrrhura hoffmanni">Sulphur-winged Parakeet.</Species>
+                <Species Scientific_Name="Myiopsitta monachus">Monk Parakeet. (I)</Species>
+                <Species Scientific_Name="Conuropsis carolinensis">Carolina Parakeet.</Species>
+                <Species Scientific_Name="Aratinga holochlora">Green Parakeet.</Species>
+                <Species Scientific_Name="Aratinga strenua">Pacific Parakeet.</Species>
+                <Species Scientific_Name="Aratinga finschi">Crimson-fronted Parakeet.</Species>
+                <Species Scientific_Name="Aratinga chloroptera">Hispaniolan Parakeet.</Species>
+                <Species Scientific_Name="Aratinga euops">Cuban Parakeet.</Species>
+                <Species Scientific_Name="Aratinga nana">Olive-throated Parakeet.</Species>
+                <Species Scientific_Name="Aratinga canicularis">Orange-fronted Parakeet.</Species>
+                <Species Scientific_Name="Aratinga pertinax">Brown-throated Parakeet.</Species>
+                <Species Scientific_Name="Ara severa">Chestnut-fronted Macaw.</Species>
+                <Species Scientific_Name="Ara militaris">Military Macaw.</Species>
+                <Species Scientific_Name="Ara ambigua">Great Green Macaw.</Species>
+                <Species Scientific_Name="Ara chloropterus">Red-and-green Macaw.</Species>
+                <Species Scientific_Name="Ara macao">Scarlet Macaw.</Species>
+                <Species Scientific_Name="Ara tricolor">Cuban Macaw.</Species>
+                <Species Scientific_Name="Ara ararauna">Blue-and-yellow Macaw.</Species>
+                <Species Scientific_Name="Rhynchopsitta pachyrhyncha">Thick-billed Parrot.</Species>
+                <Species Scientific_Name="Rhynchopsitta terrisi">Maroon-fronted Parrot.</Species>
+                <Species Scientific_Name="Bolborhynchus lineola">Barred Parakeet.</Species>
+                <Species Scientific_Name="Forpus passerinus">Green-rumped Parrotlet.</Species>
+                <Species Scientific_Name="Forpus cyanopygius">Mexican Parrotlet.</Species>
+                <Species Scientific_Name="Forpus conspicillatus">Spectacled Parrotlet.</Species>
+                <Species Scientific_Name="Brotogeris jugularis">Orange-chinned Parakeet.</Species>
+                <Species Scientific_Name="Brotogeris versicolurus">White-winged Parakeet. (I)</Species>
+                <Species Scientific_Name="Touit costaricensis">Red-fronted Parrotlet.</Species>
+                <Species Scientific_Name="Touit dilectissima">Blue-fronted Parrotlet.</Species>
+                <Species Scientific_Name="Pionopsitta pyrilia">Saffron-headed Parrot.</Species>
+                <Species Scientific_Name="Pionopsitta haematotis">Brown-hooded Parrot.</Species>
+                <Species Scientific_Name="Pionus menstruus">Blue-headed Parrot.</Species>
+                <Species Scientific_Name="Pionus senilis">White-crowned Parrot.</Species>
+                <Species Scientific_Name="Amazona albifrons">White-fronted Parrot.</Species>
+                <Species Scientific_Name="Amazona xantholora">Yellow-lored Parrot.</Species>
+                <Species Scientific_Name="Amazona leucocephala">Cuban Parrot.</Species>
+                <Species Scientific_Name="Amazona collaria">Yellow-billed Parrot.</Species>
+                <Species Scientific_Name="Amazona ventralis">Hispaniolan Parrot.</Species>
+                <Species Scientific_Name="Amazona vittata">Puerto Rican Parrot.</Species>
+                <Species Scientific_Name="Amazona agilis">Black-billed Parrot.</Species>
+                <Species Scientific_Name="Amazona viridigenalis">Red-crowned Parrot.</Species>
+                <Species Scientific_Name="Amazona finschi">Lilac-crowned Parrot.</Species>
+                <Species Scientific_Name="Amazona autumnalis">Red-lored Parrot.</Species>
+                <Species Scientific_Name="Amazona farinosa">Mealy Parrot.</Species>
+                <Species Scientific_Name="Amazona oratrix">Yellow-headed Parrot.</Species>
+                <Species Scientific_Name="Amazona auropalliata">Yellow-naped Parrot.</Species>
+                <Species Scientific_Name="Amazona ochrocephala">Yellow-crowned Parrot.</Species>
+                <Species Scientific_Name="Amazona arausiaca">Red-necked Parrot.</Species>
+                <Species Scientific_Name="Amazona versicolor">St. Lucia Parrot.</Species>
+                <Species Scientific_Name="Amazona guildingii">St. Vincent Parrot.</Species>
+                <Species Scientific_Name="Amazona imperialis">Imperial Parrot.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+<Order Name="CUCULIFORMES">
+        <Family Name="CUCULIDAE">
+            <SubFamily Name="Cuculinae">
+                <Species Scientific_Name="Cuculus canorus">Common Cuckoo. (A)</Species>
+                <Species Scientific_Name="Cuculus saturatus">Oriental Cuckoo. (A)</Species>
+            </SubFamily>
+            <SubFamily Name="Coccyzinae">
+                <Species Scientific_Name="Coccyzus erythropthalmus">Black-billed Cuckoo.</Species>
+                <Species Scientific_Name="Coccyzus americanus">Yellow-billed Cuckoo.</Species>
+                <Species Scientific_Name="Coccyzus euleri ">Pearly-breasted Cuckoo. (A)</Species>
+                <Species Scientific_Name="Coccyzus minor">Mangrove Cuckoo.</Species>
+                <Species Scientific_Name="Coccyzus ferrugineus">Cocos Cuckoo.</Species>
+                <Species Scientific_Name="Coccyzus melacoryphus">Dark-billed Cuckoo. (A)</Species>
+                <Species Scientific_Name="Saurothera merlini">Great Lizard-Cuckoo.</Species>
+                <Species Scientific_Name="Saurothera vetula">Jamaican Lizard-Cuckoo.</Species>
+                <Species Scientific_Name="Saurothera longirostris">Hispaniolan Lizard-Cuckoo.</Species>
+                <Species Scientific_Name="Saurothera vieilloti">Puerto Rican Lizard-Cuckoo.</Species>
+                <Species Scientific_Name="Hyetornis rufigularis">Bay-breasted Cuckoo.</Species>
+                <Species Scientific_Name="Hyetornis pluvialis">Chestnut-bellied Cuckoo.</Species>
+                <Species Scientific_Name="Piaya cayana">Squirrel Cuckoo.</Species>
+                <Species Scientific_Name="Piaya minuta">Little Cuckoo.</Species>
+            </SubFamily>
+            <SubFamily Name="Neomorphinae">
+                <Species Scientific_Name="Tapera naevia">Striped Cuckoo.</Species>
+                <Species Scientific_Name="Dromococcyx phasianellus">Pheasant Cuckoo.</Species>
+                <Species Scientific_Name="Morococcyx erythropygus">Lesser Ground-Cuckoo.</Species>
+                <Species Scientific_Name="Geococcyx velox">Lesser Roadrunner.</Species>
+                <Species Scientific_Name="Geococcyx californianus">Greater Roadrunner.</Species>
+                <Species Scientific_Name="Neomorphus geoffroyi">Rufous-vented Ground-Cuckoo.</Species>
+            </SubFamily>
+            <SubFamily Name="Crotophaginae">
+                <Species Scientific_Name="Crotophaga major">Greater Ani.</Species>
+                <Species Scientific_Name="Crotophaga ani">Smooth-billed Ani.</Species>
+                <Species Scientific_Name="Crotophaga sulcirostris">Groove-billed Ani.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+<Order Name="STRIGIFORMES">
+        <Family Name="TYTONIDAE">
+            <Species Scientific_Name="Tyto alba">Barn Owl.</Species>
+            <Species Scientific_Name="Tyto glaucops">Ashy-faced Owl.</Species>
+        </Family>
+        <Family Name="STRIGIDAE">
+            <Species Scientific_Name="Otus flammeolus">Flammulated Owl.</Species>
+            <Species Scientific_Name="Otus sunia">Oriental Scops-Owl. (A)</Species>
+            <Species Scientific_Name="Otus kennicottii">Western Screech-Owl.</Species>
+            <Species Scientific_Name="Otus asio">Eastern Screech-Owl.</Species>
+            <Species Scientific_Name="Otus seductus">Balsas Screech-Owl.</Species>
+            <Species Scientific_Name="Otus cooperi">Pacific Screech-Owl.</Species>
+            <Species Scientific_Name="Otus trichopsis">Whiskered Screech-Owl.</Species>
+            <Species Scientific_Name="Otus choliba">Tropical Screech-Owl.</Species>
+            <Species Scientific_Name="Otus barbarus">Bearded Screech-Owl.</Species>
+            <Species Scientific_Name="Otus guatemalae">Vermiculated Screech-Owl.</Species>
+            <Species Scientific_Name="Otus clarkii">Bare-shanked Screech-Owl.</Species>
+            <Species Scientific_Name="Otus nudipes">Puerto Rican Screech-Owl.</Species>
+            <Species Scientific_Name="Otus lawrencii">Cuban Screech-Owl.</Species>
+            <Species Scientific_Name="Lophostrix cristata">Crested Owl.</Species>
+            <Species Scientific_Name="Pulsatrix perspicillata">Spectacled Owl.</Species>
+            <Species Scientific_Name="Bubo virginianus">Great Horned Owl.</Species>
+            <Species Scientific_Name="Nyctea scandiaca">Snowy Owl.</Species>
+            <Species Scientific_Name="Surnia ulula">Northern Hawk Owl.</Species>
+            <Species Scientific_Name="Glaucidium gnoma">Northern Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium jardinii">Andean Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium griseiceps">Central American Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium sanchezi">Tamaulipas Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium palmarum">Colima Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium brasilianum">Ferruginous Pygmy-Owl.</Species>
+            <Species Scientific_Name="Glaucidium siju">Cuban Pygmy-Owl.</Species>
+            <Species Scientific_Name="Micrathene whitneyi">Elf Owl.</Species>
+            <Species Scientific_Name="Athene cunicularia">Burrowing Owl.</Species>
+            <Species Scientific_Name="Ciccaba virgata">Mottled Owl.</Species>
+            <Species Scientific_Name="Ciccaba nigrolineata">Black-and-white Owl.</Species>
+            <Species Scientific_Name="Strix occidentalis">Spotted Owl.</Species>
+            <Species Scientific_Name="Strix varia">Barred Owl.</Species>
+            <Species Scientific_Name="Strix fulvescens">Fulvous Owl.</Species>
+            <Species Scientific_Name="Strix nebulosa">Great Gray Owl.</Species>
+            <Species Scientific_Name="Asio otus">Long-eared Owl.</Species>
+            <Species Scientific_Name="Asio stygius">Stygian Owl.</Species>
+            <Species Scientific_Name="Asio flammeus">Short-eared Owl.</Species>
+            <Species Scientific_Name="Pseudoscops clamator">Striped Owl.</Species>
+            <Species Scientific_Name="Pseudoscops grammicus">Jamaican Owl.</Species>
+            <Species Scientific_Name="Aegolius funereus">Boreal Owl.</Species>
+            <Species Scientific_Name="Aegolius acadicus">Northern Saw-whet Owl.</Species>
+            <Species Scientific_Name="Aegolius ridgwayi">Unspotted Saw-whet Owl.</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="CAPRIMULGIFORMES">
+        <Family Name="CAPRIMULGIDAE">
+            <SubFamily Name="Chordeilinae">
+                <Species Scientific_Name="Lurocalis semitorquatus">Short-tailed Nighthawk.</Species>
+                <Species Scientific_Name="Chordeiles acutipennis">Lesser Nighthawk.</Species>
+                <Species Scientific_Name="Chordeiles minor">Common Nighthawk.</Species>
+                <Species Scientific_Name="Chordeiles gundlachii">Antillean Nighthawk.</Species>
+            </SubFamily>
+            <SubFamily Name="Caprimulginae">
+                <Species Scientific_Name="Nyctidromus albicollis">Common Pauraque.</Species>
+                <Species Scientific_Name="Phalaenoptilus nuttallii">Common Poorwill.</Species>
+                <Species Scientific_Name="Siphonorhis americanus">Jamaican Pauraque.</Species>
+                <Species Scientific_Name="Siphonorhis brewsteri">Least Pauraque.</Species>
+                <Species Scientific_Name="Nyctiphrynus mcleodii">Eared Poorwill.</Species>
+                <Species Scientific_Name="Nyctiphrynus yucatanicus">Yucatan Poorwill.</Species>
+                <Species Scientific_Name="Nyctiphrynus ocellatus">Ocellated Poorwill.</Species>
+                <Species Scientific_Name="Caprimulgus carolinensis">Chuck-will's-widow.</Species>
+                <Species Scientific_Name="Caprimulgus rufus">Rufous Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus cubanensis">Greater Antillean Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus salvini">Tawny-collared Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus badius">Yucatan Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus ridgwayi">Buff-collared Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus vociferus">Whip-poor-will.</Species>
+                <Species Scientific_Name="Caprimulgus noctitherus">Puerto Rican Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus saturatus">Dusky Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus cayennensis">White-tailed Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus maculicaudus">Spot-tailed Nightjar.</Species>
+                <Species Scientific_Name="Caprimulgus indicus">Jungle Nightjar. (A)</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="NYCTIBIIDAE">
+            <Species Scientific_Name="Nyctibius grandis">Great Potoo.</Species>
+            <Species Scientific_Name="Nyctibius griseus">Common Potoo.</Species>
+            <Species Scientific_Name="Nyctibius jamaicensis">Northern Potoo.</Species>
+        </Family>
+        <Family Name="STEATORNITHIDAE">
+            <Species Scientific_Name="Steatornis caripensis">Oilbird. (A)</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="APODIFORMES">
+        <Family Name="APODIDAE">
+            <SubFamily Name="Cypseloidinae">
+                <Species Scientific_Name="Cypseloides niger">Black Swift.</Species>
+                <Species Scientific_Name="Cypseloides storeri">White-fronted Swift.</Species>
+                <Species Scientific_Name="Cypseloides cryptus">White-chinned Swift.</Species>
+                <Species Scientific_Name="Cypseloides cherriei">Spot-fronted Swift.</Species>
+                <Species Scientific_Name="Streptoprocne rutila">Chestnut-collared Swift.</Species>
+                <Species Scientific_Name="Streptoprocne zonaris">White-collared Swift.</Species>
+                <Species Scientific_Name="Streptoprocne semicollaris">White-naped Swift.</Species>
+            </SubFamily>
+            <SubFamily Name="Chaeturinae">
+                <Species Scientific_Name="Chaetura pelagica">Chimney Swift.</Species>
+                <Species Scientific_Name="Chaetura vauxi">Vaux's Swift.</Species>
+                <Species Scientific_Name="Chaetura chapmani">Chapman's Swift. (A)</Species>
+                <Species Scientific_Name="Chaetura brachyura">Short-tailed Swift.</Species>
+                <Species Scientific_Name="Chaetura andrei">Ashy-tailed Swift. (A)</Species>
+                <Species Scientific_Name="Chaetura spinicauda">Band-rumped Swift.</Species>
+                <Species Scientific_Name="Chaetura cinereiventris">Gray-rumped Swift.</Species>
+                <Species Scientific_Name="Chaetura martinica">Lesser Antillean Swift.</Species>
+                <Species Scientific_Name="Hirundapus caudacutus">White-throated Needletail. (A)</Species>
+                <Species Scientific_Name="Aerodramus bartschi">Guam Swiftlet. (H, I)</Species>
+            </SubFamily>
+            <SubFamily Name="Apodinae">
+                <Species Scientific_Name="Apus apus">Common Swift. (A)</Species>
+                <Species Scientific_Name="Apus pacificus">Fork-tailed Swift. (A)</Species>
+                <Species Scientific_Name="Apus melba">Alpine Swift. (A)</Species>
+                <Species Scientific_Name="Aeronautes saxatalis">White-throated Swift.</Species>
+                <Species Scientific_Name="Panyptila cayennensis">Lesser Swallow-tailed Swift.</Species>
+                <Species Scientific_Name="Panyptila sanctihieronymi">Great Swallow-tailed Swift.</Species>
+                <Species Scientific_Name="Tachornis phoenicobia">Antillean Palm-Swift.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="TROCHILIDAE">
+            <SubFamily Name="Phaethornithinae">
+                <Species Scientific_Name="Glaucis aenea">Bronzy Hermit.</Species>
+                <Species Scientific_Name="Glaucis hirsuta">Rufous-breasted Hermit.</Species>
+                <Species Scientific_Name="Threnetes ruckeri">Band-tailed Barbthroat.</Species>
+                <Species Scientific_Name="Phaethornis guy">Green Hermit.</Species>
+                <Species Scientific_Name="Phaethornis superciliosus">Long-tailed Hermit.</Species>
+                <Species Scientific_Name="Phaethornis anthophilus">Pale-bellied Hermit.</Species>
+                <Species Scientific_Name="Phaethornis longuemareus">Little Hermit.</Species>
+                <Species Scientific_Name="Eutoxeres aquila">White-tipped Sicklebill.</Species>
+            </SubFamily>
+            <SubFamily Name="Trochilinae">
+                <Species Scientific_Name="Androdon aequatorialis">Tooth-billed Hummingbird.</Species>
+                <Species Scientific_Name="Doryfera ludovicae">Green-fronted Lancebill.</Species>
+                <Species Scientific_Name="Phaeochroa cuvierii">Scaly-breasted Hummingbird.</Species>
+                <Species Scientific_Name="Campylopterus curvipennis">Wedge-tailed Sabrewing.</Species>
+                <Species Scientific_Name="Campylopterus excellens">Long-tailed Sabrewing.</Species>
+                <Species Scientific_Name="Campylopterus rufus">Rufous Sabrewing.</Species>
+                <Species Scientific_Name="Campylopterus hemileucurus">Violet Sabrewing.</Species>
+                <Species Scientific_Name="Florisuga mellivora">White-necked Jacobin.</Species>
+                <Species Scientific_Name="Colibri delphinae">Brown Violet-ear.</Species>
+                <Species Scientific_Name="Colibri thalassinus">Green Violet-ear.</Species>
+                <Species Scientific_Name="Anthracothorax prevostii">Green-breasted Mango.</Species>
+                <Species Scientific_Name="Anthracothorax nigricollis">Black-throated Mango.</Species>
+                <Species Scientific_Name="Anthracothorax veraguensis">Veraguan Mango.</Species>
+                <Species Scientific_Name="Anthracothorax dominicus">Antillean Mango.</Species>
+                <Species Scientific_Name="Anthracothorax viridis">Green Mango.</Species>
+                <Species Scientific_Name="Anthracothorax mango">Jamaican Mango.</Species>
+                <Species Scientific_Name="Eulampis jugularis">Purple-throated Carib.</Species>
+                <Species Scientific_Name="Eulampis holosericeus">Green-throated Carib.</Species>
+                <Species Scientific_Name="Chrysolampis mosquitus">Ruby-topaz Hummingbird.</Species>
+                <Species Scientific_Name="Orthorhyncus cristatus">Antillean Crested Hummingbird.</Species>
+                <Species Scientific_Name="Klais guimeti">Violet-headed Hummingbird.</Species>
+                <Species Scientific_Name="Abeillia abeillei">Emerald-chinned Hummingbird.</Species>
+                <Species Scientific_Name="Lophornis brachylopha">Short-crested Coquette.</Species>
+                <Species Scientific_Name="Lophornis delattrei">Rufous-crested Coquette.</Species>
+                <Species Scientific_Name="Lophornis helenae">Black-crested Coquette.</Species>
+                <Species Scientific_Name="Lophornis adorabilis">White-crested Coquette.</Species>
+                <Species Scientific_Name="Discosura conversii">Green Thorntail.</Species>
+                <Species Scientific_Name="Chlorostilbon auriceps">Golden-crowned Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon forficatus">Cozumel Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon canivetii">Canivet's Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon assimilis">Garden Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon ricordii">Cuban Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon bracei">Brace's Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon swainsonii">Hispaniolan Emerald.</Species>
+                <Species Scientific_Name="Chlorostilbon maugaeus">Puerto Rican Emerald.</Species>
+                <Species Scientific_Name="Cynanthus sordidus">Dusky Hummingbird.</Species>
+                <Species Scientific_Name="Cynanthus latirostris">Broad-billed Hummingbird.</Species>
+                <Species Scientific_Name="Cyanophaia bicolor">Blue-headed Hummingbird.</Species>
+                <Species Scientific_Name="Thalurania ridgwayi">Mexican Woodnymph.</Species>
+                <Species Scientific_Name="Thalurania colombica">Violet-crowned Woodnymph.</Species>
+                <Species Scientific_Name="Thalurania fannyi">Green-crowned Woodnymph.</Species>
+                <Species Scientific_Name="Panterpe insignis">Fiery-throated Hummingbird.</Species>
+                <Species Scientific_Name="Damophila julie">Violet-bellied Hummingbird.</Species>
+                <Species Scientific_Name="Lepidopyga coeruleogularis">Sapphire-throated Hummingbird.</Species>
+                <Species Scientific_Name="Hylocharis grayi">Blue-headed Sapphire.</Species>
+                <Species Scientific_Name="Hylocharis eliciae">Blue-throated Goldentail.</Species>
+                <Species Scientific_Name="Hylocharis leucotis">White-eared Hummingbird.</Species>
+                <Species Scientific_Name="Hylocharis xantusii">Xantus's Hummingbird.</Species>
+                <Species Scientific_Name="Goldmania violiceps">Violet-capped Hummingbird.</Species>
+                <Species Scientific_Name="Goethalsia bella">Rufous-cheeked Hummingbird.</Species>
+                <Species Scientific_Name="Trochilus polytmus">Streamertail.</Species>
+                <Species Scientific_Name="Amazilia candida">White-bellied Emerald.</Species>
+                <Species Scientific_Name="Amazilia luciae">Honduran Emerald.</Species>
+                <Species Scientific_Name="Amazilia amabilis">Blue-chested Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia decora">Charming Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia boucardi">Mangrove Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia cyanocephala">Azure-crowned Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia cyanifrons">Indigo-capped Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia beryllina">Berylline Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia cyanura">Blue-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia saucerrottei">Steely-vented Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia edward">Snowy-bellied Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia tzacatl">Rufous-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia yucatanensis">Buff-bellied Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia rutila">Cinnamon Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia violiceps">Violet-crowned Hummingbird.</Species>
+                <Species Scientific_Name="Amazilia viridifrons">Green-fronted Hummingbird.</Species>
+                <Species Scientific_Name="Eupherusa eximia">Stripe-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Eupherusa cyanophrys">Blue-capped Hummingbird.</Species>
+                <Species Scientific_Name="Eupherusa poliocerca">White-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Eupherusa nigriventris">Black-bellied Hummingbird.</Species>
+                <Species Scientific_Name="Elvira chionura">White-tailed Emerald.</Species>
+                <Species Scientific_Name="Elvira cupreiceps">Coppery-headed Emerald.</Species>
+                <Species Scientific_Name="Microchera albocoronata">Snowcap.</Species>
+                <Species Scientific_Name="Chalybura buffonii">White-vented Plumeleteer.</Species>
+                <Species Scientific_Name="Chalybura urochrysia">Bronze-tailed Plumeleteer.</Species>
+                <Species Scientific_Name="Lampornis viridipallens">Green-throated Mountain-gem.</Species>
+                <Species Scientific_Name="Lampornis sybillae">Green-breasted Mountain-gem.</Species>
+                <Species Scientific_Name="Lampornis amethystinus">Amethyst-throated Hummingbird.</Species>
+                <Species Scientific_Name="Lampornis clemenciae">Blue-throated Hummingbird.</Species>
+                <Species Scientific_Name="Lampornis hemileucus">White-bellied Mountain-gem.</Species>
+                <Species Scientific_Name="Lampornis calolaema">Purple-throated Mountain-gem.</Species>
+                <Species Scientific_Name="Lampornis castaneoventris">White-throated Mountain-gem.</Species>
+                <Species Scientific_Name="Lamprolaima rhami">Garnet-throated Hummingbird.</Species>
+                <Species Scientific_Name="Heliodoxa jacula">Green-crowned Brilliant.</Species>
+                <Species Scientific_Name="Eugenes fulgens">Magnificent Hummingbird.</Species>
+                <Species Scientific_Name="Haplophaedia aureliae">Greenish Puffleg.</Species>
+                <Species Scientific_Name="Heliothryx barroti">Purple-crowned Fairy.</Species>
+                <Species Scientific_Name="Heliomaster longirostris">Long-billed Starthroat.</Species>
+                <Species Scientific_Name="Heliomaster constantii">Plain-capped Starthroat.</Species>
+                <Species Scientific_Name="Calliphlox evelynae">Bahama Woodstar.</Species>
+                <Species Scientific_Name="Calliphlox bryantae">Magenta-throated Woodstar.</Species>
+                <Species Scientific_Name="Calliphlox mitchellii">Purple-throated Woodstar.</Species>
+                <Species Scientific_Name="Doricha enicura">Slender Sheartail.</Species>
+                <Species Scientific_Name="Doricha eliza">Mexican Sheartail.</Species>
+                <Species Scientific_Name="Tilmatura dupontii">Sparkling-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Calothorax lucifer">Lucifer Hummingbird.</Species>
+                <Species Scientific_Name="Calothorax pulcher">Beautiful Hummingbird.</Species>
+                <Species Scientific_Name="Archilochus colubris">Ruby-throated Hummingbird.</Species>
+                <Species Scientific_Name="Archilochus alexandri">Black-chinned Hummingbird.</Species>
+                <Species Scientific_Name="Mellisuga minima">Vervain Hummingbird.</Species>
+                <Species Scientific_Name="Mellisuga helenae">Bee Hummingbird.</Species>
+                <Species Scientific_Name="Calypte anna">Anna's Hummingbird.</Species>
+                <Species Scientific_Name="Calypte costae">Costa's Hummingbird.</Species>
+                <Species Scientific_Name="Stellula calliope">Calliope Hummingbird.</Species>
+                <Species Scientific_Name="Atthis heloisa">Bumblebee Hummingbird.</Species>
+                <Species Scientific_Name="Atthis ellioti">Wine-throated Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus platycercus">Broad-tailed Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus rufus">Rufous Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus sasin">Allen's Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus flammula">Volcano Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus ardens">Glow-throated Hummingbird.</Species>
+                <Species Scientific_Name="Selasphorus scintilla">Scintillant Hummingbird.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+<Order Name="TROGONIFORMES">
+        <Family Name="TROGONIDAE">
+            <Species Scientific_Name="">Cuban Trogon.</Species>
+            <Species Scientific_Name="">Hispaniolan Trogon.</Species>
+            <Species Scientific_Name="">Black-headed Trogon.</Species>
+            <Species Scientific_Name="">Citreoline Trogon.</Species>
+            <Species Scientific_Name="">White-tailed Trogon.</Species>
+            <Species Scientific_Name="">Baird's Trogon.</Species>
+            <Species Scientific_Name="">Violaceous Trogon.</Species>
+            <Species Scientific_Name="">Mountain Trogon.</Species>
+            <Species Scientific_Name="">Elegant Trogon.</Species>
+            <Species Scientific_Name="">Collared Trogon.</Species>
+            <Species Scientific_Name="">Orange-bellied Trogon.</Species>
+            <Species Scientific_Name="">Black-throated Trogon.</Species>
+            <Species Scientific_Name="">Black-tailed Trogon.</Species>
+            <Species Scientific_Name="">Slaty-tailed Trogon.</Species>
+            <Species Scientific_Name="">Lattice-tailed Trogon.</Species>
+            <Species Scientific_Name="">Eared Trogon.</Species>
+            <Species Scientific_Name="">Golden-headed Quetzal.</Species>
+            <Species Scientific_Name="">Resplendent Quetzal.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+    </Order>
+
+
+<Order Name="UPUPIFORMES">
+        <Family Name="UPUPIDAE">
+            <Species Scientific_Name="Upupa epops">Eurasian Hoopoe. (A)</Species>
+        </Family>
+    </Order>
+
+
+<Order Name="CORACIIFORMES">
+        <Family Name="TODIDAE">
+            <Species Scientific_Name="Todus multicolor">Cuban Tody.</Species>
+            <Species Scientific_Name="Todus subulatus">Broad-billed Tody.</Species>
+            <Species Scientific_Name="Todus angustirostris">Narrow-billed Tody.</Species>
+            <Species Scientific_Name="Todus todus">Jamaican Tody.</Species>
+            <Species Scientific_Name="Todus mexicanus">Puerto Rican Tody.</Species>
+        </Family>
+        <Family Name="MOMOTIDAE">
+            <Species Scientific_Name="Hylomanes momotula">Tody Motmot.</Species>
+            <Species Scientific_Name="Aspatha gularis">Blue-throated Motmot.</Species>
+            <Species Scientific_Name="Momotus mexicanus">Russet-crowned Motmot.</Species>
+            <Species Scientific_Name="Momotus momota">Blue-crowned Motmot.</Species>
+            <Species Scientific_Name="Baryphthengus martii">Rufous Motmot.</Species>
+            <Species Scientific_Name="Electron carinatum">Keel-billed Motmot.</Species>
+            <Species Scientific_Name="Electron platyrhynchum">Broad-billed Motmot.</Species>
+            <Species Scientific_Name="Eumomota superciliosa">Turquoise-browed Motmot.</Species>
+        </Family>
+        <Family Name="ALCEDINIDAE">
+            <Species Scientific_Name="">Ringed Kingfisher.</Species>
+            <Species Scientific_Name="">Belted Kingfisher.</Species>
+            <Species Scientific_Name="">Amazon Kingfisher.</Species>
+            <Species Scientific_Name="">Green Kingfisher.</Species>
+            <Species Scientific_Name="">Green-and-rufous Kingfisher.</Species>
+            <Species Scientific_Name="">American Pygmy Kingfisher.</Species>
+            <Species Scientific_Name=""/>
+        </Family>
+    </Order>
+
+
+<Order Name="PICIFORMES">
+        <Family Name="BUCCONIDAE">
+            <Species Scientific_Name="Nystalus radiatus">Barred Puffbird.</Species>
+            <Species Scientific_Name="Notharchus macrorhynchos">White-necked Puffbird.</Species>
+            <Species Scientific_Name="Notharchus pectoralis">Black-breasted Puffbird.</Species>
+            <Species Scientific_Name="Notharchus tectus">Pied Puffbird.</Species>
+            <Species Scientific_Name="Malacoptila panamensis">White-whiskered Puffbird.</Species>
+            <Species Scientific_Name="Micromonacha lanceolata">Lanceolated Monklet.</Species>
+            <Species Scientific_Name="Nonnula ruficapilla">Gray-cheeked Nunlet.</Species>
+            <Species Scientific_Name="Monasa morphoeus">White-fronted Nunbird.</Species>
+        </Family>
+        <Family Name="GALBULIDAE">
+            <Species Scientific_Name="Brachygalba salmoni">Dusky-backed Jacamar.</Species>
+            <Species Scientific_Name="Galbula ruficauda">Rufous-tailed Jacamar.</Species>
+            <Species Scientific_Name="Jacamerops aurea">Great Jacamar.</Species>
+        </Family>
+        <Family Name="RAMPHASTIDAE">
+            <SubFamily Name="Capitoninae">
+                <Species Scientific_Name="Capito maculicoronatus">Spot-crowned Barbet.</Species>
+                <Species Scientific_Name="Eubucco bourcierii">Red-headed Barbet.</Species>
+            </SubFamily>
+            <SubFamily Name="Semnornithinae">
+                <Species Scientific_Name="Semnornis frantzii">Prong-billed Barbet.</Species>
+            </SubFamily>
+            <SubFamily Name="Ramphastinae">
+                <Species Scientific_Name="Aulacorhynchus prasinus">Emerald Toucanet.</Species>
+                <Species Scientific_Name="Pteroglossus torquatus">Collared Aracari.</Species>
+                <Species Scientific_Name="Pteroglossus frantzii">Fiery-billed Aracari.</Species>
+                <Species Scientific_Name="Selenidera spectabilis">Yellow-eared Toucanet.</Species>
+                <Species Scientific_Name="Ramphastos sulfuratus">Keel-billed Toucan.</Species>
+                <Species Scientific_Name="Ramphastos swainsonii">Chestnut-mandibled Toucan.</Species>
+            </SubFamily>
+        </Family>
+        <Family Name="PICIDAE">
+            <SubFamily Name="Jynginae">
+                <Species Scientific_Name="Jynx torquilla">Eurasian Wryneck. (A)</Species>
+            </SubFamily>
+            <SubFamily Name="Picumninae">
+                <Species Scientific_Name="Picumnus olivaceus">Olivaceous Piculet.</Species>
+                <Species Scientific_Name="Nesoctites micromegas">Antillean Piculet.</Species>
+            </SubFamily>
+            <SubFamily Name="Picinae">
+                <Species Scientific_Name="Melanerpes lewis">Lewis's Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes herminieri">Guadeloupe Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes portoricensis">Puerto Rican Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes erythrocephalus">Red-headed Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes formicivorus">Acorn Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes chrysauchen">Golden-naped Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes pucherani">Black-cheeked Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes striatus">Hispaniolan Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes radiolatus">Jamaican Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes chrysogenys">Golden-cheeked Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes hypopolius">Gray-breasted Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes pygmaeus">Red-vented Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes rubricapillus">Red-crowned Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes uropygialis">Gila Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes hoffmannii">Hoffmann's Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes aurifrons">Golden-fronted Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes carolinus">Red-bellied Woodpecker.</Species>
+                <Species Scientific_Name="Melanerpes superciliaris">West Indian Woodpecker.</Species>
+                <Species Scientific_Name="Sphyrapicus thyroideus">Williamson's Sapsucker.</Species>
+                <Species Scientific_Name="Sphyrapicus varius">Yellow-bellied Sapsucker.</Species>
+                <Species Scientific_Name="Sphyrapicus nuchalis">Red-naped Sapsucker.</Species>
+                <Species Scientific_Name="Sphyrapicus ruber">Red-breasted Sapsucker.</Species>
+                <Species Scientific_Name="Xiphidiopicus percussus">Cuban Green Woodpecker.</Species>
+                <Species Scientific_Name="Dendrocopos major">Great Spotted Woodpecker. (A)</Species>
+                <Species Scientific_Name="Picoides scalaris">Ladder-backed Woodpecker.</Species>
+                <Species Scientific_Name="Picoides nuttallii">Nuttall's Woodpecker.</Species>
+                <Species Scientific_Name="Picoides pubescens">Downy Woodpecker.</Species>
+                <Species Scientific_Name="Picoides villosus">Hairy Woodpecker.</Species>
+                <Species Scientific_Name="Picoides stricklandi">Strickland's Woodpecker.</Species>
+                <Species Scientific_Name="Picoides borealis">Red-cockaded Woodpecker.</Species>
+                <Species Scientific_Name="Picoides albolarvatus">White-headed Woodpecker.</Species>
+                <Species Scientific_Name="Picoides tridactylus">Three-toed Woodpecker.</Species>
+                <Species Scientific_Name="Picoides arcticus">Black-backed Woodpecker.</Species>
+                <Species Scientific_Name="Veniliornis fumigatus">Smoky-brown Woodpecker.</Species>
+                <Species Scientific_Name="Veniliornis kirkii">Red-rumped Woodpecker.</Species>
+                <Species Scientific_Name="Piculus simplex">Rufous-winged Woodpecker.</Species>
+                <Species Scientific_Name="Piculus callopterus">Stripe-cheeked Woodpecker.</Species>
+                <Species Scientific_Name="Piculus chrysochloros">Golden-green Woodpecker.</Species>
+                <Species Scientific_Name="Piculus rubiginosus">Golden-olive Woodpecker.</Species>
+                <Species Scientific_Name="Piculus auricularis">Gray-crowned Woodpecker.</Species>
+                <Species Scientific_Name="Colaptes punctigula">Spot-breasted Woodpecker.</Species>
+                <Species Scientific_Name="Colaptes auratus">Northern Flicker.</Species>
+                <Species Scientific_Name="Colaptes chrysoides">Gilded Flicker.</Species>
+                <Species Scientific_Name="Colaptes fernandinae">Fernandina's Flicker.</Species>
+                <Species Scientific_Name="Celeus loricatus">Cinnamon Woodpecker.</Species>
+                <Species Scientific_Name="Celeus castaneus">Chestnut-colored Woodpecker.</Species>
+                <Species Scientific_Name="Dryocopus lineatus">Lineated Woodpecker.</Species>
+                <Species Scientific_Name="Dryocopus pileatus">Pileated Woodpecker.</Species>
+                <Species Scientific_Name="Campephilus haematogaster">Crimson-bellied Woodpecker.</Species>
+                <Species Scientific_Name="Campephilus melanoleucos">Crimson-crested Woodpecker.</Species>
+                <Species Scientific_Name="Campephilus guatemalensis">Pale-billed Woodpecker.</Species>
+                <Species Scientific_Name="Campephilus principalis">Ivory-billed Woodpecker.</Species>
+                <Species Scientific_Name="Campephilus imperialis">Imperial Woodpecker.</Species>
+            </SubFamily>
+        </Family>
+    </Order>
+
+
+</Class>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!-- Test configuration file that describes the testing parameters -->
+<testconfig name="DefaultRun">
+	<description>This is a sample test configuration file</description>
+	
+	<!-- Location to place results along with Report name prefix.
+	     Default is the working directory.	
+	     Default is results directory and ResultReport prefix -->
+	<results file-path="SampleTestRunResults">ResultReport</results>
+
+	<!-- Location where previous result to be used for comparison is located.
+	     Threshold is percentage of variance to highlight.
+	     Default is the result directory and ResultReport_latest.xml -->
+	<baseline threshold="5" file-path="BaseLineResults">Baseline.xml</baseline> 
+
+	<!-- Parameters for the test cases:
+		num-iterations 		number of iterations 
+		min-time-to-execute	minimum time of process (milliseconds)
+		verify-result		compare against the gold file (yes|no)
+					(verify only operates with 'file' result)
+		input-mode		mode to provide input (file|stream) -->
+	<default-parameter-set 
+		num-iterations="1000" 
+		min-time-to-execute="1"
+		input-mode="stream" 
+		verify-result="no">
+		<!-- Init options: N/A at this time -->
+		<!-- <init-options/> -->
+		
+		<!-- Compile options: N/A at this time -->
+		<!-- <compile-options/> -->
+		
+		<!-- Parse options for Xalan:
+			xst		XalanSourceTree (default)
+			xerces-dom	XercesDOM -->
+		<parse-options processor="Xalan">xerces-dom</parse-options>
+
+		<!-- Result options for Xalan:
+			file		File (default)
+			xst		XalanSourceTree
+			xerces-dom	XercesDOM
+			null		Null
+			stream		Stream -->
+		<result-options processor="Xalan">xerces-dom</result-options>
+
+		<!-- Transform options: N/A at this time -->	
+	   	<!-- <transform-options processor="Xalan"/> -->			
+	</default-parameter-set>
+</testconfig>
+
+
+		
+		
+		

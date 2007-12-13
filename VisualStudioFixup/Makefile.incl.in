@@ -1,0 +1,583 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements. See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership. The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the  "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# 
+#MACROS defining commands
+MKDIR=mkdir
+LN=ln
+
+#all these setting come from the arguments passed in to runConfigure.
+PLATFORM =@platform@
+CC  = @cc@
+CXX = @cxx@
+CPPFLAGS = @cppflags@
+CFLAGS = @cflags@
+CXXFLAGS = @cxxflags@
+PREFIX = @prefix@
+LDFLAGS = @ldflags@
+BITSTOBUILD = @bitstobuild@
+LIBS = @libs@
+TRANSCODER= @transcoder@
+WCSTOMBS = @wcstombs@
+MESSAGELOADER = @xalan_locale_system@
+LOCALE = @xalan_locale@
+
+SHELL = @SHELL@
+MKINSTALLDIRS = $(MKDIR) -p
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+libdir = @libdir@
+includedir = @includedir@
+
+XSL_OBJ_DIR = ${OUTDIR}/obj
+XSL_LIB_DIR = ${OUTDIR}/lib
+XSL_BIN_DIR = ${OUTDIR}/bin
+XSL_NLS_DIR = ${OUTDIR}/nls
+
+XSL_INCL = -I$(XALANCROOT)/src -I$(XALANCROOT)/include -I${XSL_NLS_DIR}/include
+XSL_INCL += -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/xercesc -I$(XERCESCROOT)/include/
+
+SAMPLES_DIR = $(XALANCROOT)/samples
+TESTS_DIR = $(XALANCROOT)/Tests
+
+# ICU 
+ifeq ($(TRANSCODER), "icu")
+  XALAN_USE_ICU = yes
+endif
+
+ifdef XALAN_USE_ICU
+  ifndef ICUROOT
+    ICUROOT=/usr/local
+  endif
+  ifndef ICUI18NROOT
+    ICUI18NROOT=${ICUROOT}
+  endif
+  ICULIB_LOC=$(ICUROOT)/lib
+endif
+
+# required libraries 
+XERCES_LIB = -L$(XERCESCROOT)/lib -lxerces-c
+ICU_LIB = -L$(ICUROOT)/lib -licuuc -L$(ICUI18NROOT)/lib -licui18n
+XALAN_LIB = $(LIBRARY_SEARCH_PATH) $(LIBRARY_LINK_NAME)
+
+# Deprecated Xerces DOM Support handeling
+ifeq (XALAN_BUILD_DEPRECATED_DOM_BRIDGE,$(findstring XALAN_BUILD_DEPRECATED_DOM_BRIDGE,$(CXXFLAGS)))
+ifneq "$(wildcard $(XERCESCROOT)/lib/*xerces-depdom*)" ""
+XERCES_LIB += -lxerces-depdom
+endif
+endif
+
+# Library names
+LIB_NAME = lib$(PROJECT_NAME)
+LIB = $(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
+SO_NAME = $(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER)
+LINK_NAME = $(LIB_NAME)$(SHLIBSUFFIX)
+XALAN_LIB_PATH = -L$(XSL_LIB_DIR)
+LIBRARY_LINK_NAME = -l$(PROJECT_NAME)
+LIBRARY_SEARCH_PATH = -L$(XSL_LIB_DIR) -L$(XALANCROOT)/lib
+
+# Localization library names
+LOC_PROJECT_NAME = xalanMsg
+LOC_LIBNAME = lib${LOC_PROJECT_NAME}
+LOC_LIB = ${LOC_LIBNAME}$(SHLIBSUFFIX).${LIB_MAJOR_VER}.${LIB_MINOR_VER}
+LOC_SONAME = ${LOC_LIBNAME}${SHLIBSUFFIX}.${LIB_MAJOR_VER}
+MESSAGELIB = ${XSL_LIB_DIR}/${LOC_LIB}
+EXTRA_LOC_LINK_OPTIONS = $(EXTRA_LINK_OPTIONS)
+
+ifeq ($(MESSAGELOADER),nls)
+LOCAL_LIB =
+XSL_BUILD_OPTIONS += -DXALAN_NLS_MSG_LOADER
+endif
+
+ifeq ($(MESSAGELOADER),icu)
+XSL_BUILD_OPTIONS += -DXALAN_ICU_MSG_LOADER
+LOCAL_LIB = -L${XSL_LIB_DIR} -l$(LOC_PROJECT_NAME)
+endif
+ifeq ($(MESSAGELOADER),inmem)
+XSL_BUILD_OPTIONS += -DXALAN_INMEM_MSG_LOADER
+LOCAL_LIB = -L${XSL_LIB_DIR} -l$(LOC_PROJECT_NAME)
+endif
+
+#=============== CYGWIN SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), CYGWIN)
+
+  SUPPORTED = TRUE
+  ALLLIBS = $(LIBS)
+  SHLIBSUFFIX = .dll
+  CYG_PREFIX = cyg
+  LINK_SONAME =  
+  EXT=.exe
+    
+  MESSAGELIB = ${XSL_LIB_DIR}/$(CYG_PREFIX)$(LOC_PROJECT_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+  
+  LIB = $(CYG_PREFIX)$(PROJECT_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+
+  PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT
+              
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC1)
+  LINK = $(CXX) -D${PLATFORM} ${LDFLAGS}
+   
+  MAKE_SHARED = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared   -Wl,--warn-once \
+ 							  -Wl,--out-implib \
+ 							  -Wl,$(XSL_LIB_DIR)/$(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
+ 											        																            
+  MAKE_SHARED_LOC = $(LINK) $(CXXFLAGS) ${LDFLAGS} -shared -Wl,--warn-once \
+							-Wl,--out-implib \
+        						-Wl,$(XSL_LIB_DIR)/$(LOC_LIB)
+
+  LOC_OTHER_LINK_PARAMETERS = $(XERCES_LIB)
+  
+  OTHER_LINK_PARAMETERS = $(XALAN_LIB) $(ALLLIBS)
+  
+  OTHER_LINK_LIB_PARAMERES = $(ALLLIBS)
+   
+  export PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(PATH)
+ 
+endif
+
+#=============== LINUX SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), LINUX)
+
+	SUPPORTED = TRUE
+	
+  ifeq (${CXX}, xlC_r)
+
+			PLATFORM_COMPILE_OPTIONS = -qpic -D_AIX -D_THREAD_SAFE
+			ALLLIBS = ${LIBS} -L/usr/lib 
+			
+			CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+			
+			CC1 = $(CC2) $(CXXFLAGS) 
+		
+		        CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		
+			MAKE_SHARED = $(CXX) -qmkshrobj  ${LDFLAGS} ${bitstobuildLink}
+		
+			LINK = $(CC1)  ${bitstobuildLink} ${LDFLAGS}
+		
+		ifeq (${BITSTOBUILD}, 64)
+			MAKE_SHARED += -q64
+			CC2 += -q64
+			CC4 += -q64
+			LINK += -q64
+		endif
+		
+			SHLIBSUFFIX=.so
+		
+		   
+		  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c
+		  ICU_LIB= -L$(ICUROOT)/lib -licuuc32 -L$(ICUI18NROOT)/lib -licui18n32
+		
+		  LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
+		  SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+		
+		  LIBRARY_LINK_NAME=-l$(PROJECT_NAME)$(LIB_MAJOR_VER)
+		  
+		  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
+		  MAKE_SHARED_LOC=$(MAKE_SHARED)
+		  LOC_LIB = ${LOC_LIBNAME}${LIB_MAJOR_VER}.${LIB_MINOR_VER}${SHLIBSUFFIX}
+		  LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIB_MAJOR_VER}
+		        
+  else  
+    ## 	Other compilers ...
+    
+		  
+		  ALLLIBS = ${LIBS}
+		  SHLIBSUFFIX=.so
+		  PIC_OPTION=
+		
+		  ifeq (${CXX}, icpc)
+		
+		    PIC_OPTION=-KPIC
+		    PLATFORM_COMPILE_OPTIONS = -ansi
+		
+		  else
+		
+		    PIC_OPTION=-fPIC
+		    PLATFORM_COMPILE_OPTIONS = -Wall
+		
+		  endif
+		
+		  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT
+		
+		  # We need the ICU library if we are using the ICUBridge
+		  ifdef XALAN_USE_ICU
+		    LD_RPATH_PRE= -Wl,-rpath,
+		    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib
+		  endif
+		
+		  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+		  LINK_SONAME = -Wl,-soname,$(SO_NAME)
+		  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
+		  
+		  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
+		  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+	
+	 ## End of other compilers
+	endif
+endif
+#=============== FREEBSD SPECIFIC OPTIONS ======================
+
+ifeq ($(PLATFORM), FREEBSD)
+
+  SUPPORTED = TRUE
+  ALLLIBS = ${LIBS} -L/usr/local/lib
+  SHLIBSUFFIX=.so
+  PIC_OPTION = -fPIC
+
+  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} ${PIC_OPTION} ${WCSTOMBS}
+
+  # We need the ICU library if we are using the ICUBridge
+  ifdef XALAN_USE_ICU
+    LD_RPATH_PRE = -Wl,-rpath,
+    PLATFORM_LIB_LINK_OPTIONS = $(LD_RPATH_PRE)${ICUROOT}/lib
+    PLATFORM_LIB_LINK_OPTIONS += -licuuc -licudata -lgcc
+    ALLLIBS += -L${ICUROOT}
+  endif
+
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
+  
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+  
+endif
+
+#=============== NETBSD SPECIFIC OPTIONS ======================
+
+ifeq ($(PLATFORM), NETBSD)
+
+  SUPPORTED = TRUE
+  ALLLIBS = ${LIBS} -L/usr/local/lib
+  SHLIBSUFFIX=.so
+  PIC_OPTION = -fPIC
+
+  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} ${PIC_OPTION} ${WCSTOMBS}
+
+  # We need the ICU library if we are using the ICUBridge
+  ifdef XALAN_USE_ICU
+    LD_RPATH_PRE = -Wl,-rpath,
+    PLATFORM_LIB_LINK_OPTIONS = $(LD_RPATH_PRE)${ICUROOT}/lib
+    PLATFORM_LIB_LINK_OPTIONS += -licuuc -licudata
+    ALLLIBS += -L${ICUROOT}
+  endif
+
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = $(CXX) $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION} ${LDFLAGS}
+  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION} ${LDFLAGS}
+
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+endif
+
+#=============== HPUX SPECIFIC OPTIONS =========================
+
+
+ifeq ($(PLATFORM), HPUX)
+
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
+  # +p option removed, +W849 option added
+  # to avoid error created by instantiated template symbol length limitation.
+  # Also disable warning 930 about placement delete not implemented.
+  PLATFORM_CXX_COMPILE_OPTIONS = +W849,930 -mt  -Wc,-koenig_lookup,on -Wc,-ansi_for_scope,on
+
+  ALLLIBS = ${LIBS}
+  SHLIBSUFFIX=.sl
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS)
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = $(CXX) -b +Z ${LDFLAGS} -Wl,+s
+  LINK_SONAME = -Wl,+h,${SO_NAME}
+  LINK = $(CXX) $(CXXFLAGS) ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS) -Wl,+s
+
+  export SHLIB_PATH:=$(XERCESCROOT)/lib:$(ICULIB_LOC):$(SHLIB_PATH)
+
+  MAKE_SHARED_LOC = $(CXX) -b +Z ${LDFLAGS} -Wl,+s -Wl,+h,${LOC_SONAME}
+endif
+
+#=============== SOLARIS SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), SOLARIS)
+
+  SUPPORTED = TRUE
+
+  ifeq (${CXX}, g++)
+
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT
+
+	ifdef XALAN_USE_ICU
+	LD_RPATH_PRE=  -Wl,-rpath,
+	endif
+
+	EXTRA_LINK_OPTIONS=-lc
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+        CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+	LINK =  g++ -D${PLATFORM} -fPIC ${LDFLAGS}
+
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+
+  else
+
+	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XSL_OBJ_DIR) -features=rtti -D${PLATFORM} -D_REENTRANT
+
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+    CC4 = $(CC) $(CFLAGS) -KPIC -mt -xs -D${PLATFORM} -D_REENTRANT
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XSL_OBJ_DIR) ${LDFLAGS} 
+    LINK_SONAME = -h ${SO_NAME} 
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
+	LINK = ${CXX} -D${PLATFORM} -ptr$(XSL_OBJ_DIR) ${LDFLAGS}
+
+    ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -lc -lgen
+  endif
+
+  SHLIBSUFFIX=.so
+  
+  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
+
+  # if there is a LD_LIBRARY_PATH_64, we need to set this also
+  ifdef LD_LIBRARY_PATH_64
+  	export LD_LIBRARY_PATH_64 := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LD_LIBRARY_PATH_64)
+  endif
+
+  MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
+
+endif
+
+#=============== AIX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), AIX)
+
+  SUPPORTED = TRUE
+
+  ifeq (${CXX}, g++)
+
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+
+	EXTRA_LINK_OPTIONS=-lc
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+        CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+	LINK =  g++ -D${PLATFORM} -fPIC ${LDFLAGS}
+
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+
+    SHLIBSUFFIX=.a
+
+  else
+
+	PLATFORM_COMPILE_OPTIONS = -qthreaded -D${PLATFORM} -D_THREAD_SAFE
+	ALLLIBS = ${LIBS} -L/usr/lib 
+	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+	
+ifeq (-DNDEBUG,$(findstring -DNDEBUG,${CXXFLAGS}))
+	CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS) -DNDEBUG
+else
+	CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+endif
+    CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+	MAKE_SHARED = makeC++SharedLib_r -p 512 ${LDFLAGS} ${bitstobuildLink}
+
+	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
+
+ifeq (${BITSTOBUILD}, 64)
+	MAKE_SHARED += -X64
+	CC2 += -q64
+	CC4 += -q64
+endif
+
+	SHLIBSUFFIX=.a
+
+  endif
+   
+  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c27
+  ICU_LIB= -L$(ICUROOT)/lib -licuuc32 -L$(ICUI18NROOT)/lib -licui18n32
+
+  LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
+  SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+
+  LIBRARY_LINK_NAME=-l$(PROJECT_NAME)$(LIB_MAJOR_VER)
+  
+  export LIBPATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LIBPATH)
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+  LOC_LIB = ${LOC_LIBNAME}${LIB_MAJOR_VER}.${LIB_MINOR_VER}${SHLIBSUFFIX}
+  LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIB_MAJOR_VER}
+
+endif
+
+#=============== OS390 SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), OS390)
+
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS =-Wc,dll,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_XOPEN_SOURCE_EXTENDED -DXALAN_XSLT_BUILD_DLL -DXALAN_PLATFORMSUPPORT_BUILD_DLL -DXALAN_DOM_BUILD_DLL -DXALAN_XALANEXTEXTENSIONS_BUILD_DLL -DXALAN_XALANSOURCETREE_BUILD_DLL -DXALAN_TRANSFORMER_BUILD_DLL -DXALAN_XERCESPARSERLIAISON_BUILD_DLL -DXALAN_XMLSUPPORT_BUILD_DLL -DXALAN_XPATH_BUILD_DLL -DXALAN_XPATHCAPI_BUILD_DLL -DXALAN_ALLINONE_BUILD_DLL -DXALAN_EXSLT_BUILD_DLL -DXALAN_ICUBRIDGE_BUILD_DLL -DXALAN_DOMSUPPORT_BUILD_DLL
+  ALLLIBS =
+ifeq (${OS390_XPLINK},1)
+  SHLIBSUFFIX=.xplink.dll
+  OS390SIDEDECK=.xplink.x
+else
+  SHLIBSUFFIX=.dll
+  OS390SIDEDECK=.x
+endif
+
+  CPPMSGFLAGS = -2 -DNDEBUG -DXALAN_XALANMSGLIB_BUILD_DLL
+  CMSGFLAGS = -2 -DNDEBUG -DXALAN_XALANMSGLIB_BUILD_DLL
+  CXXMSGFLAGS = -2 -DNDEBUG -DXALAN_XALANMSGLIB_BUILD_DLL
+
+  CC1 = $(CXX) $(CXXFLAGS) ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) 
+ifeq (-DNDEBUG,$(findstring -DNDEBUG,${CXXFLAGS}))
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS) -DNDEBUG
+else
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+endif
+  CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC5 = $(CXX) $(CXXMSGFLAGS) $(PLATFORM_COMPILE_OPTIONS) {$LDFLAGS}
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll ${LDFLAGS}
+  MAKE_SHARED_MSG = ${CXX} $(CXXMSGFLAGS) -D${PLATFORM} -Wl,dll ${LDFLAGS}
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) ${LDFLAGS}
+
+  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_7_0.x
+  ICU_LIB=$(XERCESCROOT)/lib/libicuuc33.0$(OS390SIDEDECK) $(XERCESCROOT)/lib/libicui18n33.0$(OS390SIDEDECK)
+  
+  LIB=$(LIB_NAME).$(VER)$(SHLIBSUFFIX) 
+  
+  LIBRARY_SEARCH_PATH=
+  LIBRARY_LINK_NAME=$(XSL_LIB_DIR)/$(LIB_NAME).$(VER)$(OS390SIDEDECK)
+  LOCAL_LIB=${XSL_LIB_DIR}/lib$(LOC_PROJECT_NAME).$(VER)$(OS390SIDEDECK)
+  LOC_LIB=${LOC_LIBNAME}.${VER}$(SHLIBSUFFIX)
+  MESSAGELIB=${XSL_LIB_DIR}/${LOC_LIB}
+
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+    BATCH_XALAN_UTIL_NAME = IXMXAL20
+    BATCH_TEST_UTIL_NAME  = IXMTST20
+ifeq (${OS390_XPLINK},1)
+    BATCH_PROJECT_NAME    = IXMLX20
+    BATCH_MESSAGE_NAME    = IXMMXG20
+    BATCH_XML_PROJ_NAME   = IXM4C6XX
+    BATCH_ICUUC_PROJ_NAME = IXMI33XC
+    BATCH_ICUIN_PROJ_NAME = IXMI33XN
+else
+    BATCH_PROJECT_NAME    = IXMLC20
+    BATCH_MESSAGE_NAME    = IXMMSG20
+    BATCH_XML_PROJ_NAME   = IXM4C56X
+    BATCH_ICUUC_PROJ_NAME = IXMI33UC
+    BATCH_ICUIN_PROJ_NAME = IXMI33IN
+endif
+
+    XERCES_LIB = "//'${LOADEXP}(${BATCH_XML_PROJ_NAME})'"
+    ICU_LIB = "//'${LOADEXP}(${BATCH_ICUUC_PROJ_NAME})'" "//'${LOADEXP}(${BATCH_ICUIN_PROJ_NAME})'"
+    LOCAL_LIB = "//'${LOADEXP}(${BATCH_MESSAGE_NAME})'"
+    BATCH_TARGET = "//'${LOADMOD}(${BATCH_PROJECT_NAME})'"
+#   ALLLIBS =  ${XERCES_LIB} ${ICU_LIB} "//'${LOADEXP}(${BATCH_MESSAGE_NAME})'"
+    LIBRARY_LINK_NAME=  "//'${LOADEXP}(${BATCH_PROJECT_NAME})'" 
+    MESSAGELIB="//'${LOADMOD}(${BATCH_MESSAGE_NAME})'"
+endif  ## OS390BATCH
+
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+
+
+
+endif
+
+#============ TRU64 SPECIFIC OPTIONS ============================
+
+ifeq ($(PLATFORM), TRU64)
+
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XSL_OBJ_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors
+  ALLLIBS = ${LIBS} -L/usr/lib -lm
+  SHLIBSUFFIX = .so
+  CC1 = $(CXX) ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS) -nocxxstd
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${XSL_OBJ_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors -nocxxstd ${LDFLAGS}
+  LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) ${LDFLAGS}
+  MAKE_SHARED_LOC=$(MAKE_SHARED)
+endif
+
+#============ MacOSX SPECIFIC OPTIONS ============================
+
+ifeq ($(PLATFORM), MACOSX)
+
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -Wall -fno-elide-constructors -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+  ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+  SHLIBSUFFIX=.dylib
+  CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = ${CC} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  LIB = $(LIB_NAME).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
+  SO_NAME = $(LIB_NAME).$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x38000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LINK_NAME} ${LDFLAGS}
+  LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS} ${LDFLAGS}
+  
+  export DYLD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(DYLD_LIBRARY_PATH)
+  LOC_LIB = ${LOC_LIBNAME}.${LIB_MAJOR_VER}.${LIB_MINOR_VER}$(SHLIBSUFFIX)
+  LOC_SONAME = ${LOC_LIBNAME}.${LIB_MAJOR_VER}${SHLIBSUFFIX}
+  MAKE_SHARED_LOC= ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib -prebind -seg1addr 0x40000000  -compatibility_version 1 -current_version $(LIB_MAJOR_DOT_VER) -install_name ${LOC_LIBNAME}${SHLIBSUFFIX} ${LDFLAGS}
+endif
+
+#=============== OS400 SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), OS400)
+
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -v -D_MULTI_THREADED -D${PLATFORM} -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+  PLATFORM_C_COMPILE_OPTIONS = -v -D_MULTI_THREADED -D${PLATFORM} -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+  ALLLIBS =
+  MAKE_SHARED = ld -v ${LDFLAGS}
+  MAKE_SHARED_C = ld -v ${LDFLAGS}
+  SHLIBSUFFIX=.a
+
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+ifeq (-DNDEBUG,$(findstring -DNDEBUG,${CXXFLAGS}))
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2) -DNDEBUG
+else
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2)
+endif
+  CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)
+  CC4 = $(CC) $(CFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  TO = qwobj
+  EXTRA_COMPILE_OPTIONS = -I. -g  -qTERASPACE="*YES *NOTSIFC" -qSTGMDL="*INHERIT" -DXML_USE_ICONV400_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSSOR_SOCKET -qTGTRLS="V5R1M0"
+  EXTRA_LINK_OPTIONS = -qOPTION="*DUPPROC *DUPVAR *NOWARN"
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) ${LDFLAGS}
+
+endif
+
+ifndef SUPPORTED
+  nogood:
+	  @echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, and HP-UX are the only platforms supported.
+endif
+
+
+ALLLIBS += $(XERCES_LIB)
+
+ALLLIBS += $(LOCAL_LIB)
+
+ifdef XALAN_USE_ICU 
+  ALLLIBS += $(ICU_LIB)
+endif
+

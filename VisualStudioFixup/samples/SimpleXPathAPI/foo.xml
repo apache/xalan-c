@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<foo:doc xmlns:foo="http://www.foo.com">
+  <foo:name first="David" last="Marston">Mr. Marston</foo:name>
+  <foo:name first="David" last="Bertoni">Mr. Bertoni</foo:name>
+  <foo:name first="Donald" last="Leslie">Mr. Leslie</foo:name>
+  <foo:name first="Emily" last="Farmer">Ms. Farmer</foo:name>
+  <foo:name first="Myriam" last="Midy">Ms. Midy</foo:name>
+  <foo:name first="Paul" last="Dick">Mr. Dick</foo:name>
+  <foo:name first="Scott" last="Boag">Mr. Boag</foo:name>
+  <foo:name first="Shane" last="Curcuru">Mr. Curcuru</foo:name>
+  <foo:name first="Joseph" last="Kesselman">Mr. Kesselman</foo:name>
+  <foo:name first="Stephen" last="Auriemma">Mr. Auriemma</foo:name>
+</foo:doc>
