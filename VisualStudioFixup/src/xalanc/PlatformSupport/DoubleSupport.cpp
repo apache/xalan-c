@@ -260,17 +260,17 @@ DoubleSupport::divide(
     else if (theLHS == 0.0L)
     {
         // This is NaN...
-        return DoubleSupport::getNaN();
+        return getNaN();
     }
     else if (theLHS > 0.0L && isPositiveZero(theRHS) == true)
     {
         // This is positive infinity...
-        return DoubleSupport::getPositiveInfinity();
+        return getPositiveInfinity();
     }
     else
     {
         // This is negative infinity...
-        return DoubleSupport::getNegativeInfinity();
+        return getNegativeInfinity();
     }
 }
 
@@ -757,7 +757,7 @@ DoubleSupport::round(double     theValue)
     {
         return getPositiveInfinity();
     }
-    if (isNegativeInfinity(theValue))
+    else if (isNegativeInfinity(theValue))
     {
         return getNegativeInfinity();
     }

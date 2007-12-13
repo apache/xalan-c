@@ -773,6 +773,23 @@ LongToDOMString(
 
 
 /**
+ * Converts a size_t value and appends the
+ * result to a XalanDOMString.
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+SizeTypeToDOMString(
+            size_t				theValue,
+            XalanDOMString&     theResult);
+
+
+
+
+
+/**
  * Converts an unsigned long value and appends the
  * result to a XalanDOMString.
  * 

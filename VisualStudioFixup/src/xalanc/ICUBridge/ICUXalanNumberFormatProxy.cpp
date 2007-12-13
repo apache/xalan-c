@@ -126,6 +126,27 @@ ICUXalanNumberFormatProxy::format(unsigned long	  theValue,
 
 
 
+#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+XalanDOMString&
+ICUXalanNumberFormatProxy::format(
+			size_t				theValue,
+			XalanDOMString&		theResult)
+
+{
+	// $$$ ToDo: Fix this!
+	return format(static_cast<unsigned long>(theValue), theResult);
+}
+#endif
+
+
+
 bool
 ICUXalanNumberFormatProxy::isGroupingUsed() const
 {

@@ -11,6 +11,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
@@ -58,6 +61,40 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="..\..\..\..\..\Build\Win64\VC8\Debug"
+			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
+			ConfigurationType="10"
+			CharacterSet="1"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.mak;$(TargetPath)"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="LST rule"
+			/>
+			<Tool
+				Name="RES rule"
+			/>
+			<Tool
+				Name="XLF rule"
+			/>
+			<Tool
+				Name="TXT rule"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\..\..\..\Build\Win32\VC8\Release"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
@@ -98,8 +135,8 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release with symbols|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC8\Release.symbols"
+			Name="Release|x64"
+			OutputDirectory="..\..\..\..\..\Build\Win64\VC8\Release"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
 			ConfigurationType="10"
 			CharacterSet="1"
@@ -110,31 +147,26 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="LST rule"
+			/>
+			<Tool
+				Name="RES rule"
+			/>
+			<Tool
 				Name="XLF rule"
-				ExecutionBucket="2"
 			/>
 			<Tool
 				Name="TXT rule"
 			/>
 			<Tool
-				Name="RES rule"
-				ExecutionBucket="4"
-			/>
-			<Tool
-				Name="LST rule"
-				ExecutionBucket="5"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
-				ExecutionBucket="6"
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				ExecutionBucket="7"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				ExecutionBucket="8"
 			/>
 		</Configuration>
 	</Configurations>
@@ -159,16 +191,24 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="TXT rule"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release.symbols\nls\include\en_US.txt"
+				RelativePath="..\..\..\..\..\build\win64\vc8\debug\nls\include\en_US.txt"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -186,10 +226,54 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="TXT rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\nls\include\en_US.txt"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="TXT rule"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\nls\include\en_US.txt"
 				>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="TXT rule"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
@@ -199,11 +283,39 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
+					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
 					/>
 				</FileConfiguration>
 			</File>
@@ -219,19 +331,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -239,8 +339,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
-					ExcludedFromBuild="true"
+					Name="Release|x64"
 					>
 					<Tool
 						Name="LST rule"
@@ -248,7 +347,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release.symbols\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -266,24 +365,39 @@
 						Name="LST rule"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
-				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="LST rule"
 					/>
 				</FileConfiguration>
 			</File>
@@ -299,7 +413,43 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release with symbols|Win32"
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="RES rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="RES rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -308,10 +458,18 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release.symbols\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -323,6 +481,34 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
+						Name="RES rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="RES rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
@@ -330,6 +516,34 @@
 			<File
 				RelativePath="..\..\..\..\..\src\xalanc\NLS\en_US\XalanMsg_en_US.xlf"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="XLF rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="XLF rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="XLF rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="XLF rule"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

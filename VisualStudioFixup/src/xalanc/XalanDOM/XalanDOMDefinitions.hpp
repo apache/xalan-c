@@ -26,7 +26,7 @@
 
 
 
-#if defined(XALAN_DOM_BUILD_DLL)
+#if defined(XALAN_BUILD_DLL)
 
 #define XALAN_DOM_EXPORT XALAN_PLATFORM_EXPORT
 

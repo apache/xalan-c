@@ -58,5 +58,15 @@
 #define XALAN_HAS_STD_DISTANCE
 #define XALAN_NO_REENTRANT_TIME_FUNCTIONS
 
+#if defined(_WIN64)
+#define XALAN_SIZE_T_NOT_STANDARD_TYPE
+#endif
+#define XALAN_WINDOWS
+
+#if defined(_DEBUG) && defined(NDEBUG)
+#error NDEBUG must not be defined when _DEBUG is defined.
+#elif !defined(_DEBUG) && !defined(NDEBUG)
+#error NDEBUG must be defined when _DEBUG is not defined.
+#endif
 
 #endif  // VCPPDEFINITIONS_HEADER_GUARD_1357924680

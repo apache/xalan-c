@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="All"
 	ProjectGUID="{C5513096-5115-434E-9785-4D1DEC12EB2B}"
+	RootNamespace="All"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
 		<Platform
 			Name="Win32"
+		/>
+		<Platform
+			Name="x64"
 		/>
 	</Platforms>
 	<ToolFiles>
@@ -35,6 +39,27 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Release|x64"
+			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			IntermediateDirectory="$(OutDir)\$(ProjectName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\..\..\Build\Win32\VC8\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
@@ -55,8 +80,8 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release with symbols|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release.symbols"
+			Name="Debug|x64"
+			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -69,6 +94,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

@@ -25,7 +25,7 @@
 
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 #include <windows.h>
 #else
 #include <cstdio>
@@ -48,7 +48,7 @@ public :
 
 	enum { eDefaultBufferSize = 8192 };
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 	typedef HANDLE	HandleType;
 #else
 	typedef FILE*	HandleType;

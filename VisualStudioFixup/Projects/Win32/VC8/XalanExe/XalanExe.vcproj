@@ -9,6 +9,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
@@ -45,8 +48,8 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC8\Release\Nls\Include"
-				PreprocessorDefinitions="NDEBUG,_USRDLL,WIN32,_WINDOWS,_CONSOLE"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,$(OutDir)\Nls\Include"
+				PreprocessorDefinitions="NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -54,12 +57,13 @@
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/XalanExe.pch"
+				PrecompiledHeaderFile="$(IntDir)/"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
 				ObjectFile=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -76,14 +80,114 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_3.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC8\Release/Xalan.exe"
+				OutputFile="$(OutDir)\Xalan.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir)"
 				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
 				StackReserveSize="3096576"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			IntermediateDirectory="$(OutDir)\$(ProjectName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC8\Release/XalanExe.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,$(OutDir)\Nls\Include"
+				PreprocessorDefinitions="NDEBUG"
+				StringPooling="true"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				EnableEnhancedInstructionSet="0"
+				TreatWChar_tAsBuiltInType="true"
+				RuntimeTypeInfo="true"
+				PrecompiledHeaderFile="$(IntDir)/"
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
+				WarningLevel="4"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
+				CompileAs="0"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\Xalan.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir)"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="true"
+				StackReserveSize="3096576"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -138,15 +242,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC8\Debug\Nls\Include"
-				PreprocessorDefinitions="_DEBUG,WIN32,_WINDOWS,_CONSOLE"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,$(OutDir)\Nls\Include"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC8\Debug\XalanExe/XalanExe.pch"
+				PrecompiledHeaderFile="$(IntDir)/"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC8\Debug\XalanExe/"
 				ObjectFile=".\..\..\..\..\Build\Win32\VC8\Debug\XalanExe/"
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC8\Debug\XalanExe/"
@@ -169,12 +272,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_3D.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC8\Debug/Xalan.exe"
+				OutputFile="$(OutDir)\Xalan.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug\"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir)"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC8\Debug/Xalan.pdb"
@@ -206,14 +308,13 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release with symbols|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release.symbols"
+			Name="Debug|x64"
+			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="0"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -229,27 +330,24 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\Build\Win32\VC8\Release/XalanExe.tlb"
+				TargetEnvironment="3"
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC8\Debug/XalanExe.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC8\Release\Nls\Include"
-				PreprocessorDefinitions="NDEBUG,_USRDLL,WIN32,_WINDOWS,_CONSOLE"
-				StringPooling="true"
-				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
+				Optimization="0"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,$(OutDir)\Nls\Include"
+				PreprocessorDefinitions=""
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/XalanExe.pch"
-				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
-				ObjectFile=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
-				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC8\Release\XalanExe/"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile="$(IntDir)/"
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -261,7 +359,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
+				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
 			/>
 			<Tool
@@ -269,15 +367,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_3.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC8\Release/Xalan.exe"
-				LinkIncremental="1"
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\Xalan.exe"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir)"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 				StackReserveSize="3096576"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"

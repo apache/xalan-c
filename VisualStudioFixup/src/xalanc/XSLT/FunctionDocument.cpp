@@ -373,7 +373,9 @@ FunctionDocument::doExecute(
             const XalanDOMString::size_type     indexOfColon = indexOf(ref, XalanUnicode::charColon);
             XalanDOMString::size_type           indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
 
-#if defined(WIN32)              
+#if defined(XALAN_WINDOWS)              
+			// $$$TODO
+			// Note this is hackish code for Windows, and we should try to remove it.
             const XalanDOMString::size_type     indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
 
             if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)

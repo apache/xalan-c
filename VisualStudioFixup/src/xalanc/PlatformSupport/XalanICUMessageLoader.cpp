@@ -36,7 +36,7 @@
 
 #include "xalanc/Include/XalanVersion.hpp"
 
-#ifdef WIN32
+#if defined(XALAN_WINDOWS)
 #define XALAN_MESSAGES_NAME XalanMessages
 #else
 #define XALAN_MESSAGES_NAME xalanMsg
@@ -47,7 +47,7 @@
 #define MAKE_STRING(a) #a
 #define INVK_MAKE_STRING(a) MAKE_STRING(a)
 
-#ifdef WIN32
+#if defined(XALAN_WINDOWS)
 
 #if _MSC_VER >= 1400
 
@@ -81,13 +81,13 @@
 									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
 									ENTRY_POINT_SUFFIX)
 
-#else // NON-WIN32 systems
+#else // NON-WINDOWS systems
 
 #define ICUDLL_ENTRYPOINT_NAME INVK_CAT2_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,dat)
 
 #define PACKAGE_NAME XALAN_MESSAGES_NAME
 
-#endif // WIN32
+#endif // XALAN_WINDOWS
 
 static const char* const	sPackageName=INVK_MAKE_STRING(PACKAGE_NAME);
 
@@ -193,5 +193,6 @@ bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
 XALAN_CPP_NAMESPACE_END
 
 #endif // defined (XALAN_ICU_MSG_LOADER)
+
 
 

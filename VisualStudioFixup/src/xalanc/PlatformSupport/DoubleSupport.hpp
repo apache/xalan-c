@@ -25,6 +25,9 @@
 
 
 
+#if defined(_MSC_VER)
+#include <float.h>
+#endif
 #include <cmath>
 #include <functional>
 
@@ -62,7 +65,7 @@ public:
 
 
     // Use these functions to determine if a value represents one of these
-    // specia values.  On some platforms, regular C/C++ operators don't work
+    // special values.  On some platforms, regular C/C++ operators don't work
     // as we need them too, so we have these helper functions.
 
     /**
@@ -74,7 +77,13 @@ public:
     static bool
     isNaN(double    theNumber)
     {
-        return s_NaN == theNumber;
+#if defined(_MSC_VER)
+		return _isnan(theNumber) != 0;
+#elif defined(XALAN_POSIX2_AVAILABLE)
+		return isnan(theNumber) != 0;
+#else
+		return s_NaN == theNumber;
+#endif
     }
 
     /**
@@ -603,7 +612,7 @@ public:
 #endif
     }
 
-    typedef union
+    union NumberUnion
     {
         double  d;
         struct
@@ -620,8 +629,7 @@ public:
             return dwords.dw1 == temp.dwords.dw1 &&
                    dwords.dw2 == temp.dwords.dw2;
         }
-
-    } NumberUnion;
+    };
 
 private:
 

@@ -138,6 +138,30 @@ XalanNumberFormat::format(
 
 
 
+#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+XalanDOMString&
+XalanNumberFormat::format(
+			size_t				theValue,
+			XalanDOMString&		theResult)
+
+{
+	SizeTypeToDOMString(theValue, theResult);
+
+	applyGrouping(theResult, theResult);
+
+    return theResult;
+}
+
+
+
+#endif
 /*
  * Convert a string value using the currently active values for grouping size
  * and separator; returns the converted string

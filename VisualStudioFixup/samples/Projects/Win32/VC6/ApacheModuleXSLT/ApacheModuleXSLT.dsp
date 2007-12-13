@@ -44,8 +44,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\..\..\bin\CompileStylesheet"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GX /O2 /Ob2 /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /I "\Apache Group\Apache\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /Ob2 /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /I "\Apache Group\Apache\include" /D "NDEBUG" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /FD /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -69,8 +69,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\bin\CompileStylesheet"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "\Apache Group\Apache\include" /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "\Apache Group\Apache\include" /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -95,8 +95,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\bin\CompileStylesheet"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /c
-# ADD CPP /D "WIN64" /nologo /MD /W4 /GX /O2 /Ob2 /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /I "\Apache Group\Apache\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /O2 /Ob2 /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /I "\Apache Group\Apache\include" /D "NDEBUG" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /FD /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -120,8 +120,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\bin\CompileStylesheet"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /D "WIN64" /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "\Apache Group\Apache\include" /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "\Apache Group\Apache\include" /I "..\..\..\..\..\include\xalanc" /I "..\..\..\..\..\include" /D "_MBCS" /D "APACHEMODULEXSLT_EXPORTS" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"

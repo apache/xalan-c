@@ -1786,6 +1786,18 @@ UnsignedLongToDOMString(
 
 
 
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+SizeTypeToDOMString(
+            size_t				theValue,
+			XalanDOMString&     theResult)
+{
+	ScalarToDecimalString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isXMLWhitespace(const XalanDOMString&	string)
 {

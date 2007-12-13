@@ -47,7 +47,7 @@
 
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 
 #include <csignal>
 #include <process.h>
@@ -209,7 +209,7 @@ const XalanDOMChar*				theStylesheetFileName = 0;
 const XalanDOMChar*				theSourceFileName = 0;
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 static BOOL __stdcall
 signalHandler(DWORD		theSignalType)
 {
@@ -240,7 +240,7 @@ signalHandler(int)
 
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 
 extern "C"
 {
@@ -323,7 +323,7 @@ thePreparsedThreadRoutine(void*		param)
 
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 
 extern "C" void theUnparsedThreadRoutine(void* param);
 
@@ -402,7 +402,7 @@ theUnparsedThreadRoutine(void*		param)
 inline void
 doSleep(unsigned int	theMilliseconds)
 {
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 	Sleep(theMilliseconds);
 #elif defined(XALAN_POSIX2_AVAILABLE)
 	usleep(theMilliseconds * 10);
@@ -420,7 +420,7 @@ createThread(
 {
 	theThreadInfo.m_done = false;
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 
 	const unsigned long		theThreadID =
 			_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
@@ -567,7 +567,7 @@ doThreads(
 {
 	if (fContinuous == true)
 	{
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 		SetConsoleCtrlHandler(
 				signalHandler,
 				TRUE);
