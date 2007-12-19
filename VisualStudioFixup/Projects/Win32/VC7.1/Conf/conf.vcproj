@@ -152,7 +152,7 @@
 				InlineFunctionExpansion="2"
 				ImproveFloatingPointConsistency="TRUE"
 				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win32\VC7.1\Release.symbols\Nls\Include"
-				PreprocessorDefinitions="NDEBUG
+				PreprocessorDefinitions="NDEBUG"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
