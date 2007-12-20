@@ -137,6 +137,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "All", "All\All.vcproj", "{C
 		{36DA52E4-C5FD-4BA7-9A58-945EF75865F7} = {36DA52E4-C5FD-4BA7-9A58-945EF75865F7}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf", "Performance\perf.vcproj", "{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -337,6 +339,14 @@ Global
 		{C5513096-5115-434E-9785-4D1DEC12EB2B}.Release|Win32.Build.0 = Release|Win32
 		{C5513096-5115-434E-9785-4D1DEC12EB2B}.Release|x64.ActiveCfg = Release|x64
 		{C5513096-5115-434E-9785-4D1DEC12EB2B}.Release|x64.Build.0 = Release|x64
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Debug|Win32.Build.0 = Debug|Win32
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Debug|x64.ActiveCfg = Debug|x64
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Debug|x64.Build.0 = Debug|x64
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Release|Win32.ActiveCfg = Release|Win32
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Release|Win32.Build.0 = Release|Win32
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Release|x64.ActiveCfg = Release|x64
+		{DA7D35BC-F602-4AAC-BF4E-0BF5ED3B9761}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
