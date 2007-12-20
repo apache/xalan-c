@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="All"
 	ProjectGUID="{FDDF7AB6-F714-4C89-869C-8919D26403AA}"
 	RootNamespace="All"
 	Keyword="MakeFileProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -105,6 +106,4 @@
 	</References>
 	<Files>
 	</Files>
-	<Globals>
-	</Globals>
 </VisualStudioProject>
