@@ -4,11 +4,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AllInOne", "AllInOne\AllInO
 		{CA1C3CA3-7717-4A7A-B542-B31D66E54DE4} = {CA1C3CA3-7717-4A7A-B542-B31D66E54DE4}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApacheModuleXSLT", "ApacheModuleXSLT\ApacheModuleXSLT.vcproj", "{59F906AA-E1F0-46C4-9F08-97DFD1466396}"
-	ProjectSection(ProjectDependencies) = postProject
-		{30AC50F1-1D6C-474C-9792-E0537EFA63CA} = {30AC50F1-1D6C-474C-9792-E0537EFA63CA}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompileStylesheet", "CompileStylesheet\CompileStylesheet.vcproj", "{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}"
 	ProjectSection(ProjectDependencies) = postProject
 		{30AC50F1-1D6C-474C-9792-E0537EFA63CA} = {30AC50F1-1D6C-474C-9792-E0537EFA63CA}
@@ -126,9 +121,6 @@ Global
 		{30AC50F1-1D6C-474C-9792-E0537EFA63CA}.Release.Build.0 = Release|Win32
 		{30AC50F1-1D6C-474C-9792-E0537EFA63CA}.Release with symbols.ActiveCfg = Release with symbols|Win32
 		{30AC50F1-1D6C-474C-9792-E0537EFA63CA}.Release with symbols.Build.0 = Release with symbols|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Debug.ActiveCfg = Debug|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release.ActiveCfg = Release|Win32
-		{59F906AA-E1F0-46C4-9F08-97DFD1466396}.Release with symbols.ActiveCfg = Release|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Debug.ActiveCfg = Debug|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Debug.Build.0 = Debug|Win32
 		{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}.Release.ActiveCfg = Release|Win32
