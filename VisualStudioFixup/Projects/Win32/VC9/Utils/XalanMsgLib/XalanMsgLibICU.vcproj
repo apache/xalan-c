@@ -23,7 +23,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC8\Debug"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
 			ConfigurationType="10"
 			CharacterSet="1"
@@ -62,7 +62,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\..\..\..\Build\Win64\VC8\Debug"
+			OutputDirectory="..\..\..\..\..\Build\Win64\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
 			ConfigurationType="10"
 			CharacterSet="1"
@@ -96,7 +96,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\..\Build\Win32\VC8\Release"
+			OutputDirectory="..\..\..\..\..\Build\Win32\VC9\Release"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
 			ConfigurationType="10"
 			CharacterSet="1"
@@ -136,7 +136,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\..\..\..\Build\Win64\VC8\Release"
+			OutputDirectory="..\..\..\..\..\Build\Win64\VC9\Release"
 			IntermediateDirectory="$(OutDir)\Utils\$(ProjectName)"
 			ConfigurationType="10"
 			CharacterSet="1"
@@ -180,7 +180,7 @@
 			ParseFiles="false"
 			>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\nls\include\en_US.txt"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Release\nls\include\en_US.txt"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -236,7 +236,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\nls\include\en_US.txt"
+				RelativePath="..\..\..\..\..\Build\Win64\VC9\Release\nls\include\en_US.txt"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -264,7 +264,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\nls\include\en_US.txt"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Debug\nls\include\en_US.txt"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
@@ -292,7 +292,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
@@ -320,7 +320,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -347,7 +347,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win64\VC9\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -375,7 +375,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win64\VC9\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -402,7 +402,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -430,7 +430,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC9\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -458,7 +458,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC9\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -486,7 +486,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win32\VC9\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|x64"

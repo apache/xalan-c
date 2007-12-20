@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsgCreator", "Utils\MsgCreator\MsgCreator.vcproj", "{D3EADA85-50F9-4A1D-A2F7-18612358B436}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanMsgLib", "Utils\XalanMsgLib\XalanMsgLib.vcproj", "{E16EB6C5-A40A-4ACC-A9A0-D4DB5C551092}"

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="AllInOne"
 	ProjectGUID="{E1D6306E-4FF8-474A-BE7F-45DCBA4888B6}"
 	RootNamespace="AllInOne"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -20,7 +21,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -74,9 +75,11 @@
 				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)\Xalan-C_1D.lib"
 				TargetMachine="1"
 			/>
@@ -97,9 +100,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -107,7 +107,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -162,9 +162,11 @@
 				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)\Xalan-C_1D.lib"
 				TargetMachine="17"
 			/>
@@ -187,15 +189,12 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -251,11 +250,13 @@
 				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)\Xalan-C_1.lib"
 				TargetMachine="1"
 			/>
@@ -278,15 +279,12 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -343,11 +341,13 @@
 				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)\Xalan-C_1.lib"
 				TargetMachine="17"
 			/>
@@ -368,9 +368,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

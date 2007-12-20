@@ -20,7 +20,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -74,7 +74,7 @@
 				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10.lib icuucd.lib icuind.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir);$(ICUROOT)\lib"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				ImportLibrary="$(TargetDir)\Xalan-C_1D.lib"
@@ -107,7 +107,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -162,7 +162,7 @@
 				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10.lib icuucd.lib icuind.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir);$(ICUROOT)\lib"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				ImportLibrary="$(TargetDir)\Xalan-C_1D.lib"
@@ -195,7 +195,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -251,7 +251,7 @@
 				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir);$(ICUROOT)\lib"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -286,7 +286,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="0"
@@ -343,7 +343,7 @@
 				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
 				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir);$(ICUROOT)\lib"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

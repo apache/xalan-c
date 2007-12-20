@@ -20,7 +20,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -40,7 +40,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -61,7 +61,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -81,7 +81,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"

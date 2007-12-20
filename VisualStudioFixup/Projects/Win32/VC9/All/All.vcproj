@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="All"
 	ProjectGUID="{C5513096-5115-434E-9785-4D1DEC12EB2B}"
 	RootNamespace="All"
 	Keyword="MakeFileProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -20,7 +21,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -40,7 +41,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Release"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Release"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -61,7 +62,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\Build\Win32\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win32\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -81,7 +82,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\..\..\..\Build\Win64\VC8\Debug"
+			OutputDirectory="..\..\..\..\Build\Win64\VC9\Debug"
 			IntermediateDirectory="$(OutDir)\$(ProjectName)"
 			ConfigurationType="10"
 			UseOfMFC="0"
@@ -105,6 +106,4 @@
 	</References>
 	<Files>
 	</Files>
-	<Globals>
-	</Globals>
 </VisualStudioProject>
