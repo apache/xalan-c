@@ -317,7 +317,7 @@
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4996"
