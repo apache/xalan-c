@@ -19,7 +19,6 @@ CFG=TestXSLT - Win32 Debug
 !MESSAGE 
 !MESSAGE "TestXSLT - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestXSLT - Win32 Debug" (based on "Win32 (x86) Console Application")
-!MESSAGE "TestXSLT - Win32 Release with symbols" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestXSLT - Win64 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestXSLT - Win64 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE 
@@ -45,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "NDEBUG" /D "_MBCS" /FD /Zm250 /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "NDEBUG" /D "_MBCS" /FD /Zm250 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -53,7 +52,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /pdb:none /machine:I386 /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /debug /machine:I386 /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "TestXSLT - Win32 Debug"
 
@@ -79,32 +79,6 @@ LINK32=link.exe
 # ADD BASE LINK32 /nologo /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 xerces-c_2D.lib /nologo /stack:0x1f4000 /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
 # SUBTRACT LINK32 /pdb:none /incremental:no
-
-!ELSEIF  "$(CFG)" == "TestXSLT - Win32 Release with symbols"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "TestXSLT___Win32_Release_with_symbols"
-# PROP BASE Intermediate_Dir "TestXSLT___Win32_Release_with_symbols"
-# PROP BASE Ignore_Export_Lib 0
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
-# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\TestXSLT"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "_MBCS" /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release.symbols\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /D "NDEBUG" /D "_MBCS" /FD /Zm250 /c
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /pdb:none /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /debug /machine:I386 /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /fixed:no
-# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "TestXSLT - Win64 Release"
 
@@ -162,7 +136,6 @@ LINK32=link.exe
 
 # Name "TestXSLT - Win32 Release"
 # Name "TestXSLT - Win32 Debug"
-# Name "TestXSLT - Win32 Release with symbols"
 # Name "TestXSLT - Win64 Release"
 # Name "TestXSLT - Win64 Debug"
 # Begin Group "Source Files"

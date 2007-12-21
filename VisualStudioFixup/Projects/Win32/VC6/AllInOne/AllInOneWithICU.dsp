@@ -19,7 +19,6 @@ CFG=AllInOneWithICU - Win32 Release
 !MESSAGE 
 !MESSAGE "AllInOneWithICU - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "AllInOneWithICU - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "AllInOneWithICU - Win32 Release with symbols" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "AllInOneWithICU - Win64 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "AllInOneWithICU - Win64 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
@@ -46,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /I "$(ICUROOT)\include" /D "NDEBUG" /D "XALAN_BUILD_DLL" /D "_MBCS" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /Zm250 /c
+# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /I "$(ICUROOT)\include" /D "NDEBUG" /D "XALAN_BUILD_DLL" /D "_MBCS" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /Zm250 /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -56,7 +55,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib XalanMessages_1_10.lib icuuc.lib icuin.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_10.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /libpath:"$(ICUROOT)\lib"
+# ADD LINK32 xerces-c_2.lib XalanMessages_1_10.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_10.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /libpath:"$(ICUROOT)\lib"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Debug"
 
@@ -83,35 +83,6 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 xerces-c_2D.lib XalanMessages_1_10D.lib icuucd.lib icuind.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_10D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /libpath:"$(ICUROOT)\lib"
-# SUBTRACT LINK32 /pdb:none
-
-!ELSEIF  "$(CFG)" == "AllInOneWithICU - Win32 Release with symbols"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir "ReleaseWithSymbols"
-# PROP BASE Intermediate_Dir "ReleaseWithSymbols"
-# PROP BASE Ignore_Export_Lib 0
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Output_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols"
-# PROP Intermediate_Dir "..\..\..\..\Build\Win32\VC6\Release.symbols\AllInOne"
-# PROP Ignore_Export_Lib 0
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MD /W4 /GR /GX /O2 /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "NDEBUG" /D "_MBCS" /FD /c
-# SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /MD /W4 /GR /GX /Zi /O2 /Ob2 /I "..\..\..\..\Build\Win32\VC6\Release.symbols\Nls\Include" /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /I "..\..\..\..\..\..\icu\include" /I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include" /I "$(ICUROOT)\include" /D "NDEBUG" /D "NDEBUG_SYMBOLS" /D "XALAN_BUILD_DLL" /D "_MBCS" /D "XALAN_USE_ICU" /D "XALAN_ICU_MSG_LOADER" /FD /Zm250 /c
-# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
-# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LINK32=link.exe
-# ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
-# ADD LINK32 xerces-c_2.lib XalanMessages_1_10S.lib icuuc.lib icuin.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1_10S.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release.symbols/Xalan-C_1S.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\..\..\icu\lib" /libpath:"..\..\..\..\Build\Win32\VC6\Release.symbols" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /libpath:"$(ICUROOT)\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOneWithICU - Win64 Release"
@@ -174,7 +145,6 @@ LINK32=link.exe
 
 # Name "AllInOneWithICU - Win32 Release"
 # Name "AllInOneWithICU - Win32 Debug"
-# Name "AllInOneWithICU - Win32 Release with symbols"
 # Name "AllInOneWithICU - Win64 Release"
 # Name "AllInOneWithICU - Win64 Debug"
 # Begin Group "Include"

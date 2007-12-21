@@ -8,18 +8,17 @@ CFG=LocalizationWithICU - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "BuildMessages.mak".
+!MESSAGE NMAKE /f "LocalizationWithICU.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "BuildMessages.mak" CFG="LocalizationWithICU - Win32 Release"
+!MESSAGE NMAKE /f "LocalizationWithICU.mak" CFG="LocalizationWithICU - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "LocalizationWithICU - Win32 Release" (based on "Win32 (x86) External Target")
 !MESSAGE "LocalizationWithICU - Win32 Debug" (based on "Win32 (x86) External Target")
-!MESSAGE "LocalizationWithICU - Win32 Release with symbols" (based on "Win32 (x86) External Target")
 !MESSAGE "LocalizationWithICU - Win64 Release" (based on "Win64 (x86) External Target")
 !MESSAGE "LocalizationWithICU - Win64 Debug" (based on "Win64 (x86) External Target")
 !MESSAGE 
@@ -50,20 +49,6 @@ CFG=LocalizationWithICU - Win32 Release
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Cmd_Line "nmake    /f "BuildMessages.mak" /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
-# PROP Rebuild_Opt "/a"
-# PROP Target_File "LocalizationWithICU"
-
-!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Release with symbols"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu LOCALE=en_US"
-# PROP BASE Rebuild_Opt "/a"
-# PROP BASE Target_File "LocalizationWithICU"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu CFG=Release.symbols LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
@@ -101,17 +86,10 @@ CFG=LocalizationWithICU - Win32 Release
 
 # Name "LocalizationWithICU - Win32 Release"
 # Name "LocalizationWithICU - Win32 Debug"
-# Name "LocalizationWithICU - Win32 Release with symbols"
 # Name "LocalizationWithICU - Win64 Release"
 # Name "LocalizationWithICU - Win64 Debug"
 
 !IF  "$(CFG)" == "LocalizationWithICU - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Release with symbols"
-
-!ELSEIF  "$(CFG)" == "LocalizationWithICU - Win64 Release"
 
 !ELSEIF  "$(CFG)" == "LocalizationWithICU - Win32 Debug"
 
