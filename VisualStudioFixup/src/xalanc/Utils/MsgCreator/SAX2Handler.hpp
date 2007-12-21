@@ -112,7 +112,7 @@ static const XMLCh s_textXMLCh[] =
 // For creation data file responsible subclasses
 
 
-class SAX2Handler : public DefaultHandler
+class SAX2Handler : public XERCES_CPP_NAMESPACE_QUALIFIER DefaultHandler
 {
 public:
     // -----------------------------------------------------------------------
@@ -122,11 +122,13 @@ public:
     virtual ~SAX2Handler();
 
 public:
-    virtual void 
-    startElement(const   XMLCh* const    ,
-                                    const   XMLCh* const    localname,
-                                    const   XMLCh* const    ,
-                                    const   Attributes&     attributes);
+
+    virtual void
+    startElement(
+            const XMLCh* const  uri,
+            const XMLCh* const  localname,
+            const XMLCh* const  qname,
+            const Attributes&   attributes);
 
     virtual void 
     startDocument();

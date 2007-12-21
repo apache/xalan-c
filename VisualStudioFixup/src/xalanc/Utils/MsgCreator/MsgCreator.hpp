@@ -47,12 +47,16 @@ public :
     // -----------------------------------------------------------------------
     StrX(const XMLCh* const toTranscode)
     {
+		XALAN_USING_XERCES(XMLString)
+
         // Call the private transcoding method
         fLocalForm = XMLString::transcode(toTranscode);
     }
 
     ~StrX()
     {
+		XALAN_USING_XERCES(XMLString)
+
         XMLString::release(&fLocalForm);
     }
 

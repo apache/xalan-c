@@ -37,6 +37,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(Attributes)
+XALAN_USING_XERCES(SAXParseException)
+XALAN_USING_XERCES(XMLString)
+
 // ---------------------------------------------------------------------------
 //  SAX2Handler: Constructors and Destructor
 // ---------------------------------------------------------------------------

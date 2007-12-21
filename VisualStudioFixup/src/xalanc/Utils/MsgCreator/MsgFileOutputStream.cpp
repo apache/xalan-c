@@ -32,6 +32,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(XMLString)
+
+
+
 static  MsgFileOutputStream::HandleType
 openFile(const char*    theFileName)
 {
