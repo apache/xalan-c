@@ -455,7 +455,7 @@ if test $transcoder; then
             if test $platform != "os390"; then
 	            transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
             fi
-	    TRANSCODER=ICU;;
+	    TRANSCODER=icu;;
 
 	default)
 	    ;;

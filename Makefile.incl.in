@@ -21,7 +21,7 @@ MKDIR=mkdir
 LN=ln
 
 #all these setting come from the arguments passed in to runConfigure.
-PLATFORM =@platform@
+PLATFORM = @platform@
 CC  = @cc@
 CXX = @cxx@
 CPPFLAGS = @cppflags@
@@ -31,7 +31,7 @@ PREFIX = @prefix@
 LDFLAGS = @ldflags@
 BITSTOBUILD = @bitstobuild@
 LIBS = @libs@
-TRANSCODER= @transcoder@
+TRANSCODER = @transcoder@
 WCSTOMBS = @wcstombs@
 MESSAGELOADER = @xalan_locale_system@
 LOCALE = @xalan_locale@
@@ -57,7 +57,7 @@ SAMPLES_DIR = $(XALANCROOT)/samples
 TESTS_DIR = $(XALANCROOT)/Tests
 
 # ICU 
-ifeq ($(TRANSCODER), "icu")
+ifeq ($(TRANSCODER),icu)
   XALAN_USE_ICU = yes
 endif
 
