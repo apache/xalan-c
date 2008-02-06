@@ -68,18 +68,6 @@ public:
             return ( ( verificationStamp == int(VALID_OBJECT_STAMP)) &&
                 ( next <= rightBorder ) ) ? true : false ;
         }
-
-        static NextBlock*
-        cast(void*  thePointer)
-        {
-            return reinterpret_cast<NextBlock*>(thePointer);
-        }
-
-        static const NextBlock*
-        cast(const void*    thePointer)
-        {
-            return reinterpret_cast<const NextBlock*>(thePointer);
-        }
     };
 
     /*
@@ -114,10 +102,7 @@ public:
                 removedObjects < this->m_objectCount;
                     ++i)
         {
-            NextBlock* const    pStruct =
-                NextBlock::cast(&this->m_objectBlock[i]);
-
-            if ( isOccupiedBlock(pStruct) )
+            if ( isOccupiedBlock(&this->m_objectBlock[i]) )
             {
                 this->m_objectBlock[i].~ObjectType();
 
@@ -176,9 +161,12 @@ public:
 
                 assert(size_type(theResult - this->m_objectBlock) < this->m_blockSize);
 
-                this->m_nextFreeBlock = NextBlock::cast(theResult)->next;
+                NextBlock* const    theBlock =
+                    reinterpret_cast<NextBlock*>(theResult);
 
-                assert(NextBlock::cast(theResult)->isValidFor(this->m_blockSize));
+                this->m_nextFreeBlock = theBlock->next;
+
+                assert(theBlock->isValidFor(this->m_blockSize));
                 assert(this->m_nextFreeBlock <= this->m_blockSize);
 
                 ++this->m_objectCount;
@@ -254,7 +242,7 @@ public:
     {
         assert ( theObject != 0 );
 
-        return isOccupiedBlock(NextBlock::cast(theObject));
+        return isOccupiedBlock(theObject);
     }
 
 protected:
@@ -277,12 +265,12 @@ protected:
     }
 
     bool
-    isOccupiedBlock(const NextBlock*    block) const
+    isOccupiedBlock(const ObjectType*    block) const
     {
         assert( block !=0 );
 
-        return !(this->ownsBlock(reinterpret_cast<const ObjectType*>(block)) &&
-                 block->isValidFor(this->m_blockSize));
+        return !(this->ownsBlock(block) &&
+                 reinterpret_cast<const NextBlock*>(block)->isValidFor(this->m_blockSize));
     }
 
 private:
