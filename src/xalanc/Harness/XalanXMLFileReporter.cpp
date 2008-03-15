@@ -26,11 +26,41 @@
 
 
 #include "xalanc/PlatformSupport/DOMStringHelper.hpp"
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+#include "xalanc/PlatformSupport/XalanTranscodingServices.hpp"
 #include "xalanc/PlatformSupport/XalanUnicode.hpp"
+#include <xalanc/PlatformSupport/XSLException.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XalanOutputTranscoder*
+makeNewUTF8Transcoder(MemoryManager&    theMemoryManager)
+{
+    XalanTranscodingServices::eCode     theCode;
+
+    XalanOutputTranscoder* const    theTranscoder =
+        XalanTranscodingServices::makeNewTranscoder(
+            theMemoryManager,
+            XalanTranscodingServices::s_utf8String,
+            theCode,
+            1024);
+
+    if (theCode != XalanTranscodingServices::OK)
+    {
+        XalanDOMString  theBuffer(theMemoryManager);
+
+        throw XalanTranscodingServices::MakeTranscoderException(
+                theCode,
+                XalanTranscodingServices::s_utf8String,
+                theBuffer);
+    }
+
+    return theTranscoder;
+}
 
 
 
@@ -87,16 +117,28 @@ XalanXMLFileReporter::XalanXMLFileReporter( MemoryManagerType& theManager, const
     m_fileHandle(0),
     m_ready(false),
     m_error(false),
-    m_flushOnCaseClose(true)
+    m_flushOnCaseClose(true),
+    m_transcoder(makeNewUTF8Transcoder(theManager)),
+    m_buffer(theManager)
 {
+    assert(m_transcoder.get() != 0);
+
     if (m_fileName.empty() == false)
     {
         m_ready = initialize(theManager);
     }
 }
 
+
+
+XalanXMLFileReporter::~XalanXMLFileReporter()
+{
+}
+
+
+
 bool
-XalanXMLFileReporter::initialize(MemoryManagerType& theManager)
+XalanXMLFileReporter::initialize(MemoryManager&     /* theManager */)
 {       
     if (m_fileName.empty() == true)
     {
@@ -108,11 +150,9 @@ XalanXMLFileReporter::initialize(MemoryManagerType& theManager)
     else
     {
         // Transcode down the file name...
-        CharVectorType  theTranscodedFileName(theManager);
-        
-        TranscodeToLocalCodePage(m_fileName, theTranscodedFileName, true);
+        TranscodeToLocalCodePage(m_fileName, m_buffer, true);
 
-        const char* const       theTranscodedFileNamePointer = &theTranscodedFileName.front();
+        const char* const       theTranscodedFileNamePointer = &*m_buffer.begin();
 
         // Create a file and ensure it has a place to live
         m_fileHandle = fopen(theTranscodedFileNamePointer, "w");
@@ -828,22 +868,46 @@ XalanXMLFileReporter::closeResultsFile()
 bool 
 XalanXMLFileReporter::printToFile(const XalanDOMString&  output) 
 {
+        const XalanDOMString::size_type     theLength =
+            output.size();
+
     if (isReady() == false)
     {
         return false;
     }
+    else if (theLength == 0)
+    {
+        return true;
+    }
     else
     {
-        CharVectorType    theResult(getMemoryManager());
-        TranscodeToLocalCodePage(output, theResult, true);
+        m_buffer.resize((theLength * 4) + 1);
 
-        if(!theResult.size())
+        typedef XalanOutputTranscoder::size_type        size_type;
+        typedef XalanOutputTranscoder::XalanXMLByte     XalanXMLByte;
+
+        XalanOutputTranscoder::size_type    theCharsTranscoded;
+        XalanOutputTranscoder::size_type    theTargetBytesUsed;
+
+        const XalanOutputTranscoder::eCode  theCode =
+            m_transcoder->transcode(
+                output.c_str(),
+                theLength,
+                reinterpret_cast<XalanXMLByte*>(&*m_buffer.begin()),
+                m_buffer.size(),
+                theCharsTranscoded,
+                theTargetBytesUsed);
+
+        if (theCode != XalanTranscodingServices::OK ||
+            theCharsTranscoded != theLength)
         {
-            fputs("Error transcoding text to local codepage", m_fileHandle);
+            fputs("Error transcoding text.", m_fileHandle);
         }
         else 
         {
-            fputs(c_str(theResult), m_fileHandle);
+            m_buffer[theTargetBytesUsed] = 0;
+
+            fputs(&*m_buffer.begin(), m_fileHandle);
         }
 
         fputs("\n", m_fileHandle);

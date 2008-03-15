@@ -247,6 +247,12 @@ XalanTranscodingServices::makeNewTranscoder(
             eCode&                  theResult,
             size_type               theBlockSize)
 {
+    return makeNewTranscoder(
+                theManager,
+                theEncodingName.c_str(),
+                theResult,
+                theBlockSize);
+
     XALAN_USING_XERCES(XMLPlatformUtils)
 
     assert(XMLPlatformUtils::fgTransService != 0);
@@ -268,6 +274,53 @@ XalanTranscodingServices::makeNewTranscoder(
         XMLTranscoder*  theXercesTranscoder = 
             XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
                     c_wstr(theEncodingName),
+                    theCode,
+                    theBlockSize,
+                    &theManager);
+
+        theResult = translateCode(theCode);
+        assert(theResult == XalanTranscodingServices::OK ||
+               theXercesTranscoder == 0);
+
+        if (theResult == XalanTranscodingServices::OK)
+        {
+            theTranscoder = XalanToXercesTranscoderWrapper::create(theManager, *theXercesTranscoder);
+        }
+    }
+
+    return theTranscoder;
+}
+
+
+
+XalanOutputTranscoder*
+XalanTranscodingServices::makeNewTranscoder(
+            MemoryManagerType&      theManager,
+            const XalanDOMChar*     theEncodingName,
+            eCode&                  theResult,
+            size_type               theBlockSize)
+{
+    XALAN_USING_XERCES(XMLPlatformUtils)
+
+    assert(XMLPlatformUtils::fgTransService != 0);
+
+    XalanOutputTranscoder*  theTranscoder = 0;
+
+    XMLTransService::Codes  theCode = XMLTransService::Ok;
+
+    if (encodingIsUTF16(theEncodingName) == true)
+    {
+        theResult = OK;
+
+        theTranscoder = XalanUTF16Transcoder::create(theManager);
+    }
+    else
+    {
+        XALAN_USING_XERCES(XMLTranscoder)
+
+        XMLTranscoder*  theXercesTranscoder = 
+            XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
+                    theEncodingName,
                     theCode,
 
 #if _XERCES_VERSION >= 2030
@@ -426,6 +479,75 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&  theEncoding)
     return equals(theEncoding, s_asciiString) ||
            equals(theEncoding, s_usASCIIString) ||
            equals(theEncoding, s_windows1250String);
+}
+
+
+
+const XalanDOMChar  XalanTranscodingServices::MakeTranscoderException::s_type[] =
+{
+    XalanUnicode::charLetter_M,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_k,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
+};
+
+
+
+XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(
+            eCode                   theCode,
+            const XalanDOMChar*     theEncoding,
+            XalanDOMString&         theBuffer) :
+    XSLException(
+        XalanMessageLoader::getMessage(
+            theBuffer,
+            XalanMessages::CreateTranscoderError_2Param,
+            LongToDOMString(
+                static_cast<long>(theCode),
+                theBuffer).c_str(),
+            theEncoding),
+        theBuffer.getMemoryManager()),
+    m_code(theCode),
+    m_encoding(
+        theEncoding,
+        theBuffer.getMemoryManager())
+{
+}
+
+
+
+XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(const MakeTranscoderException&   theSource) :
+    XSLException(theSource),
+    m_code(theSource.m_code),
+    m_encoding(
+        theSource.m_encoding,
+        theSource.getMemoryManager())
+{
+}
+
+
+
+    XalanTranscodingServices::MakeTranscoderException::~MakeTranscoderException()
+{
 }
 
 

@@ -37,6 +37,11 @@
 		<target>The encoding '{0}' is not supported.</target>
 </trans-unit>
 
+<trans-unit id="CreateTranscoderError_2Param">
+		<source>The error code '{0}' was returned when creating a transcoder for the encoding '{1}'.</source>
+		<target>The error code '{0}' was returned when creating a transcoder for the encoding '{1}'.</target>
+</trans-unit>
+
 <trans-unit id="UnknownErrorOccurredWhileTranscodingToEncoding_1Param">
 		<source>An unknown error occurred while transcoding to '{0}'.</source>
 		<target>An unknown error occurred while transcoding to '{0}'.</target>

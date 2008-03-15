@@ -102,6 +102,13 @@ public:
             eCode&                  theResult,
             size_type               theBlockSize);
 
+    static XalanOutputTranscoder*
+    makeNewTranscoder(
+            MemoryManagerType&      theManager,
+            const XalanDOMChar*     theEncodingName,
+            eCode&                  theResult,
+            size_type               theBlockSize);
+
     /**
      * Destroy a transcoder instance.
      * 
@@ -235,6 +242,47 @@ public:
 
     static const XalanDOMChar   s_shiftJISString[];
 
+
+    class XALAN_PLATFORMSUPPORT_EXPORT MakeTranscoderException : public XSLException
+    {
+    public:
+
+        MakeTranscoderException(
+                eCode                   theCode,
+                const XalanDOMChar*     theEncoding,
+                XalanDOMString&         theBuffer);
+
+        MakeTranscoderException(const MakeTranscoderException&);
+
+        virtual
+        ~MakeTranscoderException();
+
+        eCode
+        getCode() const
+        {
+            return m_code;
+        }
+
+        const XalanDOMString&
+        getEncoding() const
+        {
+            return m_encoding;
+        }
+
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return s_type;
+        }
+
+    private:
+
+        static const XalanDOMChar   s_type[];
+
+        const eCode             m_code;
+
+        mutable XalanDOMString  m_encoding;
+    };
 
     class XALAN_PLATFORMSUPPORT_EXPORT UnrepresentableCharacterException : public XSLException
     {

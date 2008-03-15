@@ -32,8 +32,10 @@
 
 
 
+#include "xalanc/Include/XalanAutoPtr.hpp"
 #include "xalanc/Include/XalanMemMgrHelper.hpp"
 #include "xalanc/Include/XalanMap.hpp"
+#include "xalanc/Include/XalanVector.hpp"
 
 
 
@@ -45,6 +47,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+class XalanOutputTranscoder;
 
 class XALAN_HARNESS_EXPORT XalanXMLFileReporter
 {
@@ -65,6 +68,8 @@ public:
     // Construct and initialize this reporter with specified filename, if
     // the filename is not empty.
     XalanXMLFileReporter(MemoryManagerType& theManager, const XalanDOMString& fileName);
+
+    ~XalanXMLFileReporter();
 
     // Initialize this XalanXMLFileReporter.  Must be called before attempting to log anything.
     bool initialize(MemoryManagerType& theManager);
@@ -380,6 +385,9 @@ private:
     /** If we should flush after every logTestCaseClose.  */
     bool m_flushOnCaseClose;
 
+    const XalanAutoPtr<XalanOutputTranscoder>   m_transcoder;
+
+    CharVectorType                  m_buffer;
 };        // end of class XalanXMLFileReporter
 
 

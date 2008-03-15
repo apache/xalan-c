@@ -66,7 +66,7 @@ public:
 // A vector to hold directory names and file names.
 
     typedef XalanVector<XalanDOMString>     FileNameVectorType;
-
+    typedef XalanVector<char>               CharVectorType;
 
     struct XALAN_HARNESS_EXPORT reportStruct
     {
@@ -270,8 +270,8 @@ public:
             bool                    containsOnly = false)
     {
         checkAPIResults(
-            XalanDOMString(actual, m_memoryManager), 
-            XalanDOMString(expected, m_memoryManager),
+            XalanDOMString(actual, getMemoryManager()), 
+            XalanDOMString(expected, getMemoryManager()),
             msg,
             logfile,
             outputFile,
@@ -391,13 +391,13 @@ public:
     const MemoryManager&
     getMemoryManager() const
     {
-        return m_memoryManager;
+        return *m_buffer.getMemoryManager();
     }
 
     MemoryManager&
     getMemoryManager()
     {
-        return m_memoryManager;
+        return m_buffer.getMemoryManager();
     }
 
 private:
@@ -425,41 +425,20 @@ private:
     void
     reportError();
 
-#if defined(NDEBUG)
     void
-    debugNodeData(const XalanDOMString&     /* value */) const
-    {
-    }
+    debugNodeData(const XalanDOMString&     /* value */);
 
     void
     debugNodeData(
             const XalanDOMString&   /* node */,
-            const XalanDOMString&   /* value */) const
-    {
-    }
+            const XalanDOMString&   /* value */);
 
     void
-    debugAttributeData(const XalanDOMString&    /* value */) const
-    {
-    }
+    debugAttributeData(const XalanDOMString&    /* value */);
 
-#else
-
-    void
-    debugNodeData(const XalanDOMString&     value) const;
-
-    void
-    debugNodeData(
-            const XalanDOMString&   node,
-            const XalanDOMString&   value) const;
-
-    void
-    debugAttributeData(const XalanDOMString&    value) const;
-
-#endif
 private:
 
-    MemoryManager&  m_memoryManager;
+    CharVectorType  m_buffer;
 
     //Not implemented
     XalanFileUtility();
