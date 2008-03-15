@@ -385,20 +385,6 @@ private:
     bool                        m_poolAllText;
 
     SAX2XMLReaderType*          m_xmlReader;
-
-    static const XalanDOMChar   s_validationString[];
-
-    static const XalanDOMChar   s_dynamicValidationString[];
-
-    static const XalanDOMChar   s_namespacesString[];
-
-    static const XalanDOMChar   s_namespacePrefixesString[];
-
-    static const XalanDOMChar   s_schemaString[];
-
-    static const XalanDOMChar   s_externalSchemaLocationString[];
-
-    static const XalanDOMChar   s_externalNoNamespaceSchemaLocationString[];
 };
 
 
