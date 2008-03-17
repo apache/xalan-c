@@ -117,6 +117,8 @@ XalanDOMString::clone(MemoryManagerType&  theManager)
         return theResult;
 }
 
+
+
 XalanDOMString::XalanDOMString(
             size_type           theCount,
             XalanDOMChar        theChar,
@@ -324,7 +326,7 @@ XalanDOMString::append(
 
 
 
-static inline void
+inline void
 doTranscode(
             const char*                 theString,
             XalanDOMString::size_type   theCount,
@@ -565,7 +567,7 @@ XalanDOMString::insert(
 
 
 template <class Type, class SizeType>
-int
+inline int
 doCompare(
             const Type*     theLHS,
             SizeType        theLHSLength,
@@ -646,8 +648,10 @@ XalanDOMString::compare(
     return doCompare(c_str() + thePosition1, theCount1, theString, theCount2);
 }
 
+
+
 template<class Type>
-void
+inline void
 reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
 {
     assert( string != 0 );
@@ -656,6 +660,8 @@ reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
 
     obj.swap(tmpString);
 }
+
+
 
 void 
 XalanDOMString::reset(MemoryManagerType&    theManager,
@@ -688,7 +694,7 @@ XalanDOMString::transcode(CharVectorType&   theResult) const
 
 
 
-static inline XalanDOMString::size_type
+inline XalanDOMString::size_type
 length(const XalanDOMChar*  theString)
 {
     assert(theString != 0);
@@ -808,7 +814,7 @@ const size_t    theOneTranslatedWbCharLen = 10;
 // In case of the unconvertable characters we add the substitution char
 // and in case of too small result vector we resize it 
 template <class SourceType, class TargetType>
-void
+inline void
 doXercesTranscode(
             const SourceType*           theSourceString,
             XalanDOMString::size_type   theSourceStringLength,
@@ -849,7 +855,9 @@ doXercesTranscode(
     }
 
     // wild guessing about the size of the result transcoded vector
-    theTargetVector.resize(2*(theRealSourceStringLength + 1), TargetType(0));
+    theTargetVector.resize(
+        2 * (theRealSourceStringLength + 1),
+        TargetType(0));
 
     assert(theRealSourceString != 0);
 
@@ -928,8 +936,10 @@ doXercesTranscode(
     }
 }
 
+
+
 template <class SourceType, class TargetType>
-bool
+inline bool
 doXercesTranscode(
             const SourceType*           theSourceString,
             XalanDOMString::size_type   theSourceStringLength,
@@ -1124,6 +1134,8 @@ TranscodeToLocalCodePage(
                             terminate,
                             theSubstitutionChar);
 }
+
+
 
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeToLocalCodePage(
