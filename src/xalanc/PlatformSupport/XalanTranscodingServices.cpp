@@ -546,7 +546,7 @@ XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(const
 
 
 
-    XalanTranscodingServices::MakeTranscoderException::~MakeTranscoderException()
+XalanTranscodingServices::MakeTranscoderException::~MakeTranscoderException()
 {
 }
 
@@ -625,7 +625,7 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
 
 
 
-    XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCharacterException()
+XalanTranscodingServices::UnrepresentableCharacterException::~UnrepresentableCharacterException()
 {
 }
 
