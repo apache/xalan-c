@@ -68,7 +68,7 @@ public:
         void
         operator()(unsigned int  value) const
         {
-            m_writer.throwInvalidCharacterException(value, m_writer.getMemoryManager());
+            m_writer.throwUnrepresentableCharacterException(value, m_writer.getMemoryManager());
         }
 
     private:

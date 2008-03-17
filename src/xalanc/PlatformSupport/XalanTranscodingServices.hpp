@@ -293,7 +293,7 @@ public:
                 const XalanDOMString&   theEncoding,
                 XalanDOMString&         theBuffer);
 
-        UnrepresentableCharacterException(const UnrepresentableCharacterException&);
+        UnrepresentableCharacterException(const UnrepresentableCharacterException&  theSource);
 
         virtual
         ~UnrepresentableCharacterException();

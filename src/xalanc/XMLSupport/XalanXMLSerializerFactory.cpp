@@ -383,17 +383,17 @@ XalanXMLSerializerFactory::create(
     assert (theFormatter != 0);
 
     return theFormatter;
-
-
 }
+
+
 
 void
 XalanXMLSerializerFactory::setEncoding(
-                             MemoryManager&          theManager,
-                             Writer&            theWriter,
-                             XalanDOMString&    theEncoding)
+            MemoryManager&     theManager,
+            Writer&            theWriter,
+            XalanDOMString&    theEncoding)
 {
-    XalanOutputStream* stream = theWriter.getStream();
+    XalanOutputStream* const    stream = theWriter.getStream();
 
     if(stream != 0)
     {
@@ -418,9 +418,9 @@ XalanXMLSerializerFactory::setEncoding(
                 theEncoding = XalanTranscodingServices::s_utf8String;
             }
         }
-
     }
 }
+
 
 
 XALAN_CPP_NAMESPACE_END

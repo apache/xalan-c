@@ -264,6 +264,22 @@ public:
         throw SAXException(c_wstr(theMessage), &theManager);
     }
 
+    void
+    throwUnrepresentableCharacterException(
+                unsigned int	ch,
+                MemoryManager&  theManager)
+    {
+        XalanDOMString	theBuffer(theManager);  
+
+        const XalanOutputStream* const  theStream =
+            m_writer.getStream();
+
+        throw XalanTranscodingServices::UnrepresentableCharacterException(
+                    ch,
+                    theStream->getOutputEncoding(),
+                    theBuffer);
+    }
+
     static void
     throwInvalidUTF16SurrogateException(
 			    XalanDOMChar	    ch,

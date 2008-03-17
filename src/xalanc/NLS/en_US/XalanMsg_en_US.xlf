@@ -929,8 +929,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="UnrepresentableCharacter_2Param">
-		<source>The Unicode character U+{0} cannot be represented in the encoding '{1}'.</source>
-		<target>The Unicode character U+{0} cannot be represented in the encoding '{1}'.</target>
+		<source>The Unicode code point U+{0} cannot be represented in the encoding '{1}'.</source>
+		<target>The Unicode code point U+{0} cannot be represented in the encoding '{1}'.</target>
 </trans-unit>
 
 <trans-unit id="InvalidScalar_1Param">
