@@ -31,7 +31,7 @@
 
 
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 #include <direct.h>
 #define getcwd _getcwd
 #else
@@ -165,6 +165,7 @@ void copyFile(
 	sourceFileStream.close();
 	destFileStream.close();
 }
+
 
 
 

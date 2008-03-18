@@ -49,28 +49,51 @@ FunctionSubstring::~FunctionSubstring()
 
 
 /*
- * Get the value for the start index (C-style, not XPath).
+ * Get the value for the start index (C-style, not XPath).  This
+ * function expects theSecondArgValue to be already rounded.
  */
 inline XalanDOMString::size_type
 getStartIndex(
             double                      theSecondArgValue,
             XalanDOMString::size_type   theStringLength)
 {
-    // We always subtract 1 for C-style index, since XPath indexes from 1.
-    
-    // Anything less than, or equal to 1 is 0.
-    if (theSecondArgValue <= 1 ||
-        DoubleSupport::isNaN(theSecondArgValue) == true)
-    {
-        return 0;
-    }
-    else if (DoubleSupport::isPositiveInfinity(theSecondArgValue) == true)
+	// We always subtract 1 for C-style index, since
+	// XPath indexes from 1.  
+
+	// If we end up with NaN, INF, or -INF, then no possible index
+	// can be greater than or equal to that, so just return
+	// the start index as the length of the string.  That
+	// will result in an empty string, which is what we want.
+    if (DoubleSupport::isNaN(theSecondArgValue) == true ||
+		DoubleSupport::isPositiveInfinity(theSecondArgValue) == true ||
+		DoubleSupport::isNegativeInfinity(theSecondArgValue) == true)
     {
         return theStringLength;
     }
+    // Anything less than, or equal to 1 is 0.
+	else if (DoubleSupport::lessThanOrEqual(theSecondArgValue, 1) == true)
+    {
+		assert(DoubleSupport::round(theSecondArgValue) == theSecondArgValue);
+
+        return 0;
+    }
     else
     {
-        return XalanDOMString::size_type(DoubleSupport::round(theSecondArgValue)) - 1;
+		assert(DoubleSupport::round(theSecondArgValue) == theSecondArgValue);
+
+		// Since we have filtered out anything less than
+		// 1, and any special values, we can do this without
+		// calling DoubleSupport::subtract().
+		const double	theResult = theSecondArgValue - 1;
+
+		assert(
+			DoubleSupport::equal(
+				DoubleSupport::subtract(
+					theSecondArgValue,
+					1),
+				theResult));
+
+        return XalanDOMString::size_type(theResult);
     }
 }
 
@@ -82,55 +105,83 @@ getStartIndex(
 inline XalanDOMString::size_type
 getSubstringLength(
             XalanDOMString::size_type   theSourceStringLength,
-            XalanDOMString::size_type   theStartIndex,
-            double                      theThirdArgValue)
-{
-    // The last index must be less than theThirdArgValue.  Since it has
-    // already been rounded, subtracting 1 will do the job.
-    const XalanDOMString::size_type     theLastIndex = XalanDOMString::size_type(theThirdArgValue - 1);
-
-    if (theLastIndex >= theSourceStringLength)
-    {
-        return theSourceStringLength - theStartIndex;
-    }
-    else
-    {
-        return theLastIndex - theStartIndex;
-    }
-}
-
-
-
-/*
- * Get the total of the second and third arguments.
- */
-inline double
-getTotal(
-            XalanDOMString::size_type   theSourceStringLength,
-            double                      theSecondArgValue,
+			XalanDOMString::size_type	theStartIndex,
+			double						theSecondArgValue,
             const XObjectPtr&           arg3)
 {
+	assert(theStartIndex < theSourceStringLength);
+	assert(DoubleSupport::isNaN(theSecondArgValue) == false);
+	assert(DoubleSupport::isNegativeInfinity(theSecondArgValue) == false);
+	assert(DoubleSupport::isPositiveInfinity(theSecondArgValue) == false);
+
+	typedef XalanDOMString::size_type	size_type;
+
+	const size_type		theMaxLength =
+		theSourceStringLength - theStartIndex;
+
     // Total the second and third arguments.  If the third argument is
     // missing, make it the length of the string + 1 (for XPath
     // indexing style).
     if (arg3.null() == true)
     {
-        return double(theSourceStringLength + 1);
+        return theMaxLength;
     }
     else
     {
-        const double    theRoundedValue =
-            DoubleSupport::round(DoubleSupport::add(theSecondArgValue, arg3->num()));
+		const double	theThirdArgValue = arg3->num();
 
-        // If there's overflow, then we should return the length of the string + 1.
-        if (DoubleSupport::isPositiveInfinity(theRoundedValue) == true)
-        {
-            return double(theSourceStringLength + 1);
-        }
-        else
-        {
-            return theRoundedValue;
-        }
+		if (DoubleSupport::isNaN(theThirdArgValue) == true ||
+			DoubleSupport::isNegativeInfinity(theThirdArgValue) == true)
+		{
+			return 0;
+		}
+		else if (DoubleSupport::isPositiveInfinity(theThirdArgValue) == true)
+		{
+			return theMaxLength;
+		}
+		else
+		{
+			const double    theRoundedValue =
+				DoubleSupport::round(theThirdArgValue);
+			assert(DoubleSupport::isNaN(theRoundedValue) == false);
+			assert(DoubleSupport::isNegativeInfinity(theRoundedValue) == false);
+			assert(DoubleSupport::isPositiveInfinity(theRoundedValue) == false);
+
+			// The XPath recommendation states that following:
+			//
+			// http://www.w3.org/TR/xpath#function-substring
+			//
+			// "The returned substring contains those characters for which the
+			// position of the character is greater than or equal to the rounded
+			// value of the second argument and, if the third argument is specified,
+			// less than the sum of the rounded value of the second argument and the
+			// rounded value of the third argument; the comparisons and addition used
+			// for the above follow the standard IEEE 754 rules; rounding is done as
+			// if by a call to the round function."
+			//
+			// Note that this is indexing from 1.
+			const double	theTotal =
+				theRoundedValue + theSecondArgValue;
+
+			const size_type		theXPathStartIndex =
+				theStartIndex + 1;
+
+			// If the total is less than or equal to
+			// the starting index, or greater
+			// than or equal to the starting index, the
+			// substring is empty.
+			if (theTotal <= theXPathStartIndex)
+			{
+				return 0;
+			}
+			else
+			{
+				const size_type		theSubstringLength =
+					size_type(theTotal) - theXPathStartIndex;
+
+				return theSubstringLength > theMaxLength ? theMaxLength : theSubstringLength;
+			}
+		}
     }
 }
 
@@ -186,8 +237,9 @@ FunctionSubstring::execute(
         const double    theSecondArgValue =
             DoubleSupport::round(arg2->num());
 
-        // XPath indexes from 1, so this is the first XPath index....
-        const XalanDOMString::size_type     theStartIndex = getStartIndex(theSecondArgValue, theSourceStringLength);
+		// XPath indexes from 1, so this is the first XPath index....
+        const XalanDOMString::size_type     theStartIndex =
+			getStartIndex(theSecondArgValue, theSourceStringLength);
 
         if (theStartIndex >= theSourceStringLength)
         {
@@ -195,25 +247,22 @@ FunctionSubstring::execute(
         }
         else
         {
-            const double    theTotal =
-                getTotal( theSourceStringLength, theSecondArgValue, arg3);
+			assert(DoubleSupport::isNaN(theSecondArgValue) == false);
+			assert(DoubleSupport::isPositiveInfinity(theSecondArgValue) == false);
 
-            if (DoubleSupport::isNaN(theSecondArgValue) == true ||
-                DoubleSupport::isNaN(theTotal) == true ||
-                DoubleSupport::isNegativeInfinity(theTotal) == true ||
-                theTotal == 0.0 ||
-                theTotal < double(theStartIndex))
+			const XalanDOMString::size_type		theSubstringLength =
+                getSubstringLength(
+					theSourceStringLength,
+					theStartIndex,
+					theSecondArgValue,
+					arg3);
+
+            if (theSubstringLength == 0)
             {
                 return createEmptyString(executionContext);
             }
             else
             {
-                const XalanDOMString::size_type     theSubstringLength =
-                    getSubstringLength(
-                        theSourceStringLength,
-                        theStartIndex,
-                        theTotal);
-
                 XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
 
                 XalanDOMString&     theString = theResult.get();

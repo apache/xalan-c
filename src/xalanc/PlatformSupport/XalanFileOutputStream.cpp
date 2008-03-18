@@ -20,7 +20,7 @@
 
 
 
-#if !defined(WIN32)
+#if !defined(XALAN_WINDOWS)
 #include <cerrno>
 #endif
 
@@ -120,7 +120,7 @@ openFile(const XalanDOMString&  theFileName,
 {
     typedef XalanFileOutputStream::HandleType   HandleType;
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     HandleType  theFileHandle = CreateFileW(
             c_wstr(theFileName),
             GENERIC_WRITE,
@@ -199,7 +199,7 @@ XalanFileOutputStream::XalanFileOutputStream(
     m_fileName(theFileName, theManager),
     m_handle(openFile(theFileName, theManager))
 {
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     if (m_handle == INVALID_HANDLE_VALUE)
     {
         XalanDOMString theBuffer(theManager);
@@ -247,7 +247,7 @@ XalanFileOutputStream::create(
 
 XalanFileOutputStream::~XalanFileOutputStream()
 {
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     if (m_handle != INVALID_HANDLE_VALUE)
     {
         CloseHandle(m_handle);
@@ -265,7 +265,7 @@ XalanFileOutputStream::~XalanFileOutputStream()
 void
 XalanFileOutputStream::doFlush()
 {
-#if !defined(WIN32)
+#if !defined(XALAN_WINDOWS)
     if (fflush(m_handle) != 0)
     {
             XalanDOMString theBuffer(getMemoryManager());
@@ -284,7 +284,7 @@ XalanFileOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     DWORD           theBytesWritten;
 
     assert(size_t(DWORD(theBufferLength)) == theBufferLength);

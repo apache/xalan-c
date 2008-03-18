@@ -20,7 +20,7 @@
 
 #include "xalanc/Include/PlatformDefinitions.hpp"
 
-#if defined(XALAN_HARNESS_BUILD_DLL)
+#if defined(XALAN_BUILD_DLL)
 #   define XALAN_HARNESS_EXPORT XALAN_PLATFORM_EXPORT
 #   define XALAN_HARNESS_EXPORT_FUNCTION(T) XALAN_PLATFORM_EXPORT_FUNCTION(T)
 #else

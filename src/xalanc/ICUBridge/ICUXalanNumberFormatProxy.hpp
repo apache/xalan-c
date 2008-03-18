@@ -70,6 +70,20 @@ public:
 	virtual XalanDOMString&
 	format(unsigned long	theValue, XalanDOMString& theResult);
 
+#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual XalanDOMString&
+	format(
+			size_t				theValue,
+			XalanDOMString&		theResult);
+
+#endif
 
 	virtual bool
 	isGroupingUsed() const;

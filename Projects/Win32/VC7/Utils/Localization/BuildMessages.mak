@@ -77,8 +77,8 @@ PKGNAME=$(LIBNAME)_$(MS_VER)S
 PKGNAME=$(LIBNAME)_$(MS_VER)
 !ENDIF
 
-XERCESPATH=$(XERCESCROOT)/bin;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\Build\Win64\VC7\Release;$(XERCESCROOT)\Build\Win64\VC7\Debug
-ICUPATH=$(ICUROOT)/bin
+XERCESPATH=$(XERCESCROOT)\bin;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\Build\Win64\VC7\Release;$(XERCESCROOT)\Build\Win64\VC7\Debug
+ICUPATH=$(ICUROOT)\bin
 
 #====================== INMEM part =================================================================
 
@@ -93,7 +93,7 @@ $(OUTPUTDIR)\$(PKGNAME).dll : $(TMPINCLUDESDIR)\LocalMsgData.hpp
 	
 
 $(TMPINCLUDESDIR)\LocalMsgData.hpp   : $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) 
-	@set PATH=$(PATH);$(XERCESPATH)
+	@set PATH=$(ICUPATH);$(XERCESPATH);$(PATH)
 	@if not exist $(OUTPUTDIR)\MsgCreator.exe ( $(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" $(MAKE_PARAMS))
 	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) -TYPE $(TYPE) -LOCALE $(LOCALE)
 	@$(MOVE) LocalMsgIndex.hpp 	$(TMPINCLUDESDIR)
@@ -118,14 +118,13 @@ ALL :	PREPARE $(INTDIR)\Icu\$(LOCALE).txt $(OUTPUTDIR)\$(PKGNAME).dll
 
 	
 $(OUTPUTDIR)\$(PKGNAME).dll : $(INTDIR)\Icu\$(LOCALE).txt
-	@set PATH=$(PATH);$(ICUPATH)
-	$(GENRB) --package-name $(PKGNAME) -d $(INTDIR)\Icu $(INTDIR)\Icu\$(LOCALE).txt
+	$(ICUPATH)\$(GENRB) --package-name $(PKGNAME) -d $(INTDIR)\Icu $(INTDIR)\Icu\$(LOCALE).txt
 	echo $(INTDIR)\Icu\$(PKGNAME)_$(LOCALE).res > $(INTDIR)\Icu\res-file-list.txt
-	$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -O R:$(ICUROOT) --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt	
+	$(ICUPATH)\$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt
 			
 			
 $(INTDIR)\Icu\$(LOCALE).txt : $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT)
-	@set PATH=$(PATH);$(XERCESPATH)
+	@set PATH=$(ICUPATH);$(XERCESPATH);$(PATH)
 	if not exist $(OUTPUTDIR)\MsgCreator.exe ( $(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" $(MAKE_PARAMS))
 	$(OUTPUTDIR)\MsgCreator.exe $(NLSDIR)\$(LOCALE)\$(MSGFILENAME)$(LOCALE)$(XIFFEXT) -TYPE $(TYPE) -LOCALE $(LOCALE)
 	@$(MOVE) LocalMsgIndex.hpp $(TMPINCLUDESDIR)
@@ -145,8 +144,7 @@ CLEAN :
 	-@erase $(TMPINCLUDESDIR)\XalanMsgIndex.hpp
 	-@erase	$(TMPINCLUDESDIR)\LocalMsgData.hpp
 !IF "$(TYPE)" == "icu"
-	@set PATH=$(PATH);$(ICUPATH)
-	$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -O R:$(ICUROOT) -k --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt
+	$(ICUPATH)\$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -k --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt
 !ENDIF
 	-@erase $(INTDIR)\Icu\$(LOCALE).txt
 	-@del $(NLSDIR)\ICU\$(PKGNAME)_$(LOCALE).res

@@ -1237,7 +1237,7 @@ TestAxes(
     theBaseURL += theDirectory;
 
     XalanDOMString thetmp(theDirectory, theMemoryManager);
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     thetmp.append("\\*");
 #else
     thetmp.append("/*");

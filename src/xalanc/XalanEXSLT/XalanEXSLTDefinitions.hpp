@@ -24,7 +24,7 @@
 
 
 
-#if defined(XALAN_EXSLT_BUILD_DLL)
+#if defined(XALAN_BUILD_DLL)
 
 #define XALAN_EXSLT_EXPORT XALAN_PLATFORM_EXPORT
 

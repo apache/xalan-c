@@ -35,7 +35,7 @@
 
 
 
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION) || (XALAN_ALLINONE_BUILD_DLL)
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION) || defined(XALAN_BUILD_DLL)
 #include <xalanc/XPath/XPathProcessor.hpp>
 #endif
 

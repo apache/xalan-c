@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+#include "xalanc/Include/PlatformDefinitions.hpp"
+
 #include "ICUResHandler.hpp"
 #include "InMemHandler.hpp"
 #include "MsgCreator.hpp"
@@ -27,7 +29,7 @@
 #include <xercesc/util/TransService.hpp>
 
 #include <cassert>
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(_DEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
@@ -37,7 +39,7 @@ XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
 
 static const char* s_pathSeparator =
-#if defined(WINDOWS)
+#if defined(XALAN_WINDOWS)
              "\\";
 #else
             "/";
@@ -257,11 +259,7 @@ appendDirectory(
     {
         strcpy(FileName, p.outDir);
 
-        const char* const   separator =
-            strrchr(FileName, *s_pathSeparator);
-
-        if (separator == 0 ||
-            *(separator + 1) == '\0')
+		if (FileName[dirLength - 1] != *s_pathSeparator)
         {
             strcat(FileName, s_pathSeparator);
         }
@@ -333,7 +331,7 @@ buildIndexFileName(
 int main(int argC, char* argV[])
 {
     
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(_DEBUG) && defined(_MSC_VER)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
     
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);

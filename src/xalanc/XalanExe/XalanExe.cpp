@@ -829,7 +829,7 @@ transform(
 
 
 
-#if defined(_WINDOWS)
+#if defined(XALAN_WINDOWS)
 
 class WindowsMemoryManager : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
 {
@@ -907,7 +907,7 @@ xsltMain(
 
     XALAN_USING_XERCES(XMLPlatformUtils)
 
-#if defined(_WINDOWS) && defined(NDEBUG)
+#if defined(XALAN_WINDOWS) && defined(NDEBUG)
     WindowsMemoryManager  theMemoryManager;
 
     // Call the static initializer for Xerces...
@@ -980,7 +980,7 @@ main(
             int     argc,
             char*   argv[])
  {
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(_DEBUG) && defined(_MSC_VER)
     _CrtSetDbgFlag(
         _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 

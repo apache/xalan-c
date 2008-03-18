@@ -26,7 +26,7 @@
 #include <climits>
 #include <cstring>
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 #include <direct.h>
 #define PATH_MAX _MAX_PATH
 #define chdir _chdir
@@ -212,7 +212,7 @@ XalanFileUtility::~XalanFileUtility()
 
 
 
-#if !defined(WIN32)
+#if !defined(XALAN_WINDOWS)
 XalanDOMString&
 XalanFileUtility::getDrive(XalanDOMString&  theResult)
 {
@@ -386,7 +386,8 @@ XalanFileUtility::getParams(
     //
     if (fsetOut)
     { 
-        unsigned int ii = lastIndexOf(args.base, s_pathSep[0]);
+		const XalanDOMString::size_type		ii =
+			lastIndexOf(args.base, s_pathSep[0]);
 
         if (ii < length(args.base))
         {
@@ -543,7 +544,7 @@ void XalanFileUtility::checkAndCreateDir(const XalanDOMString&   directory)
     if (chdir(theDir))
     {
         //cout << "Couldn't change to " << directory << ", will create it." << endl;
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
         if (!mkdir(theDir))
 #else
         if (!mkdir(theDir, DIR_MODE_BITS))
@@ -2087,7 +2088,7 @@ const XalanDOMChar	XalanFileUtility::s_xmlSuffix[] =
 
 const XalanDOMChar	XalanFileUtility::s_pathSep[] =
 {
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
     XalanUnicode::charReverseSolidus,
 #else
     XalanUnicode::charSolidus,

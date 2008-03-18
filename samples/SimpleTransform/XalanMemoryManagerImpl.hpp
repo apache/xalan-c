@@ -29,15 +29,10 @@
 
 #include <xercesc/framework/MemoryManager.hpp>
 
-#if defined(WIN32)
+#if defined(XALAN_WINDOWS)
 #include <windows.h>
 #include <stdexcept>
 #include <stdlib.h>
-#endif
-
-
-
-#if defined(WIN32)
 
 
 class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER MemoryManagerType

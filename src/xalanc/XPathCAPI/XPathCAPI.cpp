@@ -36,9 +36,7 @@
 
 #include <xalanc/XPath/XObjectFactory.hpp>
 #include <xalanc/XPath/XPath.hpp>
-#if defined(XALAN_ALLINONE_BUILD_DLL)
 #include <xalanc/XPath/XPathConstructionContextDefault.hpp>
-#endif
 #include <xalanc/XPath/XPathEvaluator.hpp>
 #include <xalanc/XPath/XPathExecutionContextDefault.hpp>
 #include <xalanc/XPath/XPathFactoryDefault.hpp>

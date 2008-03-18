@@ -31,10 +31,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XERCES_CPP_NAMESPACE_USE
-
-
-
 class ICUResHandler : public SAX2Handler
 {
 public:
