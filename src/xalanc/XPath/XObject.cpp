@@ -284,9 +284,6 @@ double
 XObject::num() const
 {
     throw XObjectInvalidConversionException(getType(), eTypeNumber);
-
-    // This is just a dummy value to satisfy the compiler.
-    return 0.0;
 }
 
 
@@ -295,9 +292,6 @@ bool
 XObject::boolean() const
 {    
     throw XObjectInvalidConversionException(getType(), eTypeBoolean);
-
-    // This is just a dummy value to satisfy the compiler.
-    return false;
 }
 
 
@@ -335,21 +329,10 @@ XObject::str(XalanDOMString&    theBuffer) const
 
 
 
-static int foo = 0;
-
 const XalanDocumentFragment&
 XObject::rtree() const
 {
-
-
     throw XObjectInvalidConversionException(getType(), eTypeResultTreeFrag);
-
-    // This is just a dummy value to satisfy the compiler.
-#if defined(XALAN_OLD_STYLE_CASTS)
-    return (const XalanDocumentFragment&)foo;
-#else
-    return reinterpret_cast<const XalanDocumentFragment&>(foo);
-#endif
 }
 
 
@@ -362,10 +345,6 @@ const NodeRefListBase&
 XObject::nodeset() const
 {
     throw XObjectInvalidConversionException(getType(), eTypeNodeSet);
-
-    // error will throw, so this is just a dummy
-    // value to satisfy the compiler.
-    return s_dummyList;
 }
 
 
