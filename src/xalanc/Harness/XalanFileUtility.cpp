@@ -575,19 +575,10 @@ XalanFileUtility::generateFileName(
             XalanDOMString&         targetFile,
             bool*                   status)
 {
-    int             thePeriodIndex = -1;
-    const int       theLength = length(theXMLFileName);
+    const size_type     thePeriodIndex =
+        lastIndexOf(theXMLFileName, XalanUnicode::charFullStop);
 
-    for (int i = theLength - 1; i > 0; i--)
-    {
-        if (charAt(theXMLFileName, i) == XalanUnicode::charFullStop)
-        {
-            thePeriodIndex = i;        // charFullStop is the dot (x2E)
-            break;
-        }
-    }
-
-    if (thePeriodIndex != -1)
+    if (thePeriodIndex != XalanDOMString::npos)
     {
         targetFile.assign(theXMLFileName, 0, thePeriodIndex + 1);
 
@@ -595,7 +586,7 @@ XalanFileUtility::generateFileName(
     }
 
     // Check the .xml file exists.
-    if (!strcmp(suffix,"xml"))
+    if (!strcmp(suffix, "xml"))
     {
         TranscodeToLocalCodePage(targetFile, m_buffer, true);
         const char* const   theFileName = &*m_buffer.begin();
