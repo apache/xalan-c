@@ -505,8 +505,12 @@ main(
             XMLUni::fgXercescDefaultLocale,
             0,
             0,
+#if XERCES_VERSION_MAJOR >= 3
+            &theDiagnosticMemoryManager);
+#else
             &theDiagnosticMemoryManager,
             true);
+#endif
 
         XalanTransformer::initialize(theDiagnosticMemoryManager);
 
