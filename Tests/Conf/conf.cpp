@@ -275,14 +275,10 @@ runTests(
         {
             XalanTransformer    xalan(theMemoryManager);
 
-            // Get drive designation for final analysis and generate Unique name for results log.
-            //
-            XalanDOMString  drive(theMemoryManager);            // This is used to get stylesheet for final analysis
-            h.getDrive(drive);
             const XalanDOMString  resultFilePrefix("conf", theMemoryManager);       // This & UniqRunid used for log file name.
             XalanDOMString  UniqRunid(theMemoryManager); 
             h.generateUniqRunid(UniqRunid);
-            XalanDOMString  resultsFile(drive, theMemoryManager);
+            XalanDOMString  resultsFile(theMemoryManager);
             resultsFile += h.args.output;
             resultsFile += resultFilePrefix;
             resultsFile += UniqRunid;
