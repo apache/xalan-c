@@ -19,6 +19,10 @@
 
 
 
+#include <cstring>
+
+
+
 #include <xercesc/sax/AttributeList.hpp>
 
 
@@ -1134,7 +1138,8 @@ ElemNumber::traditionalAlphaCount(
                 } 
                 else
                 {
-                    if (buf[charPos - 1] != zeroChar[0])
+                    if (charPos == 0 ||
+                        buf[charPos - 1] != zeroChar[0])
                     {
                         buf[charPos++] = zeroChar[0];
                     }
