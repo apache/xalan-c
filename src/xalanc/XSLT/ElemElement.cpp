@@ -581,20 +581,9 @@ ElemElement::fixupDefaultNamespace(StylesheetExecutionContext&  executionContext
             executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
         }
     }
-    else
+    else if (theElementDefaultNamespace != 0)
     {
-        // There's no current default namespace in the result tree, but there may be
-        // on for this xsl:element instance, so we have to add it, if so.
-        const XalanDOMString&   theParentDefaultNamespace =
-                    getParentDefaultNamespace();
-
-        if (theElementDefaultNamespace != 0)
-        {
-            if (length(theParentDefaultNamespace) == 0 || theParentDefaultNamespace != *theElementDefaultNamespace)
-            {
-                executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
-            }
-        }
+        executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
     }
 }
 
