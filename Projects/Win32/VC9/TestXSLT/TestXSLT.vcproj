@@ -386,8 +386,8 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
-				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include;$(ICUROOT)\include"
+				PreprocessorDefinitions="NDEBUG;XALAN_USE_ICU"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
@@ -409,9 +409,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib  icuuc.lib icuin.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -473,8 +473,8 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
-				PreprocessorDefinitions="NDEBUG"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include;$(ICUROOT64)\include;$(ICUROOT)\include"
+				PreprocessorDefinitions="NDEBUG;XALAN_USE_ICU"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
@@ -496,9 +496,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib  icuuc.lib icuin.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -554,7 +554,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include;$(ICUROOT)\include"
+				PreprocessorDefinitions="XALAN_USE_ICU"
 				StringPooling="true"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -579,9 +580,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib  icuucd.lib icuind.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -636,8 +637,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
-				PreprocessorDefinitions=""
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include;$(ICUROOT64)\include;$(ICUROOT)\include"
+				PreprocessorDefinitions="XALAN_USE_ICU"
 				StringPooling="true"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -662,9 +663,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib  icuucd.lib icuind.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
