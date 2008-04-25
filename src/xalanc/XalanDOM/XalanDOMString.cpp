@@ -21,13 +21,12 @@
 
 
 #include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 
 
 #include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
-
-
-#include <cstdlib>
 
 
 

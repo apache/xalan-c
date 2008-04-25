@@ -25,13 +25,14 @@
 
 
 
+#include <cstring>
 #if defined(_MSC_VER)
 #include <io.h>
 #else
-#include <unistd.h>
 #include <dirent.h>
-#include <sys/stat.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #endif
 
 
