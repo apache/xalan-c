@@ -129,6 +129,7 @@
 #if defined(XALAN_USE_ICU)
 #include <xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #include <xalanc/ICUBridge/ICUBridgeCleanup.hpp>
+#include <xalanc/ICUBridge/ICUFormatNumberFunctor.hpp>
 #endif
 
 
@@ -982,6 +983,10 @@ xsltMain(const CmdLineParams&	params)
 	ICUBridgeCollationCompareFunctor	theICUFunctor(theManager, true);
 
 	theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
+
+    XalanAutoPtr<ICUFormatNumberFunctor>  theFormatNumberFunctor(ICUFormatNumberFunctor::create(theManager));
+    theExecutionContext.installFormatNumberFunctor(theFormatNumberFunctor.get());
+    theFormatNumberFunctor.release();
 #endif
 
 	if (params.useDOM == false)
