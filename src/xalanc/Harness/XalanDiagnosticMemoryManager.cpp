@@ -159,6 +159,14 @@ XalanDiagnosticMemoryManager::deallocate(void*    pointer)
 
 
 
+MemoryManager*
+XalanDiagnosticMemoryManager::getExceptionMemoryManager()
+{
+    return &m_memoryManager;
+}
+
+
+
 void
 XalanDiagnosticMemoryManager::dumpStatistics(
             StreamType*     theStream,

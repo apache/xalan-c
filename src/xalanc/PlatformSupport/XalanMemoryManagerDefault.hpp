@@ -54,6 +54,9 @@ public:
     virtual void
     deallocate(void*    pointer);
 
+    virtual MemoryManager*
+    getExceptionMemoryManager();
+
 private:
 
     // These are not implemented.

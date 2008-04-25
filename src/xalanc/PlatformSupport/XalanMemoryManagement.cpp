@@ -42,7 +42,8 @@ public:
 		
 		return 0;
 	}	
-	virtual void
+
+    virtual void
 	deallocate(  void* 	/*	pDataPointer */ )
 	{
 		XALAN_USING_STD(bad_alloc)
@@ -50,8 +51,12 @@ public:
 		throw bad_alloc();		
 		
 	}
-	
-	
+
+    MemoryManager*
+    getExceptionMemoryManager()
+    {
+        return this;
+    }
 };
 
 

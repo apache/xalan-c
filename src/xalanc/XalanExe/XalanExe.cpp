@@ -879,6 +879,12 @@ public:
         HeapFree(m_handle, HEAP_NO_SERIALIZE, pointer);
     }
 
+    MemoryManager*
+    getExceptionMemoryManager()
+    {
+        return this;
+    }
+
 protected:
 
 private:

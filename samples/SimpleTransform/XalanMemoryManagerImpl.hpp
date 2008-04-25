@@ -92,7 +92,13 @@ public:
         }
     }
 
-	virtual 
+    MemoryManager*
+    getExceptionMemoryManager()
+    {
+        return this;
+    }
+
+    virtual 
 	~XalanMemoryManagerImpl()
 	{
        if( 0 == HeapDestroy(m_heapHandle) )

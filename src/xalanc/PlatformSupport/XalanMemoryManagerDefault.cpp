@@ -76,4 +76,12 @@ XalanMemoryManagerDefault::deallocate(void*     pointer)
 
 
 
+MemoryManager*
+XalanMemoryManagerDefault::getExceptionMemoryManager()
+{
+    return this;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

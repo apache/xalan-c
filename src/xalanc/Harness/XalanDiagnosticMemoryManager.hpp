@@ -98,6 +98,9 @@ public:
     virtual void
     deallocate(void*    pointer);
 
+    virtual MemoryManager*
+    getExceptionMemoryManager();
+
     bool
     getAssertErrors() const
     {
