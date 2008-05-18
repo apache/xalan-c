@@ -156,6 +156,12 @@ public:
 	{
 		operator delete(pDataPointer);
 	}
+
+    MemoryManager*
+    getExceptionMemoryManager()
+    {
+        return this;
+    }
 };
 
 #endif
