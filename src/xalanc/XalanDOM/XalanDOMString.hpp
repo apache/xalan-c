@@ -580,7 +580,10 @@ public:
 
         invariants();
 
-        return theSubstring.assign(*this, thePosition, theCount);
+        return theSubstring.assign(
+                    *this,
+                    thePosition,
+                    theCount == npos ? length() : theCount);
     }
 
     int
