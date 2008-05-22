@@ -21,6 +21,7 @@
 
 #include <clocale>
 #include <cmath>
+#include <climits>
 #if !defined(XALAN_NO_STD_NUMERIC_LIMITS)
 #include <limits>
 #endif

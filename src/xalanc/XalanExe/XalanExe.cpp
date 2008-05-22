@@ -21,6 +21,7 @@
 
 
 #include <cstdlib>
+#include <cstring>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #else
@@ -64,13 +65,6 @@
 using std::clock;
 using std::clock_t;
 #endif
-#endif
-
-
-
-//#define XALAN_VQ_SPECIAL_TRACE
-#if defined(XALAN_VQ_SPECIAL_TRACE)
-#include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
 
 
@@ -992,11 +986,6 @@ main(
 
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
-
-#if defined(XALAN_VQ_SPECIAL_TRACE)
-    QuantifyStopRecordingData();
-    QuantifyClearData();
 #endif
 
     return xsltMain(argc, argv);
