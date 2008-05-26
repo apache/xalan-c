@@ -159,8 +159,6 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
 
         XalanDOMString::size_type   namespaceLen = length(elemNameSpace);
 
-        bool    foundResultNamespaceForPrefix = false;
-
         XalanDOMString::size_type           len = length(elemName);
 
         const XalanDOMString::size_type     indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
@@ -176,44 +174,34 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
             substring(elemName, prefix, 0, indexOfNSSep);
 
             const XalanDOMString* const     theNamespace =
-                executionContext.getResultNamespaceForPrefix(prefix);
+                getNamespacesHandler().getNamespace(prefix);
 
-            if (theNamespace != 0)
+            if(theNamespace == 0 && namespaceLen == 0)
             {
-                foundResultNamespaceForPrefix = true;
-            }
-            else
-            {
-                const XalanDOMString* const     theNamespace =
-                    getNamespacesHandler().getNamespace(prefix);
+                warn(
+                    executionContext,
+                    XalanMessages::PrefixIsNotDeclared_1Param,
+                    prefix);
 
-                if(theNamespace == 0 && namespaceLen == 0)
+                if (m_namespaceAVT != 0)
                 {
+                    elemName.erase(0, indexOfNSSep + 1);
+                }
+                else
+                {
+                    isIllegalElement = true;
+
                     warn(
                         executionContext,
-                        XalanMessages::PrefixIsNotDeclared_1Param,
-                        prefix);
-
-                    if (m_namespaceAVT != 0)
-                    {
-                        elemName.erase(0, indexOfNSSep + 1);
-                    }
-                    else
-                    {
-                        isIllegalElement = true;
-
-                        warn(
-                            executionContext,
-                            XalanMessages::IllegalElementName_1Param,
-                            elemName);
-                    }
+                        XalanMessages::IllegalElementName_1Param,
+                        elemName);
                 }
-                else if (theNamespace != 0 &&
-                         namespaceLen == 0 &&
-                         equals(prefix, DOMServices::s_XMLNamespace) == false)
-                {
-                    elemNameSpace = *theNamespace;
-                }
+            }
+            else if (theNamespace != 0 &&
+                namespaceLen == 0 &&
+                equals(prefix, DOMServices::s_XMLNamespace) == false)
+            {
+                elemNameSpace = *theNamespace;
             }
         }
 
@@ -222,7 +210,7 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
             executionContext.startElement(c_wstr(elemName));   
 
             if(0 == m_namespaceAVT &&
-               (havePrefix == false || foundResultNamespaceForPrefix == true))
+               havePrefix == false )
             {
                 if (havePrefix == false)
                 {
