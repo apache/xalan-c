@@ -50,9 +50,9 @@ XalanQName::format(XalanDOMString&  theString) const
 
     if (theURI.empty() == false)
     {
-        theString += XalanDOMChar(XalanUnicode::charRightCurlyBracket);
-        theString += theURI;
         theString += XalanDOMChar(XalanUnicode::charLeftCurlyBracket);
+        theString += theURI;
+        theString += XalanDOMChar(XalanUnicode::charRightCurlyBracket);
     }
 
     theString += getLocalPart();
