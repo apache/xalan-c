@@ -810,12 +810,14 @@ StylesheetRoot::getNodeSetByKey(
             const PrefixResolver&           resolver,
             MutableNodeRefList&             nodelist,
             StylesheetExecutionContext&     executionContext,
+            const LocatorType*              locator,
             KeyTablesTableType&             theKeysTable) const
 {
     assert(
         nodelist.empty() == true ||
         nodelist.getDocumentOrder() == true);
 
+    const MutableNodeRefList* nl = 0;
     XalanNode* const    theKeyNode = getKeyNode(context);
     assert(theKeyNode != 0);
 
@@ -828,17 +830,7 @@ StylesheetRoot::getNodeSetByKey(
 
         if (i != theKeysTable.end())
         {
-            const MutableNodeRefList&   nl =
-                i->second->getNodeSetByKey(qname, ref);
-
-            if (nodelist.empty() == true)
-            {
-                nodelist = nl;
-            }
-            else
-            {
-                nodelist.addNodesInDocOrder(nl, executionContext);
-            }
+            nl = i->second->getNodeSetByKey(qname, ref);
         }
         else
         {
@@ -855,18 +847,30 @@ StylesheetRoot::getNodeSetByKey(
 
             const KeyTable* const   theNewTable = kt.releasePtr();
 
-            const MutableNodeRefList&   nl =
-                theNewTable->getNodeSetByKey(qname, ref);
-
-            if (nodelist.empty() == true)
-            {
-                nodelist = nl;
-            }
-            else
-            {
-                nodelist.addNodesInDocOrder(nl, executionContext);
-            }
+            nl = theNewTable->getNodeSetByKey(qname, ref);
         }
+    }
+
+    if (nl == 0)
+    {
+        const GetCachedString   theGuard1(executionContext);
+        const GetCachedString   theGuard2(executionContext);
+
+        executionContext.error(
+            XalanMessageLoader::getMessage(
+                theGuard1.get(),
+                XalanMessages::UnknownKey_1Param,
+                qname.format(theGuard2.get())),
+            executionContext.getCurrentNode(),
+            locator);
+    }
+    else if (nodelist.empty() == true)
+    {
+        nodelist = *nl;
+    }
+    else
+    {
+        nodelist.addNodesInDocOrder(*nl, executionContext);
     }
 }
 

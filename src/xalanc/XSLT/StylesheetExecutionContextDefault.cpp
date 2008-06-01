@@ -2111,6 +2111,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
+            const LocatorType*      locator,
             MutableNodeRefList&     nodelist)
 {
     assert(m_stylesheetRoot != 0);
@@ -2122,6 +2123,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
         *getPrefixResolver(),
         nodelist,
         *this,
+        locator,
         m_keyTables);
 }
 
@@ -2153,6 +2155,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
         *resolver,
         nodelist,
         *this,
+        locator,
         m_keyTables);
 }
 

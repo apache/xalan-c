@@ -43,6 +43,25 @@ const XalanDOMString    XalanQName::s_emptyString(XalanMemMgrs::getDummyMemMgr()
 
 
 
+XalanDOMString&
+XalanQName::format(XalanDOMString&  theString) const
+{
+    const XalanDOMString& theURI = getNamespace();
+
+    if (theURI.empty() == false)
+    {
+        theString += XalanDOMChar(XalanUnicode::charRightCurlyBracket);
+        theString += theURI;
+        theString += XalanDOMChar(XalanUnicode::charLeftCurlyBracket);
+    }
+
+    theString += getLocalPart();
+
+    return theString;
+}
+
+
+
 XalanQName::PrefixResolverProxy::PrefixResolverProxy(
             const NamespacesStackType&  theStack,
             const XalanDOMString&       theURI) :

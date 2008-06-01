@@ -402,6 +402,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
             XalanNode*              /* context */,
             const XalanQName&       /* qname */,
             const XalanDOMString&   /* ref */,
+            const LocatorType*      /* locator */,
             MutableNodeRefList&     /* nodelist */)
 {
 }

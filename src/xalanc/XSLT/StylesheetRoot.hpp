@@ -385,13 +385,14 @@ public:
      * Given a valid element key, return the corresponding node list.
      *
      * @param context		   context node
-     * @param name			   qname of the key, which must match the 'name'
+     * @param qname			   qname of the key, which must match the 'name'
      *						   attribute on xsl:key
      * @param ref			   value that must match the value found by the
      *						   'match' attribute on xsl:key
      * @param resolver		   resolver for namespace resolution
      * @param nodelist         A node list to contain the nodes found
-     * @param executionContext current execution context
+     * @param executionContext The current execution context
+     * @param theKeysTable     The table of keys to search.
      */
     void
     getNodeSetByKey(
@@ -401,6 +402,7 @@ public:
             const PrefixResolver&			resolver,
             MutableNodeRefList&				nodelist,
             StylesheetExecutionContext&		executionContext,
+            const LocatorType*              locator,
             KeyTablesTableType&				theKeysTable) const;
 
     unsigned long

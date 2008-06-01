@@ -87,9 +87,6 @@ XALAN_USES_MEMORY_MANAGER(ParamsVectorTypeDecl)
 //
 class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExecutionContext
 {
-
-
-
 public:
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -936,6 +933,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
+            const LocatorType*      locator,
             MutableNodeRefList&     nodelist);
 
     virtual void

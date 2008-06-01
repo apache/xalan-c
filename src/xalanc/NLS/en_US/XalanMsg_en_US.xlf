@@ -983,6 +983,11 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The Unicode code point '{0}' is not a legal XML {1} character.</target>
 </trans-unit>
 
+<trans-unit id="UnknownKey_1Param">
+        <source>There is no xsl:key instruction with the expanded name '{0}'.</source>
+        <target>There is no xsl:key instruction with the expanded name '{0}'.</target>
+</trans-unit>
+
 
     </body>
   </file>

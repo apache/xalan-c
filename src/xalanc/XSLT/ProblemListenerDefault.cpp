@@ -196,7 +196,7 @@ ProblemListenerDefault::problem(
             msg);
     }
 
-    pw.print(theBuffer);
+    pw.println(theBuffer);
 
     if (0 != styleNode)
     {

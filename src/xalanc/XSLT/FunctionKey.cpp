@@ -85,6 +85,7 @@ getNodeSet(
                 context,
                 theQName,
                 ref,
+                locator,
                 theNodeRefList);
     }
 }

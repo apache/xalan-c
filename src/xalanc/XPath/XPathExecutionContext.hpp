@@ -501,6 +501,7 @@ public:
      *                         attribute on xsl:key
      * @param ref              value that must match the value found by the
      *                         'match' attribute on xsl:key
+     * @param locator          The LocatorType to use for error reporting.  Can be 0.
      * @param nodelist         A node list to contain the nodes found
      */
     virtual void
@@ -508,6 +509,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
+            const LocatorType*      locator,
             MutableNodeRefList&     nodelist) = 0;
 
     /**

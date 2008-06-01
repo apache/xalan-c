@@ -264,7 +264,8 @@ public:
             XalanNode*              context,
 			const XalanQName&		qname,
 			const XalanDOMString&	ref,
-			MutableNodeRefList&		nodelist);
+            const LocatorType*      locator,
+		    MutableNodeRefList&		nodelist);
 
 	virtual void
 	getNodeSetByKey(

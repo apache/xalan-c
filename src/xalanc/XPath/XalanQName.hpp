@@ -148,6 +148,17 @@ public:
                getNamespace() == theRHS.getNamespace();
     }
 
+    /**
+     * Format the QName using the notation "{namespace-uri}local-part" or
+     * "local-part" if the namespace URI is empty.  The result is appended
+     * to the provided string.
+     * 
+     * @param theString The string to format with the
+     * @return A reference to the parameter.
+     */
+    XalanDOMString&
+    format(XalanDOMString&  theString) const;
+
     size_t
     hash() const
     {

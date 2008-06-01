@@ -220,7 +220,7 @@ KeyTable::~KeyTable()
 
 
 
-const MutableNodeRefList&
+const MutableNodeRefList*
 KeyTable::getNodeSetByKey(
                       const XalanQName&         qname, 
                       const XalanDOMString&     ref) const
@@ -235,14 +235,15 @@ KeyTable::getNodeSetByKey(
 
         if (j != theMap.end())
         {
-            return (*j).second;
+            return &(*j).second;
+        }
+        else
+        {
+            return &s_dummyList;
         }
     }
 
-    // It makes things much easier if we always return
-    // a list of nodes.  So this is just an empty one
-    // to return when the ref is not found.
-    return s_dummyList;
+    return 0;
 }
 
 

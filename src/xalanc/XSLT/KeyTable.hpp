@@ -116,7 +116,7 @@ public:
 	 *             attribute on xsl:key
 	 * @return		pointer to nodeset for key 
 	 */
-	const MutableNodeRefList&
+	const MutableNodeRefList*
 	getNodeSetByKey(
 				  const XalanQName&			qname,
 				  const XalanDOMString&		ref) const;
@@ -151,7 +151,7 @@ private:
 
 	KeysMapType							m_keys;
 
-	static const MutableNodeRefList		s_dummyList;
+    static const MutableNodeRefList     s_dummyList;
 };
 
 
