@@ -988,6 +988,10 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
         <target>There is no xsl:key instruction with the expanded name '{0}'.</target>
 </trans-unit>
 
+<trans-unit id="CannotSwitchToHTMLOutputMethod">
+        <source>The processor cannot use the HTML output method because the current extension output method does not support it.</source>
+        <target>The processor cannot use the HTML output method because the current extension output method does not support it.</target>
+</trans-unit>
 
     </body>
   </file>

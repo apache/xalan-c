@@ -1563,10 +1563,42 @@ XSLTEngineImpl::flushPending()
             {
                 FormatterListener* const    theFormatter =
                             getFormatterListenerImpl();
-                assert(
-                    theFormatter != 0 &&
-                    theFormatter->getWriter() != 0);
-                if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
+                assert(theFormatter != 0);
+
+                Writer* const theWriter = theFormatter->getWriter();
+
+                if (theWriter == 0)
+                {
+                    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+
+                    XalanDOMString&     theMessage =
+                        theGuard.get();
+
+                    assert(m_stylesheetRoot->getDefaultRootRule() != 0);
+
+                    const Locator* const theLocator =
+                        m_stylesheetRoot->getDefaultRootRule()->getLocator();
+
+                    XalanMessageLoader::getMessage(
+                        theMessage,
+                        XalanMessages::CannotSwitchToHTMLOutputMethod);
+
+                    if (theLocator != 0)
+                    {
+                        warn(
+                            theMessage,
+                            *theLocator,
+                            0);
+                    }
+                    else
+                    {
+                        warn(
+                            theMessage,
+                            0,
+                            0);
+                    }
+                }
+                else if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
                 {
                     // Yuck!!! Ugly hack to switch to HTML on-the-fly.
                     setFormatterListenerImpl(
