@@ -92,7 +92,7 @@ public:
         }
     }
 
-    MemoryManager*
+    virtual MemoryManager*
     getExceptionMemoryManager()
     {
         return this;
