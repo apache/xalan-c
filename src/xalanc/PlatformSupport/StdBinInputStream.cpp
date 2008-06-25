@@ -82,4 +82,12 @@ StdBinInputStream::readBytes(
 
 
 
+const XMLCh*
+StdBinInputStream::getContentType() const
+{
+    return 0;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END
