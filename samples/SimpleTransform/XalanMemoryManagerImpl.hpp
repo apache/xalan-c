@@ -35,7 +35,7 @@
 #include <stdlib.h>
 
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER MemoryManagerType
+class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
 {
 public:
 
@@ -128,7 +128,7 @@ private:
 
 #else
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER MemoryManagerType
+class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
 {
 public:
 
@@ -157,7 +157,7 @@ public:
 		operator delete(pDataPointer);
 	}
 
-    MemoryManager*
+    virtual MemoryManager*
     getExceptionMemoryManager()
     {
         return this;
