@@ -160,7 +160,7 @@ FormatterToDOM::endElement(
 void
 FormatterToDOM::characters(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assign(m_buffer1, chars, length);
 
@@ -172,7 +172,7 @@ FormatterToDOM::characters(
 void
 FormatterToDOM::charactersRaw(
 		const XMLCh* const	chars,
-		const unsigned int	length)
+		const size_type	    length)
 {
 	assign(m_buffer1, s_piTarget, s_piTargetLength);
 	assign(m_buffer2, s_piData, s_piDataLength);
@@ -199,7 +199,7 @@ FormatterToDOM::entityReference(const XMLCh* const	name)
 void
 FormatterToDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length)
+			const size_type	    length)
 {
 	assign(m_buffer1, chars, length);
 
@@ -241,7 +241,7 @@ FormatterToDOM::comment(const XMLCh* const	data)
 void
 FormatterToDOM::cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length)
+			const size_type 	length)
 {
 	assign(m_buffer1, ch, length);
 

@@ -96,7 +96,7 @@ public:
 	virtual void
 	charactersRaw(
 			const XMLCh* const	chars,
-			const unsigned int	length);
+			const size_type	    length);
 
 	virtual void
 	comment(const XMLCh* const	data);
@@ -104,7 +104,7 @@ public:
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length);
+			const size_type 	length);
 
 	virtual void
 	entityReference(const XMLCh* const	name);
@@ -129,12 +129,12 @@ public:
 	virtual void
 	characters(
 				const XMLCh* const	chars,
-				const unsigned int	length);
+				const size_type	    length);
 
 	virtual void
 	ignorableWhitespace(
 				const XMLCh* const	chars,
-				const unsigned int	length);
+				const size_type	    length);
 
 	virtual void
 	processingInstruction(
