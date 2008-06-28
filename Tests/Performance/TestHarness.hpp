@@ -242,7 +242,7 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             m_logger->error() 
                     << "Mode: " 
                     << testCase.inputMode.c_str()
-                    << " is inavlid for stylesheet: "
+                    << " is invalid for stylesheet: "
                     << testCase.stylesheet
                     << endl;
         }
