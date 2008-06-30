@@ -53,7 +53,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemTextAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemTextAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemTextAllocator();
 	
@@ -73,8 +75,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 	/**
 	 * Destroy an instance previously created.

@@ -33,15 +33,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 ElemEmpty::ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			const XalanDOMString*			elementName) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						StylesheetConstructionContext::ELEMNAME_UNDEFINED,
-                        XalanDOMString(constructionContext.getMemoryManager()),
-						lineNumber,
-						columnNumber),
+	ElemTemplateElement(
+        constructionContext,
+		stylesheetTree,
+		StylesheetConstructionContext::ELEMNAME_UNDEFINED,
+        XalanDOMString(constructionContext.getMemoryManager()),
+		lineNumber,
+		columnNumber),
 	m_elementName(elementName)
 {
 }
@@ -53,9 +54,9 @@ ElemEmpty::ElemEmpty(
 			Stylesheet&						stylesheetTree,
 			const XalanDOMString*			elementName) :
 	ElemTemplateElement(
-			constructionContext,
-			stylesheetTree,
-			StylesheetConstructionContext::ELEMNAME_UNDEFINED),
+		constructionContext,
+		stylesheetTree,
+		StylesheetConstructionContext::ELEMNAME_UNDEFINED),
 	m_elementName(elementName)
 {
 }

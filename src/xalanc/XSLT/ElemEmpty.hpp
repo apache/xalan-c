@@ -53,8 +53,8 @@ public:
 	ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			const XalanDOMString*			elementName = 0);
 
 	/**

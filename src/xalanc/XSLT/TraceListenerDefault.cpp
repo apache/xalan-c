@@ -77,10 +77,10 @@ TraceListenerDefault::~TraceListenerDefault()
 void
 TraceListenerDefault::trace(const TracerEvent&  ev)
 {
-    switch(ev.m_styleNode.getXSLToken())
+    switch (ev.m_styleNode.getXSLToken())
     {
     case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
-        if(m_traceElements == true)
+        if (m_traceElements == true)
         {
             printNodeInfo(ev.m_styleNode);
 
@@ -100,7 +100,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
         break;
 
     case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
-        if(m_traceTemplates == true || m_traceElements == true)
+        if (m_traceTemplates == true || m_traceElements == true)
         {
             const ElemTemplate&     et =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -111,11 +111,11 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
 
             XalanDOMString lineNumbString(m_memoryManager);
 
-            LongToDOMString(ev.m_styleNode.getLineNumber(), lineNumbString);
+            NumberToDOMString(ev.m_styleNode.getLineNumber(), lineNumbString);
 
             XalanDOMString colNumbString(m_memoryManager);
 
-            LongToDOMString(ev.m_styleNode.getColumnNumber(), colNumbString);
+            NumberToDOMString(ev.m_styleNode.getColumnNumber(), colNumbString);
 
             XalanDOMString  msg(m_memoryManager);
 
@@ -132,7 +132,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
             const XPath* const  theMatchPattern =
                 et.getMatchPattern();
 
-            if(0 != theMatchPattern)
+            if (0 != theMatchPattern)
             {
                 m_printWriter.print(
                     XalanMessageLoader::getMessage(
@@ -144,7 +144,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
 
             const XalanQName&   theName = et.getNameAttribute();
 
-            if(theName.isEmpty() == false)
+            if (theName.isEmpty() == false)
             {
                 m_printWriter.print(
                     XalanMessageLoader::getMessage(
@@ -169,13 +169,13 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
         break;
 
     default:
-        if(m_traceElements == true)
+        if (m_traceElements == true)
         {
             XalanDOMString lineNumbString(m_memoryManager);
-            LongToDOMString(ev.m_styleNode.getLineNumber(), lineNumbString);
+            NumberToDOMString(ev.m_styleNode.getLineNumber(), lineNumbString);
             
             XalanDOMString colNumbString(m_memoryManager);
-            LongToDOMString(ev.m_styleNode.getColumnNumber(), colNumbString);
+            NumberToDOMString(ev.m_styleNode.getColumnNumber(), colNumbString);
 
             XalanDOMString  msg(m_memoryManager);
 
@@ -213,7 +213,7 @@ TraceListenerDefault::processNodeList(const NodeRefListBase&        nl)
     }
     else
     {
-        for(NodeRefListBase::size_type i = 0; i < n; i++)
+        for (NodeRefListBase::size_type i = 0; i < n; i++)
         {
             assert(nl.item(i) != 0);
 
@@ -231,11 +231,11 @@ TraceListenerDefault::processNodeList(const NodeRefListBase&        nl)
 void
 TraceListenerDefault::selected(const SelectionEvent&    ev)
 {
-    if(m_traceSelection == true)
+    if (m_traceSelection == true)
     {
         const ElemTemplateElement&  ete = ev.m_styleNode;
 
-        if(ev.m_styleNode.getLineNumber() == XalanLocator::getUnknownValue())
+        if (ev.m_styleNode.getLineNumber() == XalanLocator::getUnknownValue())
         {
             // You may not have line numbers if the selection is occuring from a
             // default template.
@@ -244,14 +244,14 @@ TraceListenerDefault::selected(const SelectionEvent&    ev)
 
             XalanDOMString  msg(m_memoryManager);
 
-            if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRootRule())
+            if (parent == ete.getStylesheet().getStylesheetRoot().getDefaultRootRule())
             {
                 m_printWriter.print(
                     XalanMessageLoader::getMessage(
                         msg,
                         XalanMessages::DefaultRootRule));
             }
-            else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultTextRule())
+            else if (parent == ete.getStylesheet().getStylesheetRoot().getDefaultTextRule())
             {
                 m_printWriter.print(
                     XalanMessageLoader::getMessage(
@@ -259,7 +259,7 @@ TraceListenerDefault::selected(const SelectionEvent&    ev)
                         XalanMessages::DefaultRootRule_1Param,
                         Constants::ATTRNAME_DATATYPE));
             }
-            else if(parent == ete.getStylesheet().getStylesheetRoot().getDefaultRule())
+            else if (parent == ete.getStylesheet().getStylesheetRoot().getDefaultRule())
             {
                 m_printWriter.print(
                     XalanMessageLoader::getMessage(
@@ -274,9 +274,9 @@ TraceListenerDefault::selected(const SelectionEvent&    ev)
             XalanDOMString  lineNumb(m_memoryManager);
             XalanDOMString  columnNumber(m_memoryManager);
 
-            LongToDOMString(ev.m_styleNode.getLineNumber(), lineNumb);
+            NumberToDOMString(ev.m_styleNode.getLineNumber(), lineNumb);
 
-            LongToDOMString( ev.m_styleNode.getColumnNumber(), columnNumber);
+            NumberToDOMString( ev.m_styleNode.getColumnNumber(), columnNumber);
 
             m_printWriter.print(
                 XalanMessageLoader::getMessage(
@@ -388,9 +388,9 @@ TraceListenerDefault::printNodeInfo(const ElemTemplateElement&  node)
 
     XalanDOMString msg(m_memoryManager), lineNumb(m_memoryManager), columnNumb(m_memoryManager);
 
-    LongToDOMString(node.getLineNumber(), lineNumb);
+    NumberToDOMString(node.getLineNumber(), lineNumb);
 
-    LongToDOMString(node.getColumnNumber(), columnNumb);
+    NumberToDOMString(node.getColumnNumber(), columnNumb);
 
     m_printWriter.print(
         XalanMessageLoader::getMessage(

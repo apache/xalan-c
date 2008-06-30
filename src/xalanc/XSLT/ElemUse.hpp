@@ -58,7 +58,7 @@ public:
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber,
+			XalanFileLoc					lineNumber, 
 			XalanFileLoc					columnNumber,
 			int								xslToken);
 

@@ -15,10 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- * */
 
 
 
@@ -101,8 +97,9 @@ static const XalanDOMChar   locationClose[] =
 };
 
 
-ProblemListenerDefault::ProblemListenerDefault( MemoryManagerType& theManager,
-                                                PrintWriter*        pw) :
+ProblemListenerDefault::ProblemListenerDefault(
+            MemoryManagerType&  theManager,
+            PrintWriter*        pw) :
     ProblemListener(),
     m_memoryManager(theManager),
     m_pw(pw)
@@ -134,8 +131,8 @@ ProblemListenerDefault::problem(
             const ElemTemplateElement*  styleNode,
             const XalanDOMString&       msg,
             const XalanDOMChar*         uri,
-            int                         lineNo,
-            int                         charOffset)
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset)
 {
     if (m_pw != 0)
     {
@@ -154,8 +151,8 @@ ProblemListenerDefault::problem(
             const ElemTemplateElement*  styleNode,
             const XalanDOMString&       msg,
             const XalanDOMChar*         uri,
-            int                         lineNo,
-            int                         charOffset)
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset)
 {
     MemoryManagerType& theManager = pw.getMemoryManager();
 
@@ -225,10 +222,10 @@ ProblemListenerDefault::problem(
     }
 
     XalanDOMString  lineNoString(theManager);
-    LongToDOMString(lineNo, lineNoString);
+    NumberToDOMString(lineNo, lineNoString);
 
     XalanDOMString  charOffsetString(theManager);
-    LongToDOMString(charOffset, charOffsetString);
+    NumberToDOMString(charOffset, charOffsetString);
 
     XalanMessageLoader::getMessage(
         theBuffer,

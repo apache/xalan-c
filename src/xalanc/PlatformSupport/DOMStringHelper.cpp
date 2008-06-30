@@ -1775,6 +1775,18 @@ LongToDOMString(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            unsigned long long  theValue,
+            XalanDOMString&     theResult)
+{
+	ScalarToDecimalString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)

@@ -59,7 +59,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemVariableAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemVariableAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemVariableAllocator();
 	
@@ -79,8 +81,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 	/**
 	 * Determine if an object is owned by the allocator...

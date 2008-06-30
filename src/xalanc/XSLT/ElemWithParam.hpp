@@ -55,8 +55,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
 
 	virtual
 	~ElemWithParam();
@@ -78,7 +78,7 @@ public:
 	getElementName() const;
 
 	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
+	getXPath(XalanSize_t    index) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual const ElemTemplateElement* 

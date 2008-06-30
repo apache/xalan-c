@@ -48,15 +48,15 @@ public:
 	 * @param constructionContext context for construction of object
 	 * @param stylesheetTree      stylesheet containing element
 	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
+	 * @param lineNumber		  line number in document
+	 * @param columnNumber		  column number in document
 	 */
 	ElemCallTemplate (
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
 
 	virtual
 	~ElemCallTemplate();

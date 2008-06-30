@@ -52,8 +52,8 @@ public:
 	XPathParserException(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
-			int						theLineNumber,
-			int						theColumnNumber,
+			XalanFileLoc			theLineNumber,
+			XalanFileLoc			theColumnNumber,
             MemoryManagerType&      theManager);
 
 	/**

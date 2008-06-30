@@ -59,8 +59,8 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			ExtensionNSHandler&				ns);
 
 	static ElemExtensionCall*
@@ -70,8 +70,8 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			ExtensionNSHandler&				ns);
 
 	// These methods are inherited from ElemLiteralResult ...

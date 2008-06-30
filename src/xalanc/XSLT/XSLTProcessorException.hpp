@@ -47,11 +47,11 @@ public:
 	 * @param theColumnNumber the column number of the related document.
 	 */
 	XSLTProcessorException(
-        MemoryManagerType&      theManager,
-		const XalanDOMString&	theMessage,
-		const XalanDOMString&	theURI,
-		int						theLineNumber,
-		int						theColumnNumber);
+            MemoryManagerType&      theManager,
+		    const XalanDOMString&	theMessage,
+		    const XalanDOMString&	theURI,
+	        XalanFileLoc			lineNumber,
+		    XalanFileLoc			columnNumber);
 
 	/**
 	 * Constructor
@@ -70,8 +70,8 @@ public:
 	 * @param theMessage message to print when exception thrown
 	 */
 	XSLTProcessorException(
-        MemoryManagerType&      theManager,
-		const XalanDOMString&	theMessage);
+            MemoryManagerType&      theManager,
+		    const XalanDOMString&	theMessage);
 
 	virtual
 	~XSLTProcessorException();

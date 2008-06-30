@@ -1168,7 +1168,14 @@ XSLTEngineImpl::problem(
     {
         MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
 
-        throw XSLTProcessorException( theManager, msg, XalanDOMString(id, theManager), lineNumber, columnNumber);
+        throw XSLTProcessorException(
+                    theManager,
+                    msg,
+                    XalanDOMString(
+                        id,
+                        theManager),
+                    lineNumber,
+                    columnNumber);
     }
 }
 

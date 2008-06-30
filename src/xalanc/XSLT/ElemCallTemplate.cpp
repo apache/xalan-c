@@ -46,8 +46,8 @@ ElemCallTemplate::ElemCallTemplate(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -191,7 +191,6 @@ ElemCallTemplate::getFirstChildElemToExecute(
 
 
 
-
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemCallTemplate::execute(StylesheetExecutionContext&   executionContext) const
@@ -207,6 +206,7 @@ ElemCallTemplate::execute(StylesheetExecutionContext&   executionContext) const
     m_template->executeAsNamed(executionContext);
 }
 #endif
+
 
 
 void

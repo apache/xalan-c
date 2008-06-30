@@ -43,32 +43,33 @@ ElemPI::ElemPI(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_PI),
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_PI),
     m_nameAVT(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_NAME))
+        if (equals(aname, Constants::ATTRNAME_NAME))
         {           
             m_nameAVT =
                     constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
                     constructionContext) == false &&
-                processSpaceAttr(
+                 processSpaceAttr(
                     Constants::ELEMNAME_PI_WITH_PREFIX_STRING.c_str(),
                     aname,
                     atts,
@@ -83,7 +84,7 @@ ElemPI::ElemPI(
         }
     }
 
-    if(0 == m_nameAVT)
+    if (0 == m_nameAVT)
     {
         error(
             constructionContext,
@@ -119,7 +120,7 @@ ElemPI::startElement(StylesheetExecutionContext&    executionContext) const
 
     m_nameAVT->evaluate(piName, *this, executionContext);
 
-    if(equalsIgnoreCaseASCII(
+    if (equalsIgnoreCaseASCII(
             piName,
             Constants::ATTRVAL_OUTPUT_METHOD_XML) ||
        isValidNCName(piName) == false)
@@ -158,7 +159,7 @@ ElemPI::endElement(StylesheetExecutionContext&  executionContext) const
 
     // We need to fix up any occurrences of the sequence '?>' in
     // the PI's data by inserting a space between them.
-    while(theCurrent != theEnd)
+    while (theCurrent != theEnd)
     {
         const XalanDOMChar  theChar = *theCurrent;
 
@@ -208,7 +209,7 @@ ElemPI::execute(StylesheetExecutionContext&     executionContext) const
 
     m_nameAVT->evaluate(piName, *this, executionContext);
 
-    if(equalsIgnoreCaseASCII(
+    if (equalsIgnoreCaseASCII(
             piName,
             Constants::ATTRVAL_OUTPUT_METHOD_XML) ||
        isValidNCName(piName) == false)

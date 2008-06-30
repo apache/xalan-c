@@ -48,8 +48,8 @@ ElemVariable::ElemVariable(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber) :
     ParentType(
         constructionContext,
         stylesheetTree,
@@ -71,8 +71,8 @@ ElemVariable::ElemVariable(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber,
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber,
             int                             xslToken) :
     ParentType(
         constructionContext,
@@ -103,9 +103,9 @@ ElemVariable::init(
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
     
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -129,12 +129,12 @@ ElemVariable::init(
                     atts.getValue(i));
             }
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
                     constructionContext) == false &&
-                processSpaceAttr(
+                 processSpaceAttr(
                     Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING.c_str(),
                     aname,
                     atts,
@@ -149,7 +149,7 @@ ElemVariable::init(
         }
     }
 
-    if(m_qname == 0)
+    if (m_qname == 0)
     {
         error(
             constructionContext,
@@ -232,7 +232,7 @@ ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
 
     XObjectPtr theValue;
 
-    if(m_selectPattern == 0)
+    if (m_selectPattern == 0)
     {
         if (getFirstChildElem() == 0)
         {
@@ -248,7 +248,7 @@ ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
     {
         theValue = m_selectPattern->execute(*this, executionContext);
     
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireSelectEvent(
                 SelectionEvent(
@@ -327,7 +327,7 @@ ElemVariable::execute(StylesheetExecutionContext&   executionContext) const
 
 
 const XPath*
-ElemVariable::getXPath(unsigned int     index) const
+ElemVariable::getXPath(XalanSize_t  index) const
 {
     return index == 0 ? m_selectPattern : 0;
 }
@@ -339,7 +339,7 @@ ElemVariable::getValue(
             StylesheetExecutionContext&     executionContext,
             XalanNode*                      sourceNode) const
 {
-    if(m_selectPattern == 0)
+    if (m_selectPattern == 0)
     {
         if (getFirstChildElem() == 0)
         {
@@ -376,7 +376,7 @@ ElemVariable::getValue(
             theValue = m_selectPattern->execute(*this, executionContext);
         }
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireSelectEvent(
                 SelectionEvent(

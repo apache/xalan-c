@@ -60,8 +60,8 @@ public:
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset);
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset);
 
 	// These methods are new...
 
@@ -80,14 +80,14 @@ public:
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset);
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset);
 
 private:
 
-    MemoryManagerType& m_memoryManager;
+    MemoryManagerType&  m_memoryManager;
 
-	PrintWriter*	m_pw;
+	PrintWriter*	    m_pw;
 };
 
 

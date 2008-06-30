@@ -41,18 +41,19 @@ ElemWhen::ElemWhen(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_WHEN),
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_WHEN),
     m_test(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; ++i)
+    for (XalanSize_t i = 0; i < nAttrs; ++i)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -60,12 +61,12 @@ ElemWhen::ElemWhen(
         {
             m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
                     constructionContext) == false && 
-                processSpaceAttr(
+                 processSpaceAttr(
                     Constants::ELEMNAME_WHEN_WITH_PREFIX_STRING.c_str(),
                     aname,
                     atts,
@@ -80,7 +81,7 @@ ElemWhen::ElemWhen(
         }
     }
 
-    if(0 == m_test)
+    if (0 == m_test)
     {
         error(
             constructionContext,
@@ -132,7 +133,7 @@ ElemWhen::execute(StylesheetExecutionContext&   executionContext) const
 
 
 const XPath*
-ElemWhen::getXPath(unsigned int index) const
+ElemWhen::getXPath(XalanSize_t  index) const
 {
     return index == 0 ? m_test : 0;
 }

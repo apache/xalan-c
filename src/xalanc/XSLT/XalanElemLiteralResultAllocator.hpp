@@ -59,7 +59,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemLiteralResultAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemLiteralResultAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemLiteralResultAllocator();
 	
@@ -81,8 +83,8 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 	/**
 	 * Determine if an object is owned by the allocator...

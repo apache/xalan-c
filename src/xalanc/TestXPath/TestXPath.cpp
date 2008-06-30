@@ -1185,30 +1185,20 @@ TestBooleanResults(
 
 
 XalanDOMString&
-GetXSLFileName(const XalanDOMString&        theXMLFileName, XalanDOMString& theResult)
+GetXSLFileName(
+            const XalanDOMString&   theXMLFileName,
+            XalanDOMString&         theResult)
 {
-    
+    const XalanDOMString::size_type     thePeriodIndex =
+        lastIndexOf(theXMLFileName, XalanUnicode::charFullStop);
 
-    int         thePeriodIndex = -1;
-
-    const int   theLength = length(theXMLFileName);
-
-    for (int i = theLength - 1; i > 0; i--)
+    if (thePeriodIndex != XalanDOMString::npos)
     {
-        if (charAt(theXMLFileName, i) == XalanUnicode::charFullStop)
-        {
-            thePeriodIndex = i;
-
-            break;
-        }
-    }
-
-    if (thePeriodIndex != -1)
-    {
-         substring(theXMLFileName,
-                              theResult,
-                              0,
-                              thePeriodIndex + 1);
+         substring(
+             theXMLFileName,
+             theResult,
+             0,
+             thePeriodIndex + 1);
 
         theResult.append("xsl");
     }

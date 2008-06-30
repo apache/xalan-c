@@ -77,7 +77,8 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 #endif
-	virtual	const XPath*
+
+    virtual	const XPath*
 	getXPath(XalanSize_t    index) const;
 
 private:

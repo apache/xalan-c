@@ -49,8 +49,8 @@ ElemLiteralResult::ElemLiteralResult(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber) :
     ElemUse(
         constructionContext,
         stylesheetTree,
@@ -71,8 +71,8 @@ ElemLiteralResult::ElemLiteralResult(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
             int                             xslToken) :
     ElemUse(constructionContext,
             stylesheetTree,
@@ -99,7 +99,7 @@ ElemLiteralResult::init(
 
     hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false);
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
     // This over-allocates, but we probably won't waste that much space.
     m_avts = constructionContext.allocateAVTPointerVector(nAttrs);
@@ -109,7 +109,7 @@ ElemLiteralResult::init(
 
     XalanDOMString&     theBuffer = theGuard.get();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -117,27 +117,27 @@ ElemLiteralResult::init(
         const XalanDOMString::size_type     indexOfNSSep = indexOf(aname, XalanUnicode::charColon);
         const XalanDOMString::size_type     len = length(aname);
 
-        if(indexOfNSSep < len)
+        if (indexOfNSSep < len)
         {
             substring(aname, theBuffer, 0, indexOfNSSep);
 
-            if(!equals(theBuffer, DOMServices::s_XMLNamespace))
+            if (!equals(theBuffer, DOMServices::s_XMLNamespace))
             {
                 const XalanDOMString* const     ns =
                         getNamespaceForPrefixInternal(theBuffer);
 
-                if(ns == 0)
+                if (ns == 0)
                 {
                     error(
                         constructionContext,
                         XalanMessages::PrefixIsNotDeclared_1Param,
                         theBuffer);
                 }
-                else if(equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
+                else if (equals(*ns, stylesheetTree.getXSLTNamespaceURI()))
                 {
                     theBuffer.assign(aname + indexOfNSSep + 1, len - (indexOfNSSep + 1));
 
-                    if(processPrefixControl(constructionContext, stylesheetTree, theBuffer, atts.getValue(i)) == true)
+                    if (processPrefixControl(constructionContext, stylesheetTree, theBuffer, atts.getValue(i)) == true)
                     {
                         needToProcess = false;
                     }
@@ -157,7 +157,7 @@ ElemLiteralResult::init(
             }
         }
 
-        if(needToProcess == true)
+        if (needToProcess == true)
         {
             processSpaceAttr(
                 m_elementName.c_str(),
@@ -168,7 +168,7 @@ ElemLiteralResult::init(
 
             // Add xmlns attribute(except xmlns:xsl), xml:space, etc... 
             // Ignore anything with xsl:xxx 
-            if(processUseAttributeSets(
+            if (processUseAttributeSets(
                     constructionContext,
                     aname,
                     atts,
@@ -207,8 +207,8 @@ class AVTPrefixChecker : public NamespacesHandler::PrefixChecker
 public:
 
     AVTPrefixChecker(
-            const AVT**         theAVTs,
-            unsigned int        theAVTsCount) :
+            const AVT**     theAVTs,
+            XalanSize_t     theAVTsCount) :
         m_avts(theAVTs),
         m_avtsCount(theAVTsCount)
     {
@@ -219,7 +219,7 @@ public:
     {
         bool    fActive = false;
 
-        for(unsigned int i = 0; i < m_avtsCount; ++i)
+        for (XalanSize_t i = 0; i < m_avtsCount; ++i)
         {
             const AVT* const    avt = m_avts[i];
 
@@ -252,7 +252,7 @@ private:
     // Data members...
     const AVT** const   m_avts;
 
-    const unsigned int  m_avtsCount;
+    const XalanSize_t   m_avtsCount;
 };
 
 
@@ -375,13 +375,13 @@ ElemLiteralResult::endElement(StylesheetExecutionContext&       executionContext
 void
 ElemLiteralResult::evaluateAVTs(StylesheetExecutionContext& executionContext) const
 {
-    if(m_avtsCount > 0)
+    if (m_avtsCount > 0)
     {
         StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
 
         XalanDOMString&     theStringedValue = theGuard.get();
 
-        for(unsigned int i = 0; i < m_avtsCount; ++i)
+        for(XalanSize_t i = 0; i < m_avtsCount; ++i)
         {
             const AVT* const    avt = m_avts[i];
 
@@ -443,7 +443,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&  executionContext) const
 
         XalanDOMString&     theStringedValue = theGuard.get();
 
-        for(unsigned int i = 0; i < m_avtsCount; ++i)
+        for(XalanSize_t i = 0; i < m_avtsCount; ++i)
         {
             const AVT* const    avt = m_avts[i];
 
@@ -469,18 +469,18 @@ bool
 ElemLiteralResult::isAttrOK(
             const XalanDOMChar*             attrName,
             const AttributeListType&        /* atts */,
-            int                             /* which */,
+            XalanSize_t                     /* which */,
             StylesheetConstructionContext&  constructionContext) const
 {
     bool    isAttrOK = equals(attrName, DOMServices::s_XMLNamespace) ||
                        startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
 
-    if(isAttrOK == false)
+    if (isAttrOK == false)
     {
         const XalanDOMString::size_type     len = length(attrName);
         const XalanDOMString::size_type     indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
-        if(indexOfNSSep >= len)
+        if (indexOfNSSep >= len)
         {
             // An empty namespace is OK.
             isAttrOK = true;

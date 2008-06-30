@@ -42,8 +42,8 @@ ElemMessage::ElemMessage(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -51,9 +51,9 @@ ElemMessage::ElemMessage(
                         StylesheetConstructionContext::ELEMNAME_MESSAGE),
     m_terminate(false)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -75,7 +75,7 @@ ElemMessage::ElemMessage(
                     avalue);
             }
         }
-        else if(
+        else if (
             isAttrOK(
                 aname,
                 atts,

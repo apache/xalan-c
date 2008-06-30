@@ -57,8 +57,8 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
 
 	virtual
 	~ElemLiteralResult();
@@ -77,7 +77,7 @@ public:
 	isAttrOK(
 			const XalanDOMChar*				attrName,
 			const AttributeListType&		atts,
-			int								which,
+			XalanSize_t						which,
 			StylesheetConstructionContext&	constructionContext) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
@@ -127,8 +127,8 @@ protected:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			int								xslToken);
 
 	virtual void
@@ -159,7 +159,7 @@ private:
 	/**
 	 * The size of m_avts, once the stylesheet is compiled...
 	 */
-	unsigned int			m_avtsCount;
+	XalanSize_t			    m_avtsCount;
 };
 
 

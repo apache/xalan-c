@@ -60,8 +60,8 @@ public:
 	XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
-			int						theLineNumber,
-			int						theColumnNumber,
+			XalanFileLoc			theLineNumber,
+			XalanFileLoc			theColumnNumber,
             MemoryManagerType&      theManager);
 
 	/**
@@ -83,10 +83,11 @@ public:
 	 * @param message message explaining the problem. 
 	 * @param theType type of exception, default is "XalanXPathException"
 	 */
-	XalanXPathException(const XalanDOMString&	message,
-                            MemoryManagerType& theManager);
+	XalanXPathException(
+            const XalanDOMString&	message,
+            MemoryManagerType&      theManager);
 
-    XalanXPathException(const XalanXPathException& other);
+    XalanXPathException(const XalanXPathException&  other);
 
 	virtual
 	~XalanXPathException();
@@ -94,7 +95,7 @@ public:
 	virtual const XalanDOMChar*
 	getType() const
 	{
-		return m_type;
+		return s_type;
 	}
 
 protected:
@@ -107,11 +108,12 @@ protected:
 	XalanXPathException(MemoryManagerType& theManager);
 
 private:
-	static const XalanDOMChar	m_type[];
 
 	const XalanNode*	m_styleNode;
 
 	static const XalanDOMString		s_emptyString;
+
+    static const XalanDOMChar	    s_type[];
 };
 
 

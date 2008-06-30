@@ -78,7 +78,7 @@ NamedNodeMapAttributeList::getName(const XalanSize_t    index) const
 	const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
 	assert(theAttribute != 0);
 
-	return c_wstr(theAttribute->getNodeName());
+	return theAttribute->getNodeName().c_str();
 }
 
 
@@ -101,7 +101,7 @@ NamedNodeMapAttributeList::getValue(const XalanSize_t   index) const
     const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
 	assert(theAttribute != 0);
 
-	return c_wstr(theAttribute->getNodeValue());
+	return theAttribute->getNodeValue().c_str();
 }
 
 
@@ -111,7 +111,7 @@ NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 {
 	assert(length(s_typeString) > 0);
 
-	return c_wstr(s_typeString);
+	return s_typeString;
 }
 
 
@@ -127,7 +127,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const  name) const
 	}
 	else
 	{
-		return c_wstr(theNode->getNodeValue());
+		return theNode->getNodeValue().c_str();
 	}
 }
 
@@ -136,9 +136,9 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const  name) const
 const XMLCh* 
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
-    XalanDOMString theBuffer(m_memoryManager);
+    XalanDOMString  theBuffer(m_memoryManager);
 
-	return getValue(c_wstr(TranscodeFromLocalCodePage(name, theBuffer)));
+	return getValue(TranscodeFromLocalCodePage(name, theBuffer).c_str());
 }
 
 

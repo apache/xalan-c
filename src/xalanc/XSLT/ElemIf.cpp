@@ -50,18 +50,19 @@ ElemIf::ElemIf(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_IF),
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_IF),
     m_test(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -89,7 +90,7 @@ ElemIf::ElemIf(
         }
     }
 
-    if(0 == m_test)
+    if (0 == m_test)
     {
         error(
             constructionContext,
@@ -120,7 +121,7 @@ ElemIf::startElement(StylesheetExecutionContext&        executionContext) const
 
     m_test->execute(*this, executionContext, fResult);
 
-    if(0 != executionContext.getTraceListeners())
+    if (0 != executionContext.getTraceListeners())
     {
         executionContext.fireSelectEvent(
             SelectionEvent(executionContext,
@@ -131,13 +132,14 @@ ElemIf::startElement(StylesheetExecutionContext&        executionContext) const
             fResult));
     }
 
-    if(fResult == true)
+    if (fResult == true)
     {
         executionContext.pushExecuteIf(true);
         return beginExecuteChildren(executionContext);
     }
 
     executionContext.pushExecuteIf(false);
+
     return 0;
 }
 
@@ -146,7 +148,7 @@ ElemIf::startElement(StylesheetExecutionContext&        executionContext) const
 void
 ElemIf::endElement(StylesheetExecutionContext&  executionContext) const
 {
-    if(executionContext.popExecuteIf())
+    if (executionContext.popExecuteIf())
     {
         endExecuteChildren(executionContext);
     }
@@ -167,7 +169,7 @@ ElemIf::execute(StylesheetExecutionContext&     executionContext) const
 
     m_test->execute(*this, executionContext, fResult);
 
-    if(0 != executionContext.getTraceListeners())
+    if (0 != executionContext.getTraceListeners())
     {
         executionContext.fireSelectEvent(
             SelectionEvent(executionContext,
@@ -178,7 +180,7 @@ ElemIf::execute(StylesheetExecutionContext&     executionContext) const
             fResult));
     }
 
-    if(fResult == true)
+    if (fResult == true)
     {
         executeChildren(executionContext);
     }
@@ -188,7 +190,7 @@ ElemIf::execute(StylesheetExecutionContext&     executionContext) const
 
 
 const XPath*
-ElemIf::getXPath(unsigned int   index) const
+ElemIf::getXPath(XalanSize_t    index) const
 {
     return index == 0 ? m_test : 0;
 }

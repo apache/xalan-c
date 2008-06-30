@@ -42,26 +42,26 @@ ElemComment::ElemComment(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
                         columnNumber,
                         StylesheetConstructionContext::ELEMNAME_COMMENT)
 {
-    const unsigned int nAttrs = atts.getLength();
+    const XalanSize_t nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(isAttrOK(
+        if (isAttrOK(
                 aname,
                 atts,
                 i,
                 constructionContext) == false &&
-           processSpaceAttr(
+            processSpaceAttr(
                 Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING.c_str(),
                 aname,
                 atts,
@@ -110,7 +110,6 @@ ElemComment::startElement(StylesheetExecutionContext&       executionContext) co
 void
 ElemComment::endElement(StylesheetExecutionContext&     executionContext) const
 {
-    
     endChildrenToString(executionContext);
 
     XalanDOMString&     theResult = executionContext.getAndPopCachedString();

@@ -101,7 +101,7 @@ SAX2Handler::printToIndexFile(const char*   sArrayOfStrings[])
 {
     if (sArrayOfStrings != 0)
     {
-        for (unsigned int i = 0; sArrayOfStrings[i] != 0; ++i)
+        for (XalanSize_t i = 0; sArrayOfStrings[i] != 0; ++i)
         {
             m_indexOutputStream.writeAsASCII(
                 sArrayOfStrings[i],
@@ -121,12 +121,12 @@ SAX2Handler::startElement(
 {
     if(!XMLString::compareString(localname, s_transUnitXMLCh))
     {
-        const unsigned int  len =
+        const XalanSize_t  len =
             attributes.getLength();
 
         ++m_numberOfRecords;
 
-        for (unsigned int index = 0; index < len; index++)
+        for (XalanSize_t index = 0; index < len; index++)
         {
             const XMLCh* const  name =
                 attributes.getQName(index);
@@ -138,8 +138,10 @@ SAX2Handler::startElement(
                     attributes.getValue(index);
                 assert(val != 0);
 
-                if ( m_numberOfRecords !=  1)
+                if (m_numberOfRecords !=  1)
+                {
                     printBeginOfIndexLine();
+                }
 
                 m_indexOutputStream.writeAsASCII(
                     val,

@@ -54,8 +54,8 @@ public:
 	XSLException(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
-			int						theLineNumber,
-			int						theColumnNumber,
+			XalanFileLoc			theLineNumber,
+			XalanFileLoc			theColumnNumber,
             MemoryManagerType&      theManager);
 	/**
 	 * Constructor
@@ -139,8 +139,8 @@ public:
     MemoryManagerType& 
     getMemoryManager()const
     {
-//#pragma message ("Breaks the const-correctness !")
         XalanDOMString* pnt = const_cast<XalanDOMString*>(&m_message);
+
         return pnt->getMemoryManager();
     }
 
@@ -151,8 +151,8 @@ public:
 	defaultFormat(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
-			size_type				theLineNumber,
-			size_type				theColumnNumber,
+			XalanFileLoc			theLineNumber,
+			XalanFileLoc			theColumnNumber,
 			const XalanDOMChar*		theType,
 			XalanDOMString&			theBuffer)
 	{
@@ -170,12 +170,12 @@ public:
 
 	static void
 	defaultFormat(
-			const XalanDOMChar*					theMessage,
-			const XalanDOMChar*					theURI,
-			size_type							theLineNumber,
-			size_type							theColumnNumber,
-			const XalanDOMChar*					theType,
-			XalanDOMString&						theBuffer)
+			const XalanDOMChar*		theMessage,
+			const XalanDOMChar*		theURI,
+			XalanFileLoc			theLineNumber,
+			XalanFileLoc			theColumnNumber,
+			const XalanDOMChar*		theType,
+			XalanDOMString&			theBuffer)
 	{
 		assert(theMessage != 0 && theURI != 0 && theType != 0);
 
@@ -197,8 +197,8 @@ public:
 			const XalanDOMString::size_type		theMessageLength,
 			const XalanDOMChar*					theURI,
 			const XalanDOMString::size_type		theURILength,
-			size_type							theLineNumber,
-			size_type							theColumnNumber,
+			XalanFileLoc			            theLineNumber,
+			XalanFileLoc			            theColumnNumber,
 			const XalanDOMChar*					theType,
 			const XalanDOMString::size_type		theTypeLength,
 			XalanDOMString&						theBuffer);
@@ -208,8 +208,8 @@ private:
 	const XalanDOMString	m_message;
 	const XalanDOMString	m_uri;
 
-	const size_type			m_lineNumber;
-	const size_type			m_columnNumber;
+	const XalanFileLoc		m_lineNumber;
+	const XalanFileLoc	    m_columnNumber;
 
 
 };

@@ -94,8 +94,8 @@ public:
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset) = 0;
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset) = 0;
 
 };
 

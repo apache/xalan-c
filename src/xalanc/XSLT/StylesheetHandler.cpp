@@ -143,7 +143,7 @@ bool
 StylesheetHandler::isAttrOK(
             const XalanDOMChar*         attrName,
             const AttributeListType&    atts,
-            int                         which)
+            XalanSize_t                 which)
 {
     return m_stylesheet.isAttrOK(attrName, atts, which, m_constructionContext);
 }
@@ -155,7 +155,7 @@ StylesheetHandler::processSpaceAttr(
             const XalanDOMChar*         elementName,
             const XalanDOMChar*         aname,
             const AttributeListType&    atts,
-            int                         which,
+            XalanSize_t                 which,
             const LocatorType*          locator,
             bool&                       fPreserve)
 {
@@ -204,9 +204,9 @@ StylesheetHandler::processSpaceAttr(
             const LocatorType*          locator,
             bool&                       fPreserve)
 {
-    const unsigned int  len = atts.getLength();
+    const XalanSize_t  len = atts.getLength();
 
-    for (unsigned int i = 0; i < len; ++i)
+    for (XalanSize_t i = 0; i < len; ++i)
     {
         if (processSpaceAttr(
                 elementName,
@@ -952,19 +952,19 @@ StylesheetHandler::processStylesheet(
 {
     m_foundStylesheet = true;
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
     bool                fVersionFound = false;
 
-    for(unsigned int i = 0; i < nAttrs; ++i)
+    for (XalanSize_t i = 0; i < nAttrs; ++i)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+        if (equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
         {
             m_stylesheet.processExcludeResultPrefixes(m_constructionContext, atts.getValue(i));
         }
-        else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
+        else if (equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
         {
             const GetAndReleaseCachedString     theGuard(m_constructionContext);
 
@@ -973,7 +973,7 @@ StylesheetHandler::processStylesheet(
             StringTokenizer tokenizer(atts.getValue(i),
                                       Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-            while(tokenizer.hasMoreTokens() == true)
+            while (tokenizer.hasMoreTokens() == true)
             {
                 tokenizer.nextToken(prefix);
 
@@ -994,11 +994,11 @@ StylesheetHandler::processStylesheet(
                 m_stylesheet.processExtensionNamespace(m_constructionContext, *extns);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_ID))
+        else if (equals(aname, Constants::ATTRNAME_ID))
         {
             //
         }
-        else if(equals(aname, Constants::ATTRNAME_VERSION))
+        else if (equals(aname, Constants::ATTRNAME_VERSION))
         {
             const XalanDOMChar* const   versionStr = atts.getValue(i);
             assert(versionStr != 0);
@@ -1007,19 +1007,19 @@ StylesheetHandler::processStylesheet(
 
             fVersionFound = true;
         }
-        else if(processSpaceAttr(name, aname, atts, i, locator, fPreserveSpace) == true)
+        else if (processSpaceAttr(name, aname, atts, i, locator, fPreserveSpace) == true)
         {
             fSpaceAttrProcessed = true;
         }
-        else if(isAttrOK(aname, atts, i) == false)
+        else if (isAttrOK(aname, atts, i) == false)
         {
-            if(false == m_stylesheet.isWrapperless())
+            if (false == m_stylesheet.isWrapperless())
             {
                 illegalAttributeError(name, aname, locator);
             }
         }
 
-        if(!m_stylesheet.getNamespaces().empty())
+        if (!m_stylesheet.getNamespaces().empty())
         {
             m_stylesheet.setNamespaceDecls(m_stylesheet.getNamespaces().back());
         }
@@ -1121,17 +1121,18 @@ StylesheetHandler::processPreserveStripSpace(
             const LocatorType*          locator,
             int                         xslToken)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
     bool foundIt = false;
 
-    const bool  isPreserveSpace = StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE == xslToken? true : false;
+    const bool  isPreserveSpace =
+        StylesheetConstructionContext::ELEMNAME_PRESERVE_SPACE == xslToken ? true : false;
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_ELEMENTS))
+        if (equals(aname, Constants::ATTRNAME_ELEMENTS))
         {
             foundIt = true;
 
@@ -1144,7 +1145,7 @@ StylesheetHandler::processPreserveStripSpace(
 
             const XalanQName::PrefixResolverProxy   theProxy(m_stylesheet.getNamespaces(), m_stylesheet.getURI());
 
-            while(tokenizer.hasMoreTokens())
+            while (tokenizer.hasMoreTokens())
             {
                 tokenizer.nextToken(theNameTest);
 
@@ -1159,13 +1160,13 @@ StylesheetHandler::processPreserveStripSpace(
                             locator));
             }
         }
-        else if(!isAttrOK(aname, atts, i))
+        else if (!isAttrOK(aname, atts, i))
         {
             illegalAttributeError(name, aname, locator);
         }
     }
 
-    if(!foundIt && inExtensionElement() == false)
+    if (!foundIt && inExtensionElement() == false)
     {
         const GetAndReleaseCachedString     theGuard(m_constructionContext);
 
@@ -1283,22 +1284,22 @@ StylesheetHandler::processImport(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
     bool                foundIt = false;
 
     const GetAndReleaseCachedString     theGuard4(m_constructionContext);
     XalanDOMString&     hrefUrl = theGuard4.get();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_HREF))
+        if (equals(aname, Constants::ATTRNAME_HREF))
         {
             foundIt = true;
             
-            if(m_foundNotImport)
+            if (m_foundNotImport)
             {
                 const GetAndReleaseCachedString     theError(m_constructionContext);
 
@@ -1334,7 +1335,7 @@ StylesheetHandler::processImport(
 
             Stylesheet::URLStackType&   importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
-            if(stackContains(importStack, hrefUrl))
+            if (stackContains(importStack, hrefUrl))
             {
                 const GetAndReleaseCachedString     theError(m_constructionContext);
 
@@ -1371,13 +1372,13 @@ StylesheetHandler::processImport(
 
             m_stylesheet.setXSLTNamespaceURI(saved_XSLNameSpaceURL);
         }
-        else if(!isAttrOK(aname, atts, i))
+        else if (!isAttrOK(aname, atts, i))
         {
             illegalAttributeError(name, aname, locator);
         }
     }
 
-    if(!foundIt)
+    if (!foundIt)
     {            
         const GetAndReleaseCachedString     theError(m_constructionContext);
 
@@ -1399,7 +1400,7 @@ StylesheetHandler::processInclude(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
     bool                foundIt = false;
 
@@ -1409,11 +1410,11 @@ StylesheetHandler::processInclude(
     const GetAndReleaseCachedString     theGuard2(m_constructionContext);
     XalanDOMString& hrefUrl = theGuard2.get();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_HREF))
+        if (equals(aname, Constants::ATTRNAME_HREF))
         {
             foundIt = true;
 
@@ -1425,7 +1426,7 @@ StylesheetHandler::processInclude(
      
             m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back(), hrefUrl);
 
-            if(stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
+            if (stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
             {
                 const GetAndReleaseCachedString     theError(m_constructionContext);
 
@@ -1444,13 +1445,13 @@ StylesheetHandler::processInclude(
             assert(equals(m_stylesheet.getIncludeStack().back(), hrefUrl));
             m_stylesheet.getIncludeStack().pop_back();
         }
-        else if(!isAttrOK(aname, atts, i))
+        else if (!isAttrOK(aname, atts, i))
         {
             illegalAttributeError(name, aname, locator);
         }
     }
 
-    if(!foundIt)
+    if (!foundIt)
     {
         const GetAndReleaseCachedString     theError(m_constructionContext);
 
@@ -1493,13 +1494,13 @@ StylesheetHandler::endElement(const XMLCh* const    /* name */)
         m_inScopeVariableNamesStack.pop_back();
     }
 
-    if(StylesheetConstructionContext::ELEMNAME_TEMPLATE == tok)
+    if (StylesheetConstructionContext::ELEMNAME_TEMPLATE == tok)
     {
         m_inTemplate = false;
         m_pTemplate->addToStylesheet(m_constructionContext, m_stylesheet);
         m_pTemplate = 0;
     }
-    else if((StylesheetConstructionContext::ELEMNAME_PARAM == tok) ||
+    else if (StylesheetConstructionContext::ELEMNAME_PARAM == tok ||
              StylesheetConstructionContext::ELEMNAME_VARIABLE == tok)
     {
         if(m_lastPopped->getParentNodeElem() == 0)
@@ -1508,7 +1509,7 @@ StylesheetHandler::endElement(const XMLCh* const    /* name */)
             m_inTemplate = false;
         }
     }
-    else if(StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET == tok)
+    else if (StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET == tok)
     {
         m_inTemplate = false;
     }

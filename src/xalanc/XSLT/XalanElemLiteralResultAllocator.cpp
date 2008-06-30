@@ -44,8 +44,8 @@ XalanElemLiteralResultAllocator::create(
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber)
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

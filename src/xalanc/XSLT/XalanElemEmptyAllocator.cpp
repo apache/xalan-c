@@ -42,8 +42,8 @@ XalanElemEmptyAllocator::data_type*
 XalanElemEmptyAllocator::create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber,
 			const XalanDOMString*			elementName)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();

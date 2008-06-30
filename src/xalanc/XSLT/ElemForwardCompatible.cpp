@@ -47,8 +47,8 @@ ElemForwardCompatible::ElemForwardCompatible(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber) :
     ElemTemplateElement(
         constructionContext,
         stylesheetTree,
@@ -57,9 +57,9 @@ ElemForwardCompatible::ElemForwardCompatible(
         StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE),
     m_elementName(constructionContext.getPooledString(name))
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -87,14 +87,14 @@ ElemForwardCompatible::ElemForwardCompatible(
 
 
 ElemForwardCompatible*
-ElemForwardCompatible::    create(
+ElemForwardCompatible::create(
             MemoryManagerType&              theManager,
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber)
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber)
 {
     typedef ElemForwardCompatible ThisType;
 
@@ -109,7 +109,7 @@ ElemForwardCompatible::    create(
         lineNumber,
         columnNumber);
 
-   theGuard.release();
+    theGuard.release();
 
     return theResult;
 }

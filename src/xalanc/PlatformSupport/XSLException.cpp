@@ -32,8 +32,8 @@ static const XalanDOMChar	s_dummy = 0;
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
-		int						theLineNumber,
-		int						theColumnNumber,
+		XalanFileLoc			theLineNumber,
+		XalanFileLoc			theColumnNumber,
         MemoryManagerType&      theManager) :
 	m_message(theMessage, theManager),
 	m_uri(theURI, theManager),
@@ -137,8 +137,8 @@ XSLException::defaultFormat(
 			const XalanDOMString::size_type		theMessageLength,
 			const XalanDOMChar*					theURI,
 			const XalanDOMString::size_type		theURILength,
-			size_type							theLineNumber,
-			size_type							theColumnNumber,
+			XalanFileLoc			            theLineNumber,
+			XalanFileLoc			            theColumnNumber,
 			const XalanDOMChar*					theType,
 			const XalanDOMString::size_type		theTypeLength,
 			XalanDOMString&						theBuffer)
@@ -150,9 +150,9 @@ XSLException::defaultFormat(
 	theBuffer += XalanDOMChar(XalanUnicode::charLeftParenthesis);
 	theBuffer.append(theURI, theURILength);
 	theBuffer += lineString;
-	LongToDOMString(theLineNumber, theBuffer);
+	NumberToDOMString(theLineNumber, theBuffer);
 	theBuffer += columnString;
-	LongToDOMString(theColumnNumber, theBuffer);
+	NumberToDOMString(theColumnNumber, theBuffer);
 	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
 }
 

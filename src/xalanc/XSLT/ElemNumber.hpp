@@ -97,18 +97,18 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			unsigned long					id);
 
     static ElemNumber*
     create(
-            MemoryManagerType& theManager,
+            MemoryManagerType&              theManager,
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
 			unsigned long					id);
 
 	virtual
@@ -148,7 +148,7 @@ public:
 			XalanNode*						sourceNode) const;
 
 	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
+	getXPath(XalanSize_t    index) const;
 
 protected:
 

@@ -74,19 +74,20 @@ public:
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset);
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset);
 
 private:
+
     //not implemented
     XalanTransformerProblemListener();
     XalanTransformerProblemListener(const XalanTransformerProblemListener&);
 
 	ProblemListenerDefault	m_problemListener;
 
-	StreamType*		m_warningStream;
+	StreamType*		        m_warningStream;
 
-    XalanDOMString	m_warningString;
+    XalanDOMString	        m_warningString;
 };
 
 

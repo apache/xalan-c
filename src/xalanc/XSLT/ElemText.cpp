@@ -46,21 +46,22 @@ ElemText::ElemText(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_TEXT)
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_TEXT)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
+        if (equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
         {
             disableOutputEscaping(
                 stylesheetTree.getYesOrNo(
@@ -68,7 +69,7 @@ ElemText::ElemText(
                     atts.getValue(i),
                     constructionContext));
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,

@@ -79,8 +79,8 @@ XalanTransformerProblemListener::problem(
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset)
+			XalanFileLoc				lineNo,
+			XalanFileLoc				charOffset)
 {
 	if (classification == eERROR)
 	{

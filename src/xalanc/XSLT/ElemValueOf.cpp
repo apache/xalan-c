@@ -54,20 +54,21 @@ ElemValueOf::ElemValueOf(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_VALUE_OF),
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_VALUE_OF),
     m_selectPattern(0)
 {
     bool    isSelectCurrentNode = false;
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -97,12 +98,12 @@ ElemValueOf::ElemValueOf(
                     atts.getValue(i),
                     constructionContext));
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
                     constructionContext) == false &&
-                processSpaceAttr(
+                 processSpaceAttr(
                     Constants::ELEMNAME_VALUEOF_WITH_PREFIX_STRING.c_str(),
                     aname,
                     atts,
@@ -117,7 +118,7 @@ ElemValueOf::ElemValueOf(
         }
     }
 
-    if(isSelectCurrentNode == false && m_selectPattern == 0)
+    if (isSelectCurrentNode == false && m_selectPattern == 0)
     {
         error(
             constructionContext,
@@ -266,7 +267,7 @@ ElemValueOf::startElement(StylesheetExecutionContext&       executionContext) co
             executionContext.charactersRaw(*sourceNode);
         }
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
 
@@ -284,7 +285,7 @@ ElemValueOf::startElement(StylesheetExecutionContext&       executionContext) co
 
         m_selectPattern->execute(*this, executionContext, theAdapter, theFunction);
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             const XObjectPtr    value(m_selectPattern->execute(sourceNode, *this, executionContext));
 
@@ -321,7 +322,7 @@ ElemValueOf::execute(StylesheetExecutionContext&    executionContext) const
             executionContext.charactersRaw(*sourceNode);
         }
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
 
@@ -339,7 +340,7 @@ ElemValueOf::execute(StylesheetExecutionContext&    executionContext) const
 
         m_selectPattern->execute(*this, executionContext, theAdapter, theFunction);
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             const XObjectPtr    value(m_selectPattern->execute(sourceNode, *this, executionContext));
 
@@ -355,7 +356,7 @@ ElemValueOf::execute(StylesheetExecutionContext&    executionContext) const
 
 
 const XPath*
-ElemValueOf::getXPath(unsigned int  index) const
+ElemValueOf::getXPath(XalanSize_t   index) const
 {
     return index == 0 ? m_selectPattern : 0;
 }

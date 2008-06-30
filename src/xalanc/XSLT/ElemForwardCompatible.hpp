@@ -53,8 +53,8 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
 
     static ElemForwardCompatible*
     create(
@@ -63,9 +63,10 @@ public:
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
-	virtual
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
+
+    virtual
 	~ElemForwardCompatible();
 
 	// These methods are inherited from ElemTemplateElement ...

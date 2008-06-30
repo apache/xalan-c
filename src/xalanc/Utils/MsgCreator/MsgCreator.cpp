@@ -395,7 +395,7 @@ int main(int argC, char* argV[])
                 //  handler for the parser. Then parse the file and catch any exceptions
                 //  that propogate out
                 //
-                int errorCount = 0;
+                XalanSize_t errorCount = 0;
 
                 const char* const   fileName = theParams.inXMLFileName;
 

@@ -53,8 +53,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
 
 	virtual
 	~ElemFallback();

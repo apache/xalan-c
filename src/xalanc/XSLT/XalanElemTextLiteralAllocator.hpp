@@ -59,7 +59,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemTextLiteralAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemTextLiteralAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemTextLiteralAllocator();
 	
@@ -82,8 +84,8 @@ public:
 	create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber,
             const XalanDOMChar*				ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,

@@ -686,8 +686,6 @@ PointerToDOMString(
 
 
 
-
-
 /**
  * Converts a double value into a XalanDOMString
  * 
@@ -699,7 +697,6 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 DoubleToDOMString(
             double              theValue,
             XalanDOMString&     theResult);
-
 
 
 
@@ -739,9 +736,6 @@ LongToHexDOMString(
 
 
 
-
-
-
 /**
  * Converts an unsigned long value  and appends the
  * result to a XalanDOMString.
@@ -771,6 +765,19 @@ LongToDOMString(
 
 
 
+/**
+ * Converts an unsigned long long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            unsigned long long  theValue,
+            XalanDOMString&     theResult);
+
+
 
 /**
  * Converts a size_t value and appends the
@@ -787,8 +794,6 @@ SizeTypeToDOMString(
 
 
 
-
-
 /**
  * Converts an unsigned long value and appends the
  * result to a XalanDOMString.
@@ -801,8 +806,6 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 UnsignedLongToDOMString(
             unsigned long       theValue,
             XalanDOMString&     theResult);
-
-
 
 
 

@@ -41,8 +41,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 ElemTextLiteral::ElemTextLiteral(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
             const XMLCh*					ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
@@ -61,7 +61,8 @@ ElemTextLiteral::ElemTextLiteral(
 	m_length(length)
 {
 	disableOutputEscaping(fDisableOutputEscaping);
-	preserveSpace(fPreserveSpace);
+
+    preserveSpace(fPreserveSpace);
 }
 
 
@@ -93,7 +94,7 @@ ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) cons
 {
 	ElemTemplateElement::startElement(executionContext);
 
-    if(disableOutputEscaping() == false)
+    if (disableOutputEscaping() == false)
     {
 		executionContext.characters(m_ch, 0, m_length);
     }
@@ -113,7 +114,7 @@ ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-    if(disableOutputEscaping() == false)
+    if (disableOutputEscaping() == false)
     {
 		executionContext.characters(m_ch, 0, m_length);
     }

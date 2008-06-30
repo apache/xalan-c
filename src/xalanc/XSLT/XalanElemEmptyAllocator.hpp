@@ -53,7 +53,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemEmptyAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemEmptyAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemEmptyAllocator();
 	
@@ -72,8 +74,8 @@ public:
 	create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber,
 			const XalanDOMString*			elementName = 0);
 
 	/**

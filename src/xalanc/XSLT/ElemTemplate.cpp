@@ -55,21 +55,22 @@ ElemTemplate::ElemTemplate(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
-    ElemTemplateElement(constructionContext,
-                        stylesheetTree,
-                        lineNumber,
-                        columnNumber,
-                        StylesheetConstructionContext::ELEMNAME_TEMPLATE),
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        lineNumber,
+        columnNumber,
+        StylesheetConstructionContext::ELEMNAME_TEMPLATE),
     m_matchPattern(0),
     m_name(&s_empty),
     m_mode(&s_empty),
     m_priority(XPath::getMatchScoreValue(XPath::eMatchScoreNone))
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -135,7 +136,7 @@ ElemTemplate::ElemTemplate(
         }
     }
 
-    if(0 == m_matchPattern && m_name->isEmpty() == true)
+    if (0 == m_matchPattern && m_name->isEmpty() == true)
     {
         error(
             constructionContext,
@@ -225,7 +226,7 @@ ElemTemplate::execute(StylesheetExecutionContext&   executionContext) const
 
 
 const XPath*
-ElemTemplate::getXPath(unsigned int index) const
+ElemTemplate::getXPath(XalanSize_t  index) const
 {
     return index == 0 ? m_matchPattern : 0;
 }

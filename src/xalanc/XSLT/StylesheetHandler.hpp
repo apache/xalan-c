@@ -358,7 +358,7 @@ protected:
     isAttrOK(
             const XalanDOMChar*         attrName,
             const AttributeListType&    atts,
-            int                         which);
+            XalanSize_t                 which);
 
     /** 
      * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -376,7 +376,7 @@ protected:
             const XalanDOMChar*         elementName,
             const XalanDOMChar*         aname,
             const AttributeListType&    atts,
-            int                         which,
+            XalanSize_t                 which,
             const LocatorType*          locator,
             bool&                       fPreserve);
 

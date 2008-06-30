@@ -40,8 +40,8 @@ ElemParam::ElemParam(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+			XalanFileLoc					lineNumber, 
+            XalanFileLoc					columnNumber) :
     ElemVariable(constructionContext,
                  stylesheetTree,
                  atts,
@@ -76,7 +76,7 @@ ElemParam::startElement(StylesheetExecutionContext&     executionContext) const
     }
     else
     {
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireTraceEvent(
                 TracerEvent(
@@ -120,7 +120,7 @@ ElemParam::execute(StylesheetExecutionContext&      executionContext) const
     }
     else
     {
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireTraceEvent(
                 TracerEvent(

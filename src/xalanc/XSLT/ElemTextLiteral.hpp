@@ -57,8 +57,8 @@ public:
 	ElemTextLiteral(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber,
             const XalanDOMChar*				ch,
 			XalanDOMString::size_type		start,
 			XalanDOMString::size_type		length,
