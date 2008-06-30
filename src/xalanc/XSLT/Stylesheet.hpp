@@ -88,7 +88,6 @@ class XALAN_XSLT_EXPORT Stylesheet : public PrefixResolver
 
 public:
 
-    typedef StylesheetConstructionContext::size_type        size_type;
     typedef StylesheetExecutionContext::ParamVectorType     ParamVectorType;
     typedef XalanQName::NamespaceVectorType                 NamespaceVectorType;
     typedef XalanQName::NamespacesStackType                 NamespacesStackType;
@@ -290,7 +289,7 @@ public:
     isAttrOK(
             const XalanDOMChar*             attrName,
             const AttributeListType&        atts,
-            int                             which,
+            XalanSize_t                     which,
             StylesheetConstructionContext&  constructionContext) const;
 
     /**
@@ -300,8 +299,9 @@ public:
      * @return namespace string for node, or null if not found.
      */
     const XalanDOMString*
-    getNamespaceFromStack(const XalanDOMString&     nodeName,
-                            XalanDOMString&         theBuffer) const
+    getNamespaceFromStack(
+                const XalanDOMString&   nodeName,
+                XalanDOMString&         theBuffer) const
     {
         return getNamespaceFromStack(c_wstr(nodeName), theBuffer);
     }
@@ -313,8 +313,9 @@ public:
      * @return namespace string for node, or null if not found.
      */
     const XalanDOMString*
-    getNamespaceFromStack(const XalanDOMChar*   nodeName,
-                            XalanDOMString&     theBuffer) const;
+    getNamespaceFromStack(
+                const XalanDOMChar*     nodeName,
+                XalanDOMString&         theBuffer) const;
 
     /**
      * Get the namespace from a prefix by searching the stack of namespace

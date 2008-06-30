@@ -41,8 +41,8 @@ ElemSort::ElemSort(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -54,38 +54,38 @@ ElemSort::ElemSort(
     m_orderAVT(0),
     m_caseOrderAVT(0)
 {
-    const unsigned int nAttrs = atts.getLength();
+    const XalanSize_t nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_SELECT))
+        if (equals(aname, Constants::ATTRNAME_SELECT))
         {
             m_selectPattern 
                 = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
         }
-        else if(equals(aname, Constants::ATTRNAME_LANG))
+        else if (equals(aname, Constants::ATTRNAME_LANG))
         {           
             m_langAVT =
                     constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
         }
-        else if(equals(aname, Constants::ATTRNAME_DATATYPE))
+        else if (equals(aname, Constants::ATTRNAME_DATATYPE))
         {
             m_dataTypeAVT =
                     constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
         }
-        else if(equals(aname, Constants::ATTRNAME_ORDER))
+        else if (equals(aname, Constants::ATTRNAME_ORDER))
         {
             m_orderAVT =
                     constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
         }
-        else if(equals(aname, Constants::ATTRNAME_CASEORDER))
+        else if (equals(aname, Constants::ATTRNAME_CASEORDER))
         {
             m_caseOrderAVT =
                     constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
@@ -128,8 +128,8 @@ ElemSort::create(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber)
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber)
 {
     typedef ElemSort ThisType;
 
@@ -165,7 +165,7 @@ ElemSort::getElementName() const
 
 
 const XPath*
-ElemSort::getXPath(unsigned int     index) const
+ElemSort::getXPath(XalanSize_t  index) const
 {
     return index == 0 ? m_selectPattern : 0;
 }

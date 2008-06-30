@@ -495,8 +495,8 @@ XPathExecutionContextDefault::error(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanLocator::size_type     lineNumber = XalanLocator::getUnknownValue();
-    XalanLocator::size_type     columnNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc     lineNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc     columnNumber = XalanLocator::getUnknownValue();
 
     MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
 
@@ -549,8 +549,8 @@ XPathExecutionContextDefault::warn(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanLocator::size_type     lineNumber = XalanLocator::getUnknownValue();
-    XalanLocator::size_type     columnNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc    lineNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc    columnNumber = XalanLocator::getUnknownValue();
 
     MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
 
@@ -603,8 +603,8 @@ XPathExecutionContextDefault::message(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanLocator::size_type     lineNumber = XalanLocator::getUnknownValue();
-    XalanLocator::size_type     columnNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc    lineNumber = XalanLocator::getUnknownValue();
+    XalanFileLoc    columnNumber = XalanLocator::getUnknownValue();
 
    MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
 

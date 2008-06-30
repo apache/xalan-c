@@ -48,8 +48,8 @@ ElemAttribute::ElemAttribute(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -58,9 +58,9 @@ ElemAttribute::ElemAttribute(
     m_nameAVT(0),   
     m_namespaceAVT(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -400,6 +400,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
     }
 
     executionContext.getAndPopCachedString();
+
     return 0;
 }
 

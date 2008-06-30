@@ -50,6 +50,7 @@ XercesNamedNodeMapAttributeList::XercesNamedNodeMapAttributeList(const DOMNamedN
 	m_nodeMap(theMap),
 	m_lastIndex(theMap->getLength() - 1)
 {
+    assert(theMap->getLength() != 0);
 }
 
 
@@ -60,7 +61,7 @@ XercesNamedNodeMapAttributeList::~XercesNamedNodeMapAttributeList()
 
 
 
-unsigned int
+XalanSize_t
 XercesNamedNodeMapAttributeList::getLength() const
 {
 	return m_lastIndex + 1;
@@ -69,7 +70,7 @@ XercesNamedNodeMapAttributeList::getLength() const
 
 
 const XMLCh*
-XercesNamedNodeMapAttributeList::getName(const unsigned int index) const
+XercesNamedNodeMapAttributeList::getName(const XalanSize_t  index) const
 {
 	const DOMNodeType* const	theAttribute = m_nodeMap->item(m_lastIndex - index);
 	assert(theAttribute != 0);
@@ -80,7 +81,7 @@ XercesNamedNodeMapAttributeList::getName(const unsigned int index) const
 
 
 const XMLCh*
-XercesNamedNodeMapAttributeList::getType(const unsigned int /* index */) const
+XercesNamedNodeMapAttributeList::getType(const XalanSize_t  /* index */) const
 {
 	assert(length(s_typeString) > 0);
 
@@ -90,7 +91,7 @@ XercesNamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 
 
 const XMLCh*
-XercesNamedNodeMapAttributeList::getValue(const unsigned int index) const
+XercesNamedNodeMapAttributeList::getValue(const XalanSize_t     index) const
 {
 	const DOMNodeType* const	theAttribute = m_nodeMap->item(m_lastIndex - index);
 	assert(theAttribute != 0);
@@ -128,7 +129,7 @@ XercesNamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 const XMLCh* 
 XercesNamedNodeMapAttributeList::getValue(const char* const /*name*/) const
 {
-    assert( 0 );
+    assert(false);
 
     return 0;
 }

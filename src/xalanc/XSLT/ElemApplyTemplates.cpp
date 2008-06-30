@@ -52,8 +52,8 @@ ElemApplyTemplates::ElemApplyTemplates(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ParentType(
         constructionContext,
         stylesheetTree,
@@ -62,9 +62,9 @@ ElemApplyTemplates::ElemApplyTemplates(
         StylesheetConstructionContext::ELEMNAME_APPLY_TEMPLATES),
     m_mode(0)
 {
-    const unsigned  int nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 

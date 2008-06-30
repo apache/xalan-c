@@ -85,6 +85,12 @@ private:
 
 	static ExceptionCode
 	translateErrorCode(DOMExceptionType::ExceptionCode	theCode);
+
+	static ExceptionCode
+	translateErrorCode(short    theCode)
+    {
+        return translateErrorCode(static_cast<DOMExceptionType::ExceptionCode>(theCode));
+    }
 };
 
 

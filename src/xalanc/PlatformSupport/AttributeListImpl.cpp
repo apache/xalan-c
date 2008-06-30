@@ -112,7 +112,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 		// until we're done.
 		AttributeVectorType		tempVector(getMemoryManager());
 
-		const unsigned int	theLength = theRHS.getLength();
+		const XalanSize_t	theLength = theRHS.getLength();
 
 		if (theLength > 0)
 		{
@@ -168,12 +168,12 @@ AttributeListImpl::operator=(const AttributeListType&	theRHS)
 		// safe and don't need any try blocks.
 		AttributeListImpl	theTempList(getMemoryManager());
 
-		const unsigned int	theLength = theRHS.getLength();
+		const XalanSize_t	theLength = theRHS.getLength();
 
 		theTempList.reserve(theLength);
 
 		// Add each attribute.
-		for(unsigned int i = 0; i < theLength; i++)
+		for(XalanSize_t i = 0; i < theLength; i++)
 		{
 			theTempList.addAttribute(
 					theRHS.getName(i),
@@ -191,7 +191,7 @@ AttributeListImpl::operator=(const AttributeListType&	theRHS)
 
 
 
-unsigned int
+XalanSize_t
 AttributeListImpl::getLength() const
 {
 	// Make sure the mismatch between Xerces and vector<> doesn't cause a problem...
@@ -203,7 +203,7 @@ AttributeListImpl::getLength() const
 
 
 const XMLCh*
-AttributeListImpl::getName(const unsigned int index) const
+AttributeListImpl::getName(const XalanSize_t    index) const
 {
 	assert(index < getLength());
 
@@ -213,7 +213,7 @@ AttributeListImpl::getName(const unsigned int index) const
 
 
 const XMLCh*
-AttributeListImpl::getType(const unsigned int index) const
+AttributeListImpl::getType(const XalanSize_t    index) const
 {
 	assert(index < getLength());
 
@@ -223,7 +223,7 @@ AttributeListImpl::getType(const unsigned int index) const
 
 
 const XMLCh*
-AttributeListImpl::getValue(const unsigned int index) const
+AttributeListImpl::getValue(const XalanSize_t   index) const
 {
 	assert(index < getLength());
 

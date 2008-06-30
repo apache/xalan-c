@@ -701,8 +701,8 @@ public:
         StylesheetConstructionContext&  constructionContext,
         Stylesheet&                     stylesheetTree,
         const AttributeListType&        atts,
-        int                             lineNumber,
-        int                             columnNumber)
+        XalanFileLoc                    lineNumber,
+        XalanFileLoc                    columnNumber)
     {
         Type*   theResult;
 
@@ -726,10 +726,10 @@ StylesheetConstructionContextDefault::createElement(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber =
+    const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);
 
-    const XalanLocator::size_type   columnNumber =
+    const XalanFileLoc  columnNumber =
         XalanLocator::getColumnNumber(locator);
 
     ElemTemplateElement*    theElement = 0;
@@ -1048,10 +1048,10 @@ StylesheetConstructionContextDefault::createElement(
             const AttributeListType&    atts,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber =
+    const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);
 
-    const XalanLocator::size_type   columnNumber =
+    const XalanFileLoc  columnNumber =
         XalanLocator::getColumnNumber(locator);
 
     ElemTemplateElement*    theElement = 0;
@@ -1110,12 +1110,6 @@ StylesheetConstructionContextDefault::createElement(
             ExtensionNSHandler&         handler,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber =
-        XalanLocator::getLineNumber(locator);
-
-    const XalanLocator::size_type   columnNumber =
-        XalanLocator::getColumnNumber(locator);
-
     m_allocatedElements.push_back(0);
 
     m_allocatedElements.back() = ElemExtensionCall::create(
@@ -1124,8 +1118,8 @@ StylesheetConstructionContextDefault::createElement(
             stylesheetTree,
             name,
             atts,
-            lineNumber,
-            columnNumber,
+            XalanLocator::getLineNumber(locator),
+            XalanLocator::getColumnNumber(locator),
             handler);
 
     return m_allocatedElements.back();
@@ -1142,17 +1136,11 @@ StylesheetConstructionContextDefault::createElement(
             bool                        disableOutputEscaping,
             const LocatorType*          locator)
 {
-    const XalanLocator::size_type   lineNumber =
-        XalanLocator::getLineNumber(locator);
-
-    const XalanLocator::size_type   columnNumber =
-        XalanLocator::getColumnNumber(locator);
-
     return m_elemTextLiteralAllocator.create(
             *this,
             stylesheetTree,
-            lineNumber,
-            columnNumber,
+            XalanLocator::getLineNumber(locator),
+            XalanLocator::getColumnNumber(locator),
             chars,
             0,
             length,
@@ -2098,7 +2086,7 @@ const StylesheetConstructionContextDefault::ElementTokenTableEntry  StylesheetCo
     }
 };
 
-const unsigned int  StylesheetConstructionContextDefault::s_elementTokenTableSize =
+const XalanSize_t  StylesheetConstructionContextDefault::s_elementTokenTableSize =
         sizeof(s_elementTokenTable) / sizeof(s_elementTokenTable[0]);
 
 const StylesheetConstructionContextDefault::ElementTokenTableEntry&     StylesheetConstructionContextDefault::s_elementTokenTableLast =

@@ -215,8 +215,9 @@ public:
 	getURLFromString(const XalanDOMString&	urlString);
 
 	virtual XalanDOMString&
-	getURLStringFromString(const XalanDOMString&	urlString,
-                            XalanDOMString& theResult);
+	getURLStringFromString(
+            const XalanDOMString&	urlString,
+            XalanDOMString&         theResult);
 
 	virtual URLAutoPtrType
 	getURLFromString(
@@ -650,7 +651,7 @@ private:
 
 	static const ElementTokenTableEntry		s_elementTokenTable[];
 
-	static const unsigned int				s_elementTokenTableSize;
+	static const XalanSize_t				s_elementTokenTableSize;
 
 	static const ElementTokenTableEntry&	s_elementTokenTableLast;
 

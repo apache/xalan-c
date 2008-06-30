@@ -56,13 +56,13 @@ ElemCallTemplate::ElemCallTemplate(
     m_templateName(0),
     m_template(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_NAME))
+        if (equals(aname, Constants::ATTRNAME_NAME))
         {
             m_templateName = constructionContext.createXalanQName(
                     atts.getValue(i),
@@ -78,7 +78,7 @@ ElemCallTemplate::ElemCallTemplate(
                     atts.getValue(i));
             }
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,

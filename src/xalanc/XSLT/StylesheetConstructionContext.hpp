@@ -78,12 +78,6 @@ public:
 
 	typedef XalanQName::NamespacesStackType		NamespacesStackType;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::size_t		size_type;
-#else
-	typedef size_t			size_type;
-#endif
-
 	/**
 	 * IDs for XSL element types. These are the values
 	 * that must be returned by getElementToken().

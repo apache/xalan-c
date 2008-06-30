@@ -47,8 +47,8 @@ ElemElement::ElemElement(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemUse(constructionContext,
             stylesheetTree,
             lineNumber,
@@ -61,9 +61,9 @@ ElemElement::ElemElement(
     // turn them off...
 //  m_namespacesHandler.setProcessNamespaceAliaises(false);
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -125,6 +125,7 @@ ElemElement::getElementName() const
 {
     return Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
 }
+
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)

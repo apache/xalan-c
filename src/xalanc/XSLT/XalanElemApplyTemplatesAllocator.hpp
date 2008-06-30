@@ -59,7 +59,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanElemApplyTemplatesAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanElemApplyTemplatesAllocator(
+            MemoryManagerType&  theManager,
+            size_type		    theBlockCount);
 
 	~XalanElemApplyTemplatesAllocator();
 	
@@ -79,8 +81,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 	/**
 	 * Determine if an object is owned by the allocator...

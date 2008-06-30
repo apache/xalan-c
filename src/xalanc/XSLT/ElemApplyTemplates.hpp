@@ -52,11 +52,11 @@ public:
 	 * @param columnNumber			column number in document
 	 */
 	ElemApplyTemplates(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber, 
-			int								columnNumber);
+			StylesheetConstructionContext&  constructionContext,
+			Stylesheet&                     stylesheetTree,
+			const AttributeListType&        atts,
+			XalanFileLoc                    lineNumber, 
+			XalanFileLoc                    columnNumber);
 
     virtual
     ~ElemApplyTemplates();

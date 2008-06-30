@@ -69,11 +69,11 @@ public:
 	 * @param columnNumber			column number in document
 	 */
 	ElemForEach(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			StylesheetConstructionContext&  constructionContext,
+			Stylesheet&                     stylesheetTree,
+			const AttributeListType&        atts,
+			XalanFileLoc                    lineNumber,
+			XalanFileLoc                    columnNumber);
 
 	virtual
 	~ElemForEach();
@@ -114,7 +114,7 @@ public:
 #endif
 	
 	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
+	getXPath(XalanSize_t    index) const;
 
 protected:
 
@@ -128,11 +128,11 @@ protected:
 	 * @param xslToken             an integer representing the type of instance.
 	 */
 	ElemForEach(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
-			int								xslToken);
+			StylesheetConstructionContext&  constructionContext,
+			Stylesheet&                     stylesheetTree,
+			XalanFileLoc                    lineNumber,
+			XalanFileLoc                    columnNumber,
+			int                             xslToken);
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 

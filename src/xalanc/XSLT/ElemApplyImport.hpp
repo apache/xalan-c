@@ -52,8 +52,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber, 
-			int								columnNumber);
+			XalanFileLoc					lineNumber, 
+			XalanFileLoc					columnNumber);
       
 
 	// These methods are inherited from ElemTemplateElement ...
@@ -78,7 +78,6 @@ public:
 #endif
 	virtual ElemTemplateElement*
 	appendChildElem(ElemTemplateElement*	newChild);
-
 
 private:
 };

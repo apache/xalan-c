@@ -256,9 +256,9 @@ Stylesheet::processKeyElement(
     XPath*                  matchAttr = 0;
     XPath*                  useAttr = 0;
  
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
@@ -321,7 +321,7 @@ Stylesheet::processKeyElement(
         }
     }
 
-    if(0 == theQName)
+    if (0 == theQName)
     {
         const GetAndReleaseCachedString     theGuard(constructionContext);
 
@@ -335,7 +335,7 @@ Stylesheet::processKeyElement(
             locator);
     }
 
-    if(0 == matchAttr)
+    if (0 == matchAttr)
     {
         const GetAndReleaseCachedString     theGuard(constructionContext);
 
@@ -349,7 +349,7 @@ Stylesheet::processKeyElement(
             locator);
     }
 
-    if(0 == useAttr)
+    if (0 == useAttr)
     {
         const GetAndReleaseCachedString     theGuard(constructionContext);
 
@@ -378,13 +378,13 @@ Stylesheet::processKeyElement(
 void
 Stylesheet::pushNamespaces(const AttributeListType&     atts)
 {
-    const unsigned int      nAttrs = atts.getLength();
+    const XalanSize_t       nAttrs = atts.getLength();
 
     NamespaceVectorType     namespaces(getMemoryManager());
 
     XalanDOMString          prefix(getMemoryManager());
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for(XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
         const XalanDOMChar* const   value = atts.getValue(i);
@@ -442,12 +442,10 @@ addToList(
             Stylesheet::PatternTableVectorType&     theList,
             const XalanMatchPatternData*            thePattern)
 {
-
-    typedef Stylesheet::size_type   size_type;
     assert(thePattern != 0);
 
     const double        thePatternPriority = thePattern->getPriorityOrDefault();
-    const size_type     thePatternPosition = thePattern->getPosition();
+    const XalanSize_t   thePatternPosition = thePattern->getPosition();
 
     typedef Stylesheet::PatternTableVectorType  PatternTableListType;
     typedef PatternTableListType::iterator      iterator;
@@ -456,7 +454,7 @@ addToList(
 
     const iterator  theEnd = theList.end();
 
-    while(theCurrent != theEnd)
+    while (theCurrent != theEnd)
     {
         const double    theCurrentPriority = (*theCurrent)->getPriorityOrDefault();
 
@@ -630,7 +628,7 @@ bool
 Stylesheet::isAttrOK(
             const XalanDOMChar*             attrName,
             const AttributeListType&        /* atts */,
-            int                             /* which */,
+            XalanSize_t                     /* which */,
             StylesheetConstructionContext&  constructionContext) const
 {
     // Namespace declarations are OK by definition
@@ -1507,16 +1505,16 @@ Stylesheet::processNSAliasElement(
             const AttributeListType&        atts,
             StylesheetConstructionContext&  constructionContext)
 {
-    const unsigned int      nAttrs = atts.getLength();
+    const XalanSize_t       nAttrs = atts.getLength();
 
     const XalanDOMString*   stylesheetNamespace = 0;
     const XalanDOMString*   resultNamespace = 0;
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_STYLESHEET_PREFIX) == true)
+        if (equals(aname, Constants::ATTRNAME_STYLESHEET_PREFIX) == true)
         {
             const XalanDOMChar* const   value = atts.getValue(i);
 
@@ -1529,7 +1527,7 @@ Stylesheet::processNSAliasElement(
                 stylesheetNamespace = getNamespaceForPrefix(value, constructionContext);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
+        else if (equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
         {
             const XalanDOMChar* const   value = atts.getValue(i);
 
@@ -1542,7 +1540,7 @@ Stylesheet::processNSAliasElement(
                 resultNamespace = getNamespaceForPrefix(value, constructionContext);
             }
         }
-        else if(!isAttrOK(aname, atts, i, constructionContext))
+        else if (!isAttrOK(aname, atts, i, constructionContext))
         {
             const GetAndReleaseCachedString     theGuard(constructionContext);
 
@@ -1598,10 +1596,10 @@ Stylesheet::processDecimalFormatElement(
             const AttributeListType&        atts,
             const LocatorType*              locator)
 {
-    const XalanLocator::size_type   lineNumber =
+    const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);
 
-    const XalanLocator::size_type   columnNumber =
+    const XalanFileLoc  columnNumber =
         XalanLocator::getColumnNumber(locator);
 
     m_elemDecimalFormats.reserve(m_elemDecimalFormats.size() + 1);

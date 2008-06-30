@@ -47,12 +47,6 @@ public:
 
     typedef Locator     ParentType;
 
-#if XERCES_VERSION_MAJOR < 3
-    typedef XMLSSize_t      size_type;
-#else
-    typedef unsigned long   size_type;
-#endif
-
     XalanLocator() {}
 
     virtual
@@ -64,28 +58,28 @@ public:
     virtual const XMLCh*
     getSystemId() const = 0;
 
-    virtual size_type
+    virtual XalanFileLoc
     getLineNumber() const = 0;
 
-    virtual size_type
+    virtual XalanFileLoc
     getColumnNumber() const = 0;
 
-    static size_type
+    static XalanFileLoc
     getLineNumber(const ParentType*     theLocator)
     {
-        return theLocator == 0 ? size_type(-1) : theLocator->getLineNumber();
+        return theLocator == 0 ? getUnknownValue() : theLocator->getLineNumber();
     }
 
-    static size_type
+    static XalanFileLoc
     getColumnNumber(const ParentType*   theLocator)
     {
-        return theLocator == 0 ? size_type(-1) : theLocator->getColumnNumber();
+        return theLocator == 0 ? getUnknownValue() : theLocator->getColumnNumber();
     }
 
-    static size_type
+    static XalanFileLoc
     getUnknownValue()
     {
-        return size_type(-1);
+        return XalanFileLoc(-1);
     }
 
 private:

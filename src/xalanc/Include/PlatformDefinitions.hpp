@@ -122,9 +122,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 #if XERCES_VERSION_MAJOR < 3
 typedef unsigned int    XalanSize_t;
 typedef unsigned int    XalanFilePos;
+typedef unsigned int    XalanFileLoc;
 #else
 typedef XMLSize_t       XalanSize_t;
 typedef XMLFilePos      XalanFilePos;
+typedef XMLFileLoc      XalanFileLoc;
 #endif
 
 typedef XMLCh   XalanDOMChar;

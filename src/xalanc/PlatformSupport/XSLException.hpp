@@ -42,8 +42,6 @@ class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
 
-	typedef XalanLocator::size_type					size_type;
-
 	/**
 	 * Constructor
 	 * 
@@ -121,7 +119,7 @@ public:
 	 * 
 	 * @return the line number
 	 */
-	size_type
+	XalanFileLoc
 	getLineNumber() const
 	{
 		return m_lineNumber;
@@ -132,12 +130,11 @@ public:
 	 * 
 	 * @return the column number
 	 */
-	size_type
+	XalanFileLoc
 	getColumnNumber() const
 	{
 		return m_columnNumber;
 	}
-
 
     MemoryManagerType& 
     getMemoryManager()const

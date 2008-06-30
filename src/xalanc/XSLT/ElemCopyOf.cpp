@@ -51,8 +51,8 @@ ElemCopyOf::ElemCopyOf(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -62,13 +62,13 @@ ElemCopyOf::ElemCopyOf(
 {
     bool    isSelectCurrentNode = false;
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
     
-    for(unsigned int i = 0; i < nAttrs; ++i)
+    for (XalanSize_t i = 0; i < nAttrs; ++i)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_SELECT))
+        if (equals(aname, Constants::ATTRNAME_SELECT))
         {
             const XalanDOMChar* const   avalue = atts.getValue(i);
             assert(avalue != 0);
@@ -82,7 +82,7 @@ ElemCopyOf::ElemCopyOf(
                 m_selectPattern = constructionContext.createXPath(getLocator(), avalue, *this);
             }
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
@@ -126,7 +126,7 @@ ElemCopyOf::startElement(StylesheetExecutionContext&        executionContext) co
 
     if (m_selectPattern == 0)
     {
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             StylesheetExecutionContext::BorrowReturnMutableNodeRefList  theNodeList(executionContext);
 
@@ -149,7 +149,7 @@ ElemCopyOf::startElement(StylesheetExecutionContext&        executionContext) co
         const XObjectPtr    value(m_selectPattern->execute(*this, executionContext));
         assert(value.null() == false);
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireSelectEvent(
                 SelectionEvent(
@@ -211,7 +211,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&     executionContext) const
 
     if (m_selectPattern == 0)
     {
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             StylesheetExecutionContext::BorrowReturnMutableNodeRefList  theNodeList(executionContext);
 
@@ -234,7 +234,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&     executionContext) const
         const XObjectPtr    value(m_selectPattern->execute(*this, executionContext));
         assert(value.null() == false);
 
-        if(0 != executionContext.getTraceListeners())
+        if (0 != executionContext.getTraceListeners())
         {
             executionContext.fireSelectEvent(
                 SelectionEvent(
@@ -285,7 +285,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&     executionContext) const
 
 
 const XPath*
-ElemCopyOf::getXPath(unsigned int   index) const
+ElemCopyOf::getXPath(XalanSize_t    index) const
 {
     return index == 0 ? m_selectPattern : 0;
 }

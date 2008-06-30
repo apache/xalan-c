@@ -52,8 +52,8 @@ ElemDecimalFormat::ElemDecimalFormat(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -68,13 +68,13 @@ ElemDecimalFormat::ElemDecimalFormat(
     m_decimalFormatSymbols.setInfinity(XalanDOMString(constructionContext.getMemoryManager()));
     m_decimalFormatSymbols.setNaN(XalanDOMString(constructionContext.getMemoryManager()));
 
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const       aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_NAME))
+        if (equals(aname, Constants::ATTRNAME_NAME))
         {
             assert(atts.getValue(i) != 0);
 
@@ -92,7 +92,7 @@ ElemDecimalFormat::ElemDecimalFormat(
                     atts.getValue(i));
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
+        else if (equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
         {
             const XalanDOMChar* const   decimalSepValue = atts.getValue(i);
             assert(decimalSepValue != 0);
@@ -111,7 +111,7 @@ ElemDecimalFormat::ElemDecimalFormat(
                     decimalSepValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_GROUPINGSEPARATOR))
+        else if (equals(aname, Constants::ATTRNAME_GROUPINGSEPARATOR))
         {
             const XalanDOMChar* const   sepValue = atts.getValue(i);
             assert(sepValue!= 0);
@@ -130,13 +130,13 @@ ElemDecimalFormat::ElemDecimalFormat(
                     sepValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_INFINITY))
+        else if (equals(aname, Constants::ATTRNAME_INFINITY))
         {
             assert(atts.getValue(i) != 0);
 
             m_decimalFormatSymbols.setInfinity(atts.getValue(i));
         }
-        else if(equals(aname, Constants::ATTRNAME_MINUSSIGN))
+        else if (equals(aname, Constants::ATTRNAME_MINUSSIGN))
         {
             const XalanDOMChar* const   minusValue = atts.getValue(i);
             assert(minusValue != 0);
@@ -155,13 +155,13 @@ ElemDecimalFormat::ElemDecimalFormat(
                     minusValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_NAN))
+        else if (equals(aname, Constants::ATTRNAME_NAN))
         {
             assert(atts.getValue(i) != 0);
 
             m_decimalFormatSymbols.setNaN(atts.getValue(i));
         }
-        else if(equals(aname, Constants::ATTRNAME_PERCENT))
+        else if (equals(aname, Constants::ATTRNAME_PERCENT))
         {
             const XalanDOMChar* const   percentValue = atts.getValue(i);
             assert(percentValue != 0);
@@ -180,7 +180,7 @@ ElemDecimalFormat::ElemDecimalFormat(
                     percentValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_PERMILLE))
+        else if (equals(aname, Constants::ATTRNAME_PERMILLE))
         {
             const XalanDOMChar* const   permilleValue = atts.getValue(i);
             assert(permilleValue != 0);
@@ -199,7 +199,7 @@ ElemDecimalFormat::ElemDecimalFormat(
                     permilleValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_ZERODIGIT))
+        else if (equals(aname, Constants::ATTRNAME_ZERODIGIT))
         {
             const XalanDOMChar* const   zeroDigitValue = atts.getValue(i);
             assert(zeroDigitValue != 0);
@@ -218,7 +218,7 @@ ElemDecimalFormat::ElemDecimalFormat(
                     zeroDigitValue);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_DIGIT))
+        else if (equals(aname, Constants::ATTRNAME_DIGIT))
         {
             const XalanDOMChar* const   digitValue = atts.getValue(i);
             assert(digitValue != 0);
@@ -310,7 +310,7 @@ ElemDecimalFormat::getElementName() const
 
 
 const XPath*
-ElemDecimalFormat::getXPath(unsigned int    index) const
+ElemDecimalFormat::getXPath(XalanSize_t index) const
 {
     const XPath*    result = 0;
 

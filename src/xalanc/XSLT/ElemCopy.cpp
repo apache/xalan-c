@@ -48,32 +48,32 @@ ElemCopy::ElemCopy(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemUse(constructionContext,
             stylesheetTree,
             lineNumber,
             columnNumber,
             StylesheetConstructionContext::ELEMNAME_COPY)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(processUseAttributeSets(
+        if (processUseAttributeSets(
                 constructionContext,
                 aname,
                 atts,
                 i) == false &&
-           processSpaceAttr(
+            processSpaceAttr(
                 Constants::ELEMNAME_COPY_WITH_PREFIX_STRING.c_str(),
                 aname,
                 atts,
                 i,
                 constructionContext) == false &&
-           isAttrOK(
+            isAttrOK(
                 aname,
                 atts,
                 i,

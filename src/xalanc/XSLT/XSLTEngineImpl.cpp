@@ -1068,10 +1068,10 @@ XSLTEngineImpl::problem(
 
     XalanDOMString  uri(theManager);
 
-    XalanLocator::size_type     lineNumber =
+    XalanFileLoc    lineNumber =
         XalanLocator::getUnknownValue();
 
-    XalanLocator::size_type     columnNumber =
+    XalanFileLoc    columnNumber =
         XalanLocator::getUnknownValue();
 
     const LocatorType*      locator = getLocatorFromStack();
@@ -1148,8 +1148,8 @@ XSLTEngineImpl::problem(
         id = &theDummy;
     }
 
-    const XalanLocator::size_type   lineNumber = locator.getLineNumber();
-    const XalanLocator::size_type   columnNumber = locator.getColumnNumber();
+    XalanFileLoc    lineNumber = locator.getLineNumber();
+    XalanFileLoc    columnNumber = locator.getColumnNumber();
 
     if (m_problemListener != 0)
     {
@@ -1529,13 +1529,13 @@ XSLTEngineImpl::pendingAttributesHasDefaultNS() const
     const AttributeListImpl&    thePendingAttributes =
         (const AttributeListImpl&)getPendingAttributes();
 
-    const unsigned int  n = thePendingAttributes.getLength();
+    const XalanSize_t   n = thePendingAttributes.getLength();
 
-    for(unsigned int i = 0; i < n; i++)
+    for (XalanSize_t i = 0; i < n; i++)
     {
-        if(equals(
-            thePendingAttributes.getName(i),
-            DOMServices::s_XMLNamespace) == true)
+        if (equals(
+                thePendingAttributes.getName(i),
+                DOMServices::s_XMLNamespace) == true)
         {
             return true;
         }
@@ -1694,7 +1694,7 @@ XSLTEngineImpl::startElement(
 
     flushPending();
 
-    const unsigned int  nAtts = atts.getLength();
+    const XalanSize_t   nAtts = atts.getLength();
 
     assert(m_outputContextStack.empty() == false);
 
@@ -1703,7 +1703,7 @@ XSLTEngineImpl::startElement(
 
     thePendingAttributes.clear();
 
-    for(unsigned int i = 0; i < nAtts; i++)
+    for (XalanSize_t i = 0; i < nAtts; i++)
     {
         thePendingAttributes.addAttribute(
             atts.getName(i),
@@ -1776,11 +1776,11 @@ XSLTEngineImpl::characters(
 
     doFlushPending();
 
-    if(generateCDATASection() == true)
+    if (generateCDATASection() == true)
     {
         getFormatterListenerImpl()->cdata(ch + start, length);
 
-        if(getTraceListeners() > 0)
+        if (getTraceListeners() > 0)
         {
             fireCharacterGenerateEvent(ch, start, length, true);
         }
@@ -1789,7 +1789,7 @@ XSLTEngineImpl::characters(
     {
         getFormatterListenerImpl()->characters(ch + start, length);
 
-        if(getTraceListeners() > 0)
+        if (getTraceListeners() > 0)
         {
             fireCharacterGenerateEvent(ch, start, length, false);
         }
@@ -2827,7 +2827,7 @@ isPendingAttributePrefix(
             const XalanDOMString&       thePrefix,
             XalanDOMString::size_type   thePrefixLength)
 {
-    const unsigned int  thePendingAttributesCount =
+    const XalanSize_t   thePendingAttributesCount =
                 thePendingAttributes.getLength();
 
     if (thePendingAttributesCount == 0)
@@ -2840,7 +2840,7 @@ isPendingAttributePrefix(
         bool    fResult = false;
 
         // Check each attribute...
-        for (unsigned int i = 0; i < thePendingAttributesCount; ++i)
+        for (XalanSize_t i = 0; i < thePendingAttributesCount; ++i)
         {
             const XalanDOMChar* const   thePendingAttributeName =
                             thePendingAttributes.getName(i);

@@ -50,17 +50,17 @@ public:
 	~XercesNamedNodeMapAttributeList();
 
 	// These are inherited from AttributeList
-    virtual unsigned int
+    virtual XalanSize_t
 	getLength() const;
 
     virtual const XMLCh*
-	getName(const unsigned int index) const;
+	getName(const XalanSize_t   index) const;
 
     virtual const XMLCh*
-	getType(const unsigned int index) const;
+	getType(const XalanSize_t   index) const;
 
     virtual const XMLCh*
-	getValue(const unsigned int index) const;
+	getValue(const XalanSize_t  index) const;
 
     virtual const XMLCh*
 	getType(const XMLCh* const name) const;
@@ -83,7 +83,7 @@ private:
 	// Data members...
 	const DOMNamedNodeMapType* const	m_nodeMap;
 
-	const XMLSizeType					m_lastIndex;
+	const XalanSize_t					m_lastIndex;
 
 	static const XMLCh	s_typeString[];
 };

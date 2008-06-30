@@ -84,8 +84,8 @@ const XalanQNameByReference     ElemTemplateElement::s_emptyQName(s_emptyString,
 ElemTemplateElement::ElemTemplateElement(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
-            int                             lineNumber,
-            int                             columnNumber,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
             int                             xslToken) :
     PrefixResolver(),
     m_stylesheet(stylesheetTree),
@@ -114,8 +114,8 @@ ElemTemplateElement::ElemTemplateElement(
             Stylesheet&                     stylesheetTree,
             int                             xslToken,
             const XalanDOMString&           baseURI,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     PrefixResolver(),
     m_stylesheet(stylesheetTree),
     m_namespacesHandler(constructionContext.getMemoryManager()),
@@ -160,7 +160,7 @@ bool
 ElemTemplateElement::isAttrOK(
             const XalanDOMChar*             attrName,
             const AttributeListType&        atts,
-            int                             which,
+            XalanSize_t                     which,
             StylesheetConstructionContext&  constructionContext) const
 {
     return m_stylesheet.isAttrOK(attrName, atts, which, constructionContext);
@@ -173,7 +173,7 @@ ElemTemplateElement::processSpaceAttr(
             const XalanDOMChar*             elementName, 
             const XalanDOMChar*             aname, 
             const AttributeListType&        atts,
-            int                             which,
+            XalanSize_t                     which,
             StylesheetConstructionContext&  constructionContext)
 {
     if(constructionContext.isXMLSpaceAttribute(
@@ -1064,10 +1064,11 @@ ElemTemplateElement::appendChildElem(ElemTemplateElement*   newChild)
 
 
 const XPath*
-ElemTemplateElement::getXPath(unsigned int  /* index */) const
+ElemTemplateElement::getXPath(XalanSize_t   /* index */) const
 {
     return 0;
 }
+
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
@@ -1512,8 +1513,8 @@ ElemTemplateElement::getURI() const
 
 
 ElemTemplateElement::LocatorProxy::LocatorProxy(
-            size_type               theLineNumber,
-            size_type               theColumnNumber,
+            XMLFileLoc              theLineNumber,
+            XMLFileLoc              theColumnNumber,
             const XalanDOMString&   theURI) :
     m_lineNumber(theLineNumber),
     m_columnNumber(theColumnNumber),
@@ -1529,7 +1530,7 @@ ElemTemplateElement::LocatorProxy::~LocatorProxy()
 
 
 
-ElemTemplateElement::LocatorProxy::size_type
+XMLFileLoc
 ElemTemplateElement::LocatorProxy::getLineNumber() const
 {
     return m_lineNumber;
@@ -1537,7 +1538,7 @@ ElemTemplateElement::LocatorProxy::getLineNumber() const
 
 
 
-ElemTemplateElement::LocatorProxy::size_type
+XMLFileLoc
 ElemTemplateElement::LocatorProxy::getColumnNumber() const
 {
     return m_columnNumber;

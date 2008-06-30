@@ -43,8 +43,8 @@ ElemAttributeSet::ElemAttributeSet(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemUse(constructionContext,
             stylesheetTree,
             lineNumber,
@@ -52,13 +52,13 @@ ElemAttributeSet::ElemAttributeSet(
             StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET),
     m_qname(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_NAME))
+        if (equals(aname, Constants::ATTRNAME_NAME))
         {
             m_qname = constructionContext.createXalanQName(
                 atts.getValue(i),
@@ -74,12 +74,12 @@ ElemAttributeSet::ElemAttributeSet(
                     atts.getValue(i));
             }
         }
-        else if(processUseAttributeSets(
+        else if (processUseAttributeSets(
                     constructionContext,
                     aname,
                     atts,
                     i) == false &&
-                isAttrOK(
+                 isAttrOK(
                     aname,
                     atts,
                     i,
@@ -93,7 +93,7 @@ ElemAttributeSet::ElemAttributeSet(
         }
     }
 
-    if(m_qname == 0)
+    if (m_qname == 0)
     {
         error(
             constructionContext,

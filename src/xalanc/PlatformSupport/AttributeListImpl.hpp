@@ -75,17 +75,17 @@ public:
     }
 
 	// These are inherited from AttributeList
-    virtual unsigned int
+    virtual XalanSize_t
 	getLength() const;
 
     virtual const XMLCh*
-	getName(const unsigned int index) const;
+	getName(const XalanSize_t index) const;
 
     virtual const XMLCh*
-	getType(const unsigned int index) const;
+	getType(const XalanSize_t index) const;
 
     virtual const XMLCh*
-	getValue(const unsigned int index) const;
+	getValue(const XalanSize_t index) const;
 
     virtual const XMLCh*
 	getType(const XMLCh* const name) const;
@@ -143,7 +143,7 @@ public:
 	 * @param theCount The number to reserve
 	 */
 	void
-	reserve(unsigned int	theCount)
+	reserve(XalanSize_t     theCount)
 	{
 		m_AttributeVector.reserve(theCount);
 	}

@@ -67,31 +67,42 @@ public:
 	AttributesImpl&
 	operator=(const AttributesType&		theRHS);
 
-	// These are inherited from AttributeList
-    virtual unsigned int
+	// These are inherited from Attributes
+    virtual XalanSize_t
 	getLength() const;
 
 	virtual const XMLCh*
-	getURI(const unsigned int index) const;
+	getURI(const XalanSize_t    index) const;
 
 	virtual const XMLCh*
-	getLocalName(const unsigned int index) const;
+	getLocalName(const XalanSize_t  index) const;
 
     virtual const XMLCh*
-	getQName(const unsigned int index) const;
+	getQName(const XalanSize_t  index) const;
 
     virtual const XMLCh*
-	getType(const unsigned int index) const;
+	getType(const XalanSize_t   index) const;
 
     virtual const XMLCh*
-	getValue(const unsigned int index) const;
+	getValue(const XalanSize_t  index) const;
 
-	virtual int
+    virtual bool
+    getIndex(
+            const XMLCh* const  uri,
+            const XMLCh* const  localPart,
+            XalanSize_t&        index) const;
+
+    virtual int
 	getIndex(
 			const XMLCh* const	uri,
-			const XMLCh* const	localName) const;
+			const XMLCh* const	localPart) const;
 
-	virtual int
+    virtual bool
+    getIndex(
+            const XMLCh* const  qName,
+            XalanSize_t&        index) const;
+
+    virtual int
 	getIndex(const XMLCh* const		qname) const;
 
     virtual const XMLCh*
@@ -188,7 +199,7 @@ public:
 	 * @param theCount The number to reserve
 	 */
 	void
-	reserve(unsigned int	theCount)
+	reserve(XalanSize_t     theCount)
 	{
 		m_attributesVector.reserve(theCount);
 	}

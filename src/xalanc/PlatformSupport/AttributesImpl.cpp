@@ -111,7 +111,7 @@ AttributesImpl::operator=(const AttributesImpl&		theRHS)
 		// until we're done.
 		AttributesVectorType		tempVector(getMemoryManager());
 
-		const unsigned int	theLength = theRHS.getLength();
+		const XalanSize_t	theLength = theRHS.getLength();
 
 		if (theLength > 0)
 		{
@@ -169,12 +169,12 @@ AttributesImpl::operator=(const AttributesType&		theRHS)
 		// safe and don't need any try blocks.
 		AttributesImpl	theTempList(getMemoryManager());
 
-		const unsigned int	theLength = theRHS.getLength();
+		const XalanSize_t	theLength = theRHS.getLength();
 
 		theTempList.reserve(theLength);
 
 		// Add each attribute.
-		for(unsigned int i = 0; i < theLength; i++)
+		for(XalanSize_t i = 0; i < theLength; i++)
 		{
 			theTempList.addAttribute(
 					theRHS.getURI(i),
@@ -194,7 +194,7 @@ AttributesImpl::operator=(const AttributesType&		theRHS)
 
 
 
-unsigned int
+XalanSize_t
 AttributesImpl::getLength() const
 {
 	return unsigned(m_attributesVector.size());
@@ -203,7 +203,7 @@ AttributesImpl::getLength() const
 
 
 const XMLCh*
-AttributesImpl::getURI(const unsigned int index) const
+AttributesImpl::getURI(const XalanSize_t    index) const
 {
 	assert(index < getLength());
 
@@ -213,7 +213,7 @@ AttributesImpl::getURI(const unsigned int index) const
 
 
 const XMLCh*
-AttributesImpl::getLocalName(const unsigned int index) const
+AttributesImpl::getLocalName(const XalanSize_t  index) const
 {
 	assert(index < getLength());
 
@@ -223,7 +223,7 @@ AttributesImpl::getLocalName(const unsigned int index) const
 
 
 const XMLCh*
-AttributesImpl::getQName(const unsigned int		index) const
+AttributesImpl::getQName(const XalanSize_t  index) const
 {
 	assert(index < getLength());
 
@@ -233,7 +233,7 @@ AttributesImpl::getQName(const unsigned int		index) const
 
 
 const XMLCh*
-AttributesImpl::getType(const unsigned int	index) const
+AttributesImpl::getType(const XalanSize_t   index) const
 {
 	assert(index < getLength());
 
@@ -243,7 +243,7 @@ AttributesImpl::getType(const unsigned int	index) const
 
 
 const XMLCh*
-AttributesImpl::getValue(const unsigned int		index) const
+AttributesImpl::getValue(const XalanSize_t  index) const
 {
 	assert(index < getLength());
 
@@ -382,18 +382,41 @@ AttributesImpl::getValue(
 
 
 
+bool
+AttributesImpl::getIndex(
+            const XMLCh* const  uri,
+            const XMLCh* const  localPart,
+            XalanSize_t&        index) const
+{
+    const int   tempIndex =
+        getIndex(uri, localPart);
+
+    if (tempIndex == -1)
+    {
+        return false;
+    }
+    else
+    {
+        index = tempIndex;
+
+        return true;
+    }
+}
+
+
+
 int
 AttributesImpl::getIndex(
 			const XMLCh* const	uri,
-			const XMLCh* const	localName) const
+			const XMLCh* const	localPart) const
 {
-	assert(uri != 0 && localName != 0);
+	assert(uri != 0 && localPart != 0);
 
 	const AttributesVectorType::const_iterator	i =
 		XALAN_STD_QUALIFIER find_if(
 			m_attributesVector.begin(),
 			m_attributesVector.end(),
-			URIAndLocalNameCompareFunctor(uri, localName));
+			URIAndLocalNameCompareFunctor(uri, localPart));
 
 	if (i != m_attributesVector.end())
 	{
@@ -405,6 +428,28 @@ AttributesImpl::getIndex(
 	{
 		return -1;
 	}
+}
+
+
+
+bool
+AttributesImpl::getIndex(
+            const XMLCh* const  qName,
+            XalanSize_t&        index) const
+{
+    const int   tempIndex =
+        getIndex(qName);
+
+    if (tempIndex == -1)
+    {
+        return false;
+    }
+    else
+    {
+        index = tempIndex;
+
+        return true;
+    }
 }
 
 

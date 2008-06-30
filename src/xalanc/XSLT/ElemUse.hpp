@@ -58,8 +58,8 @@ public:
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber,
 			int								xslToken);
 
 	virtual
@@ -79,7 +79,7 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			const XalanDOMChar*				attrName,
 			const AttributeListType&		atts,
-			int								which);
+			XalanSize_t						which);
 
 	// These methods are inherited from ElemTemplateElement ...
 	

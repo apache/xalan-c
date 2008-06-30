@@ -25,7 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemElementAllocator::XalanElemElementAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanElemElementAllocator::XalanElemElementAllocator(
+            MemoryManagerType&  theManager,
+            size_type	        theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }
@@ -43,8 +45,8 @@ XalanElemElementAllocator::create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber)
+			XalanFileLoc				    lineNumber,
+			XalanFileLoc					columnNumber)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

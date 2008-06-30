@@ -91,8 +91,8 @@ public:
     ElemTemplateElement(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
-            int                             lineNumber,
-            int                             columnNumber,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
             int                             xslToken);
 
     /**
@@ -112,8 +112,8 @@ public:
             Stylesheet&                     stylesheetTree,
             int                             xslToken,
             const XalanDOMString&           baseURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
-            int                             lineNumber = XalanLocator::getUnknownValue(),
-            int                             columnNumber = XalanLocator::getUnknownValue());
+            XalanFileLoc                    lineNumber = XalanLocator::getUnknownValue(),
+            XalanFileLoc                    columnNumber = XalanLocator::getUnknownValue());
 
     virtual
     ~ElemTemplateElement();
@@ -140,7 +140,7 @@ public:
     isAttrOK(
             const XalanDOMChar*             attrName,
             const AttributeListType&        atts,
-            int                             which,
+            XalanSize_t                     which,
             StylesheetConstructionContext&  constructionContext) const;
 
     /** 
@@ -158,7 +158,7 @@ public:
             const XalanDOMChar*             elementName,
             const XalanDOMChar*             aname,
             const AttributeListType&        atts,
-            int                             which,
+            XalanSize_t                     which,
             StylesheetConstructionContext&  constructionContext);
 
     /** 
@@ -617,7 +617,7 @@ public:
      * @return pointer or null 
      */
     virtual const XPath*
-    getXPath(unsigned int   index = 0) const;
+    getXPath(XalanSize_t    index) const;
 
     // These interfaces are inherited from PrefixResolver...
 
@@ -635,8 +635,8 @@ public:
     public:
 
         LocatorProxy(
-                    size_type               theLineNumber,
-                    size_type               theColumnNumber,
+                    XMLFileLoc              theLineNumber,
+                    XMLFileLoc              theColumnNumber,
                     const XalanDOMString&   theURI);
 
         virtual
@@ -648,10 +648,10 @@ public:
         virtual const XMLCh*
         getSystemId() const;
 
-        virtual size_type
+        virtual XMLFileLoc
         getLineNumber() const;
 
-        virtual size_type
+        virtual XMLFileLoc
         getColumnNumber() const;
 
         const XalanDOMString&
@@ -672,21 +672,21 @@ public:
         operator==(const LocatorProxy&) const;
 
         // data members...
-        const size_type         m_lineNumber;
+        const XMLFileLoc        m_lineNumber;
 
-        const size_type         m_columnNumber;
+        const XMLFileLoc        m_columnNumber;
 
         const XalanDOMString&   m_uri;
     };
 
 
-    LocatorProxy::size_type
+    XMLFileLoc
     getLineNumber() const
     {
         return m_locatorProxy.getLineNumber();
     }
 
-    LocatorProxy::size_type
+    XMLFileLoc
     getColumnNumber() const
     {
         return m_locatorProxy.getColumnNumber();

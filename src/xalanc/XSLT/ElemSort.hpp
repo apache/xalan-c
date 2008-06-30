@@ -61,8 +61,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
     static ElemSort*
 	create(
@@ -70,8 +70,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 	~ElemSort();
 
@@ -134,7 +134,7 @@ public:
 	getElementName() const;
 
 	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
+	getXPath(XalanSize_t	index = 0) const;
 
 private:
 

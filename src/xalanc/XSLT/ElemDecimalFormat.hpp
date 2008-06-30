@@ -59,8 +59,8 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,
-			int								lineNumber,
-			int								columnNumber);
+			XalanFileLoc					lineNumber,
+			XalanFileLoc					columnNumber);
 
 
 	~ElemDecimalFormat();
@@ -85,7 +85,7 @@ public:
 	}
 
 	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
+	getXPath(XalanSize_t    index) const;
 
 private:
 

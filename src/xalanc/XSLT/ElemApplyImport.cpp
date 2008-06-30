@@ -54,21 +54,21 @@ ElemApplyImport::ElemApplyImport(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber, 
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber) :
         ElemTemplateElement(constructionContext,
                             stylesheetTree,
                             lineNumber,
                             columnNumber,
                             StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(isAttrOK(
+        if (isAttrOK(
                 aname,
                 atts,
                 i,

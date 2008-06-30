@@ -57,8 +57,8 @@ ElemForEach::ElemForEach(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-            int                             lineNumber,
-            int                             columnNumber) :
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
                         lineNumber,
@@ -68,17 +68,17 @@ ElemForEach::ElemForEach(
     m_sortElems(constructionContext.getMemoryManager()),
     m_sortElemsCount(0)
 {
-    const unsigned int  nAttrs = atts.getLength();
+    const XalanSize_t  nAttrs = atts.getLength();
         
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_SELECT))
+        if (equals(aname, Constants::ATTRNAME_SELECT))
         {
             m_selectPattern = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
         }
-        else if(isAttrOK(
+        else if (isAttrOK(
                     aname,
                     atts,
                     i,
@@ -98,7 +98,7 @@ ElemForEach::ElemForEach(
         }
     }
 
-    if(0 == m_selectPattern)
+    if (0 == m_selectPattern)
     {
         error(
             constructionContext,
@@ -113,8 +113,8 @@ ElemForEach::ElemForEach(
 ElemForEach::ElemForEach(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
-            int                             lineNumber,
-            int                             columnNumber,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
             int                             xslToken) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
@@ -149,8 +149,8 @@ ElemForEach::processSortElement(
             const AttributeListType&        atts,
             const LocatorType*              locator)
 {
-    const int   lineNumber = XalanLocator::getLineNumber(locator);
-    const int   columnNumber = XalanLocator::getColumnNumber(locator);
+    const XalanFileLoc  lineNumber = XalanLocator::getLineNumber(locator);
+    const XalanFileLoc  columnNumber = XalanLocator::getColumnNumber(locator);
 
     m_sortElems.reserve(m_sortElems.size() + 1);
 
@@ -828,7 +828,7 @@ ElemForEach::transformSelectedChildren(
 
 
 const XPath*
-ElemForEach::getXPath(unsigned int  index) const
+ElemForEach::getXPath(XalanSize_t   index) const
 {
     return index == 0 ? m_selectPattern : 0;
 }

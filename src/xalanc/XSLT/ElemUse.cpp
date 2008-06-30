@@ -50,8 +50,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 ElemUse::ElemUse(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
-            int                             lineNumber,
-            int                             columnNumber,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
             int                             xslToken) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
@@ -274,7 +274,7 @@ ElemUse::processUseAttributeSets(
             StylesheetConstructionContext&  constructionContext,
             const XalanDOMChar*             attrName,
             const AttributeListType&        atts,
-            int                             which)
+            XalanSize_t                     which)
 {
     bool isUAS = false;
 

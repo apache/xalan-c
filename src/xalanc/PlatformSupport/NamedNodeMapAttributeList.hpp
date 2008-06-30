@@ -45,24 +45,25 @@ public:
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
 
 	explicit
-	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap,
-                                MemoryManagerType& theManager);
+	NamedNodeMapAttributeList(
+                const XalanNamedNodeMap&	theMap,
+                MemoryManagerType&          theManager);
 
 	virtual
 	~NamedNodeMapAttributeList();
 
 	// These are inherited from AttributeList
-    virtual unsigned int
+    virtual XalanSize_t
 	getLength() const;
 
     virtual const XalanDOMChar*
-	getName(const unsigned int index) const;
+	getName(const XalanSize_t   index) const;
 
     virtual const XalanDOMChar*
-	getType(const unsigned int index) const;
+	getType(const XalanSize_t   index) const;
 
     virtual const XalanDOMChar*
-	getValue(const unsigned int index) const;
+	getValue(const XalanSize_t  index) const;
 
     virtual const XalanDOMChar*
 	getType(const XalanDOMChar* const name) const;
@@ -85,11 +86,11 @@ private:
 	// Data members...
 	const XalanNamedNodeMap&	m_nodeMap;
 
-	const unsigned int			m_lastIndex;
+	const XalanSize_t			m_lastIndex;
+
+    MemoryManagerType&          m_memoryManager;
 
 	static const XalanDOMChar	s_typeString[];
-
-    	MemoryManagerType&  m_memoryManager;
 };
 
 
