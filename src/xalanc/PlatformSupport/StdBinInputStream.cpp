@@ -82,7 +82,7 @@ StdBinInputStream::readBytes(
 
 
 
-const XMLCh*
+const XalanDOMChar*
 StdBinInputStream::getContentType() const
 {
     return 0;

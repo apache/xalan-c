@@ -68,7 +68,7 @@ public:
 			XMLByte* const      toFill,
 			const XalanSize_t   maxToRead);
 
-    virtual const XMLCh*
+    virtual const XalanDOMChar*
     getContentType() const;
 
 private:
