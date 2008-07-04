@@ -591,15 +591,15 @@ XalanSourceTreeDocument::getElementById(const XalanDOMString&	elementId) const
 static bool
 hasXMLNamespaceAttribute(const AttributeListType&	attrs)
 {
-	const unsigned int	theLength = attrs.getLength();
+	const XalanSize_t	theLength = attrs.getLength();
 
-	for (unsigned int i = 0; i < theLength; ++i)
+	for (XalanSize_t i = 0; i < theLength; ++i)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
 		assert(theName != 0);
 
-		if(equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
+		if (equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
 		{
 			return true;
 		}
@@ -613,15 +613,15 @@ hasXMLNamespaceAttribute(const AttributeListType&	attrs)
 static bool
 hasXMLNamespaceAttribute(const AttributesType&	attrs)
 {
-	const unsigned int	theLength = attrs.getLength();
+	const XalanSize_t	theLength = attrs.getLength();
 
-	for (unsigned int i = 0; i < theLength; ++i)
+	for (XalanSize_t i = 0; i < theLength; ++i)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getQName(i);
 		assert(theName != 0);
 
-		if(equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
+		if (equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
 		{
 			return true;
 		}
@@ -641,10 +641,10 @@ XalanSourceTreeDocument::createAttributes(
 			bool						fCreateNamespaces,
 			const PrefixResolver*		thePrefixResolver)
 {
-	const unsigned int	theSAXAttributeCount = attrs.getLength();
+	const XalanSize_t	theSAXAttributeCount = attrs.getLength();
 
 	// Now, create the attributes...
-	for(unsigned int i = 0; i < theSAXAttributeCount; ++i)
+	for (XalanSize_t i = 0; i < theSAXAttributeCount; ++i)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -1445,10 +1445,10 @@ XalanSourceTreeDocument::createAttributes(
 			XalanSourceTreeElement*		theOwnerElement,
 			bool						fCreateNamespaces)
 {
-	const unsigned int	theSAXAttributeCount = theAttributes.getLength();
+	const XalanSize_t	theSAXAttributeCount = theAttributes.getLength();
 
 	// Now, create the attributes...
-	for(unsigned int i = 0; i < theSAXAttributeCount; ++i)
+	for (XalanSize_t i = 0; i < theSAXAttributeCount; ++i)
 	{
 		const XalanDOMChar* const	theQName =
 			theAttributes.getQName(i);
@@ -1483,7 +1483,8 @@ XalanSourceTreeDocument::createAttributes(
 					theAttributes.getLocalName(i);
 				assert(theLocalName != 0);
 
-				const XalanDOMString::size_type		theColonIndex = indexOf(theQName, XalanUnicode::charColon);
+				const XalanDOMString::size_type		theColonIndex =
+                    indexOf(theQName, XalanUnicode::charColon);
 				assert(theColonIndex != length(theQName));
 
 				// The constructor parameters for AttrNS are:

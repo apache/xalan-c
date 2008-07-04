@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * @author <a href="mailto:david_n_bertoni@us.ibm.com">David N. Bertoni</a>
- */
 
 #include "XPathEnvSupportDefault.hpp"
 
@@ -452,8 +449,8 @@ XPathEnvSupportDefault::problem(
 			const XalanNode*		/* sourceNode */,
 			const XalanDOMString&	msg,
 			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const
+			XalanFileLoc			lineNo,
+			XalanFileLoc			charOffset) const
 {
 	cerr << msg;
 

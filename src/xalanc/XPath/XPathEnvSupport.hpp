@@ -196,8 +196,8 @@ public:
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
 			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const = 0;
+			XalanFileLoc			lineNo,
+			XalanFileLoc			charOffset) const = 0;
 
 	/**
 	 * Reset the instance.

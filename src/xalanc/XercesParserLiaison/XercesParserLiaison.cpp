@@ -693,8 +693,8 @@ XercesParserLiaison::formatErrorMessage(
     XalanDOMString  theLineNumber(theMessage.getMemoryManager());
     XalanDOMString  theColumnNumb(theMessage.getMemoryManager());
 
-    LongToDOMString(e.getLineNumber(), theLineNumber);
-    LongToDOMString(e.getColumnNumber(), theColumnNumb);
+    NumberToDOMString(e.getLineNumber(), theLineNumber);
+    NumberToDOMString(e.getColumnNumber(), theColumnNumb);
 
     XalanDOMString  theErrorMsg(theMessage.getMemoryManager());
 

@@ -277,8 +277,8 @@ XSLTProcessorEnvSupportDefault::problem(
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			/* uri */,
-			int							/* lineNo */,
-			int							/* charOffset */) const
+			XalanFileLoc			    /* lineNo */,
+			XalanFileLoc			    /* charOffset */) const
 {
 	if (classification == XPathEnvSupport::eError)
 	{
@@ -319,8 +319,8 @@ XSLTProcessorEnvSupportDefault::problem(
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
 			const XalanDOMChar*		/* uri */,
-			int						/* lineNo */,
-			int						/* charOffset */) const
+			XalanFileLoc			/* lineNo */,
+			XalanFileLoc			/* charOffset */) const
 {
 	if (classification == XPathEnvSupport::eError)
 	{

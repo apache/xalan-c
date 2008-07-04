@@ -344,9 +344,9 @@ FormatterToHTML::startElement(
 
 		accumName(name);
 
-		const unsigned int	nAttrs = attrs.getLength();
+		const XalanSize_t	nAttrs = attrs.getLength();
 
-		for (unsigned int i = 0;  i < nAttrs ;  i++)
+		for (XalanSize_t i = 0;  i < nAttrs ;  i++)
 		{
 			processAttribute(attrs.getName(i), attrs.getValue(i), elemProperties);
 		}

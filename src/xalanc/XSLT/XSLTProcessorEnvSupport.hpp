@@ -77,8 +77,8 @@ public:
 			const ElemTemplateElement*	styleNode,
 			const XalanDOMString&		msg,
 			const XalanDOMChar*			uri,
-			int							lineNo,
-			int							charOffset) const = 0;
+			XalanFileLoc			    lineNo,
+			XalanFileLoc			    charOffset) const = 0;
 
 	// These interfaces are inherited from XPathEnvSupport...
 
@@ -126,8 +126,8 @@ public:
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
 			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const = 0;
+			XalanFileLoc			lineNo,
+			XalanFileLoc			charOffset) const = 0;
 
 	// These interfaces are inherited from Resettable...
 

@@ -383,18 +383,18 @@ FormatterToXercesDOM::addAttributes(
 			DOMElementType*		theElement,
 			AttributeListType&	attrs)
 {
-	const unsigned int	nAtts = attrs.getLength();
+	const XalanSize_t	nAtts = attrs.getLength();
 
 	if (m_prefixResolver == 0)
 	{
-		for(unsigned int i = 0; i < nAtts; i++)
+		for (XalanSize_t i = 0; i < nAtts; i++)
 		{
 			theElement->setAttribute(attrs.getName(i), attrs.getValue(i));
 		}
 	}
 	else
 	{
-		for(unsigned int i = 0; i < nAtts; i++)
+		for (XalanSize_t i = 0; i < nAtts; i++)
 		{
 			const XalanDOMChar* const	theName = attrs.getName(i);
 			assert(theName != 0);

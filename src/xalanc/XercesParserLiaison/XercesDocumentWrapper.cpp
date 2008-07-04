@@ -1592,7 +1592,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	// Finally, increment the index counter...
 	++m_currentIndex;
 
-	const short		theType = node->getNodeType();
+	const DOMNodeType::NodeType  theType = node->getNodeType();
 
 	if (theType == DOMNodeType::DOCUMENT_TYPE_NODE)
 	{
@@ -1607,10 +1607,10 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 		const DOMNamedNodeMapType* const	theEntities =
 			theDoctype->getEntities();
 
-		const unsigned int	theLength =
+		const XalanSize_t	theLength =
 			theEntities->getLength();
 
-		for (unsigned int i = 0; i < theLength; ++i)
+		for (XalanSize_t i = 0; i < theLength; ++i)
 		{
 			// Build it, but don't index it...
 			m_document->createWrapperNode(theEntities->item(i), m_currentIndex++, true);
@@ -1630,13 +1630,13 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 			theElement->getAttributes();
 		assert(theAttributes != 0);
 
-		const unsigned int	theLength =
+		const XalanSize_t	theLength =
 			theAttributes->getLength();
 
 		XercesWrapperNavigator*	thePreviousAttrNavigator = 0;
 		XalanNode*				thePreviousAttr = 0;
 
-		for (unsigned int i = 0; i < theLength; ++i)
+		for (XalanSize_t i = 0; i < theLength; ++i)
 		{
 			// Get the attribute from the node map...
 			const DOMNodeType* const	theAttr = theAttributes->item(i);

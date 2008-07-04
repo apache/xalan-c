@@ -473,27 +473,27 @@ StylesheetRoot::processOutputSpec(
             const AttributeListType&        atts,
             StylesheetConstructionContext&  constructionContext)
 {
-    const unsigned int      nAttrs = atts.getLength();
+    const XalanSize_t   nAttrs = atts.getLength();
 
     const LocatorType* const    theLocator = constructionContext.getLocatorFromStack();
 
-    for(unsigned int i = 0; i < nAttrs; i++)
+    for (XalanSize_t i = 0; i < nAttrs; i++)
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if(equals(aname, Constants::ATTRNAME_OUTPUT_METHOD))
+        if (equals(aname, Constants::ATTRNAME_OUTPUT_METHOD))
         {
             const XalanDOMChar* const   method = atts.getValue(i);
 
-            if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_HTML))
+            if (equals(method, Constants::ATTRVAL_OUTPUT_METHOD_HTML))
             {
                 m_outputMethod = FormatterListener::OUTPUT_METHOD_HTML;
             }
-            else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_XML))
+            else if (equals(method, Constants::ATTRVAL_OUTPUT_METHOD_XML))
             {
                 m_outputMethod = FormatterListener::OUTPUT_METHOD_XML;
             }
-            else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_TEXT))
+            else if (equals(method, Constants::ATTRVAL_OUTPUT_METHOD_TEXT))
             {
                 m_outputMethod = FormatterListener::OUTPUT_METHOD_TEXT;
             }
@@ -510,42 +510,42 @@ StylesheetRoot::processOutputSpec(
                     theLocator);
             }
         }
-        else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
+        else if (equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
         {
             m_version = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_INDENT))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_INDENT))
         {
             m_indentResult =
                 getYesOrNo(aname, atts.getValue(i), constructionContext) == true ?
                     eIndentYesExplicit :
                     eIndentNoExplicit;
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_ENCODING))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_ENCODING))
         {
             m_encoding = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_MEDIATYPE))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_MEDIATYPE))
         {
             m_mediatype = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_DOCTYPE_SYSTEM))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_DOCTYPE_SYSTEM))
         {
             m_doctypeSystem = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_DOCTYPE_PUBLIC))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_DOCTYPE_PUBLIC))
         {
             m_doctypePublic = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_OMITXMLDECL))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_OMITXMLDECL))
         {
             m_omitxmlDecl = getYesOrNo(aname, atts.getValue(i), constructionContext);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_STANDALONE))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_STANDALONE))
         {
             m_standalone = atts.getValue(i);
         }
-        else if(equals(aname,Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS))
+        else if (equals(aname,Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS))
         {
             if (m_outputMethod == FormatterListener::OUTPUT_METHOD_NONE ||
                 m_outputMethod == FormatterListener::OUTPUT_METHOD_XML)
@@ -561,7 +561,7 @@ StylesheetRoot::processOutputSpec(
 
                 XalanDOMString& theToken = theGuard.get();
 
-                while(theTokenCount > 0)
+                while (theTokenCount > 0)
                 {
                     theTokenizer.nextToken(theToken);
 
@@ -627,8 +627,8 @@ StylesheetRoot::processOutputSpec(
     }
 
     // If HTML output 
-    if(m_outputMethod == FormatterListener::OUTPUT_METHOD_HTML &&
-       m_indentResult == eIndentNoImplicit)
+    if (m_outputMethod == FormatterListener::OUTPUT_METHOD_HTML &&
+        m_indentResult == eIndentNoImplicit)
     {
         m_indentResult = eIndentYesImplicit;
     }

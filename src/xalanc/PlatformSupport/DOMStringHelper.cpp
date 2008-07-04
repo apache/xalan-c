@@ -1637,7 +1637,7 @@ ScalarToDecimalString(
 
 
 template <class ScalarType>
-void
+XalanDOMString&
 ScalarToDecimalString(
 			ScalarType			theValue,
 			XalanDOMString&		theResult)
@@ -1654,6 +1654,8 @@ ScalarToDecimalString(
         theResult,
         theBegin,
         XalanDOMString::size_type(theEnd - theBegin));
+
+    return theResult;
 }
 
 
@@ -1700,7 +1702,7 @@ UnsignedScalarToHexadecimalString(
 
 
 template <class ScalarType>
-void
+XalanDOMString&
 UnsignedScalarToHexadecimalString(
 			ScalarType			theValue,
 			XalanDOMString&		theResult)
@@ -1720,6 +1722,8 @@ UnsignedScalarToHexadecimalString(
             theBegin,
             XalanDOMString::size_type(theEnd - theBegin));
 	}
+
+    return theResult;
 }
 
 
@@ -1744,9 +1748,7 @@ LongToHexDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
-	UnsignedScalarToHexadecimalString(theValue, theResult);
-
-	return theResult;
+	return UnsignedScalarToHexadecimalString(theValue, theResult);
 }
 
 
@@ -1756,9 +1758,7 @@ UnsignedLongToHexDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-	UnsignedScalarToHexadecimalString(theValue, theResult);
-
-	return theResult;
+	return UnsignedScalarToHexadecimalString(theValue, theResult);
 }
 
 
@@ -1768,22 +1768,8 @@ LongToDOMString(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
-	ScalarToDecimalString(theValue, theResult);
-
-	return theResult;
+	return ScalarToDecimalString(theValue, theResult);
 }
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-NumberToDOMString(
-            unsigned long long  theValue,
-            XalanDOMString&     theResult)
-{
-	ScalarToDecimalString(theValue, theResult);
-
-	return theResult;
-}
-
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
@@ -1791,9 +1777,17 @@ UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-	ScalarToDecimalString(theValue, theResult);
+	return ScalarToDecimalString(theValue, theResult);
+}
 
-	return theResult;
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            unsigned long long	theValue,
+            XalanDOMString&     theResult)
+{
+    return ScalarToDecimalString(theValue, theResult);
 }
 
 
@@ -1803,9 +1797,7 @@ SizeTypeToDOMString(
             size_t				theValue,
 			XalanDOMString&     theResult)
 {
-	ScalarToDecimalString(theValue, theResult);
-
-	return theResult;
+	return ScalarToDecimalString(theValue, theResult);
 }
 
 

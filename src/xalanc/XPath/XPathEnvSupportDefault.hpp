@@ -176,8 +176,8 @@ public:
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
 			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const;
+			XalanFileLoc			lineNo,
+			XalanFileLoc			charOffset) const;
 
 	// These interfaces are inherited from Resettable...
 
