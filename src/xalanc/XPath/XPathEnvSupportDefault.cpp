@@ -460,18 +460,18 @@ XPathEnvSupportDefault::problem(
 	}
 
 	cerr << ", at line number "
-		 << lineNo
+		 << static_cast<long>(lineNo)
 		 << " at offset "
-		 << charOffset
+		 << static_cast<long>(charOffset)
 		 << endl;
 
-	return classification == XPathEnvSupport::eError ? true : false;
+	return classification == eError ? true : false;
 }
 
 
 
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager) :
-m_memMgr(theManager)
+	m_memMgr(theManager)
 {
 }
 

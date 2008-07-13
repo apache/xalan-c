@@ -84,7 +84,6 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
 	m_nodeMap(theManager),
-    m_domImplementation(theManager, XercesDOMImplementationWrapper::create(theManager, theXercesDocument->getImplementation())),
 	m_navigatorAllocator(theManager, 25),
 	m_navigator(0),
 	m_children(theXercesDocument->getChildNodes(),

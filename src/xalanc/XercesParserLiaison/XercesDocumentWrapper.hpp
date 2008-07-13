@@ -33,7 +33,6 @@
 
 
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <xalanc/XalanDOM/XalanDOMImplementation.hpp>
 #include <xalanc/PlatformSupport/XalanDOMStringPool.hpp>
 #endif
 
@@ -473,8 +472,6 @@ private:
     XalanElement*                           m_documentElement;
 
     mutable XercesWrapperToXalanNodeMap     m_nodeMap;
-
-    XalanMemMgrAutoPtr<XalanDOMImplementation, true>    m_domImplementation;
 
     mutable XercesWrapperNavigatorAllocator m_navigatorAllocator;
 

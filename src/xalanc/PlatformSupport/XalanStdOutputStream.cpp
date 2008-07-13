@@ -74,9 +74,12 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 #endif
 }
 
+
+
 XalanStdOutputStream*
-XalanStdOutputStream::create(   StreamType& theOutputStream,
-                                MemoryManagerType&  theManager)
+XalanStdOutputStream::create(
+			StreamType&		theOutputStream,
+            MemoryManager&  theManager)
 {
     typedef XalanStdOutputStream ThisType;
 
@@ -90,6 +93,8 @@ XalanStdOutputStream::create(   StreamType& theOutputStream,
 
     return theResult;
 }
+
+
 
 XalanStdOutputStream::~XalanStdOutputStream()
 {
@@ -123,16 +128,16 @@ void
 XalanStdOutputStream::doFlush()
 {
     // Don't try to flush if the stream is in a bad state...
-    if(m_outputStream)
+    if (m_outputStream)
     {
         m_outputStream.flush();
 
-        if(!m_outputStream)
+        if (!m_outputStream)
         {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
             using namespace std;
 #endif
-            XalanDOMString thebuffer(getMemoryManager());
+            XalanDOMString	thebuffer(getMemoryManager());
 
             throw XalanStdOutputStreamWriteException(errno, thebuffer);
         }
@@ -146,16 +151,16 @@ XalanStdOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-    assert(static_cast<XALAN_UINT64>(StreamSizeType(theBufferLength)) == theBufferLength);
+    assert(static_cast<XALAN_UINT64>(static_cast<StreamSizeType>(theBufferLength)) == theBufferLength);
 
     m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 
-    if(!m_outputStream)
+    if (!m_outputStream)
     {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
         using namespace std;
 #endif
-        XalanDOMString thebuffer(getMemoryManager());
+        XalanDOMString	thebuffer(getMemoryManager());
 
         throw XalanStdOutputStreamWriteException(errno, thebuffer);
     }
