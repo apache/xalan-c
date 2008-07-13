@@ -120,7 +120,7 @@ XNumber::set(double		theValue)
 double
 XNumber::stringLength() const
 {
-    return length(str());
+    return static_cast<double>(str().length());
 }
 
 

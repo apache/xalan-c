@@ -565,7 +565,7 @@ public:
     //@}
 
 	virtual bool
-	isIgnorableWhitespace() const;
+	isWhitespace() const;
 
 	/**
 	 * Get the Xerces node this instance represent.

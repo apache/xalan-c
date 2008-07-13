@@ -173,7 +173,7 @@ public:
 	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar* 	theValue,
-			unsigned int			theLength) = 0;
+			XalanSize_t			    theLength) = 0;
 
 	/**
 	 * Create a string XObject from an XToken.  The XToken

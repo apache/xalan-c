@@ -150,102 +150,6 @@ XercesAttrWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesAttrWrapper*
-#endif
-XercesAttrWrapper::cloneNode(bool	/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesAttrWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XercesAttrWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XercesAttrWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XercesAttrWrapper::appendChild(XalanNode*	/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XercesAttrWrapper::hasChildNodes() const
-{
-	return m_xercesNode->hasChildNodes();
-}
-
-
-
-void
-XercesAttrWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesAttrWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesAttrWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesAttrWrapper::getNamespaceURI() const
 {
@@ -266,14 +170,6 @@ const XalanDOMString&
 XercesAttrWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesAttrWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -314,14 +210,6 @@ const XalanDOMString&
 XercesAttrWrapper::getValue() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getValue());
-}
-
-
-
-void
-XercesAttrWrapper::setValue(const XalanDOMString&	/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

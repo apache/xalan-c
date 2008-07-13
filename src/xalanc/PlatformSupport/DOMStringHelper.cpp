@@ -63,6 +63,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#if defined (XALAN_STRICT_ANSI_HEADERS)
+    using std::size_t;
+#endif
+
+
+
 // The maximum number of digits that sprintf can put in a buffer.
 // 100 for now.  We're using this because we want to avoid transcoding
 // number strings when we don't have to,
@@ -340,6 +346,7 @@ OutputString(XalanOutputStream&		theStream,
 
 
 XALAN_USING_STD(ostream)
+XALAN_USING_STD(streamsize)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
@@ -348,7 +355,12 @@ OutputString(
 {
 	if (theString.empty() == false)
 	{
-		theStream.write(&*theString.begin(), theString.size());
+        assert(
+            static_cast<XALAN_UINT64>(static_cast<streamsize>(theString.size())) == theString.size());
+
+		theStream.write(
+            &*theString.begin(),
+            static_cast<streamsize>(theString.size()));
 	}
 }
 
@@ -1345,7 +1357,7 @@ PointerToDOMString(
 	XALAN_USING_STD(sprintf);
 #endif
 
-	unsigned int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
+	const int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
 	assert(theCharsWritten != 0);
 
 	reserve(theResult, length(theResult) + theCharsWritten);
@@ -1784,7 +1796,27 @@ UnsignedLongToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            unsigned long long	theValue,
+            XALAN_INT64	        theValue,
+            XalanDOMString&     theResult)
+{
+    return ScalarToDecimalString(theValue, theResult);
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            XALAN_UINT64	    theValue,
+            XalanDOMString&     theResult)
+{
+    return ScalarToDecimalString(theValue, theResult);
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            unsigned long	    theValue,
             XalanDOMString&     theResult)
 {
     return ScalarToDecimalString(theValue, theResult);

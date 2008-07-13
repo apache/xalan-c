@@ -161,98 +161,6 @@ XercesProcessingInstructionWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesProcessingInstructionWrapper*
-#endif
-XercesProcessingInstructionWrapper::cloneNode(bool		/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesProcessingInstructionWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesProcessingInstructionWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesProcessingInstructionWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesProcessingInstructionWrapper::appendChild(XalanNode*	/* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesProcessingInstructionWrapper::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XercesProcessingInstructionWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesProcessingInstructionWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesProcessingInstructionWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesProcessingInstructionWrapper::getNamespaceURI() const
 {
@@ -273,14 +181,6 @@ const XalanDOMString&
 XercesProcessingInstructionWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesProcessingInstructionWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -313,14 +213,6 @@ const XalanDOMString&
 XercesProcessingInstructionWrapper::getData() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getData());
-}
-
-
-
-void
-XercesProcessingInstructionWrapper::setData(const XalanDOMString&	/* data */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

@@ -41,30 +41,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-MutableNodeRefList::MutableNodeRefList(MemoryManagerType& theManager) :
+MutableNodeRefList::MutableNodeRefList(MemoryManager&   theManager) :
     NodeRefList(theManager),
     m_order(eUnknownOrder)
 {
 }
+
+
+
 MutableNodeRefList*
-MutableNodeRefList::create(MemoryManagerType& theManager)
+MutableNodeRefList::create(MemoryManager&   theManager)
 {
-    typedef MutableNodeRefList ThisType;
+    MutableNodeRefList*     theInstance = 0;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
-
-    theGuard.release();
-
-    return theResult;
+    return XalanConstruct(
+            theManager,
+            theInstance,
+            theManager);
 }
 
 
-MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&    theSource,
-                                       MemoryManagerType& theManager) :
+
+MutableNodeRefList::MutableNodeRefList(
+            const MutableNodeRefList&   theSource,
+            MemoryManager&              theManager) :
     NodeRefList(theSource, theManager),
     m_order(theSource.m_order)
 {
@@ -72,8 +72,9 @@ MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&    theSource,
 
 
 
-MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&   theSource,
-                                       MemoryManagerType& theManager) :
+MutableNodeRefList::MutableNodeRefList(
+            const NodeRefListBase&  theSource,
+            MemoryManager&          theManager) :
     NodeRefList(theSource, theManager),
     m_order(eUnknownOrder)
 {
@@ -229,17 +230,14 @@ MutableNodeRefList::setNode(
 void
 MutableNodeRefList::addNodes(const XalanNodeList&   nodelist)
 {
-    const size_type     theLength = nodelist.getLength();
+    const XalanSize_t     theLength = nodelist.getLength();
 
-    for (size_type i = 0; i < theLength; i++)
+    for (XalanSize_t i = 0; i < theLength; i++)
     {
-        assert(unsigned(i) == i);
-
-        XalanNode* const    theNode = nodelist.item(unsigned(i));
+        XalanNode* const    theNode = nodelist.item(i);
 
         if (theNode != 0)
         {
-
             m_nodeList.push_back(theNode);
         }
     }
@@ -271,9 +269,9 @@ MutableNodeRefList::addNodesInDocOrder(
             const XalanNodeList&    nodelist,
             XPathExecutionContext&  executionContext)
 {
-    const unsigned int  theOtherLength = nodelist.getLength();
+    const XalanSize_t  theOtherLength = nodelist.getLength();
 
-    for(unsigned int i = 0; i < theOtherLength; i++)
+    for(XalanSize_t i = 0; i < theOtherLength; i++)
     {
         addNodeInDocOrder(nodelist.item(i), executionContext);
     }
@@ -286,9 +284,9 @@ MutableNodeRefList::addNodesInDocOrder(
             const NodeRefListBase&  nodelist,
             XPathExecutionContext&  executionContext)
 {
-    const size_type     theOtherLength = nodelist.getLength();
+    const XalanSize_t   theOtherLength = nodelist.getLength();
 
-    for(size_type i = 0; i < theOtherLength; i++)
+    for(XalanSize_t i = 0; i < theOtherLength; i++)
     {
         addNodeInDocOrder(nodelist.item(i), executionContext);
     }

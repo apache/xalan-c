@@ -26,7 +26,6 @@
 
 
 #include <xalanc/DOMSupport/DOMSupport.hpp>
-#include <xalanc/DOMSupport/DOMSupportDefault.hpp>
 
 
 
@@ -34,11 +33,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+class XercesParserLiaison;
+
+
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMSupport : public DOMSupport
 {
 public:
 
-	XercesDOMSupport(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	XercesDOMSupport(XercesParserLiaison&   theLiaison);
 
 	virtual
 	~XercesDOMSupport();
@@ -62,7 +65,7 @@ public:
 
 private:
 
-	DOMSupportDefault	m_domSupportDefault;
+    XercesParserLiaison&    m_liaison;
 };
 
 

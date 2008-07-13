@@ -25,11 +25,11 @@
 
 
 
-#include <xalanc/PlatformSupport/XalanDOMStringPool.hpp>
-
-
-
 #include <xalanc/DOMSupport/DOMSupport.hpp>
+
+
+
+XALAN_DECLARE_XERCES_CLASS(MemoryManager)
 
 
 
@@ -37,13 +37,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(MemoryManager)
+
+
+
 class XALAN_DOMSUPPORT_EXPORT DOMSupportDefault : public DOMSupport
 {
 public:
 
-	DOMSupportDefault(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    // This constructor is deprecated.  Use the default constructor instead.
+	DOMSupportDefault(MemoryManager&    theManager);
 
-	virtual
+	DOMSupportDefault();
+
+    virtual
 	~DOMSupportDefault();
 
 	// These interfaces are inherited from Resettable...
@@ -65,8 +72,6 @@ public:
 			const XalanNode&	node2) const;
 
 private:
-
-	mutable XalanDOMStringPool	m_pool;
 };
 
 

@@ -252,102 +252,6 @@ XalanSourceTreeDocument::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeDocument*
-#endif
-XalanSourceTreeDocument::cloneNode(bool		/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocument::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocument::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocument::removeChild(XalanNode*	 /* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocument::appendChild(XalanNode*		/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XalanSourceTreeDocument::hasChildNodes() const
-{
-	return m_documentElement != 0 ? true : false;
-}
-
-
-
-void
-XalanSourceTreeDocument::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeDocument::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-bool
-XalanSourceTreeDocument::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeDocument::getNamespaceURI() const
 {
@@ -372,14 +276,6 @@ XalanSourceTreeDocument::getLocalName() const
 
 
 
-void
-XalanSourceTreeDocument::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
 bool
 XalanSourceTreeDocument::isIndexed() const
 {
@@ -397,175 +293,9 @@ XalanSourceTreeDocument::getIndex() const
 
 
 XalanElement*
-XalanSourceTreeDocument::createElement(const XalanDOMString&	/* tagName */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanDocumentFragment*
-XalanSourceTreeDocument::createDocumentFragment()
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanText*
-XalanSourceTreeDocument::createTextNode(const XalanDOMString&	/* data */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanComment*
-XalanSourceTreeDocument::createComment(const XalanDOMString&	/* data */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanCDATASection*
-XalanSourceTreeDocument::createCDATASection(const XalanDOMString&	/* data */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanProcessingInstruction*
-XalanSourceTreeDocument::createProcessingInstruction(
-			const XalanDOMString&	/* target */,
-			const XalanDOMString&	/* data */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanAttr*
-XalanSourceTreeDocument::createAttribute(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanEntityReference*
-XalanSourceTreeDocument::createEntityReference(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanDocumentType*
-XalanSourceTreeDocument::getDoctype() const
-{
-	return 0;
-}
-
-
-
-
-XalanDOMImplementation*
-XalanSourceTreeDocument::getImplementation() const
-{
-	return 0;
-}
-
-
-
-XalanElement*
 XalanSourceTreeDocument::getDocumentElement() const
 {
 	return m_documentElement;
-}
-
-
-
-XalanNodeList*
-XalanSourceTreeDocument::getElementsByTagName(const XalanDOMString&		/* tagname */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocument::importNode(
-			XalanNode*	/* importedNode */,
-			bool		/* deep */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanElement*
-XalanSourceTreeDocument::createElementNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* qualifiedName */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanAttr*
-XalanSourceTreeDocument::createAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* qualifiedName */)
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNodeList*
-XalanSourceTreeDocument::getElementsByTagNameNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
 }
 
 
@@ -732,11 +462,7 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
 {
-	// We might have typedef'ed this to something smaller than unsigned int.
-	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
-
-	// assert that we didn't lose anything...
-	assert(theAttributeCount == attrs.getLength());
+	XalanSize_t		theAttributeCount = attrs.getLength();
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
@@ -839,11 +565,7 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*					theNextSibling,
 			bool						fAddXMLNamespaceAttribute)
 {
-	// We might have typedef'ed this to something smaller than unsigned int.
-	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
-
-	// assert that we didn't lose anything...
-	assert(theAttributeCount == attrs.getLength());
+	XalanSize_t		theAttributeCount = attrs.getLength();
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
@@ -955,12 +677,7 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*				theNextSibling,
 			bool					fAddXMLNamespaceAttribute)
 {
-
-	// We might have typedef'ed this to something smaller than unsigned int.
-	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
-
-	// assert that we didn't lose anything...
-	assert(theAttributeCount == attrs.getLength());
+	XalanSize_t		theAttributeCount = attrs.getLength();
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
@@ -1032,11 +749,7 @@ XalanSourceTreeDocument::createElementNode(
 {
 	assert(indexOf(name, XalanUnicode::charColon) == length(name));
 
-	// We might have typedef'ed this to something smaller than unsigned int.
-	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
-
-	// assert that we didn't lose anything...
-	assert(theAttributeCount == attrs.getLength());
+	XalanSize_t		theAttributeCount = attrs.getLength();
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
@@ -1338,7 +1051,7 @@ XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*		theTagName,
 			XalanSourceTreeAttr**	theAttributeVector,
-			AttributesCountType		theAttributeCount,
+			XalanSize_t		        theAttributeCount,
 			XalanNode*				theParentNode,
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,

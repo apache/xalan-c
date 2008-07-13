@@ -54,15 +54,15 @@ public:
 	typedef ObjectType	CacheObjectType;
 
 	explicit
-	XalanObjectStackCache(MemoryManagerType& theManager, 
-                          unsigned int	initialListSize = 0) :
+	XalanObjectStackCache(
+            MemoryManagerType&  theManager, 
+            XalanSize_t	        initialListSize = 0) :
         m_createFunctor(),
         m_deleteFunctor(theManager),
-	m_stack(theManager),
+	    m_stack(theManager),
         m_numObjectsOnStack(0)
 	{
 		m_stack.reserve(initialListSize);
-
 	}
 
 	~XalanObjectStackCache()
@@ -154,7 +154,7 @@ public:
 	typedef XalanObjectStackCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >		BaseClassType;
 
 	explicit
-	XalanObjectStackCacheDefault(unsigned int	initialListSize = 0) :
+	XalanObjectStackCacheDefault(XalanSize_t    initialListSize = 0) :
 		BaseClassType(initialListSize)
 	{
 	}

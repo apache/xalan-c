@@ -40,8 +40,9 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxy : public XObjectResultTreeFr
 {
 public:
 
-	XObjectResultTreeFragProxy(const XObject&	value,
-                                MemoryManagerType& theManager);
+	XObjectResultTreeFragProxy(
+            const XObject&	value,
+            MemoryManager&  theManager);
 
 	virtual
 	~XObjectResultTreeFragProxy();
@@ -58,23 +59,6 @@ public:
 
 	virtual XalanNode*
 	getLastChild() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XObjectResultTreeFragProxy*
-#endif
-	cloneNode(bool deep) const;
-
-	virtual bool
-	hasChildNodes() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanDocumentFragment*
-#else
-	virtual XObjectResultTreeFragProxy*
-#endif
-	clone(bool	deep) const;
 
 private:
 

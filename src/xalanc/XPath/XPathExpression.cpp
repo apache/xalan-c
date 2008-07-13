@@ -64,7 +64,7 @@ static const bool   theNodeTestOpCodesArray[] =
     true,  true,  true
 };
 
-static const unsigned int   theNodeTestOpCodesArraySize =
+static const XalanSize_t    theNodeTestOpCodesArraySize =
         sizeof(theNodeTestOpCodesArray) / sizeof(theNodeTestOpCodesArray[0]);
 
 

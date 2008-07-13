@@ -123,7 +123,7 @@ FunctionNormalizeSpace::normalize(
     bool    fPreviousIsSpace = false;
 
     // OK, strip out any multiple spaces...
-    for (unsigned int i = 0; i < theStringLength; i++)
+    for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
     {
         const XalanDOMChar  theCurrentChar = charAt(theString, i);
 

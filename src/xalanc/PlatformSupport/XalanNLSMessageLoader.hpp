@@ -38,14 +38,15 @@ public:
 	~XalanNLSMessageLoader();
 
 protected:
-	// -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
     //  Implementation of the virtual message loader API
     // -----------------------------------------------------------------------
-    virtual bool loadMsg
-    (
-        XalanMessages::Codes    msgToLoad
-        ,       XalanDOMChar* toFill
-        , unsigned int            maxChars
+    virtual bool
+    loadMsg(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMChar*           toFill,
+            XalanSize_t             maxChars
     );
 
 private:

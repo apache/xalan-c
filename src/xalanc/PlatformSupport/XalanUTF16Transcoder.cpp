@@ -138,7 +138,7 @@ XalanUTF16Transcoder::transcode(
 
 
 bool
-XalanUTF16Transcoder::canTranscodeTo(UnicodeCharType	/* theChar */) const
+XalanUTF16Transcoder::canTranscodeTo(XalanUnicodeChar	/* theChar */) const
 {
 	return true;
 }

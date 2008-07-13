@@ -593,7 +593,7 @@ const XalanDOMChar  XalanTranscodingServices::UnrepresentableCharacterException:
 
 
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
-            UnicodeCharType         theCharacter,
+            XalanUnicodeChar        theCharacter,
             const XalanDOMString&   theEncoding,
             XalanDOMString&         theBuffer) :
     XSLException(

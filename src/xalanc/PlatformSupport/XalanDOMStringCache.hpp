@@ -45,24 +45,25 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringCache
 {
 public:
 
-	enum { eDefaultMaximumSize = 100 };
+	enum { eDefaultMaximumSize = 100u };
 
 	typedef XalanVector<XalanDOMString*>	StringListType;
 
 	explicit
-	XalanDOMStringCache(MemoryManagerType&     theManager,
-                        unsigned int	theMaximumSize = eDefaultMaximumSize);
+	XalanDOMStringCache(
+            MemoryManagerType&  theManager,
+            XalanSize_t	        theMaximumSize = eDefaultMaximumSize);
 
 	~XalanDOMStringCache();
 
-	unsigned int
+	XalanSize_t
 	getMaximumSize() const
 	{
 		return m_maximumSize;
 	}
 
 	void
-	setMaximumSize(unsigned int		theSize)
+	setMaximumSize(XalanSize_t	theSize)
 	{
 		m_maximumSize = theSize;
 	}
@@ -137,7 +138,7 @@ private:
 	 */
 	StringListType	                    m_busyList;
 
-	unsigned int	                    m_maximumSize;
+	XalanSize_t	                        m_maximumSize;
 
     XalanDOMStringReusableAllocator     m_allocator;
 };

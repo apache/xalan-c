@@ -135,7 +135,7 @@ public:
 	 *
 	 * @param theString The string to find.
 	 * @param theLength The number of characters in the string.
-	 * @param theBucketIndex A pointer to an unsigned int to get the bucket index
+	 * @param theBucketIndex A pointer to a parameter to get the bucket index
 	 * @return a pointer to the string, or null if not found.
 	 */
 	const XalanDOMString*
@@ -239,7 +239,7 @@ private:
 
 	size_t							m_count;
 
-	unsigned int					m_collisions;		
+	size_t					        m_collisions;		
 };
 
 

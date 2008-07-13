@@ -70,35 +70,41 @@ KeyTable::KeyTable(
             keyDeclarations.size();
 
     // Do a non-recursive pre-walk over the tree.
-    while(0 != pos)
+    while (0 != pos)
     {
         // We're going to have to walk the attribute list 
         // if it's an element, so get the attributes.
         const XalanNamedNodeMap*    attrs = 0;
 
-        int                         nNodes = 0;
+        XalanSize_t                 nNodes = 1;
+        XalanSize_t                 nAttrNodes = 0;
 
-        if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+        if (XalanNode::ELEMENT_NODE == pos->getNodeType())
         {
             attrs = pos->getAttributes();
 
-            nNodes = attrs->getLength();
-        
-            if(0 == nNodes)
+            nAttrNodes = attrs->getLength();
+
+            if (0 == nAttrNodes)
             {
                 attrs = 0;
+            }
+            else
+            {
+                nNodes += nAttrNodes;
             }
         }
 
         // Walk the primary node, and each of the attributes.
         // This loop is a little strange... it is meant to always 
         // execute once, then execute for each of the attributes.
-        XalanNode*  testNode = pos;
+        XalanNode*      testNode = pos;
+        XalanSize_t     nodeIndex = 0;
 
-        for(int nodeIndex = -1; nodeIndex < nNodes;)
+        for (XalanSize_t i = 0; i < nNodes; ++i)
         {
             // Walk through each of the declarations made with xsl:key
-            for(unsigned int i = 0; i < nDeclarations; ++i)
+            for (KeyDeclarationVectorType::size_type i = 0; i < nDeclarations; ++i)
             {
                 const KeyDeclaration&   kd = keyDeclarations[i];
 
@@ -112,7 +118,7 @@ KeyTable::KeyTable(
                             resolver,
                             executionContext);
 
-                if(score != XPath::eMatchScoreNone)
+                if (score != XPath::eMatchScoreNone)
                 {
                     processKeyDeclaration(
                         m_keys,
@@ -121,15 +127,15 @@ KeyTable::KeyTable(
                         resolver,
                         executionContext);
                 }
-            } // end for(int i = 0; i < nDeclarations; ++i)
+            }
 
-            ++nodeIndex;
-
-            if(0 != attrs)
+            if (0 != attrs && nodeIndex < nAttrNodes)
             {
                 testNode = attrs->item(nodeIndex);
+
+                ++nodeIndex;
             }
-        } // for(int nodeIndex = -1; nodeIndex < nNodes;)
+        }
 
         // The rest of this is getting the next pre-walk position in 
         // the tree.
@@ -297,7 +303,7 @@ KeyTable::processKeyDeclaration(
 
         // Use each node in the node list as a key value that we'll be 
         // able to use to look up the given node.
-        for(unsigned int i = 0; i < nUseValues; ++i)
+        for (NodeRefListBase::size_type i = 0; i < nUseValues; ++i)
         {
             // Get the string value of the node to use as the result of the
             // expression.

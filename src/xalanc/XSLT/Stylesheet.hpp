@@ -599,7 +599,7 @@ public:
     addObjectIfNotFound(
             const XalanMatchPatternData*    thePattern,
             const XalanMatchPatternData*    theArray[],
-            unsigned int&                   theArraySize);
+            XalanSize_t&                    theArraySize);
 
     /**
      * Given a name, locate the start of a list of 

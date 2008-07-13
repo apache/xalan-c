@@ -50,11 +50,11 @@ XalanNodeListSurrogate::~XalanNodeListSurrogate()
 
 
 XalanNode*
-XalanNodeListSurrogate::item(unsigned int	index) const
+XalanNodeListSurrogate::item(XalanSize_t	index) const
 {
 	XalanNode*	theCurrentChild = m_node->getFirstChild();
 
-	for(unsigned int i = 0; i < index && theCurrentChild != 0; ++i)
+	for(XalanSize_t i = 0; i < index && theCurrentChild != 0; ++i)
 	{
 		theCurrentChild = theCurrentChild->getNextSibling();
 	}
@@ -64,10 +64,10 @@ XalanNodeListSurrogate::item(unsigned int	index) const
 
 
 
-unsigned int
+XalanSize_t
 XalanNodeListSurrogate::getLength() const
 {
-	unsigned int	theLength = 0;
+	XalanSize_t	    theLength = 0;
 
 	XalanNode*	theCurrentChild = m_node->getFirstChild();
 

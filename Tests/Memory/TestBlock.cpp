@@ -140,7 +140,7 @@ main(
 
 				StringArenaAllocator	m_allocator(theBlockCount);
 
-				for (unsigned int i = 0; i < theCount; ++i)
+				for (size_t i = 0; i < theCount; ++i)
 				{
 					theStringVector.push_back(m_allocator.create("Test string"));
 				}
@@ -190,7 +190,7 @@ main(
 
 				ReusableStringArenaAllocator	m_allocator(theBlockCount);
 
-				for (unsigned int i = 0; i < theCount; ++i)
+				for (size_t i = 0; i < theCount; ++i)
 				{
 					theStringVector.push_back(m_allocator.create("Test string"));
 				}
@@ -216,7 +216,7 @@ main(
 						 theStringVector.end(),
 						 NullFunctor<string>());
 
-				for (unsigned int j = 0; j < theCount; ++j)
+				for (size_t j = 0; j < theCount; ++j)
 				{
 					m_allocator.destroy(theStringVector[j]);
 				}
@@ -243,7 +243,7 @@ main(
 				_CrtMemCheckpoint(&theStartState);
 #endif
 
-				for (unsigned int i = 0; i < theCount; ++i)
+				for (size_t i = 0; i < theCount; ++i)
 				{
 					theStringVector.push_back(new string("Test string"));
 				}

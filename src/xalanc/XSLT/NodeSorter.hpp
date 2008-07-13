@@ -75,14 +75,14 @@ public:
 
 		VectorEntry(
 			XalanNode*		theNode = 0,
-			unsigned int	thePosition = 0) :
+			XalanSize_t	    thePosition = 0) :
 			m_node(theNode),
 			m_position(thePosition)
 		{
 		}
 
 		XalanNode*		m_node;
-		unsigned int	m_position;
+		XalanSize_t	    m_position;
 	};
 
 	typedef XalanVector<VectorEntry>			NodeVectorType;
@@ -154,7 +154,7 @@ public:
 		compare(
 				first_argument_type		theLHS,
 				second_argument_type	theRHS,
-				unsigned int			theKeyIndex = 0) const;
+				XalanSize_t			    theKeyIndex = 0) const;
 
 		/**
 		 * Compare two nodes as a less predicate.
@@ -168,7 +168,7 @@ public:
 		operator()(
 				first_argument_type		theLHS,
 				second_argument_type	theRHS,
-				unsigned int			theKeyIndex = 0) const
+				XalanSize_t			    theKeyIndex = 0) const
 		{
 			return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
 		}
@@ -178,13 +178,13 @@ public:
 		double
 		getNumberResult(
 				const NodeSortKey&		theKey,
-				unsigned int			theKeyIndex,
+				XalanSize_t			    theKeyIndex,
 				first_argument_type		theEntry) const;
 
 		const XalanDOMString&
 		getStringResult(
 				const NodeSortKey&		theKey,
-				unsigned int			theKeyIndex,
+				XalanSize_t			    theKeyIndex,
 				first_argument_type		theEntry) const;
 
 	private:

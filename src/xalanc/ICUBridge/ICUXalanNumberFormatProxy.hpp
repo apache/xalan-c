@@ -50,27 +50,33 @@ public:
 	~ICUXalanNumberFormatProxy();
 
 	virtual XalanDOMString&
-	format(double	        theValue,
-            XalanDOMString& theResult);
+	format(
+            double	            theValue,
+            XalanDOMString&     theResult);
 
 
 	virtual XalanDOMString&
-	format(int	            theValue,
-            XalanDOMString& theResult);
+	format(
+            int	                theValue,
+            XalanDOMString&     theResult);
 
 
 	virtual XalanDOMString&
-	format(unsigned int		theValue, XalanDOMString& theResult);
+	format(
+            unsigned int		theValue,
+            XalanDOMString&     theResult);
 
 
 	virtual XalanDOMString&
-	format(long		theValue, XalanDOMString& theResult);
+	format(
+            long		        theValue,
+            XalanDOMString&     theResult);
 
 
 	virtual XalanDOMString&
-	format(unsigned long	theValue, XalanDOMString& theResult);
-
-#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
+	format(
+            unsigned long	    theValue,
+            XalanDOMString&     theResult);
 
 	/**
 	 * Format a number into a string.
@@ -80,10 +86,19 @@ public:
 	 */
 	virtual XalanDOMString&
 	format(
-			size_t				theValue,
+			XALAN_INT64	        theValue,
 			XalanDOMString&		theResult);
 
-#endif
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual XalanDOMString&
+	format(
+			XALAN_UINT64	    theValue,
+			XalanDOMString&		theResult);
 
 	virtual bool
 	isGroupingUsed() const;

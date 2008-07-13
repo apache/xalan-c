@@ -88,7 +88,7 @@ transformXercesDOM(
 	theParser.parse(theInputSource);
 
 	XercesParserLiaison		theParserLiaison;
-	XercesDOMSupport		theDOMSupport;
+	XercesDOMSupport		theDOMSupport(theParserLiaison);
 
 	const XercesDOMWrapperParsedSource	theWrapper(
 				theParser.getDocument(),

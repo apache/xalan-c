@@ -148,97 +148,6 @@ XercesTextWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesTextWrapper*
-#endif
-XercesTextWrapper::cloneNode(bool	/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesTextWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesTextWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesTextWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesTextWrapper::appendChild(XalanNode*	/* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesTextWrapper::hasChildNodes() const
-{
-	return false;
-}
-
-
-void
-XercesTextWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesTextWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesTextWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesTextWrapper::getNamespaceURI() const
 {
@@ -259,14 +168,6 @@ const XalanDOMString&
 XercesTextWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesTextWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -295,78 +196,8 @@ XercesTextWrapper::getData() const
 
 
 
-unsigned int
-XercesTextWrapper::getLength() const
-{
-	return m_xercesNode->getLength();
-}
-
-
-
-XalanDOMString&
-XercesTextWrapper::substringData(
-			unsigned int	offset, 
-			unsigned int	count,
-            XalanDOMString& theResult) const
-{
-    XercesWrapperHelper::substringData(m_xercesNode, offset, count, theResult);
-
-	return theResult;
-}
-
-
-
-void
-XercesTextWrapper::appendData(const XalanDOMString&		/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesTextWrapper::insertData(
-			unsigned int			/* offset */,
-			const  XalanDOMString& 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesTextWrapper::deleteData(
-			unsigned int	/* offset */,
-			unsigned int	/* count */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesTextWrapper::replaceData(
-			unsigned int			/* offset */,
-			unsigned int			/* count */,
-			const XalanDOMString&	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanText*
-XercesTextWrapper::splitText(unsigned int	/* offset */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
 bool
-XercesTextWrapper::isIgnorableWhitespace() const
+XercesTextWrapper::isWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }

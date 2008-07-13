@@ -163,98 +163,6 @@ XercesEntityWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesEntityWrapper*
-#endif
-XercesEntityWrapper::cloneNode(bool		/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesEntityWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesEntityWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesEntityWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesEntityWrapper::appendChild(XalanNode*	/* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesEntityWrapper::hasChildNodes() const
-{
-	return m_xercesNode->hasChildNodes();
-}
-
-
-
-void
-XercesEntityWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesEntityWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesEntityWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesEntityWrapper::getNamespaceURI() const
 {
@@ -275,14 +183,6 @@ const XalanDOMString&
 XercesEntityWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesEntityWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

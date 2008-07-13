@@ -708,7 +708,7 @@ protected:
         return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
     }
 
-    static unsigned int
+    static XalanUnicodeChar
     decodeUTF16SurrogatePair(
             XalanDOMChar    theHighSurrogate,
             XalanDOMChar    theLowSurrogate,
@@ -744,8 +744,8 @@ protected:
      */
     static void
     throwInvalidCharacterException(
-            unsigned int    ch,
-            MemoryManager&  theManager);
+            XalanUnicodeChar    ch,
+            MemoryManager&      theManager);
 
 
     /**
@@ -756,9 +756,9 @@ protected:
      */
     static void
     throwInvalidXMLCharacterException(
-            unsigned int                ch,
-            const XalanDOMString&       theXMLversion,
-            MemoryManager&              theManager);
+            XalanUnicodeChar        ch,
+            const XalanDOMString&   theXMLversion,
+            MemoryManager&          theManager);
 private:
 
     // These are not implemented.

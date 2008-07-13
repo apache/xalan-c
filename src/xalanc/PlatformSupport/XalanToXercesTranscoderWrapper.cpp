@@ -140,7 +140,7 @@ XalanToXercesTranscoderWrapper::transcode(
 
 
 bool
-XalanToXercesTranscoderWrapper::canTranscodeTo(UnicodeCharType	theChar) const
+XalanToXercesTranscoderWrapper::canTranscodeTo(XalanUnicodeChar     theChar) const
 {
 	return m_transcoder->canTranscodeTo(theChar);
 }

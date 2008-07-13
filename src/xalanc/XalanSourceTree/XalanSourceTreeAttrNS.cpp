@@ -53,46 +53,6 @@ XalanSourceTreeAttrNS::~XalanSourceTreeAttrNS()
 }
 
 
-
-XalanSourceTreeAttrNS::XalanSourceTreeAttrNS(
-			const XalanSourceTreeAttrNS&	theSource,
-			bool							deep) :
-	XalanSourceTreeAttr(theSource, deep),
-	m_localName(theSource.m_localName),
-	m_prefix(theSource.m_prefix),
-	m_namespaceURI(theSource.m_namespaceURI)
-{
-}
-
-
-
-XalanSourceTreeAttrNS::XalanSourceTreeAttrNS(
-			const XalanSourceTreeAttr&	theSource,
-			bool						deep) :
-	XalanSourceTreeAttr(theSource, deep),
-	m_localName(theSource.getLocalName()),
-	m_prefix(theSource.getPrefix()),
-	m_namespaceURI(theSource.getNamespaceURI())
-{
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeAttrNS*
-#endif
-XalanSourceTreeAttrNS::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeAttrNS::getNamespaceURI() const
 {

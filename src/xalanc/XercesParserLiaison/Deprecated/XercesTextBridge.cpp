@@ -369,7 +369,7 @@ XercesTextBridge::splitText(unsigned int	offset)
 
 
 bool
-XercesTextBridge::isIgnorableWhitespace() const
+XercesTextBridge::isWhitespace() const
 {
 	return isXMLWhitespace(getData());
 }

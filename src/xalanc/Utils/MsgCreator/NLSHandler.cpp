@@ -105,7 +105,7 @@ NLSHandler::printToDataFileAsASCII(const char*  sArrayOfStrings[])
 {
     if (sArrayOfStrings != 0)
     {
-        for (unsigned int i = 0; sArrayOfStrings[i] != 0; ++i)
+        for (XalanSize_t i = 0; sArrayOfStrings[i] != 0; ++i)
         {
             m_stream.writeAsASCII(
                 sArrayOfStrings[i],

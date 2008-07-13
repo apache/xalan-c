@@ -53,6 +53,7 @@
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>
 #include <xalanc/XalanDOM/XalanElement.hpp>
+#include <xalanc/XalanDOM/XalanNamedNodeMap.hpp>
 #include <xalanc/XalanDOM/XalanNodeList.hpp>
 
 
@@ -326,7 +327,19 @@ GetAttributeFromNode(
                     static_cast<const XalanElement*>(theNode);
 #endif
 
-        theResult = theElement->getAttribute(theAttributeName);
+        const XalanNamedNodeMap* const  theAttributes =
+            theElement->getAttributes();
+
+        if (theAttributes != 0)
+        {
+            const XalanNode* const  theNode =
+                theAttributes->getNamedItem(theAttributeName);
+
+            if (theNode != 0)
+            {
+                theResult = theNode->getNodeValue();
+            }
+        }
     }
 
     return theResult;
@@ -577,7 +590,7 @@ TestAxisResult(
                     const NodeRefListBase&  theResultList =
                         theResult->nodeset();
 
-                    const unsigned int  theLength = theResultList.getLength();
+                    const NodeRefListBase::size_type    theLength = theResultList.getLength();
 
                     if (theLength == 0)
                     {
@@ -587,7 +600,7 @@ TestAxisResult(
                     {
                         thePrintWriter.print("<out>");
 
-                        for (unsigned int i = 0; i < theLength; i++)
+                        for (NodeRefListBase::size_type i = 0; i < theLength; i++)
                         {
                             thePrintWriter.print(theResultList.item(i)->getNodeName());
                             thePrintWriter.print(" ");
@@ -722,20 +735,17 @@ TestPredicateResult(
                         const NodeRefListBase&  theResultList =
                                 theResult1->nodeset();
 
-                        const unsigned int  theLength = theResultList.getLength();
+                        const NodeRefListBase::size_type    theLength = theResultList.getLength();
 
                         thePrintWriter.print("theResult1->str() == \"");
                         thePrintWriter.print(theResult1->str());
                         thePrintWriter.print("\"");
                         thePrintWriter.println();
 
-                        if (theLength > 0)
+                        for (NodeRefListBase::size_type i = 0; i < theLength; i++)
                         {
-                            for (unsigned int i = 0; i < theLength; i++)
-                            {
-                                thePrintWriter.print(theResultList.item(i)->getNodeName());
-                                thePrintWriter.println();
-                            }
+                            thePrintWriter.print(theResultList.item(i)->getNodeName());
+                            thePrintWriter.println();
                         }
                     }
                     catch(...)
@@ -755,20 +765,17 @@ TestPredicateResult(
                         const NodeRefListBase&  theResultList =
                                 theResult2->nodeset();
 
-                        const int   theLength = theResultList.getLength();
+                        const NodeRefListBase::size_type    theLength = theResultList.getLength();
 
                         thePrintWriter.print("theResult2->str() == \"");
                         thePrintWriter.print(theResult2->str());
                         thePrintWriter.print("\"");
                         thePrintWriter.println();
 
-                        if (theLength > 0)
+                        for (NodeRefListBase::size_type i = 0; i < theLength; i++)
                         {
-                            for (int i = 0; i < theLength; i++)
-                            {
-                                thePrintWriter.print(theResultList.item(i)->getNodeName());
-                                thePrintWriter.println();
-                            }
+                            thePrintWriter.print(theResultList.item(i)->getNodeName());
+                            thePrintWriter.println();
                         }
                     }
                     catch(...)

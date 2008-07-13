@@ -871,7 +871,7 @@ doXercesTranscode(
     fSuccess = XMLString::transcode(
         theRealSourceString,
         &*theTargetVector.begin(),
-        (unsigned int)(theTargetVector.size() - 1),
+        theTargetVector.size() - 1,
         & (theTargetVector.getMemoryManager()));
 
     if (fSuccess == false)
@@ -982,7 +982,7 @@ doXercesTranscode(
 
     assert(theRealSourceString != 0);
 
-    unsigned int    theAttempts = 0;
+    XalanSize_t     theAttempts = 0;
     bool            fSuccess = false;
 
     do
@@ -995,7 +995,7 @@ doXercesTranscode(
         fSuccess = XMLString::transcode(
                     theRealSourceString,
                     &*theTargetVector.begin(),
-                    (unsigned int)(theTargetVector.size() - 1),
+                    theTargetVector.size() - 1,
                     & (theTargetVector.getMemoryManager()));
 
         if (fSuccess == false)

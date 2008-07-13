@@ -194,7 +194,7 @@ openFile(const XalanDOMString&  theFileName,
 XalanFileOutputStream::XalanFileOutputStream(
             const XalanDOMString&   theFileName,
             MemoryManagerType&      theManager,
-            unsigned int            theBufferSize) :
+            size_type               theBufferSize) :
     XalanOutputStream(theManager, theBufferSize),
     m_fileName(theFileName, theManager),
     m_handle(openFile(theFileName, theManager))
@@ -226,7 +226,7 @@ XalanFileOutputStream*
 XalanFileOutputStream::create(
             const XalanDOMString&   theFileName,
             MemoryManagerType&      theManager,
-            unsigned int            theBufferSize)
+            size_type               theBufferSize)
 {
     typedef XalanFileOutputStream ThisType;
 

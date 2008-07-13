@@ -813,8 +813,9 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 }
 
 void
-FormatterToXML::throwInvalidCharacterException( unsigned int        ch,
-                                                MemoryManagerType&  theManager)
+FormatterToXML::throwInvalidCharacterException(
+            XalanUnicodeChar    ch,
+            MemoryManagerType&  theManager)
 {
     XalanDOMString  theMessage(theManager);
     XalanDOMString  theBuffer(theManager);  

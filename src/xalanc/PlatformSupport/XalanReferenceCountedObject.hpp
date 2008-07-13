@@ -65,7 +65,7 @@ protected:
 	virtual void 
 	dereferenced() = 0;
 
-	virtual unsigned int
+	virtual XalanSize_t
 	getReferenceCount() const
 	{
 		return m_referenceCount;
@@ -73,7 +73,7 @@ protected:
 
 private:
 
-	unsigned int	m_referenceCount;
+	XalanSize_t	    m_referenceCount;
 
 	// Not implemented...
 	XalanReferenceCountedObject&

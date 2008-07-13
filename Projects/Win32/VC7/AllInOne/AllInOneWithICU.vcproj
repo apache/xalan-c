@@ -42,7 +42,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Release\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -104,7 +104,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Debug\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
@@ -173,7 +173,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Release.symbols\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
@@ -393,12 +393,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp">
@@ -1269,12 +1263,6 @@
 		<Filter
 			Name="XMLSupport"
 			Filter="">
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.hpp">
-			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp">
 			</File>

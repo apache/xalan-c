@@ -45,8 +45,6 @@ public:
 
 	typedef ObjectType::IndexType					IndexType;
 
-	typedef ObjectType::AttributesCountType			AttributesCountType;
-
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
 	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
@@ -63,7 +61,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeElementAAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XalanSourceTreeElementAAllocator(
+                MemoryManager&  theManager,
+                size_type	    theBlockCount);
 
 	~XalanSourceTreeElementAAllocator();
 
@@ -86,7 +86,7 @@ public:
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
+			XalanSize_t			        theAttributeCount,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,

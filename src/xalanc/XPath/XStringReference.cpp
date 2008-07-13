@@ -90,7 +90,7 @@ XStringReference::getRealType() const
 double
 XStringReference::stringLength() const
 {
-    return length(m_value);
+    return static_cast<double>(m_value.length());
 }
 
 

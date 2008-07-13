@@ -46,7 +46,7 @@ public:
         }
 
         void
-        operator()(unsigned int value) const
+        operator()(XalanUnicodeChar     value) const
         {
             m_writer.writeNumericCharacterReference(value);
         }
@@ -66,9 +66,11 @@ public:
         }
 
         void
-        operator()(unsigned int  value) const
+        operator()(XalanUnicodeChar     value) const
         {
-            m_writer.throwUnrepresentableCharacterException(value, m_writer.getMemoryManager());
+            m_writer.throwUnrepresentableCharacterException(
+                value,
+                m_writer.getMemoryManager());
         }
 
     private:
@@ -131,9 +133,9 @@ public:
 
         const XalanDOMChar  theChar = chars[start];
 
-        unsigned int value = theChar;
+        XalanUnicodeChar    value = theChar;
 
-        size_type result = start;
+        size_type   result = start;
 
         if (isUTF16HighSurrogate(theChar) == true)
         {
@@ -316,9 +318,9 @@ public:
                 }
                 else 
                 {
-                    unsigned int value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
+                    XalanUnicodeChar    value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
 
-                    if(this->m_isPresentable(value))
+                    if (this->m_isPresentable(value))
                     {
                         write(value);
                     }
@@ -332,7 +334,7 @@ public:
             }
             else
             {
-                write((unsigned int)ch);
+                write(static_cast<XalanUnicodeChar>(ch));
             }
         }
     }
@@ -389,7 +391,7 @@ private:
 
         const XalanDOMChar  ch = chars[start];
 
-        unsigned int value = ch;
+        XalanUnicodeChar    value = ch;
 
         if (isUTF16HighSurrogate(ch) == true)
         {
@@ -427,22 +429,22 @@ private:
      *                       transcoder, we convert it back to UTF-16                         
      */
     void
-    write(unsigned int  theChar)
+    write(XalanUnicodeChar  theChar)
     {
         // encode back UTF-32 into UTF-16 
 
-        if( theChar > 0xFFFF )
+        if (theChar > 0xFFFF)
         {
             if (m_bufferRemaining < 2)
             {
                 flushBuffer();
             }
 
-            *m_bufferPosition = (XalanDOMChar((theChar >> 10) + 0xD7C0));
+            *m_bufferPosition = static_cast<XalanDOMChar>((theChar >> 10) + 0xD7C0);
 
             ++m_bufferPosition;
 
-            *m_bufferPosition = (XalanDOMChar((theChar &  0x03FF) + 0xDC00));
+            *m_bufferPosition = static_cast<XalanDOMChar>((theChar &  0x03FF) + 0xDC00);
 
             ++m_bufferPosition;
 
@@ -463,10 +465,10 @@ private:
     }
 
     void
-    writeNumericCharacterReference(unsigned int     theNumber)
+    writeNumericCharacterReference(XalanUnicodeChar     theChar)
     {
         const XalanDOMString&   theString =
-            formatNumericCharacterReference(theNumber);
+            formatNumericCharacterReference(theChar);
 
         const XalanDOMString::size_type     theLength =
             theString.length();

@@ -156,43 +156,6 @@ public:
     virtual XalanDocument*
     getOwnerDocument() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanNode*
-#else
-    virtual XercesDocumentWrapper*
-#endif
-    cloneNode(bool deep) const;
-
-    virtual XalanNode*
-    insertBefore(
-            XalanNode*  newChild,
-            XalanNode*  refChild);
-
-    virtual XalanNode*
-    replaceChild(
-            XalanNode*  newChild,
-            XalanNode*  oldChild);
-
-    virtual XalanNode*
-    removeChild(XalanNode*  oldChild);
-
-    virtual XalanNode*
-    appendChild(XalanNode*  newChild);
-
-    virtual bool
-    hasChildNodes() const;
-
-    virtual void
-    setNodeValue(const XalanDOMString&      nodeValue);
-
-    virtual void
-    normalize();
-
-    virtual bool
-    isSupported(
-            const XalanDOMString&   feature,
-            const XalanDOMString&   version) const;
-
     virtual const XalanDOMString&
     getNamespaceURI() const;
 
@@ -202,9 +165,6 @@ public:
     virtual const XalanDOMString&
     getLocalName() const;
 
-    virtual void
-    setPrefix(const XalanDOMString& prefix);
-
     virtual bool
     isIndexed() const;
 
@@ -212,62 +172,7 @@ public:
     getIndex() const;
 
     virtual XalanElement*
-    createElement(const XalanDOMString& tagName);
-
-    virtual XalanDocumentFragment*
-    createDocumentFragment();
-
-    virtual XalanText*
-    createTextNode(const XalanDOMString&    data);
-
-    virtual XalanComment*
-    createComment(const XalanDOMString& data);
-
-    virtual XalanCDATASection*
-    createCDATASection(const XalanDOMString&    data);
-
-    virtual XalanProcessingInstruction*
-    createProcessingInstruction(
-            const XalanDOMString&   target,
-            const XalanDOMString&   data);
-
-    virtual XalanAttr*
-    createAttribute(const XalanDOMString&   name);
-
-    virtual XalanEntityReference*
-    createEntityReference(const XalanDOMString& name);
-
-    virtual XalanDocumentType*
-    getDoctype() const;
-
-    virtual XalanDOMImplementation*
-    getImplementation() const;
-
-    virtual XalanElement*
     getDocumentElement() const;
-
-    virtual XalanNodeList*
-    getElementsByTagName(const XalanDOMString&      tagname) const;
-
-    virtual XalanNode*
-    importNode(
-            XalanNode*  importedNode,
-            bool        deep);
-
-    virtual XalanElement*
-    createElementNS(
-            const XalanDOMString&   namespaceURI,
-            const XalanDOMString&   qualifiedName);
-
-    virtual XalanAttr*
-    createAttributeNS(
-            const XalanDOMString& namespaceURI,
-            const XalanDOMString& qualifiedName);
-
-    virtual XalanNodeList*
-    getElementsByTagNameNS(
-            const XalanDOMString&   namespaceURI,
-            const XalanDOMString&   localName) const;
 
     virtual XalanElement*
     getElementById(const XalanDOMString&    elementId) const;
@@ -450,7 +355,7 @@ public:
     const XalanDOMString&
     getPooledString(
             const XalanDOMChar*         theString,
-            XalanDOMString::size_type   theLength /* = XalanDOMString::npos */) const;
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) const;
 
     bool
     getMappingMode() const

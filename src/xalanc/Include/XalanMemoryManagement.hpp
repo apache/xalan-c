@@ -38,8 +38,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
 XALAN_USING_XERCES(MemoryManager)
+typedef MemoryManager    MemoryManagerType;
 
 
 

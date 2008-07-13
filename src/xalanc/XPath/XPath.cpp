@@ -2641,14 +2641,13 @@ XPath::functionCount(
 
     const XObjectPtr    nodesetResult(executeMore(context, opPos + 2, executionContext, *result));
 
-    if (nodesetResult.null() == false)
-    {
-        return nodesetResult->nodeset().getLength();
-    }
-    else
-    {
-        return result->getLength();
-    }
+    const XPathExecutionContext::size_type  theResult =
+        nodesetResult.null() == false ?
+            nodesetResult->nodeset().getLength() :
+            result->getLength();
+    assert(static_cast<double>(theResult) == theResult);
+
+    return static_cast<double>(theResult);
 }
 
 
@@ -2755,7 +2754,10 @@ XPath::functionStringLength(XalanNode*  context) const
 
     DOMServices::getNodeData(*context, theCounter, &FormatterListener::characters);
 
-    return theCounter.getCount();
+    const FormatterListener::size_type  theResult = theCounter.getCount();
+    assert(static_cast<double>(theResult) == theResult);
+
+    return static_cast<double>(theResult);
 }
 
 
@@ -2772,7 +2774,10 @@ XPath::functionStringLength(
 
     executeMore(context, opPos + 2, executionContext, theCounter, &FormatterListener::characters);
 
-    return theCounter.getCount();
+    const FormatterListener::size_type  theResult = theCounter.getCount();
+    assert(static_cast<double>(theResult) == theResult);
+
+    return static_cast<double>(theResult);
 }
 
 
@@ -3715,7 +3720,7 @@ XPath::findAttributes(
 
         if(attributeList != 0) 
         {
-            const unsigned int  nAttrs = attributeList->getLength();
+            const XalanSize_t  nAttrs = attributeList->getLength();
 
             if (nAttrs != 0)
             {
@@ -3726,7 +3731,7 @@ XPath::findAttributes(
                                 argLen,
                                 stepType);
 
-                for(unsigned int j = 0; j < nAttrs; j++)
+                for (XalanSize_t j = 0; j < nAttrs; j++)
                 {
                     XalanNode* const    theNode = attributeList->item(j);
                     assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
@@ -4317,9 +4322,9 @@ XPath::findNamespace(
 
             if(attributeList != 0) 
             {
-                unsigned int    nAttrs = attributeList->getLength();
+                XalanSize_t    nAttrs = attributeList->getLength();
 
-                while(nAttrs > 0)
+                while (nAttrs > 0)
                 {
                     --nAttrs;
 
@@ -4340,7 +4345,7 @@ XPath::findNamespace(
                         {
                             const XalanDOMString&   theNodeValue = attr->getNodeValue();
 
-                            bool            foundNSMatch = false;
+                            bool    foundNSMatch = false;
  
                             // Need to check default NS slightly differently
                             if (theNodeName == DOMServices::s_XMLNamespace)

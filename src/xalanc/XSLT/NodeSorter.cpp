@@ -106,7 +106,7 @@ NodeSorter::sort(
 
 		m_scratchVector.reserve(theLength);
 
-		unsigned int	i = 0;
+		NodeRefListBase::size_type  i = 0;
 
 		for (; i < theLength; ++i)
 		{
@@ -162,7 +162,7 @@ int
 NodeSorter::NodeSortKeyCompare::compare(
 				first_argument_type		theLHS,
 				second_argument_type	theRHS,
-				unsigned int			theKeyIndex) const
+				XalanSize_t			    theKeyIndex) const
 {
 	assert(theLHS.m_node != 0 && theRHS.m_node != 0);
 	assert(theKeyIndex < m_nodeSortKeys.size());
@@ -273,7 +273,7 @@ getResult(
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
 				const NodeSortKey&		theKey,
-				unsigned int			theKeyIndex,
+				XalanSize_t			    theKeyIndex,
 				first_argument_type		theEntry) const
 {
 	assert(theKey.getPrefixResolver() != 0);
@@ -430,7 +430,7 @@ cacheValue(const XalanDOMString&	theEntry)
 const XalanDOMString&
 NodeSorter::NodeSortKeyCompare::getStringResult(
 				const NodeSortKey&		theKey,
-				unsigned int			theKeyIndex,
+				XalanSize_t			    theKeyIndex,
 				first_argument_type		theEntry) const
 {
 	assert(theKey.getPrefixResolver() != 0);

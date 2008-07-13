@@ -447,7 +447,7 @@ XObjectFactoryDefault::createString(const XalanDOMChar*		theValue)
 const XObjectPtr
 XObjectFactoryDefault::createString(
 			const XalanDOMChar*		theValue,
-			unsigned int			theLength)
+			XalanSize_t			    theLength)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue, theLength);
 

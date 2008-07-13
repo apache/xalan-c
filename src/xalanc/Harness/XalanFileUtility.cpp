@@ -1022,7 +1022,7 @@ XalanFileUtility::fileCompare(
         }
 
         // Compare the lines character by charcter ....
-        unsigned int i = 0;
+        XalanSize_t     i = 0;
         while(i < strlen(gline)) 
         {
             if (gline[i] == rline[i]) 
@@ -1536,8 +1536,8 @@ XalanFileUtility::diffElement(
     const XalanNamedNodeMap* const  docAttrs  = doc.getAttributes();
 
     // Get number of Attributes
-    const unsigned int  numGoldAttr = goldAttrs->getLength();
-    const unsigned int  numDomAttr  = docAttrs ->getLength();
+    const XalanSize_t  numGoldAttr = goldAttrs->getLength();
+    const XalanSize_t  numDomAttr  = docAttrs ->getLength();
 
     /*
     // This needs to be uncommented if 'compare.exe' is to work. 
@@ -1554,8 +1554,7 @@ XalanFileUtility::diffElement(
     if ( numGoldAttr == numDomAttr )
     {
         // Compare Attributes one at a time.
-        //for (int i=1; i < numGoldAttr; i++)  // To be used with 'compare'
-        for (unsigned int i = 0; i < numGoldAttr; ++i)
+        for (XalanSize_t i = 0; i < numGoldAttr; ++i)
         {
             // Attribute order is irrelvant, so comparision is base on Attribute name.
             const XalanNode* const  gAttr = goldAttrs->item(i);
@@ -1588,8 +1587,8 @@ XalanFileUtility::diffElement(
         collectData(
             "Wrong number of attributes. ",
             docNodeName,
-            UnsignedLongToDOMString(numGoldAttr, numGoldStr),
-            UnsignedLongToDOMString(numDomAttr, numDOMStr));
+            NumberToDOMString(numGoldAttr, numGoldStr),
+            NumberToDOMString(numDomAttr, numDOMStr));
 
         return false;
     }
@@ -1694,17 +1693,16 @@ XalanFileUtility::diffElement2(
     assert(docAttrs != 0);
 
     // Get number of Attributes
-    const unsigned int  numGoldAttr = goldAttrs->getLength();
-    const unsigned int  numDomAttr  = docAttrs ->getLength();
+    const XalanSize_t  numGoldAttr = goldAttrs->getLength();
+    const XalanSize_t  numDomAttr  = docAttrs ->getLength();
 
     // Check that each Element has same number of Attributes. If they don't report error  
     if ( numGoldAttr == numDomAttr )
     {
         // Compare Attributes one at a time.
-        //for (int i=1; i < numGoldAttr; i++)  // To be used with 'compare'
-        for (unsigned int i = 0; i < numGoldAttr; ++i)
+        for (XalanSize_t i = 0; i < numGoldAttr; ++i)
         {
-            // Attribute order is irrelvant, so comparision is base on Attribute name.
+            // Attribute order is irrelevant, so comparision is base on Attribute name.
             const XalanNode* const  gAttr = goldAttrs->item(i);
             const XalanDOMString&   goldAttrName = gAttr->getNodeName();
 
@@ -1735,8 +1733,8 @@ XalanFileUtility::diffElement2(
         collectData(
             "Wrong number of attributes. ",
             docNodeName,
-            UnsignedLongToDOMString(numGoldAttr, numGoldStr),
-            UnsignedLongToDOMString(numDomAttr, numDOMStr));
+            NumberToDOMString(numGoldAttr, numGoldStr),
+            NumberToDOMString(numDomAttr, numDOMStr));
 
         return false;
     }

@@ -53,7 +53,7 @@ public:
 	~XalanEncodingPropertyCache();
 
 	bool
-	canEncodeCharacter(unsigned int		theChar) const;
+	canEncodeCharacter(XalanUnicodeChar     theChar) const;
 
 	const XalanOutputTranscoder*
 	getTranscoder() const

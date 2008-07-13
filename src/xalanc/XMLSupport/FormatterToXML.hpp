@@ -579,7 +579,7 @@ protected:
 	 */
     static void
     throwInvalidCharacterException( 
-            unsigned int		ch,
+            XalanUnicodeChar    ch,
             MemoryManagerType&  theManager);
 
     static bool

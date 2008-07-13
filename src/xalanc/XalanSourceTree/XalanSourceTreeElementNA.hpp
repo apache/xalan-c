@@ -66,13 +66,6 @@ public:
 	virtual const XalanNamedNodeMap*
 	getAttributes() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeElementNA*
-#endif
-	cloneNode(bool deep) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -82,51 +75,15 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-	virtual const XalanDOMString&
-	getAttribute(const XalanDOMString&		name) const;
-
-	virtual XalanAttr*
-	getAttributeNode(const XalanDOMString&		name) const;
-
-	virtual const XalanDOMString&
-	getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual XalanAttr*
-	getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-
-	// public interfaces not inherited from XalanElement...
-
-	XalanSourceTreeElementNA*
-	clone(bool	deep) const
-	{
-        MemoryManagerType& theManager = const_cast<XalanSourceTreeElementNA*>(this)->getMemoryManager();
-
-        return XalanSourceTreeElementNA::create(theManager, *this, deep);
-	}
-
 protected:
-
-	XalanSourceTreeElementNA(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNA&		theSource,
-			bool								deep = false);
-
-	static XalanSourceTreeElementNA*
-    create(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNA&		theSource,
-			bool								deep = false);
 
 	static const XalanEmptyNamedNodeMap		s_emptyAttributes;
 
 private:
 
 	// Not implemented...
+    XalanSourceTreeElementNA(const XalanSourceTreeElementNA&);
+
 	XalanSourceTreeElementNA&
 	operator=(const XalanSourceTreeElementNA&	theSource);
 

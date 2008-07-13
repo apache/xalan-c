@@ -213,11 +213,11 @@ XResultTreeFrag::stringLength() const
 {
 	if (m_singleTextChildValue != 0)
 	{
-		return m_singleTextChildValue->length();
+		return static_cast<double>(m_singleTextChildValue->length());
 	}
-	else if (isEmpty(m_cachedStringValue) == false)
+    else if (m_cachedStringValue.empty() == false)
 	{
-		return length(m_cachedStringValue);
+		return static_cast<double>(m_cachedStringValue.length());
 	}
 	else
 	{
@@ -225,7 +225,7 @@ XResultTreeFrag::stringLength() const
 
 		DOMServices::getNodeData(*m_value, theCounter, &FormatterListener::characters);
 
-		return theCounter.getCount();
+		return static_cast<double>(theCounter.getCount());
 	}
 }
 

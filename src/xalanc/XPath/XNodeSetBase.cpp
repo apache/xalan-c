@@ -170,9 +170,9 @@ XNodeSetBase::str(XalanDOMString&	theBuffer) const
 double
 XNodeSetBase::stringLength() const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+    if (m_cachedStringValue.empty() == false)
 	{
-		return length(m_cachedStringValue);
+		return static_cast<double>(m_cachedStringValue.length());
 	}
 	else if (getLength() == 0)
 	{
@@ -187,7 +187,7 @@ XNodeSetBase::stringLength() const
 
 		DOMServices::getNodeData(*theNode, theCounter, &FormatterListener::characters);
 
-		return theCounter.getCount();
+		return static_cast<double>(theCounter.getCount());
 	}
 }
 

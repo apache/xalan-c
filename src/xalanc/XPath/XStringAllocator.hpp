@@ -87,7 +87,7 @@ public:
 	string_type*
 	createString(
 			const XalanDOMChar*		theString,
-			unsigned int			theLength);
+			XalanSize_t			    theLength);
 
 	/**
 	 * Delete an XString object from allocator.	 

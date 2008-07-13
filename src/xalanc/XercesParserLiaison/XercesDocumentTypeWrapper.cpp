@@ -164,98 +164,6 @@ XercesDocumentTypeWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesDocumentTypeWrapper*
-#endif
-XercesDocumentTypeWrapper::cloneNode(bool	/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesDocumentTypeWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesDocumentTypeWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesDocumentTypeWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesDocumentTypeWrapper::appendChild(XalanNode*	 /* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesDocumentTypeWrapper::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XercesDocumentTypeWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesDocumentTypeWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesDocumentTypeWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesDocumentTypeWrapper::getNamespaceURI() const
 {
@@ -276,14 +184,6 @@ const XalanDOMString&
 XercesDocumentTypeWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesDocumentTypeWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

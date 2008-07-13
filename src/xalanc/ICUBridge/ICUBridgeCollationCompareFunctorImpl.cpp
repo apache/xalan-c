@@ -240,7 +240,7 @@ createCollator(
 
 		// Since language names must be ASCII, this
 		// is the cheapest way to "transcode"...
-		for (unsigned int i = 0; i <= theLength; ++i)
+		for (XalanDOMString::size_type i = 0; i <= theLength; ++i)
 		{
 			theBuffer[i] = char(theLocale[i]);
 		}

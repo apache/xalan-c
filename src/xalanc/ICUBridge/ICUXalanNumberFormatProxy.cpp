@@ -126,24 +126,27 @@ ICUXalanNumberFormatProxy::format(unsigned long	  theValue,
 
 
 
-#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
-
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
 XalanDOMString&
 ICUXalanNumberFormatProxy::format(
-			size_t				theValue,
+			XALAN_UINT64		theValue,
 			XalanDOMString&		theResult)
 
 {
 	// $$$ ToDo: Fix this!
 	return format(static_cast<unsigned long>(theValue), theResult);
 }
-#endif
+
+
+
+XalanDOMString&
+ICUXalanNumberFormatProxy::format(
+			XALAN_INT64		    theValue,
+			XalanDOMString&		theResult)
+
+{
+	// $$$ ToDo: Fix this!
+	return format(static_cast<long>(theValue), theResult);
+}
 
 
 

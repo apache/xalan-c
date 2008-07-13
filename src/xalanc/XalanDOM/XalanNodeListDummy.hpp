@@ -32,18 +32,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XalanNode;
-
-
-
-/*
- * <meta name="usage" content="experimental"/>
- *
- * Helper class for implementing the DOM NodeList interface.
- *
- * This class is experimental and subject to change!!
- */
-
 class XALAN_DOM_EXPORT XalanNodeListDummy : public XalanNodeList
 {
 public:
@@ -60,9 +48,9 @@ public:
 	}
 
 	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(XalanSize_t	index) const;
 
-	virtual unsigned int
+	virtual XalanSize_t
 	getLength() const;
 
 private:

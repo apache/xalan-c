@@ -37,14 +37,14 @@ XalanNodeListDummy::~XalanNodeListDummy()
 
 
 XalanNode*
-XalanNodeListDummy::item(unsigned int	/* index */) const
+XalanNodeListDummy::item(XalanSize_t	/* index */) const
 {
 	return 0;
 }
 
 
 
-unsigned int
+XalanSize_t
 XalanNodeListDummy::getLength() const
 {
 	return 0;

@@ -19,8 +19,9 @@
 #define VCPPDEFINITIONS_HEADER_GUARD_1357924680
 
 
-#pragma warning(disable: 4127 4251 4345 4351 4511 4512 4514 4521 4702 4710 4711 4786 4097 4503 4786; error: 4150 4172 4238 4239 4715)
+#pragma warning(disable: 4127 4146 4251 4345 4351 4355 4511 4512 4514 4521 4702 4710 4711 4786 4097 4503 4786; error: 4150 4172 4238 4239 4715)
 
+#include <basetsd.h>
 
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
@@ -58,9 +59,12 @@
 #define XALAN_HAS_STD_DISTANCE
 #define XALAN_NO_REENTRANT_TIME_FUNCTIONS
 
-#if defined(_WIN64)
-#define XALAN_SIZE_T_NOT_STANDARD_TYPE
-#endif
+// long long is not supported on all MS compilers.
+#define XALAN_NO_LONG_LONG
+
+typedef UINT64 XALAN_UINT64;
+typedef INT64  XALAN_INT64;
+
 #define XALAN_WINDOWS
 
 #if defined(_DEBUG) && defined(NDEBUG)

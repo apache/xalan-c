@@ -16,40 +16,47 @@
  * limitations under the License.
  */
 
-#include <xalanc/Include/XalanMemoryManagement.hpp>
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
-#include <xercesc/util/PlatformUtils.hpp>
+
+
+#include "xercesc/util/PlatformUtils.hpp"
+#include "xercesc/util/OutOfMemoryException.hpp"
+
+
 
 #include <cassert>
 #include <new>
 
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
-class XalanDummyMemoryManager : public MemoryManagerType
+
+
+class XalanDummyMemoryManager : public MemoryManager
 {
 public:
-	virtual 
+
+    virtual
 	~XalanDummyMemoryManager()
 	{
 	}
-	
+
 	virtual void*
-	allocate( size_t /*	size, */ )
+	allocate(XalanSize_t /*	size */ )
 	{
-		XALAN_USING_STD(bad_alloc)
-		
-		throw bad_alloc();
-		
-		return 0;
+        XALAN_USING_XERCES(OutOfMemoryException)
+
+		throw OutOfMemoryException();
 	}	
 
     virtual void
-	deallocate(  void* 	/*	pDataPointer */ )
+	deallocate(void* 	/* pDataPointer */ )
 	{
-		XALAN_USING_STD(bad_alloc)
-		
-		throw bad_alloc();		
-		
+        XALAN_USING_XERCES(OutOfMemoryException)
+
+		throw OutOfMemoryException();
 	}
 
     MemoryManager*
@@ -63,31 +70,26 @@ public:
 
 static XalanDummyMemoryManager  s_dummyMemMgr;
 
-MemoryManagerType&
+
+
+MemoryManager&
 XalanMemMgrs::getDummyMemMgr()
 {
 	return s_dummyMemMgr;
 }
 
 
-MemoryManagerType&
+
+MemoryManager&
 XalanMemMgrs::getDefaultXercesMemMgr()
 {
 	XALAN_USING_XERCES(XMLPlatformUtils)
-	
-	MemoryManagerType* ptr = XMLPlatformUtils::fgMemoryManager;
-	
-	assert (ptr != 0);
-	
-	return *ptr;
+
+	assert(XMLPlatformUtils::fgMemoryManager != 0);
+
+	return *XMLPlatformUtils::fgMemoryManager;
 }
 
 
 
-
-    
 XALAN_CPP_NAMESPACE_END
-
-
-
-

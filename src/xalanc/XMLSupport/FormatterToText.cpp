@@ -199,9 +199,9 @@ FormatterToText::characters(
 	}
 	else
 	{
-		unsigned int i = 0;
+		size_type   i = 0;
 
-		while(i < length)
+		while (i < length)
 		{
 			if (chars[i] > m_maxCharacter)
 			{

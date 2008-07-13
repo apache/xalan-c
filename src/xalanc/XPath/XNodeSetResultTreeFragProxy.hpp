@@ -54,23 +54,6 @@ public:
 	virtual XalanNode*
 	getLastChild() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XNodeSetResultTreeFragProxy*
-#endif
-	cloneNode(bool deep) const;
-
-	virtual bool
-	hasChildNodes() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanDocumentFragment*
-#else
-	virtual XNodeSetResultTreeFragProxy*
-#endif
-	clone(bool	deep) const;
-
 private:
 
 	// Not implemented...

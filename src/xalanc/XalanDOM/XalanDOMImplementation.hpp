@@ -35,11 +35,11 @@ class XalanDOMString;
 
 
 /*
- * <meta name="usage" content="experimental"/>
+ * <meta name="usage" content="deprecated"/>
  *
  * Base class for the DOM DOMImplementation interface.
  *
- * This class is experimental and subject to change!!
+ * This class is deprecated and should not be used!!
  */
 
 class XALAN_DOM_EXPORT XalanDOMImplementation

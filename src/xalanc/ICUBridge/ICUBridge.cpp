@@ -43,12 +43,12 @@ typedef XalanVector<UChar>	UCharVectorType;
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 inline void
 doCopyData(
-			const XalanDOMChar*		theString,
-			unsigned int			theStringLength,
-			XalanDOMChar*			theBuffer)
+			const XalanDOMChar*		    theString,
+			XalanDOMString::size_type   theStringLength,
+			XalanDOMChar*			    theBuffer)
 {
 	// Copy the data, truncating each character...
-	for (unsigned int i = 0; i < theStringLength; ++i)
+	for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
 	{
 		// There should be no truncation, since XalanDOMChars
 		// hold UTF-16 code points, but assert, just in case...
@@ -63,13 +63,14 @@ doCopyData(
 
 
 // Use a stack-based buffer up to this size.
-const unsigned int	theStackBufferSize = 200u;
+const XalanSize_t	theStackBufferSize = 200u;
 
 
 
 const UnicodeString
-ICUBridge::XalanDOMCharStringToUnicodeString(MemoryManagerType&     theManager,
-                                             const XalanDOMChar*	theString)
+ICUBridge::XalanDOMCharStringToUnicodeString(
+            MemoryManagerType&      theManager,
+            const XalanDOMChar*	    theString)
 {
 	if (theString == 0)
 	{
@@ -146,8 +147,9 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 
 
 const UnicodeString
-ICUBridge::XalanDOMStringToUnicodeString(MemoryManagerType&     theManager,
-                                         const XalanDOMString&	theString)
+ICUBridge::XalanDOMStringToUnicodeString(
+            MemoryManagerType&      theManager,
+            const XalanDOMString&   theString)
 {
 	// Just call up to the XalanDOMChar* version...
 	return XalanDOMCharStringToUnicodeString(theManager, c_wstr(theString), length(theString));
@@ -157,8 +159,8 @@ ICUBridge::XalanDOMStringToUnicodeString(MemoryManagerType&     theManager,
 
 XalanDOMString&
 ICUBridge::UnicodeStringToXalanDOMString(
-                                         const UnicodeString&	theString,
-                                         XalanDOMString&        theResult)
+            const UnicodeString&	theString,
+            XalanDOMString&         theResult)
 {
 	const int32_t	theLength = theString.length();
 

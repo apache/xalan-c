@@ -34,7 +34,6 @@
 
 #include "XercesWrapperHelper.hpp"
 #include "XercesWrapperNavigator.hpp"
-#include "XercesDOMWrapperException.hpp"
 #include "XercesDocumentWrapper.hpp"
 
 
@@ -151,98 +150,6 @@ XercesElementWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesElementWrapper*
-#endif
-XercesElementWrapper::cloneNode(bool	/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesElementWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesElementWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesElementWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesElementWrapper::appendChild(XalanNode*	/* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesElementWrapper::hasChildNodes() const
-{
-	return m_xercesNode->hasChildNodes();
-}
-
-
-
-void
-XercesElementWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesElementWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesElementWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesElementWrapper::getNamespaceURI() const
 {
@@ -263,14 +170,6 @@ const XalanDOMString&
 XercesElementWrapper::getLocalName() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getLocalName());
-}
-
-
-
-void
-XercesElementWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -299,149 +198,8 @@ XercesElementWrapper::getTagName() const
 
 
 
-const XalanDOMString&
-XercesElementWrapper::getAttribute(const XalanDOMString&	name) const
-{
-	return m_navigator.getPooledString(m_xercesNode->getAttribute(c_wstr(name)));
-}
-
-
-
-XalanAttr*
-XercesElementWrapper::getAttributeNode(const XalanDOMString&	name) const
-{
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanAttr*)m_attributes.getNamedItem(name);
-#else
-	return static_cast<XalanAttr*>(m_attributes.getNamedItem(name));
-#endif
-}
-
-
-
-XalanNodeList*
-XercesElementWrapper::getElementsByTagName(const XalanDOMString&	/* name */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-void
-XercesElementWrapper::setAttribute(
-			const XalanDOMString&	/* name */,
-			const XalanDOMString&	/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanAttr*
-XercesElementWrapper::setAttributeNode(XalanAttr*	/* newAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanAttr*
-XercesElementWrapper::removeAttributeNode(XalanAttr*	/* oldAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-void
-XercesElementWrapper::removeAttribute(const XalanDOMString&		/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-const XalanDOMString&
-XercesElementWrapper::getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	return m_navigator.getPooledString(m_xercesNode->getAttributeNS(c_wstr(namespaceURI), c_wstr(localName)));
-}
-
-
-
-void
-XercesElementWrapper::setAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* qualifiedName */,
-			const XalanDOMString&	/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesElementWrapper::removeAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanAttr*
-XercesElementWrapper::getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	DOMAttrType* const	theAttrNode =
-		m_xercesNode->getAttributeNodeNS(c_wstr(namespaceURI), c_wstr(localName));
-
-	if (theAttrNode == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return m_navigator.mapNode(theAttrNode);
-	}
-}
-
-
-
-XalanAttr*
-XercesElementWrapper::setAttributeNodeNS(XalanAttr*		/* newAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNodeList*
-XercesElementWrapper::getElementsByTagNameNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
 XalanNode*
-XercesElementWrapper::item(unsigned int		index) const
+XercesElementWrapper::item(XalanSize_t  index) const
 {
 	assert(index < getLength());
 
@@ -456,7 +214,7 @@ XercesElementWrapper::item(unsigned int		index) const
 		XalanNode*	child = getFirstChild();
 		assert(child != 0);
 
-		for(unsigned int i = 0; i < index; ++i)
+		for(XalanSize_t i = 0; i < index; ++i)
 		{
 			child = child->getNextSibling();
 			assert(child != 0);
@@ -468,7 +226,7 @@ XercesElementWrapper::item(unsigned int		index) const
 
 
 
-unsigned int
+XalanSize_t
 XercesElementWrapper::getLength() const
 {
 	return m_xercesNode->getChildNodes()->getLength();

@@ -161,98 +161,6 @@ XercesCommentWrapper::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XercesCommentWrapper*
-#endif
-XercesCommentWrapper::cloneNode(bool	/* deep */) const
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesCommentWrapper::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesCommentWrapper::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesCommentWrapper::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesCommentWrapper::appendChild(XalanNode*	 /* newChild */)
-{
-	throw XercesDOMWrapperException(XercesDOMWrapperException::HIERARCHY_REQUEST_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XercesCommentWrapper::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XercesCommentWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesCommentWrapper::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XercesCommentWrapper::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
-{
-	return XercesWrapperHelper::isSupported(m_xercesNode, feature, version);
-}
-
-
-
 const XalanDOMString&
 XercesCommentWrapper::getNamespaceURI() const
 {
@@ -277,14 +185,6 @@ XercesCommentWrapper::getLocalName() const
 
 
 
-void
-XercesCommentWrapper::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
 bool
 XercesCommentWrapper::isIndexed() const
 {
@@ -305,66 +205,6 @@ const XalanDOMString&
 XercesCommentWrapper::getData() const
 {
 	return m_navigator.getPooledString(m_xercesNode->getData());
-}
-
-
-
-unsigned int
-XercesCommentWrapper::getLength() const
-{
-	return m_xercesNode->getLength();
-}
-
-
-
-XalanDOMString&
-XercesCommentWrapper::substringData(
-			unsigned int	offset, 
-			unsigned int	count,
-            XalanDOMString& theResult) const
-{
-	XercesWrapperHelper::substringData(m_xercesNode, offset, count, theResult);
-
-    return theResult;
-}
-
-
-
-void
-XercesCommentWrapper::appendData(const XalanDOMString&		/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesCommentWrapper::insertData(
-			unsigned int			/* offset */,
-			const  XalanDOMString& 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesCommentWrapper::deleteData(
-			unsigned int	/* offset */,
-			unsigned int	/* count */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XercesCommentWrapper::replaceData(
-			unsigned int			/* offset */,
-			unsigned int			/* count */,
-			const XalanDOMString&	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

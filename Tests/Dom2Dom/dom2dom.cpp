@@ -172,7 +172,7 @@ getParams(
 	// Do we need to set the default output directory??
 	if (fSetOut)
 	{
-		unsigned int ii = lastIndexOf(basedir, XalanFileUtility::s_pathSep[0]);
+        const XalanDOMString::size_type     ii = lastIndexOf(basedir, XalanFileUtility::s_pathSep[0]);
         substring(basedir,outdir, 0, ii+1 );
 		append(outdir, "Dom2Dom-RESULTS\\");
 		f.checkAndCreateDir(outdir);

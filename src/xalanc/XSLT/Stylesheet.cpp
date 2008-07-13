@@ -996,7 +996,7 @@ inline void
 Stylesheet::addObjectIfNotFound(
             const XalanMatchPatternData*    thePattern,
             const XalanMatchPatternData*    thePatternArray[],
-            unsigned int&                   thePatternArraySize)
+            XalanSize_t&                    thePatternArraySize)
 {
     assert(thePattern != 0 && thePatternArray != 0);
 
@@ -1008,7 +1008,7 @@ Stylesheet::addObjectIfNotFound(
     }
     else
     {
-        unsigned int i = 0;
+        XalanSize_t     i = 0;
 
         while(i < thePatternArraySize)
         {
@@ -1260,7 +1260,7 @@ Stylesheet::findTemplate(
 
                 double                  bestMatchPatPriority = matchScoreNoneValue;
 
-                unsigned int            nConflicts = 0;
+                XalanSize_t             nConflicts = 0;
 
                 // Use a stack-based array when possible...
                 const XalanMatchPatternData*    conflictsArray[100];

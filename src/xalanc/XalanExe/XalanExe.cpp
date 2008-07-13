@@ -829,6 +829,8 @@ class WindowsMemoryManager : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
 {
 public:
 
+    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+
     WindowsMemoryManager() :
         MemoryManager(),
         m_handle(HeapCreate(HEAP_NO_SERIALIZE, 0, 0))
@@ -850,7 +852,7 @@ public:
       * Returns a pointer to the allocated memory
       */
     virtual void*
-    allocate(size_t  size)
+    allocate(XalanSize_t    size)
     {
         void* const     value =
                 HeapAlloc(m_handle, HEAP_NO_SERIALIZE, size);

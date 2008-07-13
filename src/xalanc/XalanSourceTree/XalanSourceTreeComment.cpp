@@ -70,20 +70,6 @@ XalanSourceTreeComment::~XalanSourceTreeComment()
 
 
 
-XalanSourceTreeComment::XalanSourceTreeComment(
-			const XalanSourceTreeComment&	theSource,
-			bool							/* deep */) :
-	XalanComment(theSource),
-	m_data(theSource.m_data),
-	m_parentNode(0),
-	m_previousSibling(0),
-	m_nextSibling(0),
-	m_index(0)
-{
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeComment::getNodeName() const
 {
@@ -186,103 +172,6 @@ XalanSourceTreeComment::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeComment*
-#endif
-XalanSourceTreeComment::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeComment::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeComment::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeComment::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeComment::appendChild(XalanNode*	/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XalanSourceTreeComment::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XalanSourceTreeComment::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeComment::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XalanSourceTreeComment::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeComment::getNamespaceURI() const
 {
@@ -307,14 +196,6 @@ XalanSourceTreeComment::getLocalName() const
 
 
 
-void
-XalanSourceTreeComment::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
 bool
 XalanSourceTreeComment::isIndexed() const
 {
@@ -335,67 +216,6 @@ const XalanDOMString&
 XalanSourceTreeComment::getData() const
 {
 	return m_data;
-}
-
-
-
-unsigned int
-XalanSourceTreeComment::getLength() const
-{
-	assert(unsigned(length(m_data)) == length(m_data));
-
-	return unsigned(length(m_data));
-}
-
-
-
-XalanDOMString&
-XalanSourceTreeComment::substringData(
-			unsigned int	offset,
-			unsigned int	count,
-            XalanDOMString& theBuffer) const
-{
-
-	return m_data.substr(theBuffer, offset, count);
-}
-
-
-
-void
-XalanSourceTreeComment::appendData(const XalanDOMString&	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeComment::insertData(
-			unsigned int			/* offset */,
-			const  XalanDOMString& 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeComment::deleteData(
-			unsigned int	/* offset */,
-			unsigned int	/* count */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeComment::replaceData(
-			unsigned int			/* offset */,
-			unsigned int			/* count */,
-			const XalanDOMString&	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

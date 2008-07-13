@@ -28,15 +28,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-/*
- * <meta name="usage" content="experimental"/>
- *
- * Class to implement a "faux" (always empty) named node map.
- * The map is read-only!
- *
- * This class is experimental and subject to change!!
- */
-
 class XALAN_DOM_EXPORT XalanEmptyNamedNodeMap : public XalanNamedNodeMap
 {
 public:
@@ -56,32 +47,18 @@ public:
 
 
 	virtual XalanNode*
-	setNamedItem(XalanNode* 	arg);
-
-	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(XalanSize_t	index) const;
 
 	virtual XalanNode*
 	getNamedItem(const XalanDOMString& 	name) const;
 
-	virtual unsigned int
+	virtual XalanSize_t
 	getLength() const;
-
-	virtual XalanNode*
-	removeNamedItem(const XalanDOMString&	name);
 
 	virtual XalanNode*
 	getNamedItemNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
-
-	virtual XalanNode*
-	setNamedItemNS(XalanNode*	arg);
-
-	virtual XalanNode*
-	removeNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName);
 
 private:
 };

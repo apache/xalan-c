@@ -766,7 +766,7 @@ LongToDOMString(
 
 
 /**
- * Converts an unsigned long long value into a XalanDOMString
+ * Converts an 64-bit signed value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -774,7 +774,33 @@ LongToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            unsigned long long  theValue,
+            XALAN_INT64         theValue,
+            XalanDOMString&     theResult);
+
+/**
+ * Converts an 64-bit unsigned value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            XALAN_UINT64        theValue,
+            XalanDOMString&     theResult);
+
+
+
+/**
+ * Converts an unsigned long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToDOMString(
+            unsigned long       theValue,
             XalanDOMString&     theResult);
 
 
@@ -789,7 +815,11 @@ NumberToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 SizeTypeToDOMString(
-            size_t				theValue,
+#if defined (XALAN_STRICT_ANSI_HEADERS)
+            std::size_t         theValue,
+#else
+            size_t              theValue,
+#endif
             XalanDOMString&     theResult);
 
 

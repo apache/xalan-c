@@ -33,14 +33,6 @@ class XalanNode;
 
 
 
-/*
- * <meta name="usage" content="experimental"/>
- *
- * Base class for the DOM NodeList interface.
- *
- * This class is experimental and subject to change!!
- */
-
 class XALAN_DOM_EXPORT XalanNodeList
 {
 public:
@@ -64,14 +56,14 @@ public:
 	 *	 index.
 	 */
 	virtual XalanNode*
-	item(unsigned int	index) const = 0;
+	item(XalanSize_t	index) const = 0;
 
 	/**
 	 * Returns the number of nodes in the list. 
 	 *
 	 * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
 	 */
-	virtual unsigned int
+	virtual XalanSize_t
 	getLength() const = 0;
 
 protected:

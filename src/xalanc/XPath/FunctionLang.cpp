@@ -19,6 +19,14 @@
 
 
 
+#include "xalanc/Include/XalanMemoryManagement.hpp"
+
+
+
+#include "xalanc/XalanDOM/XalanNamedNodeMap.hpp"
+
+
+
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
@@ -32,6 +40,10 @@
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -64,7 +76,7 @@ FunctionLang::execute(
 
     while(0 != parent)
     {
-        if(XalanNode::ELEMENT_NODE == parent->getNodeType())
+        if (XalanNode::ELEMENT_NODE == parent->getNodeType())
         {
             const XalanElement* const   theElementNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -73,22 +85,29 @@ FunctionLang::execute(
                 static_cast<const XalanElement*>(parent);
 #endif
 
-            const XalanDOMString&       langVal =
-                theElementNode->getAttributeNS(
+            const XalanNamedNodeMap* const  theAttributes =
+                theElementNode->getAttributes();
+            assert(theAttributes != 0);
+
+            const XalanNode* const  theAttribute =
+                theAttributes->getNamedItemNS(
                     DOMServices::s_XMLNamespaceURI,
                     s_attributeName);
 
-            if(0 != length(langVal))
+            const XalanDOMString&   langVal = theAttribute == 0 ?
+                        s_emptyString : theAttribute->getNodeValue();
+
+            if (0 != length(langVal))
             {
                 XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
                 XPathExecutionContext::GetAndReleaseCachedString theGuard2(executionContext);
 
-                if(startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
+                if (startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
                 {
                     const XalanDOMString::size_type     valLen = length(lang);
 
-                    if(length(langVal) == valLen ||
-                       charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
+                    if (length(langVal) == valLen ||
+                        charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
                     {
                         fMatch = true;
 

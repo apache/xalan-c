@@ -53,8 +53,8 @@ static const XalanDOMChar	s_errString[] =
 
 
 
-unsigned int
-XalanMsgContainer::getNumbOfMsgs()
+XalanSize_t
+XalanMsgContainer::getMessageCount()
 {
 	return gXalanMsgArraySize;
 }
@@ -62,12 +62,16 @@ XalanMsgContainer::getNumbOfMsgs()
 
 
 const XalanDOMChar*
-XalanMsgContainer::getMessage(unsigned int	msgInd)
+XalanMsgContainer::getMessage(XalanSize_t   msgID)
 {
-	if ( msgInd < gXalanMsgArraySize )
-		return msgArray[msgInd];
+	if (msgID < gXalanMsgArraySize)
+    {
+		return msgArray[msgID];
+    }
 	else
+    {
 		return s_errString;
+    }
 }
 
 

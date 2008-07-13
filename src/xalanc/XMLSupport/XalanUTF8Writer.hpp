@@ -28,49 +28,49 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 inline char
-bits19to21(unsigned int theChar)
+bits19to21(XalanUnicodeChar     theChar)
 {
-    return char((theChar >> 18) & 0x7);
+    return static_cast<char>((theChar >> 18) & 0x7);
 }
 
 
 
 inline char
-bits13to18(unsigned int theChar)
+bits13to18(XalanUnicodeChar     theChar)
 {
-    return char((theChar >> 12) & 0x3F);
+    return static_cast<char>((theChar >> 12) & 0x3F);
 }
 
 
 
 inline char
-bits13to16(unsigned int theChar)
+bits13to16(XalanUnicodeChar     theChar)
 {
-    return char((theChar >> 12) & 0xF);
+    return static_cast<char>((theChar >> 12) & 0xF);
 }
 
 
 
 inline char
-bits7to12(unsigned int  theChar)
+bits7to12(XalanUnicodeChar      theChar)
 {
-    return char((theChar >> 6) & 0x3f);
+    return static_cast<char>((theChar >> 6) & 0x3f);
 }
 
 
 
 inline char
-bits7to11(unsigned int  theChar)
+bits7to11(XalanUnicodeChar      theChar)
 {
-    return char((theChar >> 6) & 0x1f);
+    return static_cast<char>((theChar >> 6) & 0x1f);
 }
 
 
 
 inline char
-bits1to6(unsigned int   theChar)
+bits1to6(XalanUnicodeChar       theChar)
 {
-    return char(theChar & 0x3f);
+    return static_cast<char>(theChar & 0x3f);
 }
 
 
@@ -78,7 +78,7 @@ bits1to6(unsigned int   theChar)
 inline char
 leadingByteOf2(char     theBits)
 {
-    return char(0xC0 + theBits);
+    return static_cast<char>(0xC0 + theBits);
 }
 
 
@@ -86,7 +86,7 @@ leadingByteOf2(char     theBits)
 inline char
 leadingByteOf3(char     theBits)
 {
-    return char(0xE0 + theBits);
+    return static_cast<char>(0xE0 + theBits);
 }
 
 
@@ -94,7 +94,7 @@ leadingByteOf3(char     theBits)
 inline char
 leadingByteOf4(char     theBits)
 {
-    return char(0xF0 + theBits);
+    return static_cast<char>(0xF0 + theBits);
 }
 
 
@@ -102,7 +102,7 @@ leadingByteOf4(char     theBits)
 inline char
 trailingByte(char   theBits)
 {
-    return char(0x80 + theBits);
+    return static_cast<char>(0x80 + theBits);
 }
 
 
@@ -269,7 +269,7 @@ public:
         {
             if (isUTF16HighSurrogate(theChars[i]) == false)
             {
-                write((unsigned int)theChars[i]);
+                write(static_cast<XalanUnicodeChar>(theChars[i]));
             }
             else if (i + 1 >= theLength)
             {
@@ -301,7 +301,7 @@ public:
 
         if (isUTF16HighSurrogate(ch) == false)
         {
-            write((unsigned int)ch);
+            write(static_cast<XalanUnicodeChar>(ch));
         }
         else if (start + 1 >= length)
         {
@@ -353,7 +353,7 @@ public:
             }
             else
             {
-                write((unsigned int)ch);
+                write(static_cast<XalanUnicodeChar>(ch));
             }
         }
         
@@ -383,7 +383,7 @@ public:
 private:
 
     void
-    write(unsigned int  theChar)
+    write(XalanUnicodeChar  theChar)
     {
         if (theChar <= 0x7F)
         {

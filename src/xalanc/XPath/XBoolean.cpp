@@ -101,7 +101,11 @@ XBoolean::str(
 double
 XBoolean::stringLength() const
 {
-	return m_value == true ? s_trueString.length() : s_falseString.length();
+    assert(
+        s_trueString.length() == 4 &&
+        s_falseString.length() == 5);
+
+    return m_value == true ? 4 : 5;
 }
 
 

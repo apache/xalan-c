@@ -816,8 +816,8 @@ xsltMain(const CmdLineParams&	params)
 	theXalanSourceTreeDOMSupport.setParserLiaison( &theXalanSourceTreeParserLiaison);
 
 
-	XercesDOMSupport		theXercesDOMSupport(theManager);
 	XercesParserLiaison		theXercesParserLiaison(theManager);
+	XercesDOMSupport		theXercesDOMSupport(theXercesParserLiaison);
 
 	DOMSupport&				theDOMSupport = getDOMSupport(
 		theXalanSourceTreeDOMSupport,

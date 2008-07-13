@@ -26,19 +26,19 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+
+
 class  XALAN_XALANMSGLIB_EXPORT XalanMsgContainer{
 
 public:
 
-	static unsigned int
-	getNumbOfMsgs();
+	static XalanSize_t
+	getMessageCount();
 
 	static const XalanDOMChar*
-	getMessage(unsigned int);
+	getMessage(XalanSize_t  msgID);
 
 private:
-
-
 };
 
 
@@ -48,4 +48,3 @@ XALAN_CPP_NAMESPACE_END
 
 
 #endif
-

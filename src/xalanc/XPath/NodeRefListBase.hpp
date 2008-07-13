@@ -50,12 +50,7 @@ public:
 	virtual
 	~NodeRefListBase();
 
-//#if defined(XALAN_STRICT_ANSI_HEADERS)
-//	typedef std::size_t		size_type;
-//#else
-//	typedef size_t			size_type;
-//#endif
-    typedef unsigned int    size_type;
+    typedef XalanSize_t     size_type;
 
 	/**
 	 * Returns the <code>index</code>th item in the collection. If

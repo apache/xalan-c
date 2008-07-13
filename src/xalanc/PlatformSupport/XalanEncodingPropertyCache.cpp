@@ -44,7 +44,7 @@ XalanEncodingPropertyCache::~XalanEncodingPropertyCache()
 
 
 bool
-XalanEncodingPropertyCache::canEncodeCharacter(unsigned int 	theChar) const
+XalanEncodingPropertyCache::canEncodeCharacter(XalanUnicodeChar     theChar) const
 {
 	if (theChar > m_presentBitmap.getSize())
 	{

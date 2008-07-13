@@ -35,8 +35,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanFStreamOutputStream::XalanFStreamOutputStream(
             FILE*               theHandle,
-            MemoryManagerType&   theManager,
-            unsigned int        theBufferSize) :
+            MemoryManagerType&  theManager,
+            size_type           theBufferSize) :
     XalanOutputStream(theManager, theBufferSize),
     m_handle(theHandle)
 {
@@ -48,8 +48,8 @@ XalanFStreamOutputStream::XalanFStreamOutputStream(
 XalanFStreamOutputStream*
 XalanFStreamOutputStream::create(
             FILE*               theFileHandle,
-            MemoryManagerType&   theManager,
-            unsigned int        theBufferSize)
+            MemoryManagerType&  theManager,
+            size_type           theBufferSize)
 {
     typedef XalanFStreamOutputStream ThisType;
 

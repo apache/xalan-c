@@ -55,11 +55,12 @@ public:
 	XalanSourceTreeDocumentFragment(MemoryManagerType&  theManager,
                             XalanSourceTreeDocument&	theOwnerDocument);
 
+    /*
 	XalanSourceTreeDocumentFragment(
             MemoryManagerType&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
 			bool									deep = false);
-
+    */
 	virtual
 	~XalanSourceTreeDocumentFragment();
 
@@ -102,43 +103,6 @@ public:
 #endif
 	getOwnerDocument() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeDocumentFragment*
-#endif
-	cloneNode(bool deep) const;
-
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild);
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild);
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild);
-
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild);
-
-	virtual bool
-	hasChildNodes() const;
-
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue);
-
-	virtual void
-	normalize();
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -147,9 +111,6 @@ public:
 
 	virtual const XalanDOMString&
 	getLocalName() const;
-
-	virtual void
-	setPrefix(const XalanDOMString&		prefix);
 
 	virtual bool
 	isIndexed() const;
@@ -173,10 +134,6 @@ public:
 
 	void
 	clearChildren();
-
-	XalanSourceTreeDocumentFragment*
-	clone(bool	deep) const;
-
 
 protected:
 

@@ -163,12 +163,11 @@ XalanICUMessageLoader::~XalanICUMessageLoader()
 
 
 
-bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
-									, XalanDOMChar*		toFill
-									, unsigned int      maxChars)
+bool XalanICUMessageLoader::loadMsg(
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMChar*		    toFill,
+			XalanSize_t             maxChars)
 {
-
-
    bool bResult = true;
    UErrorCode   err = U_ZERO_ERROR;
    int32_t      strLen = 0;
@@ -183,7 +182,8 @@ bool XalanICUMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
 	   return false;
    }
 
-   const unsigned int	retStrLen = unsigned(strLen + 1 ) > maxChars ? maxChars : unsigned(strLen + 1);
+   const XalanSize_t	retStrLen =
+       static_cast<XalanSize_t>(strLen + 1 ) > maxChars ? maxChars : static_cast<XalanSize_t>(strLen + 1);
 
    XalanCopy(name, name + retStrLen, toFill);
   

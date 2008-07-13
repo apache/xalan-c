@@ -32,44 +32,11 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
-bool
-XercesWrapperHelper::isSupported(
-			const DOMNodeType*		theXercesNode,
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version)
+XercesWrapperHelper&
+XercesWrapperHelper::operator=(const XercesWrapperHelper&)
 {
-	assert(theXercesNode != 0);
-
-	return theXercesNode->isSupported(
-				XalanDOMStringToXercesDOMString(feature),
-				XalanDOMStringToXercesDOMString(version));
+    return *this;
 }
-
-
-
-const XalanDOMString&
-XercesWrapperHelper::substringData(
-			const DOMCharacterDataType*		theXercesNode,
-			unsigned int					offset,
-			unsigned int					count,
-            XalanDOMString& theResult)
-{
-	assert(theXercesNode != 0);
-
-	try
-	{
-		const XMLCh* const	theString = theXercesNode->substringData(offset, count);
-
-        theResult.assign(theString, XalanDOMString::length(theString));
-		return theResult;
-	}
-	catch(const DOMExceptionType&	theException)
-	{
-		throw XercesDOMWrapperException(theException);
-	}
-}
-
 
 
 XALAN_CPP_NAMESPACE_END

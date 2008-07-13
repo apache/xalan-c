@@ -37,11 +37,11 @@ class XalanNode;
 
 
 /*
- * <meta name="usage" content="experimental"/>
+ * <meta name="usage" content="deprecated"/>
  *
  * Helper class for implementing the DOM NodeList interface.
  *
- * This class is experimental and subject to change!!
+ * This class is deprecated and should not be used!!
  */
 
 class XALAN_DOM_EXPORT XalanNodeListSurrogate : public XalanNodeList
@@ -72,9 +72,9 @@ public:
 	}
 
 	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(XalanSize_t	index) const;
 
-	virtual unsigned int
+	virtual XalanSize_t
 	getLength() const;
 
 private:

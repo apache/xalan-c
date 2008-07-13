@@ -73,7 +73,7 @@ public:
 			unsigned char*			theCharSizes);
 
 	virtual bool
-	canTranscodeTo(UnicodeCharType	theChar) const;
+	canTranscodeTo(XalanUnicodeChar     theChar) const;
 
 private:
 

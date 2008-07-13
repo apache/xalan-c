@@ -52,7 +52,7 @@ XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManagerTy
 }
 
 
-
+/*
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
             MemoryManagerType&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
@@ -63,7 +63,7 @@ XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
 	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep))
 {
 }
-
+*/
 
 
 XalanSourceTreeDocumentFragment::~XalanSourceTreeDocumentFragment()
@@ -167,103 +167,6 @@ XalanSourceTreeDocumentFragment::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeDocumentFragment*
-#endif
-XalanSourceTreeDocumentFragment::cloneNode(bool		/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocumentFragment::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocumentFragment::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocumentFragment::removeChild(XalanNode*		/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeDocumentFragment::appendChild(XalanNode*		/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XalanSourceTreeDocumentFragment::hasChildNodes() const
-{
-	return m_firstChild != 0 ? true : false;
-}
-
-
-
-void
-XalanSourceTreeDocumentFragment::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeDocumentFragment::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XalanSourceTreeDocumentFragment::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getNamespaceURI() const
 {
@@ -284,14 +187,6 @@ const XalanDOMString&
 XalanSourceTreeDocumentFragment::getLocalName() const
 {
 	return s_emptyString;
-}
-
-
-
-void
-XalanSourceTreeDocumentFragment::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -350,20 +245,5 @@ XalanSourceTreeDocumentFragment::clearChildren()
 	m_firstChild = 0;
 }
 
-XalanSourceTreeDocumentFragment*
-XalanSourceTreeDocumentFragment::clone(bool	deep) const
-{
-	typedef XalanSourceTreeDocumentFragment Type;
-	
-	XalanMemMgrAutoPtr<Type, false> theGuard( m_manager , (Type*)m_manager.allocate(sizeof(Type)));
-	
-	Type* theResult = theGuard.get();
-	
-	new (theResult) Type(m_manager, *this, deep);
-	
-	theGuard.release();
-	
-	return theResult;
-}
 
 XALAN_CPP_NAMESPACE_END

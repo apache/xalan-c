@@ -65,40 +65,4 @@ XNodeSetResultTreeFragProxy::getLastChild() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XNodeSetResultTreeFragProxy*
-#endif
-XNodeSetResultTreeFragProxy::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XNodeSetResultTreeFragProxy::hasChildNodes() const
-{
-	return m_value.getLength() > 0 ? true : false;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanDocumentFragment*
-#else
-XNodeSetResultTreeFragProxy*
-#endif
-XNodeSetResultTreeFragProxy::clone(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
 XALAN_CPP_NAMESPACE_END

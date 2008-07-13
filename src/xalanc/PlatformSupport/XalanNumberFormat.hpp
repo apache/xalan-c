@@ -117,7 +117,16 @@ public:
 			unsigned long		theValue,
 			XalanDOMString&		theResult);
 
-#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual XalanDOMString&
+	format(
+			XALAN_INT64	        theValue,
+			XalanDOMString&		theResult);
 
 	/**
 	 * Format a number into a string.
@@ -127,10 +136,8 @@ public:
 	 */
 	virtual XalanDOMString&
 	format(
-			size_t				theValue,
+			XALAN_UINT64	    theValue,
 			XalanDOMString&		theResult);
-
-#endif
 
 	/**
 	 * Whether groupings are used for numbers, for example, "234,678"

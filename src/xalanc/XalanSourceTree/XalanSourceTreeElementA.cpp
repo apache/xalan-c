@@ -42,7 +42,7 @@ XalanSourceTreeElementA::XalanSourceTreeElementA(
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
+			XalanSize_t			        theAttributeCount,
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
@@ -67,58 +67,10 @@ XalanSourceTreeElementA::~XalanSourceTreeElementA()
 }
 
 
-
-XalanSourceTreeElementA::XalanSourceTreeElementA(
-            MemoryManagerType&              theManager,
-			const XalanSourceTreeElementA&	theSource,
-			bool							deep) :
-	XalanSourceTreeElement(theManager, theSource, deep),
-	m_attributes(theSource.m_attributes),
-	m_attributeCount(theSource.m_attributeCount)
-{
-}
-
-XalanSourceTreeElementA*
-XalanSourceTreeElementA::create(
-                                MemoryManagerType&              theManager,
-                                const XalanSourceTreeElementA&	theSource,
-                                bool							deep )
-{
-    typedef XalanSourceTreeElementA ThisType;
-
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager,
-        theSource,
-        deep);
-
-    theGuard.release();
-
-    return theResult;
-}
-
-
 const XalanNamedNodeMap*
 XalanSourceTreeElementA::getAttributes() const
 {
 	return this;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeElementA*
-#endif
-XalanSourceTreeElementA::cloneNode(bool		/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
 }
 
 
@@ -147,20 +99,18 @@ XalanSourceTreeElementA::getLocalName() const
 
 
 
-const XalanDOMString&
-XalanSourceTreeElementA::getAttribute(const XalanDOMString&		name) const
+XalanNode*
+XalanSourceTreeElementA::item(XalanSize_t	index) const
 {
-	XalanAttr* const	theAttr = getAttributeNode(name);
-
-	return theAttr == 0 ? s_emptyString : theAttr->getValue();
+	return index < m_attributeCount ? m_attributes[index] : 0;
 }
 
 
 
-XalanAttr*
-XalanSourceTreeElementA::getAttributeNode(const XalanDOMString&		name) const
+XalanNode*
+XalanSourceTreeElementA::getNamedItem(const XalanDOMString& 	name) const
 {
-	for(unsigned int i = 0; i < m_attributeCount; ++i)
+	for (XalanSize_t i = 0; i < m_attributeCount; ++i)
 	{
 		assert(m_attributes[i] != 0);
 
@@ -175,24 +125,20 @@ XalanSourceTreeElementA::getAttributeNode(const XalanDOMString&		name) const
 
 
 
-const XalanDOMString&
-XalanSourceTreeElementA::getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+XalanSize_t
+XalanSourceTreeElementA::getLength() const
 {
-	XalanAttr* const	theAttr = getAttributeNodeNS(namespaceURI, localName);
-
-	return theAttr == 0 ? s_emptyString : theAttr->getValue();
+	return m_attributeCount;
 }
 
 
 
-XalanAttr*
-XalanSourceTreeElementA::getAttributeNodeNS(
+XalanNode*
+XalanSourceTreeElementA::getNamedItemNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	for(unsigned int i = 0; i < m_attributeCount; ++i)
+	for (XalanSize_t i = 0; i < m_attributeCount; ++i)
 	{
 		assert(m_attributes[i] != 0);
 
@@ -203,86 +149,6 @@ XalanSourceTreeElementA::getAttributeNodeNS(
 		}
 	}
 
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::setNamedItem(XalanNode* 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::item(unsigned int	index) const
-{
-	return index < m_attributeCount ? m_attributes[index] : 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::getNamedItem(const XalanDOMString& 	name) const
-{
-	return getAttributeNode(name);
-}
-
-
-
-unsigned int
-XalanSourceTreeElementA::getLength() const
-{
-	return m_attributeCount;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::removeNamedItem(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	return getAttributeNodeNS(namespaceURI, localName);
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::setNamedItemNS(XalanNode*	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElementA::removeNamedItemNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
 	return 0;
 }
 

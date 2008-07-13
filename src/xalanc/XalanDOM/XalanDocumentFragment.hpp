@@ -29,14 +29,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-/*
- * <meta name="usage" content="experimental"/>
- *
- * Base class for the DOM DocumentFragment interface.
- *
- * This class is experimental and subject to change!!
- */
-
 class XALAN_DOM_EXPORT XalanDocumentFragment : public XalanNode
 {
 public:
@@ -81,43 +73,6 @@ public:
 	virtual XalanDocument*
 	getOwnerDocument() const = 0;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanDocumentFragment*
-#endif
-	cloneNode(bool deep) const = 0;
-
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild) = 0;
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild) = 0;
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild) = 0;
-
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild) = 0;
-
-	virtual bool
-	hasChildNodes() const = 0;
-
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue) = 0;
-
-	virtual void
-	normalize() = 0;
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const = 0;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const = 0;
 
@@ -126,9 +81,6 @@ public:
 
 	virtual const XalanDOMString&
 	getLocalName() const = 0;
-
-	virtual void
-	setPrefix(const XalanDOMString&		prefix) = 0;
 
 	virtual bool
 	isIndexed() const = 0;

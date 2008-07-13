@@ -60,7 +60,6 @@ public:
 
     typedef unsigned char   XalanXMLByte;
     typedef XalanSize_t     size_type;
-    typedef unsigned int    UnicodeCharType;
 
     static size_type
     length(const XalanXMLByte*  theBytes)
@@ -215,13 +214,6 @@ public:
     static bool
     getBytesEqualChars(const XalanDOMString&    theEncoding);
 
-    static bool
-    canTranscodeToLocalCodePage(UnicodeCharType     theChar)
-    {
-        // Yuck!! See getMaximumCharacterValue() for more details.
-        return theChar <= 0x7fu ? true : false;
-    }
-
     static const XalanDOMChar   s_utf8String[];
 
     static const XalanDOMChar   s_utf16String[];
@@ -289,7 +281,7 @@ public:
     public:
 
         UnrepresentableCharacterException(
-                UnicodeCharType         theCharacter,
+                XalanUnicodeChar        theCharacter,
                 const XalanDOMString&   theEncoding,
                 XalanDOMString&         theBuffer);
 
@@ -298,7 +290,7 @@ public:
         virtual
         ~UnrepresentableCharacterException();
 
-        UnicodeCharType
+        XalanUnicodeChar
         getCharacter() const
         {
             return m_badCharacter;
@@ -321,7 +313,7 @@ public:
         static const XalanDOMChar   s_type[];
 
 
-        const UnicodeCharType   m_badCharacter;
+        const XalanUnicodeChar  m_badCharacter;
 
         mutable XalanDOMString  m_encoding;
     };
@@ -342,7 +334,6 @@ public:
     typedef XalanTranscodingServices::XalanXMLByte      XalanXMLByte;
     typedef XalanTranscodingServices::eCode             eCode;
     typedef XalanTranscodingServices::size_type         size_type;
-    typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 
     explicit
     XalanOutputTranscoder(MemoryManager&    theManager);
@@ -403,7 +394,7 @@ public:
             unsigned char*          theCharSizes) = 0;
 
     virtual bool
-    canTranscodeTo(UnicodeCharType  theChar) const = 0;
+    canTranscodeTo(XalanUnicodeChar     theChar) const = 0;
 
 private:
 

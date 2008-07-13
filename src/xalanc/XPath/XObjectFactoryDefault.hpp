@@ -139,7 +139,7 @@ public:
 	virtual const XObjectPtr
 	createString(
 			const XalanDOMChar*		theValue,
-			unsigned int			theLength);
+			XalanSize_t			    theLength);
 
 	virtual const XObjectPtr
 	createString(const XToken&	theValue);

@@ -202,7 +202,7 @@ public:
       * on non-validating parsers which always include non-markup text.
       * <p>When set to true (also the default), ignorable whitespaces will be
       * added to the DOM tree as text nodes.  The method
-      * DOM_Text::isIgnorableWhitespace() will return true for those text
+      * DOM_Text::isWhitespace() will return true for those text
       * nodes only.
       * <p>When set to false, all ignorable whitespace will be discarded and
       * no text node is added to the DOM tree.  Note: applications intended

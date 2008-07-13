@@ -129,7 +129,8 @@ typedef XMLFilePos      XalanFilePos;
 typedef XMLFileLoc      XalanFileLoc;
 #endif
 
-typedef XMLCh   XalanDOMChar;
+typedef XMLCh           XalanDOMChar;
+typedef unsigned int    XalanUnicodeChar;
 
 template<bool value>
 struct XalanCompileErrorBoolean
@@ -139,6 +140,11 @@ struct XalanCompileErrorBoolean
  
 XALAN_CPP_NAMESPACE_END
 
+
+#if !defined(XALAN_NO_LONG_LONG)
+typedef unsigned long long XALAN_UINT64;
+typedef long long  XALAN_INT64;
+#endif
 
 #define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE_QUALIFIER XalanCompileErrorBoolean<bool(expr)>()
 

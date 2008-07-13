@@ -59,22 +59,6 @@ XalanSourceTreeAttr::~XalanSourceTreeAttr()
 }
 
 
-
-XalanSourceTreeAttr::XalanSourceTreeAttr(
-			const XalanSourceTreeAttr&		theSource,
-			bool							/* deep */) :
-	XalanAttr(theSource),
-	m_name(theSource.m_name),
-	m_value(theSource.m_value),
-	m_ownerElement(0),
-	m_index(0)
-{
-	// Deep copy is the same as shallow copy -- The owning element
-	// must deal with the hookup of the siblings.
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeAttr::getNodeName() const
 {
@@ -110,9 +94,6 @@ XalanSourceTreeAttr::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeAttr::getChildNodes() const
 {
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
 	return 0;
 }
 
@@ -168,103 +149,6 @@ XalanSourceTreeAttr::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeAttr*
-#endif
-XalanSourceTreeAttr::cloneNode(bool		/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeAttr::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeAttr::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeAttr::removeChild(XalanNode*		/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeAttr::appendChild(XalanNode*		/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XalanSourceTreeAttr::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XalanSourceTreeAttr::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeAttr::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XalanSourceTreeAttr::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeAttr::getNamespaceURI() const
 {
@@ -285,14 +169,6 @@ const XalanDOMString&
 XalanSourceTreeAttr::getLocalName() const
 {
 	return s_emptyString;
-}
-
-
-
-void
-XalanSourceTreeAttr::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -333,14 +209,6 @@ const XalanDOMString&
 XalanSourceTreeAttr::getValue() const
 {
 	return m_value;
-}
-
-
-
-void
-XalanSourceTreeAttr::setValue(const XalanDOMString&		/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

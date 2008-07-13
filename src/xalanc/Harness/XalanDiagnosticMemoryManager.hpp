@@ -57,18 +57,10 @@ class XALAN_HARNESS_EXPORT XalanDiagnosticMemoryManager : public MemoryManager
 {
 public:
 
-    typedef unsigned int int_type;
-
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef ostream				StreamType;
 #else
 	typedef std::ostream		StreamType;
-#endif
-
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    typedef std::size_t     size_type;
-#else
-    typedef size_t          size_type;
 #endif
 
     class LockException
@@ -93,7 +85,7 @@ public:
     ~XalanDiagnosticMemoryManager();
 
     virtual void*
-    allocate(size_type  size);
+    allocate(XalanSize_t  size);
 
     virtual void
     deallocate(void*    pointer);
@@ -115,21 +107,21 @@ public:
 
     // Get the high-water mark (the highest amount
     // that was allocated at any particular point).
-    size_type
+    XalanSize_t
     getHighWaterMark() const
     {
         return m_highWaterMark;
     }
 
     // Get the number of bytes currently allocated.
-    size_type
+    XalanSize_t
     getAllocated() const
     {
         return m_currentAllocated;
     }
 
     // Get the current number of outstanding allocations.
-    size_type
+    XalanSize_t
     getAllocations() const
     {
         return m_allocations.size();
@@ -144,16 +136,16 @@ public:
         }
 
         Data(
-                size_type   theSize,
-                size_type   theSequence) :
+                XalanSize_t     theSize,
+                XalanSize_t     theSequence) :
             m_size(theSize),
             m_sequence(theSequence)
         {
         }
 
-        size_type   m_size;
+        XalanSize_t     m_size;
 
-        size_type   m_sequence;
+        XalanSize_t     m_sequence;
     };
 
     typedef XalanMap<void*, Data>   MapType;
@@ -186,7 +178,7 @@ public:
     void
     dumpStatistics(
                 StreamType*  theStream = 0,
-                size_type    theBytesToDump = defaultBytesToDump);
+                XalanSize_t  theBytesToDump = defaultBytesToDump);
 
 private:
 
@@ -201,11 +193,11 @@ private:
 
     bool            m_locked;
 
-    size_type       m_sequence;
+    XalanSize_t     m_sequence;
 
-    size_type       m_highWaterMark;
+    XalanSize_t     m_highWaterMark;
 
-    size_type       m_currentAllocated;
+    XalanSize_t     m_currentAllocated;
 
     MapType         m_allocations;
 

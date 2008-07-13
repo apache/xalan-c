@@ -40,8 +40,6 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementA : public XalanSourceT
 {
 public:
 
-	typedef unsigned long	AttributesCountType;
-
 	/**
 	 * Constructor.
 	 *
@@ -59,7 +57,7 @@ public:
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
+			XalanSize_t			        theAttributeCount,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -72,13 +70,6 @@ public:
 	virtual const XalanNamedNodeMap*
 	getAttributes() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeElementA*
-#endif
-	cloneNode(bool deep) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -88,103 +79,54 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-	virtual const XalanDOMString&
-	getAttribute(const XalanDOMString&		name) const;
 
-	virtual XalanAttr*
-	getAttributeNode(const XalanDOMString&		name) const;
+    // public interfaces not inherited from XalanElement...
 
-	virtual const XalanDOMString&
-	getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual XalanAttr*
-	getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-
-	// public interfaces not inherited from XalanElement...
-
-	AttributesCountType
+	XalanSize_t
 	getAttributeCount() const
 	{
 		return m_attributeCount;
 	}
 
 	XalanSourceTreeAttr*
-	getAttributeByIndex(AttributesCountType		index) const
+	getAttributeByIndex(XalanSize_t     index) const
 	{
 		return index < m_attributeCount ? m_attributes[index] : 0;
 	}
-
-	XalanSourceTreeElementA*
-	clone(bool	deep) const
-	{
-        MemoryManagerType& theManager = const_cast<XalanSourceTreeElementA*>(this)->getMemoryManager();
-
-        return XalanSourceTreeElementA::create(theManager, *this, deep);
-	}
-
-protected:
-
-	XalanSourceTreeElementA(
-            MemoryManagerType&              theManager,
-			const XalanSourceTreeElementA&	theSource,
-			bool							deep = false);
-
-    static XalanSourceTreeElementA*
-    create(
-            MemoryManagerType&              theManager,
-			const XalanSourceTreeElementA&	theSource,
-			bool							deep = false);
 
 private:
 
 	// These are from XalanNamedNodeMap...
 
 	virtual XalanNode*
-	setNamedItem(XalanNode* 	arg);
-
-	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(XalanSize_t	index) const;
 
 	virtual XalanNode*
 	getNamedItem(const XalanDOMString& 	name) const;
 
-	virtual unsigned int
+	virtual XalanSize_t
 	getLength() const;
-
-	virtual XalanNode*
-	removeNamedItem(const XalanDOMString&	name);
 
 	virtual XalanNode*
 	getNamedItemNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const;
 
-	virtual XalanNode*
-	setNamedItemNS(XalanNode*	arg);
-
-	virtual XalanNode*
-	removeNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName);
-
 
 	// Not implemented...
+    XalanSourceTreeElementA(const XalanSourceTreeElementA&);
+
 	XalanSourceTreeElementA&
-	operator=(const XalanSourceTreeElementA&	theSource);
+	operator=(const XalanSourceTreeElementA&);
 
 	bool
-	operator==(const XalanSourceTreeElementA&	theRHS) const;
+	operator==(const XalanSourceTreeElementA&) const;
 
 
 	// Data members...
 	XalanSourceTreeAttr* const *	m_attributes;
 
-	const AttributesCountType		m_attributeCount;
+	const XalanSize_t		        m_attributeCount;
 };
 
 

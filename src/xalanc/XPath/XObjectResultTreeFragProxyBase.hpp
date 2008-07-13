@@ -85,43 +85,6 @@ public:
 	virtual XalanDocument*
 	getOwnerDocument() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XObjectResultTreeFragProxyBase*
-#endif
-	cloneNode(bool deep) const;
-
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild);
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild);
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild);
-
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild);
-
-	virtual bool
-	hasChildNodes() const = 0;
-
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue);
-
-	virtual void
-	normalize();
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -131,21 +94,11 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-	virtual void
-	setPrefix(const XalanDOMString&		prefix);
-
 	virtual bool
 	isIndexed() const;
 
 	virtual IndexType
 	getIndex() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanDocumentFragment*
-#else
-	virtual XObjectResultTreeFragProxyBase*
-#endif
-	clone(bool	deep) const;
 
 protected:
 

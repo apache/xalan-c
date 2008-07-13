@@ -19,17 +19,10 @@
 
 
 
-#include <xalanc/XalanDOM/XalanNode.hpp>
-#include <xalanc/XalanDOM/XalanAttr.hpp>
-#include <xalanc/XalanDOM/XalanDocument.hpp>
-#include <xalanc/XalanDOM/XalanDocumentType.hpp>
-#include <xalanc/XalanDOM/XalanElement.hpp>
-#include <xalanc/XalanDOM/XalanEntity.hpp>
-#include <xalanc/XalanDOM/XalanNamedNodeMap.hpp>
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
 
 
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include "DOMServices.hpp"
 #include "DOMSupportException.hpp"
 
@@ -39,9 +32,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-DOMSupportDefault::DOMSupportDefault(MemoryManagerType&     theManager) :
-	DOMSupport(),
-	m_pool(theManager)
+DOMSupportDefault::DOMSupportDefault(MemoryManager&     /* theManager */) :
+	DOMSupport()
+{
+}
+
+
+
+DOMSupportDefault::DOMSupportDefault() :
+	DOMSupport()
 {
 }
 
@@ -60,68 +59,16 @@ DOMSupportDefault::reset()
 
 
 
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
+
+
+
 const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDOMString&	/* theName */,
+			const XalanDocument&	/* theDocument */) const
 {
-	const XalanDocumentType* const	theDoctype =
-		theDocument.getDoctype();
-
-    XalanDOMStringPool&     theNonConstPool =
-#if defined(XALAN_NO_MUTABLE)
-	    ((DOMSupportDefault*)this)->m_pool;
-#else
-	    m_pool;
-#endif
-
-    MemoryManagerType&  theMemoryManager =
-        theNonConstPool.getMemoryManager();
-
-    XalanDOMString  theURI(theMemoryManager);
-
-	if(theDoctype != 0)
-	{
-		const XalanNamedNodeMap* const	theEntities =
-			theDoctype->getEntities();
-
-		if (theEntities != 0)
-		{
-			const XalanNode* const	theNode =
-				theEntities->getNamedItem(theName);
-
-			if (theNode != 0 && theNode->getNodeType() == XalanNode::ENTITY_NODE)
-			{
-				const XalanEntity* const    theEntity =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanEntity*)theNode;
-#else
-					static_cast<const XalanEntity*>(theNode);
-#endif
-
-				if(length(theEntity->getNotationName()) != 0) // then it's unparsed
-				{
-					// The draft says: "The XSLT processor may use the public
-					// identifier to generate a URI for the entity instead of the URI
-					// specified in the system identifier. If the XSLT processor does
-					// not use the public identifier to generate the URI, it must use
-					// the system identifier; if the system identifier is a relative
-					// URI, it must be resolved into an absolute URI using the URI of
-					// the resource containing the entity declaration as the base
-					// URI [RFC2396]."
-					// So I'm falling a bit short here.
-					theURI = theEntity->getSystemId();
-
-                    if(theURI.length() == 0)
-					{
-						theURI = theEntity->getPublicId();
-					}
-				}
-			}
-		}
-	}
-
-	return theNonConstPool.get(theURI);
+    return s_emptyString;
 }
 
 

@@ -63,7 +63,6 @@ XalanNumberFormat::format(
 			double				theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	DoubleToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
@@ -94,7 +93,6 @@ XalanNumberFormat::format(
 			unsigned int		theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	UnsignedLongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
@@ -111,7 +109,6 @@ XalanNumberFormat::format(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	LongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
@@ -128,7 +125,6 @@ XalanNumberFormat::format(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	UnsignedLongToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
@@ -138,21 +134,12 @@ XalanNumberFormat::format(
 
 
 
-#if defined(XALAN_SIZE_T_NOT_STANDARD_TYPE)
-
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
 XalanDOMString&
 XalanNumberFormat::format(
-			size_t				theValue,
+			XALAN_INT64	        theValue,
 			XalanDOMString&		theResult)
-
 {
-	SizeTypeToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 
@@ -161,7 +148,20 @@ XalanNumberFormat::format(
 
 
 
-#endif
+XalanDOMString&
+XalanNumberFormat::format(
+			XALAN_UINT64	    theValue,
+			XalanDOMString&		theResult)
+{
+	NumberToDOMString(theValue, theResult);
+
+	applyGrouping(theResult, theResult);
+
+    return theResult;
+}
+
+
+
 /*
  * Convert a string value using the currently active values for grouping size
  * and separator; returns the converted string

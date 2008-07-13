@@ -45,16 +45,18 @@ class XALAN_XPATH_EXPORT NodeRefList : public NodeRefListBase
 public:
 
 	explicit
-	NodeRefList(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	NodeRefList(MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	/**
 	 * Construct a node list from another
 	 *
 	 * @param theSource source node list
 	 */
-	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	NodeRefList(
+        const NodeRefList&	theSource,
+        MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_nodeList.getMemoryManager();
@@ -66,7 +68,9 @@ public:
 	 * @param theSource source node list
 	 */
 	explicit
-	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	NodeRefList(
+            const NodeRefListBase&	theSource,
+            MemoryManager&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	virtual
 	~NodeRefList();

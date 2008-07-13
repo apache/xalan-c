@@ -43,10 +43,12 @@ class XALAN_XPATH_EXPORT XPathFactoryBlock : public XPathFactory
 
 public:
 
-	enum { eDefaultBlockSize = 20 };
+	enum { eDefaultBlockSize = 20u };
 
 	explicit
-	XPathFactoryBlock(MemoryManagerType&      theManager, unsigned int	theBlockSize = eDefaultBlockSize);
+	XPathFactoryBlock(
+            MemoryManagerType&      theManager,
+            XalanSize_t             theBlockSize = eDefaultBlockSize);
 
 	virtual
 	~XPathFactoryBlock();

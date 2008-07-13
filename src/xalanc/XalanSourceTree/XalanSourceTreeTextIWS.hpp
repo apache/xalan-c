@@ -57,17 +57,13 @@ public:
 
 
 	virtual bool
-	isIgnorableWhitespace() const;
-
-protected:
-
-	XalanSourceTreeTextIWS(
-			const XalanSourceTreeTextIWS&	theSource,
-			bool							/* deep */);
+	isWhitespace() const;
 
 private:
 
 	// Not implemented...
+    XalanSourceTreeTextIWS(const XalanSourceTreeTextIWS&);
+
 	XalanSourceTreeTextIWS&
 	operator=(const XalanSourceTreeTextIWS&		theSource);
 

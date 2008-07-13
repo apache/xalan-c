@@ -71,7 +71,7 @@ XStringAllocator::createString(const XalanDOMChar*	theString)
 XStringAllocator::string_type*
 XStringAllocator::createString(
 			const XalanDOMChar*		theString,
-			unsigned int			theLength)
+			XalanSize_t			    theLength)
 {
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

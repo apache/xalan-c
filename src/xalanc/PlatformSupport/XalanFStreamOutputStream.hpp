@@ -42,7 +42,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanFStreamOutputStream : public XalanOutput
 {
 public :
 
-	enum { eDefaultBufferSize = 8192 };
+	enum { eDefaultBufferSize = 8192u };
 
 
 	/**
@@ -53,13 +53,14 @@ public :
 	 */
     XalanFStreamOutputStream(
 			FILE*			    theFileHandle,
-            MemoryManagerType&   theManager,
-			unsigned int	    theBufferSize = eDefaultBufferSize);
+            MemoryManagerType&  theManager,
+			size_type	        theBufferSize = eDefaultBufferSize);
 
     static XalanFStreamOutputStream*
-    create(	FILE*			    theFileHandle,
-            MemoryManagerType&   theManager,
-			unsigned int	    theBufferSize = eDefaultBufferSize);
+    create(
+            FILE*			    theFileHandle,
+            MemoryManagerType&  theManager,
+			size_type	        theBufferSize = eDefaultBufferSize);
     virtual
 	~XalanFStreamOutputStream();
 

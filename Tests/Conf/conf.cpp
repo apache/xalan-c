@@ -223,8 +223,8 @@ parseWithXerces(
 
     theDOM->normalize();
 
-    XercesDOMSupport    theDOMSupport(mgr);
-    XercesParserLiaison theParserLiaison(mgr);
+    XercesParserLiaison     theParserLiaison(mgr);
+    XercesDOMSupport        theDOMSupport(theParserLiaison);
 
     int theResult = 0;
 

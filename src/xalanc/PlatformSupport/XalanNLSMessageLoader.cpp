@@ -77,7 +77,7 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManagerType& theManager) :
     */
     m_catalogHandle = catopen(fileName, 0);
 
-    if ((int)m_catalogHandle == -1)
+    if (reinterpret_cast<int>(m_catalogHandle) == -1)
     {
         // Probably have to call panic here
         // the user will get an error with retrieving messages
@@ -85,31 +85,38 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManagerType& theManager) :
     }
 }
 
-bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
-								, XalanDOMChar*		toFill
-								, unsigned int            maxChars)
+bool
+XalanNLSMessageLoader::loadMsg(
+            XalanMessages::Codes    msgToLoad
+            XalanDOMChar*           toFill
+			XalanSize_t             maxChars)
 {
     
     bool bRetValue = false;
 
-    if( toFill == 0 || maxChars == 0 )
+    if (toFill == 0 || maxChars == 0)
     {
     	return bRetValue;
     }
 
-    if ((int)m_catalogHandle == -1)
+    if (static_cast<int>(m_catalogHandle) == -1)
     {
     	// for transcoding to Unicode
     	const XalanDOMString	errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
     	
     	if(errorMsg.length() < maxChars)
     	{
-    		XalanCopy(errorMsg.c_str(), errorMsg.c_str()+ errorMsg.length() +1 , toFill);
+    		XalanCopy(errorMsg.c_str(), errorMsg.c_str()+ errorMsg.length() + 1 , toFill);
     	}
     }
     else
     {
-    	const char* const	catMessage = catgets( m_catalogHandle, 1, (int)msgToLoad+2, s_errorMessage);
+    	const char* const	catMessage =
+            catgets(
+                m_catalogHandle,
+                1,
+                static_cast<int>(msgToLoad) + 2,
+                s_errorMessage);
 	
 		// catgets returns a pointer to msgString if it fails to locate the message
 		// from the message catalog
@@ -117,7 +124,7 @@ bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
     	{
         	const XalanDOMString	errorMsg(catMessage, m_memoryManager);
         	
-        	if(errorMsg.length() < maxChars)
+        	if (errorMsg.length() < maxChars)
     		{
     			XalanCopy(errorMsg.c_str(), errorMsg.c_str() + errorMsg.length() +1  , toFill);
     			
@@ -129,9 +136,10 @@ bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
     return bRetValue;
 }
 
+
+
 XALAN_CPP_NAMESPACE_END
 
 
+
 #endif // XALAN_NLS_MSG_LOADER
-
-

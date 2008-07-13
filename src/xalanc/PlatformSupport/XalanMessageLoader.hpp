@@ -141,7 +141,7 @@ protected:
     loadMsg(
                 XalanMessages::Codes    msgToLoad, 
                 XalanDOMChar*           toFill, 
-                unsigned int            maxChars) = 0;
+                XalanSize_t             maxChars) = 0;
 
 private:
 
@@ -150,7 +150,7 @@ private:
                 XalanMessages::Codes    msgToLoad,
                 MemoryManager&          theMemoryManager,
                 XalanDOMChar*           toFill,
-                unsigned int            maxChars,
+                XalanSize_t             maxChars,
                 const XalanDOMChar*     repText1, 
                 const XalanDOMChar*     repText2 = 0, 
                 const XalanDOMChar*     repText3 = 0,
@@ -161,7 +161,7 @@ private:
                 XalanMessages::Codes        msgToLoad,
                 MemoryManagerType&          theManager,
                 XalanDOMChar*               toFill, 
-                unsigned int                maxChars, 
+                XalanSize_t                 maxChars, 
                 const char*                 repText1 , 
                 const char*                 repText2 = 0, 
                 const char*                 repText3 = 0, 

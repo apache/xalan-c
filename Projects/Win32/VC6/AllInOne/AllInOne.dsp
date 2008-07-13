@@ -406,14 +406,6 @@ SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp
 # End Source File
 # Begin Source File
@@ -1556,14 +1548,6 @@ SOURCE=..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.h
 # Begin Group "XMLSupport"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.hpp
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp

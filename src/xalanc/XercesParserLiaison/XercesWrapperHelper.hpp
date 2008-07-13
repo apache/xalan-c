@@ -48,7 +48,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperHelper
 {
 public:
 
-	typedef XMLSize_t	XercesStringLengthType;
+	typedef XalanSize_t     XercesStringLengthType;
 
 	static const XMLCh*
 	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
@@ -58,25 +58,15 @@ public:
 		return theString.c_str();
 	}
 
-	static bool
-	isSupported(
-			const DOMNodeType*		theXercesNode,
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version);
-
-	static const XalanDOMString&
-	substringData(
-			const DOMCharacterDataType*		theXercesNode,
-			unsigned int					offset, 
-			unsigned int					count,
-            XalanDOMString&                 theResult);
-
 private:
 
 	// Not implemented...
 	XercesWrapperHelper();
 
 	XercesWrapperHelper(const XercesWrapperHelper&);
+
+	XercesWrapperHelper&
+    operator=(const XercesWrapperHelper&);
 };
 
 

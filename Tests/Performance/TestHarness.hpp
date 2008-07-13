@@ -189,9 +189,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
 
     try {
 
-        CompiledStylesheetType  compiledStylesheet;
-        ParsedInputSourceType   parsedInputSource;
-        ResultTargetType        resultTarget;
+        CompiledStylesheetType  compiledStylesheet = 0;
+        ParsedInputSourceType   parsedInputSource = 0;
 
         static const ProcessorOptions defaultProcessor;
         
@@ -263,11 +262,13 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
         Timer timeTotalRun;
         timeTotalRun.start();
 
-        while (numIterations < testCase.numIterations 
-            && timeTotalRun.getElapsedTime() < testCase.minTimeToExecute)
+        while (compiledStylesheet &&
+               numIterations < testCase.numIterations &&
+               timeTotalRun.getElapsedTime() < testCase.minTimeToExecute)
         {
             Timer timeInput;
-            if (testCase.inputMode == XalanDOMString("stream"))
+            if (testCase.inputMode == XalanDOMString("stream") &&
+                !parsedInputSource)
             {
 #if defined(XALAN_CLASSIC_IOSTREAMS)
                 XALAN_USING_XALAN(CharVectorType)
@@ -310,6 +311,7 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
                     << " is inavlid for input document: "
                     << testCase.inputDocument
                     << endl;
+                break;
             }
 
             totalParseInputTime += timeInput.getElapsedTime();
@@ -317,7 +319,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             maxParseInputTime = timeInput.getElapsedTime() > maxParseInputTime ? timeInput.getElapsedTime() : maxParseInputTime;
 
 
-            resultTarget = m_processor.createResultTarget(
+            ResultTargetType    resultTarget =
+                m_processor.createResultTarget(
                     testCase.resultDocument, 
                     processor.resultOptions);
 
@@ -334,13 +337,20 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             maxTransformTime = timeTransform.getElapsedTime() > maxTransformTime ? timeTransform.getElapsedTime() : maxTransformTime;
 
             ++numIterations;
+            m_processor.releaseResultTarget(resultTarget);
         }
 
         timeTotalRun.stop();
 
-        m_processor.releaseStylesheet(compiledStylesheet);
-        m_processor.releaseInputSource(parsedInputSource);
-        m_processor.releaseResultTarget(resultTarget);
+        if (compiledStylesheet)
+        {
+            m_processor.releaseStylesheet(compiledStylesheet);
+        }
+
+        if (parsedInputSource)
+        {
+            m_processor.releaseInputSource(parsedInputSource);
+        }
 
         if (true == testCase.verifyResult)
         {
@@ -399,6 +409,10 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
                 << exception.c_str()
                 << endl;
 
+        testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("no")));
+    }
+    catch (int)
+    {
         testAttributes.insert(TestAttributesType::value_type(XalanDOMString("complete"), XalanDOMString("no")));
     }
 

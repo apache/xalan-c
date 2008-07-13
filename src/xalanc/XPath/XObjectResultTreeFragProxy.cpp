@@ -20,20 +20,13 @@
 
 
 
-#include <cassert>
-
-
-
-#include <xalanc/XalanDOM/XalanDOMException.hpp>
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XObjectResultTreeFragProxy::XObjectResultTreeFragProxy(const XObject&	theValue,
-                                                       MemoryManagerType& theManager) :
+XObjectResultTreeFragProxy::XObjectResultTreeFragProxy(
+            const XObject&	theValue,
+            MemoryManager&  theManager) :
 	XObjectResultTreeFragProxyBase(),
 	m_proxy(theValue, theManager)
 {
@@ -68,39 +61,6 @@ XObjectResultTreeFragProxy::getLastChild() const
 #else
 	return &m_proxy;
 #endif
-}
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XObjectResultTreeFragProxy*
-#endif
-XObjectResultTreeFragProxy::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-bool
-XObjectResultTreeFragProxy::hasChildNodes() const
-{
-	return true;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanDocumentFragment*
-#else
-XObjectResultTreeFragProxy*
-#endif
-XObjectResultTreeFragProxy::clone(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
 }
 
 

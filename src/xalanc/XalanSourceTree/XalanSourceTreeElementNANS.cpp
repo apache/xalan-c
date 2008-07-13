@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
-            MemoryManagerType&          theManager,
+            MemoryManager&              theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
@@ -54,55 +54,6 @@ XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
 
 XalanSourceTreeElementNANS::~XalanSourceTreeElementNANS()
 {
-}
-
-
-
-XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNANS&	theSource,
-			bool								deep) :
-	XalanSourceTreeElementNA(theManager, theSource, deep),
-	m_localName(theSource.m_localName),
-	m_prefix(theSource.m_prefix),
-	m_namespaceURI(theSource.m_namespaceURI)
-{
-}
-
-XalanSourceTreeElementNANS*
-XalanSourceTreeElementNANS::create(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNANS&	theSource,
-			bool								deep) 
-{
-    typedef XalanSourceTreeElementNANS ThisType;
-
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager,
-                            theSource,
-                            deep);
-
-    theGuard.release();
-
-    return theResult;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeElementNANS*
-#endif
-XalanSourceTreeElementNANS::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
 }
 
 

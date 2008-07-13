@@ -75,16 +75,16 @@ ICUResHandler::characters(
         // we need to acount for the terminating null,
         // and the possibility of escaping each character,
         // 1025 is the maximum buffer size.
-        const unsigned int  theMaxChars = 512;
+        const XalanSize_t   theMaxChars = 512;
         assert(length <= theMaxChars); 
 
         XMLCh   buffer[(theMaxChars * 2) + 1];
 
-        unsigned int    j = 0;
+        XalanSize_t    j = 0;
 
         // ICU genrb doesn't like " and {} chars
         // change tham with \", \{ and \}.
-        for (unsigned int i = 0 ; i < length ; ++i , ++j)
+        for (XalanSize_t i = 0 ; i < length ; ++i , ++j)
         {
             if (chars[i] == chDoubleQuote ||
                 chars[i] == chOpenCurly ||

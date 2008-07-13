@@ -60,54 +60,10 @@ XalanSourceTreeElementNA::~XalanSourceTreeElementNA()
 
 
 
-XalanSourceTreeElementNA::XalanSourceTreeElementNA(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNA&		theSource,
-			bool								deep) :
-	XalanSourceTreeElement(theManager, theSource, deep)
-{
-}
-
-XalanSourceTreeElementNA*
-XalanSourceTreeElementNA::create(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementNA&		theSource,
-			bool								deep)
-{
-    typedef XalanSourceTreeElementNA ThisType;
-
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager,
-                            theSource,
-                            deep);
-
-   theGuard.release();
-
-    return theResult;
-}
-
 const XalanNamedNodeMap*
 XalanSourceTreeElementNA::getAttributes() const
 {
 	return &s_emptyAttributes;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeElementNA*
-#endif
-XalanSourceTreeElementNA::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
 }
 
 
@@ -132,42 +88,6 @@ const XalanDOMString&
 XalanSourceTreeElementNA::getLocalName() const
 {
 	return m_tagName;
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeElementNA::getAttribute(const XalanDOMString&	/* name */) const
-{
-	return s_emptyString;
-}
-
-
-
-XalanAttr*
-XalanSourceTreeElementNA::getAttributeNode(const XalanDOMString&	/* name */) const
-{
-	return 0;
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeElementNA::getAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	return s_emptyString;
-}
-
-
-
-XalanAttr*
-XalanSourceTreeElementNA::getAttributeNodeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	return 0;
 }
 
 

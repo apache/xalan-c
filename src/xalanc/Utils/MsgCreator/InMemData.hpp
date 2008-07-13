@@ -65,7 +65,7 @@ static const char* szArraySizeVar[]=
 {
 "\n",
 "\n",
-"static const unsigned int gXalanMsgArraySize = ",
+"static const XalanSize_t gXalanMsgArraySize = ",
 0
 };
 

@@ -2137,7 +2137,11 @@ protected:
     {
         assert(context != 0);
 
-        return executionContext.getContextNodeListPosition(*context);
+        const XPathExecutionContext::size_type  theResult =
+            executionContext.getContextNodeListPosition(*context);
+        assert(static_cast<double>(theResult) == theResult);
+
+        return static_cast<double>(theResult);
     }
 
     /**
@@ -2149,7 +2153,11 @@ protected:
     double
     functionLast(XPathExecutionContext&		executionContext) const
     {
-        return executionContext.getContextNodeListLength();
+        const XPathExecutionContext::size_type  theResult =
+            executionContext.getContextNodeListLength();
+        assert(static_cast<double>(theResult) == theResult);
+
+        return static_cast<double>(theResult);
     }
 
     /**

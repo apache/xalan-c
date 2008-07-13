@@ -63,7 +63,7 @@ XercesNodeListWrapper::XercesNodeListWrapper(const XercesNodeListWrapper&	theSou
 
 
 XalanNode*
-XercesNodeListWrapper::item(unsigned int	index) const
+XercesNodeListWrapper::item(XalanSize_t     index) const
 {
 	assert(m_xercesNodeList != 0);
 
@@ -72,7 +72,7 @@ XercesNodeListWrapper::item(unsigned int	index) const
 
 
 
-unsigned int
+XalanSize_t
 XercesNodeListWrapper::getLength() const
 {
 	assert(m_xercesNodeList != 0);

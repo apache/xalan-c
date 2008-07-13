@@ -96,7 +96,7 @@ XStringCached::getRealType() const
 double
 XStringCached::stringLength() const
 {
-    return m_value.get().length();
+    return static_cast<double>(m_value.get().length());
 }
 
 

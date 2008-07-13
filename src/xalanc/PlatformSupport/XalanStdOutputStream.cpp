@@ -146,7 +146,7 @@ XalanStdOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-    assert(StreamSizeType(theBufferLength) == theBufferLength);
+    assert(static_cast<XALAN_UINT64>(StreamSizeType(theBufferLength)) == theBufferLength);
 
     m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 

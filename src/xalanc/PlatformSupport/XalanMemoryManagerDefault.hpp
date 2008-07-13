@@ -49,7 +49,7 @@ public:
     ~XalanMemoryManagerDefault();
 
     virtual void*
-    allocate(size_t     size);
+    allocate(XalanSize_t    size);
 
     virtual void
     deallocate(void*    pointer);

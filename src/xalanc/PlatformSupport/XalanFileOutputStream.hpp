@@ -46,7 +46,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStream : public XalanOutputStr
 {
 public :
 
-	enum { eDefaultBufferSize = 8192 };
+	enum { eDefaultBufferSize = 8192u };
 
 #if defined(XALAN_WINDOWS)
 	typedef HANDLE	HandleType;
@@ -63,13 +63,13 @@ public :
     XalanFileOutputStream(
 			const XalanDOMString&	theFileName,
             MemoryManagerType&      theManager,
-			unsigned int			theBufferSize = eDefaultBufferSize);
+			size_type			    theBufferSize = eDefaultBufferSize);
 
     static XalanFileOutputStream*
     create(
 			const XalanDOMString&	theFileName,
             MemoryManagerType&      theManager,
-			unsigned int			theBufferSize = eDefaultBufferSize);
+			size_type			    theBufferSize = eDefaultBufferSize);
     virtual
 	~XalanFileOutputStream();
 

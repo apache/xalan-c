@@ -55,7 +55,6 @@ public :
 	typedef XalanVector<XalanDOMChar>		BufferType;
 	typedef XalanVector<char>				TranscodeVectorType;
 	typedef XalanTranscodingServices::size_type	        size_type;
-    typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 
 	/**
 	 * Constructor.
@@ -238,7 +237,7 @@ public :
 	 * @return true if the value can be represented, and false if not.
 	 */
 	bool
-	canTranscodeTo(UnicodeCharType 	theChar) const;
+	canTranscodeTo(XalanUnicodeChar     theChar) const;
 
 
 	const XalanOutputTranscoder*

@@ -130,7 +130,7 @@ XalanXMLSerializerBase::~XalanXMLSerializerBase()
 
 
 
-unsigned int
+XalanUnicodeChar
 XalanXMLSerializerBase::decodeUTF16SurrogatePair(
             XalanDOMChar    theHighSurrogate,
             XalanDOMChar    theLowSurrogate,
@@ -194,8 +194,8 @@ XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(
 
 void
 XalanXMLSerializerBase::throwInvalidCharacterException(
-            unsigned int        ch,
-            MemoryManager&  theManager)
+            XalanUnicodeChar    ch,
+            MemoryManager&      theManager)
 {
     XalanDOMString  theMessage(theManager);
     XalanDOMString  theBuffer(theManager);  
@@ -208,11 +208,13 @@ XalanXMLSerializerBase::throwInvalidCharacterException(
     throw SAXException(theMessage.c_str(), &theManager);
 }
 
+
+
 void
 XalanXMLSerializerBase::throwInvalidXMLCharacterException(
-                                  unsigned int                ch,
-                                  const XalanDOMString&       theXMLversion,
-                                  MemoryManager&              theManager)
+            XalanUnicodeChar        ch,
+            const XalanDOMString&   theXMLversion,
+            MemoryManager&          theManager)
 {
     XalanDOMString  theMessage(theManager);
     XalanDOMString  theBuffer(theManager);  

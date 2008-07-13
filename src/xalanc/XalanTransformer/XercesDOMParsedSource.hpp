@@ -57,9 +57,12 @@ public:
 
 private:
 
-	XercesDOMSupport		m_domSupport;
-
+    // There is an order dependency, because
+    // XercesDOMSupport requires a XercesParserLiaison
+    // instance.
 	XercesParserLiaison		m_parserLiaison;
+
+	XercesDOMSupport		m_domSupport;
 };
 
 

@@ -46,7 +46,7 @@ XString::XString(
 
 XString::XString(
             const XalanDOMChar*     val,
-            unsigned int            len,
+            XalanSize_t             len,
             MemoryManagerType&      theManager) :
     XStringBase(theManager),
     m_value(val, theManager, len)
@@ -102,7 +102,7 @@ XString::str(
 double
 XString::stringLength() const
 {
-    return m_value.length();
+    return static_cast<double>(m_value.length());
 }
 
 

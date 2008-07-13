@@ -880,7 +880,7 @@ bool
 StylesheetRoot::internalShouldStripSourceNode(const XalanText&  textNode) const
 {
     assert(
-        textNode.isIgnorableWhitespace() == true &&
+        textNode.isWhitespace() == true &&
         hasPreserveOrStripSpaceElements() == true);
 
     const XalanNode* const  parent = textNode.getParentNode();

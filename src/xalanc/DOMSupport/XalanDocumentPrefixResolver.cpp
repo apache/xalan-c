@@ -137,9 +137,9 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode
 			const XalanNamedNodeMap* const	atts = theElementNode->getAttributes();
 			assert(atts != 0);
 
-			const unsigned int	theSize = atts->getLength();
+			const XalanSize_t	theSize = atts->getLength();
 
-			for (unsigned int i = 0; i < theSize; ++i)
+			for (XalanSize_t i = 0; i < theSize; ++i)
 			{
 				assert(atts->item(i) != 0 && atts->item(i)->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 

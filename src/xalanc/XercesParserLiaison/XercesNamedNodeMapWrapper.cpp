@@ -29,8 +29,7 @@
 
 
 
-#include "XercesDocumentWrapper.hpp"
-#include "XercesDOMWrapperException.hpp"
+#include "XercesWrapperNavigator.hpp"
 
 
 
@@ -56,17 +55,7 @@ XercesNamedNodeMapWrapper::~XercesNamedNodeMapWrapper()
 
 
 XalanNode*
-XercesNamedNodeMapWrapper::setNamedItem(XalanNode* 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesNamedNodeMapWrapper::item(unsigned int	index) const
+XercesNamedNodeMapWrapper::item(XalanSize_t     index) const
 {
 	return m_navigator.mapNode(m_xercesNamedNodeMap->item(index));
 }
@@ -81,20 +70,10 @@ XercesNamedNodeMapWrapper::getNamedItem(const XalanDOMString& 	name) const
 
 
 
-unsigned int
+XalanSize_t
 XercesNamedNodeMapWrapper::getLength() const
 {
 	return m_xercesNamedNodeMap->getLength();
-}
-
-
-
-XalanNode*
-XercesNamedNodeMapWrapper::removeNamedItem(const XalanDOMString&		/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
 }
 
 
@@ -108,28 +87,6 @@ XercesNamedNodeMapWrapper::getNamedItemNS(
 			m_xercesNamedNodeMap->getNamedItemNS(
 				namespaceURI.c_str(),
 				localName.c_str()));
-}
-
-
-
-XalanNode*
-XercesNamedNodeMapWrapper::setNamedItemNS(XalanNode*		/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XercesNamedNodeMapWrapper::removeNamedItemNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
 }
 
 

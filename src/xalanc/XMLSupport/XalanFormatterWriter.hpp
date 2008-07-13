@@ -130,18 +130,18 @@ public:
     {
     public:
 
-        CommonRepresentableCharFunctor(const XalanOutputStream* stream) :
+        CommonRepresentableCharFunctor(const XalanOutputStream*     stream) :
             m_stream(stream)
         {
             assert(stream != 0);
         }
 
         bool
-        operator()(unsigned int theChar) const
+        operator()(XalanUnicodeChar     theChar) const
         {
             bool result = true;
 
-            if( m_stream != 0)
+            if (m_stream != 0)
             {
                 result = m_stream->canTranscodeTo(theChar);
             }
@@ -230,7 +230,7 @@ public:
 		return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
 	}
 
-    static unsigned int
+    static XalanUnicodeChar
     decodeUTF16SurrogatePair(
 			    XalanDOMChar	theHighSurrogate,
 			    XalanDOMChar	theLowSurrogate,
@@ -248,8 +248,8 @@ public:
 
     static void
     throwInvalidCharacterException(
-                unsigned int	ch,
-                MemoryManager&  theManager)
+                XalanUnicodeChar    ch,
+                MemoryManager&      theManager)
     {
         XalanDOMString	theMessage(theManager);
         XalanDOMString	theBuffer(theManager);  
@@ -266,8 +266,8 @@ public:
 
     void
     throwUnrepresentableCharacterException(
-                unsigned int	ch,
-                MemoryManager&  theManager)
+                XalanUnicodeChar    ch,
+                MemoryManager&      theManager)
     {
         XalanDOMString	theBuffer(theManager);  
 
@@ -340,14 +340,14 @@ protected:
      * @param theChar A Unicode code point.
      */
     const XalanDOMString&
-    formatNumericCharacterReference(unsigned int     theNumber)
+    formatNumericCharacterReference(XalanUnicodeChar    theChar)
     {
         clear(m_stringBuffer);
 
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charAmpersand));
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charNumberSign));
 
-        UnsignedLongToDOMString(theNumber, m_stringBuffer);
+        UnsignedLongToDOMString(theChar, m_stringBuffer);
 
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charSemicolon));
 

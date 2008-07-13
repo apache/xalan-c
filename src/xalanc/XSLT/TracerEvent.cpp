@@ -117,8 +117,8 @@ TracerEvent::printNodeList(const XalanNodeList&	l, XalanDOMString& r)
     
 	append(r, XalanDOMString("[", r.getMemoryManager()));
 
-	unsigned int	len = l.getLength();
-	unsigned int	i = 0;
+	const XalanSize_t	len = l.getLength();
+	XalanSize_t	        i = 0;
 
     XalanDOMString theBuffer(r.getMemoryManager());
 
@@ -141,7 +141,8 @@ TracerEvent::printNodeList(const XalanNodeList&	l, XalanDOMString& r)
 	}
 
     r +=  XalanDOMString("]", r.getMemoryManager());
-	return r;
+
+    return r;
 }
 
 

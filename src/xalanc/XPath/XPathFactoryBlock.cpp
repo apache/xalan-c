@@ -28,7 +28,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathFactoryBlock::XPathFactoryBlock(MemoryManagerType&      theManager, unsigned int	theBlockSize) :
+XPathFactoryBlock::XPathFactoryBlock(
+            MemoryManagerType&  theManager,
+            XalanSize_t	        theBlockSize) :
 	XPathFactory(),
 	m_allocator(theManager, theBlockSize)
 {

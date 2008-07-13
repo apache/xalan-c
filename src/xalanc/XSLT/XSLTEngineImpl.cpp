@@ -1287,7 +1287,7 @@ XSLTEngineImpl::traceSelect(
         const ECGetAndReleaseCachedString theGuard1(executionContext);
 
         XalanDOMString& theBuffer = theGuard1.get();
-        UnsignedLongToDOMString(nl.getLength(), theBuffer);
+        NumberToDOMString(nl.getLength(), theBuffer);
 
         msg += theBuffer;
             
@@ -2964,14 +2964,14 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&    src)
                 parent->getAttributes();
         assert(nnm != 0);
 
-        const unsigned int  nAttrs = nnm->getLength();
+        const XalanSize_t   nAttrs = nnm->getLength();
 
         assert(m_outputContextStack.empty() == false);
 
         AttributeListImpl&  thePendingAttributes =
                 getPendingAttributesImpl();
 
-        for (unsigned int i = 0;  i < nAttrs; i++) 
+        for (XalanSize_t i = 0;  i < nAttrs; i++) 
         {
             const XalanNode* const  attr = nnm->item(i);
             assert(attr != 0);
@@ -3119,9 +3119,9 @@ XSLTEngineImpl::copyAttributesToAttList(
 
     if (attributes != 0)
     {
-        const unsigned int  nAttributes = attributes->getLength();
+        const XalanSize_t   nAttributes = attributes->getLength();
 
-        for(unsigned int i = 0; i < nAttributes; ++i)  
+        for (XalanSize_t i = 0; i < nAttributes; ++i)  
         {   
             const XalanNode* const  attr = attributes->item(i);
             assert(attr != 0);

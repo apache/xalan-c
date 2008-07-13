@@ -66,17 +66,7 @@ XalanEmptyNamedNodeMap::operator==(const XalanEmptyNamedNodeMap&	/* theRHS */) c
 
 
 XalanNode*
-XalanEmptyNamedNodeMap::setNamedItem(XalanNode* 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XalanEmptyNamedNodeMap::item(unsigned int	/* index */) const
+XalanEmptyNamedNodeMap::item(XalanSize_t	/* index */) const
 {
 	return 0;
 }
@@ -90,7 +80,7 @@ XalanEmptyNamedNodeMap::getNamedItem(const XalanDOMString& 	/* name */) const
 }
 
 
-unsigned int
+XalanSize_t
 XalanEmptyNamedNodeMap::getLength() const
 {
 	return 0;
@@ -99,41 +89,10 @@ XalanEmptyNamedNodeMap::getLength() const
 
 
 XalanNode*
-XalanEmptyNamedNodeMap::removeNamedItem(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-XalanNode*
 XalanEmptyNamedNodeMap::getNamedItemNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* localName */) const
 {
-	return 0;
-}
-
-
-
-XalanNode*
-XalanEmptyNamedNodeMap::setNamedItemNS(XalanNode*	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XalanEmptyNamedNodeMap::removeNamedItemNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
 	return 0;
 }
 

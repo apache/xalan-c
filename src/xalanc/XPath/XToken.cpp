@@ -165,7 +165,7 @@ XToken::stringLength() const
 {
     assert(m_stringValue != 0);
 
-    return m_stringValue->length();
+    return static_cast<double>(m_stringValue->length());
 }
 
 

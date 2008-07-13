@@ -24,14 +24,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeElementANS::XalanSourceTreeElementANS(
-            MemoryManagerType&          theManager,
+            MemoryManager&              theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
 			const XalanDOMString&		thePrefix,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
+			XalanSize_t			        theAttributeCount,
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
@@ -57,48 +57,6 @@ XalanSourceTreeElementANS::XalanSourceTreeElementANS(
 XalanSourceTreeElementANS::~XalanSourceTreeElementANS()
 {
 }
-
-
-
-XalanSourceTreeElementANS::XalanSourceTreeElementANS(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementANS&	theSource,
-			bool								deep) :
-	XalanSourceTreeElementA(theManager, theSource, deep),
-	m_localName(theSource.m_localName),
-	m_prefix(theSource.m_prefix),
-	m_namespaceURI(theSource.m_namespaceURI)
-{
-}
-
-
-
-XalanSourceTreeElementANS::XalanSourceTreeElementANS(
-            MemoryManagerType&              theManager,
-			const XalanSourceTreeElementA&	theSource,
-			bool							deep) :
-	XalanSourceTreeElementA(theManager, theSource, deep),
-	m_localName(theSource.getLocalName()),
-	m_prefix(theSource.getPrefix()),
-	m_namespaceURI(theSource.getNamespaceURI())
-{
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeElementANS*
-#endif
-XalanSourceTreeElementANS::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
 
 
 const XalanDOMString&

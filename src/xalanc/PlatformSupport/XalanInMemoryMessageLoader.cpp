@@ -37,42 +37,39 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 bool
 XalanInMemoryMessageLoader::loadMsg(
-					 XalanMessages::Codes	msgToLoad
-					 , XalanDOMChar*		toFill
-					 , unsigned int         maxChars )
+            XalanMessages::Codes	msgToLoad,
+			XalanDOMChar*		    toFill,
+			XalanSize_t             maxChars)
 {
-	if ( toFill == 0 )
+	if (toFill == 0)
 	{
 		return false;
 	}
-	else
+	else if (XalanMsgContainer::getMessageCount() < static_cast<XalanSize_t>(msgToLoad))
 	{
-		if (XalanMsgContainer::getNumbOfMsgs() < (unsigned int)msgToLoad)
-		{
-			const XalanDOMString::size_type		msgLength =
-                m_unknownMessage.length() + 1;
+		const XalanDOMString::size_type		msgLength =
+               m_unknownMessage.length() + 1;
 
-			XalanCopy(
-                m_unknownMessage.c_str(),
-                m_unknownMessage.c_str() + (msgLength < maxChars ? msgLength : maxChars),
-                toFill);
-		}
-		else
-		{
-			const XalanDOMChar* const	pErrMsg = XalanMsgContainer::getMessage(msgToLoad);
-			assert (pErrMsg != 0);
-
-			const XalanDOMString::size_type		msgLength =
-                XalanDOMString::length(pErrMsg) + 1;
-
-            XalanCopy(
-                pErrMsg,
-                pErrMsg + (msgLength < maxChars ? msgLength : maxChars),
-                toFill);
-		}
-
-		return true;
+		XalanCopy(
+            m_unknownMessage.c_str(),
+            m_unknownMessage.c_str() + (msgLength < maxChars ? msgLength : maxChars),
+            toFill);
 	}
+	else
+    {
+        const XalanDOMChar* const	pErrMsg = XalanMsgContainer::getMessage(msgToLoad);
+		assert(pErrMsg != 0);
+
+		const XalanDOMString::size_type		msgLength =
+               XalanDOMString::length(pErrMsg) + 1;
+
+        XalanCopy(
+            pErrMsg,
+            pErrMsg + (msgLength < maxChars ? msgLength : maxChars),
+            toFill);
+    }
+
+    return true;
 }
 
 
@@ -89,6 +86,9 @@ XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManagerType& theMan
 }
 
 
+
 XALAN_CPP_NAMESPACE_END
+
+
 
 #endif

@@ -130,94 +130,6 @@ XObjectResultTreeFragProxyBase::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XObjectResultTreeFragProxyBase*
-#endif
-XObjectResultTreeFragProxyBase::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-XObjectResultTreeFragProxyBase::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XObjectResultTreeFragProxyBase::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XObjectResultTreeFragProxyBase::appendChild(XalanNode*	/* newChild */ )
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XObjectResultTreeFragProxyBase::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-void
-XObjectResultTreeFragProxyBase::setNodeValue(const XalanDOMString&	/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XObjectResultTreeFragProxyBase::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XObjectResultTreeFragProxyBase::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getNamespaceURI() const
 {
@@ -242,14 +154,6 @@ XObjectResultTreeFragProxyBase::getLocalName() const
 
 
 
-void
-XObjectResultTreeFragProxyBase::setPrefix(const XalanDOMString&		/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
 bool
 XObjectResultTreeFragProxyBase::isIndexed() const
 {
@@ -261,20 +165,6 @@ XObjectResultTreeFragProxyBase::isIndexed() const
 XObjectResultTreeFragProxyBase::IndexType
 XObjectResultTreeFragProxyBase::getIndex() const
 {
-	return 0;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanDocumentFragment*
-#else
-XObjectResultTreeFragProxyBase*
-#endif
-XObjectResultTreeFragProxyBase::clone(bool	/* deep */) const
-{
-	assert(false);
-
 	return 0;
 }
 

@@ -68,13 +68,6 @@ public:
 	~XalanSourceTreeAttrNS();
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeAttrNS*
-#endif
-	cloneNode(bool deep) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -84,19 +77,11 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-protected:
-
-	XalanSourceTreeAttrNS(
-			const XalanSourceTreeAttrNS&	theSource,
-			bool							deep = false);
-
-	XalanSourceTreeAttrNS(
-			const XalanSourceTreeAttr&	theSource,
-			bool						deep = false);
-
 private:
 
 	// Not defined...
+	XalanSourceTreeAttrNS(const XalanSourceTreeAttrNS&		theSource);
+
 	XalanSourceTreeAttrNS&
 	operator=(const XalanSourceTreeAttrNS&	theSource);
 

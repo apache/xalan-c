@@ -66,12 +66,14 @@ StdBinInputStream::readBytes(
 	}
 	else
 	{
+        XALAN_USING_STD(streamsize)
+
+        assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
+
 #if !defined(XALAN_CLASSIC_IOSTREAMS)
-#if defined(XALAN_OLD_STYLE_CASTS)
-		m_stream.read((char*)toFill, maxToRead);
-#else
-		m_stream.read(reinterpret_cast<char*>(toFill), maxToRead);
-#endif
+		m_stream.read(
+            reinterpret_cast<char*>(toFill),
+            static_cast<streamsize>(maxToRead));
 #else
 		m_stream.read(toFill, maxToRead);
 #endif

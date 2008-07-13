@@ -71,21 +71,6 @@ XalanSourceTreeProcessingInstruction::~XalanSourceTreeProcessingInstruction()
 
 
 
-XalanSourceTreeProcessingInstruction::XalanSourceTreeProcessingInstruction(
-			const XalanSourceTreeProcessingInstruction&		theSource,
-			bool											/* deep */) :
-	XalanProcessingInstruction(theSource),
-	m_target(theSource.m_target),
-	m_data(theSource.m_data),
-	m_parentNode(0),
-	m_previousSibling(0),
-	m_nextSibling(0),
-	m_index(0)
-{
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeProcessingInstruction::getNodeName() const
 {
@@ -186,103 +171,6 @@ XalanSourceTreeProcessingInstruction::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeProcessingInstruction*
-#endif
-XalanSourceTreeProcessingInstruction::cloneNode(bool	/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeProcessingInstruction::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeProcessingInstruction::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeProcessingInstruction::removeChild(XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeProcessingInstruction::appendChild(XalanNode*	/* newChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-XalanSourceTreeProcessingInstruction::hasChildNodes() const
-{
-	return false;
-}
-
-
-
-void
-XalanSourceTreeProcessingInstruction::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-XalanSourceTreeProcessingInstruction::normalize()
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-XalanSourceTreeProcessingInstruction::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
 const XalanDOMString&
 XalanSourceTreeProcessingInstruction::getNamespaceURI() const
 {
@@ -303,14 +191,6 @@ const XalanDOMString&
 XalanSourceTreeProcessingInstruction::getLocalName() const
 {
 	return s_emptyString;
-}
-
-
-
-void
-XalanSourceTreeProcessingInstruction::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 
@@ -343,14 +223,6 @@ const XalanDOMString&
 XalanSourceTreeProcessingInstruction::getData() const
 {
 	return m_data;
-}
-
-
-
-void
-XalanSourceTreeProcessingInstruction::setData(const XalanDOMString&		/* theData */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
 
 

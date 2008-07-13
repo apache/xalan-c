@@ -35,27 +35,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper(MemoryManagerType& theManager) :
-	m_domSupport(theManager),
-	m_parserLiaison(theManager)
+XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper(MemoryManager&     theManager) :
+	m_parserLiaison(theManager),
+	m_domSupport(m_parserLiaison)
 {
 }
+
+
 
 XercesDOMParsedSourceHelper*
-XercesDOMParsedSourceHelper::create(MemoryManagerType& theManager)
+XercesDOMParsedSourceHelper::create(MemoryManager&  theManager)
 {
-        typedef XercesDOMParsedSourceHelper ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XercesDOMParsedSourceHelper*    theInstance = 0;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theManager);
-
-         theGuard.release();
-
-        return theResult;
+    return XalanConstruct(
+        theManager,
+        theInstance,
+        theManager);
 }
+
+
 
 XercesDOMParsedSourceHelper::~XercesDOMParsedSourceHelper()
 {

@@ -59,7 +59,7 @@ InMemHandler::printToDataFile(const char*   sArrayOfStrings[])
 {
     if (sArrayOfStrings != 0)
     {
-        for (int i = 0; sArrayOfStrings[i] != 0; ++i)
+        for (XalanSize_t i = 0; sArrayOfStrings[i] != 0; ++i)
         {
             m_stream.writeAsASCII(
                 sArrayOfStrings[i],
@@ -89,7 +89,7 @@ InMemHandler::characters(
     {
         char buffer[20];
 
-        for( unsigned int i = 0; i < length ; ++i)
+        for (XalanSize_t i = 0; i < length ; ++i)
         {
             sprintf(
                 buffer,
@@ -143,7 +143,7 @@ InMemHandler::startElement(
 {
     if(!XMLString::compareString(localname, s_transUnitXMLCh))
     {
-        // this is an elemente, SAX2Handler class is responsible to handle:
+        // This is an element, SAX2Handler class is responsible to handle:
         // creating Index file, commom for all localization styles
         SAX2Handler::startElement(uri, localname, qname, attributes);
     }

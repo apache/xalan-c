@@ -28,6 +28,9 @@
 
 
 #include <xercesc/framework/MemoryManager.hpp>
+#include "xercesc/util/OutOfMemoryException.hpp"
+
+
 
 #if defined(XALAN_WINDOWS)
 #include <windows.h>
@@ -39,14 +42,18 @@ class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManag
 {
 public:
 
-    XalanMemoryManagerImpl( DWORD defSize = 0 ) :
+    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+
+    XalanMemoryManagerImpl(DWORD    defSize = 0) :
 	    m_heapHandle(NULL)
 	{
-		m_heapHandle = HeapCreate(	HEAP_NO_SERIALIZE,
-		                            0, // dwInitialSize
-		                            defSize);
+		m_heapHandle =
+            HeapCreate(
+                HEAP_NO_SERIALIZE,
+		        0, // dwInitialSize
+		        defSize);
 
-        if( m_heapHandle == NULL )
+        if (m_heapHandle == NULL)
 		{
             XALAN_USING_STD(runtime_error)
 
@@ -60,7 +67,7 @@ public:
 	}
 
 	virtual void*
-	allocate( size_t size )	
+	allocate(XalanSize_t    size)	
     {
         LPVOID ptr = HeapAlloc(
                         m_heapHandle,   //HANDLE hHeap
@@ -68,27 +75,27 @@ public:
                         size            //SIZE_T dwBytes
                         );
 
-        if( ptr == 0)
+        if (ptr == 0)
         {
-            XALAN_USING_STD(bad_alloc)
+            XALAN_USING_XERCES(OutOfMemoryException)
 
-            throw bad_alloc();
+		    throw OutOfMemoryException();
         }
 
         return ptr;
     }
 
 	virtual void
-	deallocate(  void* 	pDataPointer  )
+	deallocate(void* 	pDataPointer)
 	{
-        if ( 0 == HeapFree(
+        if (0 == HeapFree(
                         m_heapHandle,   //HANDLE hHeap,
                         0,              //DWORD dwFlags,
                         pDataPointer ) )//*LPVOID lpMem 
         {
-            XALAN_USING_STD(bad_alloc)
+            XALAN_USING_XERCES(OutOfMemoryException)
 
-            throw bad_alloc();
+		    throw OutOfMemoryException();
         }
     }
 
@@ -101,8 +108,8 @@ public:
     virtual 
 	~XalanMemoryManagerImpl()
 	{
-       if( 0 == HeapDestroy(m_heapHandle) )
-       {
+        if (0 == HeapDestroy(m_heapHandle))
+        {
             XALAN_USING_STD(runtime_error)
 
             char buffer[20];
@@ -132,27 +139,36 @@ class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManag
 {
 public:
 
+    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+
     virtual
 	~XalanMemoryManagerImpl()
 	{
 	}
 
 	virtual void*
-	allocate( size_t 	size )
+	allocate(XalanSize_t    size)
 	{
-	    void* memptr = ::operator new(size);
+        try
+        {
+	        void* memptr = ::operator new(size);
 
-	    if (memptr != NULL) 
-	    {
-	        return memptr;
-	    }
-	    
-		XALAN_USING_STD(bad_alloc)
-		
-		throw bad_alloc();
+	        if (memptr != 0) 
+	        {
+	            return memptr;
+	        }
+        }
+        catch (...)
+        {
+        }
+
+        XALAN_USING_XERCES(OutOfMemoryException)
+
+        throw OutOfMemoryException();
 	}	
-	virtual void
-	deallocate(  void* 		pDataPointer  )
+
+    virtual void
+	deallocate(void*    pDataPointer)
 	{
 		operator delete(pDataPointer);
 	}
@@ -163,6 +179,8 @@ public:
         return this;
     }
 };
+
+
 
 #endif
 

@@ -433,7 +433,7 @@ public:
     shouldStripSourceNode(const XalanText&  theNode) const
     {
         if (hasPreserveOrStripSpaceElements() == true &&
-            theNode.isIgnorableWhitespace() == true)
+            theNode.isWhitespace() == true)
         {
             return internalShouldStripSourceNode(theNode);
         }

@@ -52,14 +52,14 @@ public:
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeElementANS(
-            MemoryManagerType&          theManager,
+            MemoryManager&              theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
 			const XalanDOMString&		thePrefix,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
+			XalanSize_t			        theAttributeCount,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -68,13 +68,6 @@ public:
 	virtual
 	~XalanSourceTreeElementANS();
 
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeElementANS*
-#endif
-	cloneNode(bool deep) const;
 
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
@@ -85,21 +78,11 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-protected:
-
-	XalanSourceTreeElementANS(
-            MemoryManagerType&                  theManager,
-			const XalanSourceTreeElementANS&	theSource,
-			bool								deep);
-
-	XalanSourceTreeElementANS(
-            MemoryManagerType&              theManager,
-			const XalanSourceTreeElementA&	theSource,
-			bool							deep);
-
 private:
 
 	// Not implemented...
+    XalanSourceTreeElementANS(const XalanSourceTreeElementANS&);
+
 	XalanSourceTreeElementANS&
 	operator=(const XalanSourceTreeElementANS&	theSource);
 

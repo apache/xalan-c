@@ -45,18 +45,22 @@ public:
 	 * 
 	 * @param value      source string
 	 */
-	XString(const XalanDOMString&	val,
-            MemoryManagerType& theManager);
+	XString(
+            const XalanDOMString&	val,
+            MemoryManagerType&      theManager);
 
-	XString(const XalanDOMChar*		val,
-            MemoryManagerType& theManager);
+	XString(
+            const XalanDOMChar*		val,
+            MemoryManagerType&      theManager);
 
 	XString(
 			const XalanDOMChar*		val,
-			unsigned int			len,
-            MemoryManagerType& theManager);
+			XalanSize_t			    len,
+            MemoryManagerType&      theManager);
 
-	XString(const XString&	source, MemoryManagerType& theManager);
+	XString(
+            const XString&	    source,
+            MemoryManagerType&  theManager);
 
 	virtual
 	~XString();

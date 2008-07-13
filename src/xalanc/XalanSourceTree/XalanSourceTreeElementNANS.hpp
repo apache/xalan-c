@@ -50,7 +50,7 @@ public:
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeElementNANS(
-            MemoryManagerType&          theManager,
+            MemoryManager&              theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
@@ -65,13 +65,6 @@ public:
 	~XalanSourceTreeElementNANS();
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual XalanSourceTreeElementNANS*
-#endif
-	cloneNode(bool deep) const;
-
 	virtual const XalanDOMString&
 	getNamespaceURI() const;
 
@@ -81,32 +74,11 @@ public:
 	virtual const XalanDOMString&
 	getLocalName() const;
 
-	// public interfaces not inherited from XalanElement...
-
-	XalanSourceTreeElementNANS*
-	clone(bool	deep) const
-	{
-        MemoryManagerType& theManager = const_cast<XalanSourceTreeElementNANS*>(this)->getMemoryManager();
-
-        return XalanSourceTreeElementNANS::create(theManager, *this, deep);
-	}
-
-protected:
-
-	XalanSourceTreeElementNANS(
-            MemoryManagerType&                      theManager,
-			const XalanSourceTreeElementNANS&		theSource,
-			bool								deep = false);
-
-	static XalanSourceTreeElementNANS*
-    create(
-            MemoryManagerType&                      theManager,
-			const XalanSourceTreeElementNANS&		theSource,
-			bool								deep = false);
-
 private:
 
 	// Not implemented...
+    XalanSourceTreeElementNANS(const XalanSourceTreeElementNANS&);
+
 	XalanSourceTreeElementNANS&
 	operator=(const XalanSourceTreeElementNANS&	theSource);
 

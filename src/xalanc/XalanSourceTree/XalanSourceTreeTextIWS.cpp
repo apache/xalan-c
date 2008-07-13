@@ -29,7 +29,12 @@ XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
 			IndexType				theIndex) :
-	XalanSourceTreeText(theData, theParentNode, thePreviousSibling, theNextSibling, theIndex)
+	XalanSourceTreeText(
+        theData,
+        theParentNode,
+        thePreviousSibling,
+        theNextSibling,
+        theIndex)
 {
 }
 
@@ -41,17 +46,8 @@ XalanSourceTreeTextIWS::~XalanSourceTreeTextIWS()
 
 
 
-XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
-			const XalanSourceTreeTextIWS&	theSource,
-			bool							/* deep */) :
-	XalanSourceTreeText(theSource)
-{
-}
-
-
-
 bool
-XalanSourceTreeTextIWS::isIgnorableWhitespace() const
+XalanSourceTreeTextIWS::isWhitespace() const
 {
 	return true;
 }
