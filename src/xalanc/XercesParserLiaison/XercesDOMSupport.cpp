@@ -19,10 +19,10 @@
 
 
 
-#include "xercesc/DOM/DOMDocument.hpp"
-#include "xercesc/DOM/DOMDocumentType.hpp"
-#include "xercesc/DOM/DOMEntity.hpp"
-#include "xercesc/DOM/DOMNamedNodeMap.hpp"
+#include "xercesc/dom/DOMDocument.hpp"
+#include "xercesc/dom/DOMDocumentType.hpp"
+#include "xercesc/dom/DOMEntity.hpp"
+#include "xercesc/dom/DOMNamedNodeMap.hpp"
 
 
 
