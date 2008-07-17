@@ -3151,7 +3151,7 @@ XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&     theValue)
     {
         assign(m_scratchString, s_uniqueNamespacePrefix);
 
-        UnsignedLongToDOMString(m_uniqueNSValue++, m_scratchString);
+        NumberToDOMString(m_uniqueNSValue++, m_scratchString);
     } while(getResultNamespaceForPrefix(m_scratchString) != 0);
 
     append(theValue, m_scratchString);

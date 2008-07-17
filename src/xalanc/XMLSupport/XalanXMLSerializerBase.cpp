@@ -164,7 +164,7 @@ XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(
     XalanMessageLoader::getMessage(
         theMessage,
         XalanMessages::InvalidHighSurrogate_1Param,
-        UnsignedLongToHexDOMString(ch, theBuffer));
+        NumberToHexDOMString(ch, theBuffer));
 
     throw SAXException(c_wstr(theMessage), &theManager);
 }
@@ -184,8 +184,8 @@ XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(
     XalanMessageLoader::getMessage(
         theMessage,
         XalanMessages::InvalidSurrogatePair_2Param,
-        UnsignedLongToHexDOMString(ch, theBuffer1),
-        UnsignedLongToHexDOMString(next, theBuffer2));
+        NumberToHexDOMString(ch, theBuffer1),
+        NumberToHexDOMString(next, theBuffer2));
 
     throw SAXException(theMessage.c_str(), &theManager);
 }
@@ -203,7 +203,7 @@ XalanXMLSerializerBase::throwInvalidCharacterException(
     XalanMessageLoader::getMessage(
         theMessage,
         XalanMessages::InvalidScalar_1Param,
-        UnsignedLongToHexDOMString(ch, theBuffer));
+        NumberToHexDOMString(ch, theBuffer));
 
     throw SAXException(theMessage.c_str(), &theManager);
 }
@@ -222,7 +222,7 @@ XalanXMLSerializerBase::throwInvalidXMLCharacterException(
     XalanMessageLoader::getMessage(
         theMessage,
         XalanMessages::ForbiddenXMLCharacter_2Param,
-        UnsignedLongToHexDOMString(ch, theBuffer),
+        NumberToHexDOMString(ch, theBuffer),
         theXMLversion);
 
     throw SAXException(theMessage.c_str(), &theManager);

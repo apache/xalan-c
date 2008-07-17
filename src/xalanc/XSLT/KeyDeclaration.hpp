@@ -56,8 +56,8 @@ public:
 			const XPath&				matchPattern,
 			const XPath&				use,
 			const XalanDOMString&		uri,
-			XMLFileLoc		            lineNumber,
-			XMLFileLoc		            columnNumber) :
+			XalanFileLoc	            lineNumber,
+			XalanFileLoc	            columnNumber) :
 		m_qname(&qname),
 		m_match(&matchPattern),
 		m_use(&use),
@@ -138,7 +138,7 @@ public:
 	 *
 	 * @return The line number
 	 */
-	XMLFileLoc
+	XalanFileLoc
 	getLineNumber() const
 	{
 		return m_lineNumber;
@@ -149,7 +149,7 @@ public:
 	 *
 	 * @return The column number
 	 */
-	XMLFileLoc
+	XalanFileLoc
 	getColumnNumber() const
 	{
 		return m_columnNumber;
@@ -165,9 +165,9 @@ private:
 
 	const XalanDOMString*		m_uri;
 
-	XMLFileLoc		            m_lineNumber;
+	XalanFileLoc	            m_lineNumber;
 
-	XMLFileLoc                  m_columnNumber;
+	XalanFileLoc                m_columnNumber;
 };
 
 

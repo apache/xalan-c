@@ -286,7 +286,7 @@ thePreparsedThreadRoutine(void*		param)
 
 	try
 	{
-		XALAN_USING_XALAN(LongToDOMString)
+		XALAN_USING_XALAN(NumberToDOMString)
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Our input file.  The assumption is that the executable will be run
@@ -295,7 +295,7 @@ thePreparsedThreadRoutine(void*		param)
 		// Generate the output file name.
 		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
 
-		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
+		NumberToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");
 
 		// Create a transformer...
@@ -352,7 +352,7 @@ theUnparsedThreadRoutine(void*		param)
 
 	try
 	{
-		XALAN_USING_XALAN(LongToDOMString)
+		XALAN_USING_XALAN(NumberToDOMString)
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Our input file.  The assumption is that the executable will be run
@@ -366,7 +366,7 @@ theUnparsedThreadRoutine(void*		param)
         // Generate the output file name.
         XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
 
-		LongToDOMString(theInfo->m_threadNumber, theOutputFile);
+		NumberToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");
 
 		// Create a transformer...

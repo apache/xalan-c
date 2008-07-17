@@ -42,6 +42,47 @@ XALAN_USING_XERCES(MemoryManager)
 typedef MemoryManager    MemoryManagerType;
 
 
+class XALAN_PLATFORM_EXPORT XalanMemoryManager : public MemoryManager
+{
+public:
+
+#if XERCES_VERSION_MAJOR < 3
+  #if defined(XALAN_STRICT_ANSI_HEADERS)
+    typedef std::size_t     size_type;
+  #else
+    typedef size_t          size_type;
+  #endif
+#else
+    typedef XalanSize_t     size_type;
+#endif
+
+
+    XalanMemoryManager();
+
+    virtual
+    ~XalanMemoryManager();
+
+    virtual void*
+    allocate(size_type  size) = 0;
+
+    virtual void
+    deallocate(void*    pointer) = 0;
+
+    virtual MemoryManager*
+    getExceptionMemoryManager() = 0;
+
+protected:
+
+    XalanMemoryManager(const XalanMemoryManager&    theSource);
+
+    XalanMemoryManager&
+    operator=(const XalanMemoryManager&     /* theRHS */)
+    {
+        return *this;
+    }
+};
+
+
 
 class XalanAllocationGuard
 {
@@ -486,11 +527,8 @@ struct ConstructWithNoMemoryManagerTraits
 
 
 
-
 XALAN_CPP_NAMESPACE_END
 
 
 
 #endif  // XALANMEMORYMANAGEMENT_HEADER_GUARD_1357924680
-
-

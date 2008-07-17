@@ -183,7 +183,7 @@ DOMStringPrintWriter::print(double	d)
 
     XalanDOMString tmpString( m_outputString->getMemoryManager() );
 
-    DoubleToDOMString(d, tmpString);
+    NumberToDOMString(d, tmpString);
 
 	(*m_outputString) += tmpString;
 }
@@ -197,7 +197,7 @@ DOMStringPrintWriter::print(int	i)
 
     XalanDOMString tmpString( m_outputString->getMemoryManager() );
 
-    LongToDOMString(i, tmpString);
+    NumberToDOMString(i, tmpString);
 
 	(*m_outputString) += tmpString;
 }
@@ -211,7 +211,7 @@ DOMStringPrintWriter::print(long	l)
 
     XalanDOMString tmpString( m_outputString->getMemoryManager() );
 
-    LongToDOMString(l, tmpString);
+    NumberToDOMString(l, tmpString);
 
 	(*m_outputString) += tmpString;
 }

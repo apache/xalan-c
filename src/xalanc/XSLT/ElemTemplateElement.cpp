@@ -1513,8 +1513,8 @@ ElemTemplateElement::getURI() const
 
 
 ElemTemplateElement::LocatorProxy::LocatorProxy(
-            XMLFileLoc              theLineNumber,
-            XMLFileLoc              theColumnNumber,
+            XalanFileLoc            theLineNumber,
+            XalanFileLoc            theColumnNumber,
             const XalanDOMString&   theURI) :
     m_lineNumber(theLineNumber),
     m_columnNumber(theColumnNumber),
@@ -1530,7 +1530,7 @@ ElemTemplateElement::LocatorProxy::~LocatorProxy()
 
 
 
-XMLFileLoc
+XalanFileLoc
 ElemTemplateElement::LocatorProxy::getLineNumber() const
 {
     return m_lineNumber;
@@ -1538,7 +1538,7 @@ ElemTemplateElement::LocatorProxy::getLineNumber() const
 
 
 
-XMLFileLoc
+XalanFileLoc
 ElemTemplateElement::LocatorProxy::getColumnNumber() const
 {
     return m_columnNumber;

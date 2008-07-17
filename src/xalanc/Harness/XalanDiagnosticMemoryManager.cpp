@@ -67,7 +67,7 @@ XalanDiagnosticMemoryManager::~XalanDiagnosticMemoryManager()
 
 
 void*
-XalanDiagnosticMemoryManager::allocate(XalanSize_t  size)
+XalanDiagnosticMemoryManager::allocate(size_type    size)
 {
     void*   theResult = 0;
 
@@ -170,7 +170,7 @@ XalanDiagnosticMemoryManager::getExceptionMemoryManager()
 void
 XalanDiagnosticMemoryManager::dumpStatistics(
             StreamType*     theStream,
-            XalanSize_t     theBytesToDump)
+            size_type       theBytesToDump)
 {
     StreamType* const   diagStream = theStream != 0 ? theStream : m_stream;
 
@@ -209,7 +209,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
             XALAN_USING_XERCES(XMLPlatformUtils);
 
-            const XalanSize_t   theHeaderSize =
+            const size_type     theHeaderSize =
                 XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));
 
             const char* const   theChars =
@@ -223,7 +223,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
             {
                 XALAN_USING_STD(hex);
 
-                const XalanSize_t   theCount =
+                const size_type     theCount =
                     theBytesToDump > theData.m_size ?
                         theData.m_size :
                         theBytesToDump;
@@ -231,7 +231,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
                 {
                     *diagStream << "(";
 
-                    for (XalanSize_t j = 0; j < theCount; ++j)
+                    for (size_type j = 0; j < theCount; ++j)
                     {
                         const char  ch = isprint(theChars[j]) ?
                                             theChars[j] :
@@ -245,7 +245,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
                 if (theCount < theBytesToDump)
                 {
-                    for (XalanSize_t j = theCount; j < theBytesToDump; ++j)
+                    for (size_type j = theCount; j < theBytesToDump; ++j)
                     {
                         *diagStream << ' ';
                     }
@@ -254,7 +254,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
                 {
                     *diagStream << hex;
 
-                    for (XalanSize_t j = 0; j < theCount; ++j)
+                    for (size_type j = 0; j < theCount; ++j)
                     {
                         *diagStream << static_cast<unsigned int>(theUChars[j])
                                     << " ";

@@ -224,7 +224,7 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(
 {
     XalanDOMString  theOpcode(theResult.getMemoryManager()); 
 
-    LongToDOMString(theOpCode, theOpcode);
+    NumberToDOMString(theOpCode, theOpcode);
 
     return XalanMessageLoader::getMessage(
                 theResult,
@@ -266,13 +266,13 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 {
     XalanDOMString  theResult(theBuffer.getMemoryManager());
 
-    LongToDOMString(theOpCode, theResult);
+    NumberToDOMString(theOpCode, theResult);
 
     XalanDOMString  theResult1(theBuffer.getMemoryManager());
-    LongToDOMString(theExpectedCount, theResult1);
+    NumberToDOMString(theExpectedCount, theResult1);
 
     XalanDOMString  theResult2(theBuffer.getMemoryManager());
-    LongToDOMString(theSuppliedCount, theResult2);
+    NumberToDOMString(theSuppliedCount, theResult2);
 
 
     return XalanMessageLoader::getMessage(
@@ -312,11 +312,11 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
                 XalanDOMString&     theBuffer)
 { 
     XalanDOMString  theResult(theBuffer.getMemoryManager());
-    LongToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
     
     XalanDOMString  theResult1(theBuffer.getMemoryManager());
-    UnsignedLongToDOMString(theOpCode, theResult1);
+    NumberToDOMString(theOpCode, theResult1);
 
     return XalanMessageLoader::getMessage(
                 theBuffer,

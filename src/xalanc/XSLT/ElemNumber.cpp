@@ -549,7 +549,7 @@ ElemNumber::getCountString(
             DoubleSupport::isNegativeInfinity(theValue) == true ||
             DoubleSupport::lessThan(theValue, 0.5) == true)
         {
-            DoubleToDOMString(theValue, theResult);
+            NumberToDOMString(theValue, theResult);
         }
         else
         {
@@ -1379,7 +1379,7 @@ ElemNumber::getFormattedNumber(
                 error(
                     executionContext,
                     XalanMessages::NumberingFormatNotSupported_1Param,
-                    UnsignedLongToHexDOMString(numberType, theGuard.get()));
+                    NumberToHexDOMString(numberType, theGuard.get()));
                 break;
             }
 

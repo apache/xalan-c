@@ -476,7 +476,7 @@ FormatXalanDOMException(
         XalanMessageLoader::getMessage(
             theGuard1.get(),
             XalanMessages::XalanDOMExceptionCaught_1Param,
-            LongToDOMString(
+            NumberToDOMString(
                 theException.getExceptionCode(),
                 theGuard2.get()));
 

@@ -575,7 +575,7 @@ XalanFileUtility::generateFileName(
             XalanDOMString&         targetFile,
             bool*                   status)
 {
-    const size_type     thePeriodIndex =
+    const XalanDOMString::size_type     thePeriodIndex =
         lastIndexOf(theXMLFileName, XalanUnicode::charFullStop);
 
     if (thePeriodIndex != XalanDOMString::npos)

@@ -378,7 +378,7 @@ XalanXMLFileReporter::addMetricToAttrs(const char* desc, double theMetric, Hasht
 {
     XalanDOMString  temp(getMemoryManager());
 
-    DoubleToDOMString(theMetric, temp);
+    NumberToDOMString(theMetric, temp);
 
     attrs.insert(XalanDOMString(desc,getMemoryManager()) ,temp);
 

@@ -1022,7 +1022,7 @@ StylesheetConstructionContextDefault::createElement(
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
                     XalanMessages::UnknownXSLTToken_1Param,
-                    LongToDOMString(
+                    NumberToDOMString(
                         token,
                         theGuard2.get())),
                 0,
@@ -1090,7 +1090,7 @@ StylesheetConstructionContextDefault::createElement(
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::UnknownXSLTToken_1Param,
-                LongToDOMString(
+                NumberToDOMString(
                     token,
                     theGuard2.get())),
             0,

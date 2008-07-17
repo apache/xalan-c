@@ -257,7 +257,7 @@ public:
         XalanMessageLoader::getMessage(
                     theMessage,
                     XalanMessages::InvalidScalar_1Param, 
-                    UnsignedLongToHexDOMString(ch, theBuffer));
+                    NumberToHexDOMString(ch, theBuffer));
 
         XALAN_USING_XERCES(SAXException)
 
@@ -291,9 +291,9 @@ public:
 
         XalanDOMString  nextStr(theManager); 
 
-        UnsignedLongToHexDOMString(ch, chStr);
+        NumberToHexDOMString(ch, chStr);
 
-        UnsignedLongToHexDOMString(next, nextStr);
+        NumberToHexDOMString(next, nextStr);
 
 	    XalanDOMString	theMessage(theManager);
 
@@ -347,7 +347,7 @@ protected:
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charAmpersand));
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charNumberSign));
 
-        UnsignedLongToDOMString(theChar, m_stringBuffer);
+        NumberToDOMString(theChar, m_stringBuffer);
 
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charSemicolon));
 

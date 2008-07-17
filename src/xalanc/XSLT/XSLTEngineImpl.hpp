@@ -219,7 +219,7 @@ public:
      * processing occurs.  See class XSLTInit.
      */
     static void
-    initialize(MemoryManagerType&      theManager);
+    initialize(MemoryManager&   theManager);
 
     /**
      * Perform termination of statics.  See class XSLTInit.

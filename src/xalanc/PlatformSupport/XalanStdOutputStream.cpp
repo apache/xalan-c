@@ -180,7 +180,7 @@ FormatMessageLocal(
 
     XalanDOMString  theStrErrMsg(theResult.getMemoryManager());
 
-    LongToDOMString(theErrorCode, theStrErrCode);
+    NumberToDOMString(theErrorCode, theStrErrCode);
 
     theResult.append(
         XalanMessageLoader::getMessage(

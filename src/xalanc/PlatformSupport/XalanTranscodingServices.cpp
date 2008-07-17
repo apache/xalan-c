@@ -521,7 +521,7 @@ XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(
         XalanMessageLoader::getMessage(
             theBuffer,
             XalanMessages::CreateTranscoderError_2Param,
-            LongToDOMString(
+            NumberToDOMString(
                 static_cast<long>(theCode),
                 theBuffer).c_str(),
             theEncoding),
@@ -600,7 +600,7 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
         XalanMessageLoader::getMessage(
             theBuffer,
             XalanMessages::UnrepresentableCharacter_2Param,
-            UnsignedLongToHexDOMString(
+            NumberToHexDOMString(
                 theCharacter,
                 theBuffer),
             theEncoding),

@@ -225,7 +225,7 @@ XToken::set(
 {
     XalanDOMString theResult(theManager);
 
-    assert(theString == DoubleToDOMString(theNumber,theResult));
+    assert(theString == NumberToDOMString(theNumber,theResult));
 
     m_stringValue = &theString;
 

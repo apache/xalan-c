@@ -459,7 +459,7 @@ XalanEXSLTFunctionEncodeURI::escapedOctet(
         theResult += XalanDOMChar(XalanUnicode::charDigit_0);
     }
 
-    return UnsignedLongToHexDOMString(theChar, theResult);
+    return NumberToHexDOMString(theChar, theResult);
 }
 
 

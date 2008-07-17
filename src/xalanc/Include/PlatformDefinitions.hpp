@@ -122,7 +122,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 #if XERCES_VERSION_MAJOR < 3
 typedef unsigned int    XalanSize_t;
 typedef unsigned int    XalanFilePos;
-typedef unsigned int    XalanFileLoc;
+typedef XMLSSize_t      XalanFileLoc;
 #else
 typedef XMLSize_t       XalanSize_t;
 typedef XMLFilePos      XalanFilePos;
@@ -131,6 +131,7 @@ typedef XMLFileLoc      XalanFileLoc;
 
 typedef XMLCh           XalanDOMChar;
 typedef unsigned int    XalanUnicodeChar;
+typedef XMLSSize_t      XalanSSize_t;
 
 template<bool value>
 struct XalanCompileErrorBoolean

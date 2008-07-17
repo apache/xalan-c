@@ -263,7 +263,7 @@ XalanOutputStreamPrintWriter::print(double	d)
 {
 	m_buffer.clear();
 
-	DoubleToDOMString(d, m_buffer);
+	NumberToDOMString(d, m_buffer);
 
 	print(m_buffer);
 }
@@ -275,7 +275,7 @@ XalanOutputStreamPrintWriter::print(int		i)
 {
 	m_buffer.clear();
 
-	LongToDOMString(i, m_buffer);
+	NumberToDOMString(i, m_buffer);
 
 	print(m_buffer);
 }
@@ -287,7 +287,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 {
 	m_buffer.clear();
 
-	LongToDOMString(l, m_buffer);
+	NumberToDOMString(l, m_buffer);
 
 	print(m_buffer);
 }

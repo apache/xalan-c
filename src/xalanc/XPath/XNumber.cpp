@@ -67,9 +67,9 @@ XNumber::str() const
 	if (isEmpty(m_cachedStringValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		DoubleToDOMString(m_value, ((XNumber*)this)->m_cachedStringValue);
+		NumberToDOMString(m_value, ((XNumber*)this)->m_cachedStringValue);
 #else
-		DoubleToDOMString(m_value, m_cachedStringValue);
+		NumberToDOMString(m_value, m_cachedStringValue);
 #endif
 	}
 
@@ -101,7 +101,7 @@ XNumber::str(XalanDOMString&	theBuffer) const
 	}
 	else
 	{
-		DoubleToDOMString(m_value, theBuffer);
+		NumberToDOMString(m_value, theBuffer);
 	}
 }
 

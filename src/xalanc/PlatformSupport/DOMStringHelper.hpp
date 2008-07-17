@@ -444,10 +444,15 @@ indexOf(
  * or length(theString) if the string is not
  * found.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
+inline XalanDOMString::size_type
 indexOf(
             const XalanDOMChar*     theString,
-            const XalanDOMChar*     theSubstring);
+            const XalanDOMChar*     theSubstring)
+{
+	assert(theString != 0 && theSubstring != 0);
+
+	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
+}
 
 
 
@@ -686,6 +691,27 @@ PointerToDOMString(
 
 
 
+class XALAN_PLATFORMSUPPORT_EXPORT DOMStringHelper
+{
+public:
+
+    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
+
+    static void
+    NumberToCharacters(
+            double              theValue,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function);
+
+    static void
+    NumberToCharacters(
+            long                theValue,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function);
+};
+
+
+
 /**
  * Converts a double value into a XalanDOMString
  * 
@@ -694,88 +720,11 @@ PointerToDOMString(
  * @return a reference to the passed string result.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-DoubleToDOMString(
+NumberToDOMString(
             double              theValue,
             XalanDOMString&     theResult);
 
 
-
-class XALAN_PLATFORMSUPPORT_EXPORT DOMStringHelper
-{
-public:
-
-    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
-
-    static void
-    DoubleToCharacters(
-            double              theDouble,
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function);
-
-    static void
-    LongToCharacters(
-            long                theLong,
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function);
-};
-
-
-
-/**
- * Converts a long value into a XalanDOMString.  Negative
- * values are ignored.
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-LongToHexDOMString(
-            long                theValue,
-            XalanDOMString&     theResult);
-
-
-
-/**
- * Converts an unsigned long value  and appends the
- * result to a XalanDOMString.
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-UnsignedLongToHexDOMString(
-            unsigned long       theValue,
-            XalanDOMString&     theResult);
-
-
-
-/**
- * Converts a long value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-LongToDOMString(
-            long                theValue,
-            XalanDOMString&     theResult);
-
-
-
-/**
- * Converts an 64-bit signed value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-NumberToDOMString(
-            XALAN_INT64         theValue,
-            XalanDOMString&     theResult);
 
 /**
  * Converts an 64-bit unsigned value into a XalanDOMString
@@ -792,7 +741,7 @@ NumberToDOMString(
 
 
 /**
- * Converts an unsigned long value into a XalanDOMString
+ * Converts an 64-bit signed value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -800,42 +749,264 @@ NumberToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            unsigned long       theValue,
+            XALAN_INT64         theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts a size_t value and appends the
- * result to a XalanDOMString.
+ * Converts an unsigned long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            unsigned long       theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts a XalanSSize_t value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            long                theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an unsigned int value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            unsigned int        theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an int value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            int                 theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an unsigned short value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            unsigned short      theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts a short value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToDOMString(
+            short               theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an 64-bit unsigned value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-SizeTypeToDOMString(
-#if defined (XALAN_STRICT_ANSI_HEADERS)
-            std::size_t         theValue,
-#else
-            size_t              theValue,
-#endif
+NumberToHexDOMString(
+            XALAN_UINT64        theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts an unsigned long value and appends the
- * result to a XalanDOMString.
+ * Converts an 64-bit signed value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
  * @return a reference to the passed string result.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-UnsignedLongToDOMString(
-            unsigned long       theValue,
+NumberToHexDOMString(
+            XALAN_INT64         theValue,
             XalanDOMString&     theResult);
+
+
+
+/**
+ * Converts a XalanSSize_t value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            unsigned long       theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts a XalanSSize_t value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            long                theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an unsigned int value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            unsigned int        theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an int value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            int                 theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts an unsigned short value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            unsigned short      theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_UINT64>(theValue),
+                theResult);
+}
+
+
+
+/**
+ * Converts a short value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ * @return a reference to the passed string result.
+ */
+inline XalanDOMString&
+NumberToHexDOMString(
+            short               theValue,
+            XalanDOMString&     theResult)
+{
+    return NumberToHexDOMString(
+                static_cast<XALAN_INT64>(theValue),
+                theResult);
+}
 
 
 

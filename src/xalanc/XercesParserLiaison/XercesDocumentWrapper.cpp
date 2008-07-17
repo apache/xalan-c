@@ -1327,9 +1327,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	// Finally, increment the index counter...
 	++m_currentIndex;
 
-	const DOMNodeType::NodeType  theType = node->getNodeType();
-
-	if (theType == DOMNodeType::DOCUMENT_TYPE_NODE)
+	if (node->getNodeType() == DOMNodeType::DOCUMENT_TYPE_NODE)
 	{
 		// Special case for doctype -- we have to build its entities...
 		const DOMDocumentType_Type* const	theDoctype =
@@ -1351,7 +1349,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 			m_document->createWrapperNode(theEntities->item(i), m_currentIndex++, true);
 		}
 	}
-	else if (theType == DOMNodeType::ELEMENT_NODE)
+	else if (node->getNodeType() == DOMNodeType::ELEMENT_NODE)
 	{
 	// Special case for element nodes -- we have to build the attributes...
 		const DOMElementType* const		theElement =

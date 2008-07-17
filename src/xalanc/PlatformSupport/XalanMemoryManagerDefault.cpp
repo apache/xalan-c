@@ -43,7 +43,7 @@ XalanMemoryManagerDefault::~XalanMemoryManagerDefault()
 
 
 void*
-XalanMemoryManagerDefault::allocate(XalanSize_t     size)
+XalanMemoryManagerDefault::allocate(size_type   size)
 {
     XALAN_USING_XERCES(OutOfMemoryException)
 

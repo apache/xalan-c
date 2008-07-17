@@ -670,7 +670,7 @@ protected:
         m_writer.write(value_type(XalanUnicode::charAmpersand));
         m_writer.write(value_type(XalanUnicode::charNumberSign));
 
-        m_writer.write(UnsignedLongToDOMString(theNumber, m_stringBuffer));
+        m_writer.write(NumberToDOMString(theNumber, m_stringBuffer));
         clear(m_stringBuffer);
 
         m_writer.write(value_type(XalanUnicode::charSemicolon));

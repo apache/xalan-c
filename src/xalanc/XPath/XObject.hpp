@@ -378,7 +378,7 @@ public:
 			double              theNumber,
 			XalanDOMString&	    theString)
 	{
-		DoubleToDOMString(theNumber, theString);
+		NumberToDOMString(theNumber, theString);
 	}
 
 	static void
@@ -387,7 +387,7 @@ public:
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function)
 	{
-		DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
+		DOMStringHelper::NumberToCharacters(theNumber, formatterListener, function);
 	}
 
 	/**

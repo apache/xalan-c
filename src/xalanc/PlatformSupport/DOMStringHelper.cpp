@@ -189,19 +189,6 @@ indexOf(
 }
 
 
-// $$$ ToDo:  This should be inlined by the 1.6 release...
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
-indexOf(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring)
-{
-	assert(theString != 0 && theSubstring != 0);
-
-	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
-}
-
-
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMString&	theString,
@@ -1372,159 +1359,40 @@ PointerToDOMString(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-DoubleToDOMString(
-			double				theDouble,
-			XalanDOMString&		theResult)
-{
-	if (DoubleSupport::isNaN(theDouble) == true)
-	{
-		append(
-			theResult,
-			theNaNString,
-			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
-	}
-	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
-	{
-		append(
-			theResult,
-			thePositiveInfinityString,
-			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
-	}
-	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
-	{
-		append(
-			theResult,
-			theNegativeInfinityString,
-			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
-	}
-	else if (DoubleSupport::isPositiveZero(theDouble) == true ||
-			 DoubleSupport::isNegativeZero(theDouble) == true)
-	{
-		append(
-			theResult,
-			theZeroString,
-			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
-	}
-	else if (long(theDouble) == theDouble)
-	{
-		LongToDOMString(long(theDouble), theResult);
-	}
-	else
-	{
-		char			theBuffer[MAX_PRINTF_DIGITS + 1];
-
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-		XALAN_USING_STD(sprintf)
-		XALAN_USING_STD(atof)
-		XALAN_USING_STD(isdigit)
-#endif
-
-		const char* const *		thePrintfString = thePrintfStrings;
-
-		int		theCharsWritten = 0;
-
-		do
-		{
-			theCharsWritten = sprintf(theBuffer, *thePrintfString, theDouble);
-			assert(theCharsWritten != 0);
-
-			++thePrintfString;
-		}
-		while(atof(theBuffer) != theDouble && *thePrintfString != 0);
-
-		// First, cleanup the output to conform to the XPath standard,
-		// which says no trailing '0's for the decimal portion.
-		// So start with the last digit, and search until we find
-		// the last correct character for the output.
-		// Also, according to the XPath standard, any values without
-		// a fractional part are printed as integers.  There's always
-		// a decimal point, so we have to strip stuff away...
-
-		// Now, move back while there are zeros...
-		while(theBuffer[--theCharsWritten] == '0')
-		{
-		}
-
-		int		theCurrentIndex = theCharsWritten;
-
-		// If a decimal point stopped the loop, then
-		// we don't want to preserve it.  Otherwise,
-		// another digit stopped the loop, so we must
-		// preserve it.
-		if(isdigit(theBuffer[theCharsWritten]))
-		{
-			++theCharsWritten;
-		}
-
-		// Some other character other than '.' can be the
-		// separator.  This can happen if the locale is
-		// not the "C" locale, etc.  If that's the case,
-		// replace it with '.'.
-		while(theCurrentIndex > 0)
-		{
-			if (isdigit(theBuffer[theCurrentIndex]))
-			{
-				--theCurrentIndex;
-			}
-			else
-			{
-				if (theBuffer[theCurrentIndex] != '.')
-				{
-					theBuffer[theCurrentIndex] = '.';
-				}
-
-				break;
-			}
-		}
-
-		reserve(theResult, length(theResult) + theCharsWritten);
-
-		TranscodeNumber(
-				theBuffer,
-				theBuffer + theCharsWritten,
-				XALAN_STD_QUALIFIER back_inserter(theResult));
-	}
-
-	return theResult;
-}
-
-
-
 void
-DOMStringHelper::DoubleToCharacters(
-			double				theDouble,
+DOMStringHelper::NumberToCharacters(
+			double				theValue,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function)
 {
-	if (DoubleSupport::isNaN(theDouble) == true)
+	if (DoubleSupport::isNaN(theValue) == true)
 	{
 		(formatterListener.*function)(
 			theNaNString,
 			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
 	}
-	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
+	else if (DoubleSupport::isPositiveInfinity(theValue) == true)
 	{
 		(formatterListener.*function)(
 			thePositiveInfinityString,
 			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
 	}
-	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
+	else if (DoubleSupport::isNegativeInfinity(theValue) == true)
 	{
 		(formatterListener.*function)(
 			theNegativeInfinityString,
 			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
 	}
-	else if (DoubleSupport::isPositiveZero(theDouble) == true ||
-			 DoubleSupport::isNegativeZero(theDouble) == true)
+	else if (DoubleSupport::isPositiveZero(theValue) == true ||
+			 DoubleSupport::isNegativeZero(theValue) == true)
 	{
 		(formatterListener.*function)(
 			theZeroString,
 			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
 	}
-	else if (long(theDouble) == theDouble)
+	else if (static_cast<XALAN_INT64>(theValue) == theValue)
 	{
-		LongToCharacters(long(theDouble), formatterListener, function);
+		NumberToCharacters(long(theValue), formatterListener, function);
 	}
 	else
 	{
@@ -1542,12 +1410,12 @@ DOMStringHelper::DoubleToCharacters(
 
 		do
 		{
-			theCharsWritten = sprintf(theBuffer, *thePrintfString, theDouble);
+			theCharsWritten = sprintf(theBuffer, *thePrintfString, theValue);
 			assert(theCharsWritten != 0);
 
 			++thePrintfString;
 		}
-		while(atof(theBuffer) != theDouble && *thePrintfString != 0);
+		while(atof(theBuffer) != theValue && *thePrintfString != 0);
 
 		// First, cleanup the output to conform to the XPath standard,
 		// which says no trailing '0's for the decimal portion.
@@ -1741,40 +1609,23 @@ UnsignedScalarToHexadecimalString(
 
 
 void
-DOMStringHelper::LongToCharacters(
-			long				theLong,
+DOMStringHelper::NumberToCharacters(
+			long				theValue,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function)
 {
 	XalanDOMChar	theBuffer[MAX_PRINTF_DIGITS + 1];
 
-	const XalanDOMChar* const	theResult = ScalarToDecimalString(theLong, &theBuffer[MAX_PRINTF_DIGITS]);
+	const XalanDOMChar* const	theResult =
+        ScalarToDecimalString(
+            theValue,
+            &theBuffer[MAX_PRINTF_DIGITS]);
 
 	(formatterListener.*function)(theResult, XalanDOMString::length(theResult));
 }
 
 
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-LongToHexDOMString(
-			long				theValue,
-			XalanDOMString&		theResult)
-{
-	return UnsignedScalarToHexadecimalString(theValue, theResult);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-UnsignedLongToHexDOMString(
-			unsigned long		theValue,
-			XalanDOMString&		theResult)
-{
-	return UnsignedScalarToHexadecimalString(theValue, theResult);
-}
-
-
-
+#if 0
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 LongToDOMString(
 			long				theValue,
@@ -1791,6 +1642,7 @@ UnsignedLongToDOMString(
 {
 	return ScalarToDecimalString(theValue, theResult);
 }
+#endif
 
 
 
@@ -1816,20 +1668,140 @@ NumberToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            unsigned long	    theValue,
+            double              theValue,
             XalanDOMString&     theResult)
 {
-    return ScalarToDecimalString(theValue, theResult);
+	if (DoubleSupport::isNaN(theValue) == true)
+	{
+		append(
+			theResult,
+			theNaNString,
+			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
+	}
+	else if (DoubleSupport::isPositiveInfinity(theValue) == true)
+	{
+		append(
+			theResult,
+			thePositiveInfinityString,
+			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
+	}
+	else if (DoubleSupport::isNegativeInfinity(theValue) == true)
+	{
+		append(
+			theResult,
+			theNegativeInfinityString,
+			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
+	}
+	else if (DoubleSupport::isPositiveZero(theValue) == true ||
+			 DoubleSupport::isNegativeZero(theValue) == true)
+	{
+		append(
+			theResult,
+			theZeroString,
+			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
+	}
+	else if (static_cast<XALAN_INT64>(theValue) == theValue)
+	{
+		NumberToDOMString(static_cast<XALAN_INT64>(theValue), theResult);
+	}
+	else
+	{
+		char			theBuffer[MAX_PRINTF_DIGITS + 1];
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		XALAN_USING_STD(sprintf)
+		XALAN_USING_STD(atof)
+		XALAN_USING_STD(isdigit)
+#endif
+
+		const char* const *		thePrintfString = thePrintfStrings;
+
+		int		theCharsWritten = 0;
+
+		do
+		{
+			theCharsWritten = sprintf(theBuffer, *thePrintfString, theValue);
+			assert(theCharsWritten != 0);
+
+			++thePrintfString;
+		}
+		while(atof(theBuffer) != theValue && *thePrintfString != 0);
+
+		// First, cleanup the output to conform to the XPath standard,
+		// which says no trailing '0's for the decimal portion.
+		// So start with the last digit, and search until we find
+		// the last correct character for the output.
+		// Also, according to the XPath standard, any values without
+		// a fractional part are printed as integers.  There's always
+		// a decimal point, so we have to strip stuff away...
+
+		// Now, move back while there are zeros...
+		while(theBuffer[--theCharsWritten] == '0')
+		{
+		}
+
+		int		theCurrentIndex = theCharsWritten;
+
+		// If a decimal point stopped the loop, then
+		// we don't want to preserve it.  Otherwise,
+		// another digit stopped the loop, so we must
+		// preserve it.
+		if(isdigit(theBuffer[theCharsWritten]))
+		{
+			++theCharsWritten;
+		}
+
+		// Some other character other than '.' can be the
+		// separator.  This can happen if the locale is
+		// not the "C" locale, etc.  If that's the case,
+		// replace it with '.'.
+		while(theCurrentIndex > 0)
+		{
+			if (isdigit(theBuffer[theCurrentIndex]))
+			{
+				--theCurrentIndex;
+			}
+			else
+			{
+				if (theBuffer[theCurrentIndex] != '.')
+				{
+					theBuffer[theCurrentIndex] = '.';
+				}
+
+				break;
+			}
+		}
+
+		reserve(theResult, length(theResult) + theCharsWritten);
+
+		TranscodeNumber(
+				theBuffer,
+				theBuffer + theCharsWritten,
+				XALAN_STD_QUALIFIER back_inserter(theResult));
+	}
+
+	return theResult;
+}
+
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
+NumberToHexDOMString(
+			XALAN_UINT64		theValue,
+			XalanDOMString&		theResult)
+{
+	return UnsignedScalarToHexadecimalString(theValue, theResult);
 }
 
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-SizeTypeToDOMString(
-            size_t				theValue,
-			XalanDOMString&     theResult)
+NumberToHexDOMString(
+			XALAN_INT64		    theValue,
+			XalanDOMString&		theResult)
 {
-	return ScalarToDecimalString(theValue, theResult);
+	return UnsignedScalarToHexadecimalString(theValue, theResult);
 }
 
 

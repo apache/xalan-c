@@ -711,7 +711,7 @@ void XPathExecutionContextDefault::doFormatNumber(
         }
         else
         {
-            DoubleToDOMString(number, theResult);
+            NumberToDOMString(number, theResult);
         }
     }
     else if (DoubleSupport::isNegativeInfinity(number) == true)
@@ -723,7 +723,7 @@ void XPathExecutionContextDefault::doFormatNumber(
         }
         else
         {
-            DoubleToDOMString(number, theResult);
+            NumberToDOMString(number, theResult);
         }
     }
     else if (DoubleSupport::isPositiveInfinity(number) == true )
@@ -734,7 +734,7 @@ void XPathExecutionContextDefault::doFormatNumber(
         }
         else
         {
-            DoubleToDOMString(number, theResult);
+            NumberToDOMString(number, theResult);
         }
     }
     else
@@ -749,7 +749,7 @@ void XPathExecutionContextDefault::doFormatNumber(
             context, 
             locator);
 
-        DoubleToDOMString(number,theResult);
+        NumberToDOMString(number,theResult);
     }
 }
 

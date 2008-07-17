@@ -63,7 +63,7 @@ XalanNumberFormat::format(
 			double				theValue,
 			XalanDOMString&		theResult)
 {
-	DoubleToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 
@@ -78,7 +78,7 @@ XalanNumberFormat::format(
 			int					theValue,
 			XalanDOMString&		theResult)
 {
-	LongToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 
@@ -93,7 +93,7 @@ XalanNumberFormat::format(
 			unsigned int		theValue,
 			XalanDOMString&		theResult)
 {
-	UnsignedLongToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 
@@ -109,7 +109,7 @@ XalanNumberFormat::format(
 			long				theValue,
 			XalanDOMString&		theResult)
 {
-	LongToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 
@@ -125,7 +125,7 @@ XalanNumberFormat::format(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-	UnsignedLongToDOMString(theValue, theResult);
+	NumberToDOMString(theValue, theResult);
 
 	applyGrouping(theResult, theResult);
 

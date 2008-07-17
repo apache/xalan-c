@@ -831,7 +831,7 @@ FormatterToHTML::writeAttrString(
 					accumContent(XalanUnicode::charAmpersand);
 					accumContent(XalanUnicode::charNumberSign);
 
-					accumContent(UnsignedLongToDOMString(next, m_stringBuffer));
+					accumContent(NumberToDOMString(next, m_stringBuffer));
 					clear(m_stringBuffer);
 
 					accumContent(XalanUnicode::charSemicolon);
@@ -1051,7 +1051,7 @@ FormatterToHTML::writeAttrURI(
 				accumContent(XalanUnicode::charAmpersand);
 				accumContent(XalanUnicode::charNumberSign);
     
-				accumContent(UnsignedLongToDOMString(ch, m_stringBuffer));
+				accumContent(NumberToDOMString(ch, m_stringBuffer));
 				clear(m_stringBuffer);
 
 				accumContent(XalanUnicode::charSemicolon);
@@ -1093,7 +1093,7 @@ FormatterToHTML::accumHexNumber(XalanDOMChar	theChar)
 
 	assert(length(m_stringBuffer) == 0);
 
-	UnsignedLongToHexDOMString(theChar, m_stringBuffer);
+	NumberToHexDOMString(theChar, m_stringBuffer);
 
 	if (length(m_stringBuffer) == 1)
 	{

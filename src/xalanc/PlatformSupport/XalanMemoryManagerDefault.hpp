@@ -26,7 +26,7 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
 
 
@@ -35,11 +35,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XALAN_USING_XERCES(MemoryManager)
-
-
-
-class XALAN_PLATFORMSUPPORT_EXPORT XalanMemoryManagerDefault : public MemoryManager
+class XALAN_PLATFORMSUPPORT_EXPORT XalanMemoryManagerDefault : public XalanMemoryManager
 {
 public:
 
@@ -49,7 +45,7 @@ public:
     ~XalanMemoryManagerDefault();
 
     virtual void*
-    allocate(XalanSize_t    size);
+    allocate(size_type  size);
 
     virtual void
     deallocate(void*    pointer);

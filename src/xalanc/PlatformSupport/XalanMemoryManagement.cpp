@@ -34,9 +34,34 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XalanDummyMemoryManager : public MemoryManager
+ 
+XalanMemoryManager::XalanMemoryManager() :
+    MemoryManager()
+{
+}
+
+
+
+XalanMemoryManager::~XalanMemoryManager()
+{
+}
+
+
+
+XalanMemoryManager::XalanMemoryManager(const XalanMemoryManager&    /* theSource */) :
+    MemoryManager()
+{
+}
+
+
+
+class XalanDummyMemoryManager : public XalanMemoryManager
 {
 public:
+
+	XalanDummyMemoryManager()
+	{
+	}
 
     virtual
 	~XalanDummyMemoryManager()
@@ -44,7 +69,7 @@ public:
 	}
 
 	virtual void*
-	allocate(XalanSize_t /*	size */ )
+	allocate(size_type /*	size */ )
 	{
         XALAN_USING_XERCES(OutOfMemoryException)
 

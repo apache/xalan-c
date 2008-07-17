@@ -42,6 +42,7 @@
 
 
 #include <xalanc/Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 
 
@@ -825,14 +826,14 @@ transform(
 
 #if defined(XALAN_WINDOWS)
 
-class WindowsMemoryManager : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
+class WindowsMemoryManager : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
 public:
 
     typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
 
     WindowsMemoryManager() :
-        MemoryManager(),
+        XalanMemoryManager(),
         m_handle(HeapCreate(HEAP_NO_SERIALIZE, 0, 0))
     {
         assert(m_handle != 0);
@@ -852,7 +853,7 @@ public:
       * Returns a pointer to the allocated memory
       */
     virtual void*
-    allocate(XalanSize_t    size)
+    allocate(size_type  size)
     {
         void* const     value =
                 HeapAlloc(m_handle, HEAP_NO_SERIALIZE, size);

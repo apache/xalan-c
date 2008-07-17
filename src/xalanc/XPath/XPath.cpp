@@ -102,7 +102,7 @@ XPath::unknownOpCodeError(
 
     XalanDOMString&     theOpCode = theGuard1.get();
 
-    LongToDOMString(
+    NumberToDOMString(
         m_expression.getOpCodeMapValue(opPos),
         theOpCode);
 
@@ -3262,7 +3262,7 @@ XPath::stepPattern(
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
                     XalanMessages::UnknownMatchOpCode_1Param,
-                    LongToDOMString(
+                    NumberToDOMString(
                         stepType,
                         theGuard2.get())),
                 context,
@@ -4412,7 +4412,7 @@ XPath::findNodesOnUnknownAxis(
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::UnknownAxis_1Param,
-                LongToDOMString(
+                NumberToDOMString(
                     stepType,
                     theGuard2.get())),
             context,

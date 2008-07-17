@@ -635,8 +635,8 @@ public:
     public:
 
         LocatorProxy(
-                    XMLFileLoc              theLineNumber,
-                    XMLFileLoc              theColumnNumber,
+                    XalanFileLoc            theLineNumber,
+                    XalanFileLoc            theColumnNumber,
                     const XalanDOMString&   theURI);
 
         virtual
@@ -648,10 +648,10 @@ public:
         virtual const XMLCh*
         getSystemId() const;
 
-        virtual XMLFileLoc
+        virtual XalanFileLoc
         getLineNumber() const;
 
-        virtual XMLFileLoc
+        virtual XalanFileLoc
         getColumnNumber() const;
 
         const XalanDOMString&
@@ -672,21 +672,21 @@ public:
         operator==(const LocatorProxy&) const;
 
         // data members...
-        const XMLFileLoc        m_lineNumber;
+        const XalanFileLoc      m_lineNumber;
 
-        const XMLFileLoc        m_columnNumber;
+        const XalanFileLoc      m_columnNumber;
 
         const XalanDOMString&   m_uri;
     };
 
 
-    XMLFileLoc
+    XalanFileLoc
     getLineNumber() const
     {
         return m_locatorProxy.getLineNumber();
     }
 
-    XMLFileLoc
+    XalanFileLoc
     getColumnNumber() const
     {
         return m_locatorProxy.getColumnNumber();

@@ -112,7 +112,7 @@ FormatMessageLocal(
 
     XalanDOMString strErrorMsg(theResult.getMemoryManager());
 
-    LongToDOMString(theErrorCode, strErrorCode);
+    NumberToDOMString(theErrorCode, strErrorCode);
 
     theResult.assign(theMessage);
 

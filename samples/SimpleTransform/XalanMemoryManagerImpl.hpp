@@ -27,8 +27,11 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
 #include "xercesc/util/OutOfMemoryException.hpp"
+
+
+
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
 
 
@@ -38,11 +41,9 @@
 #include <stdlib.h>
 
 
-class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
+class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
 public:
-
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
 
     XalanMemoryManagerImpl(DWORD    defSize = 0) :
 	    m_heapHandle(NULL)
@@ -67,7 +68,7 @@ public:
 	}
 
 	virtual void*
-	allocate(XalanSize_t    size)	
+	allocate(size_type  size)	
     {
         LPVOID ptr = HeapAlloc(
                         m_heapHandle,   //HANDLE hHeap
@@ -135,7 +136,7 @@ private:
 
 #else
 
-class XalanMemoryManagerImpl : public XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager
+class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
 public:
 
@@ -147,7 +148,7 @@ public:
 	}
 
 	virtual void*
-	allocate(XalanSize_t    size)
+	allocate(size_type  size)
 	{
         try
         {

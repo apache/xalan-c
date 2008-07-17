@@ -800,7 +800,7 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 {
     XalanDOMString  chStr(theManager);
 
-    UnsignedLongToHexDOMString(ch, chStr);
+    NumberToHexDOMString(ch, chStr);
 
     XalanDOMString  theMessage(theManager);
 
@@ -823,7 +823,7 @@ FormatterToXML::throwInvalidCharacterException(
     XalanMessageLoader::getMessage(
             theMessage,
             XalanMessages::InvalidScalar_1Param,
-            UnsignedLongToHexDOMString(ch, theBuffer));
+            NumberToHexDOMString(ch, theBuffer));
 
     XALAN_USING_XERCES(SAXException)
 
@@ -840,8 +840,8 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
     XalanDOMString  chStr1(theManager); 
     XalanDOMString  chStr2(theManager); 
 
-    UnsignedLongToHexDOMString(ch, chStr1);
-    UnsignedLongToHexDOMString(next, chStr2);
+    NumberToHexDOMString(ch, chStr1);
+    NumberToHexDOMString(next, chStr2);
 
     XalanDOMString  theMessage(theManager);
 
@@ -1562,7 +1562,7 @@ FormatterToXML::writeNumberedEntityReference(unsigned long  theNumber)
     accumContent(XalanUnicode::charAmpersand);
     accumContent(XalanUnicode::charNumberSign);
 
-    accumContent(UnsignedLongToDOMString(theNumber, m_stringBuffer));
+    accumContent(NumberToDOMString(theNumber, m_stringBuffer));
     clear(m_stringBuffer);
 
     accumContent(XalanUnicode::charSemicolon);

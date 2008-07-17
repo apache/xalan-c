@@ -2646,7 +2646,7 @@ XPathProcessorImpl::Number()
  
         XalanDOMString&     theStringValue = theGuard.get();
  
-        DoubleToDOMString(num, theStringValue);
+        NumberToDOMString(num, theStringValue);
 
         m_expression->pushNumberLiteralOnOpCodeMap(num);
 
