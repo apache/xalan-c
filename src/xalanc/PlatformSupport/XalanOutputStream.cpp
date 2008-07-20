@@ -270,7 +270,8 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
                     theCode,
                     m_transcoderBlockSize);
 
-        if (theCode == XalanTranscodingServices::UnsupportedEncoding)
+        if (theCode == XalanTranscodingServices::UnsupportedEncoding ||
+            theCode == XalanTranscodingServices::SupportFilesNotFound)
         {
             XalanDOMString theBuffer(getMemoryManager());
 
