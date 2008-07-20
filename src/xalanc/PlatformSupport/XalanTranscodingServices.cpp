@@ -252,43 +252,6 @@ XalanTranscodingServices::makeNewTranscoder(
                 theEncodingName.c_str(),
                 theResult,
                 theBlockSize);
-
-    XALAN_USING_XERCES(XMLPlatformUtils)
-
-    assert(XMLPlatformUtils::fgTransService != 0);
-
-    XalanOutputTranscoder*  theTranscoder = 0;
-
-    XMLTransService::Codes  theCode = XMLTransService::Ok;
-
-    if (encodingIsUTF16(theEncodingName) == true)
-    {
-        theResult = OK;
-
-        theTranscoder = XalanUTF16Transcoder::create(theManager);
-    }
-    else
-    {
-        XALAN_USING_XERCES(XMLTranscoder)
-
-        XMLTranscoder*  theXercesTranscoder = 
-            XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
-                    c_wstr(theEncodingName),
-                    theCode,
-                    theBlockSize,
-                    &theManager);
-
-        theResult = translateCode(theCode);
-        assert(theResult == XalanTranscodingServices::OK ||
-               theXercesTranscoder == 0);
-
-        if (theResult == XalanTranscodingServices::OK)
-        {
-            theTranscoder = XalanToXercesTranscoderWrapper::create(theManager, *theXercesTranscoder);
-        }
-    }
-
-    return theTranscoder;
 }
 
 
