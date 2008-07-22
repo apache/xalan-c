@@ -1392,7 +1392,7 @@ DOMStringHelper::NumberToCharacters(
 	}
 	else if (static_cast<XALAN_INT64>(theValue) == theValue)
 	{
-		NumberToCharacters(long(theValue), formatterListener, function);
+		NumberToCharacters(static_cast<XALAN_INT64>(theValue), formatterListener, function);
 	}
 	else
 	{
@@ -1625,24 +1625,22 @@ DOMStringHelper::NumberToCharacters(
 }
 
 
-#if 0
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-LongToDOMString(
-			long				theValue,
-			XalanDOMString&		theResult)
-{
-	return ScalarToDecimalString(theValue, theResult);
-}
 
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-UnsignedLongToDOMString(
-			unsigned long		theValue,
-			XalanDOMString&		theResult)
+void
+DOMStringHelper::NumberToCharacters(
+			XALAN_INT64		theValue,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
 {
-	return ScalarToDecimalString(theValue, theResult);
+	XalanDOMChar	theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	const XalanDOMChar* const	theResult =
+        ScalarToDecimalString(
+            theValue,
+            &theBuffer[MAX_PRINTF_DIGITS]);
+
+	(formatterListener.*function)(theResult, XalanDOMString::length(theResult));
 }
-#endif
 
 
 

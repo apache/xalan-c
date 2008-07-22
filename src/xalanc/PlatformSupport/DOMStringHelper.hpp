@@ -708,6 +708,12 @@ public:
             long                theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function);
+
+    static void
+    NumberToCharacters(
+            XALAN_INT64         theValue,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function);
 };
 
 
