@@ -65,58 +65,6 @@ class XalanOutputStream;
 
 
 
-// This macro has been defined to deal with certain C++ compilers which
-// do not create Unicode strings when the "L" string constant prefix is
-// used.  It is meant _only_ for use with static strings.
-#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-
-#define XALAN_STATIC_UCODE_STRING(str) L##str
-
-#else
-
-#define XALAN_STATIC_UCODE_STRING(str) str
-
-#endif
-
-
-
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-
-template<class InputIteratorType, class OutputIteratorType>
-inline OutputIteratorType
-XalanCopy(
-            InputIteratorType   begin,
-            InputIteratorType   end,
-            OutputIteratorType  iterator)
-{
-    for(; begin != end; ++iterator, ++begin)
-    {
-        *iterator = *begin;
-    }
-
-    return iterator;
-}
-
-
-
-template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
-inline OutputIteratorType
-XalanTransform(
-            InputIteratorType   begin,
-            InputIteratorType   end,
-            OutputIteratorType  iterator,
-            UnaryFunction       function)
-{
-    for(; begin != end; ++iterator, ++begin)
-    {
-        *iterator = function(*begin);
-    }
-
-    return iterator;
-}
-
-#else
-
 template<class InputIteratorType, class OutputIteratorType>
 inline OutputIteratorType
 XalanCopy(
@@ -139,8 +87,6 @@ XalanTransform(
 {
     return XALAN_STD_QUALIFIER transform(begin, end, iterator);
 }
-
-#endif
 
 
 

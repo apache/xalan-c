@@ -116,11 +116,7 @@ XResultTreeFrag::num() const
 {
 	if (m_cachedNumberValue == 0.0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XResultTreeFrag*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
-#else
 		m_cachedNumberValue = DoubleSupport::toDouble(str(), getMemoryManager());
-#endif
 	}
 
 	return m_cachedNumberValue;
@@ -149,11 +145,7 @@ XResultTreeFrag::str() const
 	}
 	else if (isEmpty(m_cachedStringValue) == true)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		DOMServices::getNodeData(*m_value, ((XResultTreeFrag*)this)->m_cachedStringValue);
-#else
 		DOMServices::getNodeData(*m_value, m_cachedStringValue);
-#endif
 	}
 
 	return m_cachedStringValue;

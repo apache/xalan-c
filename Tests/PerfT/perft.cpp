@@ -135,7 +135,7 @@ runTests(
 
 	bool setGold = false;
 
-	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+	const XalanDOMString	processorType("XalanC");
 
 	if (h.getParams(argc, argv, "PERFT-RESULTS", setGold) == true)
 	{

@@ -394,11 +394,8 @@ ElemNumber::getCountMatchPattern(
                 // OK, there's a prefix, so create a prefix resolver so the
                 // prefix can be properly resolved...
                 const XalanElement* const   theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                    (const XalanElement*)contextNode;
-#else
                     static_cast<const XalanElement*>(contextNode);
-#endif
+
                     const ElementPrefixResolverProxy    theProxy( theElement, executionContext.getMemoryManager());
 
                 countMatchPattern =
@@ -439,11 +436,8 @@ ElemNumber::getCountMatchPattern(
     case XalanNode::ATTRIBUTE_NODE:
         {
             const XalanAttr* const  theAttribute =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanAttr*)contextNode;
-#else
                 static_cast<const XalanAttr*>(contextNode);
-#endif
+
             assert(theAttribute->getOwnerElement() != 0);
 
             const XalanDOMString&   theNodeName = theAttribute->getNodeName();

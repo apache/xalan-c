@@ -89,11 +89,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
             m_printWriter.print("    ");
 
             const ElemTextLiteral&  etl =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const ElemTextLiteral&)ev.m_styleNode;
-#else
                 static_cast<const ElemTextLiteral&>(ev.m_styleNode);
-#endif
 
             m_printWriter.println(etl.getText());
         }
@@ -103,11 +99,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
         if (m_traceTemplates == true || m_traceElements == true)
         {
             const ElemTemplate&     et =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const ElemTemplate&)ev.m_styleNode;
-#else
                 static_cast<const ElemTemplate&>(ev.m_styleNode);
-#endif
 
             XalanDOMString lineNumbString(m_memoryManager);
 
@@ -217,7 +209,7 @@ TraceListenerDefault::processNodeList(const NodeRefListBase&        nl)
         {
             assert(nl.item(i) != 0);
 
-            m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
+            m_printWriter.print("     ");
 
             DOMServices::getNodeData(*nl.item(i), msg);
 

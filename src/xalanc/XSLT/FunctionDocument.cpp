@@ -184,11 +184,7 @@ getDoc(
     assert(resolver != 0);
 
     const XalanDocument* const  ownerDocument = XalanNode::DOCUMENT_NODE == resolver->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-            (const XalanDocument*)resolver :
-#else
             static_cast<const XalanDocument*>(resolver) :
-#endif
             resolver->getOwnerDocument();
 
     getDoc(
@@ -289,11 +285,7 @@ FunctionDocument::execute(
                 assert(baseNode != 0);
 
                 XalanDocument* const    baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-                    (XalanDocument*)baseNode :
-#else
                     static_cast<XalanDocument*>(baseNode) :
-#endif
                     baseNode->getOwnerDocument();
 
                 base = executionContext.findURIFromDoc(baseDoc);

@@ -79,11 +79,7 @@ FunctionLang::execute(
         if (XalanNode::ELEMENT_NODE == parent->getNodeType())
         {
             const XalanElement* const   theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanElement*)parent;
-#else
                 static_cast<const XalanElement*>(parent);
-#endif
 
             const XalanNamedNodeMap* const  theAttributes =
                 theElementNode->getAttributes();

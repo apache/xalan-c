@@ -44,11 +44,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 inline XalanSourceTreeComment*
 castToComment(XalanNode*	theNode)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanSourceTreeComment*)theNode;
-#else
 	return static_cast<XalanSourceTreeComment*>(theNode);
-#endif
 }
 
 
@@ -56,11 +52,7 @@ castToComment(XalanNode*	theNode)
 inline XalanSourceTreeElement*
 castToElement(XalanNode*	theNode)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanSourceTreeElement*)theNode;
-#else
 	return static_cast<XalanSourceTreeElement*>(theNode);
-#endif
 }
 
 
@@ -68,11 +60,7 @@ castToElement(XalanNode*	theNode)
 inline XalanSourceTreeProcessingInstruction*
 castToProcessingInstruction(XalanNode*	theNode)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanSourceTreeProcessingInstruction*)theNode;
-#else
 	return static_cast<XalanSourceTreeProcessingInstruction*>(theNode);
-#endif
 }
 
 
@@ -80,11 +68,7 @@ castToProcessingInstruction(XalanNode*	theNode)
 inline XalanSourceTreeText*
 castToText(XalanNode*	theNode)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanSourceTreeText*)theNode;
-#else
 	return static_cast<XalanSourceTreeText*>(theNode);
-#endif
 }
 
 

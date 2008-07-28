@@ -165,11 +165,8 @@ DOMServices::getNodeData(
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		{
 			const XalanDocumentFragment&		theDocumentFragment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocumentFragment&)node;
-#else
 				static_cast<const XalanDocumentFragment&>(node);
-#endif
+
 			getNodeData(theDocumentFragment, data);
 		}
 		break;
@@ -177,11 +174,8 @@ DOMServices::getNodeData(
 	case XalanNode::DOCUMENT_NODE:
 		{
 			const XalanDocument&	theDocument =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocument&)node;
-#else
 				static_cast<const XalanDocument&>(node);
-#endif
+
 			getNodeData(theDocument, data);
 		}
 		break;
@@ -189,11 +183,8 @@ DOMServices::getNodeData(
 	case XalanNode::ELEMENT_NODE:
 		{
 			const XalanElement&		theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement&)node;
-#else
 				static_cast<const XalanElement&>(node);
-#endif
+
 			getNodeData(theElement, data);
 		}
 		break;
@@ -202,11 +193,7 @@ DOMServices::getNodeData(
 	case XalanNode::CDATA_SECTION_NODE:
 		{
 			const XalanText&	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText&)node;
-#else
 				static_cast<const XalanText&>(node);
-#endif
 
 				getNodeData(theTextNode, data);
 		}
@@ -215,11 +202,8 @@ DOMServices::getNodeData(
 	case XalanNode::ATTRIBUTE_NODE:
 		{
 			const XalanAttr&		theAttr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr&)node;
-#else
 				static_cast<const XalanAttr&>(node);
-#endif
+
 			getNodeData(theAttr, data);
 		}
 		break;
@@ -227,11 +211,8 @@ DOMServices::getNodeData(
 	case XalanNode::COMMENT_NODE:
 		{
 			const XalanComment&		theComment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanComment&)node;
-#else
 				static_cast<const XalanComment&>(node);
-#endif
+
 			getNodeData(theComment, data);
 		}
 		break;
@@ -239,11 +220,8 @@ DOMServices::getNodeData(
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
 			const XalanProcessingInstruction&		thePI =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanProcessingInstruction&)node;
-#else
 				static_cast<const XalanProcessingInstruction&>(node);
-#endif
+
 			getNodeData(thePI, data);
 		}
 		break;
@@ -267,11 +245,7 @@ getChildData(
 	if (theType == XalanNode::ELEMENT_NODE)
 	{
 		const XalanElement*	const	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement*)child;
-#else
 				static_cast<const XalanElement*>(child);
-#endif
 
 		DOMServices::getNodeData(*theElementNode, data);
 	}
@@ -279,11 +253,7 @@ getChildData(
 			 theType == XalanNode::CDATA_SECTION_NODE)
 	{
 		const XalanText*	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText*)child;
-#else
 				static_cast<const XalanText*>(child);
-#endif
 
 		DOMServices::getNodeData(*theTextNode, data);
 	}
@@ -357,11 +327,8 @@ DOMServices::getNodeData(
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		{
 			const XalanDocumentFragment&		theDocumentFragment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocumentFragment&)node;
-#else
 				static_cast<const XalanDocumentFragment&>(node);
-#endif
+
 			getNodeData(theDocumentFragment, formatterListener, function);
 		}
 		break;
@@ -369,11 +336,8 @@ DOMServices::getNodeData(
 	case XalanNode::DOCUMENT_NODE:
 		{
 			const XalanDocument&	theDocument =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanDocument&)node;
-#else
 				static_cast<const XalanDocument&>(node);
-#endif
+
 			getNodeData(theDocument, formatterListener, function);
 		}
 		break;
@@ -381,11 +345,8 @@ DOMServices::getNodeData(
 	case XalanNode::ELEMENT_NODE:
 		{
 			const XalanElement&		theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement&)node;
-#else
 				static_cast<const XalanElement&>(node);
-#endif
+
 			getNodeData(theElement, formatterListener, function);
 		}
 		break;
@@ -394,11 +355,7 @@ DOMServices::getNodeData(
 	case XalanNode::CDATA_SECTION_NODE:
 		{
 			const XalanText&	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText&)node;
-#else
 				static_cast<const XalanText&>(node);
-#endif
 
 				getNodeData(theTextNode, formatterListener, function);
 		}
@@ -407,11 +364,8 @@ DOMServices::getNodeData(
 	case XalanNode::ATTRIBUTE_NODE:
 		{
 			const XalanAttr&		theAttr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr&)node;
-#else
 				static_cast<const XalanAttr&>(node);
-#endif
+
 			getNodeData(theAttr, formatterListener, function);
 		}
 		break;
@@ -419,11 +373,8 @@ DOMServices::getNodeData(
 	case XalanNode::COMMENT_NODE:
 		{
 			const XalanComment&		theComment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanComment&)node;
-#else
 				static_cast<const XalanComment&>(node);
-#endif
+
 			getNodeData(theComment, formatterListener, function);
 		}
 		break;
@@ -431,11 +382,8 @@ DOMServices::getNodeData(
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
 			const XalanProcessingInstruction&		thePI =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanProcessingInstruction&)node;
-#else
 				static_cast<const XalanProcessingInstruction&>(node);
-#endif
+
 			getNodeData(thePI, formatterListener, function);
 		}
 		break;
@@ -459,11 +407,7 @@ getChildData(
 	if (theType == XalanNode::ELEMENT_NODE)
 	{
 		const XalanElement*	const	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement*)child;
-#else
 				static_cast<const XalanElement*>(child);
-#endif
 
 		DOMServices::getNodeData(*theElementNode, formatterListener, function);
 	}
@@ -471,11 +415,7 @@ getChildData(
 			 theType == XalanNode::CDATA_SECTION_NODE)
 	{
 		const XalanText*	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText*)child;
-#else
 				static_cast<const XalanText*>(child);
-#endif
 
 		DOMServices::getNodeData(*theTextNode, formatterListener, function);
 	}
@@ -545,21 +485,11 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 
 	if (theNodeType == XalanNode::ATTRIBUTE_NODE)
 	{
-		return getNameOfNode(
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr&)n);
-#else
-				static_cast<const XalanAttr&>(n));
-#endif
+		return getNameOfNode(static_cast<const XalanAttr&>(n));
 	}
 	else if (theNodeType == XalanNode::ELEMENT_NODE)
 	{
-		return getNameOfNode(
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement&)n);
-#else
-				static_cast<const XalanElement&>(n));
-#endif
+		return getNameOfNode(static_cast<const XalanElement&>(n));
 	}
 	else if (theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{

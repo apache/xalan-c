@@ -66,11 +66,7 @@ XNumber::str() const
 {
 	if (isEmpty(m_cachedStringValue) == true)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		NumberToDOMString(m_value, ((XNumber*)this)->m_cachedStringValue);
-#else
 		NumberToDOMString(m_value, m_cachedStringValue);
-#endif
 	}
 
 	return m_cachedStringValue;

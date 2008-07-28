@@ -81,11 +81,7 @@ writeCallback(
 			CallbackSizeType	theLength,
 			void*				theHandle)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return ((CallbackHandler*)theHandle)->write(theData, theLength);
-#else
 	return reinterpret_cast<CallbackHandler*>(theHandle)->write(theData, theLength);
-#endif
 }
 
 // This is the flush callback function, which casts the handle
@@ -94,11 +90,7 @@ writeCallback(
 void
 flushCallback(void*	theHandle)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	((CallbackHandler*)theHandle)->flush();
-#else
 	reinterpret_cast<CallbackHandler*>(theHandle)->flush();
-#endif
 }
 
 }

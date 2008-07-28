@@ -181,11 +181,7 @@ XercesWrapperNavigator::getOwnerElement(const DOMAttrType*	theXercesAttr) const
 	{
 		assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (XalanElement*)m_parentNode;
-#else
 		return static_cast<XalanElement*>(m_parentNode);
-#endif
 	}
 	else
 	{

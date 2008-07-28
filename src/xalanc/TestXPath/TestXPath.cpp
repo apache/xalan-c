@@ -321,11 +321,7 @@ GetAttributeFromNode(
     if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
     {
         const XalanElement* const   theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                    (const XalanElement*)theNode;
-#else
                     static_cast<const XalanElement*>(theNode);
-#endif
 
         const XalanNamedNodeMap* const  theAttributes =
             theElement->getAttributes();

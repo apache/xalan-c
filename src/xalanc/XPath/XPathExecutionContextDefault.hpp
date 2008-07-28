@@ -165,11 +165,7 @@ public:
 	XalanQNameByValue&
 	getScratchQName() const
 	{
-#if defined(XALAN_NO_MUTABLE)
-		return ((XPathExecutionContextDefault*)this)->m_scratchQName;
-#else
 		return m_scratchQName;
-#endif
 	}
 
 	virtual void doFormatNumber(

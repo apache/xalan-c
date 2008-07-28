@@ -77,11 +77,7 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			*(XalanDOMChar*)(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
-#else
 			*reinterpret_cast<XalanDOMChar*>(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
-#endif
 
 			theTargetPosition += 2;
 		}
@@ -118,11 +114,7 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			theTarget[theTargetPosition++] = *(const XalanDOMChar*)(theSourceData + theSourceCount++);
-#else
 			theTarget[theTargetPosition++] = *reinterpret_cast<const XalanDOMChar*>(theSourceData + theSourceCount++);
-#endif
 
 			*theCharSizes++ = 2;
 		}

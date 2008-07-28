@@ -94,13 +94,8 @@ doExecute(
 {
     assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-    ElementPrefixResolverProxy  theProxy((const XalanElement*)resolver, 
-                                            executionContext.getMemoryManager());
-#else
     ElementPrefixResolverProxy  theProxy(static_cast<const XalanElement*>(resolver), 
                                             executionContext.getMemoryManager());
-#endif
 
     return doExecute(executionContext, context, expression, theProxy, locator);
 }

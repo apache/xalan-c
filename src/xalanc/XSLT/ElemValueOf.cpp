@@ -394,7 +394,7 @@ ElemValueOf::fireSelectionEvent(
     {
         const StylesheetExecutionContext::GetAndReleaseCachedString     thePattern(executionContext);
 
-        thePattern.get() = XALAN_STATIC_UCODE_STRING(".");
+        thePattern.get() = ".";
 
         fireSelectionEvent(
             executionContext,

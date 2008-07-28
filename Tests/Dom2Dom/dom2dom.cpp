@@ -349,8 +349,8 @@ runTests(
 					}
 					else
 					{
-						const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"), theManager);
-						const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"), theManager);
+						const XalanDOMString	mimeEncoding("UTF-8", theManager);
+						const XalanDOMString	encoding("UTF-8", theManager);
 
 						XalanFileOutputStream myOutput(theOutputFile, theManager);
 						XalanOutputStreamPrintWriter myResultWriter(myOutput);

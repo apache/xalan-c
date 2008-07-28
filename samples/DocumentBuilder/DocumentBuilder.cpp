@@ -76,25 +76,25 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	theContentHandler->startDocument();
 
 	// start the document element...
-	theElementName = XALAN_STATIC_UCODE_STRING("foo");
+	theElementName = "foo";
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
 	// Create an element child...
 
 	// Set the name of the element...
-	theElementName = XALAN_STATIC_UCODE_STRING("foobar");
+	theElementName = "foobar";
 
 	// Add an attribute...
-	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute1");
-	theAttributeValue = XALAN_STATIC_UCODE_STRING("value1");
+	theAttributeName = "attribute1";
+	theAttributeValue = "value1";
 
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
 	// Add a text node...
-	theTextValue = XALAN_STATIC_UCODE_STRING("The first foobar");
+	theTextValue = "The first foobar";
 
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
@@ -102,31 +102,31 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	theAttributes.clear();
-	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute2");
-	theAttributeValue = XALAN_STATIC_UCODE_STRING("value2");
+	theAttributeName = "attribute2";
+	theAttributeValue = "value2";
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
-	theTextValue = XALAN_STATIC_UCODE_STRING("The second foobar");
+	theTextValue = "The second foobar";
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	theAttributes.clear();
-	theAttributeName = XALAN_STATIC_UCODE_STRING("attribute3");
-	theAttributeValue = XALAN_STATIC_UCODE_STRING("value3");
+	theAttributeName = "attribute3";
+	theAttributeValue = "value3";
 	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
 
 	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
 
-	theTextValue = XALAN_STATIC_UCODE_STRING("The third foobar");
+	theTextValue = "The third foobar";
 	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 
 	// end the document element...
-	theElementName = XALAN_STATIC_UCODE_STRING("foo");
+	theElementName = "foo";
 
 	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
 

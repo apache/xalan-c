@@ -77,11 +77,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 	case XalanNode::ELEMENT_NODE:
 		{
 			const XalanElement*	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement*)node;
-#else
 				static_cast<const XalanElement*>(node);
-#endif
 
 			const XalanNamedNodeMap*	atts = theElementNode->getAttributes();
 			assert(atts != 0);
@@ -140,11 +136,7 @@ FormatterTreeWalker::startNode(XalanNode*	node)
 {
 	assert(node != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return startNode((const XalanNode*)node);
-#else
 	return startNode(const_cast<const XalanNode*>(node));
-#endif
 }
 
 
@@ -177,11 +169,7 @@ FormatterTreeWalker::endNode(const XalanNode*	node)
 bool
 FormatterTreeWalker::endNode(XalanNode*		node)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return endNode((const XalanNode*)node);
-#else
 	return endNode(const_cast<const XalanNode*>(node));
-#endif
 }
 
 

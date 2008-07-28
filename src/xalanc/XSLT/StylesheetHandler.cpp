@@ -1643,11 +1643,8 @@ StylesheetHandler::processText(
 
         if (preserveSpace == false && parent->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT)
         {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            disableOutputEscaping = ((ElemText*)parent)->getDisableOutputEscaping();
-#else
             disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
-#endif
+
             preserveSpace = true;
 
             parent = m_elemStack[m_elemStack.size() - 2];
@@ -1956,19 +1953,11 @@ StylesheetHandler::LastPoppedHolder::cleanup()
 
         if (tok == StylesheetConstructionContext::ELEMNAME_UNDEFINED)
         {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            m_stylesheetHandler.m_elemEmptyAllocator.destroy((ElemEmpty*)m_lastPopped);
-#else
             m_stylesheetHandler.m_elemEmptyAllocator.destroy(static_cast<ElemEmpty*>(m_lastPopped));
-#endif
         }
         else if (tok == StylesheetConstructionContext::ELEMNAME_TEXT)
         {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            m_stylesheetHandler.m_elemTextAllocator.destroy((ElemText*)m_lastPopped);
-#else
             m_stylesheetHandler.m_elemTextAllocator.destroy(static_cast<ElemText*>(m_lastPopped));
-#endif
         }
     }
 }

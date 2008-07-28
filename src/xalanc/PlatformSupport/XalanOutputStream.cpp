@@ -184,11 +184,7 @@ XalanOutputStream::transcode(
                 m_transcoder->transcode(
                         theBufferPosition,
                         theRemainingBufferLength,
-#if defined(XALAN_OLD_STYLE_CASTS)
-                        (XMLByte*)&theDestination[0] + theTotalBytesFilled,
-#else
                         reinterpret_cast<XMLByte*>(&theDestination[0]) + theTotalBytesFilled,
-#endif
                         theTargetSize,
                         theSourceBytesEaten,
                         theTargetBytesEaten);
@@ -254,15 +250,11 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
 
     XalanTranscodingServices::eCode     theCode = XalanTranscodingServices::OK;
 
-    // This turns on an optimization that we can only do if
-    // XalanDOMChar == sizeof(ushort).  See doWrite().
-#if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
     if (XalanTranscodingServices::encodingIsUTF16(theEncoding) == true)
     {
         m_writeAsUTF16 = true;
     }
     else
-#endif
     {
         m_transcoder = XalanTranscodingServices::makeNewTranscoder(
                     getMemoryManager(),
@@ -297,11 +289,7 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
 
     if (theLength > 0)
     {
-#if defined(XALAN_OLD_STYLE_CASTS)
-        write((const char*)theProlog, theLength);
-#else
         write(reinterpret_cast<const char*>(theProlog), theLength);
-#endif
     }
 }
 
@@ -352,15 +340,9 @@ XalanOutputStream::doWrite(
 
     if (m_writeAsUTF16 == true)
     {
-        assert(sizeof(XalanDOMChar) == sizeof(char) * 2);
-
         // This is a hack to write UTF-16 through as if it
         // were just chars.  Saves lots of time "transcoding."
-#if defined(XALAN_OLD_STYLE_CASTS)
-        writeData((const char*)theBuffer, theBufferLength * 2);
-#else
         writeData(reinterpret_cast<const char*>(theBuffer), theBufferLength * 2);
-#endif
     }
     else
     {

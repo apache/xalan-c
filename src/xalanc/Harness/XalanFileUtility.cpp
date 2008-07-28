@@ -441,7 +441,7 @@ XalanFileUtility::getTestFileNames(
     char buffer3[PATH_MAX];
     getcwd(buffer3, PATH_MAX);
 
-    const XalanDOMString    searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"), getMemoryManager());
+    const XalanDOMString    searchSuffix("*.xsl", getMemoryManager());
     XalanDOMString  searchSpecification(getMemoryManager());
 
     // Allow directory search w/o mandating files start with directory name. Required for files
@@ -487,7 +487,7 @@ XalanFileUtility::getDirectoryNames(
     char buffer2[PATH_MAX];
     getcwd(buffer2, PATH_MAX);
 
-    const XalanDOMString    dirSpec(XALAN_STATIC_UCODE_STRING("*"), getMemoryManager());
+    const XalanDOMString    dirSpec("*", getMemoryManager());
 
     DirectoryEnumeratorFunctor<
         FileNameVectorType,

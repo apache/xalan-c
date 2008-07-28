@@ -162,16 +162,21 @@ ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
     
         if (0 != executionContext.getTraceListeners())
         {
+            const StylesheetExecutionContext::GetAndReleaseCachedString     theGuard(executionContext);
+
+            XalanDOMString&     theString = theGuard.get();
+
+            theString = "select";
+
             executionContext.fireSelectEvent(
                 SelectionEvent(
                     executionContext,
                     executionContext.getCurrentNode(),
                     *this,
-                    XalanDOMString(XALAN_STATIC_UCODE_STRING("select"), executionContext.getMemoryManager()),
+                    theString,
                     *m_selectPattern,
                     theValue));
         }
-
     }
 
     assert(theValue.null() == false);

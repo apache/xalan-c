@@ -194,11 +194,7 @@ XalanSourceTreeParserLiaison::ensureReader()
         {
             m_xmlReader->setProperty(
                 XMLUni::fgXercesSchemaExternalSchemaLocation,
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (void*)theLocation);
-#else
                 const_cast<XalanDOMChar*>(theLocation));
-#endif
         }
     }
 
@@ -210,11 +206,7 @@ XalanSourceTreeParserLiaison::ensureReader()
         {
             m_xmlReader->setProperty(
                 XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation,
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (void*)theLocation);
-#else
                 const_cast<XalanDOMChar*>(theLocation));
-#endif
         }
     }
 }

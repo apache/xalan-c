@@ -324,7 +324,7 @@ XalanTranscodingServices::destroyTranscoder(XalanOutputTranscoder*  theTranscode
 bool
 XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*    theEncodingName)
 {
-    return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf8String) == 0 ? true : false;
+    return compareIgnoreCaseASCII(theEncodingName, s_utf8String) == 0 ? true : false;
 }
 
 
@@ -332,7 +332,7 @@ XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*    theEncodingName)
 bool
 XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&  theEncodingName)
 {
-    return encodingIsUTF8(c_wstr(theEncodingName));
+    return encodingIsUTF8(theEncodingName.c_str());
 }
 
 
@@ -340,9 +340,9 @@ XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&  theEncodingName)
 bool
 XalanTranscodingServices::encodingIsUTF16(const XalanDOMChar*   theEncodingName)
 {
-    return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16String) == 0 ||
-           compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16LEString) == 0 ||
-           compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16BEString) == 0 ? true : false;
+    return compareIgnoreCaseASCII(theEncodingName, s_utf16String) == 0 ||
+           compareIgnoreCaseASCII(theEncodingName, s_utf16LEString) == 0 ||
+           compareIgnoreCaseASCII(theEncodingName, s_utf16BEString) == 0 ? true : false;
 }
 
 
@@ -350,7 +350,7 @@ XalanTranscodingServices::encodingIsUTF16(const XalanDOMChar*   theEncodingName)
 bool
 XalanTranscodingServices::encodingIsUTF16(const XalanDOMString&     theEncodingName)
 {
-    return encodingIsUTF16(c_wstr(theEncodingName));
+    return encodingIsUTF16(theEncodingName.c_str());
 }
 
 
@@ -358,14 +358,15 @@ XalanTranscodingServices::encodingIsUTF16(const XalanDOMString&     theEncodingN
 bool
 XalanTranscodingServices::encodingIsUTF32(const XalanDOMChar*   theEncodingName)
 {
-    return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf32String) == 0 ? true : false;
+    return compareIgnoreCaseASCII(theEncodingName, s_utf32String) == 0 ? true : false;
 }
+
 
 
 bool
 XalanTranscodingServices::encodingIsUTF32(const XalanDOMString&     theEncodingName)
 {
-    return encodingIsUTF32(c_wstr(theEncodingName));
+    return encodingIsUTF32(theEncodingName.c_str());
 }
 
 
@@ -373,21 +374,10 @@ XalanTranscodingServices::encodingIsUTF32(const XalanDOMString&     theEncodingN
 const XalanTranscodingServices::XalanXMLByte*
 XalanTranscodingServices::getStreamProlog(const XalanDOMString&     theEncodingName)
 {
-    if (compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16String) == 0)
+    if (compareIgnoreCaseASCII(theEncodingName, s_utf16String) == 0)
     {
-#if defined(XALAN_OLD_STYLE_CASTS)
-        return (const XalanXMLByte*)s_UTF16ByteOrderMark;
-#else
         return reinterpret_cast<const XalanXMLByte*>(s_UTF16ByteOrderMark);
-#endif
     }
-#if 0
-    // We won't do this for now...
-    else if (compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf8String) == 0)
-    {
-        return s_UTF8ByteOrderMark;
-    }
-#endif
     else
     {
         return s_dummyByteOrderMark;
@@ -399,25 +389,25 @@ XalanTranscodingServices::getStreamProlog(const XalanDOMString&     theEncodingN
 XalanDOMChar
 XalanTranscodingServices::getMaximumCharacterValue(const XalanDOMString&    theEncoding)
 {
-    if (compareIgnoreCaseASCII(c_wstr(theEncoding), s_utf8String) == 0 ||
-        compareIgnoreCaseASCII(c_wstr(theEncoding), s_utf16String) == 0)
+    if (compareIgnoreCaseASCII(theEncoding, s_utf8String) == 0 ||
+        compareIgnoreCaseASCII(theEncoding, s_utf16String) == 0)
     {
-        return XalanDOMChar(0xFFFFu);
+        return static_cast<XalanDOMChar>(0xFFFFu);
     }
-    else if (compareIgnoreCaseASCII(c_wstr(theEncoding), s_iso88591String) == 0)
+    else if (compareIgnoreCaseASCII(theEncoding, s_iso88591String) == 0)
     {
-        return XalanDOMChar(0x00FFu);
+        return static_cast<XalanDOMChar>(0x00FFu);
     }
-    else if (compareIgnoreCaseASCII(c_wstr(theEncoding), s_utf16LEString) == 0 ||
-        compareIgnoreCaseASCII(c_wstr(theEncoding), s_utf16BEString) == 0 ||
-        compareIgnoreCaseASCII(c_wstr(theEncoding), s_utf32String) == 0 ||
-        compareIgnoreCaseASCII(c_wstr(theEncoding), s_shiftJISString) == 0)
+    else if (compareIgnoreCaseASCII(theEncoding, s_utf16LEString) == 0 ||
+             compareIgnoreCaseASCII(theEncoding, s_utf16BEString) == 0 ||
+             compareIgnoreCaseASCII(theEncoding, s_utf32String) == 0 ||
+             compareIgnoreCaseASCII(theEncoding, s_shiftJISString) == 0)
     {
-        return XalanDOMChar(0xFFFFu);
+        return static_cast<XalanDOMChar>(0xFFFFu);
     }
     else
     {
-        return XalanDOMChar(0x007fu);
+        return static_cast<XalanDOMChar>(0x007fu);
     }
 }
 

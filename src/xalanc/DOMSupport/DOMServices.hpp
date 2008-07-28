@@ -438,11 +438,7 @@ public:
 	{
 		if(node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XalanAttr&)node).getOwnerElement();
-#else
 			return static_cast<const XalanAttr&>(node).getOwnerElement();
-#endif
 		}
 		else
 		{

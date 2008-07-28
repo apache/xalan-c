@@ -670,21 +670,13 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         if (theType == XalanNode::DOCUMENT_NODE)
         {
             const XalanDocument&    doc =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanDocument&)fragBase;
-#else
                 static_cast<const XalanDocument&>(fragBase);
-#endif
 
             nsNode = doc.getDocumentElement(); 
         }
         else if (theType == XalanNode::ELEMENT_NODE)
         {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            nsNode = (const XalanElement*)&fragBase;
-#else
             nsNode = static_cast<const XalanElement*>(&fragBase);
-#endif
         }
         else
         {
@@ -692,11 +684,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
             if  (node->getNodeType() == XalanNode::ELEMENT_NODE) 
             {
-#if defined(XALAN_OLD_STYLE_CASTS)
-                nsNode = (const XalanElement*)&fragBase;
-#else
                 nsNode = static_cast<const XalanElement*>(node);
-#endif
             }
             else
             {
@@ -796,11 +784,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
             }
             else
             {
-#if defined(XALAN_OLD_STYLE_CASTS)
-                stylesheet = constructionContext.create( *((StylesheetRoot*)m_stylesheetRoot), stringHolder);
-#else
-                stylesheet = constructionContext.create( *const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
-#endif
+                stylesheet = constructionContext.create(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
 
                 theGuard.reset(&theMemoryManager, stylesheet);
             }
@@ -836,12 +820,8 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
         const XalanDocument* const  theOwnerDocument =
                 fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanDocument*)&fragBase :
-#else
-                static_cast<const XalanDocument*>(&fragBase) :
-#endif
-                fragBase.getOwnerDocument();
+                    static_cast<const XalanDocument*>(&fragBase) :
+                    fragBase.getOwnerDocument();
         assert(theOwnerDocument != 0);
 
         // Catch any XMLExceptions thrown, since we may not
@@ -883,11 +863,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         {
             stylesheet = Stylesheet::create(
                             theMemoryManager,
-#if defined(XALAN_OLD_STYLE_CASTS)
-                            *(StylesheetRoot*)m_stylesheetRoot,
-#else
                             *const_cast<StylesheetRoot*>(m_stylesheetRoot),
-#endif
                             localXSLURLString,
                             constructionContext);
 
@@ -1297,9 +1273,9 @@ XSLTEngineImpl::traceSelect(
 
         if(mode != 0 && mode->isEmpty() == false)
         {
-            msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = {"), executionContext.getMemoryManager());
+            msg += XalanDOMString(", mode = {", executionContext.getMemoryManager());
             msg += mode->getNamespace();
-            msg += XalanDOMString(XALAN_STATIC_UCODE_STRING("}"), executionContext.getMemoryManager());
+            msg += XalanDOMString("}", executionContext.getMemoryManager());
             msg += mode->getLocalPart();
         }
 
@@ -2135,11 +2111,7 @@ XSLTEngineImpl::cloneToResultTree(
     if (posNodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
     {
         outputResultTreeFragment(
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanDocumentFragment&)node,
-#else
                 static_cast<const XalanDocumentFragment&>(node),
-#endif
             cloneTextNodesOnly,
             locator);
     }
@@ -2305,11 +2277,7 @@ XSLTEngineImpl::cloneToResultTree(
         else
         {
             const XalanText&    tx =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanText&)node;
-#else
                 static_cast<const XalanText&>(node);
-#endif
 
             cloneToResultTree(tx, overrideStrip);
         }
@@ -2321,11 +2289,7 @@ XSLTEngineImpl::cloneToResultTree(
         case XalanNode::TEXT_NODE:
             {
                 const XalanText&    tx =
-    #if defined(XALAN_OLD_STYLE_CASTS)
-                    (const XalanText&)node;
-    #else
                     static_cast<const XalanText&>(node);
-    #endif
 
                 cloneToResultTree(tx, overrideStrip);
             }

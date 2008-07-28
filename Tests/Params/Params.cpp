@@ -226,7 +226,7 @@ runTests(
 							{
 								const XSLTInputSource	embed07InputSource(theXSLFile);
 								xalan.transform(embed07InputSource, theResultTarget);
-								h.data.testOrFile += XALAN_STATIC_UCODE_STRING(" (Embed01)");
+								h.data.testOrFile += " (Embed01)";
 								embedFlag = true;
 								break;
 							}
@@ -235,7 +235,7 @@ runTests(
 							{
 								const XSLTInputSource	embed08InputSource(theXSLFile);
 								xalan.transform(embed08InputSource, theResultTarget);
-								h.data.testOrFile += XALAN_STATIC_UCODE_STRING(" (Embed02)");
+								h.data.testOrFile += " (Embed02)";
 								embedFlag = true;
 								break;
 							}

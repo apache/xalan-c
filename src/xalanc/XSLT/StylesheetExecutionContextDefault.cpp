@@ -1330,18 +1330,10 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*   theX
 
         if (m_usePerInstanceDocumentFactory == true)
         {
-#if defined(XALAN_OLD_STYLE_CASTS)
-            m_documentAllocator.destroy((XalanSourceTreeDocument*)theDocumentFragment->getOwnerDocument());
-#else
             m_documentAllocator.destroy(static_cast<XalanSourceTreeDocument*>(theDocumentFragment->getOwnerDocument()));
-#endif
         }
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-        m_documentFragmentAllocator.destroy((XalanSourceTreeDocumentFragment*)theDocumentFragment);
-#else
         m_documentFragmentAllocator.destroy(static_cast<XalanSourceTreeDocumentFragment*>(theDocumentFragment));
-#endif
 
         return true;
     }
@@ -2602,11 +2594,7 @@ StylesheetExecutionContextDefault::getParams(
                 }
 
                 const ElemWithParam* const  xslParamElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                        (ElemWithParam*)child;
-#else
                         static_cast<const ElemWithParam*>(child);
-#endif
 
                 params.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
             }
@@ -2623,13 +2611,9 @@ StylesheetExecutionContextDefault::getSourceTreeFactory(MemoryManagerType& theMa
 {
     assert(m_xsltProcessor != 0);
 
-    if(m_sourceTreeResultTreeFactory.get() == 0)
+    if (m_sourceTreeResultTreeFactory.get() == 0)
     {
-#if defined(XALAN_NO_MUTABLE)
-        ((StylesheetExecutionContextDefault*)this)->m_sourceTreeResultTreeFactory.reset(
-#else
         m_sourceTreeResultTreeFactory.reset(
-#endif
             &theManager, 
             XalanSourceTreeDocument::create(theManager));
     }
@@ -2648,7 +2632,7 @@ StylesheetExecutionContextDefault::isCached(const XPath*    theXPath)
     const XPathCacheMapType::const_iterator     theEnd =
         m_matchPatternCache.end();
 
-    while(i != theEnd)
+    while (i != theEnd)
     {
         if ((*i).second.first == theXPath)
         {

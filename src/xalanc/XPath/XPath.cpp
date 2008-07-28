@@ -3466,11 +3466,7 @@ XPath::findRoot(
     // This is a special case for RTFs, as the "owner document" is
     // just a factory for the RTF.  Instead, we have to search for
     // the containing XalanDocumentFragment node.
-#if defined(XALAN_OLD_STYLE_CASTS)
-    if (((const XalanDocument*)docContext)->getDocumentElement() == 0)
-#else
     if (static_cast<const XalanDocument*>(docContext)->getDocumentElement() == 0)
-#endif
     {
         docContext = context;
 
@@ -4923,11 +4919,7 @@ isNamespaceDeclaration(const XalanNode&     theAttributeNode)
 {
     assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-    return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
-#else
     return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
-#endif
 }
 
 
@@ -4960,11 +4952,7 @@ XPath::NodeTester::testText(
             XalanNode::NodeType     nodeType) const
 {
     if (XalanNode::TEXT_NODE == nodeType &&
-#if defined(XALAN_OLD_STYLE_CASTS)
-        shouldStripSourceNode((const XalanText&)context) == false)
-#else
         shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
-#endif
     {
         return eMatchScoreNodeTest;
     }
@@ -5019,11 +5007,7 @@ XPath::NodeTester::testNode(
             XalanNode::NodeType     nodeType) const
 {
     if (nodeType != XalanNode::TEXT_NODE ||
-#if defined(XALAN_OLD_STYLE_CASTS)
-        shouldStripSourceNode((const XalanText&)context) == false)
-#else
         shouldStripSourceNode(static_cast<const XalanText&>(context)) == false)
-#endif
     {
         return eMatchScoreNodeTest;
     }

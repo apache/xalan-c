@@ -77,11 +77,7 @@ XercesDOMFormatterWalker::startNode(const DOMNodeType*	node)
 	case DOMNodeType::ELEMENT_NODE:
 		{
 			const DOMElementType* const		theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const DOMElementType*)node;
-#else
 				static_cast<const DOMElementType*>(node);
-#endif
 
 			const DOMNamedNodeMapType* const	atts = theElementNode->getAttributes();
 			assert(atts != 0);

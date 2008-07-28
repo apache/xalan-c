@@ -66,11 +66,7 @@ XercesLiaisonXalanDOMStringPool::clear()
 size_t
 XercesLiaisonXalanDOMStringPool::size() const
 {
-#if defined(XALAN_NO_MUTABLE)
-	XMLMutexLockType	theLock(&((XercesLiaisonXalanDOMStringPool*)this)->m_mutex);
-#else
 	XMLMutexLockType	theLock(&m_mutex);
-#endif
 
 	return ParentType::size();
 }

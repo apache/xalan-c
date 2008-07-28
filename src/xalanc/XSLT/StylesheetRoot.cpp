@@ -759,11 +759,7 @@ getKeyNode(XalanNode*   context)
 
     XalanDocument* const    docNode = 
             XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-                    (XalanDocument*)context :
-#else
                     static_cast<XalanDocument*>(context) :
-#endif
                         context->getOwnerDocument();
 
     assert(docNode != 0);
@@ -889,11 +885,7 @@ StylesheetRoot::internalShouldStripSourceNode(const XalanText&  textNode) const
     if (parent->getNodeType() == XalanNode::ELEMENT_NODE)
     {
         const XalanElement* const   theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                (const XalanElement*)parent;
-#else
                 static_cast<const XalanElement*>(parent);
-#endif
 
         typedef WhitespaceElementsVectorType::const_iterator    const_iterator;
 

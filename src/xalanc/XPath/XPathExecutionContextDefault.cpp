@@ -263,13 +263,8 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&   cont
         const size_type     theIndex = m_contextNodeListStack.back()->indexOf(&contextNode);
 
         // If not found, it's 0.  Otherwise, it's the index + 1
-#if defined(XALAN_NO_MUTABLE)
-        ((XPathExecutionContextDefault*)this)->m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
-        ((XPathExecutionContextDefault*)this)->m_cachedPosition.m_node = &contextNode;
-#else
         m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
         m_cachedPosition.m_node = &contextNode;
-#endif
     }
 
     return m_cachedPosition.m_index;

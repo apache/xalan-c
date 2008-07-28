@@ -155,11 +155,7 @@ XercesNamedNodeMapBridge::getNamedItemNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-#if defined(XALAN_NO_MUTABLE)
-	return m_navigator.mapNode(((XercesNamedNodeMapBridge*)this)->m_xercesNamedNodeMap.getNamedItemNS(c_wstr(namespaceURI), c_wstr(localName)));
-#else
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(c_wstr(namespaceURI), c_wstr(localName)));
-#endif
+	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(namespaceURI.c_str(), localName.c_str()));
 }
 
 

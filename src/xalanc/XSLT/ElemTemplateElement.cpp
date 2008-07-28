@@ -1389,11 +1389,7 @@ ElemTemplateElement::postConstruction(
                 m_flags |= eHasDirectTemplate;
 
                 ElemCallTemplate* const     theCallTemplateChild =
-#if defined(XALAN_OLD_STYLE_CASTS)
-                    (ElemCallTemplate*)m_firstChild;
-#else
                     static_cast<ElemCallTemplate*>(m_firstChild);
-#endif
 
                 m_directTemplate = theCallTemplateChild->getTemplate();
             }

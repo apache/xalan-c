@@ -119,11 +119,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeStringAdapter:
 		{
 			XStringAdapter* const		theXStringAdapter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XStringAdapter*)theXObject;
-#else
 				static_cast<XStringAdapter*>(theXObject);
-#endif
 
 			bStatus = m_xstringAdapterAllocator.destroy(theXStringAdapter);
 		}
@@ -132,11 +128,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeXTokenNumberAdapter:
 		{
 			XTokenNumberAdapter* const	theAdapter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XTokenNumberAdapter*)theXObject;
-#else
 				static_cast<XTokenNumberAdapter*>(theXObject);
-#endif
 
 			bStatus = m_xtokenNumberAdapterAllocator.destroy(theAdapter);
 		}
@@ -145,11 +137,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeXTokenStringAdapter:
 		{
 			XTokenStringAdapter* const	theAdapter =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XTokenStringAdapter*)theXObject;
-#else
 				static_cast<XTokenStringAdapter*>(theXObject);
-#endif
 
 			bStatus = m_xtokenStringAdapterAllocator.destroy(theAdapter);
 		}
@@ -158,11 +146,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeString:
 		{
 			XString* const	theXString =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XString*)theXObject;
-#else
 				static_cast<XString*>(theXObject);
-#endif
 
 			if (m_xstringCache.size() < eXStringCacheMax)
 			{
@@ -180,11 +164,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeStringCached:
 		{
 			XStringCached* const	theXStringCached =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XStringCached*)theXObject;
-#else
 				static_cast<XStringCached*>(theXObject);
-#endif
 
 			bStatus = m_xstringCachedAllocator.destroy(theXStringCached);
 		}
@@ -193,11 +173,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeStringReference:
 		{
 			XStringReference* const		theXStringReference =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XStringReference*)theXObject;
-#else
 				static_cast<XStringReference*>(theXObject);
-#endif
 
 			bStatus = m_xstringReferenceAllocator.destroy(theXStringReference);
 		}
@@ -206,11 +182,7 @@ XObjectFactoryDefault::doReturnObject(
 	case  XObject::eTypeNumber:
 		{
 			XNumber* const	theXNumber =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XNumber*)theXObject;
-#else
 				static_cast<XNumber*>(theXObject);
-#endif
 
 			if (m_xnumberCache.size() < eXNumberCacheMax)
 			{
@@ -228,11 +200,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeNodeSet:
 		{
 			XNodeSet* const		theXNodeSet =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XNodeSet*)theXObject;
-#else
 				static_cast<XNodeSet*>(theXObject);
-#endif
 
 			if (m_xnodesetCache.size() < eXNodeSetCacheMax)
 			{
@@ -252,11 +220,7 @@ XObjectFactoryDefault::doReturnObject(
 	case XObject::eTypeNodeSetNodeProxy:
 		{
 			XNodeSetNodeProxy* const	theXNodeSet =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XNodeSetNodeProxy*)theXObject;
-#else
 				static_cast<XNodeSetNodeProxy*>(theXObject);
-#endif
 
 			bStatus = m_xnodesetNodeProxyAllocator.destroy(theXNodeSet);
 		}

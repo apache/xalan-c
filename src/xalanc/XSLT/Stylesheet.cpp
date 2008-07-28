@@ -1089,11 +1089,7 @@ Stylesheet::locateMatchPatternDataList(
         break;
 
     case XalanNode::ATTRIBUTE_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-        if (DOMServices::isNamespaceDeclaration((const XalanAttr&)theNode) == true)
-#else
         if ((DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theNode)) == true))
-#endif
         {
             return &s_emptyTemplateList;
         } 

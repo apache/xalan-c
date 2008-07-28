@@ -77,12 +77,7 @@ XStringBase::num() const
 {
 	if (m_cachedNumberValue == 0.0)
 	{
-
-#if defined(XALAN_NO_MUTABLE)
-		((XStringBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
-#else
 		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
-#endif
 	}
 
 	return m_cachedNumberValue;

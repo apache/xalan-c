@@ -460,19 +460,11 @@ TransformString(
 			OutputIteratorType	theOutputIterator,
 			FunctionType		theFunction)
 {
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	return XalanTransform(
-			theInputBegin,
-			theInputEnd,
-			theOutputIterator,
-			theFunction);
-#else
 	return XALAN_STD_QUALIFIER transform(
 			theInputBegin,
 			theInputEnd,
 			theOutputIterator,
 			theFunction);
-#endif
 }
 
 
@@ -936,11 +928,7 @@ MakeXalanDOMCharVector(
 
 		theResult.reserve(theLength);
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-		XalanCopy(
-#else
 		XALAN_STD_QUALIFIER copy(
-#endif
 			data,
 			data + theLength,
 			XALAN_STD_QUALIFIER back_inserter(theResult));

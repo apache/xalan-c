@@ -309,11 +309,7 @@ XercesElementBridge::getAttribute(const XalanDOMString&		name) const
 XalanAttr*
 XercesElementBridge::getAttributeNode(const XalanDOMString&		name) const
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanAttr*)m_attributes.getNamedItem(name);
-#else
 	return static_cast<XalanAttr*>(m_attributes.getNamedItem(name));
-#endif
 }
 
 

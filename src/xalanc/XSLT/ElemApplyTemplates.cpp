@@ -304,11 +304,7 @@ ElemApplyTemplates::transformChild(
 
     // Filter out any attributes nodes that are namespace declarations
     if (nodeType != XalanNode::ATTRIBUTE_NODE ||
-#if defined(XALAN_OLD_STYLE_CASTS)
-        DOMServices::isNamespaceDeclaration((const XalanAttr&)*child) == false)
-#else
         DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(*child)) == false)
-#endif
     {
         ParentType::transformChild(
             executionContext,

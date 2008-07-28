@@ -206,11 +206,7 @@ getEvaluator(XalanXPathEvaluatorHandle	theHandle)
 {
 	assert(theHandle != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XPathEvaluator*)theHandle;
-#else
 	return static_cast<XPathEvaluator*>(theHandle);
-#endif
 }
 
 
@@ -220,11 +216,7 @@ getXPath(XalanXPathHandle	theHandle)
 {
 	assert(theHandle != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XPath*)theHandle;
-#else
 	return static_cast<XPath*>(theHandle);
-#endif
 }
 
 
@@ -282,11 +274,7 @@ transcodeString(
 	size_type	theTargetBytesUsed = 0;
 
 	const XalanTranscodingServices::eCode	theCode = theTranscoder->transcode(
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanOutputTranscoder::XalanXMLByte*)theString,
-#else
 					reinterpret_cast<const XalanOutputTranscoder::XalanXMLByte*>(theString),
-#endif
 					theLength,
 					theChars,
 					theLength,
@@ -549,11 +537,7 @@ XalanEvaluateXPathAsBoolean(
 
 			// Create an input source...
 			const MemBufInputSource		theInputSource(
-#if defined(XALAN_OLD_STYLE_CASTS)
-											(const XMLByte*)theXML,
-#else
 											reinterpret_cast<const XMLByte*>(theXML),
-#endif
 											XalanDOMString::length(theXML),
 											"SourceXML",
 											false);

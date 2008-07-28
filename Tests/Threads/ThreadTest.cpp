@@ -269,11 +269,7 @@ thePreparsedThreadRoutine(void*		param)
 // theProcessor.setStylesheetRoot method. The transform is done using the theProcessor's
 // process() method.
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	ThreadInfo* const		theInfo = (ThreadInfo*)param;
-#else
 	ThreadInfo* const		theInfo = reinterpret_cast<ThreadInfo*>(param);
-#endif
 
 	assert(theInfo != 0);
 
@@ -293,7 +289,7 @@ thePreparsedThreadRoutine(void*		param)
 		// from same directory as the input files.
 
 		// Generate the output file name.
-		XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
+		XalanDOMString	theOutputFile("birds", theManager);
 
 		NumberToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");
@@ -340,11 +336,7 @@ theUnparsedThreadRoutine(void*		param)
 {
 // This routine compiles a stylesheet and a source document
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	ThreadInfo* const		theInfo = (ThreadInfo*)param;
-#else
 	ThreadInfo* const		theInfo = reinterpret_cast<ThreadInfo*>(param);
-#endif
 
 	assert(theInfo != 0);
 
@@ -364,7 +356,7 @@ theUnparsedThreadRoutine(void*		param)
         MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
         // Generate the output file name.
-        XalanDOMString	theOutputFile(XALAN_STATIC_UCODE_STRING("birds"), theManager);
+        XalanDOMString	theOutputFile("birds", theManager);
 
 		NumberToDOMString(theInfo->m_threadNumber, theOutputFile);
         theOutputFile.append(".out");

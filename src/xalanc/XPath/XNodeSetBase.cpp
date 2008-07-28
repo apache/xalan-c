@@ -86,11 +86,7 @@ XNodeSetBase::num() const
 {
 	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XNodeSetBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
-#else
 		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
-#endif
 	}
 
 	return m_cachedNumberValue;
@@ -115,11 +111,7 @@ XNodeSetBase::str() const
 		const XalanNode* const	theNode = item(0);
 		assert(theNode != 0);
 
-#if defined(XALAN_NO_MUTABLE)
-		DOMServices::getNodeData(*theNode, ((XNodeSetBase*)this)->m_cachedStringValue);
-#else
 		DOMServices::getNodeData(*theNode, m_cachedStringValue);
-#endif
 	}
 
 	return m_cachedStringValue;

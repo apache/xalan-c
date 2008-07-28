@@ -62,21 +62,13 @@ XalanEncodingPropertyCache::canEncodeCharacter(XalanUnicodeChar     theChar) con
 		}
 		else
 		{
-#if defined(XALAN_NO_MUTABLE)
-			((XalanEncodingPropertyCache*)this)->m_presentBitmap.set(theChar);
-#else
 			m_presentBitmap.set(theChar);
-#endif
 
-			const bool	fResult = m_transcoder->canTranscodeTo(theChar);
+            const bool	fResult = m_transcoder->canTranscodeTo(theChar);
 
 			if (fResult == true)
 			{
-#if defined(XALAN_NO_MUTABLE)
-				((XalanEncodingPropertyCache*)this)->m_valueBitmap.set(theChar);
-#else
 				m_valueBitmap.set(theChar);
-#endif
 			}
 
 			return fResult;

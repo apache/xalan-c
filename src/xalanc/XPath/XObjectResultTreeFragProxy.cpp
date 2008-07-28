@@ -40,15 +40,10 @@ XObjectResultTreeFragProxy::~XObjectResultTreeFragProxy()
 
 
 
-#define XALAN_NO_MUTABLE
 XalanNode*
 XObjectResultTreeFragProxy::getFirstChild() const
 {
-#if defined(XALAN_NO_MUTABLE)
-	return (XalanNode*)&m_proxy;
-#else
 	return &m_proxy;
-#endif
 }
 
 
@@ -56,11 +51,7 @@ XObjectResultTreeFragProxy::getFirstChild() const
 XalanNode*
 XObjectResultTreeFragProxy::getLastChild() const
 {
-#if defined(XALAN_NO_MUTABLE)
-	return (XalanNode*)&m_proxy;
-#else
 	return &m_proxy;
-#endif
 }
 
 

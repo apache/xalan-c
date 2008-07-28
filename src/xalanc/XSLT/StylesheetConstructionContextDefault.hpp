@@ -440,11 +440,7 @@ private:
 	{
 		assert(sizeof(AVT**) == sizeof(PointerVectorAllocatorType::value_type));
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (const AVT**)m_pointerVectorAllocator.allocate(theSize);
-#else
 		return reinterpret_cast<const AVT**>(m_pointerVectorAllocator.allocate(theSize));
-#endif
 	}
 
 	const AVTPart**
@@ -452,11 +448,7 @@ private:
 	{
 		assert(sizeof(AVTPart**) == sizeof(PointerVectorAllocatorType::value_type));
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (const AVTPart**)m_pointerVectorAllocator.allocate(theSize);
-#else
 		return reinterpret_cast<const AVTPart**>(m_pointerVectorAllocator.allocate(theSize));
-#endif
 	}
 
 	const XalanQName**
@@ -464,11 +456,7 @@ private:
 	{
 		assert(sizeof(XalanQName**) == sizeof(PointerVectorAllocatorType::value_type));
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (const XalanQName**)m_pointerVectorAllocator.allocate(theSize);
-#else
 		return reinterpret_cast<const XalanQName**>(m_pointerVectorAllocator.allocate(theSize));
-#endif
 	}
 
 

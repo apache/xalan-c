@@ -117,20 +117,13 @@ ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &
 {
     XALAN_USING_STD(find_if)
 
-    DecimalFormatCacheListType&     theNonConstCache =
-#if defined(XALAN_NO_MUTABLE)
-        (DecimalFormatCacheListType&)m_decimalFormatCache;
-#else
-        m_decimalFormatCache;
-#endif
-
     DecimalFormatCacheListType::iterator i =
         find_if(
-            theNonConstCache.begin(),
-            theNonConstCache.end(),
+            m_decimalFormatCache.begin(),
+            m_decimalFormatCache.end(),
             DecimalFormatCacheStruct::DecimalFormatFindFunctor(&theDFS));
 
-    if (i == theNonConstCache.end())
+    if (i == m_decimalFormatCache.end())
     {
         return 0;
     }
@@ -140,7 +133,7 @@ ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &
         // If so, we don't have to update the cache, so just return the
         // appropriate value...
         const DecimalFormatCacheListType::iterator  theBegin =
-            theNonConstCache.begin();
+            m_decimalFormatCache.begin();
 
         if (i == theBegin)
         {
@@ -149,11 +142,11 @@ ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &
         else
         {
             // Save the formatter, because splice() may invalidate
-            // i.
+            // the iterator.
             DecimalFormatType* const    theFormatter = (*i).m_formatter;
 
             // Move the entry to the beginning the cache
-            theNonConstCache.splice(theBegin, theNonConstCache, i);
+            m_decimalFormatCache.splice(theBegin, m_decimalFormatCache, i);
 
             return theFormatter;
         }
@@ -333,30 +326,23 @@ ICUFormatNumberFunctor::cacheDecimalFormat(
 
     assert(theFormatter != 0);
 
-    DecimalFormatCacheListType&     theNonConstCache =
-#if defined(XALAN_NO_MUTABLE)
-        (DecimalFormatCacheListType&)m_decimalFormatCache;
-#else
-        m_decimalFormatCache;
-#endif
-
     // Is the cache full?
-    if (theNonConstCache.size() == eCacheMax)
+    if (m_decimalFormatCache.size() == eCacheMax)
     {
         // Yes, so guard the collator instance, in case pop_back() throws...
         DFAutoPtrType   theDecimalFormatGuard(
                             m_memoryManager,
-                            theNonConstCache.back().m_formatter);
+                            m_decimalFormatCache.back().m_formatter);
 
-        theNonConstCache.pop_back();
+        m_decimalFormatCache.pop_back();
     }
 
     const DecimalFormatCacheListType::value_type    emptyDFC(m_memoryManager);
 
-    theNonConstCache.push_front(emptyDFC);
+    m_decimalFormatCache.push_front(emptyDFC);
 
     DecimalFormatCacheListType::value_type&     theEntry = 
-        theNonConstCache.front();
+        m_decimalFormatCache.front();
 
     theEntry.m_formatter = theFormatter;
     theEntry.m_DFS = theDFS;

@@ -73,11 +73,7 @@ public:
 	static NodeImplType*
 	getImpl(const ParentType&		theNode)
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return ((const XercesDOM_NodeHack&)theNode).getImpl();
-#else
 		return static_cast<const XercesDOM_NodeHack&>(theNode).getImpl();
-#endif
 	}
 };
 
@@ -140,21 +136,13 @@ public:
 	ElementImplType*
 	getImpl() const
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (ElementImplType*)fImpl;
-#else
 		return reinterpret_cast<ElementImplType*>(fImpl);
-#endif
 	}
 
 	static ElementImplType*
 	getImpl(const ParentType&	theNode)
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return ((const XercesDOM_ElementHack&)theNode).getImpl();
-#else
 		return static_cast<const XercesDOM_ElementHack&>(theNode).getImpl();
-#endif
 	}
 };
 
@@ -194,21 +182,13 @@ public:
 	TextImplType*
 	getImpl() const
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (TextImplType*)fImpl;
-#else
 		return reinterpret_cast<TextImplType*>(fImpl);
-#endif
 	}
 
 	static TextImplType*
 	getImpl(const ParentType&	theNode)
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return ((const XercesDOM_TextHack&)theNode).getImpl();
-#else
 		return static_cast<const XercesDOM_TextHack&>(theNode).getImpl();
-#endif
 	}
 };
 

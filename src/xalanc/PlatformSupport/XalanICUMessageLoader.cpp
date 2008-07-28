@@ -122,7 +122,7 @@ static const char* domainName = INVK_MAKE_STRING(XALAN_PRODUCT);
 XalanICUMessageLoader::XalanICUMessageLoader(MemoryManagerType &theManager):
 	m_localeBundle(0),
 	m_domainBundle(0),
-	m_unknownMessage(XALAN_STATIC_UCODE_STRING("The message was not found in the ICU resource bundle."), theManager)
+	m_unknownMessage("The message was not found in the ICU resource bundle.", theManager)
 {
  	UErrorCode err = U_ZERO_ERROR;
 

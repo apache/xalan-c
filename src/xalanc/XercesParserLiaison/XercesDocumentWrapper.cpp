@@ -162,11 +162,7 @@ XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
 		{
 			if (theXercesNode != m_xercesDocument &&
 					theXercesNode->getOwnerDocument() != m_xercesDocument &&
-#if defined(XALAN_OLD_STYLE_CASTS)
-				theXercesNode->getParentNode() != (const DOMNodeType*)m_xercesDocument)
-#else
 				theXercesNode->getParentNode() != static_cast<const DOMNodeType*>(m_xercesDocument))
-#endif
 			{
 				throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
 			}
@@ -188,20 +184,11 @@ XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
 const DOMNodeType*
 XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	if ((const XalanNode*)this == theXalanNode)
-#else
-	if (static_cast<const XalanNode*>(this) == theXalanNode)
-#endif
+	if (this == theXalanNode)
 	{
 		return m_xercesDocument;
 	}
-	else if (theXalanNode == 0 ||
-#if defined(XALAN_OLD_STYLE_CASTS)
-		(const XalanDocument*)this != theXalanNode->getOwnerDocument())
-#else
-		static_cast<const XalanDocument*>(this) != theXalanNode->getOwnerDocument())
-#endif
+	else if (theXalanNode == 0 || this != theXalanNode->getOwnerDocument())
 	{
 		throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
 	}
@@ -210,27 +197,15 @@ XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 		switch(theXalanNode->getNodeType())
 		{
 		case XalanNode::ATTRIBUTE_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesAttrWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesAttrWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::CDATA_SECTION_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesCDATASectionWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesCDATASectionWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::COMMENT_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesCommentWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesCommentWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::DOCUMENT_FRAGMENT_NODE:
@@ -238,59 +213,31 @@ XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 			break;
 
 		case XalanNode::ELEMENT_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesElementWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesElementWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::ENTITY_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesEntityWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesEntityWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::ENTITY_REFERENCE_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesEntityReferenceWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesEntityReferenceWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::NOTATION_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesNotationWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesNotationWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesProcessingInstructionWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesProcessingInstructionWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::TEXT_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesTextWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesTextWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		case XalanNode::DOCUMENT_TYPE_NODE:
-#if defined(XALAN_OLD_STYLE_CASTS)
-			return ((const XercesDocumentTypeWrapper*)theXalanNode)->getXercesNode();
-#else
 			return static_cast<const XercesDocumentTypeWrapper*>(theXalanNode)->getXercesNode();
-#endif
 			break;
 
 		default:
@@ -307,11 +254,7 @@ XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 XalanAttr*
 XercesDocumentWrapper::mapNode(const DOMAttrType* 	theXercesNode) const
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanAttr*)mapNode((const DOMNodeType*)theXercesNode);
-#else
 	return static_cast<XalanAttr*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
-#endif
 }
 
 
@@ -319,11 +262,7 @@ XercesDocumentWrapper::mapNode(const DOMAttrType* 	theXercesNode) const
 XalanElement*
 XercesDocumentWrapper::mapNode(const DOMElementType* 	theXercesNode) const
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XercesElementWrapper*)mapNode((const DOMNodeType*)theXercesNode);
-#else
 	return static_cast<XercesElementWrapper*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
-#endif
 }
 
 
@@ -377,14 +316,7 @@ XercesDocumentWrapper::rebuildWrapper()
 XercesWrapperNavigator&
 XercesDocumentWrapper::createNavigator() const
 {
-	XercesDocumentWrapper* const		This =
-#if defined(XALAN_OLD_STYLE_CASTS)
-		(XercesDocumentWrapper*)this;
-#else
-		const_cast<XercesDocumentWrapper*>(this);
-#endif
-
-	return *This->m_navigatorAllocator.create(This);
+	return *m_navigatorAllocator.create(const_cast<XercesDocumentWrapper*>(this));
 }
 
 
@@ -407,23 +339,15 @@ XercesDocumentWrapper::createWrapperNode(
 
 	theNavigator.setIndex(theIndex);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
 	// Update the member variable for the new instance.
-    This->m_doctype =  XercesDocumentTypeWrapper::create( getMemoryManager(), theDoctype, theNavigator);
+    m_doctype =  XercesDocumentTypeWrapper::create(getMemoryManager(), theDoctype, theNavigator);
 
 	if (mapNode == true)
 	{
-		This->m_nodeMap.addAssociation(theDoctype, m_doctype);
+		m_nodeMap.addAssociation(theDoctype, m_doctype);
 	}
 
-	This->m_nodes.push_back(m_doctype);
+	m_nodes.push_back(m_doctype);
 
     if (theWrapperNodeNavigator != 0)
     {
@@ -447,23 +371,14 @@ XercesDocumentWrapper::createWrapperNode(
 
 	theNavigator.setIndex(theIndex);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
 	XercesElementWrapper* const	theWrapper =
-		This->m_elementAllocator.create(theXercesNode,
-										theNavigator);
+		m_elementAllocator.create(theXercesNode, theNavigator);
 
 	if (m_doctype != 0 || mapNode == true)
 	{
 		// Add it to the node map, since we my need it for getting
 		// elements by ID, or we're in mapping mode.
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -488,22 +403,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 	theNavigator.setIndex(theIndex);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
 	XercesTextWrapper* const		theWrapper =
-		This->m_textAllocator.create(theXercesNode,
-									 theNavigator);
+		m_textAllocator.create(theXercesNode, theNavigator);
 
 	if (mapNode == true)
 	{
 		// Add it to the node map...
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -534,20 +440,12 @@ XercesDocumentWrapper::createWrapperNode(
                                 theXercesNode,
 								theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	if (mapNode == true)
 	{
 		// Add it to the node map...
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -578,20 +476,12 @@ XercesDocumentWrapper::createWrapperNode(
                                      theXercesNode,
 									 theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	if (mapNode == true)
 	{
 		// Add it to the node map...
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -622,20 +512,12 @@ XercesDocumentWrapper::createWrapperNode(
                                               theXercesNode,
 											  theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	if (mapNode == true)
 	{
 		// Add it to the node map...
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -660,21 +542,12 @@ XercesDocumentWrapper::createWrapperNode(
 
 	theNavigator.setIndex(theIndex);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
 	XercesAttrWrapper* const		theWrapper =
-		This->m_attributeAllocator.create(theXercesNode,
-										  theNavigator);
+		m_attributeAllocator.create(theXercesNode, theNavigator);
 
 	// Add it to the node map -- attributes ALWAYS go in the map
 	// for now...
-	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+	m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
@@ -704,19 +577,11 @@ XercesDocumentWrapper::createWrapperNode(
                                theXercesNode,
 							   theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	// Add it to the node map -- entities ALWAYS go in the map
 	// for now...
-	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+	m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
@@ -746,20 +611,12 @@ XercesDocumentWrapper::createWrapperNode(
                                         theXercesNode,
 										theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	if (mapNode == true)
 	{
 		// Add it to the node map...
-		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+		m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
     if (theWrapperNodeNavigator != 0)
@@ -790,19 +647,11 @@ XercesDocumentWrapper::createWrapperNode(
                                  theXercesNode,
 								 theNavigator);
 
-#if defined(XALAN_NO_MUTABLE)
-	XercesDocumentWrapper* const		This =
-		(XercesDocumentWrapper*)this;
-#else
-	const XercesDocumentWrapper* const	This =
-		this;
-#endif
-
-	This->m_nodes.push_back(theWrapper);
+	m_nodes.push_back(theWrapper);
 
 	// Add it to the node map -- notations ALWAYS go in the map
 	// for now...
-	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
+	m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
@@ -830,11 +679,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::ATTRIBUTE_NODE:
 		{
 			const DOMAttrType*		theAttrNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMAttrType*)theXercesNode;
-#else
 						static_cast<const DOMAttrType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theAttrNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -844,11 +689,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::CDATA_SECTION_NODE:
 		{
 			const DOMCDATASectionType*	theCDATASectionNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMCDATASectionType*)theXercesNode;
-#else
 						static_cast<const DOMCDATASectionType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theCDATASectionNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -859,11 +700,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::COMMENT_NODE:
 		{
 			const DOMCommentType*	theCommentNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMCommentType*)theXercesNode;
-#else
 						static_cast<const DOMCommentType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theCommentNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -877,11 +714,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::ELEMENT_NODE:
 		{
 			const DOMElementType*	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMElementType*)theXercesNode;
-#else
 						static_cast<const DOMElementType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theElementNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -891,11 +724,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::ENTITY_NODE:
 		{
 			const DOMEntityType*	theEntityNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMEntityType*)theXercesNode;
-#else
 						static_cast<const DOMEntityType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theEntityNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -905,11 +734,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::ENTITY_REFERENCE_NODE:
 		{
 			const DOMEntityReferenceType*	theEntityReferenceNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMEntityReferenceType*)theXercesNode;
-#else
 						static_cast<const DOMEntityReferenceType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theEntityReferenceNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -919,11 +744,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::NOTATION_NODE:
 		{
 			const DOMNotationType*	theNotationNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMNotationType*)theXercesNode;
-#else
 						static_cast<const DOMNotationType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theNotationNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -933,11 +754,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::PROCESSING_INSTRUCTION_NODE:
 		{
 			const DOMProcessingInstructionType*		thePINode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMProcessingInstructionType*)theXercesNode;
-#else
 						static_cast<const DOMProcessingInstructionType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(thePINode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -947,11 +764,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::TEXT_NODE:
 		{
 			const DOMTextType*	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMTextType*)theXercesNode;
-#else
 						static_cast<const DOMTextType*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theTextNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
@@ -961,11 +774,7 @@ XercesDocumentWrapper::createWrapperNode(
 	case DOMNodeType::DOCUMENT_TYPE_NODE:
 		{
 			const DOMDocumentType_Type*		theDoctypeNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMDocumentType_Type*)theXercesNode;
-#else
 						static_cast<const DOMDocumentType_Type*>(theXercesNode);
-#endif
 
 			theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode, theWrapperNodeNavigator);
 
@@ -998,18 +807,12 @@ XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
 	}
 	else
 	{
-		// Delete the node...
-        XalanNode* ptrToDelete = *i;
+        assert(*i != 0);
 
-        if ( ptrToDelete != 0 )
-        {
-            MemoryManagerType& theManager = m_nodes.getMemoryManager();
-
-            ptrToDelete->~XalanNode();
-
-            theManager.deallocate(ptrToDelete);
-
-        }
+        // Delete the node...
+        XalanDestroy(
+            m_nodes.getMemoryManager(),
+            *i);
 
 		// Erase it from the map...
 		m_nodes.erase(i);
@@ -1176,7 +979,8 @@ XercesDocumentWrapper::getDocumentElement() const
 XalanElement*
 XercesDocumentWrapper::getElementById(const XalanDOMString&		elementId) const
 {
-	const DOMNodeType* const	theXercesNode = m_xercesDocument->getElementById(c_wstr(elementId));
+	const DOMNodeType* const	theXercesNode =
+        m_xercesDocument->getElementById(elementId.c_str());
 
 	if (theXercesNode == 0)
 	{
@@ -1184,11 +988,7 @@ XercesDocumentWrapper::getElementById(const XalanDOMString&		elementId) const
 	}
 	else
 	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (XalanElement*)mapNode(theXercesNode);
-#else
 		return static_cast<XalanElement*>(mapNode(theXercesNode));
-#endif
 	}
 }
 
@@ -1223,11 +1023,7 @@ XercesDocumentWrapper::buildWrapperNodes()
 		theChild = theChild->getNextSibling();
 	}
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	m_documentElement = (XalanElement*)theChild;
-#else
 	m_documentElement = static_cast<XalanElement*>(theChild);
-#endif
 
 	m_indexValid = true;
 
@@ -1331,11 +1127,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	{
 		// Special case for doctype -- we have to build its entities...
 		const DOMDocumentType_Type* const	theDoctype =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOMDocumentType_Type*)node;
-#else
 			static_cast<const DOMDocumentType_Type*>(node);
-#endif
 
 		const DOMNamedNodeMapType* const	theEntities =
 			theDoctype->getEntities();
@@ -1351,13 +1143,9 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	}
 	else if (node->getNodeType() == DOMNodeType::ELEMENT_NODE)
 	{
-	// Special case for element nodes -- we have to build the attributes...
+	    // Special case for element nodes -- we have to build the attributes...
 		const DOMElementType* const		theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOMElementType*)node;
-#else
 			static_cast<const DOMElementType*>(node);
-#endif
 
 		const DOMNamedNodeMapType* const	theAttributes =
 			theElement->getAttributes();

@@ -64,11 +64,7 @@ XalanDocumentFragmentNodeRefListBaseProxy::item(size_type	index) const
 {
 	assert(index == 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanDocumentFragment*)&m_value;
-#else
 	return const_cast<XalanDocumentFragment*>(&m_value);
-#endif
 }
 
 

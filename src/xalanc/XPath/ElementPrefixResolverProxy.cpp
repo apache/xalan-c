@@ -92,12 +92,7 @@ ElementPrefixResolverProxy::getURI() const
 {
 	if (m_envSupport != 0 && m_namespaceContext != 0 && length(m_uri) == 0)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((ElementPrefixResolverProxy*)this)->m_uri =
-#else
-		m_uri =
-#endif
-				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
+		m_uri = m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
 	}
 
 	return m_uri;

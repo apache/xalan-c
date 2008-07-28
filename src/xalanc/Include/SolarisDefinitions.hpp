@@ -32,42 +32,14 @@
 #define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
 
 
-#if __SUNPRO_CC >= 0x520
-
 #define XALAN_HAS_CPP_NAMESPACE
 #define XALAN_STRICT_ANSI_HEADERS
-
-#else
-
-// Sun Workshop 4.2 _does_ support new cast syntax, but it's
-// broken with extra cv-qualifiers, so we'll use old-style casts.
-#define XALAN_OLD_STYLE_CASTS
-
-#define XALAN_NO_STD_NAMESPACE
-#define XALAN_STLPORT_STL
-#define XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION
-#define XALAN_CLASSIC_IOSTREAMS
-#define XALAN_NO_MUTABLE
-#define XALAN_SGI_BASED_STL
-#define XALAN_NO_MEMBER_TEMPLATES
-#define XALAN_BOOL_AS_INT
-#define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
-#define XALAN_NO_COVARIANT_RETURN_TYPE
-#define XALAN_NO_USING_DECLARATION
-
-// STL Port Definitions
-#define __STL_NO_SGI_IOSTREAMS
-#define _REENTRANT
-#include <stl/_config.h>
-
-#endif
 
 // Standard allocators don't seem to work correctly with this compiler.
 // I don't know if this is their bug, or ours...
 #define XALAN_NO_STD_ALLOCATORS
 #define XALAN_RW_NO_CLASS_PARTIAL_SPEC
 
-#define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
 #define XALAN_NO_STD_NUMERIC_LIMITS
 

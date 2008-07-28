@@ -125,11 +125,7 @@ getTransformer(XalanHandle	theHandle)
 {
 	assert(theHandle != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (XalanTransformer*)theHandle;
-#else
 	return static_cast<XalanTransformer*>(theHandle);
-#endif
 }
 
 
@@ -139,11 +135,7 @@ getStylesheet(XalanCSSHandle	theHandle)
 {
 	assert(theHandle != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (const XalanCompiledStylesheet*)theHandle;
-#else
 	return reinterpret_cast<const XalanCompiledStylesheet*>(theHandle);
-#endif
 }
 
 
@@ -153,11 +145,7 @@ getParsedSource(XalanPSHandle	theHandle)
 {
 	assert(theHandle != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return (const XalanParsedSource*)theHandle;
-#else
 	return reinterpret_cast<const XalanParsedSource*>(theHandle);
-#endif
 }
 
 

@@ -40,28 +40,6 @@ typedef XalanVector<UChar>	UCharVectorType;
 
 
 
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-inline void
-doCopyData(
-			const XalanDOMChar*		    theString,
-			XalanDOMString::size_type   theStringLength,
-			XalanDOMChar*			    theBuffer)
-{
-	// Copy the data, truncating each character...
-	for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
-	{
-		// There should be no truncation, since XalanDOMChars
-		// hold UTF-16 code points, but assert, just in case...
-		assert(theString[i] == UChar(theString[i]));
-
-		theBuffer[i] = theString[i];
-	}
-
-}
-#endif
-
-
-
 // Use a stack-based buffer up to this size.
 const XalanSize_t	theStackBufferSize = 200u;
 
@@ -83,20 +61,11 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 }
 
 
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-
-const UnicodeString
-ICUBridge::XalanDOMCharStringToUnicodeString(
-            MemoryManagerType&          theManager,
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
-#else
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(
             MemoryManagerType&        /*  theManager */,
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength)
-#endif
 {
 	assert(theString != 0);
 
@@ -106,41 +75,7 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 	}
 	else
 	{
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-
-		if (theStackBufferSize > theLength)
-		{
-			XalanDOMChar	theBuffer[theStackBufferSize];
-
-			doCopyData(theString, theLength, theBuffer);
-
-#if U_SIZEOF_WCHAR_T==2
-			return UnicodeString((wchar_t*)&theBuffer[0], theLength);
-#else
-			return UnicodeString(&theBuffer[0], theLength);
-#endif
-		}
-		else
-		{
-			// Create a buffer to copy out the UnicodeString data...
-			UCharVectorType		theBuffer(theManager);
-
-			// Resize the buffer appropriately...
-			theBuffer.resize(theLength);		
-
-#if U_SIZEOF_WCHAR_T==2
-			doCopyData(theString, theLength, (XalanDOMChar*)&theBuffer[0]);
-#else
-			doCopyData(theString, theLength, &theBuffer[0]);
-#endif
-
-			assert(theLength == theBuffer.size());
-
-			return UnicodeString(&theBuffer[0], theLength);
-		}
-#else
 		return UnicodeString(theString, length(theString));
-#endif
 	}
 }
 
@@ -163,27 +98,6 @@ ICUBridge::UnicodeStringToXalanDOMString(
             XalanDOMString&         theResult)
 {
 	const int32_t	theLength = theString.length();
-
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-
-	// If XalanDOMChar is larger than the ICU's UChar, we have to more work...
-	// Create a buffer...
-    XalanDOMCharVectorType	theBuffer(theResult.getMemoryManager());
-
-	// Reserve the appropriate amount of space...
-	theBuffer.reserve(theLength);
-
-	// Copy the data...
-	for (int32_t i = 0; i < theLength; ++i)
-	{
-		theBuffer.push_back(theString[i]);
-	}
-
-    theResult.assign(&theBuffer[0], theBuffer.size());
-
-	return theResult;
-
-#else
 
 	if (theStackBufferSize > theLength)
 	{
@@ -213,7 +127,6 @@ ICUBridge::UnicodeStringToXalanDOMString(
 
 		return theResult;
 	}
-#endif
 }
 
 

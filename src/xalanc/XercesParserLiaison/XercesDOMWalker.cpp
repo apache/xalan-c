@@ -290,11 +290,7 @@ XercesDOMWalker::traverseSubtree(DOMNodeType*	pos)
 bool
 XercesDOMWalker::startNode(DOMNodeType*		node)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return startNode((const DOMNodeType*)node);
-#else
 	return startNode(const_cast<const DOMNodeType*>(node));
-#endif
 }
 
 
@@ -302,11 +298,7 @@ XercesDOMWalker::startNode(DOMNodeType*		node)
 bool
 XercesDOMWalker::endNode(DOMNodeType*	node)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return endNode((const DOMNodeType*)node);
-#else
 	return endNode(const_cast<const DOMNodeType*>(node));
-#endif
 }
 
 

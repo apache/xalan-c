@@ -128,11 +128,7 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode
 	case XalanNode::ELEMENT_NODE:
 		{
 			const XalanElement*	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanElement*)node;
-#else
 				static_cast<const XalanElement*>(node);
-#endif
 
 			const XalanNamedNodeMap* const	atts = theElementNode->getAttributes();
 			assert(atts != 0);
@@ -144,11 +140,7 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode
 				assert(atts->item(i) != 0 && atts->item(i)->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 				const XalanAttr* const	theAttr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanAttr*)atts->item(i);
-#else
 					static_cast<const XalanAttr*>(atts->item(i));
-#endif
 
 				if (DOMServices::isNamespaceDeclaration(*theAttr) == true)
 				{
@@ -173,11 +165,7 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(XalanNode*		nod
 {
 	assert(node != 0);
 
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return startNode((const XalanNode*)node);
-#else
 	return startNode(const_cast<const XalanNode*>(node));
-#endif
 }
 
 
