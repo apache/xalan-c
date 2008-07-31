@@ -2443,6 +2443,14 @@ private:
 
 protected:
 
+    /**
+     * Execute a step in a location path.
+     *
+     * @param xpath The xpath that is executing
+     * @param context The current source tree context node
+     * @param opPos The current position in the xpath operation map array
+     * @param queryResults The set of nodes that matches the step.
+     */
     void
     step(
             XPathExecutionContext&	executionContext,
@@ -2451,7 +2459,25 @@ protected:
             MutableNodeRefList&		queryResults) const;
 
     /**
-     * Execute a step in a location path.
+     * Potentially evaluate a predicate in a match pattern step.
+     *
+     * @param executionContext The current execution context.
+     * @param context          The current source tree context node.
+     * @param opPos            The current position in the Op Map.
+     * @param startOpPos       The original position for the step in the Op Map.
+     * @param score            The current match score for the context node.
+     * @return The resulting match score
+     */
+    eMatchScore
+    doStepPredicate(
+            XPathExecutionContext&	executionContext,
+            XalanNode* 				context, 
+            OpCodeMapPositionType 	opPos,
+            OpCodeMapPositionType 	startOpPos,
+            eMatchScore 			score) const;
+
+    /**
+     * Execute a step in a match pattern's location path.
      *
      * @param xpath The xpath that is executing
      * @param context The current source tree context node

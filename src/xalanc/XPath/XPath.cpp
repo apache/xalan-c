@@ -3019,6 +3019,71 @@ XPath::step(
 
 
 
+XPath::eMatchScore
+XPath::doStepPredicate(
+            XPathExecutionContext&	executionContext,
+            XalanNode* 				context,
+            OpCodeMapPositionType 	opPos,
+            OpCodeMapPositionType 	startOpPos,
+            eMatchScore 			score) const
+{
+    const XPathExpression&  currentExpression = getExpression();
+
+    OpCodeMapValueType  nextStepType = currentExpression.getOpCodeMapValue(opPos);
+
+    if (XPathExpression::eOP_PREDICATE == nextStepType ||
+        XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+    {
+        do
+        {
+            // This is a quick hack to look ahead and see if we have
+            // number literal as the predicate, i.e. match="foo[1]".
+            if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+            {
+                if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
+                {
+                    score = handleFoundIndexPositional(
+                            executionContext,
+                            context,
+                            startOpPos);
+                }
+                else
+                {
+                    score = handleFoundIndex(
+                            executionContext,
+                            context,
+                            startOpPos);
+                }
+            }
+            else
+            {
+                const XObjectPtr    pred(predicate(context, opPos, executionContext));
+                assert(pred.get() != 0);
+
+                if(XObject::eTypeNumber == pred->getType())
+                {
+                    score = handleFoundIndex(executionContext, context, startOpPos);
+                }
+                else if(pred->boolean() == false)
+                {
+                    score = eMatchScoreNone;
+
+                    break;
+                }
+            }
+
+            opPos = currentExpression.getNextOpCodePosition(opPos);
+            nextStepType = currentExpression.getOpCodeMapValue(opPos);
+        }
+        while(XPathExpression::eOP_PREDICATE == nextStepType ||
+              XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType);
+    }
+
+    return score;
+}
+
+
+
 XalanNode*
 XPath::stepPattern(
             XPathExecutionContext&  executionContext,
@@ -3030,6 +3095,8 @@ XPath::stepPattern(
 
     const OpCodeMapPositionType     endStep = currentExpression.getNextOpCodePosition(opPos);
     OpCodeMapValueType              nextStepType = currentExpression.getOpCodeMapValue(endStep);
+
+    bool    fDoPredicates = true;
 
     if(XPathExpression::eENDOP != nextStepType)
     {
@@ -3200,6 +3267,9 @@ XPath::stepPattern(
     case XPathExpression::eMATCH_ANY_ANCESTOR:
     case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
         {
+            assert(fDoPredicates == true);
+            fDoPredicates = false;
+
             argLen = currentExpression.getOpCodeArgumentLength(opPos);
 
             XalanNode::NodeType     nodeType = context->getNodeType();
@@ -3219,8 +3289,20 @@ XPath::stepPattern(
                 {
                     score = theTester(*context, nodeType);
 
-                    if(eMatchScoreNone != score)
-                        break;
+                    if (eMatchScoreNone != score)
+                    {
+                        score = 
+                            doStepPredicate(
+                                executionContext,
+                                context, 
+                                opPos + argLen,
+                                startOpPos,
+                                score);
+                        if (eMatchScoreNone != score)
+                        {
+                            break;
+                        }
+                    }
 
                     context = DOMServices::getParentOfNode(*context);
 
@@ -3272,57 +3354,15 @@ XPath::stepPattern(
         }
     }
 
-    opPos += argLen;
-
-    nextStepType = currentExpression.getOpCodeMapValue(opPos);
-
-    if(score != eMatchScoreNone &&
-       (XPathExpression::eOP_PREDICATE == nextStepType || XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType))
+    if (fDoPredicates == true && score != eMatchScoreNone)
     {
-        score = eMatchScoreOther;
-
-        while(XPathExpression::eOP_PREDICATE == nextStepType ||
-              XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
-        {
-            // This is a quick hack to look ahead and see if we have
-            // number literal as the predicate, i.e. match="foo[1]".
-            if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
-            {
-                if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
-                {
-                    score = handleFoundIndexPositional(
-                            executionContext,
-                            context,
-                            startOpPos);
-                }
-                else
-                {
-                    score = handleFoundIndex(
-                            executionContext,
-                            context,
-                            startOpPos);
-                }
-            }
-            else
-            {
-                const XObjectPtr    pred(predicate(context, opPos, executionContext));
-                assert(pred.get() != 0);
-
-                if(XObject::eTypeNumber == pred->getType())
-                {
-                    score = handleFoundIndex(executionContext, context, startOpPos);
-                }
-                else if(pred->boolean() == false)
-                {
-                    score = eMatchScoreNone;
-
-                    break;
-                }
-            }
-
-            opPos = currentExpression.getNextOpCodePosition(opPos);
-            nextStepType = currentExpression.getOpCodeMapValue(opPos);
-        }
+        score =
+            doStepPredicate(
+                executionContext,
+                context, 
+                opPos + argLen,
+                startOpPos,
+                score);
     }
 
     if (scoreHolder == eMatchScoreNone || 
