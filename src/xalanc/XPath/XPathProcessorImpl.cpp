@@ -2844,7 +2844,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
     }
     else if(tokenIs(XalanUnicode::charSolidus) == true)
     {
-        if(lookahead(s_axisString, 2) == false)
+        if(lookahead(s_axisString, 2) == false &&
+           lookahead(XalanUnicode::charCommercialAt, 1) == false)
         {
             matchTypePos = m_expression->opCodeMapLength();
 
@@ -2856,26 +2857,37 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
         {
             nextToken();
 
-            if(tokenIs(s_attributeString) == true)
+            // This matches an abbreviated step "@foo"
+            if (tokenIs(XalanUnicode::charCommercialAt) == true)
             {
                 axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
                 m_expression->appendOpCode(axisType);
             }
-            else if(tokenIs(s_childString) == true)
-            {
-                matchTypePos = m_expression->opCodeMapLength();
-
-                axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
-
-                m_expression->appendOpCode(axisType);
-            }
             else
             {
-                error(XalanMessages::OnlyChildAndAttributeAxesAreAllowed); 
-            }
+                // This matches the attribute or child axis: attribute::name or child::name.
+                if(tokenIs(s_attributeString) == true)
+                {
+                    axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-            nextToken();
+                    m_expression->appendOpCode(axisType);
+                }
+                else if(tokenIs(s_childString) == true)
+                {
+                    matchTypePos = m_expression->opCodeMapLength();
+
+                    axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+
+                    m_expression->appendOpCode(axisType);
+                }
+                else
+                {
+                    error(XalanMessages::OnlyChildAndAttributeAxesAreAllowed); 
+                }
+
+                nextToken();
+            }
         }
 
         nextToken();
