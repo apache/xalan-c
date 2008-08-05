@@ -1240,16 +1240,19 @@ TranscodeToLocalCodePage(const XalanDOMChar*    theSourceString)
  * page.
  * 
  * @param theSourceString The source string
- * @param targetVector The target string
+ * @param theTargetVector The target string
  * @return true if successful, false if not.
  */
 inline bool
 TranscodeToLocalCodePage(
             const XalanDOMString&   theSourceString,
-            CharVectorType&         targetVector,
+            CharVectorType&         theTargetVector,
             bool                    terminate = false)
 {
-    return TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate);
+    return TranscodeToLocalCodePage(
+                theSourceString.c_str(),
+                theTargetVector,
+                terminate);
 }
 
 /**
@@ -1259,18 +1262,18 @@ TranscodeToLocalCodePage(
  * 
  * @param theSourceString The source string
  * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
  * @param theSubstitutionChar The substitution character for code points that are not presentable
  *                              in the local page
  */
-inline void
+XALAN_DOM_EXPORT_FUNCTION(void)
 TranscodeToLocalCodePage(
             const XalanDOMString&   theSourceString,
-            CharVectorType&         targetVector,
-            bool                    terminate ,
-            char                    theSubstitutionChar)
-{
-    TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate, theSubstitutionChar);
-}
+            CharVectorType&         theTargetVector,
+            bool                    terminate,
+            char                    theSubstitutionChar);
+
+
 
 /**
  * Convert XalanDOMString to C++ standard library
@@ -1298,18 +1301,19 @@ TranscodeToLocalCodePage(const XalanDOMString&  theSourceString)
  * the default local code page.
  * 
  * @param theSourceString The source string
+ * @param theResult The result.
  * @param theSourceStringLength The source string length.
  * @return The new string.
  */
 inline const XalanDOMString&
 TranscodeFromLocalCodePage(
             const char*                 theSourceString,
-             XalanDOMString&            result,
+            XalanDOMString&             theResult,
             XalanDOMString::size_type   theSourceStringLength = XalanDOMString::npos)
 {
-    result.assign(theSourceString, theSourceStringLength);
+    theResult.assign(theSourceString, theSourceStringLength);
 
-    return result;
+    return theResult;
 }
 
 
@@ -1349,15 +1353,37 @@ TranscodeFromLocalCodePage(
             bool                        terminate = false);
 
 /**
+ * Convert a string to a C++ standard library
+ * vector, transcoding from the default local code
+ * page.
+ * 
+ * @param theSourceString The source string
+ * @param theSourceStringLength The source string length.
+ * @param theSourceStringIsNullTerminated true if the source string is null-terminated, otherwise false.
+ * @param targetVector The target string
+ * @param terminate If true, the transcoded string will be null-terminated
+ * @return true if successful, false if not.
+ */
+XALAN_DOM_EXPORT_FUNCTION(bool)
+TranscodeFromLocalCodePage(
+            const char*                 theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            bool                        theSourceStringIsNullTerminated,
+            XalanDOMCharVectorType&     theTargetVector,
+            bool                        terminate = false);
+
+/**
  * Convert a vector of characters to a XalanDOMString,
  * transcoding from the default local code
  *
- * @param theSourceString source string
+ * @param theSourceString The source vector.
+ * @param theResult The result.
  * @return The transcoded string.
  */
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString&)
-TranscodeFromLocalCodePage(const CharVectorType&    theSourceString,
-                           XalanDOMString&          result);
+TranscodeFromLocalCodePage(
+            const CharVectorType&   theSourceString,
+            XalanDOMString&         theResult);
 
 
 XALAN_USES_MEMORY_MANAGER(XalanDOMString)

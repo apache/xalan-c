@@ -26,10 +26,6 @@
 
 
 
-#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -329,6 +325,7 @@ inline void
 doTranscode(
             const char*                 theString,
             XalanDOMString::size_type   theCount,
+            bool                        theSourceStringIsNullTerminated,
             XalanDOMCharVectorType&     theVector,
             bool                        fTerminate)
 {
@@ -336,14 +333,22 @@ doTranscode(
 
     if (theCount == XalanDOMString::size_type(XalanDOMString::npos))
     {
-        if (TranscodeFromLocalCodePage(theString, theVector, fTerminate) == false)
+        if (TranscodeFromLocalCodePage(
+                theString,
+                theVector,
+                fTerminate) == false)
         {
             throw XalanDOMString::TranscodingError();
         }
     }
     else
     {
-        if (TranscodeFromLocalCodePage(theString, theCount, theVector, fTerminate) == false)
+        if (TranscodeFromLocalCodePage(
+                theString,
+                theCount,
+                theSourceStringIsNullTerminated,
+                theVector,
+                fTerminate) == false)
         {
             throw XalanDOMString::TranscodingError();
         }
@@ -366,13 +371,13 @@ XalanDOMString::append(
     {
         if (empty() == true)
         {
-            doTranscode(theString, theLength, m_data, true);
+            doTranscode(theString, theLength, theCount == size_type(npos), m_data, true);
         }
         else
         {
             XalanDOMCharVectorType  theTempVector(getMemoryManager());
 
-            doTranscode(theString, theLength, theTempVector, false);
+            doTranscode(theString, theLength, theCount == size_type(npos), theTempVector, false);
 
             append(&*theTempVector.begin(), size_type(theTempVector.size()));
         }
@@ -806,7 +811,7 @@ XALAN_CPP_NAMESPACE_END
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-const size_t    theOneTranslatedWbCharLen = 10;
+const XalanDOMString::size_type     theOneTranslatedWbCharLen = 10;
 
 
 // The template function should never fail.
@@ -822,41 +827,30 @@ doXercesTranscode(
             bool                        terminate,
             char                        theSubstitutionChar)
 {
+    assert(
+        theSourceStringIsNullTerminated == false ||
+        theSourceStringLength == XalanDOMString::length(theSourceString));
 
     const SourceType*   theRealSourceString = theSourceString;
 
-    XalanDOMString::size_type   theRealSourceStringLength = theSourceStringLength;
+    XalanVector<SourceType>     theCopiedSource(theTargetVector.getMemoryManager());
 
-    XalanMemMgrAutoPtrArray<SourceType>     theGuard;
-
-    if (theSourceStringIsNullTerminated == true)
+    if (theSourceStringIsNullTerminated == false)
     {
-        theRealSourceStringLength = XalanDOMString::length(theSourceString);
-    }
-    else
-    {
-        typedef XalanMemMngArrayAllocate<SourceType> ArrayAllocateSourceType;
+        theCopiedSource.reserve(theSourceStringLength + 1);
 
-        theGuard.reset( &( theTargetVector.getMemoryManager()), 
-                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()),
-                        theRealSourceStringLength + 1);
+        theCopiedSource.assign(
+            theSourceString,
+            theSourceString + theSourceStringLength);
 
-        assert(theGuard.get() != 0);
+        theCopiedSource.push_back(static_cast<SourceType>(0));
 
-        for (XalanDOMString::size_type index = 0; index < theRealSourceStringLength; ++index)
-        {
-            theGuard[index] = theSourceString[index];
-        }
-
-        theGuard[theRealSourceStringLength] = SourceType(0);
-
-        theRealSourceString = theGuard.get(); 
+        theRealSourceString = &*theCopiedSource.begin();
     }
 
-    // wild guessing about the size of the result transcoded vector
-    theTargetVector.resize(
-        2 * (theRealSourceStringLength + 1),
-        TargetType(0));
+    // Initially, let's guess the the transcoded string will be the same
+    // length as the source string.
+    theTargetVector.resize(theSourceStringLength + 1);
 
     assert(theRealSourceString != 0);
 
@@ -864,15 +858,11 @@ doXercesTranscode(
 
     XALAN_USING_XERCES(XMLString)
 
-    // $$$ ToDo: We should use the Xerces transcoder interface
-    // instead of XMLString::transcode(), so we can better control
-    // error handling and failures due to inadequate space.
-
     fSuccess = XMLString::transcode(
         theRealSourceString,
         &*theTargetVector.begin(),
         theTargetVector.size() - 1,
-        & (theTargetVector.getMemoryManager()));
+        &theTargetVector.getMemoryManager());
 
     if (fSuccess == false)
     {
@@ -888,7 +878,7 @@ doXercesTranscode(
 
         TargetType theOneTranslatedWbChar[theOneTranslatedWbCharLen]; 
 
-        for (size_t i = 0 ; i <= theRealSourceStringLength ; ++i)
+        for (XalanDOMString::size_type i = 0; i < theSourceStringLength; ++i)
         {
             oneCharArray[0] = theRealSourceString[i];
 
@@ -898,19 +888,20 @@ doXercesTranscode(
                 oneCharArray,
                 theOneTranslatedWbChar,
                 theOneTranslatedWbCharLen - 1,
-                & (theTargetVector.getMemoryManager()));
+                &theTargetVector.getMemoryManager());
 
-            if( fSuccess == false )
+            if (fSuccess == false)
             {
                 theTargetVector.push_back(theSubstitutionChar);
             }
             else
             {
-                XalanDOMString::size_type theRealCharLength = XalanDOMString::length(theOneTranslatedWbChar);
+                XalanDOMString::size_type theRealCharLength =
+                    XalanDOMString::length(theOneTranslatedWbChar);
 
-                /* When we transcode the character '\0', that looks like "\0\0", 
-                   XalanDOMString::length returns a size of 0.
-                   It's incorrect and the real size should be 1*/
+                // When we transcode the character '\0', that looks like "\0\0", 
+                // XalanDOMString::length returns a size of 0.  In this case, the
+                // real size should be 1
                 if (theRealCharLength == 0)
 		        {
 	                theRealCharLength = 1;
@@ -926,12 +917,14 @@ doXercesTranscode(
 
     }
 
-    if (terminate == false)
+    while(theTargetVector.back() == static_cast<TargetType>(0))
     {
-        while(theTargetVector.back() == TargetType(0))
-        {
-            theTargetVector.pop_back();
-        }
+        theTargetVector.pop_back();
+    }
+
+    if (terminate == true)
+    {
+        theTargetVector.push_back(static_cast<TargetType>(0));
     }
 }
 
@@ -946,69 +939,57 @@ doXercesTranscode(
             XalanVector<TargetType>&    theTargetVector,
             bool                        terminate)
 {
+    assert(
+        theSourceStringIsNullTerminated == false ||
+        theSourceStringLength == XalanDOMString::length(theSourceString));
+
     const SourceType*   theRealSourceString = theSourceString;
 
-    XalanDOMString::size_type   theRealSourceStringLength = theSourceStringLength;
+    XalanVector<SourceType>     theCopiedSource(theTargetVector.getMemoryManager());
 
-    XalanMemMgrAutoPtrArray<SourceType>     theGuard;
-
-    if (theSourceStringIsNullTerminated == true)
+    if (theSourceStringIsNullTerminated == false)
     {
-        theRealSourceStringLength = XalanDOMString::length(theSourceString);
-    }
-    else
-    {
-        typedef XalanMemMngArrayAllocate<SourceType> ArrayAllocateSourceType;
+        theCopiedSource.reserve(theSourceStringLength + 1);
 
-        theGuard.reset( &( theTargetVector.getMemoryManager()), 
-                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()),
-                        theRealSourceStringLength + 1);
+        theCopiedSource.assign(
+            theSourceString,
+            theSourceString + theSourceStringLength);
 
-        assert(theGuard.get() != 0);
+        theCopiedSource.push_back(static_cast<SourceType>(0));
 
-        for (XalanDOMString::size_type index = 0; index < theRealSourceStringLength; ++index)
-        {
-            theGuard[index] = theSourceString[index];
-        }
-
-        theGuard[theRealSourceStringLength] = SourceType(0);
-
-        theRealSourceString = theGuard.get(); 
+        theRealSourceString = &*theCopiedSource.begin();
     }
 
-    // Initially, let's guess the the transcoded string will be of the same
-    // length as the UTF-16 string.
-    theTargetVector.resize(theRealSourceStringLength + 1, TargetType(0));
+    // Initially, let's guess the the transcoded string will be the same
+    // length as the source string.
+    theTargetVector.resize(theSourceStringLength + 1);
 
     assert(theRealSourceString != 0);
 
-    XalanSize_t     theAttempts = 0;
     bool            fSuccess = false;
 
     do
     {
         XALAN_USING_XERCES(XMLString)
 
-        // $$$ ToDo: We should use the Xerces transcoder interface
-        // instead of XMLString::transcode(), so we can better control
-        // error handling and failures due to inadequate space.
         fSuccess = XMLString::transcode(
                     theRealSourceString,
                     &*theTargetVector.begin(),
                     theTargetVector.size() - 1,
-                    & (theTargetVector.getMemoryManager()));
+                    &theTargetVector.getMemoryManager());
 
         if (fSuccess == false)
         {
-            if (theAttempts > 2)
+            // We're going to assume that the maximum storage for
+            // a transcoded string is 4 times the source string
+            // length.  This will only occur in edge cases.
+            if (theTargetVector.size() >= theSourceStringLength * 4)
             {
                 break;
             }
             else
             {
-                ++theAttempts;
-
-                theTargetVector.resize(theTargetVector.size() + 10, TargetType(0));
+                theTargetVector.resize(theTargetVector.size() + 10);
             }
         }
     } while (fSuccess == false);
@@ -1017,11 +998,16 @@ doXercesTranscode(
     {
         theTargetVector.clear();
     }
-    else if (terminate == false)
+    else
     {
-        while(theTargetVector.back() == TargetType(0))
+        while(theTargetVector.back() == static_cast<TargetType>(0))
         {
             theTargetVector.pop_back();
+        }
+
+        if (terminate == true)
+        {
+            theTargetVector.push_back(static_cast<TargetType>(0));
         }
     }
 
@@ -1127,7 +1113,7 @@ TranscodeToLocalCodePage(
 {
     doTranscodeToLocalCodePage(
                             theSourceString, 
-                            0, 
+                            length(theSourceString),
                             true, 
                             theTargetVector, 
                             terminate,
@@ -1143,7 +1129,12 @@ TranscodeToLocalCodePage(
             CharVectorType&             theTargetVector,
             bool                        terminate)
 {
-    return doTranscodeToLocalCodePage(theSourceString, theSourceStringLength, false, theTargetVector, terminate);
+    return doTranscodeToLocalCodePage(
+                theSourceString,
+                theSourceStringLength,
+                false,
+                theTargetVector,
+                terminate);
 }
 
 
@@ -1154,7 +1145,30 @@ TranscodeToLocalCodePage(
             CharVectorType&         theTargetVector,
             bool                    terminate)
 {
-    return doTranscodeToLocalCodePage(theSourceString, 0, true, theTargetVector, terminate);
+    return doTranscodeToLocalCodePage(
+                theSourceString,
+                length(theSourceString),
+                true,
+                theTargetVector,
+                terminate);
+}
+
+
+
+XALAN_DOM_EXPORT_FUNCTION(void)
+TranscodeToLocalCodePage(
+            const XalanDOMString&   theSourceString,
+            CharVectorType&         theTargetVector,
+            bool                    terminate,
+            char                    theSubstitutionChar)
+{
+    doTranscodeToLocalCodePage(
+        theSourceString.c_str(),
+        theSourceString.length(),
+        true,
+        theTargetVector,
+        terminate,
+        theSubstitutionChar);
 }
 
 
@@ -1205,7 +1219,30 @@ TranscodeFromLocalCodePage(
             XalanDOMCharVectorType&     theTargetVector,
             bool                        terminate)
 {
-    return doTranscodeFromLocalCodePage(theSourceString, theSourceStringLength, false, theTargetVector, terminate);
+    return doTranscodeFromLocalCodePage(
+                theSourceString,
+                theSourceStringLength,
+                false,
+                theTargetVector,
+                terminate);
+}
+
+
+
+XALAN_DOM_EXPORT_FUNCTION(bool)
+TranscodeFromLocalCodePage(
+            const char*                 theSourceString,
+            XalanDOMString::size_type   theSourceStringLength,
+            bool                        theSourceStringIsNullTerminated,
+            XalanDOMCharVectorType&     theTargetVector,
+            bool                        terminate)
+{
+    return doTranscodeFromLocalCodePage(
+                theSourceString,
+                theSourceStringLength,
+                theSourceStringIsNullTerminated,
+                theTargetVector,
+                terminate);
 }
 
 
@@ -1216,14 +1253,20 @@ TranscodeFromLocalCodePage(
             XalanDOMCharVectorType&     theTargetVector,
             bool                        terminate)
 {
-    return doTranscodeFromLocalCodePage(theSourceString, 0, true, theTargetVector, terminate);
+    return doTranscodeFromLocalCodePage(
+                theSourceString,
+                XalanDOMString::length(theSourceString),
+                true,
+                theTargetVector,
+                terminate);
 }
 
 
 
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString&)
-TranscodeFromLocalCodePage(const CharVectorType&    theSourceString,
-                           XalanDOMString&          result)
+TranscodeFromLocalCodePage(
+            const CharVectorType&   theSourceString,
+            XalanDOMString&         result)
 {
     if (theSourceString.empty() == true)
     {
