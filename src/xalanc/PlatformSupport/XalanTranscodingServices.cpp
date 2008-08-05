@@ -493,7 +493,7 @@ XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(const
     m_code(theSource.m_code),
     m_encoding(
         theSource.m_encoding,
-        theSource.getMemoryManager())
+        m_memoryManager)
 {
 }
 
@@ -561,7 +561,7 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
     m_badCharacter(theCharacter),
     m_encoding(
         theEncoding,
-        theBuffer.getMemoryManager())
+        m_memoryManager)
 {
 }
 
@@ -572,7 +572,7 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
     m_badCharacter(theSource.m_badCharacter),
     m_encoding(
         theSource.m_encoding,
-        theSource.getMemoryManager())
+        m_memoryManager)
 {
 }
 

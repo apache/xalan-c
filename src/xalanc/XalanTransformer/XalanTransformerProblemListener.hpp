@@ -68,7 +68,7 @@ public:
 
 	virtual void
 	problem(
-			eProblemSource				where,
+			eProblemSource				source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,

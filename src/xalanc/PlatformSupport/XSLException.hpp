@@ -56,7 +56,7 @@ public:
 			const XalanDOMString&	theURI,
 			XalanFileLoc			theLineNumber,
 			XalanFileLoc			theColumnNumber,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 	/**
 	 * Constructor
 	 * 
@@ -67,7 +67,7 @@ public:
 	XSLException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 	/**
 	 * Constructor
 	 * 
@@ -76,7 +76,7 @@ public:
 	 */
 	XSLException(
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
 
 	XSLException(const XSLException&	other);
@@ -136,12 +136,16 @@ public:
 		return m_columnNumber;
 	}
 
-    MemoryManagerType& 
-    getMemoryManager()const
+    const MemoryManager&
+    getMemoryManager() const
     {
-        XalanDOMString* pnt = const_cast<XalanDOMString*>(&m_message);
+        return m_memoryManager;
+    }
 
-        return pnt->getMemoryManager();
+    MemoryManager&
+    getMemoryManager()
+    {
+        return m_memoryManager;
     }
 
 	void
@@ -203,15 +207,17 @@ public:
 			const XalanDOMString::size_type		theTypeLength,
 			XalanDOMString&						theBuffer);
 
-private:
+protected:
+
+    mutable MemoryManager&  m_memoryManager;
 	
+private:
+
 	const XalanDOMString	m_message;
 	const XalanDOMString	m_uri;
 
 	const XalanFileLoc		m_lineNumber;
 	const XalanFileLoc	    m_columnNumber;
-
-
 };
 
 

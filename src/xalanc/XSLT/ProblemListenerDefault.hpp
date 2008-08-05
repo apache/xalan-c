@@ -41,8 +41,9 @@ class XALAN_XSLT_EXPORT ProblemListenerDefault : public ProblemListener
 {
 public:
 
-	ProblemListenerDefault(MemoryManagerType& theManager, 
-                            PrintWriter*		pw = 0);
+	ProblemListenerDefault(
+            MemoryManager&  theManager, 
+            PrintWriter*    pw = 0);
 
 	virtual
 	~ProblemListenerDefault();
@@ -54,7 +55,7 @@ public:
 
 	virtual void
 	problem(
-			eProblemSource				where,
+			eProblemSource				source,
 			eClassification				classification, 
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -74,7 +75,7 @@ public:
 	static void
 	problem(
 			PrintWriter&				pw,
-			eProblemSource				where,
+			eProblemSource				source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -85,9 +86,9 @@ public:
 
 private:
 
-    MemoryManagerType&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 
-	PrintWriter*	    m_pw;
+	PrintWriter*	m_pw;
 };
 
 

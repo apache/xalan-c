@@ -48,6 +48,7 @@
 #include <xalanc/PlatformSupport/ExecutionContext.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
+#include <xalanc/PlatformSupport/XSLException.hpp>
 
 
 
@@ -687,42 +688,23 @@ XercesParserLiaison::formatErrorMessage(
             const SAXParseExceptionType&    e,
             XalanDOMString&                 theMessage)
 {
+    XalanDOMString  theErrorBuffer(theMessage.getMemoryManager());
+
+    const XalanDOMChar* const   theExceptionMessage = e.getMessage();
+    assert(theExceptionMessage != 0);
 
     const XalanDOMChar* const   theSystemID = e.getSystemId();
 
-    XalanDOMString  theLineNumber(theMessage.getMemoryManager());
-    XalanDOMString  theColumnNumb(theMessage.getMemoryManager());
-
-    NumberToDOMString(e.getLineNumber(), theLineNumber);
-    NumberToDOMString(e.getColumnNumber(), theColumnNumb);
-
-    XalanDOMString  theErrorMsg(theMessage.getMemoryManager());
-
-    if (theSystemID == 0 || length(theSystemID) == 0)
-    {
-        
-        append(
-            theMessage,
-            XalanMessageLoader::getMessage(
-                theErrorMsg,
-                XalanMessages::AtUnknownFileLineColumn_2Param,
-            theLineNumber,
-            theColumnNumb));
-    }
-    else
-    {
-        append(
-            theMessage,
-            XalanMessageLoader::getMessage(
-                theErrorMsg,
-                XalanMessages::AtFileLineColumn_3Param,
-                XalanDOMString(theSystemID, theMessage.getMemoryManager()),
-            theLineNumber,
-            theColumnNumb));
-    }
-
-    append(theMessage, XalanDOMChar(XalanUnicode::charSpace));
-    append(theMessage, e.getMessage());
+    XSLException::defaultFormat(
+        theExceptionMessage,
+        length(theExceptionMessage),
+        theSystemID,
+        theSystemID == 0 ? 0 : length(theSystemID),
+        e.getLineNumber(),
+        e.getColumnNumber(),
+        0,
+        0,
+        theMessage);
 }
 
 

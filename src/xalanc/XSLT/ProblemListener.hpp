@@ -50,14 +50,16 @@ class XALAN_XSLT_EXPORT ProblemListener
 public:
 
 	/// Sources of problem
-	enum eProblemSource { eXMLPARSER		= 1,
-						  eXSLPROCESSOR		= 2,
-						  eXPATH			= 3 };
+	enum eProblemSource { eXMLPARSER		= 0,
+						  eXSLPROCESSOR		= 1,
+						  eXPATH			= 2,
+                          eSourceCount };
 
 	/// Severity of problem
 	enum eClassification {	eMESSAGE	= 0,
 							eWARNING	= 1,
-							eERROR		= 2 };
+							eERROR		= 2,
+                            eClassificationCount };
 
 	ProblemListener();
 
@@ -75,8 +77,8 @@ public:
 	/**
  	 * Function that is called when a problem event occurs.
      * 
-     * @param   where          either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
-     * @param   classification either MESSAGE, ERROR or WARNING
+     * @param   source         either eXMLPARSER, eXSLPROCESSOR, or eXPATH
+     * @param   classification either eMESSAGE, eERROR or eWARNING
 	 * @param   sourceNode     source tree node where the problem occurred
 	 *                         (may be 0)
 	 * @param   styleNode      style tree node where the problem occurred
@@ -88,7 +90,7 @@ public:
 	 */
 	virtual void
 	problem(
-			eProblemSource				where,
+			eProblemSource				source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,

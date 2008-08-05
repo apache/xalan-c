@@ -15,10 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- * */
 
 
 
@@ -73,7 +69,7 @@ XalanTransformerProblemListener::setPrintWriter(PrintWriter*	thePrintWriter)
 
 void
 XalanTransformerProblemListener::problem(
-			eProblemSource				where,
+			eProblemSource				source,
 			eClassification				classification, 
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -85,7 +81,7 @@ XalanTransformerProblemListener::problem(
 	if (classification == eERROR)
 	{
 		m_problemListener.problem(
-			where,
+			source,
 			classification,
 			sourceNode,
 			styleNode,
@@ -102,7 +98,7 @@ XalanTransformerProblemListener::problem(
 
 		ProblemListenerDefault::problem(
 			thePrintWriter,
-			where,
+			source,
 			classification,
 			sourceNode,
 			styleNode,

@@ -79,7 +79,24 @@ public:
     static XalanFileLoc
     getUnknownValue()
     {
-        return XalanFileLoc(-1);
+        // The parser reports the maximum value of the XalanFileLoc
+        // type for an unknown value.
+        return ~static_cast<XalanFileLoc>(0);
+    }
+
+    static XalanFileLoc
+    getUnknownDisplayValue()
+    {
+        // The parser reports the maximum value of the XalanFileLoc
+        // type for an unknown value, but that is really non-sensical
+        // for display purposes, so we use 0 instead.
+        return static_cast<XalanFileLoc>(0);
+    }
+
+    static bool
+    isUnknownValue(XalanFileLoc     theLocation)
+    {
+        return theLocation == getUnknownValue();
     }
 
 private:

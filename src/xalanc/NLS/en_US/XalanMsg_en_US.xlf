@@ -454,19 +454,49 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The function '{0}' accepts one argument.</target>
 </trans-unit>
 
-<trans-unit id="Error_1Param">
-		<source>Error: {0}</source>
-		<target>Error: {0}</target>
+<trans-unit id="XSLTError">
+        <source>XSLT error</source>
+        <target>XSLT error</target>
 </trans-unit>
 
-<trans-unit id="Warning_1Param">
-		<source>Warning: {0}</source>
-		<target>Warning: {0}</target>
+<trans-unit id="XSLTWarning">
+        <source>XSLT warning</source>
+        <target>XSLT warning</target>
 </trans-unit>
 
-<trans-unit id="Message_1Param">
-		<source>Message: {0}</source>
-		<target>Message: {0}</target>
+<trans-unit id="XSLTMessage">
+        <source>XSLT message</source>
+        <target>XSLT message</target>
+</trans-unit>
+
+<trans-unit id="XMLError">
+        <source>XML error</source>
+        <target>XML error</target>
+</trans-unit>
+
+<trans-unit id="XMLWarning">
+        <source>XML warning</source>
+        <target>XML warning</target>
+</trans-unit>
+
+<trans-unit id="XMLMessage">
+        <source>XML message</source>
+        <target>XML message</target>
+</trans-unit>
+
+<trans-unit id="XPathError">
+        <source>XPath error</source>
+        <target>XPath error</target>
+</trans-unit>
+
+<trans-unit id="XPathWarning">
+        <source>XPath warning</source>
+        <target>XPath warning</target>
+</trans-unit>
+
+<trans-unit id="XPathMessage">
+        <source>XPath message</source>
+        <target>XPath message</target>
 </trans-unit>
 
 <trans-unit id="StyleTreeNode_1Param">
@@ -605,18 +635,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="Warning2">
-		<source>Warning.</source>
-		<target>Warning.</target>
-</trans-unit>
-
-<trans-unit id="AtFileLineColumn_3Param">
-		<source>Occurred at file {0}, line {1}, column {2}.</source>
-		<target>Occurred at file {0}, line {1}, column {2}.</target>
+		<source>Warning: </source>
+		<target>Warning: </target>
 </trans-unit>
 
 <trans-unit id="FatalError">
-		<source>Fatal Error.</source>
-		<target>Fatal Error.</target>
+		<source>Fatal Error: </source>
+		<target>Fatal Error: </target>
 </trans-unit>
 
 <trans-unit id="FormatNumberFailed">
@@ -629,9 +654,24 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>Internal error: An invalid match op code '{0}' was detected.</target>
 </trans-unit>
 
-<trans-unit id="AtUnknownFileLineColumn_2Param">
-		<source>Occurred at unknown file, line {0}, column {1}.</source>
-		<target>Occurred at unknown file, line {0}, column {1}.</target>
+<trans-unit id="InEntity_1Param">
+		<source>Occurred in entity '{0}', at an unknown location.</source>
+		<target>Occurred in entity '{0}', at an unknown location.</target>
+</trans-unit>
+
+<trans-unit id="InEntity_3Param">
+		<source>Occurred in entity '{0}', at line {1}, column {2}.</source>
+		<target>Occurred in entity '{0}', at line {1}, column {2}.</target>
+</trans-unit>
+
+<trans-unit id="InUnknownEntity_2Param">
+		<source>Occurred in an unknown entity, at line {0}, column {1}.</source>
+		<target>Occurred in an unknown entity, at line {0}, column {1}.</target>
+</trans-unit>
+
+<trans-unit id="InUnknownEntity">
+        <source>Occurred in an unknown entity, at an unknown location.</source>
+        <target>Occurred in an unknown entity, at an unknown location.</target>
 </trans-unit>
 
 <trans-unit id="EmptyNodeList">

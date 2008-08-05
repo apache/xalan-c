@@ -20,6 +20,8 @@
 
 
 
+#include "LocalMsgIndex.hpp"
+#include "XalanMessageLoader.hpp"
 #include "XalanUnicode.hpp"
 #include "DOMStringHelper.hpp"
 
@@ -34,11 +36,12 @@ XSLException::XSLException(
 		const XalanDOMString&	theURI,
 		XalanFileLoc			theLineNumber,
 		XalanFileLoc			theColumnNumber,
-        MemoryManagerType&      theManager) :
+        MemoryManager&          theManager) :
 	m_message(theMessage, theManager),
 	m_uri(theURI, theManager),
 	m_lineNumber(theLineNumber),
-	m_columnNumber(theColumnNumber)
+	m_columnNumber(theColumnNumber),
+    m_memoryManager(theManager)
 {
 }
 
@@ -47,9 +50,12 @@ XSLException::XSLException(
 XSLException::XSLException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager) :
-	m_message(theMessage,theManager),
-	m_uri(theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId(), theManager),
+            MemoryManager&          theManager) :
+    m_memoryManager(theManager),
+	m_message(theMessage, theManager),
+	m_uri(
+        theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId(),
+        theManager),
 	m_lineNumber(theLocator.getLineNumber()),
 	m_columnNumber(theLocator.getColumnNumber())
 {
@@ -59,21 +65,24 @@ XSLException::XSLException(
 
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
-        MemoryManagerType&      theManager) :
-	m_message(theMessage,theManager),
+        MemoryManager&          theManager) :
+    m_memoryManager(theManager),
+	m_message(theMessage, theManager),
 	m_uri(theManager),
 	m_lineNumber(XalanLocator::getUnknownValue()),
 	m_columnNumber(XalanLocator::getUnknownValue())
 {
 }
 
+
+
 XSLException::XSLException(const XSLException&	other) :
-	m_message(other.m_message,other.getMemoryManager()),
-	m_uri(other.m_uri, other.getMemoryManager()),
+    m_memoryManager(other.m_memoryManager),
+	m_message(other.m_message, m_memoryManager),
+	m_uri(other.m_uri, m_memoryManager),
 	m_lineNumber(other.m_lineNumber),
 	m_columnNumber(other.m_columnNumber)
 {
-    // hack : breal const-ness , use the same memory manager
 }
 
 
@@ -82,53 +91,19 @@ XSLException::~XSLException()
 {
 }
 
+
+
 void
 XSLException::defaultFormat(XalanDOMString&		theBuffer) const
 {
-	defaultFormat(m_message, m_uri, m_lineNumber, m_columnNumber, getType(), theBuffer);
+	defaultFormat(
+        m_message,
+        m_uri,
+        m_lineNumber,
+        m_columnNumber,
+        getType(),
+        theBuffer);
 }
-
-
-static
-XalanDOMChar	colonString[] =
-{
-	XalanUnicode::charColon,
-	XalanUnicode::charSpace,
-	0
-};
-
-
-
-static
-XalanDOMChar	lineString[] =
-{
-	XalanUnicode::charComma,
-	XalanUnicode::charSpace,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charSpace,
-	0
-};
-
-
-
-static
-XalanDOMChar	columnString[] =
-{
-	XalanUnicode::charComma,
-	XalanUnicode::charSpace,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charSpace,
-	0
-};
-
 
 
 void
@@ -143,16 +118,61 @@ XSLException::defaultFormat(
 			const XalanDOMString::size_type		theTypeLength,
 			XalanDOMString&						theBuffer)
 {
-	theBuffer.append(theType, theTypeLength);
-	theBuffer.append(colonString);
+    assert(
+        (theMessageLength == 0 || theMessage != 0) &&
+        (theURILength == 0 || theURI != 0) &&
+        (theTypeLength == 0 || theType != 0));
+
+    if (theTypeLength != 0)
+    {
+	    theBuffer.append(theType, theTypeLength);
+	    theBuffer += XalanDOMChar(XalanUnicode::charColon);
+	    theBuffer += XalanDOMChar(XalanUnicode::charSpace);
+    }
+
 	theBuffer.append(theMessage, theMessageLength);
 	theBuffer += XalanDOMChar(XalanUnicode::charSpace);
 	theBuffer += XalanDOMChar(XalanUnicode::charLeftParenthesis);
-	theBuffer.append(theURI, theURILength);
-	theBuffer += lineString;
-	NumberToDOMString(theLineNumber, theBuffer);
-	theBuffer += columnString;
-	NumberToDOMString(theColumnNumber, theBuffer);
+
+    // Assume we have reasonable locator information.
+    XalanMessages::Codes    theMessageID = XalanMessages::InEntity_3Param;
+
+    XalanDOMString  theMessageBuffer(theBuffer.getMemoryManager());
+    XalanDOMString  theLineNumberBuffer(theBuffer.getMemoryManager());
+    XalanDOMString  theColumnNumberBuffer(theBuffer.getMemoryManager());
+
+    if (XalanLocator::isUnknownValue(theLineNumber))
+    {
+        // We assume that if the line number is unknown,
+        // that the column number will also be unknown.
+        if (theURILength == 0)
+        {
+            theMessageID = XalanMessages::InUnknownEntity;
+        }
+        else
+        {
+            theMessageID = XalanMessages::InEntity_1Param;
+        }
+    }
+    else
+    {
+        if (theURILength == 0)
+        {
+            theMessageID = XalanMessages::InUnknownEntity_2Param;
+        }
+
+        NumberToDOMString(theLineNumber, theLineNumberBuffer);
+        NumberToDOMString(theColumnNumber, theColumnNumberBuffer);
+    }
+
+    XalanMessageLoader::getMessage(
+        theMessageBuffer,
+        theMessageID,
+        theURI,
+        theLineNumberBuffer.c_str(),
+        theColumnNumberBuffer.c_str());
+
+    theBuffer.append(theMessageBuffer);
 	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
 }
 
