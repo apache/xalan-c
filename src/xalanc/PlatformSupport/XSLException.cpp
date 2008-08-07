@@ -134,9 +134,6 @@ XSLException::defaultFormat(
 	theBuffer += XalanDOMChar(XalanUnicode::charSpace);
 	theBuffer += XalanDOMChar(XalanUnicode::charLeftParenthesis);
 
-    // Assume we have reasonable locator information.
-    XalanMessages::Codes    theMessageID = XalanMessages::InEntity_3Param;
-
     XalanDOMString  theMessageBuffer(theBuffer.getMemoryManager());
     XalanDOMString  theLineNumberBuffer(theBuffer.getMemoryManager());
     XalanDOMString  theColumnNumberBuffer(theBuffer.getMemoryManager());
@@ -147,30 +144,42 @@ XSLException::defaultFormat(
         // that the column number will also be unknown.
         if (theURILength == 0)
         {
-            theMessageID = XalanMessages::InUnknownEntity;
+            XalanMessageLoader::getMessage(
+                theMessageBuffer,
+                XalanMessages::InUnknownEntity);
         }
         else
         {
-            theMessageID = XalanMessages::InEntity_1Param;
+            XalanMessageLoader::getMessage(
+                theMessageBuffer,
+                XalanMessages::InEntity_1Param,
+                theURI);
         }
     }
     else
     {
-        if (theURILength == 0)
-        {
-            theMessageID = XalanMessages::InUnknownEntity_2Param;
-        }
-
         NumberToDOMString(theLineNumber, theLineNumberBuffer);
         NumberToDOMString(theColumnNumber, theColumnNumberBuffer);
+
+        if (theURILength == 0)
+        {
+            XalanMessageLoader::getMessage(
+                theMessageBuffer,
+                XalanMessages::InUnknownEntity_2Param,
+                theLineNumberBuffer.c_str(),
+                theColumnNumberBuffer.c_str());
+        }
+        else
+        {
+            XalanMessageLoader::getMessage(
+                theMessageBuffer,
+                XalanMessages::InEntity_3Param,
+                theURI,
+                theLineNumberBuffer.c_str(),
+                theColumnNumberBuffer.c_str());
+        }
     }
 
-    XalanMessageLoader::getMessage(
-        theMessageBuffer,
-        theMessageID,
-        theURI,
-        theLineNumberBuffer.c_str(),
-        theColumnNumberBuffer.c_str());
 
     theBuffer.append(theMessageBuffer);
 	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
