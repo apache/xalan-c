@@ -24,6 +24,8 @@
 
 
 #include <xercesc/sax/EntityResolver.hpp>
+#include "xercesc/util/XMLEntityResolver.hpp"
+#include "xercesc/util/XMLResourceIdentifier.hpp"
 #include <xercesc/util/XMLURL.hpp>
 
 
@@ -58,8 +60,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(
-                                        MemoryManagerType& theManager,
-                                        XSLTProcessor*	theProcessor) :
+            MemoryManager&  theManager,
+            XSLTProcessor*	theProcessor) :
 	XSLTProcessorEnvSupport(),
 	m_defaultSupport(theManager),
 	m_processor(theProcessor)
@@ -127,7 +129,7 @@ XSLTProcessorEnvSupportDefault::reset()
 
 XalanDocument*
 XSLTProcessorEnvSupportDefault::parseXML(
-        MemoryManagerType&      theManager,
+        MemoryManager&          theManager,
 		const XalanDOMString&	urlString,
 		const XalanDOMString&	base)
 {
@@ -155,38 +157,41 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			XMLParserLiaison&	parserLiaison =
 				m_processor->getXMLParserLiaison();
 
-			EntityResolverType* const	theResolver = 
+			EntityResolver* const   theResolver = 
 				parserLiaison.getEntityResolver();
+
+            XMLEntityResolver* const    theXMLResolver = 
+                parserLiaison.getXMLEntityResolver();
+
+            XalanAutoPtr<InputSource>   resolverInputSource;
 
             const XalanDOMString    theEmptyString(theManager);
 
-			if (theResolver == 0)
-			{
-				const XSLTInputSource	inputSource(urlText.c_str(), theManager);
+            if (theResolver != 0)
+            {
+                resolverInputSource.reset(theResolver->resolveEntity(0, urlString.c_str()));
+            }
+            else if (theXMLResolver != 0)
+            {
+                XALAN_USING_XERCES(XMLResourceIdentifier);
 
-                theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
+                XMLResourceIdentifier   theIndentifier(
+                    XMLResourceIdentifier::ExternalEntity,
+                    urlString.c_str());
+
+                resolverInputSource.reset(
+                    theXMLResolver->resolveEntity(&theIndentifier));
+            }
+
+		    if (resolverInputSource.get() != 0)
+			{
+				theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get(), theEmptyString);
 			}
 			else
 			{
-                XALAN_USING_XERCES(InputSource)
+				const XSLTInputSource	inputSource(urlText.c_str(), theManager);
 
-                typedef XalanAutoPtr<InputSource>   AutoPtrType;
-
-				const AutoPtrType   resolverInputSource(
-                                        theResolver->resolveEntity(
-                                            0,
-                                            urlText.c_str()));
-
-				if (resolverInputSource.get() != 0)
-				{
-					theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get(), theEmptyString);
-				}
-				else
-				{
-					const XSLTInputSource	inputSource(urlText.c_str(), theManager);
-
-					theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
-				}
+				theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
 			}
 
 			if (theDocument != 0)

@@ -41,6 +41,7 @@
 
 XALAN_DECLARE_XERCES_CLASS(AttributeList)
 XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
+XALAN_DECLARE_XERCES_CLASS(Locator)
 
 
 
@@ -50,6 +51,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
+
+XALAN_USING_XERCES(AttributeList)
+XALAN_USING_XERCES(DocumentHandler)
+XALAN_USING_XERCES(Locator)
 
 
 
@@ -149,7 +154,7 @@ public:
 	typedef URISupport::URLAutoPtrType	URLAutoPtrType;
 
 	explicit
-	StylesheetConstructionContext(MemoryManagerType&  theManager);
+	StylesheetConstructionContext(MemoryManager&    theManager);
 
 	virtual
 	~StylesheetConstructionContext();
@@ -223,8 +228,9 @@ public:
 	 * @return string to fully qualified URI
 	 */
 	virtual XalanDOMString&
-	getURLStringFromString(const XalanDOMString&	urlString,
-                            XalanDOMString& theResult) = 0;
+	getURLStringFromString(
+            const XalanDOMString&	urlString,
+            XalanDOMString&         theResult) = 0;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -249,7 +255,7 @@ public:
 	getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base,
-            XalanDOMString& theResult) = 0;
+            XalanDOMString&         theResult) = 0;
 
 	/**
 	 * Retrieve the URI for the current XSLT namespace, for example,
@@ -274,7 +280,7 @@ public:
 	 */
 	virtual XPath*
 	createMatchPattern(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -294,7 +300,7 @@ public:
 	 */
 	virtual XPath*
 	createMatchPattern(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -312,7 +318,7 @@ public:
 	 */
 	virtual XPath*
 	createXPath(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -330,7 +336,7 @@ public:
 	 */
 	virtual XPath*
 	createXPath(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -348,7 +354,7 @@ public:
 	 */
 	virtual XPath*
 	createXPath(
-			const LocatorType*			locator,
+			const Locator*			    locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
 			const PrefixResolver&		resolver,
@@ -360,7 +366,7 @@ public:
 	 *
 	 * @return A pointer to the Locator, or 0 if there is nothing on the stack.
 	 */
-	virtual const LocatorType*
+	virtual const Locator*
 	getLocatorFromStack() const = 0;
 
 	/**
@@ -369,7 +375,7 @@ public:
 	 * @param A pointer to the Locator to push.
 	 */
 	virtual void
-	pushLocatorOnStack(const LocatorType*	locator) = 0;
+	pushLocatorOnStack(const Locator*	locator) = 0;
 
 	/**
 	 * Pop the locator from the top of the locator stack.
@@ -399,7 +405,7 @@ public:
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,
-			DocumentHandlerType*	docHandler, 
+			DocumentHandler*	    docHandler, 
 			XalanDocument*			docToRegister) = 0;
 
 	/**
@@ -415,7 +421,7 @@ public:
 	isXMLSpaceAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const LocatorType*		theLocator = 0) = 0;
+			const Locator*		    theLocator = 0) = 0;
 
 	/**
 	 * Given an name, determine if it is the xsl:use-attribute-sets attribute
@@ -430,7 +436,7 @@ public:
 	isXSLUseAttributeSetsAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const LocatorType*		theLocator = 0) = 0;
+			const Locator*		    theLocator = 0) = 0;
 
 	/**
 	 * Given an name, determine if it is a valid QName
@@ -445,7 +451,7 @@ public:
 	isValidQName(
 			const XalanDOMChar*		theName,
 			const Stylesheet&		theStylesheet,
-			const LocatorType*		theLocator = 0) = 0;
+			const Locator*		    theLocator = 0) = 0;
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
@@ -617,7 +623,7 @@ public:
 			size_type&					count,
 			const XalanDOMChar*			qnameTokens,
 			const NamespacesStackType&	namespaces,
-			const LocatorType*			locator = 0,
+			const Locator*			    locator = 0,
 			bool						fUseDefault = false) = 0;
 
 	/**
@@ -635,10 +641,10 @@ public:
 	 */
 	virtual ElemTemplateElement*
 	createElement(
-			int							token,
-			Stylesheet&					stylesheetTree,
-			const AttributeListType&	atts,
-			const LocatorType*			locator = 0) = 0;
+			int						token,
+			Stylesheet&				stylesheetTree,
+			const AttributeList&	atts,
+			const Locator*			locator = 0) = 0;
 
 	/**
 	 * Create a elements which have specific names. The instance
@@ -655,11 +661,11 @@ public:
 	 */
 	virtual ElemTemplateElement*
 	createElement(
-			int							token,
-			Stylesheet&					stylesheetTree,
-			const XalanDOMChar*			name,
-			const AttributeListType&	atts,
-			const LocatorType*			locator = 0) = 0;
+			int						token,
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			const Locator*			locator = 0) = 0;
 
 	/**
 	 * Create a an element for literal text. The instance owns the
@@ -682,7 +688,7 @@ public:
 			XalanDOMString::size_type	length,
 			bool						preserveSpace,
             bool						disableOutputEscaping,
-			const LocatorType*			locator = 0) = 0;
+			const Locator*			    locator = 0) = 0;
 
 	/**
 	 * Create an element to handle an extension element.   The
@@ -700,11 +706,11 @@ public:
 	 */
 	virtual ElemTemplateElement*
 	createElement(
-			Stylesheet&					stylesheetTree,
-			const XalanDOMChar*			name,
-			const AttributeListType&	atts,
-			ExtensionNSHandler&			handler,
-			const LocatorType*			locator = 0) = 0;
+			Stylesheet&				stylesheetTree,
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			ExtensionNSHandler&		handler,
+			const Locator*			   locator = 0) = 0;
 
 	/**
 	 * Create an instance of XalanMatchPatternData, which describes
@@ -744,7 +750,7 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const = 0;
+			const Locator* 		    locator) const = 0;
 
 	virtual void
 	warn(
@@ -756,7 +762,7 @@ public:
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const = 0;
+			const Locator* 		    locator) const = 0;
 
 	virtual void
 	message(
@@ -768,8 +774,7 @@ public:
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const = 0;
-
+			const Locator* 		    locator) const = 0;
 };
 
 

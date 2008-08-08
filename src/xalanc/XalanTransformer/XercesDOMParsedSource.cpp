@@ -79,13 +79,14 @@ XercesDOMParsedSourceHelper::getParserLiaison()
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-			const InputSourceType&	theInputSource,
+			const InputSource&	    theInputSource,
 			bool					fValidate,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver,
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver,
+			XMLEntityResolver*		theXMLEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theManager),
 	m_parsedSource(0),
@@ -93,6 +94,7 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 {
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
+	m_parserLiaison.setXMLEntityResolver(theXMLEntityResolver);
 	m_parserLiaison.setErrorHandler(theErrorHandler);
 	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
 	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
@@ -119,36 +121,42 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 	}
 }
 
+
+
 XercesDOMParsedSource*
 XercesDOMParsedSource::create(
-            MemoryManagerType&      theManager,
-			const InputSourceType&	theInputSource,
+            MemoryManager&          theManager,
+			const InputSource&	    theInputSource,
 			bool					fValidate,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver,
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver,
+			XMLEntityResolver*		theXMLEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation)
 {
     typedef XercesDOMParsedSource ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(
+                                theManager,
+                                theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* theResult =
+        new (theGuard.get()) ThisType(
+                                theInputSource,
+                                fValidate,
+                                theErrorHandler,
+                                theEntityResolver,
+                                theXMLEntityResolver,
+                                theExternalSchemaLocation,
+                                theExternalNoNamespaceSchemaLocation,
+                                theManager);
 
-    new (theResult) ThisType(            
-                            theInputSource,
-                            fValidate,
-                            theErrorHandler,
-                            theEntityResolver,
-                            theExternalSchemaLocation,
-                            theExternalNoNamespaceSchemaLocation,
-                            theManager);
 
-
-     theGuard.release();
+    theGuard.release();
 
     return theResult;
 }
+
 
 
 XercesDOMParsedSource::~XercesDOMParsedSource()

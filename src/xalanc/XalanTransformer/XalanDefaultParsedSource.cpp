@@ -151,14 +151,15 @@ XalanDefaultParsedSourceHelper::getParserLiaison()
 
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
-			const InputSourceType&	theInputSource,
+			const InputSource&	    theInputSource,
 			bool					fValidate,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver,
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver,
+			XMLEntityResolver*		theXMLEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
             bool                    fPoolAllTextNodes,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theManager),
 	m_domSupport(m_parserLiaison),
@@ -167,6 +168,7 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 {
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
+	m_parserLiaison.setXMLEntityResolver(theXMLEntityResolver);
 	m_parserLiaison.setErrorHandler(theErrorHandler);
 	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
 	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
@@ -196,37 +198,44 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 	}
 }
 
+
+    
 XalanDefaultParsedSource*
 XalanDefaultParsedSource::create(
-            MemoryManagerType&      theManager,
-			const InputSourceType&	theInputSource,
+            MemoryManager&          theManager,
+			const InputSource&	    theInputSource,
 			bool					fValidate,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver,
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver,
+			XMLEntityResolver*		theXMLEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
             bool                    fPoolAllTextNodes)
 {
     typedef XalanDefaultParsedSource ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(
+                                theManager,
+                                theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(
-			                theInputSource,
-			                fValidate,
-			                theErrorHandler,
-			                theEntityResolver,
-			                theExternalSchemaLocation,
-			                theExternalNoNamespaceSchemaLocation,
-                            fPoolAllTextNodes,
-                            theManager);
+    ThisType* theResult =
+        new (theGuard.get()) ThisType(
+			                    theInputSource,
+			                    fValidate,
+			                    theErrorHandler,
+			                    theEntityResolver,
+                                theXMLEntityResolver,
+			                    theExternalSchemaLocation,
+			                    theExternalNoNamespaceSchemaLocation,
+                                fPoolAllTextNodes,
+                                theManager);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XalanDefaultParsedSource::~XalanDefaultParsedSource()
 {

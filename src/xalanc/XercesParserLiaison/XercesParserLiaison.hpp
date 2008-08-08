@@ -71,7 +71,7 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException	SAXParseExceptionType;
 
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
 	public XMLParserLiaison,
-	public ErrorHandlerType
+	public ErrorHandler
 {
     
 public:
@@ -85,12 +85,14 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XercesParserLiaison( XercesDOMSupport&	theSupport, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XercesParserLiaison(
+        XercesDOMSupport&	theSupport,
+        MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct a XercesParserLiaison instance.
 	 */
-	XercesParserLiaison(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XercesParserLiaison(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XercesParserLiaison();
@@ -98,7 +100,7 @@ public:
 
 
 	// These interfaces are inherited from XMLParserLiaison...
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_externalSchemaLocation.getMemoryManager();
@@ -115,13 +117,13 @@ public:
 
 	virtual XalanDocument*
 	parseXMLStream(
-			const InputSourceType&	reader,
+			const InputSource&	    reader,
 			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
 	parseXMLStream(
-			const InputSourceType&	urlInputSource,
-			DocumentHandlerType&	handler,
+			const InputSource&	    urlInputSource,
+			DocumentHandler&	    handler,
 			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
@@ -140,14 +142,25 @@ public:
 	setUseValidation(bool	b);
 
 	virtual const XalanDOMString&
-	getParserDescription(XalanDOMString& theResult) const;
+	getParserDescription(XalanDOMString&    theResult) const;
 
-	virtual EntityResolverType*
+	virtual EntityResolver*
 	getEntityResolver() const;
 
 	virtual void
-	setEntityResolver(EntityResolverType*	resolver);
+	setEntityResolver(EntityResolver*	resolver);
 
+	virtual XMLEntityResolver*
+	getXMLEntityResolver() const;
+
+	virtual void
+	setXMLEntityResolver(XMLEntityResolver*     resolver);
+
+	virtual ErrorHandler*
+	getErrorHandler() const;
+
+	virtual void
+	setErrorHandler(ErrorHandler*	handler);
 
 	// These interfaces are new to XercesParserLiaison...
 
@@ -204,25 +217,6 @@ public:
 	  */
 	virtual void
 	setIncludeIgnorableWhitespace(bool	include);
-
-	/**
-	  * This method returns the installed error handler.
-	  *
-	  * @return A pointer to the installed error handler object.
-	  */
-	virtual ErrorHandlerType*
-	getErrorHandler() const;
-
-	/**
-	  * This method installs the user specified error handler on
-	  * the parser.
-	  *
-	  * @param handler A pointer to the error handler to be called
-	  * 			   when the parser comes across 'error' events
-	  * 			   as per the SAX specification.
-	  */
-	virtual void
-	setErrorHandler(ErrorHandlerType*	handler);
 
 	/**
 	  * This method returns the state of the parser's namespace
@@ -730,9 +724,6 @@ protected:
 private:
 
 	void
-	ensureSAXParser();
-
-	void
 	ensureDOMParser();
 
 	DOMParserType*
@@ -754,9 +745,11 @@ private:
 
 	bool				m_exitOnFirstFatalError;
 
-	EntityResolverType* m_entityResolver;
+	EntityResolver*     m_entityResolver;
 
-	ErrorHandlerType*	m_errorHandler;
+    XMLEntityResolver*  m_xmlEntityResolver;
+
+    ErrorHandler*	    m_errorHandler;
 
 	XalanDOMString		m_externalSchemaLocation;
 
@@ -773,8 +766,6 @@ private:
 	bool				m_buildMaps;
 
 	ExecutionContext*	m_executionContext;
-
-	SAXParserType*		m_saxParser;
 
 	DOMParserType*		m_domParser;
 };

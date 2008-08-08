@@ -90,6 +90,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
 
+XALAN_USING_XERCES(InputSource)
+XALAN_USING_XERCES(DocumentHandler)
+
 
 
 // Forward declarations...
@@ -359,7 +362,7 @@ public:
     XalanDocument*
     parseXML(
             const XalanDOMString&   urlString,
-            DocumentHandlerType*    docHandler,
+            DocumentHandler*        docHandler,
             XalanDocument*          docToRegister);
 
     /**
@@ -375,9 +378,9 @@ public:
      */
     XalanDocument*
     parseXML(
-            const InputSourceType&  inputSource,
-            DocumentHandlerType*    docHandler,
-            XalanDocument*          docToRegister);
+            const InputSource&  inputSource,
+            DocumentHandler*    docHandler,
+            XalanDocument*      docToRegister);
 
     /**
      * Reset the state of the XSL processor by reading in a new XSL stylesheet

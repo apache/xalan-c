@@ -50,6 +50,7 @@ class ostream;
 
 XALAN_DECLARE_XERCES_CLASS(EntityResolver)
 XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+XALAN_DECLARE_XERCES_CLASS(XMLEntityResolver)
 
 
 
@@ -59,6 +60,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
+
+XALAN_USING_XERCES(EntityResolver)
+XALAN_USING_XERCES(ErrorHandler)
+XALAN_USING_XERCES(XMLEntityResolver)
 
 
 
@@ -569,29 +574,63 @@ public:
     }
 
     /**
-     * This method returns the installed entity resolver.
+     * Returns the installed EntityResolver.
      *
-     * @return The pointer to the installed entity resolver object.
+     * @return The pointer to the installed EntityResolver.
      */
-    EntityResolverType*
+    EntityResolver*
     getEntityResolver() const
     {
         return m_entityResolver;
     }
 
     /**
-     * This method installs the user-specified entity resolver.
-     * It allows applications to trap and redirect calls to
-     * external entities.
+     * Installs the supplied EntityResolver.
      *
-     * @param handler A pointer to the entity resolver to be called
-     *             when the parser comes across references to
-     *             entities in the XML file.
+      * A call to setEntityResolver with a non-null pointer will
+      * uninstall any XMLEntityResolver previously installed.
+      *
+     * @param theResolver A pointer to the EntityResolver.
      */
     void
-    setEntityResolver(EntityResolverType*   theResolver)
+    setEntityResolver(EntityResolver*   theResolver)
     {
         m_entityResolver = theResolver;
+
+        if (theResolver != 0 && m_xmlEntityResolver != 0)
+        {
+            m_xmlEntityResolver = 0;
+        }
+    }
+
+    /**
+     * Returns the installed XMLEntityResolver.
+     *
+     * @return The pointer to the installed XMLEntityResolver.
+     */
+    XMLEntityResolver*
+    getXMLEntityResolver() const
+    {
+        return m_xmlEntityResolver;
+    }
+
+    /**
+     * Installs the supplied XMLEntityResolver.
+     *
+      * A call to setXMLEntityResolver with a non-null pointer will
+      * uninstall any EntityResolver previously installed.
+      *
+     * @param theResolver A pointer to the XMLEntityResolver.
+     */
+    void
+    setXMLEntityResolver(XMLEntityResolver*     theResolver)
+    {
+        m_xmlEntityResolver = theResolver;
+
+        if (theResolver != 0 && m_entityResolver != 0)
+        {
+            m_entityResolver = 0;
+        }
     }
 
     /**
@@ -599,7 +638,7 @@ public:
      *
      * @return The pointer to the installed error handler object.
      */
-    ErrorHandlerType*
+    ErrorHandler*
     getErrorHandler() const
     {
         return m_errorHandler;
@@ -611,7 +650,7 @@ public:
      * @param handler A pointer to the error handler to be called upon error.
      */
     void
-    setErrorHandler(ErrorHandlerType*   theErrorHandler)
+    setErrorHandler(ErrorHandler*   theErrorHandler)
     {
         m_errorHandler = theErrorHandler;
     }
@@ -918,8 +957,10 @@ public:
         const XalanParsedSource* const  m_parsedSource;
     };
 
-    struct EnsureDestroyCompiledStylesheet
+    class EnsureDestroyCompiledStylesheet
     {
+    public:
+
         EnsureDestroyCompiledStylesheet(
                 XalanTransformer&               theTransformer,
                 const XalanCompiledStylesheet*  theCompiledStylesheet) :
@@ -1012,9 +1053,11 @@ private:
 
     bool                                    m_useValidation;
 
-    EntityResolverType*                     m_entityResolver;
+    EntityResolver*                         m_entityResolver;
 
-    ErrorHandlerType*                       m_errorHandler;
+    XMLEntityResolver*                      m_xmlEntityResolver;
+
+    ErrorHandler*                           m_errorHandler;
 
     XalanDOMString                          m_externalSchemaLocation;
 

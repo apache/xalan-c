@@ -289,7 +289,7 @@ public:
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,
-			DocumentHandlerType*	docHandler, 
+			DocumentHandler*	    docHandler, 
 			XalanDocument*			docToRegister);
 
 	virtual bool

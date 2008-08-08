@@ -54,6 +54,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
 
+XALAN_USING_XERCES(EntityResolver)
+XALAN_USING_XERCES(ErrorHandler)
 
 
 class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet
@@ -61,20 +63,20 @@ class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanComp
 public:
 	
 	XalanCompiledStylesheetDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
-			ErrorHandlerType*		theErrorHandler = 0,
-			EntityResolverType*		theEntityResolver = 0);
+			ErrorHandler*		    theErrorHandler = 0,
+			EntityResolver*		    theEntityResolver = 0);
 
 	
 	static XalanCompiledStylesheetDefault*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
-			ErrorHandlerType*		theErrorHandler = 0,
-			EntityResolverType*		theEntityResolver = 0);
+			ErrorHandler*		    theErrorHandler = 0,
+			EntityResolver*		    theEntityResolver = 0);
 
 	virtual
 	~XalanCompiledStylesheetDefault();

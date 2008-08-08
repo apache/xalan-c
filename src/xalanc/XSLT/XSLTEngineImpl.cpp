@@ -26,6 +26,8 @@
 #include <xercesc/sax/DocumentHandler.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/Locator.hpp>
+#include "xercesc/util/XMLEntityResolver.hpp"
+#include "xercesc/util/XMLResourceIdentifier.hpp"
 
 
 
@@ -554,7 +556,7 @@ XSLTEngineImpl::getURI() const
 XalanDocument*
 XSLTEngineImpl::parseXML(
             const XalanDOMString&   urlString,
-            DocumentHandlerType*    docHandler,
+            DocumentHandler*        docHandler,
             XalanDocument*          docToRegister)
 {
     
@@ -563,36 +565,47 @@ XSLTEngineImpl::parseXML(
 
     if(doc == 0)
     {
-        EntityResolverType* const   theResolver = 
+        EntityResolver* const   theResolver = 
             m_parserLiaison.getEntityResolver();
 
-        if (theResolver == 0)
-        {
-            const XSLTInputSource   inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
+        XMLEntityResolver* const    theXMLResolver = 
+            m_parserLiaison.getXMLEntityResolver();
 
-            doc = parseXML(inputSource, docHandler, docToRegister);
+        XalanAutoPtr<InputSource>   resolverInputSource;
+
+        if (theResolver != 0)
+        {
+            resolverInputSource.reset(theResolver->resolveEntity(0, urlString.c_str()));
+        }
+        else if (theXMLResolver != 0)
+        {
+            XALAN_USING_XERCES(XMLResourceIdentifier);
+
+            XMLResourceIdentifier   theIndentifier(
+                XMLResourceIdentifier::ExternalEntity,
+                urlString.c_str());
+
+            resolverInputSource.reset(
+                theXMLResolver->resolveEntity(&theIndentifier));
+        }
+
+        if (resolverInputSource.get() != 0)
+        {
+            doc = parseXML(
+                        *resolverInputSource.get(),
+                        docHandler,
+                        docToRegister);
         }
         else
         {
-            const XalanAutoPtr<InputSourceType> resolverInputSource =  
-                                theResolver->resolveEntity(0, c_wstr(urlString));
+            const XSLTInputSource   inputSource(
+                                        urlString.c_str(),
+                                        m_parserLiaison.getMemoryManager());
 
-            if (resolverInputSource.get() != 0)
-            {
-                doc = parseXML(
-                            *resolverInputSource.get(),
-                            docHandler,
-                            docToRegister);
-            }
-            else
-            {
-                const XSLTInputSource   inputSource(c_wstr(urlString), m_parserLiaison.getMemoryManager());
-
-                doc = parseXML(
-                            inputSource,
-                            docHandler,
-                            docToRegister);
-            }
+            doc = parseXML(
+                        inputSource,
+                        docHandler,
+                        docToRegister);
         }
 
         if (doc != 0)
@@ -608,9 +621,9 @@ XSLTEngineImpl::parseXML(
 
 XalanDocument*
 XSLTEngineImpl::parseXML(
-            const InputSourceType&  inputSource,
-            DocumentHandlerType*    docHandler,
-            XalanDocument*          docToRegister)
+            const InputSource&  inputSource,
+            DocumentHandler*    docHandler,
+            XalanDocument*      docToRegister)
 {
     if(0 != docHandler)
     {

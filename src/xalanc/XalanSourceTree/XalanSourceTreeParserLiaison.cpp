@@ -24,7 +24,7 @@
 
 
 
-#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include "xercesc/parsers/SAX2XMLReaderImpl.hpp"
 #include "xercesc/util/XMLUni.hpp"
 
 
@@ -122,8 +122,8 @@ XalanSourceTreeParserLiaison::setExecutionContext(ExecutionContext&     theConte
 
 void
 XalanSourceTreeParserLiaison::parseXMLStream(
-            const InputSourceType&  inputSource,
-            DocumentHandlerType&    handler,
+            const InputSource&      inputSource,
+            DocumentHandler&        handler,
             const XalanDOMString&   identifier)
 {
     m_xercesParserLiaison.parseXMLStream(inputSource, handler, identifier);
@@ -173,7 +173,7 @@ XalanSourceTreeParserLiaison::ensureReader()
             true);
     }
 
-    ErrorHandlerType* const     theHandler = getErrorHandler();
+    ErrorHandler* const     theHandler = getErrorHandler();
 
     if (theHandler == 0)
     {
@@ -184,7 +184,17 @@ XalanSourceTreeParserLiaison::ensureReader()
         m_xmlReader->setErrorHandler(theHandler);
     }
 
-    m_xmlReader->setEntityResolver(getEntityResolver());
+    EntityResolver* const   theEntityResolver =
+        getEntityResolver();
+
+    if (theEntityResolver != 0)
+    {
+        m_xmlReader->setEntityResolver(theEntityResolver);
+    }
+    else
+    {
+        m_xmlReader->setXMLEntityResolver(getXMLEntityResolver());
+    }
 
     {
         const XalanDOMChar* const   theLocation =
@@ -215,7 +225,7 @@ XalanSourceTreeParserLiaison::ensureReader()
 
 XalanDocument*
 XalanSourceTreeParserLiaison::parseXMLStream(
-            const InputSourceType&  inputSource,
+            const InputSource&      inputSource,
             const XalanDOMString&   identifier)
 {
     XalanSourceTreeDocument* const  theDocument =
@@ -306,11 +316,11 @@ XalanSourceTreeParserLiaison::getParserDescription(XalanDOMString&  theResult) c
 
 void
 XalanSourceTreeParserLiaison::parseXMLStream(
-            const InputSourceType&  theInputSource,
-            ContentHandlerType&     theContentHandler,
+            const InputSource&      theInputSource,
+            ContentHandler&         theContentHandler,
             const XalanDOMString&   /* theIdentifier */,
-            DTDHandlerType*         theDTDHandler,
-            LexicalHandlerType*     theLexicalHandler)
+            DTDHandler*             theDTDHandler,
+            LexicalHandler*         theLexicalHandler)
 {
     ensureReader();
 
@@ -359,7 +369,7 @@ XalanSourceTreeParserLiaison::setIncludeIgnorableWhitespace(bool    include)
 
 
 
-ErrorHandlerType*
+ErrorHandler*
 XalanSourceTreeParserLiaison::getErrorHandler() const
 {
     return m_xercesParserLiaison.getErrorHandler();
@@ -368,7 +378,7 @@ XalanSourceTreeParserLiaison::getErrorHandler() const
 
 
 void
-XalanSourceTreeParserLiaison::setErrorHandler(ErrorHandlerType*     handler)
+XalanSourceTreeParserLiaison::setErrorHandler(ErrorHandler*     handler)
 {
     m_xercesParserLiaison.setErrorHandler(handler);
 }
@@ -407,7 +417,7 @@ XalanSourceTreeParserLiaison::setExitOnFirstFatalError(bool     newState)
 
 
 
-EntityResolverType*
+EntityResolver*
 XalanSourceTreeParserLiaison::getEntityResolver() const
 {
     return m_xercesParserLiaison.getEntityResolver();
@@ -416,9 +426,25 @@ XalanSourceTreeParserLiaison::getEntityResolver() const
 
 
 void
-XalanSourceTreeParserLiaison::setEntityResolver(EntityResolverType*     resolver)
+XalanSourceTreeParserLiaison::setEntityResolver(EntityResolver*     resolver)
 {
     m_xercesParserLiaison.setEntityResolver(resolver);
+}
+
+
+
+XMLEntityResolver*
+XalanSourceTreeParserLiaison::getXMLEntityResolver() const
+{
+    return m_xercesParserLiaison.getXMLEntityResolver();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::setXMLEntityResolver(XMLEntityResolver*   resolver)
+{
+    m_xercesParserLiaison.setXMLEntityResolver(resolver);
 }
 
 
@@ -479,15 +505,16 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 
 
 
-SAX2XMLReaderType*
+SAX2XMLReaderImpl*
 XalanSourceTreeParserLiaison::createReader()
 {
-    XALAN_USING_XERCES(XMLReaderFactory)
     XALAN_USING_XERCES(XMLUni)
 
-    typedef XalanAutoPtr<SAX2XMLReaderType> AutoPtrType;
+    typedef XalanAutoPtr<SAX2XMLReaderImpl> AutoPtrType;
 
-    AutoPtrType     theReader(XMLReaderFactory::createXMLReader(&getMemoryManager()));
+    MemoryManager&  theManager = getMemoryManager();
+
+    AutoPtrType     theReader(new (&theManager) SAX2XMLReaderImpl(&theManager));
 
     theReader->setFeature(
         XMLUni::fgSAX2CoreNameSpaces,

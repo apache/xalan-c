@@ -622,7 +622,7 @@ StylesheetConstructionContextDefault::getXalanXSLNameSpaceURL() const
 XalanDocument*
 StylesheetConstructionContextDefault::parseXML(
             const XalanDOMString&   urlString,
-            DocumentHandlerType*    docHandler,
+            DocumentHandler*        docHandler,
             XalanDocument*          docToRegister)
 {
     return m_processor.parseXML(

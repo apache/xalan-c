@@ -101,7 +101,7 @@ public:
 	 * @return A pointer to a XalanParsedSourceHelper instance.
 	 */
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR) const = 0;
+	createHelper(MemoryManager&     theManager) const = 0;
 
 	/**
 	 * Get the URI for the parsed source, if any.

@@ -36,7 +36,7 @@
 XALAN_DECLARE_XERCES_CLASS(ContentHandler)
 XALAN_DECLARE_XERCES_CLASS(DTDHandler)
 XALAN_DECLARE_XERCES_CLASS(LexicalHandler)
-XALAN_DECLARE_XERCES_CLASS(SAX2XMLReader)
+XALAN_DECLARE_XERCES_CLASS(SAX2XMLReaderImpl)
 
 
 
@@ -49,11 +49,17 @@ class XalanSourceTreeDocument;
 
 
 
+/*
 typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler       ContentHandlerType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler           DTDHandlerType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler       LexicalHandlerType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader        SAX2XMLReaderType;
+*/
 
+XALAN_USING_XERCES(ContentHandler)
+XALAN_USING_XERCES(DTDHandler)
+XALAN_USING_XERCES(LexicalHandler)
+XALAN_USING_XERCES(SAX2XMLReaderImpl)
 
 
 class XALAN_XALANSOURCETREE_EXPORT  XalanSourceTreeParserLiaison : public XMLParserLiaison
@@ -123,13 +129,13 @@ public:
 
     virtual XalanDocument*
     parseXMLStream(
-            const InputSourceType&  reader,
+            const InputSource&      reader,
             const XalanDOMString&   identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
     virtual void
     parseXMLStream(
-            const InputSourceType&  inputSource,
-            DocumentHandlerType&    handler,
+            const InputSource&      inputSource,
+            DocumentHandler&        handler,
             const XalanDOMString&   identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
     virtual void
@@ -148,13 +154,25 @@ public:
     setUseValidation(bool   b);
 
     virtual const XalanDOMString&
-    getParserDescription(XalanDOMString& theResult) const;
+    getParserDescription(XalanDOMString&    theResult) const;
 
-    virtual EntityResolverType*
+    virtual EntityResolver*
     getEntityResolver() const;
 
     virtual void
-    setEntityResolver(EntityResolverType*   resolver);
+    setEntityResolver(EntityResolver*   resolver);
+
+	virtual XMLEntityResolver*
+	getXMLEntityResolver() const;
+
+	virtual void
+	setXMLEntityResolver(XMLEntityResolver*     resolver);
+
+    virtual ErrorHandler*
+    getErrorHandler() const;
+
+    virtual void
+    setErrorHandler(ErrorHandler*   handler);
 
 
     // These interfaces are new to XalanSourceTreeParserLiaison...
@@ -170,11 +188,11 @@ public:
      */
     virtual void
     parseXMLStream(
-            const InputSourceType&  theInputSource,
-            ContentHandlerType&     theContentHandler,
+            const InputSource&      theInputSource,
+            ContentHandler&         theContentHandler,
             const XalanDOMString&   theIdentifier,
-            DTDHandlerType*         theDTDHandler = 0,
-            LexicalHandlerType*     theLexicalHandler = 0);
+            DTDHandler*             theDTDHandler = 0,
+            LexicalHandler*         theLexicalHandler = 0);
 
     virtual DOMDocument_Type*
     createDOMFactory();
@@ -215,27 +233,6 @@ public:
       */
     virtual void
     setIncludeIgnorableWhitespace(bool  include);
-
-    /**
-      * This method returns the installed error handler.
-      *
-      * @return A pointer to the installed error handler object.
-      */
-    virtual ErrorHandlerType*
-    getErrorHandler() const;
-
-    /**
-      * This method installs the user specified error handler on
-      * the parser.
-      *
-      * @param handler A pointer to the error handler to be called
-      *                when the parser comes across 'error' events
-      *                as per the SAX specification.
-      *
-      * @see Parser#setErrorHandler
-      */
-    virtual void
-    setErrorHandler(ErrorHandlerType*   handler);
 
     /**
       * This method returns the state of the parser's namespace
@@ -361,7 +358,7 @@ public:
 
 protected:
 
-    virtual SAX2XMLReaderType*
+    virtual SAX2XMLReaderImpl*
     createReader();
 
 private:
@@ -384,7 +381,7 @@ private:
 
     bool                        m_poolAllText;
 
-    SAX2XMLReaderType*          m_xmlReader;
+    SAX2XMLReaderImpl*          m_xmlReader;
 };
 
 

@@ -32,9 +32,9 @@ class SetAndRestoreHandlers
 public:
 
 	SetAndRestoreHandlers(
-			XMLParserLiaison&		theParserLiaison,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver) :
+			XMLParserLiaison&	theParserLiaison,
+			ErrorHandler*		theErrorHandler,
+			EntityResolver*		theEntityResolver) :
 		m_parserLiaison(theParserLiaison),
 		m_errorHandler(theParserLiaison.getErrorHandler()),
 		m_entityResolver(theParserLiaison.getEntityResolver())
@@ -59,11 +59,11 @@ public:
 
 private:
 
-	XMLParserLiaison&			m_parserLiaison;
+	XMLParserLiaison&		m_parserLiaison;
 
-	ErrorHandlerType* const		m_errorHandler;
+	ErrorHandler* const		m_errorHandler;
 
-	EntityResolverType*	const	m_entityResolver;
+	EntityResolver*	const	m_entityResolver;
 };
 
 
@@ -74,8 +74,8 @@ compileStylesheet(
 			const XSLTInputSource&					theStylesheetSource,
 			XSLTEngineImpl&							theProcessor,
 			StylesheetConstructionContextDefault&	theConstructionContext,
-			ErrorHandlerType*						theErrorHandler,
-			EntityResolverType*						theEntityResolver)
+			ErrorHandler*   						theErrorHandler,
+			EntityResolver*						    theEntityResolver)
 {
 	const SetAndRestoreHandlers		theSetAndRestore(
 			theProcessor.getXMLParserLiaison(),
@@ -88,51 +88,55 @@ compileStylesheet(
 
 
 XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver):
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver):
 	XalanCompiledStylesheet(),
 	m_stylesheetXPathFactory(theManager),
 	m_stylesheetConstructionContext(
-                theManager,
-				theProcessor,
-				m_stylesheetXPathFactory),
-	m_stylesheetRoot(compileStylesheet(
-				theStylesheetSource,
-				theProcessor,
-				m_stylesheetConstructionContext,
-				theErrorHandler,
-				theEntityResolver))
+        theManager,
+		theProcessor,
+		m_stylesheetXPathFactory),
+	m_stylesheetRoot(
+        compileStylesheet(
+			theStylesheetSource,
+			theProcessor,
+			m_stylesheetConstructionContext,
+			theErrorHandler,
+			theEntityResolver))
 {
 }
 
 XalanCompiledStylesheetDefault*
 XalanCompiledStylesheetDefault::create(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
-			ErrorHandlerType*		theErrorHandler,
-			EntityResolverType*		theEntityResolver)
+			ErrorHandler*		    theErrorHandler,
+			EntityResolver*		    theEntityResolver)
 {
     typedef XalanCompiledStylesheetDefault ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(
+                                theManager,
+                                theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+			                    theStylesheetSource,
+			                    theProcessor,
+			                    theErrorHandler,
+			                    theEntityResolver);
 
-    new (theResult) ThisType(
-            theManager,
-			theStylesheetSource,
-			theProcessor,
-			theErrorHandler,
-			theEntityResolver);
-
-     theGuard.release();
+    theGuard.release();
 
     return theResult;
 }
+
+
 
 XalanCompiledStylesheetDefault::~XalanCompiledStylesheetDefault()
 {

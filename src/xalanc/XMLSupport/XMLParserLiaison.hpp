@@ -33,6 +33,7 @@ XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
 XALAN_DECLARE_XERCES_CLASS(EntityResolver)
 XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
 XALAN_DECLARE_XERCES_CLASS(InputSource)
+XALAN_DECLARE_XERCES_CLASS(XMLEntityResolver)
 
 
 
@@ -44,6 +45,14 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
+
+XALAN_USING_XERCES(DocumentHandler)
+XALAN_USING_XERCES(EntityResolver)
+XALAN_USING_XERCES(ErrorHandler)
+XALAN_USING_XERCES(InputSource)
+XALAN_USING_XERCES(XMLEntityResolver)
+
+
 
 class ExecutionContext;
 class FormatterListener;
@@ -107,6 +116,9 @@ public:
 	 * The liaison owns the XalanDocument instance, and will delete it when
 	 * when asked (see DestroyDocument()), or when the liaison is reset, or
 	 * goes out of scope.
+     *
+     * This function is not reentrant, so you cannot call it again until
+     * the current call exits.
 	 *
 	 * @param reader     stream that should hold valid XML
 	 * @param identifier used for diagnostic purposes only, some sort of
@@ -116,13 +128,16 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXMLStream(
-			const InputSourceType&	inputSource,
+			const InputSource&	    inputSource,
 			const XalanDOMString&	identifier) = 0;
 
 	/**
 	 * Parse the text pointed at by the reader as XML. It is recommended that
 	 * you pass in some sort of recognizable name, such as the filename or URI,
 	 * with which the reader can be recognized if the parse fails.
+	 *
+     * This function is reentrant, so you can call it again before any
+     * other call exits.  However, it is not thread-safe.
 	 *
 	 * @param inputSource input source that should hold valid XML
 	 * @param handler        instance of a DocumentHandler
@@ -132,8 +147,8 @@ public:
 	 */
 	virtual void
 	parseXMLStream(
-			const InputSourceType&	inputSource,
-			DocumentHandlerType&	handler,
+			const InputSource&	    inputSource,
+			DocumentHandler&	    handler,
 			const XalanDOMString&	identifier) = 0;
 
 	/**
@@ -192,31 +207,57 @@ public:
 	getParserDescription(XalanDOMString& theResult) const = 0;
 
 	/**
-	  * This method returns the installed entity resolver.
+	  * This method returns the installed EntityResolver.
 	  *
-	  * @return The pointer to the installed entity resolver object.
+	  * @return The pointer to the installed EntityResolver object.
 	  */
-	virtual EntityResolverType*
+	virtual EntityResolver*
 	getEntityResolver() const = 0;
 
 	/**
-	  * This method installs the user specified entity resolver on the
+	  * This method installs the user-specified EntityResolver on the
 	  * parser. It allows applications to trap and redirect calls to
 	  * external entities.
 	  *
-	  * @param handler A pointer to the entity resolver to be called
-	  * 			   when the parser comes across references to
-	  * 			   entities in the XML file.
+      * A call to setEntityResolver with a non-null pointer will
+      * uninstall any XMLEntityResolver previously installed.
+      *
+	  * @param handler A pointer to the EntityResolver to be called
+	  * 			   when the parser encounters references to
+	  * 			   external entities.
 	  */
 	virtual void
-	setEntityResolver(EntityResolverType*	resolver) = 0;
+	setEntityResolver(EntityResolver*	resolver) = 0;
+
+	/**
+	  * This method returns the installed XMLEntityResolver.
+	  *
+	  * @return The pointer to the installed XMLEntityResolver object.
+	  */
+	virtual XMLEntityResolver*
+	getXMLEntityResolver() const = 0;
+
+	/**
+	  * This method installs the user-specified XMLEntityResolver on the
+	  * parser. It allows applications to trap and redirect calls to
+	  * external entities.
+	  *
+      * A call to setXMLEntityResolver with a non-null pointer will
+      * uninstall any EntityResolver previously installed.
+      *
+	  * @param handler A pointer to the entity resolver to be called
+	  * 			   when the parser encounters references to
+	  * 			   external entities.
+	  */
+	virtual void
+	setXMLEntityResolver(XMLEntityResolver*     resolver) = 0;
 
 	/**
 	  * This method returns the installed error handler.
 	  *
 	  * @return The pointer to the installed error handler object.
 	  */
-	virtual ErrorHandlerType*
+	virtual ErrorHandler*
 	getErrorHandler() const = 0;
 
 	/**
@@ -225,7 +266,7 @@ public:
 	  * @param handler A pointer to the error handler to be called upon error.
 	  */
 	virtual void
-	setErrorHandler(ErrorHandlerType*	handler) = 0;
+	setErrorHandler(ErrorHandler*	handler) = 0;
 
 protected:
 

@@ -103,9 +103,11 @@ const XSLTInputSource*  XalanTransformer::s_emptyInputSource = 0;
 const XSLTInit*         XalanTransformer::s_xsltInit = 0;
 
 
-static MemoryManagerType* s_initMemoryManager = 0;
+static MemoryManager*   s_initMemoryManager = 0;
 
-XalanTransformer::XalanTransformer(MemoryManagerType& theManager):
+
+
+XalanTransformer::XalanTransformer(MemoryManager&   theManager):
     m_memoryManager(theManager),
     m_compiledStylesheets(m_memoryManager),
     m_parsedSources(m_memoryManager),
@@ -115,6 +117,7 @@ XalanTransformer::XalanTransformer(MemoryManagerType& theManager):
     m_errorMessage(1, '\0', m_memoryManager),
     m_useValidation(false),
     m_entityResolver(0),
+    m_xmlEntityResolver(0),
     m_errorHandler(0),
     m_externalSchemaLocation(m_memoryManager),
     m_externalNoNamespaceSchemaLocation(m_memoryManager),
@@ -181,7 +184,7 @@ XalanTransformer::~XalanTransformer()
 
 
 void
-XalanTransformer::initialize(MemoryManagerType&  theManager)
+XalanTransformer::initialize(MemoryManager&     theManager)
 {
     // Initialize Xalan. 
     XalanMemMgrAutoPtr<XSLTInit, true>          initGuard(theManager, XSLTInit::create(theManager));
@@ -227,18 +230,21 @@ XalanTransformer::ICUCleanUp()
 #endif
 }
 
+
+
 #if defined(XALAN_USE_ICU)
 void
-ICUStartUp(MemoryManagerType&  theManager)
+ICUStartUp(MemoryManager&   theManager)
 {
     ICUBridgeCleanup::startup(theManager);
 }
 #else
 void
-ICUStartUp(MemoryManagerType&  /*theManager*/)
+ICUStartUp(MemoryManager&   /*theManager*/)
 {
 }
 #endif
+
 
 
 static void
@@ -548,6 +554,7 @@ XalanTransformer::compileStylesheet(
         XalanSourceTreeParserLiaison    theParserLiaison(theDOMSupport, m_memoryManager);
 
         theParserLiaison.setEntityResolver(m_entityResolver);
+        theParserLiaison.setXMLEntityResolver(m_xmlEntityResolver);
         theParserLiaison.setErrorHandler(m_errorHandler);
 
         // Hook the two together...
@@ -735,6 +742,7 @@ XalanTransformer::parseSource(
                         m_useValidation,
                         m_errorHandler,
                         m_entityResolver,
+                        m_xmlEntityResolver,
                         getExternalSchemaLocation(),
                         getExternalNoNamespaceSchemaLocation());
         }
@@ -747,6 +755,7 @@ XalanTransformer::parseSource(
                         m_useValidation,
                         m_errorHandler,
                         m_entityResolver,
+                        m_xmlEntityResolver,
                         getExternalSchemaLocation(),
                         getExternalNoNamespaceSchemaLocation());
         }
@@ -1170,6 +1179,7 @@ XalanTransformer::doTransform(
         theParserLiaison.setExecutionContext(*m_stylesheetExecutionContext);
 
         theParserLiaison.setEntityResolver(m_entityResolver);
+        theParserLiaison.setXMLEntityResolver(m_xmlEntityResolver);
         theParserLiaison.setErrorHandler(m_errorHandler);
         theParserLiaison.setUseValidation(m_useValidation);
 

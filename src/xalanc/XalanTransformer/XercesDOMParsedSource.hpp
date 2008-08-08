@@ -76,21 +76,23 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 public:
 	
 	XercesDOMParsedSource(
-			const InputSourceType&	theInputSource,
+			const InputSource&	    theInputSource,
 			bool					fValidate = false,
-			ErrorHandlerType*		theErrorHandler = 0,
-			EntityResolverType*		theEntityResolver = 0,
+			ErrorHandler*		    theErrorHandler = 0,
+			EntityResolver*		    theEntityResolver = 0,
+			XMLEntityResolver*		theXMLEntityResolver = 0,
 			const XalanDOMChar*		theExternalSchemaLocation = 0,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&          theManager XALAN_DEFAULT_MEMMGR);
 
 	static XercesDOMParsedSource*
     create(
-            MemoryManagerType&      theManager,
-			const InputSourceType&	theInputSource,
+            MemoryManager&          theManager,
+			const InputSource&	    theInputSource,
 			bool					fValidate = false,
-			ErrorHandlerType*		theErrorHandler = 0,
-			EntityResolverType*		theEntityResolver = 0,
+			ErrorHandler*		    theErrorHandler = 0,
+			EntityResolver*		    theEntityResolver = 0,
+			XMLEntityResolver*		theXMLEntityResolver = 0,
 			const XalanDOMChar*		theExternalSchemaLocation = 0,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
 
@@ -101,7 +103,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR) const;
+	createHelper(MemoryManager&     theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;
