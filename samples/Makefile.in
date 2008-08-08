@@ -49,6 +49,7 @@ endif
 
 ALL_BINARIES =    CompileStylesheet$(EXT) \
                   DocumentBuilder$(EXT) \
+                  EntityResolver$(EXT) \
                   ExternalFunction$(EXT) \
                   ParsedSourceWrappers$(EXT) \
                   SerializeNodeSet$(EXT) \
@@ -77,7 +78,7 @@ all: Samples
 
 samples: Samples
 
-Samples: CompileStylesheet DocumentBuilder ExternalFunction \
+Samples: CompileStylesheet DocumentBuilder EntityResolver ExternalFunction \
          ParsedSourceWrappers SimpleTransform SerializeNodeSet SimpleXPathAPI \
          SimpleXPathCAPI StreamTransform TraceListen TransformToXercesDOM \
          UseStylesheetParam XalanTransform XalanTransformerCallback \
@@ -105,6 +106,14 @@ $(XSL_BIN_DIR)/DocumentBuilder: $(XSL_OBJ_DIR)/DocumentBuilder.o
 	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
 	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
 $(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+EntityResolver: prepare $(XSL_BIN_DIR)/EntityResolver
+
+$(XSL_BIN_DIR)/EntityResolver: $(XSL_OBJ_DIR)/EntityResolver.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/EntityResolver/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 ExternalFunction: prepare $(XSL_BIN_DIR)/ExternalFunction
