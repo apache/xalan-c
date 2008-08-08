@@ -1034,9 +1034,29 @@ XalanFileUtility::fileCompare(
                 // the results can be seen in the browser enclose the actual/expected in CDATA Sections.
 
                 data.msg = "Text based comparison failure";
-                data.expected += XalanDOMString(gline, getMemoryManager());
+		try
+		{
+		  data.expected += XalanDOMString(gline, getMemoryManager());
+		}
+		catch(const XalanDOMString::TranscodingError&)
+		{
+		  data.expected +=
+		    XalanDOMString(
+			"Unable to transcode expected data.",
+			getMemoryManager());
+		}
 
-                data.actual += XalanDOMString(rline, getMemoryManager());
+		try
+		{
+		  data.actual += XalanDOMString(rline, getMemoryManager());
+		}
+		catch(const XalanDOMString::TranscodingError&)
+		{
+		  data.actual +=
+		    XalanDOMString(
+			"Unable to transcode actual data.",
+			getMemoryManager());
+		}
 
                 data.currentNode = XalanDOMString("Line: ", getMemoryManager());
                 data.currentNode += XalanDOMString(temp, getMemoryManager());
