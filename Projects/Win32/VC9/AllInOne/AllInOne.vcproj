@@ -1737,14 +1737,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XPath\XNull.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XPath\XNull.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\XPath\XNumber.cpp"
 				>
 			</File>

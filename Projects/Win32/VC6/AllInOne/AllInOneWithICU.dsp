@@ -1148,14 +1148,6 @@ SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XPath\XNull.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XPath\XNull.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XPath\XNumber.cpp
 # End Source File
 # Begin Source File

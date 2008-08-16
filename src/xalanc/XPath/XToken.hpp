@@ -76,6 +76,17 @@ public:
 	/**
 	 * Create an XToken from another one.
 	 *
+     * In most cases, the following copy constructor,
+     * which accepts an explicit MemoryManager instance,
+     * is recommended.
+     *
+	 * @param theSource The source XToken instance.
+	 */
+	XToken(const XToken&    theSource);
+
+	/**
+	 * Create an XToken from another one.
+	 *
 	 * @param theSource The source XToken instance.
 	 * @param theMemoryManager The MemoryManager instance.
 	 */

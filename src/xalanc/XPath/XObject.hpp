@@ -112,16 +112,6 @@ public:
             eObjectType		theObjectType,
             MemoryManager&  theMemoryManager);
 
-	/**
-	 * Create an XObject from another XObject.
-	 *
-	 * @param source The source for the copy
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XObject(
-            const XObject&	source,
-            MemoryManager&  theManager);
-
     /**
      * Given a request type, return the equivalent string. 
      * For diagnostic purposes.
@@ -802,6 +792,27 @@ public:
 protected:
 
 	/**
+	 * Create an XObject from another XObject.
+     * 
+	 * The recommended copy constructor is the next
+     * overload, that accepts an explicit MemoryManager
+     * instance.
+     *
+	 * @param source The source for the copy
+	 */
+    XObject(const XObject&);
+
+	/**
+	 * Create an XObject from another XObject.
+	 *
+	 * @param source The source for the copy
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XObject(
+            const XObject&	source,
+            MemoryManager&  theManager);
+
+	/**
 	 * Get the MemoryManager for this instance.
 	 *
 	 * @return The MemoryManager.
@@ -856,7 +867,8 @@ private:
 	XObject&
 	operator=(const XObject&);
 
-	eObjectType	            m_objectType;
+
+    eObjectType	            m_objectType;
 
 	XObjectFactory*		    m_factory;
 

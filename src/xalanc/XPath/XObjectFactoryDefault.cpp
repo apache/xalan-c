@@ -27,7 +27,6 @@
 
 #include "XBoolean.hpp"
 #include "XNodeSet.hpp"
-#include "XNull.hpp"
 #include "XNumber.hpp"
 #include "XString.hpp"
 #include "XStringAdapter.hpp"
@@ -61,7 +60,6 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xnumberCache(theManager),
 	m_xnodesetCache(theManager),
 	m_xstringCache(theManager),
-	m_xnull(theManager),
 	m_xbooleanFalse(false, theManager),
 	m_xbooleanTrue(true, theManager)
 {
@@ -270,14 +268,6 @@ XObjectFactoryDefault::createBoolean(bool   theValue)
 	{
 		return XObjectPtr(&m_xbooleanFalse);
 	}
-}
-
-
-
-const XObjectPtr
-XObjectFactoryDefault::createNull()
-{	
-	return XObjectPtr(&m_xnull);
 }
 
 

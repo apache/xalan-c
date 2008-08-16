@@ -97,6 +97,9 @@ public:
 	virtual double
 	num(XPathExecutionContext&  executionContext) const;
 
+	virtual double
+	num() const;
+
 	virtual bool
 	boolean(XPathExecutionContext&  executionContext) const;
 

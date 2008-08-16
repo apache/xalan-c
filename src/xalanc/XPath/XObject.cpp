@@ -219,6 +219,15 @@ XObject::XObject(
 
 
 
+XObject::XObject(const XObject&     source) :
+    m_objectType(source.m_objectType),
+    m_factory(0),
+    m_memoryManager(source.m_memoryManager)
+{
+}
+
+
+
 XObject::~XObject()
 {
 }

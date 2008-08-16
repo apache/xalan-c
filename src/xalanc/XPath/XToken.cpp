@@ -85,6 +85,17 @@ XToken::XToken(
 
 
 
+XToken::XToken(const XToken&    theSource) :
+    XObject(theSource),
+    m_stringValue(theSource.m_stringValue),
+    m_numberValue(theSource.m_numberValue),
+    m_isString(theSource.m_isString)
+{
+    assert(m_stringValue != 0);
+}
+
+
+
 XToken::~XToken()
 {
     assert(m_stringValue != 0);

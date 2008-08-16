@@ -37,7 +37,6 @@
 #include <xalanc/XPath/XBoolean.hpp>
 #include <xalanc/XPath/XNodeSetAllocator.hpp>
 #include <xalanc/XPath/XNodeSetNodeProxyAllocator.hpp>
-#include <xalanc/XPath/XNull.hpp>
 #include <xalanc/XPath/XNumberAllocator.hpp>
 #include <xalanc/XPath/XStringAllocator.hpp>
 #include <xalanc/XPath/XStringAdapterAllocator.hpp>
@@ -120,9 +119,6 @@ public:
 
 	virtual const XObjectPtr
 	createNodeSet(XalanNode* 	theValue);
-
-	virtual const XObjectPtr
-	createNull();
 
 	virtual const XObjectPtr
 	createNumber(double		theValue);
@@ -212,8 +208,6 @@ private:
 	XNodeSetCacheType				m_xnodesetCache;
 
 	XStringCacheType				m_xstringCache;
-
-	XNull		                    m_xnull;
 
 	XBoolean	                    m_xbooleanFalse;
 

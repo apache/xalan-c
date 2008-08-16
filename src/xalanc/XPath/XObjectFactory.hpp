@@ -117,15 +117,6 @@ public:
 	createNodeSet(XalanNode* 	theValue) = 0;
 
 	/**
-	 * Create a null XObject.
-	 * 
-	 * @param theValue	value used to create object 
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createNull() = 0;
-
-	/**
 	 * Create a numeric XObject from a number.
 	 * 
 	 * @param theValue	value used to create object 

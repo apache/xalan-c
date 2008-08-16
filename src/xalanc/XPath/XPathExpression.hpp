@@ -1204,6 +1204,7 @@ public:
     {
         m_tokenQueue.push_back(
             XToken(
+
                 DoubleSupport::toDouble(theToken, getMemoryManager()),
                 theToken,
                 getMemoryManager()));

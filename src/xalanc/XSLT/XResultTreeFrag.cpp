@@ -68,6 +68,10 @@ getSingleTextChildValue(const XalanDocumentFragment&	theRTreeFrag)
 
 
 
+const double	theBogusNumberValue = 123456789;
+
+
+
 XResultTreeFrag::XResultTreeFrag(
             XalanDocumentFragment&	value,
             MemoryManager&          theManager) :
@@ -76,7 +80,7 @@ XResultTreeFrag::XResultTreeFrag(
 	m_singleTextChildValue(getSingleTextChildValue(value)),
 	m_executionContext(0),
 	m_cachedStringValue(theManager),
-	m_cachedNumberValue(0.0)
+	m_cachedNumberValue(theBogusNumberValue)
 
 {
 }
@@ -115,11 +119,27 @@ XResultTreeFrag::getTypeString() const
 double
 XResultTreeFrag::num(XPathExecutionContext&     executionContext) const
 {
-	if (m_cachedNumberValue == 0.0)
+	if (m_cachedNumberValue == theBogusNumberValue)
 	{
 		m_cachedNumberValue =
             DoubleSupport::toDouble(
                 str(executionContext),
+                getMemoryManager());
+	}
+
+	return m_cachedNumberValue;
+}
+
+
+
+double
+XResultTreeFrag::num() const
+{
+	if (m_cachedNumberValue == theBogusNumberValue)
+	{
+		m_cachedNumberValue =
+            DoubleSupport::toDouble(
+                str(),
                 getMemoryManager());
 	}
 
@@ -300,7 +320,7 @@ XResultTreeFrag::release()
 
 	clear(m_cachedStringValue);
 
-	m_cachedNumberValue = 0.0;
+	m_cachedNumberValue = theBogusNumberValue;
 
 	XalanDocumentFragment* const	temp = m_value;
 
