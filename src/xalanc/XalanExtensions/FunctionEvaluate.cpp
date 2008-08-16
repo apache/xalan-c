@@ -118,7 +118,7 @@ FunctionEvaluate::execute(
 
     assert(args[0].null() == false);
 
-    const XalanDOMString&   theExpression = args[0]->str();
+    const XalanDOMString&   theExpression = args[0]->str(executionContext);
 
     const PrefixResolver* const theResolver =
         executionContext.getPrefixResolver();

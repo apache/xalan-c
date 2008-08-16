@@ -547,7 +547,10 @@ XalanEvaluateXPathAsBoolean(
 							theLiaison.parseXMLStream(theInputSource);
 			assert(theDocument != 0);
 
-			if (theEvaluator->evaluate(theDOMSupport, theDocument, *theXPath)->boolean() == true)
+			if (theEvaluator->evaluate(
+                    theDOMSupport,
+                    theDocument,
+                    *theXPath)->boolean(theEvaluator->getExecutionContext()) == true)
 			{
 				*theResult = 1;
 			}

@@ -59,14 +59,33 @@ public:
 	/**
 	 * Construct an XUnknown object from a string.
 	 * 
-	 * @param name       source string
+	 * @param name The source string.
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	XUnknown(const XalanDOMString&	name, MemoryManagerType& theManager);
+	XUnknown(
+                const XalanDOMString&	name,
+                MemoryManager&          theMemoryManager);
 
-	XUnknown(const XUnknown&	source, MemoryManagerType& theManager);
+	/**
+	 * Construct an XUnknown from another one.
+	 *
+	 * @param source The XUnknown instance to copy.
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XUnknown(
+                const XUnknown&	    source,
+                MemoryManager&      theMemoryManager);
 
+	/**
+	 * Create an XUnknown object from a string.
+	 * 
+	 * @param name the source string.
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
     static XUnknown*
-    create(const XalanDOMString&	name, MemoryManagerType& theManager);
+    create(
+            const XalanDOMString&	name,
+            MemoryManager&          theMemoryManager);
 
 	virtual
 	~XUnknown();
@@ -76,25 +95,38 @@ public:
 	getTypeString() const;
   
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

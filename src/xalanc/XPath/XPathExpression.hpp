@@ -1202,7 +1202,11 @@ public:
     void
     pushToken(const XalanDOMString&     theToken)
     {
-        m_tokenQueue.push_back(XToken(theToken, getMemoryManager()));
+        m_tokenQueue.push_back(
+            XToken(
+                DoubleSupport::toDouble(theToken, getMemoryManager()),
+                theToken,
+                getMemoryManager()));
     }
 
     /**
@@ -1216,7 +1220,11 @@ public:
             double                  theNumber,
             const XalanDOMString&   theString)
     {
-        m_tokenQueue.push_back(XToken(theNumber, theString));
+        m_tokenQueue.push_back(
+            XToken(
+                theNumber,
+                theString,
+                getMemoryManager()));
     }
 
     /**
@@ -1228,7 +1236,12 @@ public:
     void
     insertToken(const XalanDOMString&   theToken)
     {
-        m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken, getMemoryManager()));
+        m_tokenQueue.insert(
+            m_tokenQueue.begin() + (m_currentPosition - 1),
+            XToken(
+                theToken,
+                DoubleSupport::toDouble(theToken, getMemoryManager()),
+                getMemoryManager()));
     }
 
     /**
@@ -1243,7 +1256,12 @@ public:
             double                  theNumber,
             const XalanDOMString&   theString)
     {
-        m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theNumber, theString));
+        m_tokenQueue.insert(
+            m_tokenQueue.begin() + (m_currentPosition - 1),
+            XToken(
+                theNumber,
+                theString,
+                getMemoryManager()));
     }
 
     /**
@@ -1262,7 +1280,9 @@ public:
             calculateRelativePosition(theOffset, theDirection);
         assert(thePosition < tokenQueueSize());
 
-        m_tokenQueue[thePosition].set(theString, getMemoryManager());
+        m_tokenQueue[thePosition].set(
+            theString,
+            DoubleSupport::toDouble(theString, getMemoryManager()));
     }
 
     /**

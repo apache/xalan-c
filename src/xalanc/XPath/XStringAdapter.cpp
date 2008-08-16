@@ -24,17 +24,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringAdapter::XStringAdapter(const XObjectPtr&	val,
-                               MemoryManagerType&   theManager) :
-	XStringBase(theManager),
+XStringAdapter::XStringAdapter(
+            const XObjectPtr&	    val,
+            MemoryManager&          theManager,
+            XPathExecutionContext&  theExecutionContext) :
+	XStringBase(theManager, theExecutionContext),
 	m_value(val)
 {
 }
 
 
 
-XStringAdapter::XStringAdapter(const XStringAdapter&	source,
-                               MemoryManagerType&       theManager) :
+XStringAdapter::XStringAdapter(
+            const XStringAdapter&   source,
+            MemoryManager&          theManager) :
 	XStringBase(source, theManager),
 	m_value(source.m_value)
 {
@@ -49,6 +52,14 @@ XStringAdapter::~XStringAdapter()
 
 
 const XalanDOMString&
+XStringAdapter::str(XPathExecutionContext&  executionContext) const
+{
+	return m_value->str(executionContext);
+}
+
+
+
+const XalanDOMString&
 XStringAdapter::str() const
 {
 	return m_value->str();
@@ -58,10 +69,46 @@ XStringAdapter::str() const
 
 void
 XStringAdapter::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	m_value->str(formatterListener, function);
+	m_value->str(
+        executionContext,
+        formatterListener,
+        function);
+}
+
+
+
+void
+XStringAdapter::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+	m_value->str(
+        formatterListener,
+        function);
+}
+
+
+
+void
+XStringAdapter::str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const
+{
+	m_value->str(
+        executionContext,
+        theBuffer);
+}
+
+
+
+void
+XStringAdapter::str(XalanDOMString&     theBuffer) const
+{
+	m_value->str(theBuffer);
 }
 
 
@@ -75,9 +122,9 @@ XStringAdapter::getRealType() const
 
 
 double
-XStringAdapter::stringLength() const
+XStringAdapter::stringLength(XPathExecutionContext&     executionContext) const
 {
-	return m_value->stringLength();
+	return m_value->stringLength(executionContext);
 }
 
 

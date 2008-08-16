@@ -104,6 +104,7 @@ getStartIndex(
  */
 inline XalanDOMString::size_type
 getSubstringLength(
+            XPathExecutionContext&      executionContext,
             XalanDOMString::size_type   theSourceStringLength,
 			XalanDOMString::size_type	theStartIndex,
 			double						theSecondArgValue,
@@ -128,7 +129,7 @@ getSubstringLength(
     }
     else
     {
-		const double	theThirdArgValue = arg3->num();
+		const double	theThirdArgValue = arg3->num(executionContext);
 
 		if (DoubleSupport::isNaN(theThirdArgValue) == true ||
 			DoubleSupport::isNegativeInfinity(theThirdArgValue) == true)
@@ -224,7 +225,7 @@ FunctionSubstring::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);   
 
-    const XalanDOMString&               theSourceString = arg1->str();
+    const XalanDOMString&               theSourceString = arg1->str(executionContext);
     const XalanDOMString::size_type     theSourceStringLength = length(theSourceString);
 
     if (theSourceStringLength == 0)
@@ -235,7 +236,7 @@ FunctionSubstring::execute(
     {
         // Get the value of the second argument...
         const double    theSecondArgValue =
-            DoubleSupport::round(arg2->num());
+            DoubleSupport::round(arg2->num(executionContext));
 
 		// XPath indexes from 1, so this is the first XPath index....
         const XalanDOMString::size_type     theStartIndex =
@@ -252,6 +253,7 @@ FunctionSubstring::execute(
 
 			const XalanDOMString::size_type		theSubstringLength =
                 getSubstringLength(
+                    executionContext,
 					theSourceStringLength,
 					theStartIndex,
 					theSecondArgValue,

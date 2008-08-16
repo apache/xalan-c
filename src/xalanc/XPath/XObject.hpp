@@ -41,6 +41,7 @@
 
 #include <xalanc/XPath/NodeRefListBase.hpp>
 #include <xalanc/XPath/XalanXPathException.hpp>
+#include <xalanc/XPath/XPathExecutionContext.hpp>
 
 
 
@@ -53,7 +54,6 @@ class NodeRefListBase;
 class XalanDocumentFragment;
 class XObjectFactory;
 class XObjectTypeCallback;
-class XPathExecutionContext;
 
 
 
@@ -90,9 +90,11 @@ public:
 
 	/**
 	 * Perform static initialization.  See class XPathInit.
-	 */
+     *
+	 * @param theMemoryManager The MemoryManager instance.
+     */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager&   theMemoryManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.
@@ -104,11 +106,21 @@ public:
 	 * Create an XObject.
 	 *
 	 * @param theObjectType The enum for the type of the object.
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	XObject(eObjectType		theObjectType);
+	XObject(
+            eObjectType		theObjectType,
+            MemoryManager&  theMemoryManager);
 
-	XObject(const XObject&	source);
-
+	/**
+	 * Create an XObject from another XObject.
+	 *
+	 * @param source The source for the copy
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XObject(
+            const XObject&	source,
+            MemoryManager&  theManager);
 
     /**
      * Given a request type, return the equivalent string. 
@@ -122,7 +134,21 @@ public:
 	/**
 	 * Cast result object to a number.
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @return numeric value
+	 */
+	virtual double
+	num(XPathExecutionContext&  executionContext) const;
+
+	/**
+	 * Cast result object to a number.
+	 *
+     * This function does not have access to the current
+     * XPathExecutionContext, so the result may contain data
+     * from whitespace text nodes that might have been stripped
+	 * otherwise.
+     *
+     * @return numeric value
 	 */
 	virtual double
 	num() const;
@@ -130,60 +156,116 @@ public:
 	/**
 	 * Cast result object to a boolean.
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @return boolean value
 	 */
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const = 0;
 
 	/**
 	 * Cast result object to a string.
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @return string value
 	 */
 	virtual const XalanDOMString&
-	str() const;
+	str(XPathExecutionContext&  executionContext) const = 0;
+
+	/**
+	 * Cast result object to a string.
+	 *
+     * This function does not have access to the current
+     * XPathExecutionContext, so the result may contain data
+     * from whitespace text nodes that might have been stripped
+	 * otherwise.
+     *
+     * @param executionContext The current XPathExecutionContext
+	 * @return string value
+	 */
+	virtual const XalanDOMString&
+	str() const = 0;
 
     typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
 	/**
 	 * Send the string value to a FormatterListener instance.
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @param formatterListener The FormatterListener instance
 	 * @param function A pointer to the member function of FormatterListener to call
-	 * 
 	 */
 	virtual void
 	str(
-  			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const = 0;
+            XPathExecutionContext&  executionContext,
+  			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const = 0;
 
 	/**
-	 * Get the length of the string value of the instance..
-	 *
-	 * @return The length of the string value
+	 * Send the string value to a FormatterListener instance.
+     *
+     * This function does not have access to the current
+     * XPathExecutionContext, so the result may contain data
+     * from whitespace text nodes that might have been stripped
+	 * otherwise.
+     *
+	 * @param formatterListener The FormatterListener instance
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	virtual double
-	stringLength() const = 0;
+	virtual void
+	str(
+  			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const = 0;
 
 	/**
 	 * Append the string value directly a string
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @param theBuffer The buffer for the data
 	 */
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const = 0;
+
+	/**
+	 * Append the string value directly a string
+	 *
+     * This function does not have access to the current
+     * XPathExecutionContext, so the result may contain data
+     * from whitespace text nodes that might have been stripped
+	 * otherwise.
+     *
+	 * @param theBuffer The buffer for the data
+	 */
+	virtual void
+	str(XalanDOMString&     theBuffer) const = 0;
+
+	/**
+	 * Get the length of the string value of the instance.
+	 *
+	 * @return The length of the string value
+	 */
+	virtual double
+	stringLength(XPathExecutionContext&     executionContext) const = 0;
 
 	/**
 	 * Cast result object to a result tree fragment.
 	 *
+     * @param executionContext The current XPathExecutionContext
 	 * @return result tree fragment
 	 */
 	virtual const XalanDocumentFragment&
 	rtree() const;
 
 	/**
-	 * Cast result object to a nodelist.
+	 * Cast result object to a nodelist 
 	 *
+     * This function does not have access to the current
+     * XPathExecutionContext, so the result may contain data
+     * from whitespace text nodes that might have been stripped
+	 * otherwise.
+     *
+     * @param executionContext The current XPathExecutionContext
 	 * @return node list
 	 */
 	virtual const NodeRefListBase&
@@ -286,8 +368,11 @@ public:
 		return m_objectType;
 	}
 
-	/**
-	 * Static conversion function.
+    /**
+	 * Static conversion function.  Returns the boolean value
+     * of the supplied double.
+	 *
+	 * @param theString The double to convert.
 	 *
 	 * @return bool value
 	 */
@@ -298,8 +383,10 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Returns the boolean value
+     * of the supplied XalanDOMString.
 	 *
+	 * @param theString The XalanDOMString to convert.
 	 * @return bool value
 	 */
 	static bool
@@ -309,8 +396,10 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Returns the boolean value
+     * of the supplied NodeRefListBase.
 	 *
+	 * @param theNodeList The NodeRefListBase to convert.
 	 * @return bool value
 	 */
 	static bool
@@ -320,8 +409,11 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Returns a reference to a
+     * XalanDOMString instance with the string value of the
+     * boolean.
 	 *
+	 * @param theBool The boolean value to convert.
 	 * @return The string value of the boolean
 	 */
 	static const XalanDOMString&
@@ -331,7 +423,8 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function. Appends the supplied boolean
+     * value to a string.
 	 *
 	 * @param theBool The boolean value to convert.
 	 * @param theString The string value of the provided boolean value.
@@ -341,7 +434,7 @@ public:
 			bool                theBool,
 			XalanDOMString&     theString)
 	{
-		theString = theBool == true ? s_trueString : s_falseString;
+		theString.append(theBool == true ? s_trueString : s_falseString);
 	}
 
 	/**
@@ -369,9 +462,11 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Append the string value of the
+     * double to the supplied XalanDOMString parameter.
 	 *
-	 * @return The string value of the number
+	 * @param theNumber The double to convert.
+	 * @param theString The output XalanDOMString.
 	 */
 	static void
 	string(
@@ -381,6 +476,14 @@ public:
 		NumberToDOMString(theNumber, theString);
 	}
 
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the double.
+	 *
+	 * @param theNumber The double to convert.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
 	static void
 	string(
 			double				theNumber,
@@ -391,9 +494,13 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Append the string value of the
+     * XalanNode to the supplied XalanDOMString parameter.
+     *
+     * @deprecated This function is deprecated and should not be used.
 	 *
-	 * @return The string value of the node
+	 * @param theNode The XalanNode to convert.
+	 * @param theString The output XalanDOMString.
 	 */
 	static void
 	string(
@@ -403,6 +510,16 @@ public:
 		DOMServices::getNodeData(theNode, theString);
 	}
 
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the XalanNode.
+	 *
+     * @deprecated This function is deprecated and should not be used.
+	 *
+	 * @param theNode The XalanNode to convert.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
 	static void
 	string(
 			const XalanNode&	theNode,
@@ -413,9 +530,13 @@ public:
 	}
 
 	/**
-	 * Static conversion function.
+	 * Static conversion function.  Append the string value of the
+     * NodeRefListBase to the supplied XalanDOMString parameter.
 	 *
-	 * @return The string value of the node list
+     * @deprecated This function is deprecated and should not be used.
+	 *
+	 * @param theNodeList The NodeRefListBase to convert.
+	 * @param theString The output XalanDOMString.
 	 */
 	static void
 	string(
@@ -430,6 +551,16 @@ public:
 		}
 	}
 
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the NodeRefListBase.
+	 *
+     * @deprecated This function is deprecated and should not be used.
+	 *
+	 * @param theNodeList The NodeRefListBase to convert.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
 	static void
 	string(
 			const NodeRefListBase&	theNodeList,
@@ -445,6 +576,123 @@ public:
 	}
 
 	/**
+	 * Static conversion function.  Append the string value of the
+     * XalanNode to the supplied XalanDOMString parameter.
+     *
+	 * @param theNode The XalanNode to convert.
+     * @param theExecutionContext The current XPathExecutionContext.
+	 * @param theString The output XalanDOMString.
+	 */
+	static void
+	string(
+			const XalanNode&	    theNode,
+            XPathExecutionContext&  theExecutionContext,
+            XalanDOMString&		    theString)
+	{
+		DOMServices::getNodeData(theNode, theExecutionContext, theString);
+	}
+
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the XalanNode.
+	 *
+	 * @param theNode The XalanNode to convert.
+     * @param theExecutionContext The current XPathExecutionContext.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
+	static void
+	string(
+			const XalanNode&	    theNode,
+            XPathExecutionContext&  theExecutionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function)
+	{
+		DOMServices::getNodeData(
+            theNode,
+            theExecutionContext,
+            formatterListener,
+            function);
+	}
+
+	/**
+	 * Static conversion function.  Append the string value of the
+     * NodeRefListBase to the supplied XalanDOMString parameter.
+	 *
+	 * @param theNodeList The NodeRefListBase to convert.
+     * @param theExecutionContext The current XPathExecutionContext.
+	 * @param theString The output XalanDOMString.
+	 */
+	static void
+	string(
+			const NodeRefListBase&	theNodeList,
+            XPathExecutionContext&  theExecutionContext,
+			XalanDOMString&			theString)
+	{
+		if (theNodeList.getLength() > 0)
+		{
+			assert(theNodeList.item(0) != 0);
+
+			string(*theNodeList.item(0), theExecutionContext, theString);
+		}
+	}
+
+	/**
+	 * Static conversion function.  Calls the supplied FormatterListener
+	 * member function with the string value of the NodeRefListBase.
+	 *
+	 * @param theNodeList The NodeRefListBase to convert.
+     * @param theExecutionContext The current XPathExecutionContext.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
+	static void
+	string(
+			const NodeRefListBase&	theNodeList,
+            XPathExecutionContext&  theExecutionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
+	{
+		if (theNodeList.getLength() > 0)
+		{
+			assert(theNodeList.item(0) != 0);
+
+			DOMServices::getNodeData(
+                *theNodeList.item(0),
+                theExecutionContext,
+                formatterListener,
+                function);
+		}
+	}
+
+	/**
+	 * Calls the supplied FormatterListener member function with
+     * the string.
+	 *
+	 * @param theString The XalanDOMString to convert.
+	 * @param formatterListener The FormatterListener instance.
+	 * @param function The FormatterListener member function to call.
+	 */
+	static void
+	string(
+			const XalanDOMString&	theString,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function)
+	{
+        const XalanDOMString::size_type     theLength =
+            theString.length();
+
+        if (theLength != 0)
+        {
+            assert(theLength == static_cast<FormatterListener::size_type>(theLength));
+
+            (formatterListener.*function)(
+                theString.c_str(),
+                static_cast<FormatterListener::size_type>(theLength));
+        }
+	}
+
+	/**
 	 * Static conversion function.
 	 *
 	 * @return bool value
@@ -456,8 +704,9 @@ public:
 	}
 
 	static double
-	number(const XalanDOMString&	theString,
-            MemoryManagerType&      theManager)
+	number(
+            const XalanDOMString&	theString,
+            MemoryManager&          theManager)
 	{
 		return DoubleSupport::toDouble(theString, theManager);
 	}
@@ -499,10 +748,10 @@ public:
 
 		explicit
 		XObjectException(
-				const XalanDOMString&	message = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
-                MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr());
+				const XalanDOMString&	theMessage,
+                MemoryManager&          theManager);
 
-        XObjectException( const XObjectException& other) ;
+        XObjectException(const XObjectException&    other) ;
 
 		virtual
 		~XObjectException();
@@ -512,7 +761,8 @@ public:
 		{
 			return m_type;
 		}
-	private:
+
+    private:
 
 		static const XalanDOMChar	m_type[];
 	};
@@ -522,11 +772,12 @@ public:
 	public:
 
 		XObjectInvalidConversionException(
-				                eObjectType	fromType,
-				                eObjectType	toType);
+                    MemoryManager&          memoryManager,
+		            const XalanDOMString&   fromType,
+				    const XalanDOMString&   toType,
+                    XalanDOMString&         buffer);
 
-
-        XObjectInvalidConversionException( const XObjectInvalidConversionException& other);
+        XObjectInvalidConversionException(const XObjectInvalidConversionException&  other);
 
 		virtual
 		~XObjectInvalidConversionException();
@@ -537,8 +788,7 @@ public:
 			return m_type;
 		}
 
-
-	private:
+    private:
 
 		static const XalanDOMChar	m_type[];
 
@@ -547,14 +797,25 @@ public:
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType,
                 XalanDOMString&         theResult);
-
-
-        const eObjectType       m_from;
-
-        const eObjectType       m_to;
 	};
 
 protected:
+
+	/**
+	 * Get the MemoryManager for this instance.
+	 *
+	 * @return The MemoryManager.
+	 */
+    MemoryManager&
+    getMemoryManager() const
+    {
+        assert(m_memoryManager != 0);
+
+        return *m_memoryManager;
+    }
+
+    void
+    throwInvalidConversionException(const XalanDOMString&   theTargetType) const;
 
 	/**
 	 * Tell what kind of class this is.
@@ -595,9 +856,11 @@ private:
 	XObject&
 	operator=(const XObject&);
 
-	const eObjectType	m_objectType;
+	eObjectType	            m_objectType;
 
-	XObjectFactory*		m_factory;
+	XObjectFactory*		    m_factory;
+
+    mutable MemoryManager*  m_memoryManager;
 };
 
 

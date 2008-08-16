@@ -474,7 +474,7 @@ XPath::executeMore(
 //      break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-        return executionContext.getXObjectFactory().createNumber(functionStringLength(context));
+        return executionContext.getXObjectFactory().createNumber(functionStringLength(context, executionContext));
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
@@ -569,7 +569,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_VARIABLE:
-        result = variable(opPos, executionContext)->boolean();
+        result = variable(opPos, executionContext)->boolean(executionContext);
         break;
 
     case XPathExpression::eOP_GROUP:
@@ -581,11 +581,11 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_EXTFUNCTION:
-        result = runExtFunction(context, opPos, executionContext)->boolean();
+        result = runExtFunction(context, opPos, executionContext)->boolean(executionContext);
         break;
 
     case XPathExpression::eOP_FUNCTION:
-        result = runFunction(context, opPos, executionContext)->boolean();
+        result = runFunction(context, opPos, executionContext)->boolean(executionContext);
         break;
 
     case XPathExpression::eOP_LOCATIONPATH:
@@ -657,7 +657,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-        result = XObject::boolean(functionStringLength(context));
+        result = XObject::boolean(functionStringLength(context, executionContext));
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
@@ -750,7 +750,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_VARIABLE:
-        result = variable(opPos, executionContext)->num();
+        result = variable(opPos, executionContext)->num(executionContext);
         break;
 
     case XPathExpression::eOP_GROUP:
@@ -762,11 +762,11 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_EXTFUNCTION:
-        result = runExtFunction(context, opPos, executionContext)->num();
+        result = runExtFunction(context, opPos, executionContext)->num(executionContext);
         break;
 
     case XPathExpression::eOP_FUNCTION:
-        result = runFunction(context, opPos, executionContext)->num();
+        result = runFunction(context, opPos, executionContext)->num(executionContext);
         break;
 
     case XPathExpression::eOP_LOCATIONPATH:
@@ -838,7 +838,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-        result = functionStringLength(context);
+        result = functionStringLength(context, executionContext);
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
@@ -931,7 +931,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_VARIABLE:
-        variable(opPos, executionContext)->str(result);
+        variable(opPos, executionContext)->str(executionContext, result);
         break;
 
     case XPathExpression::eOP_GROUP:
@@ -943,11 +943,11 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_EXTFUNCTION:
-        runExtFunction(context, opPos, executionContext)->str(result);
+        runExtFunction(context, opPos, executionContext)->str(executionContext, result);
         break;
 
     case XPathExpression::eOP_FUNCTION:
-        runFunction(context, opPos, executionContext)->str(result);
+        runFunction(context, opPos, executionContext)->str(executionContext, result);
         break;
 
     case XPathExpression::eOP_LOCATIONPATH:
@@ -1019,7 +1019,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-        XObject::string(functionStringLength(context), result);
+        XObject::string(functionStringLength(context, executionContext), result);
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
@@ -1157,7 +1157,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_VARIABLE:
-        variable(opPos, executionContext)->str( formatterListener, function);
+        variable(opPos, executionContext)->str(executionContext, formatterListener, function);
         break;
 
     case XPathExpression::eOP_GROUP:
@@ -1169,11 +1169,11 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_EXTFUNCTION:
-        runExtFunction(context, opPos, executionContext)->str( formatterListener, function);
+        runExtFunction(context, opPos, executionContext)->str(executionContext, formatterListener, function);
         break;
 
     case XPathExpression::eOP_FUNCTION:
-        runFunction(context, opPos, executionContext)->str(formatterListener, function);
+        runFunction(context, opPos, executionContext)->str(executionContext, formatterListener, function);
         break;
 
     case XPathExpression::eOP_LOCATIONPATH:
@@ -1245,7 +1245,7 @@ XPath::executeMore(
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_0:
-        XObject::string(functionStringLength(context), formatterListener, function);
+        XObject::string(functionStringLength(context, executionContext), formatterListener, function);
         break;
 
     case XPathExpression::eOP_FUNCTION_STRINGLENGTH_1:
@@ -1466,7 +1466,7 @@ getStringFromTokenQueue(
     {
         assert(tokenPosition != XPathExpression::eENDOP);
 
-        const XObject* const    token =
+        const XToken* const     token =
                     expression.getToken(tokenPosition);
         assert(token != 0);
 
@@ -2129,7 +2129,7 @@ XPath::Union(
 
     Union(context, opPos, executionContext, *resultNodeList);
 
-    XObject::string(*resultNodeList, result);
+    XObject::string(*resultNodeList, executionContext, result);
 }
 
 
@@ -2148,7 +2148,7 @@ XPath::Union(
 
     Union(context, opPos, executionContext, *resultNodeList);
 
-    XObject::string(*resultNodeList, formatterListener, function);
+    XObject::string(*resultNodeList, executionContext, formatterListener, function);
 }
 
 
@@ -2259,7 +2259,7 @@ XPath::literal(
     const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-    theLiteral->str(theString);
+    theString = theLiteral->str();
 }
 
 
@@ -2276,7 +2276,7 @@ XPath::literal(
     const XToken* const     theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
 
-    theLiteral->str( formatterListener, function);
+    theLiteral->str(formatterListener, function);
 }
 
 
@@ -2370,7 +2370,7 @@ XPath::numberlit(
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
     assert(theLiteral != 0);
 
-    theLiteral->str(theString);
+    theString = theLiteral->str();
 }
 
 
@@ -2467,7 +2467,7 @@ XPath::locationPath(
 
     locationPath(context, opPos, executionContext, *mnl.get());
 
-    XObject::string(*mnl.get(), theResult);
+    XObject::string(*mnl.get(), executionContext, theResult);
 }
 
 
@@ -2488,7 +2488,7 @@ XPath::locationPath(
 
     locationPath(context, opPos, executionContext, *mnl.get());
 
-    XObject::string(*mnl, formatterListener, function);
+    XObject::string(*mnl, executionContext, formatterListener, function);
 }
 
 
@@ -2746,13 +2746,15 @@ XPath::functionLocalName(
 
 
 double
-XPath::functionStringLength(XalanNode*  context) const
+XPath::functionStringLength(
+            XalanNode*              context,
+            XPathExecutionContext&  executionContext) const
 {
     assert(context != 0);
 
     FormatterStringLengthCounter    theCounter;
 
-    DOMServices::getNodeData(*context, theCounter, &FormatterListener::characters);
+    DOMServices::getNodeData(*context, executionContext, theCounter, &FormatterListener::characters);
 
     const FormatterListener::size_type  theResult = theCounter.getCount();
     assert(static_cast<double>(theResult) == theResult);
@@ -2814,7 +2816,7 @@ XPath::functionSum(
 
         for (NodeRefListBase::size_type i = 0; i < theLength; i++)
         {
-            DOMServices::getNodeData(*theNodeList->item(i), theString);
+            DOMServices::getNodeData(*theNodeList->item(i), executionContext, theString);
 
             sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString, executionContext.getMemoryManager()));
 
@@ -3064,7 +3066,7 @@ XPath::doStepPredicate(
                 {
                     score = handleFoundIndex(executionContext, context, startOpPos);
                 }
-                else if(pred->boolean() == false)
+                else if(pred->boolean(executionContext) == false)
                 {
                     score = eMatchScoreNone;
 
@@ -4540,8 +4542,8 @@ XPath::predicates(
                     assert(pred.get() != 0);
 
                     // Remove any node that doesn't satisfy the predicate.
-                    if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num()) ||
-                       pred->boolean() == false)
+                    if((XObject::eTypeNumber == pred->getType() && i + 1 != pred->num(executionContext)) ||
+                        pred->boolean(executionContext) == false)
                     {
                         // Set the node to 0.  After we're done,
                         // we'll clear it out.

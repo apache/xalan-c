@@ -716,7 +716,8 @@ createOutputStream(MemoryManagerType& theManager , const CmdLineParams&		params)
 
 TraceListener*
 createTraceListener(
-            MemoryManagerType&      theManager ,
+            XPathExecutionContext&	theExecutionContext,
+            MemoryManager&          theManager,
 			const CmdLineParams&	params,
 			PrintWriter&			diagnosticsWriter)
 {
@@ -726,12 +727,13 @@ createTraceListener(
 		params.traceSelectionEvent == true)
 	{
 		return new TraceListenerDefault(
+                theExecutionContext,
 				diagnosticsWriter,
+                theManager,
 				params.traceTemplates,
 				params.traceTemplateChildren,
 				params.traceGenerationEvent,
-				params.traceSelectionEvent,
-                theManager);
+				params.traceSelectionEvent);
 	}
 	else
 	{
@@ -784,7 +786,7 @@ xsltMain(const CmdLineParams&	params)
 	// Initialize the XSLT subsystem.  This must stay in scope until
 	// we're done with the subsystem, since its destructor shuts down
 	// the subsystem.
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	XSLTInit	theInit(theManager);
 
@@ -844,12 +846,6 @@ xsltMain(const CmdLineParams&	params)
 
 	XPathFactoryDefault		theXPathFactory(theManager);
 
-	const XalanAutoPtr<TraceListener>		theTraceListener(
-			createTraceListener(
-                theManager,
-				params,
-				diagnosticsWriter));
-
 	XSLTEngineImpl	processor(
             theManager,
 			xmlParserLiaison,
@@ -859,12 +855,6 @@ xsltMain(const CmdLineParams&	params)
 			theXPathFactory);
 
 	theXSLProcessorSupport.setProcessor(&processor);
-
-	if (theTraceListener.get() != 0)
-	{
-		processor.setTraceSelects(params.traceSelectionEvent);
-		processor.addTraceListener(theTraceListener.get());
-	}
 
 	// Use a different factory type for the stylesheet.  This is an optimization, since
 	// stylesheet XPath instances are built all at once and are deleted all at once when
@@ -976,6 +966,19 @@ xsltMain(const CmdLineParams&	params)
 			theXSLProcessorSupport,
 			theDOMSupport,
 			theXObjectFactory);
+
+	const XalanAutoPtr<TraceListener>		theTraceListener(
+			createTraceListener(
+                theExecutionContext,
+                theManager,
+				params,
+				diagnosticsWriter));
+
+	if (theTraceListener.get() != 0)
+	{
+		processor.setTraceSelects(params.traceSelectionEvent);
+		processor.addTraceListener(theTraceListener.get());
+	}
 
 #if defined(XALAN_USE_ICU)
 	// Create a collation function for the ICU, and have it

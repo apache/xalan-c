@@ -28,16 +28,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenNumberAdapter::XTokenNumberAdapter(const XToken&	theToken) :
-	XNumberBase(),
+XTokenNumberAdapter::XTokenNumberAdapter(
+            const XToken&	theToken,
+            MemoryManager&  theMemoryManager) :
+	XNumberBase(theMemoryManager),
 	m_value(theToken)
 {
 }
 
 
 
-XTokenNumberAdapter::XTokenNumberAdapter(const XTokenNumberAdapter&		source) :
-	XNumberBase(source),
+XTokenNumberAdapter::XTokenNumberAdapter(
+            const XTokenNumberAdapter&	source,
+            MemoryManager&              theMemoryManager) :
+	XNumberBase(source, theMemoryManager),
 	m_value(source.m_value)
 {
 }
@@ -50,9 +54,17 @@ XTokenNumberAdapter::~XTokenNumberAdapter()
 
 
 double
-XTokenNumberAdapter::num() const
+XTokenNumberAdapter::num(XPathExecutionContext&     /* executionContext */) const
 {
 	return m_value.num();
+}
+
+
+
+const XalanDOMString&
+XTokenNumberAdapter::str(XPathExecutionContext&     /* executionContext */) const
+{
+	return m_value.str();
 }
 
 
@@ -67,8 +79,9 @@ XTokenNumberAdapter::str() const
 
 void
 XTokenNumberAdapter::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  /* executionContext */,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
 	m_value.str(formatterListener, function);
 }
@@ -76,15 +89,35 @@ XTokenNumberAdapter::str(
 
 
 void
-XTokenNumberAdapter::str(XalanDOMString&	theBuffer) const
+XTokenNumberAdapter::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	m_value.str(theBuffer);
+	m_value.str(formatterListener, function);
+}
+
+
+
+void
+XTokenNumberAdapter::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+	theBuffer.append(m_value.str());
+}
+
+
+
+void
+XTokenNumberAdapter::str(XalanDOMString&    theBuffer) const
+{
+	theBuffer.append(m_value.str());
 }
 
 
 
 double
-XTokenNumberAdapter::stringLength() const
+XTokenNumberAdapter::stringLength(XPathExecutionContext&    /* executionContext */) const
 {
 	return m_value.stringLength();
 }

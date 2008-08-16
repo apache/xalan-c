@@ -87,8 +87,8 @@ XalanEXSLTFunctionAlign::execute(
         args[1].null() == false &&
         (theSize == 2 || args[2].null() == false));
 
-    const XalanDOMString&   theTargetString = args[0]->str();
-    const XalanDOMString&   thePaddingString = args[1]->str();
+    const XalanDOMString&   theTargetString = args[0]->str(executionContext);
+    const XalanDOMString&   thePaddingString = args[1]->str(executionContext);
 
     const XalanDOMString::size_type     theTargetStringLength = theTargetString.length();
     const XalanDOMString::size_type     thePaddingStringLength = thePaddingString.length();
@@ -117,7 +117,7 @@ XalanEXSLTFunctionAlign::execute(
 
             if (theSize == 3)
             {
-                const XalanDOMString&   theAlignmentString = args[2]->str();
+                const XalanDOMString&   theAlignmentString = args[2]->str(executionContext);
 
                 if (equals(
                             s_centerString,
@@ -207,7 +207,7 @@ XalanEXSLTFunctionConcat::execute(
         {
             assert(theNodeSet.item(i) != 0);
 
-            DOMServices::getNodeData(*theNodeSet.item(i), theResult);
+            DOMServices::getNodeData(*theNodeSet.item(i), executionContext, theResult);
         }
 
         return executionContext.getXObjectFactory().createString(theResult);
@@ -248,8 +248,8 @@ XalanEXSLTFunctionPadding::execute(
         args[0].null() == false &&
         (theSize == 1 || args[1].null() == false));
 
-    const double                        theLength = DoubleSupport::round(args[0]->num());
-    const XalanDOMString&               thePaddingString = theSize == 2 ? args[1]->str() : m_space;
+    const double                        theLength = DoubleSupport::round(args[0]->num(executionContext));
+    const XalanDOMString&               thePaddingString = theSize == 2 ? args[1]->str(executionContext) : m_space;
     const XalanDOMString::size_type     thePaddingStringLength = thePaddingString.length();
 
     if (theLength == 0.0 || thePaddingStringLength == 0)
@@ -357,13 +357,13 @@ XalanEXSLTFunctionEncodeURI::execute(
         args[1].null() == false &&
         (theSize == 2 || args[2].null() == false));
 
-    const XalanDOMString& theString = args[0]->str();
-    const bool            escapeReserved = args[1]->boolean();
+    const XalanDOMString& theString = args[0]->str(executionContext);
+    const bool            escapeReserved = args[1]->boolean(executionContext);
 
     // We only support UTF-8, which is the default when there are only two arguments.
     const bool  fSupportedEncoding =
                     theSize == 2 ||
-                    XalanTranscodingServices::encodingIsUTF8(args[2]->str());
+                    XalanTranscodingServices::encodingIsUTF8(args[2]->str(executionContext));
 
     if (theString.length() == 0 ||
         !fSupportedEncoding)
@@ -488,12 +488,12 @@ XalanEXSLTFunctionDecodeURI::execute(
         args[0].null() == false && 
         (theSize == 1 || args[1].null() == false));
 
-    const XalanDOMString& theString = args[0]->str();
+    const XalanDOMString& theString = args[0]->str(executionContext);
 
     // We only support UTF-8, which is the default when there's only one argument.
     const bool  fSupportedEncoding =
         theSize == 1 ||
-        XalanTranscodingServices::encodingIsUTF8(args[1]->str());
+        XalanTranscodingServices::encodingIsUTF8(args[1]->str(executionContext));
 
     if (theString.length() == 0 || !fSupportedEncoding)
     {

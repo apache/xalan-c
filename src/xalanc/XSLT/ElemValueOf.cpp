@@ -271,7 +271,7 @@ ElemValueOf::startElement(StylesheetExecutionContext&       executionContext) co
         {
             const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
 
-            DOMServices::getNodeData(*sourceNode, theString.get());
+            DOMServices::getNodeData(*sourceNode, executionContext, theString.get());
 
             fireSelectionEvent(executionContext, sourceNode, theString.get());
         }
@@ -326,7 +326,7 @@ ElemValueOf::execute(StylesheetExecutionContext&    executionContext) const
         {
             const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
 
-            DOMServices::getNodeData(*sourceNode, theString.get());
+            DOMServices::getNodeData(*sourceNode, executionContext, theString.get());
 
             fireSelectionEvent(executionContext, sourceNode, theString.get());
         }

@@ -137,6 +137,7 @@ main(
 			// Set up the TraceListener... 
 			TraceListenerDefault		theTraceListener(				
 					diagnosticsWriter,
+                    theXalanTransformer.getMemoryManager(),
 					traceTemplates,
 					traceTemplateChildren,
 					traceGenerationEvent,

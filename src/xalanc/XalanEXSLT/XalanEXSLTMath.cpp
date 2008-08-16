@@ -65,7 +65,7 @@ findNodes(
         XalanNode*          theCurrentNode = theNodeSet.item(0);
         assert(theCurrentNode != 0);
 
-        DOMServices::getNodeData(*theCurrentNode, theStringValue);
+        DOMServices::getNodeData(*theCurrentNode, executionContext, theStringValue);
 
         double  theNumericValue = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
@@ -80,7 +80,7 @@ findNodes(
 
                 theStringValue.clear();
 
-                DOMServices::getNodeData(*theCurrentNode, theStringValue);
+                DOMServices::getNodeData(*theCurrentNode, executionContext, theStringValue);
 
                 const double    theCurrent = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
@@ -139,7 +139,10 @@ XalanEXSLTFunctionHighest::execute(
 
     assert(args[0].null() == false);
 
-    return findNodes(executionContext, args[0]->nodeset(), DoubleSupport::greaterThan);
+    return findNodes(
+                executionContext,
+                args[0]->nodeset(),
+                DoubleSupport::greaterThan);
 }
 
 
@@ -183,7 +186,10 @@ XalanEXSLTFunctionLowest::execute(
 
     assert(args[0].null() == false);
 
-    return findNodes(executionContext, args[0]->nodeset(), DoubleSupport::lessThan);
+    return findNodes(
+                executionContext,
+                args[0]->nodeset(),
+                DoubleSupport::lessThan);
 }
 
 
@@ -220,7 +226,7 @@ findValue(
 
         assert(theNodeSet.item(0) != 0);
 
-        DOMServices::getNodeData(*theNodeSet.item(0), theStringValue);
+        DOMServices::getNodeData(*theNodeSet.item(0), executionContext, theStringValue);
 
         double  theResult = DOMStringToDouble(theStringValue, executionContext.getMemoryManager());
 
@@ -230,7 +236,7 @@ findValue(
 
             theStringValue.clear();
 
-            DOMServices::getNodeData(*theNodeSet.item(i), theStringValue);
+            DOMServices::getNodeData(*theNodeSet.item(i), executionContext, theStringValue);
 
             const double    theCurrent =
                 DOMStringToDouble(
@@ -281,7 +287,10 @@ XalanEXSLTFunctionMin::execute(
 
     assert(args[0].null() == false);
 
-    return findValue(executionContext, args[0]->nodeset(), DoubleSupport::lessThan);
+    return findValue(
+                executionContext,
+                args[0]->nodeset(),
+                DoubleSupport::lessThan);
 }
 
 
@@ -323,7 +332,10 @@ XalanEXSLTFunctionMax::execute(
 
     assert(args[0].null() == false);
 
-    return findValue(executionContext, args[0]->nodeset(), DoubleSupport::greaterThan);
+    return findValue(
+                executionContext,
+                args[0]->nodeset(),
+                DoubleSupport::greaterThan);
 }
 
 
@@ -365,7 +377,7 @@ XalanEXSLTFunctionAbs::execute(
 
     assert(args[0].null() == false);
 
-    return executionContext.getXObjectFactory().createNumber(DoubleSupport::abs(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(DoubleSupport::abs(args[0]->num(executionContext)));
 }
 
 
@@ -469,7 +481,7 @@ XalanEXSLTFunctionAcos::execute(
     using std::acos;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(acos(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(acos(args[0]->num(executionContext)));
 }
 
 
@@ -517,7 +529,7 @@ XalanEXSLTFunctionAsin::execute(
     using std::asin;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(asin(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(asin(args[0]->num(executionContext)));
 }
 
 
@@ -564,7 +576,7 @@ XalanEXSLTFunctionAtan::execute(
     using std::atan;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(atan(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(atan(args[0]->num(executionContext)));
 }
 
 
@@ -612,7 +624,8 @@ XalanEXSLTFunctionAtan2::execute(
     using std::atan2;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(atan2(args[0]->num(), args[1]->num()));
+    return executionContext.getXObjectFactory().createNumber(
+                atan2(args[0]->num(executionContext), args[1]->num(executionContext)));
 }
 
 
@@ -1017,8 +1030,8 @@ XalanEXSLTFunctionConstant::execute(
 
     assert(args[0].null() == false && args[1].null() == false);
 
-    const XalanDOMString&   theConstant = args[0]->str();
-    const double            thePrecision = DoubleSupport::round(args[1]->num());
+    const XalanDOMString&   theConstant = args[0]->str(executionContext);
+    const double            thePrecision = DoubleSupport::round(args[1]->num(executionContext));
 
     if (thePrecision <= 0.0L)
     {
@@ -1118,7 +1131,7 @@ XalanEXSLTFunctionCos::execute(
     using std::cos;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(cos(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(cos(args[0]->num(executionContext)));
 }
 
 
@@ -1164,7 +1177,7 @@ XalanEXSLTFunctionExp::execute(
     using std::exp;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(exp(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(exp(args[0]->num(executionContext)));
 }
 
 
@@ -1210,7 +1223,7 @@ XalanEXSLTFunctionLog::execute(
     using std::log;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(log(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(log(args[0]->num(executionContext)));
 }
 
 
@@ -1258,7 +1271,10 @@ XalanEXSLTFunctionPower::execute(
     using std::pow;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), args[1]->num()));
+    return executionContext.getXObjectFactory().createNumber(
+                pow(
+                    args[0]->num(executionContext),
+                    args[1]->num(executionContext)));
 }
 
 
@@ -1304,7 +1320,7 @@ XalanEXSLTFunctionSin::execute(
     using std::sin;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(sin(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(sin(args[0]->num(executionContext)));
 }
 
 
@@ -1352,7 +1368,7 @@ XalanEXSLTFunctionSqrt::execute(
     using std::sqrt;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
 }
 
 
@@ -1398,7 +1414,7 @@ XalanEXSLTFunctionTan::execute(
     using std::tan;
 #endif
 
-    return executionContext.getXObjectFactory().createNumber(tan(args[0]->num()));
+    return executionContext.getXObjectFactory().createNumber(tan(args[0]->num(executionContext)));
 }
 
 

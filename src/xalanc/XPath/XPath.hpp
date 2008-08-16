@@ -2360,10 +2360,13 @@ protected:
      * Handle the built-in function "string-length".
      *
      * @param context The current source tree context node, which must not be 0.
+     * @param executionContext current execution context
      * @return the result of the function.
      */
     double
-    functionStringLength(XalanNode*		context) const;
+    functionStringLength(
+            XalanNode*              context,
+            XPathExecutionContext&  executionContext) const;
 
     /**
      * Handle the built-in function "string-length".

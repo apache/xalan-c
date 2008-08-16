@@ -1167,12 +1167,6 @@
 				RelativePath="..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\XPath\XSpan.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\XPath\XSpan.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\XPath\XString.cpp">
 			</File>
 			<File

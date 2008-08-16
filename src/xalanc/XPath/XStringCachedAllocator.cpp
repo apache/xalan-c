@@ -25,7 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringCachedAllocator::XStringCachedAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XStringCachedAllocator::XStringCachedAllocator(
+            MemoryManager&  theManager,
+            size_type	    theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

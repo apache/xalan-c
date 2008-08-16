@@ -293,9 +293,6 @@ public:
 			const XalanDOMString&   theName,
 			const XalanDocument&    theDocument) const;
 
-	virtual bool
-	shouldStripSourceNode(const XalanText&	node);
-
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const;
 
@@ -339,6 +336,9 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const;
+
+    virtual bool
+    shouldStripSourceNode(const XalanText&  node);
 
 protected:
 

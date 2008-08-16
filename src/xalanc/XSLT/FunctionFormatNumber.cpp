@@ -50,8 +50,8 @@ FunctionFormatNumber::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);   
     
-    const double            theNumber = arg1->num();
-    const XalanDOMString&   thePattern = arg2->str();
+    const double            theNumber = arg1->num(executionContext);
+    const XalanDOMString&   thePattern = arg2->str(executionContext);
 
     typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
 
@@ -80,10 +80,10 @@ FunctionFormatNumber::execute(
 {
     assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
     
-    const double                        theNumber = arg1->num();
-    const XalanDOMString&               thePattern = arg2->str();
+    const double                        theNumber = arg1->num(executionContext);
+    const XalanDOMString&               thePattern = arg2->str(executionContext);
 
-    const XalanDOMString&               theDFSName = arg3->str();
+    const XalanDOMString&               theDFSName = arg3->str(executionContext);
     assert(length(theDFSName) != 0);
     
     typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;

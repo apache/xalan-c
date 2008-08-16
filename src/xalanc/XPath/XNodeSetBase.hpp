@@ -51,12 +51,6 @@ public:
 	virtual
 	~XNodeSetBase();
 
-    MemoryManagerType&
-    getMemoryManager()const
-    {
-        return m_cachedStringValue.getMemoryManager();
-    }
-
 	// These methods are inherited from XObject ...
 
 
@@ -64,24 +58,38 @@ public:
 	getTypeString() const;
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual const XalanDocumentFragment&
 	rtree() const;
@@ -89,7 +97,7 @@ public:
 	virtual const NodeRefListBase&
 	nodeset() const = 0;
 
-	virtual void
+    virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
@@ -106,14 +114,16 @@ protected:
 	/**
 	 * Create an XNodeSetBase
 	 */
-	XNodeSetBase(MemoryManagerType& theManager);
+	XNodeSetBase(MemoryManager&     theMemoryManager);
 
 	/**
 	 * Create an XNodeSetBase from another.
 	 *
 	 * @param source    object to copy
 	 */
-	XNodeSetBase(const XNodeSetBase&	source, MemoryManagerType& theManager);
+	XNodeSetBase(
+        const XNodeSetBase&	    source,
+        MemoryManager&          theMemoryManager);
 
 	void
 	clearCachedValues();

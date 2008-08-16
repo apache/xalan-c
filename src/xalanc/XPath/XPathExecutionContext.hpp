@@ -630,19 +630,6 @@ public:
             const XalanDocument&    theDocument) const = 0;
 
     /**
-     * Tells, through the combination of the default-space attribute
-     * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-     * xml:space attribute, whether or not extra whitespace should be stripped
-     * from the node.  Literal elements from template elements should
-     * <em>not</em> be tested with this function.
-     *
-     * @param textNode text node from the source tree
-     * @return true if the text node should be stripped of extra whitespace
-     */
-    virtual bool
-    shouldStripSourceNode(const XalanText&  node) = 0;
-
-    /**
      * Get the document associated with the given URI.
      *
      * @param theURI      document URI
@@ -716,6 +703,9 @@ public:
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode = 0,
             const LocatorType*      locator = 0) const = 0;
+
+    virtual bool
+    shouldStripSourceNode(const XalanText&  node) = 0;
 
 protected:
 

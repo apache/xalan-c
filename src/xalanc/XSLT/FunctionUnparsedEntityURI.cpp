@@ -72,7 +72,7 @@ FunctionUnparsedEntityURI::execute(
     }
     else
     {
-        const XalanDOMString&   name = arg->str();
+        const XalanDOMString&   name = arg->str(executionContext);
 
         XalanDocument* const    doc =
                 XalanNode::DOCUMENT_NODE == context->getNodeType() ?

@@ -27,7 +27,7 @@
 
 
 
-#include "XObject.hpp"
+#include "XStringBase.hpp"
 
 
 
@@ -42,11 +42,13 @@ static const XalanDOMString		    s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 XObjectResultTreeFragProxyText::XObjectResultTreeFragProxyText(
-            const XObject&	theXObject,
-            MemoryManager&  theManager) :
+                const XObject&          theXObject,
+                MemoryManager&          theManager,
+                XPathExecutionContext*  theExecutionContext) :
 	XalanText(),
 	m_value(theXObject),
-    m_memoryManager(theManager)
+    m_memoryManager(theManager),
+    m_executionContext(theExecutionContext)
 {
 }
 
@@ -69,7 +71,14 @@ XObjectResultTreeFragProxyText::getNodeName() const
 const XalanDOMString&
 XObjectResultTreeFragProxyText::getNodeValue() const
 {
-	return m_value.str();
+    if (m_executionContext != 0)
+    {
+        return m_value.str(*m_executionContext);
+    }
+    else
+    {
+	    return m_value.str();
+    }
 }
 
 
@@ -189,7 +198,7 @@ XObjectResultTreeFragProxyText::getIndex() const
 const XalanDOMString&
 XObjectResultTreeFragProxyText::getData() const
 {
-	return m_value.str();
+	return getNodeValue();
 }
 
 
@@ -197,7 +206,7 @@ XObjectResultTreeFragProxyText::getData() const
 bool
 XObjectResultTreeFragProxyText::isWhitespace() const
 {
-	return isXMLWhitespace(m_value.str());
+	return isXMLWhitespace(getNodeValue());
 }
 
 

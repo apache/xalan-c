@@ -54,7 +54,7 @@ FunctionElementAvailable::execute(
     assert(arg1.null() == false);
 
     return executionContext.getXObjectFactory().createBoolean(
-        executionContext.elementAvailable(arg1->str(), locator));
+        executionContext.elementAvailable(arg1->str(executionContext), locator));
 }
 
 

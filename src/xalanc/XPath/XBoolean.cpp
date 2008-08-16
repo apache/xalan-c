@@ -32,16 +32,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XBoolean::XBoolean(bool		val) :
-	XObject(eTypeBoolean),
+XBoolean::XBoolean(
+            bool		    val,
+            MemoryManager&  theMemoryManager) :
+	XObject(eTypeBoolean, theMemoryManager),
 	m_value(val)
 {
 }
 
 
 
-XBoolean::XBoolean(const XBoolean&	source) :
-	XObject(source),
+XBoolean::XBoolean(
+            const XBoolean&     source,
+            MemoryManager&      theMemoryManager) :
+	XObject(source, theMemoryManager),
 	m_value(source.m_value)
 {
 }
@@ -65,7 +69,7 @@ XBoolean::getTypeString() const
 
 
 double
-XBoolean::num() const
+XBoolean::num(XPathExecutionContext&    /* executionContext */) const
 {
 	return number(m_value);
 }
@@ -73,9 +77,17 @@ XBoolean::num() const
 
 
 bool
-XBoolean::boolean() const
+XBoolean::boolean(XPathExecutionContext&    /* executionContext */) const
 {
 	return m_value;
+}
+
+
+
+const XalanDOMString&
+XBoolean::str(XPathExecutionContext&    /* executionContext */) const
+{
+	return string(m_value);
 }
 
 
@@ -90,16 +102,45 @@ XBoolean::str() const
 
 void
 XBoolean::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  /* executionContext */,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
 	string(m_value, formatterListener, function);
 }
 
 
 
+void
+XBoolean::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+	string(m_value, formatterListener, function);
+}
+
+
+
+void
+XBoolean::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    string(m_value, theBuffer);
+}
+
+
+
+void
+XBoolean::str(XalanDOMString&   theBuffer) const
+{
+    string(m_value, theBuffer);
+}
+
+
+
 double
-XBoolean::stringLength() const
+XBoolean::stringLength(XPathExecutionContext&   /* executionContext */) const
 {
     assert(
         s_trueString.length() == 4 &&
@@ -113,7 +154,9 @@ XBoolean::stringLength() const
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.Boolean(*this, boolean());
+    theCallbackObject.Boolean(
+        *this,
+        boolean(theCallbackObject.getExecutionContext()));
 }
 
 
@@ -121,7 +164,9 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.Boolean(*this, boolean());
+	theCallbackObject.Boolean(
+        *this,
+        boolean(theCallbackObject.getExecutionContext()));
 }
 
 

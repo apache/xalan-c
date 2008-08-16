@@ -75,16 +75,20 @@ XNodeSetNodeProxy::Proxy::indexOf(const XalanNode*	theNode) const
 
 
 
-XNodeSetNodeProxy::XNodeSetNodeProxy(MemoryManagerType& theManager, XalanNode*		theNode) :
-	XNodeSetBase(theManager),
+XNodeSetNodeProxy::XNodeSetNodeProxy(
+            MemoryManager&  theMemoryManager,
+            XalanNode*		theNode) :
+	XNodeSetBase(theMemoryManager),
 	m_proxy(theNode)
 {
 }
 
 
 
-XNodeSetNodeProxy::XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManagerType& theManager) :
-	XNodeSetBase(source, theManager),
+XNodeSetNodeProxy::XNodeSetNodeProxy(
+            const XNodeSetNodeProxy&	source,
+            MemoryManager&              theMemoryManager) :
+	XNodeSetBase(source, theMemoryManager),
 	m_proxy(source.m_proxy)
 {
 }

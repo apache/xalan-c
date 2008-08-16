@@ -44,7 +44,15 @@ public:
 
 	typedef XObject	ParentType;
 
-	XNumberBase(const XNumberBase&	source);
+	/**
+	 * Construct an XNumberBase object from another.
+	 * 
+	 * @param source The source XNumberBase instance.
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XNumberBase(
+            const XNumberBase&	source,
+            MemoryManager&      theMemoryManager);
 
 	virtual
 	~XNumberBase();
@@ -55,27 +63,40 @@ public:
 	getTypeString() const;
 
 	virtual double
-	num() const = 0;
+	num(XPathExecutionContext&  executionContext) const = 0;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const = 0;
 
 	virtual const XalanDOMString&
 	str() const = 0;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const = 0;
-
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
-
-	virtual double
-	stringLength() const = 0;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const = 0;
 
 	virtual void
+	str(
+  			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const = 0;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const = 0;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const = 0;
+
+	virtual double
+	stringLength(XPathExecutionContext&     executionContext) const = 0;
+
+    virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
@@ -85,9 +106,10 @@ protected:
 
 	/**
 	 * Constructor for derived classes
+	 * 
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	explicit
-	XNumberBase();
+	XNumberBase(MemoryManager&  theMemoryManager);
 
 private:
 };

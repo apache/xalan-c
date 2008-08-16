@@ -24,8 +24,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XObjectTypeCallback::XObjectTypeCallback(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+XObjectTypeCallback::XObjectTypeCallback(XPathExecutionContext&  theExecutionContext) :
+    m_executionContext(theExecutionContext)
 {
 }
 

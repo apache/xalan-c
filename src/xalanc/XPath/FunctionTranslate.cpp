@@ -57,9 +57,9 @@ FunctionTranslate::execute(
 {
     assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 
-    const XalanDOMString&   theFirstString = arg1->str();
-    const XalanDOMString&   theSecondString = arg2->str();
-    const XalanDOMString&   theThirdString = arg3->str();
+    const XalanDOMString&   theFirstString = arg1->str(executionContext);
+    const XalanDOMString&   theSecondString = arg2->str(executionContext);
+    const XalanDOMString&   theThirdString = arg3->str(executionContext);
 
     const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
     const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);

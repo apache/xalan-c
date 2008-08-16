@@ -23,7 +23,10 @@
 // Base include file.  Must be first.
 #include <xalanc/XPath/XPathDefinitions.hpp>
 
+
+
 #include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 
 #include <xalanc/XPath/XObjectResultTreeFragProxyBase.hpp>
@@ -31,8 +34,11 @@
 
 
 
-
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+class XPathExecutionContext;
 
 
 
@@ -40,19 +46,29 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxy : public XObjectResultTreeFr
 {
 public:
 
+	/**
+	 * Constructor.
+	 *
+	 * @param theXObject The XObject instance for which this is a proxy.
+     * @param theManager The MemoryManager for this instance.
+     * @param theExecutionContext An optional XPathExecutionContext instance.
+	 */
 	XObjectResultTreeFragProxy(
-            const XObject&	value,
-            MemoryManager&  theManager);
+            const XObject&	        value,
+            MemoryManager&          theManager,
+            XPathExecutionContext*  theExecutionContext);
 
 	virtual
 	~XObjectResultTreeFragProxy();
 
-    MemoryManagerType&
-    getMemoryManager()
+
+    XPathExecutionContext*
+    getExecutionContext()
     {
-        return m_proxy.getMemoryManager();
+        return m_proxy.getExecutionContext();
     }
-	// These interfaces are inherited from XalanDocumentFragment...
+
+    // These interfaces are inherited from XalanDocumentFragment...
 
 	virtual XalanNode*
 	getFirstChild() const;

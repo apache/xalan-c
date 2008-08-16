@@ -51,19 +51,20 @@ public:
 	 * Create an XNodeSet from a node list.
 	 *
 	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
+	 * @param theMemoryManager The MemoryManager for the instance.
 	 */
-	XNodeSet(BorrowReturnMutableNodeRefList&	value,
-             MemoryManagerType& theManager);
+	XNodeSet(
+            BorrowReturnMutableNodeRefList&	    value,
+            MemoryManager&                      theMemoryManager);
 	/**
 	 * Create an XNodeSet from another.
 	 *
 	 * @param source    object to copy
-	 * @param deepClone true to copy all children on nodeset nodes
+	 * @param theMemoryManager The MemoryManager for the instance.
 	 */
 	XNodeSet(
 			const XNodeSet&		source,
-            MemoryManagerType&  theManager,
-			bool				deepClone = false);
+            MemoryManager&      theMemoryManager);
 
 	virtual
 	~XNodeSet();

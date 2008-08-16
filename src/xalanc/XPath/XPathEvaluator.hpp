@@ -84,7 +84,7 @@ public:
 	terminate();
 
 
-	XPathEvaluator(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XPathEvaluator(MemoryManager&   theManager XALAN_DEFAULT_MEMMGR);
 
 	~XPathEvaluator();
 
@@ -377,6 +377,14 @@ public:
 	bool
 	destroyXPath(XPath*		theXPath);
 
+    XPathExecutionContext&
+    getExecutionContext()
+    {
+        assert(m_executionContext.get() != 0);
+
+        return *m_executionContext.get();
+    }
+
 private:
 
 	/**
@@ -426,7 +434,7 @@ private:
 
 	const XalanMemMgrAutoPtr<XPathExecutionContextDefault>	    m_executionContext;
 
-    MemoryManagerType&                                          m_memoryManager;
+    MemoryManager&                                              m_memoryManager;
 };
 
 

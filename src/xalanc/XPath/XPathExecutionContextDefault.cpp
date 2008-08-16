@@ -643,6 +643,7 @@ XPathExecutionContextDefault::message(
 }
 
 
+
 XalanDocument*
 XPathExecutionContextDefault::getSourceDocument(const XalanDOMString&   theURI) const
 {

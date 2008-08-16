@@ -30,7 +30,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XStringCached::XStringCached(
             GetAndReleaseCachedString&  val,
-            MemoryManagerType&          theManager) :
+            MemoryManager&              theManager) :
     XStringBase(theManager),
     m_value(val)
 {
@@ -40,7 +40,7 @@ XStringCached::XStringCached(
 
 XStringCached::XStringCached(
             const XStringCached&    source,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
     XStringBase(source, theManager),
     m_value(source.m_value.getExecutionContext())
 {
@@ -56,6 +56,14 @@ XStringCached::~XStringCached()
 
 
 const XalanDOMString&
+XStringCached::str(XPathExecutionContext&   /* executionContext */) const
+{
+    return m_value.get();
+}
+
+
+
+const XalanDOMString&
 XStringCached::str() const
 {
     return m_value.get();
@@ -65,22 +73,47 @@ XStringCached::str() const
 
 void
 XStringCached::str(
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function) const
+            XPathExecutionContext&  /* executionContext */,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    const XalanDOMString&   theString = m_value.get();
+    string(m_value.get(), formatterListener, function);
+}
 
-    const XalanDOMString::size_type     theLength =
-        theString.length();
 
-    if (theLength != 0)
-    {
-        assert(theLength == FormatterListener::size_type(theLength));
 
-        (formatterListener.*function)(
-            theString.c_str(),
-            FormatterListener::size_type(theLength));
-    }
+void
+XStringCached::str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
+{
+    string(m_value.get(), formatterListener, function);
+}
+
+
+
+void
+XStringCached::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    theBuffer.append(m_value.get());
+}
+
+
+
+void
+XStringCached::str(XalanDOMString&  theBuffer) const
+{
+    theBuffer.append(m_value.get());
+}
+
+
+
+double
+XStringCached::stringLength(XPathExecutionContext&  /* executionContext */) const
+{
+    return static_cast<double>(m_value.get().length());
 }
 
 
@@ -89,14 +122,6 @@ XStringCached::eObjectType
 XStringCached::getRealType() const
 {
     return eTypeStringCached;
-}
-
-
-
-double
-XStringCached::stringLength() const
-{
-    return static_cast<double>(m_value.get().length());
 }
 
 

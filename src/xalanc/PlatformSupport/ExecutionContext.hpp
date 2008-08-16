@@ -37,8 +37,10 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 
 
-class XalanNode;
 class XalanDOMString;
+class XalanNode;
+class XalanText;
+
 
 
 //
@@ -48,8 +50,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext
 {
 public:
 
-	explicit
-	ExecutionContext( MemoryManagerType& m_memoryManager);
+	ExecutionContext(MemoryManager&     m_memoryManager);
 
 	virtual
 	~ExecutionContext();
@@ -93,13 +94,39 @@ public:
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
 
-    MemoryManagerType&
+    bool
+    hasPreserveOrStripSpaceConditions() const
+    {
+        return m_hasPreserveOrStripConditions;
+    }
+
+    /**
+     * Determine if a text node should be stripped from the source tree,
+     * as if it weren't there.
+     *
+     * @param textNode text node from the source tree
+     * @return true if the text node should be stripped
+     */
+    virtual bool
+    shouldStripSourceNode(const XalanText&  node) = 0;
+
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
     }
+
+    MemoryManager&
+    getExceptionMemoryManager()
+    {
+        return *m_memoryManager.getExceptionMemoryManager();
+    }
+
 protected:
-    MemoryManagerType&              m_memoryManager;
+
+    MemoryManager&  m_memoryManager;
+
+    bool            m_hasPreserveOrStripConditions;
 };
 
 

@@ -148,7 +148,9 @@ public:
 	createStringReference(const XalanDOMString&		theValue);
 
 	virtual const XObjectPtr
-	createStringAdapter(const XObjectPtr&	theValue);
+	createStringAdapter(
+            const XObjectPtr&	    theValue,
+            XPathExecutionContext&  theExecutionContext);
 
 	virtual const XObjectPtr
 	createString(GetAndReleaseCachedString&		theValue);

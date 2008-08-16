@@ -38,9 +38,9 @@ class XalanDocumentFragmentXNodeSetBaseProxy : public XNodeSetBase
 public:
 
     XalanDocumentFragmentXNodeSetBaseProxy(
-                MemoryManagerType&  theManager,
-                const XObjectPtr&   theXObject) :
-        XNodeSetBase(theManager),
+                XPathExecutionContext&  theExecutionContext,
+                const XObjectPtr&       theXObject) :
+        XNodeSetBase(theExecutionContext.getMemoryManager()),
         m_xobject(theXObject),
         m_proxy(theXObject->rtree())
     {
@@ -48,16 +48,20 @@ public:
 
     static XalanDocumentFragmentXNodeSetBaseProxy*
     create(
-            MemoryManagerType&  theManager,
-            const XObjectPtr&   theXObject)
+                XPathExecutionContext&  theExecutionContext,
+                const XObjectPtr&       theXObject)
     {
         XalanDocumentFragmentXNodeSetBaseProxy*     theResult;
 
-        return XalanConstruct(theManager, theResult, theManager, theXObject);
+        return XalanConstruct(
+                    theExecutionContext.getMemoryManager(),
+                    theResult,
+                    theExecutionContext,
+                    theXObject);
     }
 
     XalanDocumentFragmentXNodeSetBaseProxy(
-                MemoryManagerType&                              theManager,
+                MemoryManager&                                  theManager,
                 const XalanDocumentFragmentXNodeSetBaseProxy&   theSource) :
         XNodeSetBase(theSource, theManager),
         m_xobject(theSource.m_xobject),
@@ -70,6 +74,11 @@ public:
     {
     }
 
+    virtual const NodeRefListBase&
+    nodeset(XPathExecutionContext&  /* theExecutionContext */) const
+    {
+        return m_proxy;
+    }
 
     virtual const NodeRefListBase&
     nodeset() const
@@ -140,7 +149,7 @@ FunctionNodeSet::execute(
     {
         return XObjectPtr(
                     XalanDocumentFragmentXNodeSetBaseProxy::create(
-                        executionContext.getMemoryManager(),
+                        executionContext,
                         args[0]));
     }
     else

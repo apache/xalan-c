@@ -53,7 +53,10 @@ FunctionFunctionAvailable::execute(
 {
     assert(arg.null() == false);
 
-    return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(arg->str(), locator));
+    return executionContext.getXObjectFactory().createBoolean(
+                executionContext.functionAvailable(
+                    arg->str(executionContext),
+                    locator));
 }
 
 

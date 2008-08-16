@@ -47,20 +47,22 @@ const double	theBogusNumberValue = 123456789;
 
 
 
-XNodeSetBase::XNodeSetBase(MemoryManagerType& theManager) :
-	XObject(eTypeNodeSet),
+XNodeSetBase::XNodeSetBase(MemoryManager&   theMemoryManager) :
+	XObject(eTypeNodeSet, theMemoryManager),
 	m_proxy(*this),
-	m_cachedStringValue(theManager),
+	m_cachedStringValue(theMemoryManager),
 	m_cachedNumberValue(theBogusNumberValue)
 {
 }
 
 
 
-XNodeSetBase::XNodeSetBase(const XNodeSetBase&	source, MemoryManagerType& theManager) :
-	XObject(source),
+XNodeSetBase::XNodeSetBase(
+            const XNodeSetBase&	    source,
+            MemoryManager&          theMemoryManager) :
+	XObject(source, theMemoryManager),
 	m_proxy(*this),
-	m_cachedStringValue(source.m_cachedStringValue, theManager),
+	m_cachedStringValue(source.m_cachedStringValue, theMemoryManager),
 	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 }
@@ -82,11 +84,14 @@ XNodeSetBase::getTypeString() const
 
 
 double
-XNodeSetBase::num() const
+XNodeSetBase::num(XPathExecutionContext&    executionContext) const
 {
 	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
 	{
-		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
+		m_cachedNumberValue =
+            DoubleSupport::toDouble(
+                str(executionContext),
+                getMemoryManager());
 	}
 
 	return m_cachedNumberValue;
@@ -95,7 +100,7 @@ XNodeSetBase::num() const
 
 
 bool
-XNodeSetBase::boolean() const
+XNodeSetBase::boolean(XPathExecutionContext&    /* executionContext */) const
 {
 	return getLength() > 0 ? true : false;
 }
@@ -103,15 +108,37 @@ XNodeSetBase::boolean() const
 
 
 const XalanDOMString&
-XNodeSetBase::str() const
+XNodeSetBase::str(XPathExecutionContext&    executionContext) const
 {
-	if (isEmpty(m_cachedStringValue) == true &&
+    if (m_cachedStringValue.empty() == true &&
 		getLength() > 0)
 	{
 		const XalanNode* const	theNode = item(0);
 		assert(theNode != 0);
 
-		DOMServices::getNodeData(*theNode, m_cachedStringValue);
+		DOMServices::getNodeData(
+            *theNode,
+            executionContext,
+            m_cachedStringValue);
+	}
+
+	return m_cachedStringValue;
+}
+
+
+
+const XalanDOMString&
+XNodeSetBase::str() const
+{
+    if (m_cachedStringValue.empty() == true &&
+		getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(
+            *theNode,
+            m_cachedStringValue);
 	}
 
 	return m_cachedStringValue;
@@ -121,46 +148,97 @@ XNodeSetBase::str() const
 
 void
 XNodeSetBase::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+    if (m_cachedStringValue.empty() == false)
 	{
-		assert(length(m_cachedStringValue) == FormatterListener::size_type(length(m_cachedStringValue)));
-
-		(formatterListener.*function)(c_wstr(m_cachedStringValue), FormatterListener::size_type(length(m_cachedStringValue)));
+        XObject::string(m_cachedStringValue, formatterListener, function);
 	}
 	else if (getLength() > 0)
 	{
 		const XalanNode* const	theNode = item(0);
 		assert(theNode != 0);
 
-		DOMServices::getNodeData(*theNode, formatterListener, function);
+		DOMServices::getNodeData(
+            *theNode,
+            executionContext,
+            formatterListener,
+            function);
 	}
 }
 
 
 
 void
-XNodeSetBase::str(XalanDOMString&	theBuffer) const
+XNodeSetBase::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+    if (m_cachedStringValue.empty() == false)
 	{
-		append(theBuffer, m_cachedStringValue);
+        XObject::string(m_cachedStringValue, formatterListener, function);
 	}
 	else if (getLength() > 0)
 	{
 		const XalanNode* const	theNode = item(0);
 		assert(theNode != 0);
 
-		DOMServices::getNodeData(*theNode, theBuffer);
+		DOMServices::getNodeData(
+            *theNode,
+            formatterListener,
+            function);
+	}
+}
+
+
+
+void
+XNodeSetBase::str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         theBuffer) const
+{
+    if (m_cachedStringValue.empty() == false)
+	{
+		theBuffer.append(m_cachedStringValue);
+	}
+	else if (getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(
+            *theNode,
+            executionContext,
+            theBuffer);
+	}
+}
+
+
+
+void
+XNodeSetBase::str(XalanDOMString&   theBuffer) const
+{
+    if (m_cachedStringValue.empty() == false)
+	{
+		theBuffer.append(m_cachedStringValue);
+	}
+	else if (getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(
+            *theNode,
+            theBuffer);
 	}
 }
 
 
 
 double
-XNodeSetBase::stringLength() const
+XNodeSetBase::stringLength(XPathExecutionContext&   executionContext) const
 {
     if (m_cachedStringValue.empty() == false)
 	{
@@ -177,7 +255,11 @@ XNodeSetBase::stringLength() const
 
 		FormatterStringLengthCounter	theCounter;
 
-		DOMServices::getNodeData(*theNode, theCounter, &FormatterListener::characters);
+		DOMServices::getNodeData(
+            *theNode,
+            executionContext,
+            theCounter,
+            &FormatterListener::characters);
 
 		return static_cast<double>(theCounter.getCount());
 	}
@@ -196,8 +278,9 @@ XNodeSetBase::rtree() const
 void
 XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.NodeSet(*this,
-							  nodeset());
+	theCallbackObject.NodeSet(
+        *this,
+		nodeset());
 }
 
 
@@ -205,8 +288,9 @@ XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.NodeSet(*this,
-							  nodeset());
+	theCallbackObject.NodeSet(
+        *this,
+		nodeset());
 }
 
 

@@ -31,11 +31,6 @@
 
 
 
-#include <xalanc/XPath/XObjectResultTreeFragProxyText.hpp>
-
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 

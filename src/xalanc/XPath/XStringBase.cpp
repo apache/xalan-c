@@ -39,20 +39,35 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringBase::XStringBase(MemoryManagerType& theManager) :
-	XObject(eTypeString),
+XStringBase::XStringBase(MemoryManager&  theMemoryManager) :
+	XObject(eTypeString, theMemoryManager),
 	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(*this, theManager)
+	m_resultTreeFrag(*this, theMemoryManager, 0)
 {
 }
 
 
 
-XStringBase::XStringBase(const XStringBase&		source,
-                         MemoryManagerType&     theManager) :
-	XObject(source),
+XStringBase::XStringBase(
+            MemoryManager&          theMemoryManager,
+            XPathExecutionContext&  theExecutionContext) :
+	XObject(eTypeString, theMemoryManager),
+	m_cachedNumberValue(0.0),
+	m_resultTreeFrag(*this, theMemoryManager, &theExecutionContext)
+{
+}
+
+
+
+XStringBase::XStringBase(
+            const XStringBase&  source,
+            MemoryManager&      theMemoryManager) :
+	XObject(source, theMemoryManager),
 	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_resultTreeFrag(*this, theManager)
+    m_resultTreeFrag(
+        *this,
+        theMemoryManager,
+        source.m_resultTreeFrag.getExecutionContext())
 {
 }
 
@@ -73,11 +88,14 @@ XStringBase::getTypeString() const
 
 
 double
-XStringBase::num() const
+XStringBase::num(XPathExecutionContext&     executionContext) const
 {
 	if (m_cachedNumberValue == 0.0)
 	{
-		m_cachedNumberValue = DoubleSupport::toDouble(str(),getMemoryManager());
+		m_cachedNumberValue =
+            DoubleSupport::toDouble(
+                str(executionContext),
+                getMemoryManager());
 	}
 
 	return m_cachedNumberValue;
@@ -86,9 +104,9 @@ XStringBase::num() const
 
 
 bool
-XStringBase::boolean() const
+XStringBase::boolean(XPathExecutionContext&     executionContext) const
 {
-	return length(str()) > 0 ? true : false;
+	return length(str(executionContext)) > 0 ? true : false;
 }
 
 
@@ -104,7 +122,9 @@ XStringBase::rtree() const
 void
 XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.String(*this,	str());
+	theCallbackObject.String(
+        *this,
+        str(theCallbackObject.getExecutionContext()));
 }
 
 
@@ -112,7 +132,23 @@ XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.String(*this, str());
+	theCallbackObject.String(
+        *this,
+        str(theCallbackObject.getExecutionContext()));
+}
+
+
+
+const XalanDOMString&
+XStringBase::str() const
+{
+    XalanDOMString  theBuffer(*getMemoryManager().getExceptionMemoryManager());
+
+    throw XObjectInvalidConversionException(
+                theBuffer.getMemoryManager(),
+                getTypeString(),
+                s_numberString,
+                theBuffer);
 }
 
 

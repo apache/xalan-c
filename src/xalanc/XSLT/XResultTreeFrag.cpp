@@ -68,14 +68,16 @@ getSingleTextChildValue(const XalanDocumentFragment&	theRTreeFrag)
 
 
 
-XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value,
-                                 MemoryManagerType& theManager) :
-	XObject(eTypeResultTreeFrag),
+XResultTreeFrag::XResultTreeFrag(
+            XalanDocumentFragment&	value,
+            MemoryManager&          theManager) :
+	XObject(eTypeResultTreeFrag, theManager),
 	m_value(&value),
 	m_singleTextChildValue(getSingleTextChildValue(value)),
 	m_executionContext(0),
 	m_cachedStringValue(theManager),
 	m_cachedNumberValue(0.0)
+
 {
 }
 
@@ -83,9 +85,8 @@ XResultTreeFrag::XResultTreeFrag(XalanDocumentFragment&		value,
 
 XResultTreeFrag::XResultTreeFrag(
 			const XResultTreeFrag&	source,
-            MemoryManagerType&      theManager,
-			bool					/* deepClone */) :
-	XObject(source),
+            MemoryManager&          theManager) :
+	XObject(source, theManager),
 	m_value(source.m_value),
 	m_singleTextChildValue(source.m_singleTextChildValue),
 	m_executionContext(0),
@@ -112,11 +113,14 @@ XResultTreeFrag::getTypeString() const
 
 
 double
-XResultTreeFrag::num() const
+XResultTreeFrag::num(XPathExecutionContext&     executionContext) const
 {
 	if (m_cachedNumberValue == 0.0)
 	{
-		m_cachedNumberValue = DoubleSupport::toDouble(str(), getMemoryManager());
+		m_cachedNumberValue =
+            DoubleSupport::toDouble(
+                str(executionContext),
+                getMemoryManager());
 	}
 
 	return m_cachedNumberValue;
@@ -125,10 +129,18 @@ XResultTreeFrag::num() const
 
 
 bool
-XResultTreeFrag::boolean() const
+XResultTreeFrag::boolean(XPathExecutionContext&     /* executionContext */) const
 {
 	// Result tree fragments always evaluate to true.
 	return true;
+}
+
+
+
+const XalanDOMString&
+XResultTreeFrag::str(XPathExecutionContext&     /* executionContext */) const
+{
+    return XResultTreeFrag::str();
 }
 
 
@@ -145,7 +157,9 @@ XResultTreeFrag::str() const
 	}
 	else if (isEmpty(m_cachedStringValue) == true)
 	{
-		DOMServices::getNodeData(*m_value, m_cachedStringValue);
+		DOMServices::getNodeData(
+            *m_value,
+            m_cachedStringValue);
 	}
 
 	return m_cachedStringValue;
@@ -155,53 +169,75 @@ XResultTreeFrag::str() const
 
 void
 XResultTreeFrag::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  /* executionContext */,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+    XResultTreeFrag::str(formatterListener, function);
+}
+
+
+
+void
+XResultTreeFrag::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
 	if (m_singleTextChildValue != 0)
 	{
 		assert(m_value->getFirstChild() != 0 &&
-				m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
+	           m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
 
-		assert(length(*m_singleTextChildValue) == FormatterListener::size_type(length(*m_singleTextChildValue)));
-
-		(formatterListener.*function)(c_wstr(*m_singleTextChildValue), FormatterListener::size_type(length(*m_singleTextChildValue)));
-	}
+        XObject::string(*m_singleTextChildValue, formatterListener, function);
+    }
 	else if (isEmpty(m_cachedStringValue) == false)
 	{
-		assert(length(m_cachedStringValue) == FormatterListener::size_type(length(m_cachedStringValue)));
-
-		(formatterListener.*function)(c_wstr(m_cachedStringValue), FormatterListener::size_type(length(m_cachedStringValue)));
+        XObject::string(m_cachedStringValue, formatterListener, function);
 	}
 	else
 	{
-		DOMServices::getNodeData(*m_value, formatterListener, function);
+		DOMServices::getNodeData(
+            *m_value,
+            formatterListener,
+            function);
 	}
 }
 
 
 
 void
-XResultTreeFrag::str(XalanDOMString&	theBuffer) const
+XResultTreeFrag::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    XResultTreeFrag::str(theBuffer);
+}
+
+
+
+void
+XResultTreeFrag::str(XalanDOMString&    theBuffer) const
 {
 	if (m_singleTextChildValue != 0)
 	{
-		append(theBuffer, *m_singleTextChildValue);
+		theBuffer.append(*m_singleTextChildValue);
 	}
 	else if (isEmpty(m_cachedStringValue) == false)
 	{
-		append(theBuffer, m_cachedStringValue);
+		theBuffer.append(m_cachedStringValue);
 	}
 	else
 	{
-		DOMServices::getNodeData(*m_value, theBuffer);
+		DOMServices::getNodeData(
+            *m_value,
+            theBuffer);
 	}
 }
 
 
 
 double
-XResultTreeFrag::stringLength() const
+XResultTreeFrag::stringLength(XPathExecutionContext&    executionContext) const
 {
 	if (m_singleTextChildValue != 0)
 	{
@@ -215,7 +251,11 @@ XResultTreeFrag::stringLength() const
 	{
 		FormatterStringLengthCounter	theCounter;
 
-		DOMServices::getNodeData(*m_value, theCounter, &FormatterListener::characters);
+		DOMServices::getNodeData(
+            *m_value,
+            executionContext,
+            theCounter,
+            &FormatterListener::characters);
 
 		return static_cast<double>(theCounter.getCount());
 	}
@@ -233,19 +273,12 @@ XResultTreeFrag::rtree() const
 
 
 
-const NodeRefListBase&
-XResultTreeFrag::nodeset() const
-{
-	return ParentType::nodeset();
-}
-
-
-
 void
 XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.ResultTreeFragment(*this,
-										 rtree());
+	theCallbackObject.ResultTreeFragment(
+        *this,
+        rtree());
 }
 
 
@@ -253,8 +286,9 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 void
 XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.ResultTreeFragment(*this,
-										 rtree());
+	theCallbackObject.ResultTreeFragment(
+        *this,
+        rtree());
 }
 
 

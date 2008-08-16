@@ -25,8 +25,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNumberAllocator::XNumberAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XNumberAllocator::XNumberAllocator(
+            MemoryManager&  theMemoryManager,
+            size_type	    theBlockCount) :
+	m_allocator(theMemoryManager, theBlockCount)
 {
 }
 

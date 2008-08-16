@@ -32,6 +32,7 @@
 
 #include <xalanc/XPath/NodeRefListBase.hpp>
 #include <xalanc/XPath/XPath.hpp>
+#include <xalanc/XPath/XPathExecutionContext.hpp>
 
 
 
@@ -51,12 +52,35 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 TraceListenerDefault::TraceListenerDefault(
-            PrintWriter&    thePrintWriter,
-            bool            traceTemplates,
-            bool            traceElements,
-            bool            traceGeneration,
-            bool            traceSelection,
-            MemoryManagerType& theManager) :
+            PrintWriter&            thePrintWriter,
+            MemoryManager&          theManager,
+            bool                    traceTemplates,
+            bool                    traceElements,
+            bool                    traceGeneration,
+            bool                    traceSelection) :
+    TraceListener(),
+    m_executionContext(0),
+    m_printWriter(thePrintWriter),
+    m_traceTemplates(traceTemplates),
+    m_traceElements(traceElements),
+    m_traceGeneration(traceGeneration),
+    m_traceSelection(traceSelection),
+    m_memoryManager(theManager)
+{
+}
+
+
+
+TraceListenerDefault::TraceListenerDefault(
+            XPathExecutionContext&  theExecutionContext,
+            PrintWriter&            thePrintWriter,
+            MemoryManager&          theManager,
+            bool                    traceTemplates,
+            bool                    traceElements,
+            bool                    traceGeneration,
+            bool                    traceSelection) :
+    TraceListener(),
+    m_executionContext(&theExecutionContext),
     m_printWriter(thePrintWriter),
     m_traceTemplates(traceTemplates),
     m_traceElements(traceElements),
@@ -211,7 +235,14 @@ TraceListenerDefault::processNodeList(const NodeRefListBase&        nl)
 
             m_printWriter.print("     ");
 
-            DOMServices::getNodeData(*nl.item(i), msg);
+            if (m_executionContext != 0)
+            {
+                DOMServices::getNodeData(*nl.item(i), *m_executionContext, msg);
+            }
+            else
+            {
+                DOMServices::getNodeData(*nl.item(i), msg);
+            }
 
             m_printWriter.println(msg);
         }
@@ -300,11 +331,21 @@ TraceListenerDefault::selected(const SelectionEvent&    ev)
         }
         else if(ev.m_selection->getType() == XObject::eTypeNodeSet)
         {
-            processNodeList(ev.m_selection->nodeset());
+            const NodeRefListBase&  theNodeSet =
+                m_executionContext != 0 ?
+                    ev.m_selection->nodeset() :
+                    ev.m_selection->nodeset();
+
+            processNodeList(theNodeSet);
         }
         else
         {
-            m_printWriter.println(ev.m_selection->str());
+            const XalanDOMString&   theString =
+                m_executionContext != 0 ?
+                    ev.m_selection->str(*m_executionContext) :
+                    ev.m_selection->str();
+
+            m_printWriter.println(theString);
         }
     }
 }

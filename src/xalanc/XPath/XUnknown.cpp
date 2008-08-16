@@ -55,9 +55,9 @@ static const XalanDOMChar   s_unknown[] =
 
 XUnknown::XUnknown(
             const XalanDOMString&   name,
-            MemoryManagerType&      theManager) :
-    XObject(eTypeUnknown),
-    m_value(theManager)
+            MemoryManager&          theMemoryManager) :
+    XObject(eTypeUnknown, theMemoryManager),
+    m_value(theMemoryManager)
 {
     XalanMessageLoader::getMessage(
         m_value,
@@ -68,15 +68,15 @@ XUnknown::XUnknown(
 
     
 XUnknown*
-XUnknown::create(const XalanDOMString&  name, MemoryManagerType& theManager)
+XUnknown::create(
+            const XalanDOMString&   name,
+            MemoryManager&          theMemoryManager)
 {
     typedef XUnknown Type;
 
-    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+    XalanAllocationGuard    theGuard(theMemoryManager, theMemoryManager.allocate(sizeof(Type)));
 
-    Type* theResult = theGuard.get();
-
-    new (theResult) Type(name, theManager);
+    Type* const     theResult = new (theGuard.get()) Type(name, theMemoryManager);
 
     theGuard.release();
 
@@ -85,9 +85,11 @@ XUnknown::create(const XalanDOMString&  name, MemoryManagerType& theManager)
 
 
 
-XUnknown::XUnknown(const XUnknown&  source, MemoryManagerType& theManager) :
-    XObject(source),
-    m_value(source.m_value, theManager)
+XUnknown::XUnknown(
+            const XUnknown&     source,
+            MemoryManager&      theMemoryManager) :
+    XObject(source, theMemoryManager),
+    m_value(source.m_value, theMemoryManager)
 {
 }
 
@@ -105,8 +107,11 @@ XUnknown::getTypeString() const
 {
     return s_unknownString;
 }
+
+
+
 double
-XUnknown::num() const
+XUnknown::num(XPathExecutionContext&    /* executionContext */) const
 {
     return 0.0;
 }
@@ -114,9 +119,17 @@ XUnknown::num() const
 
 
 bool
-XUnknown::boolean() const
+XUnknown::boolean(XPathExecutionContext&    /* executionContext */) const
 {
     return false;
+}
+
+
+
+const XalanDOMString&
+XUnknown::str(XPathExecutionContext&    /* executionContext */) const
+{
+    return m_value;
 }
 
 
@@ -131,18 +144,45 @@ XUnknown::str() const
 
 void
 XUnknown::str(
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function) const
+            XPathExecutionContext&  /* executionContext */,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    assert(length(m_value) == FormatterListener::size_type(length(m_value)));
+    XObject::string(m_value, formatterListener, function);
+}
 
-    (formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
+
+
+void
+XUnknown::str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
+{
+    XObject::string(m_value, formatterListener, function);
+}
+
+
+
+void
+XUnknown::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    theBuffer.append(m_value);
+}
+
+
+
+void
+XUnknown::str(XalanDOMString&   theBuffer) const
+{
+    theBuffer.append(m_value);
 }
 
 
 
 double
-XUnknown::stringLength() const
+XUnknown::stringLength(XPathExecutionContext&   /* executionContext */) const
 {
     return static_cast<double>(m_value.length());
 }
@@ -152,8 +192,9 @@ XUnknown::stringLength() const
 void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject)
 {
-    theCallbackObject.Unknown(*this,
-                              m_value);
+    theCallbackObject.Unknown(
+        *this,
+        m_value);
 }
 
 
@@ -161,14 +202,15 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject)
 void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject) const
 {
-    theCallbackObject.Unknown(*this,
-                              m_value);
+    theCallbackObject.Unknown(
+        *this,
+        m_value);
 }
 
 
 
 void
-XUnknown::initialize(MemoryManagerType& theManager)
+XUnknown::initialize(MemoryManager&     theManager)
 {
     s_unknownString.reset(theManager, s_unknown);
 }

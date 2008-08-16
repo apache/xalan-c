@@ -43,11 +43,22 @@ public:
 	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
-	 * @param val		boolean value to initialize object
+	 * @param val	The boolean value to initialize object
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	XBoolean(bool	val);
+	XBoolean(
+            bool	        val,
+            MemoryManager&  theMemoryManager);
 
-	XBoolean(const XBoolean&	source);
+	/**
+	 * Construct an XBoolean object from another.
+	 * 
+	 * @param source The source XBoolean instance.
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XBoolean(
+            const XBoolean&	    source,
+            MemoryManager&      theMemoryManager);
 
 	virtual
 	~XBoolean();
@@ -58,25 +69,42 @@ public:
 	getTypeString() const;
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 #if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::str;
 #endif
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

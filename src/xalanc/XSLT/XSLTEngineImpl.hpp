@@ -772,7 +772,10 @@ public:
             bool                outputTextNodesOnly,
             const LocatorType*  locator)
     {
-        outputResultTreeFragment(theTree.rtree(), outputTextNodesOnly, locator);
+        outputResultTreeFragment(
+            theTree.rtree(),
+            outputTextNodesOnly,
+            locator);
     }
 
     /**

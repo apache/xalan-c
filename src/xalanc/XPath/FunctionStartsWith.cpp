@@ -53,8 +53,10 @@ FunctionStartsWith::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);   
 
-    const bool  fStartsWith = startsWith(arg1->str(), 
-                            arg2->str());
+    const bool  fStartsWith =
+        startsWith(
+            arg1->str(executionContext), 
+            arg2->str(executionContext));
 
     return executionContext.getXObjectFactory().createBoolean(fStartsWith);
 }

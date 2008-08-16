@@ -55,17 +55,19 @@ public:
 	/**
 	 * Create an XNull.
 	 *
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	explicit
-	XNull();
+	XNull(MemoryManager&    theMemoryManager);
 
 	/**
 	 * Create an XNull from another.
 	 *
 	 * @param source    object to copy
-	 * @param deepClone true to copy all children on nodeset nodes
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	XNull(const XNull&	source);
+	XNull(
+            const XNull&	source,
+            MemoryManager&  theMemoryManager);
 
 	virtual
 	~XNull();
@@ -76,25 +78,38 @@ public:
 	getTypeString() const;
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

@@ -153,11 +153,11 @@ TestNumericResult(
     thePrintWriter.print("Execution of XPath ");
     thePrintWriter.print(theXPathString);
 
-    if (theResult->num() == theExpectedResult)
+    if (theResult->num(theExecutionContext) == theExpectedResult)
     {
         thePrintWriter.println(" succeeded.");
         thePrintWriter.print("The result was ");
-        thePrintWriter.println(theResult->num());
+        thePrintWriter.println(theResult->num(theExecutionContext));
     }
     else
     {
@@ -167,7 +167,7 @@ TestNumericResult(
         thePrintWriter.print("The expected result was ");
         thePrintWriter.println(theExpectedResult);
         thePrintWriter.print("The actual result was ");
-        thePrintWriter.println(theResult->num());
+        thePrintWriter.println(theResult->num(theExecutionContext));
     }
 
     return fError;
@@ -204,11 +204,11 @@ TestStringResult(
     thePrintWriter.print("Execution of XPath ");
     thePrintWriter.print(theXPathString);
 
-    if (equals(theResult->str(), theExpectedResult) == true)
+    if (equals(theResult->str(theExecutionContext), theExpectedResult) == true)
     {
         thePrintWriter.println(" succeeded.");
         thePrintWriter.print("The result was \"");
-        thePrintWriter.print(theResult->str());
+        thePrintWriter.print(theResult->str(theExecutionContext));
         thePrintWriter.println("\".");
     }
     else
@@ -220,7 +220,7 @@ TestStringResult(
         thePrintWriter.print(theExpectedResult);
         thePrintWriter.println("\".");
         thePrintWriter.print("The actual result was \"");
-        thePrintWriter.print(theResult->str());
+        thePrintWriter.print(theResult->str(theExecutionContext));
         thePrintWriter.println("\".");
     }
 
@@ -271,11 +271,11 @@ TestBooleanResult(
     thePrintWriter.print("Execution of XPath ");
     thePrintWriter.print(theXPathString);
 
-    if (theResult->boolean() == theExpectedResult)
+    if (theResult->boolean(theExecutionContext) == theExpectedResult)
     {
         thePrintWriter.println(" succeeded.");
         thePrintWriter.print("The result was ");
-        thePrintWriter.print(theResult->boolean());
+        thePrintWriter.print(theResult->boolean(theExecutionContext));
         thePrintWriter.println(".");
     }
     else
@@ -287,7 +287,7 @@ TestBooleanResult(
         thePrintWriter.print(theExpectedResult);
         thePrintWriter.println("\".");
         thePrintWriter.print("The actual result was \"");
-        thePrintWriter.print(theResult->boolean());
+        thePrintWriter.print(theResult->boolean(theExecutionContext));
         thePrintWriter.println("\".");
     }
 
@@ -734,7 +734,7 @@ TestPredicateResult(
                         const NodeRefListBase::size_type    theLength = theResultList.getLength();
 
                         thePrintWriter.print("theResult1->str() == \"");
-                        thePrintWriter.print(theResult1->str());
+                        thePrintWriter.print(theResult1->str(theExecutionContext));
                         thePrintWriter.print("\"");
                         thePrintWriter.println();
 
@@ -764,7 +764,7 @@ TestPredicateResult(
                         const NodeRefListBase::size_type    theLength = theResultList.getLength();
 
                         thePrintWriter.print("theResult2->str() == \"");
-                        thePrintWriter.print(theResult2->str());
+                        thePrintWriter.print(theResult2->str(theExecutionContext));
                         thePrintWriter.print("\"");
                         thePrintWriter.println();
 

@@ -305,6 +305,8 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*  theS
 
     m_stylesheetRoot = theStylesheet;
 
+    m_hasPreserveOrStripConditions = theStylesheet->hasPreserveOrStripSpaceElements();
+
     m_xsltProcessor->setStylesheetRoot(theStylesheet);
 
     if (theStylesheet == 0)
@@ -1075,8 +1077,7 @@ StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(XalanNode*    sour
 
 const XObjectPtr
 StylesheetExecutionContextDefault::endCreateXResultTreeFrag()
-{
-    
+{    
     FormatterToSourceTree* const    theFormatter =
         m_formatterToSourceTreeStack.top();
 

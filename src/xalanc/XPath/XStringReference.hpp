@@ -61,19 +61,32 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual const XalanDOMString&
-	str() const;
+	str(XPathExecutionContext&  executionContext) const;
   
+	virtual const XalanDOMString&
+	str() const;
+
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 protected:
 
@@ -81,8 +94,10 @@ protected:
 	getRealType() const;
 
 private:
+
     // Not implemented
     XStringReference(const XStringReference&	source);
+
     XStringReference();
 
 	const XalanDOMString&	m_value;

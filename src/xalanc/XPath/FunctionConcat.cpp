@@ -57,8 +57,8 @@ FunctionConcat::execute(
 
     XalanDOMString&     theString = theResult.get();
 
-    arg1->str(theString);
-    arg2->str(theString);
+    arg1->str(executionContext, theString);
+    arg2->str(executionContext, theString);
 
     return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -80,9 +80,9 @@ FunctionConcat::execute(
 
     XalanDOMString&         theString = theResult.get();
 
-    arg1->str(theString);
-    arg2->str(theString);
-    arg3->str(theString);
+    arg1->str(executionContext, theString);
+    arg2->str(executionContext, theString);
+    arg3->str(executionContext, theString);
 
     return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -106,7 +106,7 @@ FunctionConcat::execute(
 
     for(; i != theEnd; ++i)
     {
-        (*i)->str(theString);
+        (*i)->str(executionContext, theString);
     }
 
     return executionContext.getXObjectFactory().createString(theResult);

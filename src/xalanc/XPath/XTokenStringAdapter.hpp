@@ -51,11 +51,13 @@ public:
 	 *
 	 * @param theXToken The XToken instance to adapt
 	 */
-	XTokenStringAdapter(const XToken&	    theToken,
-                        MemoryManagerType& theManager);
+	XTokenStringAdapter(
+                const XToken&	theToken,
+                MemoryManager&  theManager);
 
-	XTokenStringAdapter(const XTokenStringAdapter&	source,
-                        MemoryManagerType&          theManager);
+	XTokenStringAdapter(
+                const XTokenStringAdapter&	source,
+                MemoryManager&              theManager);
 
 	virtual
 	~XTokenStringAdapter();
@@ -63,21 +65,35 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
+  
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 protected:
 
@@ -85,8 +101,10 @@ protected:
 	getRealType() const;
 
 private:
+
     // Not implemented
     XTokenStringAdapter(const XTokenStringAdapter&	source);
+
     XTokenStringAdapter();
 
 	// XToken instance that we're adapting...

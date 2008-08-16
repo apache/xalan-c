@@ -250,7 +250,7 @@ getResult(
 
 		const GetAndReleaseCachedString		temp(theExecutionContext);
 
-		DOMServices::getNodeData(*theNode, temp.get());
+		DOMServices::getNodeData(*theNode, theExecutionContext, temp.get());
 
         return DoubleSupport::toDouble(temp.get(), theExecutionContext.getMemoryManager());
 	}
@@ -393,6 +393,7 @@ getResult(
 
 		DOMServices::getNodeData(
 				*theNode,
+                theExecutionContext,
 				theResult);
 	}
 	else

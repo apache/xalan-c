@@ -46,12 +46,17 @@ public:
 	 * other XObject.
 	 *
 	 * @param theValue	value used to create object  
+     * @param theManager The MemoryManager instance to use
+     * @param theExecutionContext The current XPathExecutionContext
 	 */
-	XStringAdapter(const XObjectPtr&	val, 
-                    MemoryManagerType&  theManager);
+	XStringAdapter(
+            const XObjectPtr&	    val,
+            MemoryManager&          theManager,
+            XPathExecutionContext&  theExecutionContext);
 
-	XStringAdapter(const XStringAdapter&	source,
-                    MemoryManagerType&      theManager);
+	XStringAdapter(
+            const XStringAdapter&	source,
+            MemoryManager&          theManager);
 
 	virtual
 	~XStringAdapter();
@@ -60,19 +65,32 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 protected:
 
@@ -80,8 +98,10 @@ protected:
 	getRealType() const;
 
 private:
+
     // Not implemented
     XStringAdapter(const XStringAdapter&	source);
+
     XStringAdapter();
 
 	const XObjectPtr	m_value;

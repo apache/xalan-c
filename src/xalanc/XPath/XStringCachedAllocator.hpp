@@ -54,7 +54,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringCachedAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XStringCachedAllocator(
+                MemoryManager&  theManager,
+                size_type	    theBlockCount);
 
 	~XStringCachedAllocator();
 

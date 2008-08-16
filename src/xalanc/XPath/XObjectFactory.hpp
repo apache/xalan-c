@@ -58,13 +58,13 @@ public:
 	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
 
 
-	XObjectFactory(MemoryManagerType& theManager);
+	XObjectFactory(MemoryManager&   theManager);
 
 	virtual
 	~XObjectFactory();
 
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
@@ -203,11 +203,14 @@ public:
 	 * behave like a string.  The XObject holds a reference to the
 	 * other XObject.
 	 *
-	 * @param theValue	value used to create object  
+	 * @param theValue	value used to create object
+     * @paran theExecutionContext The current execution context
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createStringAdapter(const XObjectPtr&	theValue) = 0;
+	createStringAdapter(
+            const XObjectPtr&	    theValue,
+            XPathExecutionContext&  theExecutionContext) = 0;
 
 	/**
 	 * Create a string XObject from a cached XalanDOMString,
@@ -295,14 +298,13 @@ protected:
 	{
         if( theXObject!= 0)
         {
-            XObject* 	theTmpXObject = const_cast<XObject*>(theXObject);
-            MemoryManagerType& theManager = const_cast<MemoryManagerType&>(m_memoryManager);
+            XObject* const  nonConst =
+                const_cast<XObject*>(theXObject);
 
-            theTmpXObject->~XObject();
+            nonConst->~XObject();
 
-            theManager.deallocate((void*)theTmpXObject);
+            m_memoryManager.deallocate(nonConst);
         }
-    
 	}
 
 	/**
@@ -328,7 +330,7 @@ private:
 	bool
 	operator==(const XObjectFactory&) const;
 
-    MemoryManagerType& m_memoryManager;
+    mutable MemoryManager&  m_memoryManager;
 };
 
 

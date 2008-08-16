@@ -155,7 +155,7 @@ main(
 
 					cout << "The string value of the result is:"
 						 << endl
-						 << theResult->str()
+                         << theResult->str(theEvaluator.getExecutionContext())
 						 << endl
 						 << endl;
 				}

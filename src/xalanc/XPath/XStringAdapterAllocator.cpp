@@ -25,7 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XStringAdapterAllocator::XStringAdapterAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+XStringAdapterAllocator::XStringAdapterAllocator(
+            MemoryManager&  theManager,
+            size_type	    theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }
@@ -39,12 +41,14 @@ XStringAdapterAllocator::~XStringAdapterAllocator()
 
 
 XStringAdapterAllocator::string_type*
-XStringAdapterAllocator::createString(const XObjectPtr&		theXObject) 
+XStringAdapterAllocator::createString(
+            const XObjectPtr&	    theXObject,
+            XPathExecutionContext&  theExecutionContext)
 {
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);
 
-    string_type* const	theResult = new(theBlock) string_type(theXObject, m_allocator.getMemoryManager());
+    string_type* const	theResult = new(theBlock) string_type(theXObject, m_allocator.getMemoryManager(), theExecutionContext);
 
 	m_allocator.commitAllocation(theBlock);
 

@@ -43,24 +43,44 @@ public:
 	/**
 	 * Construct an XString object from a string.
 	 * 
-	 * @param value      source string
+	 * @param val The string value to use.
+     * @param theMemoryManager The MemoryManager instance.
 	 */
 	XString(
             const XalanDOMString&	val,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
+	/**
+	 * Construct an XString object from a string.
+	 * 
+	 * @param val The string value to use.
+     * @param theMemoryManager The MemoryManager instance.
+	 */
 	XString(
             const XalanDOMChar*		val,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
+	/**
+	 * Construct an XString object from a string.
+	 * 
+	 * @param val The string value to use.
+	 * @param len The length of the string value.
+     * @param theMemoryManager The MemoryManager instance.
+	 */
 	XString(
 			const XalanDOMChar*		val,
 			XalanSize_t			    len,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
+	/**
+	 * Construct an XString object from another string.
+	 * 
+	 * @param source The source XString.
+     * @param theMemoryManager The MemoryManager instance.
+	 */
 	XString(
             const XString&	    source,
-            MemoryManagerType&  theManager);
+            MemoryManager&      theManager);
 
 	virtual
 	~XString();
@@ -74,21 +94,35 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
 	str() const;
-  
+
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 private:
+
     //not implemented
     XString(const XString&	source);
 

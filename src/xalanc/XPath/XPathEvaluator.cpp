@@ -39,14 +39,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static XPathInit*	theXPathInit = 0;
+static XPathInit*       s_xpathInit = 0;
 
-static MemoryManagerType* s_memoryManager = 0;
+static MemoryManager*   s_memoryManager = 0;
 
 void
-XPathEvaluator::initialize(MemoryManagerType& theManager)
+XPathEvaluator::initialize(MemoryManager&   theManager)
 {
-    theXPathInit = XPathInit::create(theManager);
+    s_xpathInit = XPathInit::create(theManager);
 
     s_memoryManager = &theManager;
 }
@@ -56,11 +56,11 @@ XPathEvaluator::initialize(MemoryManagerType& theManager)
 void
 XPathEvaluator::terminate()
 {
-	theXPathInit->~XPathInit();
+    XalanDestroy(
+        *s_memoryManager,
+        *s_xpathInit);
 
-    s_memoryManager->deallocate(theXPathInit);
-
-	theXPathInit = 0;
+	s_xpathInit = 0;
 
     s_memoryManager = 0;
 }
@@ -191,7 +191,7 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			namespaceNode));
 
-	result = (theResult->nodeset());
+	result = theResult->nodeset();
 
     return result;
 }
@@ -213,7 +213,7 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			prefixResolver));
 
-	result = (theResult->nodeset());
+	result = theResult->nodeset();
 
     return result;
 }

@@ -47,10 +47,13 @@ public:
 	 *
 	 * @param val numeric value to use
 	 */
-	XNumber(double	val,
-            MemoryManagerType& theManager);
+	XNumber(
+            double	        val,
+            MemoryManager&  theMemoryManager);
 
-	XNumber(const XNumber&	source, MemoryManagerType& theManager);
+	XNumber(
+            const XNumber&	source,
+            MemoryManager&  theMemoryManager);
 
 	virtual
 	~XNumber();
@@ -58,21 +61,35 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	// These methods are new to XNumber...
 

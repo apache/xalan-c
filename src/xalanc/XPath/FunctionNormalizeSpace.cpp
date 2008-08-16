@@ -81,7 +81,7 @@ FunctionNormalizeSpace::execute(
 
         XalanDOMString&     theString = theData.get();
 
-        DOMServices::getNodeData(*context, theString);
+        DOMServices::getNodeData(*context, executionContext, theString);
 
         return normalize(executionContext, theString);
     }
@@ -179,7 +179,7 @@ FunctionNormalizeSpace::normalize(
             XPathExecutionContext&  executionContext,
             const XObjectPtr&       theArg) const
 {
-    const XalanDOMString&   theString = theArg->str();
+    const XalanDOMString&   theString = theArg->str(executionContext);
 
     if (needsNormalization(theString) == false)
     {
@@ -189,7 +189,7 @@ FunctionNormalizeSpace::normalize(
         }
         else
         {
-            return executionContext.getXObjectFactory().createStringAdapter(theArg);
+            return executionContext.getXObjectFactory().createStringAdapter(theArg, executionContext);
         }
     }
     else

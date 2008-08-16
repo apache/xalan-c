@@ -105,7 +105,7 @@ FunctionDistinct::execute(
             XalanNode* const    theNode = nodeset.item(i);
             assert(theNode != 0);
 
-            DOMServices::getNodeData(*theNode, theCachedString);
+            DOMServices::getNodeData(*theNode, executionContext, theCachedString);
 
             if (theStrings.find(theCachedString) == theStrings.end())
             {

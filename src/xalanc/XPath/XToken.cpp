@@ -36,8 +36,8 @@ static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XToken::XToken() :
-    XObject(eTypeString),
+XToken::XToken(MemoryManager&   theMemoryManager) :
+    XObject(eTypeString, theMemoryManager),
     m_stringValue(&s_emptyString),
     m_numberValue(DoubleSupport::getNaN()),
     m_isString(true)
@@ -48,10 +48,11 @@ XToken::XToken() :
 
 XToken::XToken(
             const XalanDOMString&   theString,
-            MemoryManagerType&      theManager) :
-    XObject(eTypeString),
+            double                  theNumber,
+            MemoryManager&          theMemoryManager) :
+    XObject(eTypeString, theMemoryManager),
     m_stringValue(&theString),
-    m_numberValue(DoubleSupport::toDouble(theString, theManager)),
+    m_numberValue(theNumber),
     m_isString(true)
 {
 }
@@ -60,8 +61,9 @@ XToken::XToken(
 
 XToken::XToken(
             double                  theNumber,
-            const XalanDOMString&   theString) :
-    XObject(eTypeString),
+            const XalanDOMString&   theString,
+            MemoryManager&          theMemoryManager) :
+    XObject(eTypeString, theMemoryManager),
     m_stringValue(&theString),
     m_numberValue(theNumber),
     m_isString(false)
@@ -70,8 +72,10 @@ XToken::XToken(
 
 
 
-XToken::XToken(const XToken&    theSource) :
-    XObject(theSource),
+XToken::XToken(
+            const XToken&   theSource,
+            MemoryManager&  theMemoryManager) :
+    XObject(theSource, theMemoryManager),
     m_stringValue(theSource.m_stringValue),
     m_numberValue(theSource.m_numberValue),
     m_isString(theSource.m_isString)
@@ -99,7 +103,7 @@ XToken::getTypeString() const
 
 
 double
-XToken::num() const
+XToken::num(XPathExecutionContext&    /* executionContext */) const
 {
     assert(m_stringValue != 0);
 
@@ -109,7 +113,7 @@ XToken::num() const
 
 
 bool
-XToken::boolean() const
+XToken::boolean(XPathExecutionContext&  /* executionContext */) const
 {
     assert(m_stringValue != 0);
 
@@ -119,10 +123,16 @@ XToken::boolean() const
 
 
 const XalanDOMString&
+XToken::str(XPathExecutionContext&  /* executionContext */) const
+{
+    return *m_stringValue;
+}
+
+
+
+const XalanDOMString&
 XToken::str() const
 {
-    assert(m_stringValue != 0);
-
     return *m_stringValue;
 }
 
@@ -130,22 +140,25 @@ XToken::str() const
 
 void
 XToken::str(
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function) const
+            XPathExecutionContext&  /* executionContext */,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
     assert(m_stringValue != 0);
 
-    const XalanDOMString::size_type     theLength =
-        m_stringValue->length();
+    string(*m_stringValue, formatterListener, function);
+}
 
-    if (theLength != 0)
-    {
-        assert(theLength == FormatterListener::size_type(theLength));
 
-        (formatterListener.*function)(
-            m_stringValue->c_str(),
-            FormatterListener::size_type(theLength));
-    }
+
+void
+XToken::str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
+{
+    assert(m_stringValue != 0);
+
+    string(*m_stringValue, formatterListener, function);
 }
 
 
@@ -160,8 +173,20 @@ XToken::str(XalanDOMString&     theBuffer) const
 
 
 
+void
+XToken::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&         theBuffer) const
+{
+    assert(m_stringValue != 0);
+
+    theBuffer.append(*m_stringValue);
+}
+
+
+
 double
-XToken::stringLength() const
+XToken::stringLength(XPathExecutionContext&     /* executionContext */) const
 {
     assert(m_stringValue != 0);
 
@@ -205,12 +230,13 @@ XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) c
 
 
 void
-XToken::set(const XalanDOMString&   theString,
-            MemoryManagerType& theManager)
+XToken::set(
+            const XalanDOMString&   theString,
+            double                  theNumber)
 {
     m_stringValue = &theString;
 
-    m_numberValue = DoubleSupport::toDouble(theString, theManager);
+    m_numberValue = theNumber;
 
     m_isString = true;
 }
@@ -220,16 +246,11 @@ XToken::set(const XalanDOMString&   theString,
 void
 XToken::set(
             double                  theNumber,
-            const XalanDOMString&   theString,
-            MemoryManagerType&      theManager)
+            const XalanDOMString&   theString)
 {
-    XalanDOMString theResult(theManager);
-
-    assert(theString == NumberToDOMString(theNumber,theResult));
+    m_numberValue = theNumber;
 
     m_stringValue = &theString;
-
-    m_numberValue = theNumber;
 
     m_isString = false;
 }

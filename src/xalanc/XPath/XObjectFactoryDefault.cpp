@@ -42,11 +42,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XObjectFactoryDefault::XObjectFactoryDefault(
-            MemoryManagerType& theManager,
-			size_type	theXStringBlockSize,
-			size_type	theXNumberBlockSize,
-			size_type	theXNodeSetBlockSize,
-			size_type	theXNodeSetNodeProxyBlockSize) : 
+            MemoryManager&  theManager,
+			size_type	    theXStringBlockSize,
+			size_type	    theXNumberBlockSize,
+			size_type	    theXNodeSetBlockSize,
+			size_type	    theXNodeSetNodeProxyBlockSize) : 
 	XObjectFactory(theManager),
 	m_xstringAdapterAllocator(theManager, theXStringBlockSize),
 	m_xstringAllocator(theManager, theXStringBlockSize),
@@ -61,27 +61,33 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xnumberCache(theManager),
 	m_xnodesetCache(theManager),
 	m_xstringCache(theManager),
-	m_xnull(),
-	m_xbooleanFalse(false),
-	m_xbooleanTrue(true)
+	m_xnull(theManager),
+	m_xbooleanFalse(false, theManager),
+	m_xbooleanTrue(true, theManager)
 {
 }
 
+
+
 XObjectFactoryDefault*
 XObjectFactoryDefault::create(
-                              MemoryManagerType& theManager,
-                              size_type	theXStringBlockSize ,
-                              size_type	theXNumberBlockSize ,
-                              size_type	theXNodeSetBlockSize,
-                              size_type	theXNodeSetNodeProxyBlockSize)
+                              MemoryManager&    theManager,
+                              size_type	        theXStringBlockSize ,
+                              size_type	        theXNumberBlockSize ,
+                              size_type	        theXNodeSetBlockSize,
+                              size_type	        theXNodeSetNodeProxyBlockSize)
 {
     typedef XObjectFactoryDefault Type;
 
-    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(Type)));
 
-    Type* theResult = theGuard.get();
-
-    new (theResult) Type(theManager, theXStringBlockSize , theXNumberBlockSize, theXNodeSetBlockSize, theXNodeSetNodeProxyBlockSize);
+    Type* theResult =
+        new (theGuard.get()) Type(
+                                theManager, 
+                                theXStringBlockSize,
+                                theXNumberBlockSize,
+                                theXNodeSetBlockSize,
+                                theXNodeSetNodeProxyBlockSize);
 
     theGuard.release();
 
@@ -447,9 +453,12 @@ XObjectFactoryDefault::createStringReference(const XalanDOMString&	theValue)
 
 
 const XObjectPtr
-XObjectFactoryDefault::createStringAdapter(const XObjectPtr&	theValue)
+XObjectFactoryDefault::createStringAdapter(
+            const XObjectPtr&	    theValue,
+            XPathExecutionContext&  theExecutionContext)
 {
-	XStringAdapter* const	theXStringAdapter = m_xstringAdapterAllocator.createString(theValue);
+	XStringAdapter* const	theXStringAdapter =
+        m_xstringAdapterAllocator.createString(theValue, theExecutionContext);
 
 	theXStringAdapter->setFactory(this);
 

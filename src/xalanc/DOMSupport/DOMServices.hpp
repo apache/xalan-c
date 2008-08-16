@@ -36,6 +36,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/ExecutionContext.hpp>
 #include <xalanc/PlatformSupport/FormatterListener.hpp>
 
 
@@ -81,7 +82,7 @@ public:
 	 * other functions are called.
 	 */
 	static void
-	initialize(MemoryManagerType&      theManager);
+	initialize(MemoryManager&   theManager);
 
 	/**
 	 * Destroy static data.  After thus function is called,
@@ -89,7 +90,6 @@ public:
 	 */
 	static void
 	terminate();
-
 
 
 	/**
@@ -102,6 +102,29 @@ public:
 	getNodeData(
 			const XalanNode&	node,
 			XalanDOMString&		data);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanNode&    node,
+            ExecutionContext&   context,
+			XalanDOMString&     data)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(node, data);
+        }
+        else
+        {
+            doGetNodeData(node, context, data);
+        }
+    }
 
 
 
@@ -135,8 +158,6 @@ public:
 		append(data, comment.getData());
 	}
 
-
-
 	/**
 	 * Retrieves data for node
 	 * 
@@ -148,12 +169,33 @@ public:
 			const XalanDocument&	document,
 			XalanDOMString&			data);
 
-
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param document The DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanDocument&    document,
+            ExecutionContext&       context,
+			XalanDOMString&         data)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(document, data);
+        }
+        else
+        {
+            doGetNodeData(document, context, data);
+        }
+    }
 
 	/**
 	 * Retrieves data for node
 	 * 
-	 * @param documentFragment DOM node whose data is to be returned
+	 * @param documentFragment The DOM node whose data is to be returned
 	 * @param data a string to which the node's data will be appended
 	 */
 	static void
@@ -161,7 +203,28 @@ public:
 			const XalanDocumentFragment&	documentFragment,
 			XalanDOMString&					data);
 
-
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param documentFragment The DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               context,
+			XalanDOMString&		            data)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(documentFragment, data);
+        }
+        else
+        {
+            doGetNodeData(documentFragment, context, data);
+        }
+    }
 
 	/**
 	 * Retrieves data for node
@@ -174,6 +237,28 @@ public:
 			const XalanElement&		element,
 			XalanDOMString&			data);
 
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanElement&     element,
+            ExecutionContext&       context,
+			XalanDOMString&		    data)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(element, data);
+        }
+        else
+        {
+            doGetNodeData(element, context, data);
+        }
+    }
 
 	/**
 	 * Retrieves data for node
@@ -189,8 +274,6 @@ public:
 		append(data, pi.getData());
 	}
 
-
-
 	/**
 	 * Retrieves data for node
 	 * 
@@ -204,6 +287,31 @@ public:
 	{
 		append(data, text.getData());
 	}
+
+public:
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param text DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	getNodeData(
+			const XalanText&	text,
+            ExecutionContext&   context,
+			XalanDOMString&		data)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(text, data);
+        }
+        else
+        {
+            doGetNodeData(text, context, data);
+        }
+    }
 
     typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
@@ -219,6 +327,31 @@ public:
 			const XalanNode&	node,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	getNodeData(
+			const XalanNode&	node,
+            ExecutionContext&   context,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(node, formatterListener, function);
+        }
+        else
+        {
+            doGetNodeData(node, context, formatterListener, function);
+        }
+    }
 
 	/**
 	 * Sends the data for a node to a FormatterListener
@@ -268,6 +401,31 @@ public:
 	/**
 	 * Sends the data for a node to a FormatterListener
 	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	getNodeData(
+			const XalanDocument&	document,
+            ExecutionContext&       context,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(document, formatterListener, function);
+        }
+        else
+        {
+            doGetNodeData(document, context, formatterListener, function);
+        }
+    }
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
 	 * @param documentFragment DOM node whose data is to be sent
 	 * @param formatterListener the FormatterListener instance to receive the data
 	 * @param fRaw Whether or not the data should be sent raw.
@@ -281,6 +439,31 @@ public:
 	/**
 	 * Sends the data for a node to a FormatterListener
 	 * 
+	 * @param documentFragment DOM node whose data is to be sent
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               context,
+			FormatterListener&				formatterListener,
+			MemberFunctionPtr				function)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(documentFragment, formatterListener, function);
+        }
+        else
+        {
+            doGetNodeData(documentFragment, context, formatterListener, function);
+        }
+    }
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
 	 * @param element DOM node whose data is to be returned
 	 * @param formatterListener the FormatterListener instance to receive the data
 	 * @param fRaw Whether or not the data should be sent raw.
@@ -290,6 +473,31 @@ public:
 			const XalanElement&		element,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	getNodeData(
+			const XalanElement&		element,
+            ExecutionContext&       context,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function)
+    {
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(element, formatterListener, function);
+        }
+        else
+        {
+            doGetNodeData(element, context, formatterListener, function);
+        }
+    }
 
 	/**
 	 * Sends the data for a node to a FormatterListener
@@ -321,6 +529,31 @@ public:
 			MemberFunctionPtr	function)
 	{
 		sendData(formatterListener, function, text.getData());
+	}
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanText&	text,
+            ExecutionContext&   context,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+        if (!context.hasPreserveOrStripSpaceConditions())
+        {
+            getNodeData(text, formatterListener, function);
+        }
+        else
+        {
+            doGetNodeData(text, context, formatterListener, function);
+        }
 	}
 
 	/**
@@ -503,48 +736,180 @@ public:
 
 private:
 
-	/**
-	 * If necessary, do a brute-force search for an owner element.  This is
-	 * necessary when a given DOM implementation returns 0 for
-	 * XalanAttr::getOwnerElement()
-	 *
-	 * @deprecated We now require DOM Level 2 support, so XalanAttr::getOwnerElement() always works.
-	 *
-	 * @param attr The XalanAttr instance for which to find the owner element
-	 * @return A pointer to the element node that owns the attribute
-	 */
-	static XalanNode*
-	findOwnerElement(const XalanAttr&	attr)
-	{
-		XalanNode* const	theOwnerElement = attr.getOwnerElement();
+    friend void
+    getChildData(
+            const XalanNode*    child,
+            XalanDOMString&     data);
 
-		if (theOwnerElement != 0)
-		{
-			return theOwnerElement;
-		}
-		else
-		{
-			return findOwnerElement(attr, *attr.getOwnerDocument()->getDocumentElement());
-		}
+    friend void
+    getChildData(
+            const XalanNode*    child,
+            ExecutionContext&   executionContext,
+            XalanDOMString&     data);
+
+    friend void
+    getChildData(
+			const XalanNode*				child,
+			FormatterListener&				formatterListener,
+			DOMServices::MemberFunctionPtr	function);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+    static void
+    doGetNodeData(
+			const XalanNode&	node,
+            ExecutionContext&   executionContext,
+			XalanDOMString&		data);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param document DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	doGetNodeData(
+			const XalanDocument&    document,
+            ExecutionContext&       context,
+			XalanDOMString&         data);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param documentFragment DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	doGetNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               context,
+			XalanDOMString&		            data);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param element DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	doGetNodeData(
+			const XalanElement&     element,
+            ExecutionContext&       context,
+			XalanDOMString&		    data);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param data a string to which the node's data will be appended
+	 */
+	static void
+	doGetNodeData(
+			const XalanText&	text,
+            ExecutionContext&   context,
+			XalanDOMString&		data)
+    {
+        assert(context.hasPreserveOrStripSpaceConditions() == true);
+
+        if (context.shouldStripSourceNode(text) == false)
+        {
+		    append(data, text.getData());
+        }
 	}
 
 	/**
-	 * If necessary, do a brute-force search for an owner element.  This is
-	 * necessary when a given DOM implementation returns 0 for
-	 * XalanAttr::getOwnerElement()
-	 *
-	 * @deprecated We now require DOM Level 2 support, so XalanAttr::getOwnerElement() always works.
-	 *
-	 * @param attr The XalanAttr instance for which to find the owner element
-	 * @param element The document element
-	 * @return A pointer to the element node that owns the attribute
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
 	 */
-	static XalanNode*
-	findOwnerElement(
-			const XalanNode&	attr,
-			XalanNode&			element);
+	static void
+	doGetNodeData(
+			const XalanNode&	node,
+            ExecutionContext&   context,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function);
 
 	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	doGetNodeData(
+			const XalanDocument&	document,
+            ExecutionContext&       context,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param documentFragment DOM node whose data is to be sent
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	doGetNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               context,
+			FormatterListener&				formatterListener,
+			MemberFunctionPtr				function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	doGetNodeData(
+			const XalanElement&		element,
+            ExecutionContext&       context,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+     * @param context The current execution context
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	doGetNodeData(
+			const XalanText&	text,
+            ExecutionContext&   context,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+        assert(context.hasPreserveOrStripSpaceConditions() == true);
+
+        if (context.shouldStripSourceNode(text) == false)
+        {
+		    sendData(formatterListener, function, text.getData());
+        }
+	}
+
+    /**
 	 * Utility function to send data to a FormatterListener
 	 *
 	 * @param formatterListener The FormatterListener instance.

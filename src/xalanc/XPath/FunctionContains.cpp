@@ -53,8 +53,8 @@ FunctionContains::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);   
 
-    const XalanDOMString&   str1 = arg1->str();
-    const XalanDOMString&   str2 = arg2->str();
+    const XalanDOMString&   str1 = arg1->str(executionContext);
+    const XalanDOMString&   str2 = arg2->str(executionContext);
 
     bool                    fResult = true;
 

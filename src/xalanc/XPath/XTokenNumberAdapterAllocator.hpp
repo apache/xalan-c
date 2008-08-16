@@ -52,7 +52,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XTokenNumberAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XTokenNumberAdapterAllocator(
+            MemoryManager&  theMemoryManager,
+            size_type	    theBlockCount);
 
 	~XTokenNumberAdapterAllocator();
 
@@ -64,8 +66,7 @@ public:
 	 * @return A pointer to the new object
 	 */
 	object_type*
-	create(const XToken&	theXToken);
-
+	create(const XToken&    theXToken);
 
 	/**
 	 * Delete an XStringAdapter object from allocator.	 
@@ -112,6 +113,12 @@ public:
 	}
 
 private:
+
+    MemoryManager&
+    getMemoryManager()
+    {
+        return m_allocator.getMemoryManager();
+    }
 
 	// Not implemented...
 	XTokenNumberAdapterAllocator(const XTokenNumberAdapterAllocator&);

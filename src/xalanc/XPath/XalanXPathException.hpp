@@ -62,7 +62,7 @@ public:
 			const XalanDOMString&	theURI,
 			XalanFileLoc			theLineNumber,
 			XalanFileLoc			theColumnNumber,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
 	/**
 	 * Constructor
@@ -75,7 +75,7 @@ public:
 	XalanXPathException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
 	/**
 	 * Construct an XPath exeption object.
@@ -85,7 +85,7 @@ public:
 	 */
 	XalanXPathException(
             const XalanDOMString&	message,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
     XalanXPathException(const XalanXPathException&  other);
 
@@ -105,7 +105,7 @@ protected:
 	 * 
 	 */
 	explicit
-	XalanXPathException(MemoryManagerType& theManager);
+	XalanXPathException(MemoryManager&  theManager);
 
 private:
 

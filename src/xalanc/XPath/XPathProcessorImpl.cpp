@@ -694,7 +694,7 @@ XPathProcessorImpl::nextToken()
 {
     assert(m_expression != 0);
 
-    const XObject* const    theNextToken =
+    const XToken* const     theNextToken =
             m_expression->getNextToken();
 
     if (theNextToken == 0)
@@ -727,7 +727,7 @@ XPathProcessorImpl::prevToken()
 {
     assert(m_expression != 0);
 
-    const XObject* const    thePreviousToken =
+    const XToken* const     thePreviousToken =
             m_expression->getPreviousToken();
 
     m_token = thePreviousToken == 0 ? s_emptyString : thePreviousToken->str();
@@ -749,7 +749,7 @@ XPathProcessorImpl::getTokenRelative(int    theOffset) const
 {
     assert(m_expression != 0);
 
-    const XObject*  theToken = 0;
+    const XToken*   theToken = 0;
 
     if (theOffset < 0)
     {

@@ -82,7 +82,7 @@ FunctionString::execute(
 
         XalanDOMString&     theString = theData.get();
 
-        DOMServices::getNodeData(*context, theString);
+        DOMServices::getNodeData(*context, executionContext, theString);
 
         return executionContext.getXObjectFactory().createString(theData);
     }
@@ -107,7 +107,7 @@ FunctionString::execute(
     }
     else
     {
-        return executionContext.getXObjectFactory().createStringAdapter(arg1);
+        return executionContext.getXObjectFactory().createStringAdapter(arg1, executionContext);
     }
 }
 

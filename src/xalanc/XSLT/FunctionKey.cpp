@@ -120,7 +120,7 @@ FunctionKey::execute(
     {
         assert(executionContext.getPrefixResolver() != 0);
 
-        const XalanDOMString&   keyname = arg1->str();
+        const XalanDOMString&   keyname = arg1->str(executionContext);
 
         assert(arg2.null() == false);
 
@@ -135,7 +135,7 @@ FunctionKey::execute(
                 executionContext,
                 context,
                 keyname,
-                arg2->str(),
+                arg2->str(executionContext),
                 locator,
                 *theNodeRefList.get());
         }
@@ -151,7 +151,7 @@ FunctionKey::execute(
                     executionContext,
                     context,
                     keyname,
-                    arg2->str(),
+                    arg2->str(executionContext),
                     locator,
                     *theNodeRefList.get());
             }
@@ -165,7 +165,7 @@ FunctionKey::execute(
                 {
                     assert(theNodeSet.item(i) != 0);
 
-                    DOMServices::getNodeData(*theNodeSet.item(i), ref);
+                    DOMServices::getNodeData(*theNodeSet.item(i), executionContext, ref);
 
                     if (0 != ref.length())
                     {

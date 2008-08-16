@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XString::XString(
             const XalanDOMString&   val,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
     XStringBase(theManager),
     m_value(val,theManager)
 {
@@ -36,7 +36,7 @@ XString::XString(
 
 XString::XString(
             const XalanDOMChar*     val,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
     XStringBase(theManager),
     m_value(val, theManager)
 {
@@ -47,7 +47,7 @@ XString::XString(
 XString::XString(
             const XalanDOMChar*     val,
             XalanSize_t             len,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
     XStringBase(theManager),
     m_value(val, theManager, len)
 {
@@ -57,7 +57,7 @@ XString::XString(
 
 XString::XString(
             const XString&      source,
-            MemoryManagerType&  theManager) :
+            MemoryManager&      theManager) :
     XStringBase(source, theManager),
     m_value(source.m_value, theManager)
 {
@@ -72,6 +72,14 @@ XString::~XString()
 
 
 const XalanDOMString&
+XString::str(XPathExecutionContext&     /* executionContext */) const
+{
+    return m_value;
+}
+
+
+
+const XalanDOMString&
 XString::str() const
 {
     return m_value;
@@ -81,26 +89,45 @@ XString::str() const
 
 void
 XString::str(
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function) const
+            XPathExecutionContext&  /* executionContext */,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    const XalanDOMString::size_type     theLength =
-        m_value.length();
+    string(m_value, formatterListener, function);
+}
 
-    if (theLength != 0)
-    {
-        assert(theLength == FormatterListener::size_type(theLength));
 
-        (formatterListener.*function)(
-            m_value.c_str(),
-            FormatterListener::size_type(theLength));
-    }
+
+void
+XString::str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
+{
+    string(m_value, formatterListener, function);
+}
+
+
+
+void
+XString::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    theBuffer.append(m_value);
+}
+
+
+
+void
+XString::str(XalanDOMString&    theBuffer) const
+{
+    theBuffer.append(m_value);
 }
 
 
 
 double
-XString::stringLength() const
+XString::stringLength(XPathExecutionContext&    /* executionContext */) const
 {
     return static_cast<double>(m_value.length());
 }

@@ -28,21 +28,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNumber::XNumber(double		val,
-                 MemoryManagerType& theManager) :
-	XNumberBase(),
+XNumber::XNumber(
+            double	        val,
+            MemoryManager&  theMemoryManager) :
+	XNumberBase(theMemoryManager),
 	m_value(val),
-	m_cachedStringValue(theManager)
+	m_cachedStringValue(theMemoryManager)
 {
 }
 
 
 
-XNumber::XNumber(const XNumber&		source,
-                 MemoryManagerType& theManager) :
-	XNumberBase(source),
+XNumber::XNumber(
+            const XNumber&	source,
+            MemoryManager&  theMemoryManager) :
+	XNumberBase(source, theMemoryManager),
 	m_value(source.m_value),
-	m_cachedStringValue(source.m_cachedStringValue, theManager)
+	m_cachedStringValue(source.m_cachedStringValue, theMemoryManager)
 {
 }
 
@@ -54,9 +56,22 @@ XNumber::~XNumber()
 
 
 double
-XNumber::num() const
+XNumber::num(XPathExecutionContext&     /* executionContext */) const
 {
 	return m_value;
+}
+
+
+
+const XalanDOMString&
+XNumber::str(XPathExecutionContext&     /* executionContext */) const
+{
+	if (isEmpty(m_cachedStringValue) == true)
+	{
+		NumberToDOMString(m_value, m_cachedStringValue);
+	}
+
+	return m_cachedStringValue;
 }
 
 
@@ -76,24 +91,45 @@ XNumber::str() const
 
 void
 XNumber::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-    const XalanDOMString&	theValue = str();
+    const XalanDOMString&	theValue = str(executionContext);
 
 	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
 
-	(formatterListener.*function)(c_wstr(theValue), FormatterListener::size_type(length(theValue)));
+	(formatterListener.*function)(
+        theValue.c_str(),
+        FormatterListener::size_type(length(theValue)));
 }
 
 
 
 void
-XNumber::str(XalanDOMString&	theBuffer) const
+XNumber::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+    const XalanDOMString&	theValue = str();
+
+	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
+
+	(formatterListener.*function)(
+        theValue.c_str(),
+        FormatterListener::size_type(length(theValue)));
+}
+
+
+
+void
+XNumber::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
 {
 	if (isEmpty(m_cachedStringValue) == false)
 	{
-		append(theBuffer, m_cachedStringValue);
+		theBuffer.append(m_cachedStringValue);
 	}
 	else
 	{
@@ -104,19 +140,34 @@ XNumber::str(XalanDOMString&	theBuffer) const
 
 
 void
-XNumber::set(double		theValue)
+XNumber::str(XalanDOMString&    theBuffer) const
 {
-	m_value = theValue;
-
-	clear(m_cachedStringValue);
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		theBuffer.append(m_cachedStringValue);
+	}
+	else
+	{
+		NumberToDOMString(m_value, theBuffer);
+	}
 }
 
 
 
 double
-XNumber::stringLength() const
+XNumber::stringLength(XPathExecutionContext&    executionContext) const
 {
-    return static_cast<double>(str().length());
+    return static_cast<double>(str(executionContext).length());
+}
+
+
+
+void
+XNumber::set(double		theValue)
+{
+	m_value = theValue;
+
+	clear(m_cachedStringValue);
 }
 
 

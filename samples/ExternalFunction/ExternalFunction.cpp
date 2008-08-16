@@ -89,7 +89,7 @@ public:
 		using std::sqrt;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
+		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
 	}
 
 #if !defined(XALAN_NO_USING_DECLARATION)
@@ -178,7 +178,7 @@ public:
 		using std::pow;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
+		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
 	}
 
 #if !defined(XALAN_NO_USING_DECLARATION)

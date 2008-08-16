@@ -153,7 +153,7 @@ FunctionID::getError(XalanDOMString&    theResult) const
 FunctionID::FunctionIDXObjectTypeCallback::FunctionIDXObjectTypeCallback(
             XPathExecutionContext&  theExecutionContext,
             XalanDOMString&         theResultString) :
-    XObjectTypeCallback(theExecutionContext.getMemoryManager()),
+    XObjectTypeCallback(theExecutionContext),
     m_resultString(theResultString),
     m_executionContext(theExecutionContext)
 {
@@ -174,7 +174,7 @@ FunctionID::FunctionIDXObjectTypeCallback::Number(
             const XObject&  theXObject,
             double          /* theValue */)
 {
-    m_resultString = theXObject.str();
+    m_resultString = theXObject.str(m_executionContext);
 }
 
 
@@ -184,7 +184,7 @@ FunctionID::FunctionIDXObjectTypeCallback::Boolean(
             const XObject&  theXObject,
             bool            /* theValue */)
 {
-    m_resultString = theXObject.str();
+    m_resultString = theXObject.str(m_executionContext);
 }
 
 
@@ -194,7 +194,7 @@ FunctionID::FunctionIDXObjectTypeCallback::String(
             const XObject&          theXObject,
             const XalanDOMString&   /* theValue */)
 {
-    m_resultString = theXObject.str();
+    m_resultString = theXObject.str(m_executionContext);
 }
 
 
@@ -204,7 +204,7 @@ FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
             const XObject&                  theXObject,
             const XalanDocumentFragment&    /* theValue */)
 {
-    m_resultString = theXObject.str();
+    m_resultString = theXObject.str(m_executionContext);
 }
 
 
@@ -214,7 +214,7 @@ FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
             const XObject&          theXObject,
             XalanDocumentFragment&  /* theValue */)
 {
-    m_resultString = theXObject.str();
+    m_resultString = theXObject.str(m_executionContext);
 }
 
 
@@ -228,7 +228,7 @@ FunctionID::FunctionIDXObjectTypeCallback::NodeSet(
 
     for (NodeRefListBase::size_type i = 0 ; i < theNodeCount; i++)
     {
-        DOMServices::getNodeData(*theValue.item(i), m_resultString);
+        DOMServices::getNodeData(*theValue.item(i), m_executionContext, m_resultString);
 
         append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));          
     }

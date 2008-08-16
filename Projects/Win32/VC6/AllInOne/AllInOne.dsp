@@ -1406,14 +1406,6 @@ SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XPath\XString.cpp
 # End Source File
 # Begin Source File

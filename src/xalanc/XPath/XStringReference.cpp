@@ -27,7 +27,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XStringReference::XStringReference(
             const XalanDOMString&   val,
-            MemoryManagerType&      theManager) :
+            MemoryManager&          theManager) :
     XStringBase(theManager),
     m_value(val)
 {
@@ -37,7 +37,7 @@ XStringReference::XStringReference(
 
 XStringReference::XStringReference(
             const XStringReference&     source,
-            MemoryManagerType&          theManager) :
+            MemoryManager&              theManager) :
     XStringBase(source, theManager),
     m_value(source.m_value)
 {
@@ -52,6 +52,14 @@ XStringReference::~XStringReference()
 
 
 const XalanDOMString&
+XStringReference::str(XPathExecutionContext&    /* executionContext */) const
+{
+    return m_value;
+}
+
+
+
+const XalanDOMString&
 XStringReference::str() const
 {
     return m_value;
@@ -61,20 +69,47 @@ XStringReference::str() const
 
 void
 XStringReference::str(
-            FormatterListener&  formatterListener,
-            MemberFunctionPtr   function) const
+            XPathExecutionContext&  /* executionContext */,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    const XalanDOMString::size_type     theLength =
-        m_value.length();
+    string(m_value, formatterListener, function);
+}
 
-    if (theLength != 0)
-    {
-        assert(theLength == FormatterListener::size_type(theLength));
 
-        (formatterListener.*function)(
-            m_value.c_str(),
-            FormatterListener::size_type(theLength));
-    }
+
+void
+XStringReference::str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
+{
+    string(m_value, formatterListener, function);
+}
+
+
+
+void
+XStringReference::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+    theBuffer.append(m_value);
+}
+
+
+
+void
+XStringReference::str(XalanDOMString&   theBuffer) const
+{
+    theBuffer.append(m_value);
+}
+
+
+
+double
+XStringReference::stringLength(XPathExecutionContext&   /* executionContext */) const
+{
+    return static_cast<double>(m_value.length());
 }
 
 
@@ -83,14 +118,6 @@ XStringReference::eObjectType
 XStringReference::getRealType() const
 {
     return eTypeStringReference;
-}
-
-
-
-double
-XStringReference::stringLength() const
-{
-    return static_cast<double>(m_value.length());
 }
 
 

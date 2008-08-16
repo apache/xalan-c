@@ -44,15 +44,17 @@ static const XalanDOMChar   s_null[] =
 
 
 
-XNull::XNull() :
-	XObject(eTypeNull)
+XNull::XNull(MemoryManager&     theMemoryManager) :
+	XObject(eTypeNull, theMemoryManager)
 {
 }
 
 
 
-XNull::XNull(const XNull&	source) :
-	XObject(source)
+XNull::XNull(
+            const XNull&	source,
+            MemoryManager&  theMemoryManager) :
+	XObject(source, theMemoryManager)
 {
 }
 
@@ -64,24 +66,34 @@ XNull::~XNull()
 
 
 
-
 const XalanDOMString&
 XNull::getTypeString() const
 {
 	return s_nullString;
 }
+
+
+
 double
-XNull::num() const
+XNull::num(XPathExecutionContext&   /* executionContext */) const
 {
-	return 0.0;
+    return DoubleSupport::getNaN();
 }
 
 
 
 bool
-XNull::boolean() const
+XNull::boolean(XPathExecutionContext&   /* executionContext */) const
 {
 	return false;
+}
+
+
+
+const XalanDOMString&
+XNull::str(XPathExecutionContext&   /* executionContext */) const
+{
+    return XNull::str();
 }
 
 
@@ -96,17 +108,47 @@ XNull::str() const
 
 void
 XNull::str(
-			FormatterListener&	/* formatterListener */,
-			MemberFunctionPtr	/* function */) const
+            XPathExecutionContext&  /* executionContext */,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
+    string(s_nullString, formatterListener, function);
+}
+
+
+
+void
+XNull::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+    string(s_nullString, formatterListener, function);
+}
+
+
+
+void
+XNull::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&         theBuffer) const
+{
+    theBuffer.append(s_nullString);
+}
+
+
+
+void
+XNull::str(XalanDOMString&  theBuffer) const
+{
+    theBuffer.append(s_nullString);
 }
 
 
 
 double
-XNull::stringLength() const
+XNull::stringLength(XPathExecutionContext&  /* executionContext */) const
 {
-	return 0;
+	return (sizeof(s_null) / sizeof(s_null[0])) - 1;
 }
 
 

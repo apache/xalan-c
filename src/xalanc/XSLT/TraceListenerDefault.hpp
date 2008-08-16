@@ -30,14 +30,18 @@
 
 #include <xalanc/Include/XalanMemoryManagement.hpp>
 
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 class DOMSupport;
 class ElemTemplateElement;
+class ExecutionContext;
 class NodeRefListBase;
 class PrintWriter;
+class XPathExecutionContext;
 
 
 
@@ -46,12 +50,21 @@ class XALAN_XSLT_EXPORT TraceListenerDefault : public TraceListener
 public:
 
 	TraceListenerDefault(
-			PrintWriter&	thePrintWriter,
-			bool			traceTemplates = false,
-			bool			traceElements = false,
-			bool			traceGeneration = false,
-			bool			traceSelection = false,
-            MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+			PrintWriter&	        thePrintWriter,
+            MemoryManager&          theManager,
+			bool			        traceTemplates = false,
+			bool			        traceElements = false,
+			bool			        traceGeneration = false,
+			bool			        traceSelection = false);
+
+	TraceListenerDefault(
+            XPathExecutionContext&  theExecutionContext,
+			PrintWriter&	        thePrintWriter,
+            MemoryManager&          theManager,
+			bool			        traceTemplates = false,
+			bool			        traceElements = false,
+			bool			        traceGeneration = false,
+			bool			        traceSelection = false);
 
 	virtual
 	~TraceListenerDefault();
@@ -123,17 +136,19 @@ private:
 
 
 	// Data members...
-	PrintWriter&	    m_printWriter;
+    XPathExecutionContext*  m_executionContext;
 
-	bool			    m_traceTemplates;
+	PrintWriter&	        m_printWriter;
 
-	bool			    m_traceElements;
+	bool			        m_traceTemplates;
 
-	bool			    m_traceGeneration;
+	bool			        m_traceElements;
 
-	bool			    m_traceSelection;
+	bool			        m_traceGeneration;
 
-    MemoryManagerType&  m_memoryManager;
+	bool			        m_traceSelection;
+
+    MemoryManager&          m_memoryManager;
 };
 
 

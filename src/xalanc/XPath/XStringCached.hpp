@@ -51,11 +51,13 @@ public:
 	 *
 	 * @param theValue	value used to create object 
 	 */
-	XStringCached(GetAndReleaseCachedString&	val,
-                    MemoryManagerType&          theManager);
+	XStringCached(
+            GetAndReleaseCachedString&	val,
+            MemoryManager&              theManager);
 
-	XStringCached(const XStringCached&	source,
-                    MemoryManagerType&  theManager);
+	XStringCached(
+            const XStringCached&	source,
+            MemoryManager&          theManager);
 
 	virtual
 	~XStringCached();
@@ -64,19 +66,32 @@ public:
 	// These methods are inherited from XObject ...
 
 	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
+	virtual void
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 protected:
 
@@ -84,8 +99,10 @@ protected:
 	getRealType() const;
 
 private:
+
     //Not implemented
     XStringCached(const XStringCached&	source);
+
     XStringCached();
 
 	const GetAndReleaseCachedString		m_value;

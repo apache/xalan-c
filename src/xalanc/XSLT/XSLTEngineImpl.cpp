@@ -1804,7 +1804,11 @@ XSLTEngineImpl::characters(const XalanNode&     node)
 
     if(generateCDATASection() == true)
     {
-        DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::cdata);
+        DOMServices::getNodeData(
+            node,
+            *m_executionContext,
+            *getFormatterListenerImpl(),
+            &FormatterListener::cdata);
 
         if(getTraceListeners() > 0)
         {
@@ -1813,7 +1817,11 @@ XSLTEngineImpl::characters(const XalanNode&     node)
     }
     else
     {
-        DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::characters);
+        DOMServices::getNodeData(
+            node,
+            *m_executionContext,
+            *getFormatterListenerImpl(),
+            &FormatterListener::characters);
 
         if(getTraceListeners() > 0)
         {
@@ -1835,7 +1843,10 @@ XSLTEngineImpl::characters(const XObjectPtr&    xobject)
 
     if(generateCDATASection() == true)
     {
-        xobject->str(*getFormatterListenerImpl(), &FormatterListener::cdata);
+        xobject->str(
+            *m_executionContext,
+            *getFormatterListenerImpl(),
+            &FormatterListener::cdata);
 
         if(getTraceListeners() > 0)
         {
@@ -1844,7 +1855,10 @@ XSLTEngineImpl::characters(const XObjectPtr&    xobject)
     }
     else
     {
-        xobject->str(*getFormatterListenerImpl(), &FormatterListener::characters);
+        xobject->str(
+            *m_executionContext,
+            *getFormatterListenerImpl(),
+            &FormatterListener::characters);
 
         if(getTraceListeners() > 0)
         {
@@ -1881,7 +1895,11 @@ XSLTEngineImpl::charactersRaw(const XalanNode&  node)
 {
     doFlushPending();
 
-    DOMServices::getNodeData(node, *getFormatterListenerImpl(), &FormatterListener::charactersRaw);
+    DOMServices::getNodeData(
+        node,
+        *m_executionContext,
+        *getFormatterListenerImpl(),
+        &FormatterListener::charactersRaw);
 
     if(getTraceListeners() > 0)
     {
@@ -1896,7 +1914,10 @@ XSLTEngineImpl::charactersRaw(const XObjectPtr&     xobject)
 {
     doFlushPending();
 
-    xobject->str(*getFormatterListenerImpl(), &FormatterListener::charactersRaw);
+    xobject->str(
+        *m_executionContext,
+        *getFormatterListenerImpl(),
+        &FormatterListener::charactersRaw);
 
     if(getTraceListeners() > 0)
     {
@@ -2439,7 +2460,7 @@ XSLTEngineImpl::outputToResultTree(
     case XObject::eTypeNumber:
     case XObject::eTypeString:
         {
-            const XalanDOMString&   s = value.str();
+            const XalanDOMString&   s = value.str(*m_executionContext);
 
             characters(toCharArray(s), 0, length(s));
         }
@@ -3242,7 +3263,7 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 {
     XalanDOMString  theBuffer(getMemoryManager());
     
-    DOMServices::getNodeData(theNode, theBuffer);
+    DOMServices::getNodeData(theNode, *m_executionContext, theBuffer);
 
     fireCharacterGenerateEvent(theBuffer, isCDATA);
 }
@@ -3254,7 +3275,9 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
             const XObjectPtr&   theXObject,
             bool                isCDATA)
 {
-    fireCharacterGenerateEvent(theXObject->str(), isCDATA);
+    fireCharacterGenerateEvent(
+        theXObject->str(*m_executionContext),
+        isCDATA);
 }
 
 

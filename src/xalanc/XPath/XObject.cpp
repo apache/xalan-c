@@ -170,7 +170,7 @@ static const XalanDOMChar   s_true[] =
 
 
 void
-XObject::initialize(MemoryManagerType& theManager)
+XObject::initialize(MemoryManager&  theManager)
 {
     s_localBooleanString.reset(theManager, s_boolean);
     s_localFalseString.reset(theManager,  s_false);
@@ -197,17 +197,23 @@ XObject::terminate()
 
 
 
-XObject::XObject(eObjectType    theObjectType) :
+XObject::XObject(
+            eObjectType		theObjectType,
+            MemoryManager&  theMemoryManager) :
     m_objectType(theObjectType),
-    m_factory(0)
+    m_factory(0),
+    m_memoryManager(&theMemoryManager)
 {
 }
 
 
 
-XObject::XObject(const XObject&     source) :
+XObject::XObject(
+            const XObject&	source,
+            MemoryManager&  theMemoryManager) :
     m_objectType(source.m_objectType),
-    m_factory(0)
+    m_factory(0),
+    m_memoryManager(&theMemoryManager)
 {
 }
 
@@ -243,7 +249,7 @@ XObject::number(
 
     XalanDOMString&     theString = theGuard.get();
 
-    XObject::string(theNode, theString);
+    XObject::string(theNode, executionContext, theString);
 
     return XObject::number(theString, executionContext.getMemoryManager());
 }
@@ -281,58 +287,30 @@ XObject::dereferenced()
 
 
 double
+XObject::num(XPathExecutionContext&     executionContext) const
+{
+    return DoubleSupport::toDouble(str(executionContext), *m_memoryManager);
+}
+
+
+
+double
 XObject::num() const
 {
-    throw XObjectInvalidConversionException(getType(), eTypeNumber);
+    return DoubleSupport::toDouble(str(), *m_memoryManager);
 }
 
 
 
-bool
-XObject::boolean() const
-{    
-    throw XObjectInvalidConversionException(getType(), eTypeBoolean);
-}
-
-
-
-const XalanDOMString&
-XObject::str() const
-{
-
-
-    throw XObjectInvalidConversionException(getType(), eTypeString);
-
-    // This is just a dummy value to satisfy the compiler.
-    return s_emptyString;
-}
-
-
-
-void
-XObject::str(
-            FormatterListener&  /* formatterListener */,
-            MemberFunctionPtr   /* function */) const
-{
-
-
-        throw XObjectInvalidConversionException(getType(), eTypeString);
-}
-
-
-
-void
-XObject::str(XalanDOMString&    theBuffer) const
-{
-    append(theBuffer, str());
-}
-
-
+static const XalanDocumentFragment* const   s_dummyFragment = 0;
 
 const XalanDocumentFragment&
 XObject::rtree() const
 {
-    throw XObjectInvalidConversionException(getType(), eTypeResultTreeFrag);
+    throwInvalidConversionException(s_stringString);
+
+    // This is only to satisfy the compiler.
+    return *s_dummyFragment;
 }
 
 
@@ -341,20 +319,26 @@ static const NodeRefList    s_dummyList(XalanMemMgrs::getDummyMemMgr());
 
 
 
+static const NodeRefListBase* const   s_dummyNodeset= 0;
+
 const NodeRefListBase&
 XObject::nodeset() const
 {
-    throw XObjectInvalidConversionException(getType(), eTypeNodeSet);
+    throwInvalidConversionException(s_stringString);
+
+    // This is only to satisfy the compiler.
+    return *s_dummyNodeset;
 }
 
 
 
 inline void
 getStringFromNode(
-            const XalanNode&    theNode,
-            XalanDOMString&     theString)
+            const XalanNode&        theNode,
+            XPathExecutionContext&  theContext,
+            XalanDOMString&         theString)
 {
-    DOMServices::getNodeData(theNode, theString);
+    DOMServices::getNodeData(theNode, theContext, theString);
 }
 
 
@@ -372,7 +356,7 @@ getStringFromNodeFunction
             const XalanNode&    theNode,
             XalanDOMString&     theString) const
     {
-        getStringFromNode(theNode, theString);
+        getStringFromNode(theNode, m_executionContext, theString);
     }
 
 private:
@@ -411,7 +395,7 @@ private:
     {
         XPathExecutionContext::GetAndReleaseCachedString    theString(m_executionContext);
 
-        getStringFromNode(theNode, theString.get());
+        getStringFromNode(theNode, m_executionContext, theString.get());
 
         return DoubleSupport::toDouble(theString.get(), m_executionContext.getMemoryManager());
     }
@@ -432,8 +416,8 @@ private:
 struct
 equalsDOMString
 {
-    equalsDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    equalsDOMString(XPathExecutionContext&  theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
     }
 
@@ -450,7 +434,7 @@ equalsDOMString
             const XObject&          theLHS,
             const XalanDOMString&   theRHS) const
     {
-        return DOMStringEqualsFunction()(theLHS.str(), theRHS);
+        return DOMStringEqualsFunction()(theLHS.str(m_executionContext), theRHS);
     }
 
     bool
@@ -458,10 +442,12 @@ equalsDOMString
             const XalanDOMString&   theLHS,
             const XObject&          theRHS) const
     {
-        return DOMStringEqualsFunction()(theLHS, theRHS.str());
+        return DOMStringEqualsFunction()(theLHS, theRHS.str(m_executionContext));
     }
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -469,8 +455,8 @@ private:
 struct
 notEqualsDOMString
 {
-    notEqualsDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    notEqualsDOMString(XPathExecutionContext&   theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
     }
 
@@ -487,7 +473,7 @@ notEqualsDOMString
             const XObject&          theLHS,
             const XalanDOMString&   theRHS) const
     {
-        return DOMStringNotEqualsFunction()(theLHS.str(), theRHS);
+        return DOMStringNotEqualsFunction()(theLHS.str(m_executionContext), theRHS);
     }
 
     bool
@@ -495,10 +481,12 @@ notEqualsDOMString
             const XalanDOMString&   theLHS,
             const XObject&          theRHS) const
     {
-        return DOMStringNotEqualsFunction()(theLHS, theRHS.str());
+        return DOMStringNotEqualsFunction()(theLHS, theRHS.str(m_executionContext));
     }
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -506,8 +494,8 @@ private:
 struct
 lessThanDOMString
 {
-    lessThanDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    lessThanDOMString(XPathExecutionContext&    theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
     }
 
@@ -517,8 +505,8 @@ lessThanDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::lessThan(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -527,8 +515,8 @@ lessThanDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::lessThan(
-                theLHS.num(),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                theLHS.num(m_executionContext),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -537,11 +525,13 @@ lessThanDOMString
             const XObject&          theRHS) const
     {
         return DoubleSupport::lessThan(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                theRHS.num());
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                theRHS.num(m_executionContext));
     }
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -549,8 +539,8 @@ private:
 struct
 lessThanOrEqualDOMString
 {
-    lessThanOrEqualDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    lessThanOrEqualDOMString(XPathExecutionContext&     theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
     }
 
@@ -560,8 +550,8 @@ lessThanOrEqualDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::lessThanOrEqual(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -570,8 +560,8 @@ lessThanOrEqualDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::lessThanOrEqual(
-                theLHS.num(),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                theLHS.num(m_executionContext),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -580,11 +570,13 @@ lessThanOrEqualDOMString
             const XObject&          theRHS) const
     {
         return DoubleSupport::lessThanOrEqual(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                theRHS.num());
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                theRHS.num(m_executionContext));
     }
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -592,8 +584,8 @@ private:
 struct
 greaterThanDOMString
 {
-    greaterThanDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    greaterThanDOMString(XPathExecutionContext&     theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
     }
 
@@ -603,8 +595,8 @@ greaterThanDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::greaterThan(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -613,8 +605,8 @@ greaterThanDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::greaterThan(
-                theLHS.num(),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                theLHS.num(m_executionContext),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -623,11 +615,13 @@ greaterThanDOMString
             const XObject&          theRHS) const
     {
         return DoubleSupport::greaterThan(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                theRHS.num());
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                theRHS.num(m_executionContext));
     }
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -635,10 +629,10 @@ private:
 struct
 greaterThanOrEqualDOMString
 {
-    greaterThanOrEqualDOMString(MemoryManagerType& theManager) :
-    m_memoryManager(theManager)
+    greaterThanOrEqualDOMString(XPathExecutionContext&  theExecutionContext) :
+        m_executionContext(theExecutionContext)
     {
-    } 
+    }
 
     bool
     operator()(
@@ -646,8 +640,8 @@ greaterThanOrEqualDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::greaterThanOrEqual(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -656,8 +650,8 @@ greaterThanOrEqualDOMString
             const XalanDOMString&   theRHS) const
     {
         return DoubleSupport::greaterThanOrEqual(
-                theLHS.num(),
-                DOMStringToDouble(theRHS, m_memoryManager));
+                theLHS.num(m_executionContext),
+                DOMStringToDouble(theRHS, m_executionContext.getMemoryManager()));
     }
 
     bool
@@ -666,11 +660,13 @@ greaterThanOrEqualDOMString
             const XObject&          theRHS) const
     {
         return DoubleSupport::greaterThanOrEqual(
-                DOMStringToDouble(theLHS, m_memoryManager),
-                theRHS.num());
+                DOMStringToDouble(theLHS, m_executionContext.getMemoryManager()),
+                theRHS.num(m_executionContext));
     }
+
 private:
-        MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -854,9 +850,9 @@ compareNodeSets(
         // performing the comparison on the boolean and on the result of 
         // converting the node-set to a boolean using the boolean function 
         // is true.
-        const double    num1 = theLHS.boolean() == true ? 1.0 : 0.0;
+        const double    num1 = theLHS.boolean(executionContext) == true ? 1.0 : 0.0;
 
-        theResult = theNumberCompareFunction(num1, theRHS.num());
+        theResult = theNumberCompareFunction(num1, theRHS.num(executionContext));
     }
     else if(theRHSType == XObject::eTypeNumber)
     {
@@ -878,13 +874,13 @@ compareNodeSets(
         theResult = doCompareNumber(
                 theLHS.nodeset(),
                 getNumberFromNodeFunction(executionContext),
-                theRHS.num(),
+                theRHS.num(executionContext),
                 theNumberCompareFunction);
     }
     else if(theRHSType == XObject::eTypeResultTreeFrag)
     {
         // hmmm... 
-        const double    theRHSNumber = theRHS.num();
+        const double    theRHSNumber = theRHS.num(executionContext);
 
         if(DoubleSupport::isNaN(theRHSNumber) == false)
         {
@@ -892,7 +888,7 @@ compareNodeSets(
             theResult = doCompareNumber(
                     theLHS.nodeset(),
                     getNumberFromNodeFunction(executionContext),
-                    theRHS.num(),
+                    theRHS.num(executionContext),
                     theNumberCompareFunction);
         }
         else
@@ -949,7 +945,7 @@ equalNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                equalsDOMString(executionContext.getMemoryManager()),
+                equalsDOMString(executionContext),
                 DoubleSupport::equalFunction(),
                 executionContext);
 }
@@ -967,7 +963,7 @@ notEqualNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                notEqualsDOMString(executionContext.getMemoryManager()),
+                notEqualsDOMString(executionContext),
                 DoubleSupport::notEqualFunction(),
                 executionContext);
 }
@@ -985,7 +981,7 @@ lessThanNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                lessThanDOMString(executionContext.getMemoryManager()),
+                lessThanDOMString(executionContext),
                 DoubleSupport::lessThanFunction(),
                 executionContext);
 }
@@ -1003,7 +999,7 @@ lessThanOrEqualNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                lessThanOrEqualDOMString(executionContext.getMemoryManager()),
+                lessThanOrEqualDOMString(executionContext),
                 DoubleSupport::lessThanOrEqualFunction(),
                 executionContext);
 }
@@ -1021,7 +1017,7 @@ greaterThanNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                greaterThanDOMString(executionContext.getMemoryManager()),
+                greaterThanDOMString(executionContext),
                 DoubleSupport::greaterThanFunction(),
                 executionContext);
 }
@@ -1039,7 +1035,7 @@ greaterThanOrEqualNodeSet(
                 theLHS,
                 theRHS,
                 theRHSType,
-                greaterThanOrEqualDOMString(executionContext.getMemoryManager()),
+                greaterThanOrEqualDOMString(executionContext),
                 DoubleSupport::greaterThanOrEqualFunction(),
                 executionContext);
 }
@@ -1083,15 +1079,15 @@ XObject::equals(
             {
                 if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
                 {
-                    return boolean() == theRHS.boolean();
+                    return boolean(executionContext) == theRHS.boolean(executionContext);
                 }
                 else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
                 {
-                    return DoubleSupport::equal(num(), theRHS.num());
+                    return DoubleSupport::equal(num(executionContext), theRHS.num(executionContext));
                 }
                 else
                 {
-                    return str() == theRHS.str();
+                    return str(executionContext) == theRHS.str(executionContext);
                 }
             }
         }
@@ -1137,15 +1133,15 @@ XObject::notEquals(
             {
                 if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
                 {
-                    return boolean() != theRHS.boolean();
+                    return boolean(executionContext) != theRHS.boolean(executionContext);
                 }
                 else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
                 {
-                    return DoubleSupport::notEqual(num(), theRHS.num());
+                    return DoubleSupport::notEqual(num(executionContext), theRHS.num(executionContext));
                 }
                 else
                 {
-                    return str() != theRHS.str();
+                    return str(executionContext) != theRHS.str(executionContext);
                 }
             }
         }
@@ -1181,7 +1177,7 @@ XObject::lessThan(
         }
         else
         {
-            return DoubleSupport::lessThan(num(), theRHS.num());
+            return DoubleSupport::lessThan(num(executionContext), theRHS.num(executionContext));
         }
     }
 }
@@ -1215,7 +1211,7 @@ XObject::lessThanOrEquals(
         }
         else
         {
-            return DoubleSupport::lessThanOrEqual(num(), theRHS.num());
+            return DoubleSupport::lessThanOrEqual(num(executionContext), theRHS.num(executionContext));
         }
     }
 }
@@ -1249,7 +1245,7 @@ XObject::greaterThan(
         }
         else
         {
-            return DoubleSupport::greaterThan(num(), theRHS.num());
+            return DoubleSupport::greaterThan(num(executionContext), theRHS.num(executionContext));
         }
     }
 }
@@ -1283,10 +1279,31 @@ XObject::greaterThanOrEquals(
         }
         else
         {
-            return DoubleSupport::greaterThanOrEqual(num(), theRHS.num());
+            return DoubleSupport::greaterThanOrEqual(num(executionContext), theRHS.num(executionContext));
         }
     }
 }
+
+
+
+void
+XObject::throwInvalidConversionException(const XalanDOMString&  theTargetType) const
+{
+    assert(m_memoryManager != 0);
+
+    MemoryManager* const    theMemoryManager =
+        m_memoryManager->getExceptionMemoryManager();
+    assert(theMemoryManager != 0);
+
+    XalanDOMString  theBuffer(*theMemoryManager);
+
+    throw XObjectInvalidConversionException(
+                *theMemoryManager,
+                getTypeString(),
+                theTargetType,
+                theBuffer);
+}
+
 
 
 const XalanDOMChar  XObject::XObjectException::m_type[] = 
@@ -1311,21 +1328,30 @@ const XalanDOMChar  XObject::XObjectException::m_type[] =
 };
 
 
+
 XObject::XObjectException::XObjectException(
                 const XalanDOMString&   message,
-                MemoryManagerType&      theManager) :
-    XalanXPathException(message, theManager)
+                MemoryManager&          theManager) :
+    XalanXPathException(
+        message,
+        theManager)
 {
 }
-XObject::XObjectException::XObjectException( const XObjectException& other):
+
+    
+    
+XObject::XObjectException::XObjectException(const XObjectException&     other):
     XalanXPathException(other)
 {
 }
 
 
+
 XObject::XObjectException::~XObjectException()
 {
 }
+
+
 
 const XalanDOMChar  XObject::XObjectInvalidConversionException::m_type[] = 
 {   
@@ -1350,8 +1376,6 @@ const XalanDOMChar  XObject::XObjectInvalidConversionException::m_type[] =
     XalanUnicode::charLetter_e,
     XalanUnicode::charLetter_r,
     XalanUnicode::charLetter_s,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_t,
     XalanUnicode::charLetter_i,
     XalanUnicode::charLetter_o,
     XalanUnicode::charLetter_n,
@@ -1367,23 +1391,29 @@ const XalanDOMChar  XObject::XObjectInvalidConversionException::m_type[] =
     0
 };
 
+
+
 XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
-                                eObjectType fromType,
-                                eObjectType toType):
-            XObjectException(), 
-            m_from(fromType),
-            m_to(toType)
+            MemoryManager&          memoryManager,
+		    const XalanDOMString&   fromType,
+            const XalanDOMString&   toType,
+            XalanDOMString&         buffer) :
+    XObjectException(
+        formatErrorString(
+            fromType,
+            toType,
+            buffer),
+        memoryManager)
 {
 }
+
+
 
 XObject::XObjectInvalidConversionException::XObjectInvalidConversionException( 
-    const XObjectInvalidConversionException& other) :
-    XObjectException(other),
-     m_from(other.m_from),
-     m_to(other.m_to)
+            const XObjectInvalidConversionException& other) :
+     XObjectException(other)
 {
 }
-
 
 
 
@@ -1399,13 +1429,11 @@ XObject::XObjectInvalidConversionException::formatErrorString(
                 const XalanDOMString&   toType,
                 XalanDOMString&         theResult)
 {
-
     return XalanMessageLoader::getMessage(
                 theResult,
                 XalanMessages::CannotConvertTypetoType_2Param,
                 fromType,
                 toType);
-
 }
 
 

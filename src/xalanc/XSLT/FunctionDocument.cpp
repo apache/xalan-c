@@ -314,7 +314,7 @@ FunctionDocument::doExecute(
     const XObject::eObjectType          theType = arg->getType();
 
     const NodeRefListBase::size_type    nRefs = XObject::eTypeNodeSet == theType ?
-        arg->nodeset().getLength()
+                                                arg->nodeset().getLength()
                                                 : 1;
 
     for(NodeRefListBase::size_type i = 0; i < nRefs; i++)
@@ -330,14 +330,14 @@ FunctionDocument::doExecute(
 
         if (theType != XObject::eTypeNodeSet)
         {
-            ref = arg->str();
+            ref = arg->str(executionContext);
         }
         else
         {
             resolver = arg->nodeset().item(i);
             assert(resolver != 0);
 
-            DOMServices::getNodeData(*resolver,ref);
+            DOMServices::getNodeData(*resolver, executionContext, ref);
         }
 
         // This is the case where the function was called with

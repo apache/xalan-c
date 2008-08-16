@@ -286,7 +286,7 @@ KeyTable::processKeyDeclaration(
 
         addIfNotFound(
             executionContext,
-            theKeys[*kd.getQName()][xuse->str()],
+            theKeys[*kd.getQName()][xuse->str(executionContext)],
             testNode);
     }
     else
@@ -309,7 +309,7 @@ KeyTable::processKeyDeclaration(
             // expression.
             assert(nl.item(i) != 0);
 
-            DOMServices::getNodeData(*nl.item(i), nodeData);
+            DOMServices::getNodeData(*nl.item(i), executionContext, nodeData);
 
             assert(kd.getQName() != 0);
 

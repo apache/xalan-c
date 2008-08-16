@@ -30,6 +30,10 @@
 
 
 
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -38,28 +42,46 @@ class XALAN_XPATH_EXPORT XToken : public XObject
 {
 public:
 
-	XToken();
-
 	/**
+	 * Create an XToken.
+	 *
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XToken(MemoryManager&   theMemoryManager);
+
+    /**
 	 * Create an XToken for string in the token queue.
 	 *
 	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
-	explicit
-	XToken(const XalanDOMString&	theString,
-            MemoryManagerType&      theManager);
+	XToken(
+            const XalanDOMString&	theString,
+			double					theNumber,
+            MemoryManager&          theMemoryManager);
 
 	/**
 	 * Create an XToken for number in the token queue.
 	 *
 	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
 	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 * @param theMemoryManager The MemoryManager instance.
 	 */
 	XToken(
 			double					theNumber,
-			const XalanDOMString&	theString);
+			const XalanDOMString&	theString,
+            MemoryManager&          theMemoryManager);
 
-	XToken(const XToken&	theSource);
+	/**
+	 * Create an XToken from another one.
+	 *
+	 * @param theSource The source XToken instance.
+	 * @param theMemoryManager The MemoryManager instance.
+	 */
+	XToken(
+            const XToken&	theSource,
+            MemoryManager&  theMemoryManager);
 
 	virtual
 	~XToken();
@@ -68,24 +90,38 @@ public:
 	getTypeString() const;
 
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
@@ -103,14 +139,40 @@ public:
 		return *this;
 	}
 
+    bool
+    boolean() const
+    {
+        assert(m_stringValue != 0);
+
+        return m_isString == true ? XObject::boolean(*m_stringValue) : XObject::boolean(m_numberValue);
+    }
+
+    double
+    num() const
+    {
+        assert(m_stringValue != 0);
+
+        return m_numberValue;
+    }
+
+    double
+    stringLength() const
+    {
+        assert(m_stringValue != 0);
+
+        return static_cast<double>(m_stringValue->length());
+    }
+
 	/**
 	 * Set the instance as a string in the token queue.
 	 *
 	 * @param theString The string data for the token.  XToken will keep a point to this string, so it must be persistent.
+	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
 	 */
-	void
-	set(const XalanDOMString&	theString,
-        MemoryManagerType& theManager);
+    void
+    set(
+            const XalanDOMString&   theString,
+            double                  theNumber);
 
 	/**
 	 * Set the instance as a number in the token queue.
@@ -120,9 +182,8 @@ public:
 	 */
 	void
 	set(
-			double					theNumber,
-			const XalanDOMString&	theString,
-            MemoryManagerType&      theManager);
+            double                  theNumber,
+            const XalanDOMString&   theString);
 
 protected:
 
@@ -145,6 +206,10 @@ private:
 
 	bool					m_isString;
 };
+
+
+
+XALAN_USES_MEMORY_MANAGER(XToken)
 
 
 

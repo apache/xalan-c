@@ -57,26 +57,27 @@ public:
 	/**
 	 * Construct an XResultTreeFrag object from a result tree fragment
 	 * 
-	 * @param val source result tree fragment.
+	 * @param value The source result tree fragment.
+     * @param theManager The MemoryManager for this instance.
 	 */
-	XResultTreeFrag(XalanDocumentFragment&		value,
-                    MemoryManagerType& theManager);
+	XResultTreeFrag(
+            XalanDocumentFragment&	value,
+            MemoryManager&          theManager);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
 	 * 
 	 * @param source     source XResultTreeFrag
-	 * @param deepClone  true to copy all subobjects, default is false
+     * @param theManager The MemoryManager for this instance.
 	 */
 	XResultTreeFrag(
 			const XResultTreeFrag&	source,
-            MemoryManagerType&      theManager,
-			bool					deepClone = false);
+            MemoryManager&          theManager);
 
 	virtual
 	~XResultTreeFrag();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()const
     {
         return m_cachedStringValue.getMemoryManager();
@@ -94,30 +95,41 @@ public:
 	getTypeString() const;
   
 	virtual double
-	num() const;
+	num(XPathExecutionContext&  executionContext) const;
 
 	virtual bool
-	boolean() const;
+	boolean(XPathExecutionContext&  executionContext) const;
+
+	virtual const XalanDOMString&
+	str(XPathExecutionContext&  executionContext) const;
 
 	virtual const XalanDOMString&
 	str() const;
 
 	virtual void
 	str(
- 			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+            XPathExecutionContext&  executionContext,
+ 			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	str(
+ 			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
+
+	virtual void
+	str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&	        theBuffer) const;
+
+	virtual void
+	str(XalanDOMString&     theBuffer) const;
 
 	virtual double
-	stringLength() const;
+	stringLength(XPathExecutionContext&     executionContext) const;
 
 	virtual const XalanDocumentFragment&
 	rtree() const;
-
-	virtual const NodeRefListBase&
-	nodeset() const;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);

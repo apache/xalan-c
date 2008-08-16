@@ -34,6 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+class XPathExecutionContext;
 class XObject;
 
 
@@ -46,7 +47,7 @@ public:
 	 * Perform static initialization.  See class XPathInit.
 	 */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager&   theManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.
@@ -59,10 +60,12 @@ public:
 	 *
 	 * @param theXObject The XObject instance for which this is a proxy.
      * @param theManager The MemoryManager for this instance.
+     * @param theExecutionContext An optional XPathExecutionContext instance.
 	 */
 	XObjectResultTreeFragProxyText(
-                const XObject&	theXObject,
-                MemoryManager&  theManager);
+                const XObject&          theXObject,
+                MemoryManager&          theManager,
+                XPathExecutionContext*  theExecutionContext);
 
 	virtual
 	~XObjectResultTreeFragProxyText();
@@ -71,6 +74,12 @@ public:
     getMemoryManager()
     {
         return m_memoryManager;
+    }
+
+    XPathExecutionContext*
+    getExecutionContext()
+    {
+        return m_executionContext;
     }
 
     // These interfaces are inherited from XalanText...
@@ -128,7 +137,6 @@ public:
 	virtual bool
 	isWhitespace() const;
 
-
 private:
 
 	// Not implemented...
@@ -140,9 +148,11 @@ private:
 
 
 	// Data members...
-	const XObject&	m_value;
+	const XObject&          m_value;
 
-    MemoryManager&  m_memoryManager;
+    MemoryManager&          m_memoryManager;
+
+    XPathExecutionContext*  m_executionContext;
 
     static const XalanDOMString&	s_nameString;
 };

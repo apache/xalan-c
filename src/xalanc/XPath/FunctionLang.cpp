@@ -72,7 +72,7 @@ FunctionLang::execute(
 
     bool                    fMatch = false;
 
-    const XalanDOMString&   lang = arg1->str();
+    const XalanDOMString&   lang = arg1->str(executionContext);
 
     while(0 != parent)
     {

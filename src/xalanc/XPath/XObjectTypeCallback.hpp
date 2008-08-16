@@ -39,6 +39,7 @@ class MutableNodeRefList;
 class NodeRefListBase;
 class XalanDocumentFragment;
 class XObject;
+class XPathExecutionContext;
 
 
 
@@ -54,7 +55,7 @@ class XALAN_XPATH_EXPORT XObjectTypeCallback
 {
 public:
 
-	XObjectTypeCallback(MemoryManagerType& theManager);
+	XObjectTypeCallback(XPathExecutionContext&  theExecutionContext);
 
 	virtual
 	~XObjectTypeCallback();
@@ -138,13 +139,23 @@ public:
 	virtual void
 	Null(const XObject&		theObject) = 0;
 
-    MemoryManagerType&
+    XPathExecutionContext&
+    getExecutionContext()
+    {
+        return m_executionContext;
+    }
+
+    /*
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
     }
+    */
+
 private:
-    MemoryManagerType& m_memoryManager;
+
+    XPathExecutionContext&  m_executionContext;
 };
 
 

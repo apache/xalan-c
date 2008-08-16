@@ -235,6 +235,89 @@ DOMServices::getNodeData(
 
 
 
+void
+DOMServices::doGetNodeData(
+			const XalanNode&	node,
+            ExecutionContext&   executionContext,
+			XalanDOMString&		data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+    switch(node.getNodeType())
+	{
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		{
+			const XalanDocumentFragment&		theDocumentFragment =
+				static_cast<const XalanDocumentFragment&>(node);
+
+			doGetNodeData(theDocumentFragment, executionContext, data);
+		}
+		break;
+
+	case XalanNode::DOCUMENT_NODE:
+		{
+			const XalanDocument&	theDocument =
+				static_cast<const XalanDocument&>(node);
+
+			doGetNodeData(theDocument, executionContext, data);
+		}
+		break;
+
+	case XalanNode::ELEMENT_NODE:
+		{
+			const XalanElement&		theElement =
+				static_cast<const XalanElement&>(node);
+
+			doGetNodeData(theElement, executionContext, data);
+		}
+		break;
+
+	case XalanNode::TEXT_NODE:
+	case XalanNode::CDATA_SECTION_NODE:
+		{
+			const XalanText&	theTextNode =
+				static_cast<const XalanText&>(node);
+
+				doGetNodeData(theTextNode, executionContext, data);
+		}
+		break;
+
+	case XalanNode::ATTRIBUTE_NODE:
+		{
+			const XalanAttr&		theAttr =
+				static_cast<const XalanAttr&>(node);
+
+			getNodeData(theAttr, data);
+		}
+		break;
+
+	case XalanNode::COMMENT_NODE:
+		{
+			const XalanComment&		theComment =
+				static_cast<const XalanComment&>(node);
+
+			getNodeData(theComment, data);
+		}
+		break;
+
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		{
+			const XalanProcessingInstruction&		thePI =
+				static_cast<const XalanProcessingInstruction&>(node);
+
+			getNodeData(thePI, data);
+		}
+		break;
+
+	default:
+		// ignore
+		break;
+	}
+}
+
+
+
+
 inline void
 getChildData(
 			const XalanNode*	child,
@@ -262,6 +345,35 @@ getChildData(
 
 
 inline void
+getChildData(
+			const XalanNode*	child,
+            ExecutionContext&   executionContext,
+			XalanDOMString&		data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	const XalanNode::NodeType	theType = child->getNodeType();
+
+	if (theType == XalanNode::ELEMENT_NODE)
+	{
+		const XalanElement*	const	theElementNode =
+				static_cast<const XalanElement*>(child);
+
+		DOMServices::doGetNodeData(*theElementNode, executionContext, data);
+	}
+	else if (theType == XalanNode::TEXT_NODE ||
+			 theType == XalanNode::CDATA_SECTION_NODE)
+	{
+		const XalanText*	theTextNode =
+				static_cast<const XalanText*>(child);
+
+		DOMServices::doGetNodeData(*theTextNode, executionContext, data);
+	}
+}
+
+
+
+inline void
 getChildrenData(
 			const XalanNode*	firstChild,
 			XalanDOMString&		data)
@@ -269,6 +381,24 @@ getChildrenData(
 	while(firstChild != 0)
 	{
 		getChildData(firstChild, data);
+
+		firstChild = firstChild->getNextSibling();
+	}
+}
+
+
+
+inline void
+getChildrenData(
+			const XalanNode*	firstChild,
+            ExecutionContext&   executionContext,
+			XalanDOMString&		data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	while(firstChild != 0)
+	{
+		getChildData(firstChild, executionContext, data);
 
 		firstChild = firstChild->getNextSibling();
 	}
@@ -284,6 +414,25 @@ DOMServices::getNodeData(
 	assert(document.getDocumentElement() != 0);
 
 	getChildrenData(document.getDocumentElement(), data);
+}
+
+
+
+
+
+void
+DOMServices::doGetNodeData(
+			const XalanDocument&	document,
+            ExecutionContext&       executionContext,
+			XalanDOMString&			data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+	assert(document.getDocumentElement() != 0);
+
+	getChildrenData(
+        document.getDocumentElement(),
+        executionContext,
+        data);
 }
 
 
@@ -307,11 +456,43 @@ DOMServices::getNodeData(
 
 
 void
+DOMServices::doGetNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               executionContext,
+			XalanDOMString&					data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	for(const XalanNode* child = documentFragment.getFirstChild(); child != 0; child = child->getNextSibling())
+	{
+		assert(child != 0);
+
+		getChildData(child, executionContext, data);
+	}
+}
+
+
+
+
+void
 DOMServices::getNodeData(
 			const XalanElement&		element,
 			XalanDOMString&			data)
 {
 	getChildrenData(element.getFirstChild(), data);
+}
+
+
+
+void
+DOMServices::doGetNodeData(
+			const XalanElement&		element,
+            ExecutionContext&       executionContext,
+			XalanDOMString&			data)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	getChildrenData(element.getFirstChild(), executionContext, data);
 }
 
 
@@ -396,6 +577,89 @@ DOMServices::getNodeData(
 
 
 
+void
+DOMServices::doGetNodeData(
+			const XalanNode&	node,
+            ExecutionContext&   executionContext,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	switch(node.getNodeType())
+	{
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		{
+			const XalanDocumentFragment&		theDocumentFragment =
+				static_cast<const XalanDocumentFragment&>(node);
+
+			doGetNodeData(theDocumentFragment, executionContext, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::DOCUMENT_NODE:
+		{
+			const XalanDocument&	theDocument =
+				static_cast<const XalanDocument&>(node);
+
+			doGetNodeData(theDocument, executionContext, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::ELEMENT_NODE:
+		{
+			const XalanElement&		theElement =
+				static_cast<const XalanElement&>(node);
+
+			doGetNodeData(theElement, executionContext, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::TEXT_NODE:
+	case XalanNode::CDATA_SECTION_NODE:
+		{
+			const XalanText&	theTextNode =
+				static_cast<const XalanText&>(node);
+
+				doGetNodeData(theTextNode, executionContext, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::ATTRIBUTE_NODE:
+		{
+			const XalanAttr&		theAttr =
+				static_cast<const XalanAttr&>(node);
+
+			getNodeData(theAttr, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::COMMENT_NODE:
+		{
+			const XalanComment&		theComment =
+				static_cast<const XalanComment&>(node);
+
+			getNodeData(theComment, formatterListener, function);
+		}
+		break;
+
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		{
+			const XalanProcessingInstruction&		thePI =
+				static_cast<const XalanProcessingInstruction&>(node);
+
+			getNodeData(thePI, formatterListener, function);
+		}
+		break;
+
+	default:
+		// ignore
+		break;
+	}
+}
+
+
+
 inline void
 getChildData(
 			const XalanNode*				child,
@@ -424,6 +688,36 @@ getChildData(
 
 
 inline void
+getChildData(
+			const XalanNode*				child,
+            ExecutionContext&               executionContext,
+			FormatterListener&				formatterListener,
+			DOMServices::MemberFunctionPtr	function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	const XalanNode::NodeType	theType = child->getNodeType();
+
+	if (theType == XalanNode::ELEMENT_NODE)
+	{
+		const XalanElement*	const	theElementNode =
+				static_cast<const XalanElement*>(child);
+
+		DOMServices::getNodeData(*theElementNode, executionContext, formatterListener, function);
+	}
+	else if (theType == XalanNode::TEXT_NODE ||
+			 theType == XalanNode::CDATA_SECTION_NODE)
+	{
+		const XalanText*	theTextNode =
+				static_cast<const XalanText*>(child);
+
+		DOMServices::getNodeData(*theTextNode, executionContext, formatterListener, function);
+	}
+}
+
+
+
+inline void
 getChildrenData(
 			const XalanNode*				firstChild,
 			FormatterListener&				formatterListener,
@@ -439,13 +733,53 @@ getChildrenData(
 
 
 
+inline void
+getChildrenData(
+			const XalanNode*				firstChild,
+            ExecutionContext&               executionContext,
+			FormatterListener&				formatterListener,
+			DOMServices::MemberFunctionPtr	function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	while(firstChild != 0)
+	{
+		getChildData(firstChild, executionContext, formatterListener, function);
+
+		firstChild = firstChild->getNextSibling();
+	}
+}
+
+
+
 void
 DOMServices::getNodeData(
 			const XalanDocument&	document,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function)
 {
-	getChildrenData(document.getDocumentElement(), formatterListener, function);
+	getChildrenData(
+        document.getDocumentElement(),
+        formatterListener,
+        function);
+}
+
+
+
+void
+DOMServices::doGetNodeData(
+			const XalanDocument&	document,
+            ExecutionContext&       executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	getChildrenData(
+        document.getDocumentElement(),
+        executionContext,
+        formatterListener,
+        function);
 }
 
 
@@ -467,12 +801,52 @@ DOMServices::getNodeData(
 
 
 void
+DOMServices::doGetNodeData(
+			const XalanDocumentFragment&	documentFragment,
+            ExecutionContext&               executionContext,
+			FormatterListener&				formatterListener,
+			MemberFunctionPtr				function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	for(const XalanNode* child = documentFragment.getFirstChild(); child != 0; child = child->getNextSibling())
+	{
+		assert(child != 0);
+
+		getChildData(child, executionContext, formatterListener, function);
+	}
+}
+
+
+
+void
 DOMServices::getNodeData(
 			const XalanElement&		element,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function)
 {
-	getChildrenData(element.getFirstChild(), formatterListener, function);
+	getChildrenData(
+        element.getFirstChild(),
+        formatterListener,
+        function);
+}
+
+
+
+void
+DOMServices::doGetNodeData(
+			const XalanElement&		element,
+            ExecutionContext&       executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
+{
+    assert(executionContext.hasPreserveOrStripSpaceConditions() == true);
+
+	getChildrenData(
+        element.getFirstChild(),
+        executionContext,
+        formatterListener,
+        function);
 }
 
 
@@ -890,61 +1264,6 @@ DOMServices::isNodeAfterSibling(
 	}
 
 	return isNodeAfterSibling;
-}
-
-
-
-XalanNode*
-DOMServices::findOwnerElement(
-			const XalanNode&	attr,
-			XalanNode&			element)
-{
-
-    XalanNode*	parent = 0;
-
-	const XalanNamedNodeMap* const	attrs = element.getAttributes();
-
-	if (attrs != 0)
-	{
-		const XalanSize_t	nAttrs = attrs->getLength();
-
-		for (XalanSize_t i = 0; i < nAttrs; i++)
-		{
-			if (attrs->item(i) == &attr)
-			{
-				parent = &element;
-					
-				break;
-			}
-		}
-	}
-
-	if (parent == 0)
-    {
-		bool		fFound = false;
-
-		XalanNode*	child = element.getFirstChild();
-
-		while (child != 0 && fFound == false)
-		{
-			if (child->getNodeType() == XalanNode::ELEMENT_NODE)
-			{
-				parent = findOwnerElement(attr, *child);
-
-				if (parent != 0)
-				{
-					fFound = true;
-				}
-			}
-
-			if (fFound == false)
-			{
-				child = child->getNextSibling();
-			}
-		}
-    }
-
-	return parent;
 }
 
 

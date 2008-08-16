@@ -901,7 +901,9 @@ XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&  theToken)
     assert(thePosition < tokenQueueSize());
 
     // Set the entry in the token queue to the XObject.
-    m_tokenQueue[thePosition].set(theToken, getMemoryManager());
+    m_tokenQueue[thePosition].set(
+        theToken,
+        DoubleSupport::toDouble(theToken, getMemoryManager()));
 
     // Push the index onto the op map.
     m_opMap.push_back(thePosition);
@@ -924,7 +926,7 @@ XPathExpression::pushArgumentOnOpCodeMap(
     assert(thePosition < tokenQueueSize());
 
     // Set the entry in the token queue to the XObject.
-    m_tokenQueue[thePosition].set(theNumber, theString, getMemoryManager());
+    m_tokenQueue[thePosition].set(theNumber, theString);
 
     // Push the index onto the op map.
     m_opMap.push_back(thePosition);

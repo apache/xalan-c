@@ -52,7 +52,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XStringAdapterAllocator(
+            MemoryManager&  theManager,
+            size_type       theBlockCount);
 
 	~XStringAdapterAllocator();
 
@@ -64,7 +66,9 @@ public:
 	 * @return a pointer to string
 	 */
 	string_type*
-	createString(const XObjectPtr&	theXObject);
+	createString(
+            const XObjectPtr&	    theXObject,
+            XPathExecutionContext&  theExecutionContext);
 
 
 	/**

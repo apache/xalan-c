@@ -28,8 +28,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenStringAdapter::XTokenStringAdapter(const XToken&	    theToken,
-                                         MemoryManagerType& theManager) :
+XTokenStringAdapter::XTokenStringAdapter(
+            const XToken&	    theToken,
+            MemoryManager&      theManager) :
 	XStringBase(theManager),
 	m_value(theToken)
 {
@@ -37,8 +38,9 @@ XTokenStringAdapter::XTokenStringAdapter(const XToken&	    theToken,
 
 
 
-XTokenStringAdapter::XTokenStringAdapter(const XTokenStringAdapter&		source,
-                                         MemoryManagerType&             theManager) :
+XTokenStringAdapter::XTokenStringAdapter(
+            const XTokenStringAdapter&	source,
+            MemoryManager&              theManager) :
 	XStringBase(source, theManager),
 	m_value(source.m_value)
 {
@@ -53,7 +55,7 @@ XTokenStringAdapter::~XTokenStringAdapter()
 
 
 double
-XTokenStringAdapter::num() const
+XTokenStringAdapter::num(XPathExecutionContext&     /* executionContext */) const
 {
 	return m_value.num();
 }
@@ -61,33 +63,62 @@ XTokenStringAdapter::num() const
 
 
 const XalanDOMString&
-XTokenStringAdapter::str() const
+XTokenStringAdapter::str(XPathExecutionContext&     /* executionContext */) const
 {
 	return m_value.str();
 }
 
 
 
-void
-XTokenStringAdapter::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+const XalanDOMString&
+XTokenStringAdapter::str() const
 {
-	m_value.str( formatterListener, function);
+    return m_value.str();
 }
 
 
 
 void
-XTokenStringAdapter::str(XalanDOMString&	theBuffer) const
+XTokenStringAdapter::str(
+            XPathExecutionContext&  /* executionContext */,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	m_value.str(theBuffer);
+	m_value.str(formatterListener, function);
+}
+
+
+
+void
+XTokenStringAdapter::str(
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
+{
+	m_value.str(formatterListener, function);
+}
+
+
+
+void
+XTokenStringAdapter::str(
+            XPathExecutionContext&  /* executionContext */,
+            XalanDOMString&	        theBuffer) const
+{
+	theBuffer.append(m_value.str());
+}
+
+
+
+void
+XTokenStringAdapter::str(XalanDOMString&    theBuffer) const
+{
+	theBuffer.append(m_value.str());
 }
 
 
 
 double
-XTokenStringAdapter::stringLength() const
+XTokenStringAdapter::stringLength(XPathExecutionContext&    /* executionContext */) const
 {
 	return m_value.stringLength();
 }
