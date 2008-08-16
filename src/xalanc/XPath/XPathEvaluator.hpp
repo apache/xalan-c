@@ -62,6 +62,7 @@ class XalanElement;
 class XObjectPtr;
 class XPath;
 class XPathEnvSupport;
+class XPathExecutionContext;
 
 
 
@@ -378,12 +379,7 @@ public:
 	destroyXPath(XPath*		theXPath);
 
     XPathExecutionContext&
-    getExecutionContext()
-    {
-        assert(m_executionContext.get() != 0);
-
-        return *m_executionContext.get();
-    }
+    getExecutionContext();
 
 private:
 

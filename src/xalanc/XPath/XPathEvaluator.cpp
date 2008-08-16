@@ -516,4 +516,14 @@ XPathEvaluator::evaluate(
 
 
 
+XPathExecutionContext&
+XPathEvaluator::getExecutionContext()
+{
+    assert(m_executionContext.get() != 0);
+
+    return *m_executionContext.get();
+}
+
+
+
 XALAN_CPP_NAMESPACE_END
