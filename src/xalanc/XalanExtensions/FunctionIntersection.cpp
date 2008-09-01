@@ -53,9 +53,10 @@ FunctionIntersection::execute(
 {
     if (args.size() != 2)
     {
-        XalanDOMString theResult(executionContext.getMemoryManager());
-
-        executionContext.error(getError(theResult), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);

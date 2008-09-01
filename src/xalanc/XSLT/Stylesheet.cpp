@@ -30,11 +30,9 @@
 
 
 #include <xalanc/Include/STLHelper.hpp>
-
-
-#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
-
 #include <xalanc/Include/XalanMemMgrHelper.hpp>
+
+
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
 
@@ -128,9 +126,9 @@ Stylesheet::Stylesheet(
     {
         try
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
+            const GetCachedString   theGuard(constructionContext);
 
-            XalanDOMString& urlString = theGuard.get();
+            XalanDOMString&     urlString = theGuard.get();
 
             constructionContext.getURLStringFromString(m_baseIdent, urlString);
 
@@ -201,6 +199,32 @@ Stylesheet::~Stylesheet()
 
 
 
+void
+Stylesheet::error(
+            StylesheetConstructionContext&  theContext,
+            XalanMessages::Codes            theErrorCode,
+            const Locator*                  theLocator,
+            const XalanDOMChar*             theParam1,
+            const XalanDOMChar*             theParam2,
+            const XalanDOMChar*             theParam3) const
+{
+    const GetCachedString   theGuard(theContext);
+
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
+        XalanMessageLoader::getMessage(
+            theGuard.get(),
+            theErrorCode,
+            theParam1,
+            theParam2,
+            theParam3),
+        theLocator,
+        0);
+}
+
+
+
 ElemTemplateElement*
 Stylesheet::initWrapperless(
             StylesheetConstructionContext&  constructionContext,
@@ -208,13 +232,9 @@ Stylesheet::initWrapperless(
 {
     if (m_isWrapperless == true)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::StylesheetHasWrapperlessTemplate),
-            0,
+        error(
+            constructionContext,
+            XalanMessages::StylesheetHasWrapperlessTemplate,
             locator);
     }
 
@@ -266,25 +286,24 @@ Stylesheet::processKeyElement(
         {
             theQName = constructionContext.createXalanQName(atts.getValue(i), m_namespaces, locator);
 
+            // $$$TODO: It's not clear of this code will ever be executed, since
+            // constructing an invalid QName is not possibly right now.
+            assert(theQName->isValid() == true);
             if (theQName->isValid() == false)
             {
-                const GetAndReleaseCachedString     theGuard(constructionContext);
-
-                constructionContext.error(
-                        XalanMessageLoader::getMessage(
-                            theGuard.get(),
-                            XalanMessages::AttributeValueNotValidQName_2Param,
-                            Constants::ATTRNAME_NAME.c_str(),
-                            atts.getValue(i)),
-                        0,
-                        locator);
+                error(
+                    constructionContext,
+                    XalanMessages::AttributeValueNotValidQName_2Param,
+                    locator,
+                    Constants::ATTRNAME_NAME.c_str(),
+                    atts.getValue(i));
             }
         }
         else if(equals(aname, Constants::ATTRNAME_MATCH))
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
+            const GetCachedString   theGuard(constructionContext);
 
-            XalanDOMString& theBuffer = theGuard.get();
+            XalanDOMString&     theBuffer = theGuard.get();
 
             theBuffer.assign(atts.getValue(i));
 
@@ -308,59 +327,43 @@ Stylesheet::processKeyElement(
         }
         else if (isAttrOK(aname, atts, i, constructionContext) == false)
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
-
-            constructionContext.error(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::ElementHasIllegalAttribute_2Param,
-                    Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
-                    aname),
-                0,
-                locator);
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                locator,
+                Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
+                aname);
         }
     }
 
     if (0 == theQName)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::ElementRequiresAttribute_2Param,
-                Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
-                Constants::ATTRNAME_NAME),
-            0,
-            locator);
+        error(
+            constructionContext,
+            XalanMessages::ElementRequiresAttribute_2Param,
+            locator,
+            Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
+            Constants::ATTRNAME_NAME.c_str());
     }
 
     if (0 == matchAttr)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::ElementRequiresAttribute_2Param,
-                Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
-                Constants::ATTRNAME_MATCH),
-            0,
-            locator);
+        error(
+            constructionContext,
+            XalanMessages::ElementRequiresAttribute_2Param,
+            locator,
+            Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
+            Constants::ATTRNAME_MATCH.c_str());
     }
 
     if (0 == useAttr)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::ElementRequiresAttribute_2Param,
-                Constants::ELEMNAME_KEY_WITH_PREFIX_STRING,
-                Constants::ATTRNAME_USE),
-            0,
-            locator);
+        error(
+            constructionContext,
+            XalanMessages::ElementRequiresAttribute_2Param,
+            locator,
+            Constants::ELEMNAME_KEY_WITH_PREFIX_STRING.c_str(),
+            Constants::ATTRNAME_USE.c_str());
     }
 
     m_keyDeclarations.push_back(
@@ -646,7 +649,7 @@ Stylesheet::isAttrOK(
 
         if(indexOfNSSep < length(attrName))
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
+            const GetCachedString   theGuard(constructionContext);
 
             XalanDOMString&     prefix = theGuard.get();
 
@@ -698,13 +701,11 @@ Stylesheet::getNamespaceForPrefix(
 
     if (theURI == 0)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::PrefixIsNotDeclared_1Param,
-                prefix));
+        error(
+            constructionContext,
+            XalanMessages::PrefixIsNotDeclared_1Param,
+            constructionContext.getLocatorFromStack(),
+            prefix.c_str());
     }
 
     return theURI;
@@ -717,7 +718,7 @@ Stylesheet::getNamespaceForPrefix(
             const XalanDOMChar*             prefix,
             StylesheetConstructionContext&  constructionContext) const
 {
-    const GetAndReleaseCachedString     theGuard(constructionContext);
+    const GetCachedString   theGuard(constructionContext);
 
     XalanDOMString&     theTemp = theGuard.get();
 
@@ -730,7 +731,7 @@ Stylesheet::getNamespaceForPrefix(
 
 bool
 Stylesheet::getYesOrNo(
-            const XalanDOMChar*             /* aname */,
+            const XalanDOMChar*             aname,
             const XalanDOMChar*             val,
             StylesheetConstructionContext&  constructionContext) const
 {
@@ -744,14 +745,13 @@ Stylesheet::getYesOrNo(
     }
     else
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(), 
-                XalanMessages::AttributeMustBe_2Params,
-                Constants::ATTRVAL_YES,
-                Constants::ATTRVAL_NO));
+        error(
+            constructionContext,
+            XalanMessages::AttributeMustBe_3Params,
+            constructionContext.getLocatorFromStack(),
+            aname,
+            Constants::ATTRVAL_YES.c_str(),
+            Constants::ATTRVAL_NO.c_str());
 
         return false;
     }
@@ -770,21 +770,17 @@ Stylesheet::addTemplate(
     {
         if (m_firstTemplate != 0)
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
-
-            constructionContext.error(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::StylesheetHasWrapperlessTemplate),
-                0,
-                theTemplate);
+            error(
+                constructionContext,
+                XalanMessages::StylesheetHasWrapperlessTemplate,
+                theTemplate->getLocator());
         }
         else
         {
             m_firstTemplate = theTemplate;
         }
     }
-    else if(0 == m_firstTemplate)
+    else if (0 == m_firstTemplate)
     {
         m_firstTemplate = theTemplate;
     }
@@ -793,9 +789,9 @@ Stylesheet::addTemplate(
         ElemTemplateElement*    next = m_firstTemplate;
 
         // Find the last one, then append the new one.
-        while(0 != next)
+        while (0 != next)
         {
-            if(0 == next->getNextSiblingElem())
+            if (0 == next->getNextSiblingElem())
             {
                 next->setNextSiblingElem(theTemplate);
                 theTemplate->setNextSiblingElem(0); // just to play it safe.
@@ -811,7 +807,7 @@ Stylesheet::addTemplate(
     // and it to the map of named templates.
     const XalanQName&   theName = theTemplate->getNameAttribute();
 
-    if(theName.isEmpty() == false)
+    if (theName.isEmpty() == false)
     {
         if (m_namedTemplates.find(theName) == m_namedTemplates.end())
         {
@@ -819,15 +815,13 @@ Stylesheet::addTemplate(
         }
         else
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
+            const GetCachedString   theGuard(constructionContext);
 
-            // This is an error...
-            constructionContext.error(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::StylesheetHasDuplicateNamedTemplate),
-                0,
-                theTemplate);
+            error(
+                constructionContext,
+                XalanMessages::StylesheetHasDuplicateNamedTemplate_1Param,
+                theTemplate->getLocator(),
+                theName.format(theGuard.get()).c_str());
         }
     }
 
@@ -835,7 +829,7 @@ Stylesheet::addTemplate(
     // template.
     const XPath* const  xp = theTemplate->getMatchPattern();
 
-    if(0 != xp)
+    if (0 != xp)
     {
         /* Each string has a list of pattern tables associated with it; if the
          * string is not in the map, then create a list of pattern tables with one
@@ -851,14 +845,13 @@ Stylesheet::addTemplate(
         TargetDataVectorType::size_type nTargets =
                 data.size();
 
-        if(nTargets != 0)
+        if (nTargets != 0)
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
+            const GetCachedString   theGuard(constructionContext);
 
             XalanDOMString& tempString = theGuard.get();
 
-            for(TargetDataVectorType::size_type i = 0;
-                                i < nTargets; ++i) 
+            for (TargetDataVectorType::size_type i = 0; i < nTargets; ++i) 
             {
                 assert(data[i].getString() != 0);
                 
@@ -1193,7 +1186,7 @@ Stylesheet::findTemplate(
             const PatternTableVectorType::const_iterator    theTableEnd =
                     matchPatternList->end();
 
-            while(theCurrentEntry != theTableEnd)
+            while (theCurrentEntry != theTableEnd)
             {
                 const XalanMatchPatternData*    matchPat = *theCurrentEntry;
                 assert(matchPat != 0);
@@ -1261,7 +1254,7 @@ Stylesheet::findTemplate(
                 // Use a stack-based array when possible...
                 const XalanMatchPatternData*    conflictsArray[100];
 
-                XalanMemMgrAutoPtr<const XalanMatchPatternData*, true>      conflictsVector;
+                XalanVector<const XalanMatchPatternData*>   conflictsVector(executionContext.getMemoryManager());
 
                 const XalanMatchPatternData**   conflicts = 0;
 
@@ -1335,12 +1328,9 @@ Stylesheet::findTemplate(
                                     {
                                         if (m_patternCount > sizeof(conflictsArray) / sizeof(conflictsArray[0]))
                                         {
-                                            typedef XalanMemMngArrayAllocate<const XalanMatchPatternData*> ArrayAllocator;
-                                            //conflictsVector.reset(new const XalanMatchPatternData*[m_patternCount]);
-                                            conflictsVector.reset( &( executionContext.getMemoryManager()),
-                                                                      ArrayAllocator::allocate(m_patternCount, executionContext.getMemoryManager()));
+                                            conflictsVector.resize(m_patternCount);
 
-                                            conflicts = conflictsVector.get();
+                                            conflicts = conflictsVector.begin();
                                         }
                                         else
                                         {
@@ -1381,18 +1371,20 @@ Stylesheet::findTemplate(
 
                     bestMatchedRule = bestMatchedPattern->getTemplate();
 
-                    const XPathExecutionContext::GetAndReleaseCachedString  theGuard(executionContext);
+                    const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
-                    executionContext.warn(
+                    executionContext.problem(
+                        StylesheetExecutionContext::eXSLTProcessor,
+                        StylesheetExecutionContext::eWarning,
                         XalanMessageLoader::getMessage(
                             theGuard.get(),
                             XalanMessages::ConflictsFound),
-                        targetNode,
-                        bestMatchedRule->getLocator());
+                        bestMatchedRule->getLocator(),
+                        targetNode);
                 }
             }
 
-            if(0 == bestMatchedRule)
+            if (0 == bestMatchedRule)
             {
                 bestMatchedRule = findTemplateInImports(executionContext, targetNode, targetNodeType, mode);
             }
@@ -1430,7 +1422,7 @@ Stylesheet::pushTopLevelVariables(
         // First, push any imports...
         const StylesheetVectorType::const_reverse_iterator  rend = m_imports.rend();
 
-        for(StylesheetVectorType::const_reverse_iterator i = m_imports.rbegin(); i != rend; ++i)
+        for (StylesheetVectorType::const_reverse_iterator i = m_imports.rbegin(); i != rend; ++i)
         {
             const Stylesheet* const stylesheet = *i;
             assert(stylesheet != 0);
@@ -1441,7 +1433,7 @@ Stylesheet::pushTopLevelVariables(
 
     const ParamVectorType::size_type    nVars = m_topLevelVariables.size();
 
-    for(ParamVectorType::size_type i = 0; i < nVars; ++i)
+    for (ParamVectorType::size_type i = 0; i < nVars; ++i)
     {
         ElemVariable* const     var = m_topLevelVariables[i];
 
@@ -1510,42 +1502,52 @@ Stylesheet::processNSAliasElement(
     {
         const XalanDOMChar* const   aname = atts.getName(i);
 
-        if (equals(aname, Constants::ATTRNAME_STYLESHEET_PREFIX) == true)
+        if (aname == Constants::ATTRNAME_STYLESHEET_PREFIX)
         {
             const XalanDOMChar* const   value = atts.getValue(i);
 
             if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
             {
-                stylesheetNamespace = getNamespaceForPrefix(DOMServices::s_emptyString, constructionContext);
+                stylesheetNamespace =
+                    getNamespaceForPrefix(
+                        DOMServices::s_emptyString,
+                        constructionContext);
             }
             else
             {
-                stylesheetNamespace = getNamespaceForPrefix(value, constructionContext);
+                stylesheetNamespace =
+                    getNamespaceForPrefix(
+                        value,
+                        constructionContext);
             }
         }
-        else if (equals(aname, Constants::ATTRNAME_RESULT_PREFIX))
+        else if (aname == Constants::ATTRNAME_RESULT_PREFIX)
         {
             const XalanDOMChar* const   value = atts.getValue(i);
 
             if (equals(value, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
             {
-                resultNamespace = getNamespaceForPrefix(DOMServices::s_emptyString, constructionContext);
+                resultNamespace =
+                    getNamespaceForPrefix(
+                        DOMServices::s_emptyString,
+                        constructionContext);
             }
             else
             {
-                resultNamespace = getNamespaceForPrefix(value, constructionContext);
+                resultNamespace =
+                    getNamespaceForPrefix(
+                        value,
+                        constructionContext);
             }
         }
         else if (!isAttrOK(aname, atts, i, constructionContext))
         {
-            const GetAndReleaseCachedString     theGuard(constructionContext);
-
-            constructionContext.error(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::ElementHasIllegalAttribute_2Param,
-                    name,
-                    aname));
+            error(
+                constructionContext,
+                XalanMessages::ElementHasIllegalAttribute_2Param,
+                constructionContext.getLocatorFromStack(),
+                name,
+                aname);
         }
     }
 
@@ -1553,25 +1555,21 @@ Stylesheet::processNSAliasElement(
     // value is the result uri
     if (stylesheetNamespace == 0)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::ElementMustHaveAttribute_2Param,
-                name,
-                Constants::ATTRNAME_STYLESHEET_PREFIX.c_str()));
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            constructionContext.getLocatorFromStack(),
+            name,
+            Constants::ATTRNAME_STYLESHEET_PREFIX.c_str());
     }
     else if (resultNamespace == 0)
     {
-        const GetAndReleaseCachedString     theGuard(constructionContext);
-
-        constructionContext.error(
-            XalanMessageLoader::getMessage(
-                theGuard.get(),
-                XalanMessages::ElementMustHaveAttribute_2Param,
-                name,
-                Constants::ATTRNAME_RESULT_PREFIX.c_str()));
+        error(
+            constructionContext,
+            XalanMessages::ElementMustHaveAttribute_2Param,
+            constructionContext.getLocatorFromStack(),
+            name,
+            Constants::ATTRNAME_RESULT_PREFIX.c_str());
     }
     else
     {
@@ -1624,7 +1622,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanQName&   theQName) const
     const ElemDecimalFormatVectorType::size_type    theSize =
         m_elemDecimalFormats.size();
 
-    if(theSize > 0)
+    if (theSize > 0)
     {
         // Start from the top of the stack
         for (ElemDecimalFormatVectorType::size_type i = theSize; i > 0; --i)
@@ -1649,13 +1647,13 @@ Stylesheet::getDecimalFormatSymbols(const XalanQName&   theQName) const
     // with the given name. So go up the import hierarchy
     // and see if one of the imported stylesheets declared
     // it.
-    if(dfs == 0)
+    if (dfs == 0)
     {
-        for(StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
+        for (StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
         {
             dfs = m_imports[i]->getDecimalFormatSymbols(theQName);
 
-            if(dfs != 0)
+            if (dfs != 0)
             {
                 break;
             }

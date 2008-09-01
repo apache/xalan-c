@@ -673,11 +673,7 @@ public:
 		m_buildMaps = newState;
 	}
 
-#if XERCES_VERSION_MAJOR >= 2
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser 	DOMParserType;
-#else
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMParser		DOMParserType;
-#endif
 
 protected:
 

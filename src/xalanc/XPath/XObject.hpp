@@ -66,6 +66,8 @@ public:
 
 	friend class XObjectPtr;
 
+    typedef XPathExecutionContext::GetCachedString  GetCachedString;
+
 	/**
 	 * Enumeration of possible object types
 	 */
@@ -736,10 +738,14 @@ public:
 	{
 	public:
 
-		explicit
 		XObjectException(
 				const XalanDOMString&	theMessage,
                 MemoryManager&          theManager);
+
+		XObjectException(
+				const XalanDOMString&	theMessage,
+                MemoryManager&          theManager,
+                const Locator*          theLocator);
 
         XObjectException(const XObjectException&    other) ;
 
@@ -747,14 +753,11 @@ public:
 		~XObjectException();
 
 		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+		getType() const;
 
     private:
 
-		static const XalanDOMChar	m_type[];
+		static const XalanDOMChar	s_type[];
 	};
 
 	class XObjectInvalidConversionException : public XObjectException
@@ -773,14 +776,11 @@ public:
 		~XObjectInvalidConversionException();
 
 		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+		getType() const;
 
     private:
 
-		static const XalanDOMChar	m_type[];
+		static const XalanDOMChar	s_type[];
 
 		static const XalanDOMString&
 		formatErrorString(

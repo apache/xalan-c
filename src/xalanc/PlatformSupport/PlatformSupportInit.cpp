@@ -21,6 +21,7 @@
 
 
 #include "DoubleSupport.hpp"
+#include "DOMStringHelper.hpp"
 #include "XalanMessageLoader.hpp"
 #include "XalanTranscodingServices.hpp"
 
@@ -60,9 +61,11 @@ PlatformSupportInit::~PlatformSupportInit()
 
 
 void
-PlatformSupportInit::initialize(MemoryManagerType&      theManager)
+PlatformSupportInit::initialize(MemoryManager&  theManager)
 {
     DoubleSupport::initialize();
+
+    DOMStringHelper::initialize(theManager);
 
     XalanMessageLoader::initialize(theManager);
 
@@ -77,6 +80,8 @@ PlatformSupportInit::terminate()
     XalanTranscodingServices::terminate();
 
     XalanMessageLoader::terminate();
+
+    DOMStringHelper::terminate();
 
     DoubleSupport::terminate();
 }

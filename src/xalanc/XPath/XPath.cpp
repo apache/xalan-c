@@ -108,13 +108,15 @@ XPath::unknownOpCodeError(
 
     const GetCachedString   theGuard2(executionContext);
 
-    executionContext.error(
+    executionContext.problem(
+        XPathExecutionContext::eXPath,
+        XPathExecutionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard2.get(),
             XalanMessages::InvalidOpcodeWasDetected_1Param,
             theOpCode),
-        context,
-        m_locator);
+        m_locator,
+        context);
 }
 
 
@@ -128,12 +130,14 @@ XPath::notNodeSetError(
 
     XalanDOMString&     theBuffer = theGuard.get();
 
-    executionContext.error(
+    executionContext.problem(
+        XPathExecutionContext::eXPath,
+        XPathExecutionContext::eError,
         XalanMessageLoader::getMessage(
             theBuffer,
             XalanMessages::ExpressionDoesNotEvaluateToNodeSet),
-        context,
-        m_locator);
+        m_locator,
+        context);
 }
 
 
@@ -1403,12 +1407,14 @@ XPath::getMatchScore(
 
         XalanDOMString&     theBuffer = theGuard.get();
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theBuffer,
                 XalanMessages::CannotEvaluateXPathExpressionAsMatchPattern),
-            node,
-            m_locator);
+            m_locator,
+            node);
     }
     else
     {
@@ -2810,7 +2816,7 @@ XPath::functionSum(
     {
         assert(theNodeList->item(0) != 0);
 
-        const XPathExecutionContext::GetAndReleaseCachedString  theData(executionContext);
+        const GetCachedString   theData(executionContext);
 
         XalanDOMString&     theString = theData.get();
 
@@ -3342,15 +3348,17 @@ XPath::stepPattern(
             const GetCachedString   theGuard1(executionContext);
             const GetCachedString   theGuard2(executionContext);
 
-            executionContext.error(
+            executionContext.problem(
+                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
                     XalanMessages::UnknownMatchOpCode_1Param,
                     NumberToDOMString(
                         stepType,
                         theGuard2.get())),
-                context,
-                getLocator());
+                getLocator(),
+                context);
 
             break;
         }
@@ -4446,15 +4454,17 @@ XPath::findNodesOnUnknownAxis(
     const GetCachedString   theGuard1(executionContext);
     const GetCachedString   theGuard2(executionContext);
 
-    executionContext.error(
+    executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::UnknownAxis_1Param,
                 NumberToDOMString(
                     stepType,
                     theGuard2.get())),
-            context,
-            getLocator());
+            getLocator(),
+            context);
 
     return opPos + argLen + 3;
 }
@@ -4628,13 +4638,15 @@ XPath::NodeTester::NodeTester(
         {
             GetCachedString     theGuard(executionContext);
 
-            executionContext.error(
+            executionContext.problem(
+                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::ArgLengthNodeTestIsIncorrect_1Param,
                     "processing-instruction()"),
-                0,
-                xpath.getLocator());
+                xpath.getLocator(),
+                executionContext.getCurrentNode());
         }
         break;
 
@@ -4824,15 +4836,17 @@ XPath::NodeTester::initialize(
         {
             if (XalanQName::isValidNCName(theNameTest) == false)
             {
-                const XPathConstructionContext::GetAndReleaseCachedString   theGuard(theConstructionContext);
+                const XPathConstructionContext::GetCachedString     theGuard(theConstructionContext);
 
-                theConstructionContext.error(
+                theConstructionContext.problem(
+                    XPathConstructionContext::eXPath,
+                    XPathConstructionContext::eError,
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::IsNotValidQName_1Param,
                         theNameTest),
-                        0,
-                        theLocator);
+                        theLocator,
+                        0);
             }
             else
             {
@@ -4843,7 +4857,7 @@ XPath::NodeTester::initialize(
         }
         else
         {
-            const XPathConstructionContext::GetAndReleaseCachedString   scratchGuard(theConstructionContext);
+            const XPathConstructionContext::GetCachedString     scratchGuard(theConstructionContext);
 
             XalanDOMString&     theScratchString = scratchGuard.get();
 
@@ -4855,25 +4869,29 @@ XPath::NodeTester::initialize(
 
             if (theNamespaceURI == 0)
             {
-                theConstructionContext.error(
+                theConstructionContext.problem(
+                    XPathConstructionContext::eXPath,
+                    XPathConstructionContext::eError,
                     XalanMessageLoader::getMessage(
                         theScratchString,
                         XalanMessages::PrefixIsNotDeclared_1Param),
-                        0,
-                        theLocator);
+                        theLocator,
+                        0);
             }
             else
             {
                 // OK, now we have a namespace URI...
                 if (XalanQName::isValidNCName(theScratchString) == false)
                 {
-                    theConstructionContext.error(
+                    theConstructionContext.problem(
+                        XPathConstructionContext::eXPath,
+                        XPathConstructionContext::eError,
                         XalanMessageLoader::getMessage(
                             theScratchString,
                             XalanMessages::IsNotValidQName_1Param,
                             theNameTest),
-                            0,
-                            theLocator);
+                            theLocator,
+                            0);
                 }
                 else if (theIndex == theLength - 2 &&
                          theNameTest[theIndex + 1] == XPath::PSEUDONAME_ANY[0])
@@ -4889,13 +4907,15 @@ XPath::NodeTester::initialize(
 
                     if (XalanQName::isValidNCName(theScratchString) == false)
                     {
-                        theConstructionContext.error(
+                        theConstructionContext.problem(
+                            XPathConstructionContext::eXPath,
+                            XPathConstructionContext::eError,
                             XalanMessageLoader::getMessage(
                                 theScratchString,
                                 XalanMessages::IsNotValidQName_1Param,
                                 theNameTest),
-                            0,
-                            theLocator);
+                            theLocator,
+                            0);
                     }
                     else
                     {

@@ -149,9 +149,10 @@ XalanEXSLTFunctionObjectType::execute(
 
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);

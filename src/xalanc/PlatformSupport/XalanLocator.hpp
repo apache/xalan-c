@@ -64,6 +64,22 @@ public:
     virtual XalanFileLoc
     getColumnNumber() const = 0;
 
+    static const XalanDOMChar*
+    getPublicId(
+            const Locator*          theLocator,
+            const XalanDOMChar*     theAlternateId = 0)
+    {
+        return theLocator == 0 ? theAlternateId : theLocator->getPublicId();
+    }
+
+    static const XalanDOMChar*
+    getSystemId(
+            const Locator*          theLocator,
+            const XalanDOMChar*     theAlternateId = 0)
+    {
+        return theLocator == 0 ? theAlternateId : theLocator->getSystemId();
+    }
+
     static XalanFileLoc
     getLineNumber(const ParentType*     theLocator)
     {

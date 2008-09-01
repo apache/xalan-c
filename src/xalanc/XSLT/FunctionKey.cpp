@@ -104,15 +104,17 @@ FunctionKey::execute(
 
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "key()"),
-            context,
-            locator);
+            locator,
+            context);
 
         return XObjectPtr();
     }
@@ -124,10 +126,8 @@ FunctionKey::execute(
 
         assert(arg2.null() == false);
 
-        typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
-
         // This list will hold the nodes...
-        BorrowReturnMutableNodeRefList  theNodeRefList(executionContext);
+        GetCachedNodeList   theNodeRefList(executionContext);
 
         if (arg2->getType() != XObject::eTypeNodeSet)
         {
@@ -157,7 +157,7 @@ FunctionKey::execute(
             }
             else if (nRefs > 1)
             {
-                XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+                const GetCachedString   theResult(executionContext);
 
                 XalanDOMString&     ref = theResult.get();
 

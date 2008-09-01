@@ -50,7 +50,7 @@ public:
      * Perform static initialization.  See class PlatformSupportInit.
      */
     static void
-    initialize(MemoryManagerType&      theManager);
+    initialize(MemoryManager&   theManager);
  
     /**
      * Perform static shut down.  See class PlatformSupportInit.
@@ -96,14 +96,14 @@ public:
      */
     static XalanOutputTranscoder*
     makeNewTranscoder(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
             const XalanDOMString&   theEncodingName,
             eCode&                  theResult,
             size_type               theBlockSize);
 
     static XalanOutputTranscoder*
     makeNewTranscoder(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
             const XalanDOMChar*     theEncodingName,
             eCode&                  theResult,
             size_type               theBlockSize);
@@ -242,7 +242,8 @@ public:
         MakeTranscoderException(
                 eCode                   theCode,
                 const XalanDOMChar*     theEncoding,
-                XalanDOMString&         theBuffer);
+                XalanDOMString&         theBuffer,
+                const Locator*          theLocator = 0);
 
         MakeTranscoderException(const MakeTranscoderException&);
 
@@ -283,7 +284,8 @@ public:
         UnrepresentableCharacterException(
                 XalanUnicodeChar        theCharacter,
                 const XalanDOMString&   theEncoding,
-                XalanDOMString&         theBuffer);
+                XalanDOMString&         theBuffer,
+                const Locator*          theLocator = 0);
 
         UnrepresentableCharacterException(const UnrepresentableCharacterException&  theSource);
 

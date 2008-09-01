@@ -68,7 +68,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+typedef StylesheetConstructionContext::GetCachedString  GetCachedString;
 
 
 
@@ -108,7 +108,7 @@ StylesheetHandler::~StylesheetHandler()
 
 
 
-void StylesheetHandler::setDocumentLocator(const LocatorType* const     locator)
+void StylesheetHandler::setDocumentLocator(const Locator* const     locator)
 {
     m_constructionContext.pushLocatorOnStack(locator);
 
@@ -159,7 +159,7 @@ StylesheetHandler::processSpaceAttr(
             const LocatorType*          locator,
             bool&                       fPreserve)
 {
-    if(m_constructionContext.isXMLSpaceAttribute(aname, m_stylesheet, locator) == false)
+    if (m_constructionContext.isXMLSpaceAttribute(aname, m_stylesheet, locator) == false)
     {
         fPreserve = false;
 
@@ -169,17 +169,17 @@ StylesheetHandler::processSpaceAttr(
     {
         const XalanDOMChar* const   spaceVal = atts.getValue(which);
 
-        if(equals(spaceVal, Constants::ATTRVAL_DEFAULT))
+        if (equals(spaceVal, Constants::ATTRVAL_DEFAULT))
         {
             fPreserve = false;
         }
-        else if(equals(spaceVal, Constants::ATTRVAL_PRESERVE))
+        else if (equals(spaceVal, Constants::ATTRVAL_PRESERVE))
         {
             fPreserve = true;
         }
         else
         {
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             error(
                 XalanMessageLoader::getMessage(
@@ -259,7 +259,7 @@ StylesheetHandler::startElement(
         const XalanDOMString::size_type     nameLength = length(name);
         const XalanDOMString::size_type     index = indexOf(name, XalanUnicode::charColon);
 
-        const GetAndReleaseCachedString     theGuard2(m_constructionContext);
+        const GetCachedString   theGuard2(m_constructionContext);
         XalanDOMString&     buffer = theGuard2.get();
 
         const XalanDOMString*   ns = getNamespaceFromStack(name, buffer);
@@ -268,7 +268,7 @@ StylesheetHandler::startElement(
         {
             if (index < nameLength)
             {
-                const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                const GetCachedString   theGuard(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -353,7 +353,7 @@ StylesheetHandler::startElement(
                     {
                         if (m_elemStack.empty() == true)
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -385,7 +385,7 @@ StylesheetHandler::startElement(
                     {
                         if (m_elemStack.empty() == true)
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -404,7 +404,7 @@ StylesheetHandler::startElement(
 
                         if (parentToken == StylesheetConstructionContext::ELEMNAME_FOR_EACH)
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -443,7 +443,7 @@ StylesheetHandler::startElement(
 
                         if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -470,7 +470,7 @@ StylesheetHandler::startElement(
                             }
                             else
                             {
-                                const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                                const GetCachedString   theGuard(m_constructionContext);
 
                                 error(
                                     XalanMessageLoader::getMessage(
@@ -489,7 +489,7 @@ StylesheetHandler::startElement(
 
                         if(StylesheetConstructionContext::ELEMNAME_CHOOSE != parent->getXSLToken())
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -516,7 +516,7 @@ StylesheetHandler::startElement(
                             }
                             else
                             {
-                                const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                                const GetCachedString   theGuard(m_constructionContext);
 
                                 error(
                                     XalanMessageLoader::getMessage(
@@ -559,7 +559,7 @@ StylesheetHandler::startElement(
                 case StylesheetConstructionContext::ELEMNAME_STRIP_SPACE:
                 case StylesheetConstructionContext::ELEMNAME_DECIMAL_FORMAT:
                     {
-                        const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                        const GetCachedString   theGuard(m_constructionContext);
 
                         error(
                             XalanMessageLoader::getMessage(
@@ -576,7 +576,7 @@ StylesheetHandler::startElement(
                         // supported, don't flag an error.
                         if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             warn(
                                 XalanMessageLoader::getMessage(
@@ -594,7 +594,7 @@ StylesheetHandler::startElement(
                         }
                         else
                         {
-                            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                            const GetCachedString   theGuard(m_constructionContext);
 
                             error(
                                 XalanMessageLoader::getMessage(
@@ -624,7 +624,7 @@ StylesheetHandler::startElement(
                 }
                 else if (length(*ns) == 0 && m_elemStack.size() == 1)
                 {
-                    const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                    const GetCachedString   theGuard(m_constructionContext);
 
                     error(
                         XalanMessageLoader::getMessage(
@@ -902,7 +902,7 @@ StylesheetHandler::processTopLevelElement(
     case StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS:
         if (inExtensionElement() == false)
         {
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             error(
                 XalanMessageLoader::getMessage(
@@ -927,7 +927,7 @@ StylesheetHandler::processTopLevelElement(
             }
             else
             {
-                const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                const GetCachedString   theGuard(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -966,7 +966,7 @@ StylesheetHandler::processStylesheet(
         }
         else if (equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
         {
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             XalanDOMString&     prefix = theGuard.get();
 
@@ -981,7 +981,7 @@ StylesheetHandler::processStylesheet(
 
                 if (extns == 0)
                 {
-                    const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                    const GetCachedString   theGuard(m_constructionContext);
 
                     error(
                         XalanMessageLoader::getMessage(
@@ -1027,7 +1027,7 @@ StylesheetHandler::processStylesheet(
 
     if (fVersionFound == false)
     {
-        const GetAndReleaseCachedString     theGuard(m_constructionContext);
+        const GetCachedString   theGuard(m_constructionContext);
 
         error(
             XalanMessageLoader::getMessage(
@@ -1068,7 +1068,7 @@ StylesheetHandler::checkForOrAddVariableName(
 
         if (m_globalVariableNames.count(theVariableName) != 0)
         {
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             error(
                 XalanMessageLoader::getMessage(
@@ -1094,7 +1094,7 @@ StylesheetHandler::checkForOrAddVariableName(
 
             if (theLocalScope.count(theVariableName) != 0)
             {
-                const GetAndReleaseCachedString     theGuard(m_constructionContext);
+                const GetCachedString   theGuard(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -1139,7 +1139,7 @@ StylesheetHandler::processPreserveStripSpace(
             StringTokenizer     tokenizer(atts.getValue(i),
                                           Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             XalanDOMString&     theNameTest = theGuard.get();
 
@@ -1168,7 +1168,7 @@ StylesheetHandler::processPreserveStripSpace(
 
     if (!foundIt && inExtensionElement() == false)
     {
-        const GetAndReleaseCachedString     theGuard(m_constructionContext);
+        const GetCachedString   theGuard(m_constructionContext);
 
         error(
             XalanMessageLoader::getMessage(
@@ -1222,7 +1222,7 @@ StylesheetHandler::appendChildElementToParent(
     {
         if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
         {
-            const GetAndReleaseCachedString     theGuard(m_constructionContext);
+            const GetCachedString   theGuard(m_constructionContext);
 
             const XalanMessages::Codes  theCode =
                 elem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT ?
@@ -1288,7 +1288,7 @@ StylesheetHandler::processImport(
 
     bool                foundIt = false;
 
-    const GetAndReleaseCachedString     theGuard4(m_constructionContext);
+    const GetCachedString   theGuard4(m_constructionContext);
     XalanDOMString&     hrefUrl = theGuard4.get();
 
     for (XalanSize_t i = 0; i < nAttrs; i++)
@@ -1301,7 +1301,7 @@ StylesheetHandler::processImport(
             
             if (m_foundNotImport)
             {
-                const GetAndReleaseCachedString     theError(m_constructionContext);
+                const GetCachedString   theError(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -1310,13 +1310,13 @@ StylesheetHandler::processImport(
                     locator);
             }
 
-            const GetAndReleaseCachedString     theGuard1(m_constructionContext);
+            const GetCachedString   theGuard1(m_constructionContext);
 
             XalanDOMString&     saved_XSLNameSpaceURL = theGuard1.get();
 
             saved_XSLNameSpaceURL = m_stylesheet.getXSLTNamespaceURI();
 
-            const GetAndReleaseCachedString     theGuard2(m_constructionContext);
+            const GetCachedString   theGuard2(m_constructionContext);
 
             XalanDOMString&     href = theGuard2.get();
 
@@ -1337,7 +1337,7 @@ StylesheetHandler::processImport(
 
             if (stackContains(importStack, hrefUrl))
             {
-                const GetAndReleaseCachedString     theError(m_constructionContext);
+                const GetCachedString   theError(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -1380,7 +1380,7 @@ StylesheetHandler::processImport(
 
     if (!foundIt)
     {            
-        const GetAndReleaseCachedString     theError(m_constructionContext);
+        const GetCachedString   theError(m_constructionContext);
 
         error(
             XalanMessageLoader::getMessage(
@@ -1404,10 +1404,10 @@ StylesheetHandler::processInclude(
 
     bool                foundIt = false;
 
-    const GetAndReleaseCachedString     theGuard1(m_constructionContext);
+    const GetCachedString   theGuard1(m_constructionContext);
     XalanDOMString& href = theGuard1.get();
 
-    const GetAndReleaseCachedString     theGuard2(m_constructionContext);
+    const GetCachedString   theGuard2(m_constructionContext);
     XalanDOMString& hrefUrl = theGuard2.get();
 
     for (XalanSize_t i = 0; i < nAttrs; i++)
@@ -1428,7 +1428,7 @@ StylesheetHandler::processInclude(
 
             if (stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
             {
-                const GetAndReleaseCachedString     theError(m_constructionContext);
+                const GetCachedString   theError(m_constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
@@ -1453,7 +1453,7 @@ StylesheetHandler::processInclude(
 
     if (!foundIt)
     {
-        const GetAndReleaseCachedString     theError(m_constructionContext);
+        const GetCachedString   theError(m_constructionContext);
 
         error(
             XalanMessageLoader::getMessage(
@@ -1534,7 +1534,7 @@ StylesheetHandler::characters(
         inExtensionElement() == false &&
         isXMLWhitespace(chars, 0, length) == false)
     {
-        const GetAndReleaseCachedString     theGuard(m_constructionContext);
+        const GetCachedString   theGuard(m_constructionContext);
 
         error(
             XalanMessageLoader::getMessage(
@@ -1631,7 +1631,7 @@ StylesheetHandler::processText(
             const XMLCh*    chars,
             size_type       length)
 {
-    if(m_inTemplate)
+    if (m_inTemplate)
     {
         ElemTemplateElement*    parent = m_elemStack.back();
         assert(parent != 0);
@@ -1641,7 +1641,8 @@ StylesheetHandler::processText(
         bool    preserveSpace = m_preserveSpaceStack.back();
         bool    disableOutputEscaping = false;
 
-        if (preserveSpace == false && parent->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT)
+        if (preserveSpace == false &&
+            parent->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT)
         {
             disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
 
@@ -1650,7 +1651,7 @@ StylesheetHandler::processText(
             parent = m_elemStack[m_elemStack.size() - 2];
         }
 
-        const LocatorType* const    locator = m_constructionContext.getLocatorFromStack();
+        const Locator* const    locator = m_constructionContext.getLocatorFromStack();
 
         ElemTemplateElement* const  elem =
             m_constructionContext.createElement(
@@ -1664,9 +1665,9 @@ StylesheetHandler::processText(
 
         const bool  isWhite = elem->isWhitespace();
 
-        if(preserveSpace || (!preserveSpace && !isWhite))
+        if (preserveSpace || (!preserveSpace && !isWhite))
         {
-            while(!m_whiteSpaceElems.empty())
+            while (!m_whiteSpaceElems.empty())
             {
                 assert(m_whiteSpaceElems.back() != 0);
 
@@ -1681,13 +1682,13 @@ StylesheetHandler::processText(
                 parent,
                 elem);
         }
-        else if(isWhite)
+        else if (isWhite)
         {
             bool    shouldPush = true;
 
             ElemTemplateElement* const  last = parent->getLastChildElem();
 
-            if(0 != last)
+            if (0 != last)
             {
                 // If it was surrounded by xsl:text, it will count as an element.
                 const bool  isPrevCharData =
@@ -1696,7 +1697,7 @@ StylesheetHandler::processText(
                 const bool  isLastPoppedXSLText = (m_lastPopped != 0) &&
                         (StylesheetConstructionContext::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
 
-                if(isPrevCharData == true && isLastPoppedXSLText == false)
+                if (isPrevCharData == true && isLastPoppedXSLText == false)
                 {
                     appendChildElementToParent(
                         parent,
@@ -1706,7 +1707,7 @@ StylesheetHandler::processText(
                 }
             }
 
-            if(shouldPush)
+            if (shouldPush)
             {
                 m_whiteSpaceElems.push_back(elem);
             }
@@ -1722,7 +1723,7 @@ StylesheetHandler::accumulateText(
             const XMLCh*    chars,
             size_type       length)
 {   
-    if(m_inTemplate)
+    if (m_inTemplate)
     {
         append(m_accumulateText, chars, length);
     }
@@ -1766,9 +1767,14 @@ StylesheetHandler::inExtensionElement() const
 void
 StylesheetHandler::error(
             const XalanDOMString&   theMessage,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
-    m_constructionContext.error(theMessage, 0, theLocator);
+    m_constructionContext.problem(
+                StylesheetConstructionContext::eXSLTProcessor,
+                StylesheetConstructionContext::eError,
+                theMessage,
+                theLocator,
+                0);
 }
 
 
@@ -1777,9 +1783,9 @@ void
 StylesheetHandler::error(
             const XalanDOMChar*     theMessage1,
             const XalanDOMChar*     theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
-    const GetAndReleaseCachedString     theGuard(m_constructionContext);
+    const GetCachedString   theGuard(m_constructionContext);
 
     XalanDOMString&     msg = theGuard.get();
 
@@ -1796,7 +1802,7 @@ void
 StylesheetHandler::error(
             const XalanDOMChar*     theMessage1,
             const XalanDOMString&   theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     error(theMessage1, theMessage2.c_str(), theLocator);
 }
@@ -1807,7 +1813,7 @@ void
 StylesheetHandler::error(
             const XalanDOMString&   theMessage1,
             const XalanDOMChar*     theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     error(theMessage1.c_str(), theMessage2, theLocator);
 }
@@ -1819,7 +1825,7 @@ void
 StylesheetHandler::error(
             const XalanDOMString&   theMessage1,
             const XalanDOMString&   theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     error(theMessage1.c_str(), theMessage2.c_str(), theLocator);
 }
@@ -1830,7 +1836,7 @@ void
 StylesheetHandler::warn(
             const XalanDOMChar*     theMessage1,
             const XalanDOMString&   theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     warn(theMessage1, theMessage2.c_str(), theLocator);
 }
@@ -1838,9 +1844,14 @@ StylesheetHandler::warn(
 void
 StylesheetHandler::warn(
             const XalanDOMString&   theMessage,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
-    m_constructionContext.warn(theMessage, 0, theLocator);
+    m_constructionContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eWarning,
+        theMessage,
+        theLocator,
+        0);
 }
 
 
@@ -1849,16 +1860,21 @@ void
 StylesheetHandler::warn(
             const XalanDOMChar*     theMessage1,
             const XalanDOMChar*     theMessage2,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
-    const GetAndReleaseCachedString     theGuard(m_constructionContext);
+    const GetCachedString   theGuard(m_constructionContext);
 
     XalanDOMString&     msg = theGuard.get();
 
     msg = theMessage1;
     msg += theMessage2;
 
-    m_constructionContext.warn(msg, 0, theLocator);
+    m_constructionContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eWarning,
+        msg,
+        theLocator,
+        0);
 }
 
 
@@ -1870,7 +1886,7 @@ StylesheetHandler::illegalAttributeError(
             const LocatorType*      theLocator) const
 
 {
-    const GetAndReleaseCachedString     theGuard(m_constructionContext);
+    const GetCachedString   theGuard(m_constructionContext);
 
     error(
         XalanMessageLoader::getMessage(

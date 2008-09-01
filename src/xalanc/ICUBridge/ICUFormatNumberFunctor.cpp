@@ -101,12 +101,14 @@ ICUFormatNumberFunctor::operator() (
     {
         const XPathExecutionContext::GetCachedString    theGuard(executionContext);
 
-        executionContext.warn(
+        executionContext.problem(
+            XPathExecutionContext::eXSLTProcessor,
+            XPathExecutionContext::eWarning,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::FormatNumberFailed),
-            context,
-            locator);
+            locator,
+            context);
     }       
 }
 

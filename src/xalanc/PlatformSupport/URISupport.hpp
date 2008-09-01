@@ -275,20 +275,27 @@ public:
 		 *
 		 * @param theMessage the error message
 		 */
-		InvalidURIException(const XalanDOMString&	theMessage,
-                            MemoryManagerType&      theManager);
+		InvalidURIException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator);
+
+		/**
+		 * Construct an InvalidURIException.
+		 *
+		 * @param theMessage the error message
+		 */
+		InvalidURIException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager);
 
 		virtual
 		~InvalidURIException();
 
 		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+		getType() const;
 
 	private:
-		static const XalanDOMChar	m_type[];
 	};
 
 

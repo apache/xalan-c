@@ -519,19 +519,19 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>'{0}' has an invalid '{1}' attribute.</target>
 </trans-unit>
 
-<trans-unit id="AttributeMustBe_2Params">
-		<source>The attribute value must be '{0}' or '{1}'.</source>
-		<target>The attribute value must be '{0}' or '{1}'.</target>
+<trans-unit id="AttributeMustBe_3Params">
+		<source>The value of the attribute '{0}' must be '{1}' or '{2}'.</source>
+		<target>The value of the attribute '{0}' must be '{1}' or '{2}'.</target>
 </trans-unit>
 
 <trans-unit id="StylesheetHasWrapperlessTemplate">
-		<source>The stylesheet already has a wrapperless template.</source>
-		<target>The stylesheet already has a wrapperless template.</target>
+		<source>The stylesheet already has a literal result element template.</source>
+		<target>The stylesheet already has a literal result element template.</target>
 </trans-unit>
 
-<trans-unit id="StylesheetHasDuplicateNamedTemplate">
-		<source>The stylesheet already has a template with this name.</source>
-		<target>The stylesheet already has a template with this name.</target>
+<trans-unit id="StylesheetHasDuplicateNamedTemplate_1Param">
+		<source>The stylesheet already has a template with the expanded name '{0}'.</source>
+		<target>The stylesheet already has a template with the expanded name '{0}'.</target>
 </trans-unit>
 
 <trans-unit id="UnknownXSLTToken_1Param">
@@ -740,8 +740,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="CantLoadReqDocument_1Param">
-		<source>Cannot load requested document: '{0}'.</source>
-		<target>Cannot load requested document: '{0}'.</target>
+		<source>The document '{0}' could not be loaded.</source>
+		<target>The document '{0}' could not be loaded.</target>
+</trans-unit>
+
+<trans-unit id="CantLoadReqDocument_2Param">
+		<source>The document '{0}' could not be loaded.  (Base URI: '{1}')</source>
+		<target>The document '{0}' could not be loaded.  (Base URI: '{1}')</target>
 </trans-unit>
 
 <trans-unit id="ElementRequiresAttribute_2Param">

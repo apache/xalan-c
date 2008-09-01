@@ -390,7 +390,7 @@ XPathEvaluator::createXPath(
 
 
 
-typedef XPathConstructionContext::GetAndReleaseCachedString     GetAndReleaseCachedString;
+typedef XPathConstructionContext::GetCachedString   GetCachedString;
 
 
 
@@ -404,7 +404,7 @@ XPathEvaluator::createXPath(
 
 	XPathProcessorImpl		theProcessor(m_memoryManager);
 
-    GetAndReleaseCachedString   theGuard(*m_constructionContext.get());
+    const GetCachedString   theGuard(*m_constructionContext.get());
 
     XalanDOMString&     theTempString = theGuard.get();
 
@@ -455,7 +455,7 @@ XPathEvaluator::evaluate(
 
 	XPathProcessorImpl  theProcessor(m_memoryManager);
 
-    GetAndReleaseCachedString   theGuard(*m_constructionContext.get());
+    const GetCachedString   theGuard(*m_constructionContext.get());
 
     XalanDOMString&     theTempString = theGuard.get();
 

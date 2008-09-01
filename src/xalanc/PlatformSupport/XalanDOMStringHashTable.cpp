@@ -27,23 +27,24 @@
 
 #include "DOMStringHelper.hpp"
 
-#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
+
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 XalanDOMStringHashTable::XalanDOMStringHashTable(
-            MemoryManagerType& theManager,
-            size_t      theBucketCount,
-            size_t      theBucketSize) :
+            MemoryManager&  theManager,
+            size_t          theBucketCount,
+            size_t          theBucketSize) :
 
     m_bucketCount(theBucketCount),
     m_bucketSize(theBucketSize),
-    m_buckets(theManager , XalanMemMngArrayAllocate<BucketType>::allocateMemMgr(theBucketCount, theManager), theBucketCount),
+    m_buckets(theManager),
     m_count(0),
     m_collisions(0)
 {
+    m_buckets.resize(theBucketCount);
 }
 
 
@@ -67,7 +68,7 @@ XalanDOMStringHashTable::clear()
 void
 XalanDOMStringHashTable::getBucketCounts(BucketCountsType&  theVector) const
 {
-    for(size_t i = 0; i < m_bucketCount; ++i)
+    for (size_t i = 0; i < m_bucketCount; ++i)
     {
         const bucket_size_type  size = m_buckets[i].size();
 
@@ -77,20 +78,6 @@ XalanDOMStringHashTable::getBucketCounts(BucketCountsType&  theVector) const
 
 
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-bool
-XalanDOMStringHashTable::equalsXalanDOMString::operator()(const XalanDOMString*     theString) const
-{
-    if (m_length != length(*theString))
-    {
-        return false;
-    }
-    else
-    {
-        return equals(m_string, c_wstr(*theString), m_length);
-    }
-}
-#else
 struct
 equalsXalanDOMString
 {
@@ -121,7 +108,6 @@ private:
 
     const XalanDOMString::size_type     m_length;
 };
-#endif
 
 
 

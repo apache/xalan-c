@@ -393,19 +393,19 @@ NamespacesHandler::setNamespaceAlias(
 
 
 
+typedef StylesheetConstructionContext::GetCachedString  GetCachedString;
+
 void
 NamespacesHandler::processExcludeResultPrefixes(
         StylesheetConstructionContext&  theConstructionContext,
         const XalanDOMChar*             theValue,
         const NamespacesStackType&      theCurrentNamespaces)
 {
-    typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
-
     StringTokenizer     tokenizer(
                     theValue,
                     Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-    const GetAndReleaseCachedString     theGuard(theConstructionContext);
+    const GetCachedString   theGuard(theConstructionContext);
 
     XalanDOMString&     thePrefix = theGuard.get();
 
@@ -423,13 +423,17 @@ NamespacesHandler::processExcludeResultPrefixes(
 
         if(theNamespaceURI == 0)
         {
-            GetAndReleaseCachedString   theGuard(theConstructionContext);
+            const GetCachedString   theGuard(theConstructionContext);
 
-            theConstructionContext.error(
+            theConstructionContext.problem(
+                StylesheetConstructionContext::eXSLTProcessor,
+                StylesheetConstructionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::PrefixIsNotDeclared_1Param,
-                    thePrefix));
+                    thePrefix),
+                theConstructionContext.getLocatorFromStack(),
+                0);
         }
 
         addOrUpdateByPrefix(
@@ -451,13 +455,11 @@ NamespacesHandler::processExtensionElementPrefixes(
             const XalanDOMChar*             theValue,
             const NamespacesStackType&      theCurrentNamespaces)
 {
-    typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
-
     StringTokenizer     tokenizer(
                     theValue,
                     Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-    const GetAndReleaseCachedString     theGuard(theConstructionContext);
+    const GetCachedString   theGuard(theConstructionContext);
 
     XalanDOMString&     thePrefix = theGuard.get();
 
@@ -475,13 +477,17 @@ NamespacesHandler::processExtensionElementPrefixes(
 
         if(theNamespace == 0)
         {
-            GetAndReleaseCachedString   theGuard(theConstructionContext);
+            const GetCachedString   theGuard(theConstructionContext);
 
-            theConstructionContext.error(
+            theConstructionContext.problem(
+                StylesheetConstructionContext::eXSLTProcessor,
+                StylesheetConstructionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::PrefixIsNotDeclared_1Param,
-                    thePrefix));
+                    thePrefix),
+                theConstructionContext.getLocatorFromStack(),
+                0);
         }
 
         assert(theNamespace != 0);
@@ -513,9 +519,7 @@ NamespacesHandler::postConstruction(
     // don't exclude its prefix.
     const XalanDOMString::size_type     indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
-    typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
-
-    const GetAndReleaseCachedString     theGuard(theConstructionContext);
+    const GetCachedString   theGuard(theConstructionContext);
 
     XalanDOMString&     thePrefix = theGuard.get();
 
@@ -705,8 +709,8 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&    
         NamespaceExtendedVectorType::iterator       i =
                 m_namespaceDeclarations.begin();
 
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(theConstructionContext);
-        XalanDOMString& theName = theGuard.get();
+        const GetCachedString   theGuard(theConstructionContext);
+        XalanDOMString&     theName = theGuard.get();
 
         for(; i != theEnd; ++i)
         {

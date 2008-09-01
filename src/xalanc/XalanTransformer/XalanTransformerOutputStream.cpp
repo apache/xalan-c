@@ -76,7 +76,8 @@ XalanTransformerOutputStream::writeData(
             XalanMessageLoader::getMessage(
                 theBuffer,
                 XalanMessages::NumberBytesWrittenDoesNotEqual),
-            getMemoryManager());
+            getMemoryManager(),
+            0);
     }
 }
 

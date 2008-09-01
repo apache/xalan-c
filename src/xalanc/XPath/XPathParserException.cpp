@@ -23,7 +23,45 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-const XalanDOMChar	XPathParserException::m_type[] = 
+
+XPathParserException::XPathParserException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*		    theLocator) :
+	XalanXPathException(
+        theMessage,
+        theManager,
+        theLocator)
+{
+}
+
+
+
+XPathParserException::XPathParserException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager) :
+	XalanXPathException(
+        theMessage,
+        theManager)
+{
+}
+
+
+
+XPathParserException::XPathParserException(const XPathParserException&  other) :
+    XalanXPathException(other)
+{
+}
+
+
+
+XPathParserException::~XPathParserException()
+{
+}
+
+
+
+static const XalanDOMChar   s_type[] = 
 {	
 	XalanUnicode::charLetter_X,
 	XalanUnicode::charLetter_P,
@@ -50,49 +88,10 @@ const XalanDOMChar	XPathParserException::m_type[] =
 
 
 
-XPathParserException::XPathParserException(
-			const XalanDOMString&	message,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-            MemoryManagerType&      theManager) :
-	XalanXPathException(
-        message,
-        theURI,
-        theLineNumber,
-        theColumnNumber,
-        theManager)
+const XalanDOMChar*
+XPathParserException::getType() const
 {
-}
-
-
-
-XPathParserException::XPathParserException(
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager) :
-	XalanXPathException(
-        theLocator,
-        theMessage,
-        theManager)
-{
-}
-
-
-
-XPathParserException::XPathParserException(
-			const XalanDOMString&	message,
-            MemoryManagerType&      theManager) :
-	XalanXPathException(
-        message,
-        theManager)
-{
-}
-
-
-
-XPathParserException::~XPathParserException()
-{
+    return s_type;
 }
 
 

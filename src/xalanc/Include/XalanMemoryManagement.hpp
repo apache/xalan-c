@@ -506,6 +506,13 @@ struct MemoryManagedConstructionTraits
 
 };
 
+template <class C>
+struct ExplicitMemoryManagedConstructionTraits
+{
+    typedef ConstructWithMemoryManager<C> Constructor;
+
+};
+
 #define  XALAN_USES_MEMORY_MANAGER(Type)  \
 template<> \
 struct MemoryManagedConstructionTraits<Type> \

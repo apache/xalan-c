@@ -46,8 +46,9 @@ class XALAN_XSLT_EXPORT XSLTProcessorEnvSupportDefault : public XSLTProcessorEnv
 {
 public:
 
-	XSLTProcessorEnvSupportDefault( MemoryManagerType& theManager, 
-                                    XSLTProcessor*	theProcessor = 0);
+	XSLTProcessorEnvSupportDefault(
+            MemoryManager&  theManager, 
+            XSLTProcessor*  theProcessor = 0);
 
 	virtual
 	~XSLTProcessorEnvSupportDefault();
@@ -115,26 +116,29 @@ public:
 			const XalanDOMString&	functionName);
 
 
-	// These interfaces are inherited from XSLTProcessorEnvSupport...
+    // These interfaces are inherited from XSLTProcessorEnvSupport...
 
-	virtual bool
+	virtual void
 	problem(
-			eSource						where,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			XalanFileLoc			    lineNo,
-			XalanFileLoc			    charOffset) const;
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
 
-	// These interfaces are inherited from XPathEnvSupport...
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
 
 	virtual XalanDocument*
 	parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base);
+			const XalanDOMString&	base,
+            ErrorHandler*           theErrorHandler = 0);
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const;
@@ -165,19 +169,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
 			const LocatorType*				locator) const;
-
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
-			const PrefixResolver*	resolver,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			XalanFileLoc			lineNo,
-			XalanFileLoc			charOffset) const;
-
-	// These interfaces are inherited from Resettable...
 
 	virtual void
 	reset();

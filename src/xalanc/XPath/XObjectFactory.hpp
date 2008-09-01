@@ -54,8 +54,9 @@ class XALAN_XPATH_EXPORT XObjectFactory
 {
 public:
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-	typedef XPathExecutionContext::GetAndReleaseCachedString		GetAndReleaseCachedString;
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
+	typedef XPathExecutionContext::GetCachedString		            GetCachedString;
+	typedef XPathExecutionContext::GetCachedString		            GetAndReleaseCachedString;
 
 
 	XObjectFactory(MemoryManager&   theManager);
@@ -210,7 +211,7 @@ public:
 	 * @return pointer to new object
 	 */
 	virtual const XObjectPtr
-	createString(GetAndReleaseCachedString&		theValue) = 0;
+	createString(GetCachedString&   theValue) = 0;
 
 	/**
 	 * Create an "unknown" XObject from a string.

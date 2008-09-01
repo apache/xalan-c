@@ -81,21 +81,23 @@ FunctionGenerateID::execute(
 {
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
-                XalanMessageLoader::getMessage(
-                    theGuard.get(),
-                    XalanMessages::FunctionRequiresNonNullContextNode_1Param,
-                    "generate-id()"),
-                context,
-                locator);
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
+            XalanMessageLoader::getMessage(
+                theGuard.get(),
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                "generate-id()"),
+            locator,
+            context);
 
         return XObjectPtr();
     }
     else
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theID(executionContext);
+        GetCachedString     theID(executionContext);
 
         theID.get() = XalanUnicode::charLetter_N;
 

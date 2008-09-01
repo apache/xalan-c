@@ -178,7 +178,8 @@ XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOu
                 XalanDOMString(theBuffer.getMemoryManager())),
             theErrorCode,
             theBuffer),
-        theBuffer.getMemoryManager())
+        theBuffer.getMemoryManager(),
+        0)
 {
 }
 

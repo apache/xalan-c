@@ -58,7 +58,9 @@
 
 
 
+#include "xercesc/sax/ErrorHandler.hpp"
 #include "xercesc/sax/SAXException.hpp"
+#include "xercesc/sax/SAXParseException.hpp"
 
 
 
@@ -192,7 +194,8 @@ XalanFileUtility::cmdParams::getHelpMessage()
 XalanFileUtility::XalanFileUtility(MemoryManager&   theManager) :
     data(theManager),
     args(theManager),
-    m_buffer(theManager)
+    m_buffer(theManager),
+    m_verbose(false)
 {
     cout << endl
          << "Using Xalan version "
@@ -550,7 +553,10 @@ void XalanFileUtility::checkAndCreateDir(const XalanDOMString&   directory)
         if (!mkdir(theDir, DIR_MODE_BITS))
 #endif
         {
-            cout << theDir << " created." << endl;
+            if (m_verbose == true)
+            {
+                cout << theDir << " created." << endl;
+            }
         }
         else
         {
@@ -827,7 +833,7 @@ XalanFileUtility::checkDOMResults(
             const XalanCompiledStylesheet*  compiledSS, 
             const XalanSourceTreeDocument*  dom,
             const XSLTInputSource&          goldInputSource,
-            XalanXMLFileReporter&                logfile)
+            XalanXMLFileReporter&           logfile)
 {
     const int   ambgFlag = data.nogold;
 
@@ -857,7 +863,7 @@ XalanFileUtility::checkDOMResults(
     const XalanDocument* const  goldDom =
         parserLiaison.parseXMLStream(goldInputSource);
 
-    if(domCompare(*goldDom, *dom))
+    if (domCompare(*goldDom, *dom))
     {
         cout << "Passed: " << data.testOrFile << endl;
         logfile.logCheckPass(data.testOrFile);
@@ -902,6 +908,36 @@ XalanFileUtility::checkDOMResults(
     }
 }
 
+
+
+class DummyErrorHandler : public XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler
+{
+    virtual void
+    warning(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        throw exc;
+    }
+
+    virtual void
+    error(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        throw exc;
+    }
+
+    virtual void
+    fatalError(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        throw exc;
+    }
+
+    virtual void
+    resetErrors()
+    {
+    }
+};
+
+
+
 /*  This routine takes the result file and gold file and parses them.
 //  If either of the files fails to parse and a SAXException is throw,
 //  then the files are compared using a char by char file compare,
@@ -919,7 +955,6 @@ XalanFileUtility::compareSerializedResults(
             const XalanDOMString&   outputFile,
             const XalanDOMString&   goldFile)
 {
-
     const XSLTInputSource   resultInputSource(outputFile, getMemoryManager());
     const XSLTInputSource   goldInputSource(goldFile, getMemoryManager());
 
@@ -927,6 +962,10 @@ XalanFileUtility::compareSerializedResults(
     XalanSourceTreeParserLiaison    parserLiaison(domSupport, getMemoryManager());
 
     domSupport.setParserLiaison(&parserLiaison);
+
+    DummyErrorHandler   theErrorHandler;
+
+    parserLiaison.setErrorHandler(&theErrorHandler);
 
     try
     {
@@ -945,7 +984,10 @@ XalanFileUtility::compareSerializedResults(
     // to be compared with the Gold,  with a character by character basis,  not via the DOM compair. 
     catch (const XERCES_CPP_NAMESPACE_QUALIFIER SAXException&)
     {
-        cout << "SAXException: Using fileCompare to check output.\n";
+        if (m_verbose == true)
+        {
+            cout << "SAXException: Using fileCompare to check output.\n";
+        }
 
         CharVectorType     goldFileVec(getMemoryManager());
         TranscodeToLocalCodePage(goldFile, goldFileVec, true);

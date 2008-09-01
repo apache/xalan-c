@@ -23,8 +23,10 @@
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
+#include <strstream.h>
 #else
 #include <iostream>
+#include <strstream>
 #endif
 
 #include <cstdio>
@@ -203,7 +205,7 @@ parseWithXerces(
     XALAN_USING_XERCES(XercesDOMParser)
     XALAN_USING_XERCES(DOMDocument)
 
-    MemoryManagerType& mgr = h.getMemoryManager();
+    MemoryManager&  mgr = h.getMemoryManager();
 
     h.data.xmlFormat = XalanDOMString("Xerces_DOM", mgr);
 
@@ -375,6 +377,17 @@ runTests(
                         const XSLTInputSource   xslInputSource(theXSLFile, theMemoryManager);
                         const XSLTInputSource   xmlInputSource(theXMLFile, theMemoryManager);
                         const XSLTResultTarget  resultFile(theOutputFile, theMemoryManager);
+
+                        XALAN_USING_STD(ostrstream)
+
+                        // Setting a warning stream will swallow output in non-verbose mode.
+                        ostrstream  theDummyStream;
+
+                        if (h.getVerbose() == false)
+                        {
+                            xalan.setWarningStream(0);
+                            // xalan.setWarningStream(&theDummyStream);
+                        }
 
                         // Parsing(compile) the XSL stylesheet and report the results..
                         //

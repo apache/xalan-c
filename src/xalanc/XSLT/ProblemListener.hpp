@@ -21,11 +21,11 @@
 
 
 // Base include file.  Must be first.
-#include <xalanc/XSLT/XSLTDefinitions.hpp>
+#include "xalanc/XSLT/XSLTDefinitions.hpp"
 
 
 
-#include <xalanc/XalanDOM/XalanDOMString.hpp>
+#include "xalanc/PlatformSupport/ProblemListenerBase.hpp"
 
 
 
@@ -45,38 +45,44 @@ class PrintWriter;
  * should ask the XSLTProcessor class to setProblemListener if they wish an
  * object instance to be called when a problem event occurs.
  */
-class XALAN_XSLT_EXPORT ProblemListener
+class XALAN_XSLT_EXPORT ProblemListener : public ProblemListenerBase
 {
 public:
 
-	/// Sources of problem
-	enum eProblemSource { eXMLPARSER		= 0,
-						  eXSLPROCESSOR		= 1,
-						  eXPATH			= 2,
-                          eSourceCount };
-
-	/// Severity of problem
-	enum eClassification {	eMESSAGE	= 0,
-							eWARNING	= 1,
-							eERROR		= 2,
-                            eClassificationCount };
+    // A typedef for compatibility.
+    typedef eSource    eProblemSource;
 
 	ProblemListener();
 
 	virtual
 	~ProblemListener();
 
-	/** 
-	 * Set the print writer to which the problem is reported.
-	 * 
-	 * @param pw writer to receive messages
-	 */
+    // These interfaces are inherited from ProblemListenerBase...
 	virtual void
 	setPrintWriter(PrintWriter*		pw) = 0;
 
-	/**
- 	 * Function that is called when a problem event occurs.
-     * 
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
+
+
+    // This interface is new to ProblemListenerBase...
+    /**
+ 	 * Function that is called when a problem event occurs.  This function
+     * is deprecated. Use the overload with the Locator parameter instead.
+     * @deprecated
+     *
      * @param   source         either eXMLPARSER, eXSLPROCESSOR, or eXPATH
      * @param   classification either eMESSAGE, eERROR or eWARNING
 	 * @param   sourceNode     source tree node where the problem occurred
@@ -90,7 +96,7 @@ public:
 	 */
 	virtual void
 	problem(
-			eProblemSource				source,
+			eSource				        source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -98,7 +104,6 @@ public:
 			const XalanDOMChar*			uri,
 			XalanFileLoc				lineNo,
 			XalanFileLoc				charOffset) = 0;
-
 };
 
 

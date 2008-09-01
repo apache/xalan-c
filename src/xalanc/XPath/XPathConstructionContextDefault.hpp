@@ -55,15 +55,32 @@ public:
 	/*
 	 * Construct an instance.
 	 */
-	XPathConstructionContextDefault(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XPathConstructionContextDefault(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
     static XPathConstructionContextDefault*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager&   theManager);
 
 	virtual
 	~XPathConstructionContextDefault();
 
+
+    // These interfaces are inherited from XPathConstructionContext...
 	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
+
+    virtual void
 	reset();
 
 	virtual const XalanDOMString&
@@ -79,18 +96,6 @@ public:
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString);
-
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const;
-
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const;
 
 private:
 

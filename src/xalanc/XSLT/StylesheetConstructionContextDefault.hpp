@@ -156,46 +156,39 @@ public:
 	~StylesheetConstructionContextDefault();
 
 
-	virtual void
-	error(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement*	styleNode = 0) const;
+    // These interfaces are inherited from StylesheetConstructionContext...
 
 	virtual void
-	error(
+	problem(
+			eSource		            source,
+			eClassification			classification,
 			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const;
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
 
 	virtual void
-	warn(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement* 	styleNode = 0) const;
-
-	virtual void
-	warn(
+	problem(
+            eSource                 source,
+            eClassification         classification,
 			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType* 		locator) const;
+			const XalanNode*		sourceNode);
 
-	virtual void
-	message(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement* 	styleNode = 0) const;
-
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const LocatorType*		locator) const;
-
-	// These interfaces are inherited from StylesheetConstructionContext...
-
-	virtual void
+    virtual void
 	reset();
+
+	virtual const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString);
+
+	virtual const XalanDOMString&
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	virtual XalanDOMString&
+	getCachedString();
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString);
 
 	virtual StylesheetRoot*
 	create(const XalanDOMString&	theBaseIdentifier);
@@ -235,7 +228,7 @@ public:
 
 	virtual XPath*
 	createMatchPattern(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -243,7 +236,7 @@ public:
 
 	virtual XPath*
 	createMatchPattern(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -251,7 +244,7 @@ public:
 
 	virtual XPath*
 	createXPath(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -259,7 +252,7 @@ public:
 
 	virtual XPath*
 	createXPath(
-			const LocatorType*		locator,
+			const Locator*		    locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver,
             bool                    allowVariableReferences = true,
@@ -267,18 +260,18 @@ public:
 
 	virtual XPath*
 	createXPath(
-			const LocatorType*			locator,
+			const Locator*			    locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
 			const PrefixResolver&		resolver,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true);
 
-	virtual const LocatorType*
+	virtual const Locator*
 	getLocatorFromStack() const;
 
 	virtual void
-	pushLocatorOnStack(const LocatorType*	locator);
+	pushLocatorOnStack(const Locator*   locator);
 
 	virtual void
 	popLocatorStack();
@@ -290,7 +283,8 @@ public:
 	parseXML(
 			const XalanDOMString&	urlString,
 			DocumentHandler*	    docHandler, 
-			XalanDocument*			docToRegister);
+			XalanDocument*			docToRegister,
+            ErrorHandler*           theErrorHandler = 0);
 
 	virtual bool
 	isXMLSpaceAttribute(
@@ -315,20 +309,6 @@ public:
 
 	virtual double
 	getXSLTVersionSupported() const;
-
-	virtual const XalanDOMString&
-	getPooledString(const XalanDOMString&	theString);
-
-	virtual const XalanDOMString&
-	getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
-
-	virtual XalanDOMString&
-	getCachedString();
-
-	virtual bool
-	releaseCachedString(XalanDOMString&		theString);
 
 	virtual XalanDOMChar*
 	allocateXalanDOMCharVector(XalanDOMString::size_type	theLength);

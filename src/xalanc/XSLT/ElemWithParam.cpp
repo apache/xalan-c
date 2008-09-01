@@ -162,7 +162,7 @@ ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
     
         if (0 != executionContext.getTraceListeners())
         {
-            const StylesheetExecutionContext::GetAndReleaseCachedString     theGuard(executionContext);
+            const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
             XalanDOMString&     theString = theGuard.get();
 

@@ -25,9 +25,6 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 
-#include <xalanc/Include/XalanMemoryManagement.hpp>
-#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
-
 
 #include <cstddef>
 #include <algorithm>
@@ -38,9 +35,12 @@
 
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
 
 
 #if defined(_MSC_VER)
@@ -116,7 +116,7 @@ public:
 
     XalanVector(
             MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
-            size_type           initialAllocation = size_type(0)) :
+            size_type       initialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
         m_allocation(initialAllocation),
@@ -132,11 +132,10 @@ public:
     {
         typedef XalanVector ThisType;
 
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theManager, initialAllocation);
+        ThisType* const     theResult =
+                new (theGuard.get()) ThisType(theManager, initialAllocation);
 
         theGuard.release();
 
@@ -198,11 +197,10 @@ public:
     {
         typedef XalanVector ThisType;
 
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theFirst, theLast, theManager);
+        ThisType* const     theResult =
+                new (theGuard.get()) ThisType(theFirst, theLast, theManager);
 
         theGuard.release();
 
@@ -864,10 +862,12 @@ public:
         invariants();
     }
 
-    const MemoryManager*
+    const MemoryManager&
     getMemoryManager() const
     {
-        return m_memoryManager;
+        assert (m_memoryManager != 0);
+
+        return *m_memoryManager;
     }
 
     MemoryManager&

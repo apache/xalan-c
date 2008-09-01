@@ -19,11 +19,17 @@
 
 
 
+// Necessary for the static asserts below...
+#include "xalanc/XPath/XPathEnvSupport.hpp"
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XSLTProcessor::XSLTProcessor()
+XSLTProcessor::XSLTProcessor() :
+    ProblemListenerBase()
 {
 }
 

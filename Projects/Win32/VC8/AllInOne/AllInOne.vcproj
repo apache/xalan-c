@@ -1132,6 +1132,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp"
 				>
 			</File>

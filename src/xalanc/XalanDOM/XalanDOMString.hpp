@@ -269,7 +269,37 @@ public:
         invariants();
     }
 
-    void
+    iterator
+    erase(iterator  thePosition)
+    {
+        invariants();
+
+        m_data.erase(thePosition);
+
+        --m_size;
+
+        invariants();
+
+        return thePosition;
+    }
+
+    iterator
+    erase(
+            iterator   theFirst,
+            iterator   theLast)
+    {
+        invariants();
+
+        m_data.erase(theFirst, theLast);
+
+        m_size = m_data.size() - 1;
+
+        invariants();
+
+        return theFirst;
+    }
+
+    XalanDOMString&
     erase(
             size_type   theStartPosition = 0,
             size_type   theCount = size_type(npos));
@@ -1044,7 +1074,7 @@ operator!=(
 }
 
 
-
+#if 0
 inline XalanDOMString&
 add(
             const XalanDOMString&   theLHS,
@@ -1111,7 +1141,7 @@ add(
 
     return result;
 }
-
+#endif
 
 
 // Standard vector of XalanDOMChars and chars

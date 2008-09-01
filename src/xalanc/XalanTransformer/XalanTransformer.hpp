@@ -873,10 +873,36 @@ public:
     setOmitMETATag(eOmitMETATag     value);
 
     /**
+     * Set the ostream instance for reporting errors.  The default
+     * is a null pointer, so errors are not reported.  If there is 
+     * a user-installed ProblemListener instance, this is not used, as
+     * all such warnings and messages are handled by the that
+     * ProblemListener.
+     *
+     * @param theStream A pointer to the ostream instance.
+     */
+    void
+    setErrorStream(StreamType*  theStream)
+    {
+        m_errorStream = theStream;
+    }
+
+    /**
+     * Get the current error stream ostream instance.
+     *
+     * @return A pointer to the instance.  Can be a null pointer.
+     */
+    StreamType*
+    getErrorStream() const
+    {
+        return m_errorStream;
+    }
+
+    /**
      * Set the ostream instance for reporting warnings and messages.  The default
-     * is std::cerr.  If set to 0, no warnings or messages will be written.  If
-     * there is a user-installed ProblemListener instance, this is not used, as
-     * all such warnings and messages are handled by the user's ProblemListener.
+     * is std::cerr.  If set to a null pointer, no warnings or messages are written.
+     * If there is a user-installed ProblemListener instance, this is not used, as
+     * all such warnings and messages are handled by the that ProblemListener.
      *
      * @param theStream A pointer to the ostream instance.
      */
@@ -889,7 +915,7 @@ public:
     /**
      * Get the current warning stream ostream instance.
      *
-     * @return A pointer to the instance.  Can be 0.
+     * @return A pointer to the instance.  Can be a null pointer.
      */
     StreamType*
     getWarningStream() const
@@ -1064,6 +1090,8 @@ private:
     XalanDOMString                          m_externalNoNamespaceSchemaLocation;
 
     ProblemListener*                        m_problemListener;
+
+    StreamType*                             m_errorStream;
 
     StreamType*                             m_warningStream;
 

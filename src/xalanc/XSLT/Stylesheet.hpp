@@ -109,7 +109,7 @@ public:
 
     typedef XalanMap<XalanDOMString, PatternTableVectorType> PatternTableMapType;
 
-    typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    typedef StylesheetConstructionContext::GetCachedString  GetCachedString;
 
     /**
      * Constructor for a Stylesheet needs a Document.
@@ -744,6 +744,14 @@ private:
     bool
     operator==(const Stylesheet&) const;
 
+    void
+    error(
+            StylesheetConstructionContext&  theContext,
+            XalanMessages::Codes            theErrorCode,
+            const Locator*                  theLocator,
+            const XalanDOMChar*             theParam1 = 0,
+            const XalanDOMChar*             theParam2 = 0,
+            const XalanDOMChar*             theParam3 = 0) const;
 
     /**
      * Given a target element, find the template that best matches in the given

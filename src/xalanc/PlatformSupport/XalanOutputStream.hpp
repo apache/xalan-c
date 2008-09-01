@@ -291,58 +291,42 @@ public :
 
 		XalanOutputStreamException(
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager,
+            const Locator*          theLocator);
 
-        XalanOutputStreamException( const XalanOutputStreamException& other):
-            XSLException(other)
-            {
-            }
+		XalanOutputStreamException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager);
+
+        XalanOutputStreamException(const XalanOutputStreamException& other);
 
 		virtual
 		~XalanOutputStreamException();
 
 		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+		getType() const;
 
 	private:
-		static const XalanDOMChar	m_type[];
-
-	};
-
-	class XALAN_PLATFORMSUPPORT_EXPORT UnknownEncodingException : public XalanOutputStreamException
-	{
-	public:
-
-		explicit
-		UnknownEncodingException(XalanDOMString& theBuffer);
-
-		virtual
-		~UnknownEncodingException();
-
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
-
-	private:
-		static const XalanDOMChar	m_type[];
-
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT UnsupportedEncodingException : public XalanOutputStreamException
 	{
 	public:
 
-		UnsupportedEncodingException(const XalanDOMString&	theEncoding,
-                                        XalanDOMString& theBuffer);
+		UnsupportedEncodingException(
+            const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator);
 
-        UnsupportedEncodingException(const UnsupportedEncodingException& other) :
-        XalanOutputStreamException(other),
-        m_encoding(other.getEncoding(),(const_cast<XalanDOMString*>(&(other.m_encoding)))->getMemoryManager())
+		UnsupportedEncodingException(
+            const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer);
+
+        UnsupportedEncodingException(const UnsupportedEncodingException&    other) :
+            XalanOutputStreamException(other),
+            m_encoding(
+                other.m_encoding,
+                other.m_memoryManager)
         {
         }
 
@@ -355,15 +339,10 @@ public :
 			return m_encoding;
 		}
 
-
 		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
-	private:
+		getType() const;
 
-		static const XalanDOMChar	m_type[];
+    private:
 
 		const XalanDOMString	m_encoding;
 	};
@@ -372,17 +351,22 @@ public :
 	{
 	public:
 
-		TranscoderInternalFailureException(const XalanDOMString&	theEncoding,
-                                            XalanDOMString& theBuffer);
+		TranscoderInternalFailureException(
+            const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator);
 
-        TranscoderInternalFailureException(const TranscoderInternalFailureException& other) :
-            XalanOutputStreamException(other),
-            m_encoding(other.getEncoding(),(const_cast<XalanDOMString*>(&(other.m_encoding)))->getMemoryManager())
-            {
-            }
+		TranscoderInternalFailureException(
+            const XalanDOMString&	theEncoding,
+            XalanDOMString&         theBuffer);
+
+        TranscoderInternalFailureException(const TranscoderInternalFailureException& other);
 
 		virtual
 		~TranscoderInternalFailureException();
+
+		virtual const XalanDOMChar*
+		getType() const;
 
 		const XalanDOMString&
 		getEncoding() const
@@ -399,16 +383,20 @@ public :
 	{
 	public:
 
-		explicit
-		TranscodingException(XalanDOMString& theBuffer);
+		TranscodingException(
+            XalanDOMString&     theBuffer,
+            const Locator*      theLocator);
 
-        TranscodingException(const TranscodingException& other) :
-        XalanOutputStreamException(other)
-        {
-        }
+		explicit
+		TranscodingException(XalanDOMString&    theBuffer);
+
+        TranscodingException(const TranscodingException& other);
 
 		virtual
 		~TranscodingException();
+
+        virtual const XalanDOMChar*
+		getType() const;
 	};
 
 protected:

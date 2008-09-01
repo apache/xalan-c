@@ -53,9 +53,7 @@ FunctionFormatNumber::execute(
     const double            theNumber = arg1->num(executionContext);
     const XalanDOMString&   thePattern = arg2->str(executionContext);
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
-
-    GetAndReleaseCachedString   theString(executionContext);
+    GetCachedString     theString(executionContext);
 
     executionContext.formatNumber(
             theNumber, 
@@ -85,10 +83,8 @@ FunctionFormatNumber::execute(
 
     const XalanDOMString&               theDFSName = arg3->str(executionContext);
     assert(length(theDFSName) != 0);
-    
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
 
-    GetAndReleaseCachedString   theString(executionContext);
+    GetCachedString     theString(executionContext);
 
     executionContext.formatNumber(
         theNumber, 

@@ -45,7 +45,7 @@ public:
 	 */
 	PrintWriter( bool	fAutoFlush = false, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
 
-    MemoryManagerType& 
+    MemoryManager& 
     getMemoryManager()
     {
         return m_memoryManager;
@@ -161,9 +161,9 @@ public:
 
 protected:
 
-	const bool						m_fAutoFlush;
+	const bool		m_fAutoFlush;
 
-    MemoryManagerType&              m_memoryManager;
+    MemoryManager&  m_memoryManager;
 
 	// Some static strings to help derived classes...
 	static const XalanDOMChar	s_trueString[];

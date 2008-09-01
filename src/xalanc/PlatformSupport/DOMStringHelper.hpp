@@ -643,6 +643,13 @@ public:
 
     typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const FormatterListener::size_type);
 
+
+    static void
+    initialize(MemoryManager&    theMemoryManager);
+
+    static void
+    terminate();
+
     static void
     NumberToCharacters(
             double              theValue,
@@ -1890,13 +1897,10 @@ collationCompare(
  * @see operator<()
  * @see compare()
  */
-inline int
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 collationCompare(
             const XalanDOMChar*     theLHS,
-            const XalanDOMChar*     theRHS)
-{
-    return collationCompare(theLHS, length(theLHS), theRHS, length(theRHS));
-}
+            const XalanDOMChar*     theRHS);
 
 
 
@@ -1915,7 +1919,7 @@ collationCompare(
             const XalanDOMString&   theLHS,
             const XalanDOMString&   theRHS)
 {
-    return collationCompare(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+    return collationCompare(theLHS.c_str(), theRHS.c_str());
 }
 
 
@@ -1933,7 +1937,7 @@ collationCompare(
             const XalanDOMChar*     theLHS,
             const XalanDOMString&   theRHS)
 {
-    return collationCompare(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+    return collationCompare(theLHS, theRHS.c_str());
 }
 
 

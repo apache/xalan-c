@@ -111,9 +111,10 @@ FunctionEvaluate::execute(
 {
     if (args.size() != 1)
     {
-        XPathExecutionContext::GetAndReleaseCachedString theString(executionContext);
-
-        executionContext.error(getError(theString.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -139,12 +140,14 @@ FunctionEvaluate::execute(
             {
                 const XPathExecutionContext::GetCachedString    theString(executionContext);
 
-                executionContext.warn(
+                executionContext.problem(
+                    XPathExecutionContext::eXPath,
+                    XPathExecutionContext::eWarning,
                     XalanMessageLoader::getMessage(
                         theString.get(),
                         XalanMessages::NoPrefixResolverAvailable),
-                    context,
-                    locator);
+                    locator,
+                    context);
 
                 resolverNode = 0;
             }

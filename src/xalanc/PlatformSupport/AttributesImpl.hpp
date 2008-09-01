@@ -207,42 +207,6 @@ public:
 	// This vector will hold the entries.
 	typedef XalanVector<AttributeVectorEntryExtended*>		AttributesVectorType;
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-	struct NameCompareFunctor
-	{
-		NameCompareFunctor(const XMLCh*		theQName) :
-			m_qname(theQName)
-		{
-		}
-
-		bool
-		operator()(const AttributeVectorEntryExtended*	theEntry) const;
-
-	private:
-
-		const XMLCh* const	m_qname;
-	};
-
-	struct URIAndLocalNameCompareFunctor
-	{
-		URIAndLocalNameCompareFunctor(
-				const XMLCh*	theURI,
-				const XMLCh*	theLocalName) :
-			m_uri(theURI),
-			m_localName(theLocalName)
-		{
-		}
-
-		bool
-		operator()(const AttributeVectorEntryExtended*	theEntry) const;
-
-	private:
-
-		const XMLCh* const	m_uri;
-		const XMLCh* const	m_localName;
-	};
-#endif
-
 private:
 
 	// This is not implemented.

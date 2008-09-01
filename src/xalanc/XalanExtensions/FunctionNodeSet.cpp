@@ -135,9 +135,10 @@ FunctionNodeSet::execute(
 {
     if (args.size() != 1)
     {
-        XalanDOMString  theError(executionContext.getMemoryManager());
-
-        executionContext.error(getError(theError), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -154,14 +155,16 @@ FunctionNodeSet::execute(
     }
     else
     {
-        const XPathExecutionContext::GetAndReleaseCachedString  theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theMessage = theGuard.get();
 
-        executionContext.warn(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eWarning,
             getInvalidArgumentTypeError(theMessage),
-            context,
-            locator);
+            locator,
+            context);
 
         return args[0];
     }

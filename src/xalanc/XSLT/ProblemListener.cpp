@@ -15,14 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
 
 
 
 // Class header file.
 #include "ProblemListener.hpp"
+
+
+
+// Necessary for the static asserts below...
+#include "xalanc/XPath/XPathEnvSupport.hpp"
 
 
 

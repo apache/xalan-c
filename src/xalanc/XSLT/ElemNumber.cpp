@@ -221,17 +221,17 @@ ElemNumber::getElementName() const
 
 
 
+typedef XPathExecutionContext::GetCachedString  GetCachedString;
+
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemNumber::startElement(StylesheetExecutionContext&        executionContext) const
 {
     ElemTemplateElement::startElement(executionContext);
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    const GetCachedString   theGuard(executionContext);
 
-    GetAndReleaseCachedString   theGuard(executionContext);
-
-    XalanDOMString&             countString = theGuard.get();
+    XalanDOMString&         countString = theGuard.get();
 
     getCountString(executionContext, countString);
 
@@ -252,11 +252,9 @@ ElemNumber::execute(StylesheetExecutionContext&     executionContext) const
 {
     ElemTemplateElement::execute(executionContext);
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    const GetCachedString   theGuard(executionContext);
 
-    GetAndReleaseCachedString   theGuard(executionContext);
-
-    XalanDOMString&             countString = theGuard.get();
+    XalanDOMString&         countString = theGuard.get();
 
     getCountString(executionContext, countString);
 
@@ -405,11 +403,11 @@ ElemNumber::getCountMatchPattern(
             {
                 // OK, this is ugly.  We have to get a unique prefix and
                 // construct a match pattern with that prefix...
-                StylesheetExecutionContext::GetAndReleaseCachedString   thePrefix(executionContext);
+                const GetCachedString   thePrefix(executionContext);
 
                 executionContext.getUniqueNamespaceValue(thePrefix.get());
 
-                StylesheetExecutionContext::GetAndReleaseCachedString   theMatchPatternString(executionContext);
+                const GetCachedString   theMatchPatternString(executionContext);
 
                 assign(theMatchPatternString.get(), thePrefix.get());
                 append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charColon));
@@ -444,7 +442,7 @@ ElemNumber::getCountMatchPattern(
 
             const ElementPrefixResolverProxy    theProxy(theAttribute->getOwnerElement(), executionContext.getMemoryManager());
 
-            StylesheetExecutionContext::GetAndReleaseCachedString   theMatchPatternString(executionContext);
+            const GetCachedString   theMatchPatternString(executionContext);
 
             assign(theMatchPatternString.get(), s_atString);
             append(theMatchPatternString.get(), theNodeName);
@@ -473,7 +471,7 @@ ElemNumber::getCountMatchPattern(
 
     case XalanNode::PROCESSING_INSTRUCTION_NODE:
         {
-            StylesheetExecutionContext::GetAndReleaseCachedString   theMatchPatternString(executionContext);
+            const GetCachedString   theMatchPatternString(executionContext);
 
             theMatchPatternString.get() = s_piString;
             append(theMatchPatternString.get(), contextNode->getNodeName());
@@ -836,11 +834,11 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&  executionContext) co
 
     XalanMemMgrAutoPtr<XalanNumberFormat, true>     formatter(executionContext.createXalanNumberFormat());
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    typedef XPathExecutionContext::GetCachedString  GetCachedString;
 
-    GetAndReleaseCachedString   theGuard1(executionContext);
+    const GetCachedString   theGuard1(executionContext);
 
-    XalanDOMString&             digitGroupSepValue = theGuard1.get();
+    XalanDOMString&         digitGroupSepValue = theGuard1.get();
 
     if (0 != m_groupingSeparator_avt)
     {
@@ -854,9 +852,9 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&  executionContext) co
             XalanMessages::GroupingSeparatorValueMustBeOneCharacterLength);
     }
 
-    GetAndReleaseCachedString   theGuard2(executionContext);
+    GetCachedString     theGuard2(executionContext);
 
-    XalanDOMString&             nDigitsPerGroupValue = theGuard2.get();
+    XalanDOMString&     nDigitsPerGroupValue = theGuard2.get();
 
     if (0 != m_groupingSize_avt)
     {
@@ -902,11 +900,9 @@ ElemNumber::formatNumberList(
     StringVectorType    tokenVector(executionContext. getMemoryManager()) ;
 
     {
-        typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+        const GetCachedString   theGuard1(executionContext);
 
-        GetAndReleaseCachedString   theGuard1(executionContext);
-
-        XalanDOMString&             formatValue = theGuard1.get();
+        XalanDOMString&         formatValue = theGuard1.get();
 
         if (m_format_avt != 0)
         {
@@ -976,11 +972,9 @@ ElemNumber::formatNumberList(
         theResult += *leaderStrIt;
     }
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    const GetCachedString   theGuard2(executionContext);
 
-    GetAndReleaseCachedString   theGuard2(executionContext);
-
-    XalanDOMString&             theIntermediateResult = theGuard2.get();
+    XalanDOMString&         theIntermediateResult = theGuard2.get();
 
     for( NodeRefListBase::size_type i = 0; i < theListLength; i++)
     {
@@ -1380,7 +1374,7 @@ ElemNumber::getFormattedNumber(
         // Handle the special case of Greek letters for now
         case elalphaNumberType:
             {
-                StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+                const GetCachedString   theGuard(executionContext);
 
                 XalanDOMString&     letterVal = theGuard.get();
 
@@ -1417,7 +1411,7 @@ ElemNumber::getFormattedNumber(
                 {
                     const XalanDOMString::size_type nPadding = numberWidth - lengthNumString;
 
-                    StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+                    const GetCachedString   theGuard(executionContext);
 
                     XalanDOMString&     padString = theGuard.get();
 

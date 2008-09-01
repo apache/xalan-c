@@ -201,12 +201,14 @@ AVT::AVT(
                                                 GetCachedString     theGuard(constructionContext);
 
                                                 // What's another brace doing here?
-                                                constructionContext.error(
+                                                constructionContext.problem(
+                                                    StylesheetConstructionContext::eXSLTProcessor,
+                                                    StylesheetConstructionContext::eError,
                                                     XalanMessageLoader::getMessage(
                                                         theGuard.get(),
                                                         XalanMessages::LeftBraceCannotAppearWithinExpression),
-                                                    0,
-                                                    locator);
+                                                    locator,
+                                                    0);
                                                 break;
                                             }
 
@@ -259,12 +261,14 @@ AVT::AVT(
                         {
                             GetCachedString     theGuard(constructionContext);
 
-                            constructionContext.error(
+                            constructionContext.problem(
+                                StylesheetConstructionContext::eXSLTProcessor,
+                                StylesheetConstructionContext::eError,
                                 XalanMessageLoader::getMessage(
                                     theGuard.get(),
                                     XalanMessages::UnmatchedWasFound),
-                                0,
-                                locator);
+                                locator,
+                                0);
 
                         }
                         break;
@@ -352,12 +356,14 @@ AVT::nextToken(
     {
         GetCachedString     theGuard(constructionContext);
 
-        constructionContext.error(
+        constructionContext.problem(
+            StylesheetConstructionContext::eXSLTProcessor,
+            StylesheetConstructionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::AttributeValueTemplateHasMissing),
-            0,
-            locator);
+            locator,
+            0);
     }
     else
     {

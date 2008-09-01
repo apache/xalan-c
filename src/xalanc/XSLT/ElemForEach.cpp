@@ -364,11 +364,11 @@ ElemForEach::sortChildren(
     keys.reserve(m_sortElemsCount);
 
     // Get some temporary strings to use for evaluting the AVTs...
-    StylesheetExecutionContext::GetAndReleaseCachedString   theTemp1(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theTemp1(executionContext);
 
     XalanDOMString&     langString = theTemp1.get();
 
-    StylesheetExecutionContext::GetAndReleaseCachedString   theTemp2(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theTemp2(executionContext);
 
     XalanDOMString&     scratchString = theTemp2.get();
 
@@ -558,11 +558,11 @@ ElemForEach::transformSelectedChildren(
         keys.reserve(m_sortElemsCount);
 
         // Get some temporary strings to use for evaluting the AVTs...
-        StylesheetExecutionContext::GetAndReleaseCachedString   theTemp1(executionContext);
+        StylesheetExecutionContext::GetCachedString     theTemp1(executionContext);
 
         XalanDOMString&     langString = theTemp1.get();
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   theTemp2(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theTemp2(executionContext);
 
         XalanDOMString&     scratchString = theTemp2.get();
 

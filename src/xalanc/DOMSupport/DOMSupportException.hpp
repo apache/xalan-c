@@ -45,12 +45,31 @@ public:
 	/**
 	 * Constructor for an exception arising from DOMSupport classes
 	 * 
-	 * @param message error message
+	 * @param theMessage The error message.
+     * @param theManager the MemoryManager instance to use.
+     * @param theLocator The Locator instance to use, if any.
 	 */
-	explicit DOMSupportException(const XalanDOMString&	message, MemoryManagerType& theManager);
+    DOMSupportException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator);
+
+	/**
+	 * Constructor for an exception arising from DOMSupport classes.
+     * Use this constructor when the error message is already formatted.
+	 * 
+	 * @param theMessage The error message.
+     * @param theManager the MemoryManager instance to use.
+	 */
+    DOMSupportException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager);
 
 	virtual
 	~DOMSupportException();
+
+	virtual const XalanDOMChar*
+	getType() const;
 
 private:
 };

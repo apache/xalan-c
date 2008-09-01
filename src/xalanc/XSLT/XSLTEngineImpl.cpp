@@ -204,13 +204,59 @@ XSLTEngineImpl::~XSLTEngineImpl()
 
 
 
-//==========================================================
-// SECTION: Main API Functions
-//==========================================================
+void
+XSLTEngineImpl::problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
+{
+    if (m_problemListener != 0)
+    {
+        m_problemListener->problem(
+                    source,
+                    classification,
+                    msg,
+                    locator,
+                    sourceNode);
+    }
+
+    if (classification == ProblemListener::eERROR)
+    {
+        throw XSLTProcessorException(
+                getMemoryManager(),
+                msg,
+                locator);
+    }
+}
 
 
 
-static const XalanDOMChar   s_dummyString = 0;
+void
+XSLTEngineImpl::problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
+{
+    if (m_problemListener != 0)
+    {
+        m_problemListener->problem(
+                    source,
+                    classification,
+                    msg,
+                    sourceNode);
+    }
+
+    if (classification == ProblemListener::eERROR)
+    {
+        throw XSLTProcessorException(
+                getMemoryManager(),
+                msg);
+    }
+}
+
 
 
 void
@@ -308,7 +354,7 @@ XSLTEngineImpl::process(
 
         if (isOK == true && theStylesheetURI.empty() == false)
         {
-            const CCGetAndReleaseCachedString   theGuard(constructionContext);
+            const CCGetCachedString     theGuard(constructionContext);
 
             XalanDOMString&             sysid = theGuard.get();
 
@@ -330,12 +376,14 @@ XSLTEngineImpl::process(
 
     if(0 == m_stylesheetRoot)
     {
-        const ECGetAndReleaseCachedString   theGuard(executionContext);
+        const ECGetCachedString     theGuard(executionContext);
 
         error(
             XalanMessageLoader::getMessage(
                 theGuard.get(),
-                XalanMessages::FailedToProcessStylesheet));
+                XalanMessages::FailedToProcessStylesheet),
+                0,
+                sourceTree);
     }
     else if(0 != sourceTree)
     {
@@ -369,12 +417,14 @@ XSLTEngineImpl::process(
     {
         if (m_stylesheetRoot == 0)
         {
-            const ECGetAndReleaseCachedString theGuard(executionContext);
+            const ECGetCachedString     theGuard(executionContext);
 
             error(
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
-                    XalanMessages::NoStylesheet));
+                    XalanMessages::NoStylesheet),
+                    0,
+                    sourceTree);
         }
 
         FormatterListener* const    theFormatter =
@@ -419,7 +469,7 @@ XSLTEngineImpl::processStylesheet(
 
     if (systemID != 0 || stylesheetNode != 0 || stylesheetSource.getStream() != 0)
     {
-        const CCGetAndReleaseCachedString   theGuard(constructionContext);
+        const CCGetCachedString     theGuard(constructionContext);
 
         XalanDOMString&     xslIdentifier = theGuard.get();
 
@@ -433,12 +483,14 @@ XSLTEngineImpl::processStylesheet(
 
             if (theType != XalanNode::ELEMENT_NODE && theType != XalanNode::DOCUMENT_NODE)
             {
-                const CCGetAndReleaseCachedString   theGuard(constructionContext);
+                const CCGetCachedString     theGuard(constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
-                        XalanMessages::CompilingDOMStylesheetReqDocument));
+                        XalanMessages::CompilingDOMStylesheetReqDocument),
+                        constructionContext.getLocatorFromStack(),
+                        0);
             }
             else
             {
@@ -495,7 +547,7 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&   inputSource)
 
     if(0 == sourceTree)
     {
-        const CCGetAndReleaseCachedString   theGuard1(m_xpathConstructionContext);
+        const CCGetCachedString     theGuard1(m_xpathConstructionContext);
 
         XalanDOMString&     xmlIdentifier = theGuard1.get();
 
@@ -557,7 +609,8 @@ XalanDocument*
 XSLTEngineImpl::parseXML(
             const XalanDOMString&   urlString,
             DocumentHandler*        docHandler,
-            XalanDocument*          docToRegister)
+            XalanDocument*          docToRegister,
+            ErrorHandler*           theErrorHandler)
 {
     
     XalanDocument*  doc =
@@ -594,7 +647,8 @@ XSLTEngineImpl::parseXML(
             doc = parseXML(
                         *resolverInputSource.get(),
                         docHandler,
-                        docToRegister);
+                        docToRegister,
+                        theErrorHandler);
         }
         else
         {
@@ -605,7 +659,8 @@ XSLTEngineImpl::parseXML(
             doc = parseXML(
                         inputSource,
                         docHandler,
-                        docToRegister);
+                        docToRegister,
+                        theErrorHandler);
         }
 
         if (doc != 0)
@@ -623,9 +678,21 @@ XalanDocument*
 XSLTEngineImpl::parseXML(
             const InputSource&  inputSource,
             DocumentHandler*    docHandler,
-            XalanDocument*      docToRegister)
+            XalanDocument*      docToRegister,
+            ErrorHandler*       theErrorHandler)
 {
-    if(0 != docHandler)
+    typedef XMLParserLiaison::EnsureResetErrorHandler   EnsureResetErrorHandler;
+
+    EnsureResetErrorHandler     theGuard;
+
+    if (theErrorHandler != 0)
+    {
+        theGuard.set(
+            &m_parserLiaison,
+            theErrorHandler);
+    }
+
+    if (0 != docHandler)
     {
         m_parserLiaison.parseXMLStream(
             inputSource,
@@ -657,10 +724,10 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
     Stylesheet*             stylesheet = 0;
 
-    const CCGetAndReleaseCachedString theGuard(constructionContext);
-    XalanDOMString  &       stringHolder = theGuard.get();
+    const CCGetCachedString     theGuard(constructionContext);
+    XalanDOMString&             stringHolder = theGuard.get();
 
-    const CCGetAndReleaseCachedString theGuard1(constructionContext);
+    const CCGetCachedString     theGuard1(constructionContext);
     XalanDOMString&     localXSLURLString = theGuard1.get();    
     
     trim(xslURLString, localXSLURLString);
@@ -670,7 +737,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
     if(fragIndex == 0)
     {
-        const CCGetAndReleaseCachedString theGuard(constructionContext);
+        const CCGetCachedString     theGuard(constructionContext);
 
         XalanDOMString& fragID = theGuard.get();
 
@@ -701,19 +768,21 @@ XSLTEngineImpl::getStylesheetFromPIURL(
             }
             else
             {
-                const CCGetAndReleaseCachedString theGuard(constructionContext);
+                const CCGetCachedString     theGuard(constructionContext);
 
                 error(
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::CantFindFragment_1Param,
-                        fragID));
+                        fragID),
+                    constructionContext.getLocatorFromStack(),
+                    &fragBase);
             }
         }
 
         // Try a bunch of really ugly stuff to find the fragment.
         // What's the right way to do this?
-        const CCGetAndReleaseCachedString theGuard3(constructionContext);
+        const CCGetCachedString     theGuard3(constructionContext);
 
         XalanDOMString& ds = theGuard3.get();
 
@@ -771,13 +840,15 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
         if(nl.getLength() == 0)
         {
-            const CCGetAndReleaseCachedString   theGuard(constructionContext);
+            const CCGetCachedString     theGuard(constructionContext);
 
             error(
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::CantFindFragment_1Param,
-                    fragID));
+                    fragID),
+                constructionContext.getLocatorFromStack(),
+                &fragBase);
         }
 
         XalanNode* const    frag = nl.item(0);
@@ -818,13 +889,15 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         }
         else
         {
-            const CCGetAndReleaseCachedString theGuard(constructionContext);
+            const CCGetCachedString     theGuard(constructionContext);
 
             error(
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::NodePointedByFragment_1Param,
-                    fragID));
+                    fragID),
+                constructionContext.getLocatorFromStack(),
+                &fragBase);
         }
     }
     else
@@ -1022,207 +1095,6 @@ XSLTEngineImpl::setTraceSelects(bool    b)
 
 
 void
-XSLTEngineImpl::message(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
-{
-    problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::message(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode) const
-{
-    problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
-}
-
-
-
-void
-XSLTEngineImpl::problem(
-            const XalanDOMString&               msg, 
-            ProblemListener::eClassification    classification,
-            const XalanNode*                    sourceNode,
-            const ElemTemplateElement*          styleNode) const
-{
-    const XalanDOMChar*     id = 0;
-
-    MemoryManager& theManager =
-        const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
-
-    XalanDOMString  uri(theManager);
-
-    XalanFileLoc    lineNumber =
-        XalanLocator::getUnknownValue();
-
-    XalanFileLoc    columnNumber =
-        XalanLocator::getUnknownValue();
-
-    const LocatorType*      locator = getLocatorFromStack();
-
-    if (locator == 0 && styleNode != 0)
-    {
-        locator = styleNode->getLocator();
-    }
-
-    if (locator != 0)
-    {
-        id = locator->getPublicId();
-
-        if (id == 0)
-        {
-            id = locator->getSystemId();
-        }
-
-        if (id != 0)
-        {
-            uri = id;
-        }
-
-        lineNumber = locator->getLineNumber();
-        columnNumber = locator->getColumnNumber();
-    }
-    else if (styleNode != 0)
-    {
-        lineNumber = styleNode->getLineNumber();
-        columnNumber = styleNode->getColumnNumber();
-
-        uri = styleNode->getURI();
-    }
-
-    if (m_problemListener != 0)
-    {
-        m_problemListener->problem(
-                    ProblemListener::eXSLPROCESSOR,
-                    classification,
-                    sourceNode,
-                    styleNode,
-                    msg,
-                    id,
-                    lineNumber,
-                    columnNumber);
-    }
-
-    if (classification == ProblemListener::eERROR)
-    {
-        throw XSLTProcessorException(
-                theManager,
-                msg,
-                uri,
-                lineNumber,
-                columnNumber);
-    }
-}
-
-
-
-static const XalanDOMChar   theDummy = 0;
-
-void
-XSLTEngineImpl::problem(
-            const XalanDOMString&               msg, 
-            ProblemListener::eClassification    classification,
-            const LocatorType&                  locator,
-            const XalanNode*                    sourceNode) const
-{
-    const XalanDOMChar*     id = locator.getSystemId();
-
-    if (id == 0)
-    {
-        id = &theDummy;
-    }
-
-    XalanFileLoc    lineNumber = locator.getLineNumber();
-    XalanFileLoc    columnNumber = locator.getColumnNumber();
-
-    if (m_problemListener != 0)
-    {
-        m_problemListener->problem(
-                    ProblemListener::eXSLPROCESSOR,
-                    classification,
-                    sourceNode,
-                    0,
-                    msg,
-                    id,
-                    lineNumber,
-                    columnNumber);
-    }
-
-    if (classification == ProblemListener::eERROR)
-    {
-        MemoryManagerType& theManager = const_cast<XSLTEngineImpl*>(this)->getMemoryManager();
-
-        throw XSLTProcessorException(
-                    theManager,
-                    msg,
-                    XalanDOMString(
-                        id,
-                        theManager),
-                    lineNumber,
-                    columnNumber);
-    }
-}
-
-
-
-void
-XSLTEngineImpl::warn(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
-{
-    const LocatorType* const    locator = styleNode == 0 ? 0 : styleNode->getLocator();
-
-    if (locator != 0)
-    {
-        problem(msg, ProblemListener::eWARNING, *locator, sourceNode);
-    }
-    else
-    {
-        problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
-    }
-}
-
-
-
-void
-XSLTEngineImpl::warn(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode) const
-{
-    problem(msg, ProblemListener::eWARNING, locator, sourceNode);
-}
-
-
-void
-XSLTEngineImpl::error(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
-{
-    problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::error(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode) const
-{
-    problem(msg, ProblemListener::eERROR, locator, sourceNode);
-}
-
-
-
-void
 XSLTEngineImpl::setDiagnosticsOutput(PrintWriter*   pw)
 {
     m_diagnosticsPrintWriter = pw;
@@ -1257,7 +1129,7 @@ XSLTEngineImpl::traceSelect(
 {
     if (0 != m_diagnosticsPrintWriter)
     {
-        const ECGetAndReleaseCachedString theGuard(executionContext);
+        const ECGetCachedString     theGuard(executionContext);
 
         XalanDOMString& msg = theGuard.get();
 
@@ -1273,7 +1145,7 @@ XSLTEngineImpl::traceSelect(
         {
             msg.append("*|text(), (default select), ");
         }
-        const ECGetAndReleaseCachedString theGuard1(executionContext);
+        const ECGetCachedString     theGuard1(executionContext);
 
         XalanDOMString& theBuffer = theGuard1.get();
         NumberToDOMString(nl.getLength(), theBuffer);
@@ -1437,7 +1309,7 @@ XSLTEngineImpl::addResultAttribute(
         {
             assert(m_executionContext != 0);
 
-            const ECGetAndReleaseCachedString   prefixGuard(*m_executionContext);
+            const ECGetCachedString     prefixGuard(*m_executionContext);
 
             XalanDOMString&     prefix = prefixGuard.get();
 
@@ -1488,7 +1360,7 @@ XSLTEngineImpl::reportDuplicateNamespaceNodeError(
 {
     assert(m_executionContext != 0);
 
-    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+    const ECGetCachedString     theGuard(*m_executionContext);
 
     XalanDOMString&     theMessage =
             theGuard.get();
@@ -1507,14 +1379,10 @@ XSLTEngineImpl::reportDuplicateNamespaceNodeError(
             theName);
     }
 
-    if (locator != 0)
-    {
-        error(theMessage, *locator);
-    }
-    else
-    {
-        error(theMessage);
-    }
+    error(
+        theMessage,
+        locator,
+        m_executionContext->getCurrentNode());
 }
 
 
@@ -1565,7 +1433,7 @@ XSLTEngineImpl::flushPending()
 
                 if (theWriter == 0)
                 {
-                    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+                    const ECGetCachedString     theGuard(*m_executionContext);
 
                     XalanDOMString&     theMessage =
                         theGuard.get();
@@ -1579,20 +1447,10 @@ XSLTEngineImpl::flushPending()
                         theMessage,
                         XalanMessages::CannotSwitchToHTMLOutputMethod);
 
-                    if (theLocator != 0)
-                    {
-                        warn(
-                            theMessage,
-                            *theLocator,
-                            0);
-                    }
-                    else
-                    {
-                        warn(
-                            theMessage,
-                            0,
-                            0);
-                    }
+                    warn(
+                        theMessage,
+                        theLocator,
+                        0);
                 }
                 else if (theFormatter->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
                 {
@@ -2089,26 +1947,17 @@ XSLTEngineImpl::warnCopyTextNodesOnly(
 {
     assert(m_executionContext != 0);
 
-    const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+    const ECGetCachedString     theGuard(*m_executionContext);
 
     const XalanDOMString&   theMessage =
         XalanMessageLoader::getMessage(
             theGuard.get(),
             XalanMessages::OnlyTextNodesCanBeCopied);
 
-    if (locator != 0)
-    {
-        warn(
-            theMessage,
-            *locator,
-            sourceNode);
-    }
-    else
-    {
-        warn(
-            theMessage,
-            sourceNode);
-    }
+    warn(
+        theMessage,
+        locator,
+        sourceNode);
 }
 
 
@@ -2244,9 +2093,7 @@ createAndAddNamespaceResultAttribute(
             const XalanDOMString&           thePrefix,
             const XalanDOMString&           theNamespaceURI)
 {
-    typedef StylesheetExecutionContext::GetAndReleaseCachedString   GetAndReleaseCachedString;
-
-    const GetAndReleaseCachedString     theCachedString(theExecutionContext);
+    const XSLTEngineImpl::ECGetCachedString     theCachedString(theExecutionContext);
 
     createAndAddNamespaceResultAttribute(
         theExecutionContext,
@@ -2264,9 +2111,9 @@ createFixedUpResultAttribute(
             const XalanDOMString&           theNamespaceURI,
             const XalanDOMString&           theValue)
 {
-    typedef StylesheetExecutionContext::GetAndReleaseCachedString   GetAndReleaseCachedString;
+    typedef StylesheetExecutionContext::GetCachedString     GetCachedString;
 
-    const GetAndReleaseCachedString     theCachedString(theExecutionContext);
+    const GetCachedString   theCachedString(theExecutionContext);
 
     XalanDOMString&     theBuffer = theCachedString.get();
 
@@ -2369,26 +2216,17 @@ XSLTEngineImpl::cloneToResultTree(
             }
             else
             {
-                const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+                const ECGetCachedString     theGuard(*m_executionContext);
 
                 const XalanDOMString&   theMessage =
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::WrongAttemptingToAddAttrinbute);
 
-                if (locator != 0)
-                {
-                    warn(
-                        theMessage,
-                        *locator,
-                        &node);
-                }
-                else
-                {
-                    warn(
-                        theMessage,
-                        &node);
-                }
+                warn(
+                    theMessage,
+                    locator,
+                    &node);
             }
             break;
 
@@ -2418,26 +2256,17 @@ XSLTEngineImpl::cloneToResultTree(
 
         default:
             {
-                const ECGetAndReleaseCachedString   theGuard(*m_executionContext);
+                const ECGetCachedString     theGuard(*m_executionContext);
 
                 const XalanDOMString&   theMessage =
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::CantCreateItemInResultTree);
 
-                if (locator != 0)
-                {
-                    warn(
-                        theMessage,
-                        *locator,
-                        &node);
-                }
-                else
-                {
-                    warn(
-                        theMessage,
-                        &node);
-                }
+                warn(
+                    theMessage,
+                    locator,
+                    &node);
             }
         break;
         }
@@ -2647,7 +2476,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 
 
 bool
-XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName) const
+XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName)
 {
     assert(m_executionContext != 0);
     assert(m_hasCDATASectionElements == true);
@@ -2676,10 +2505,8 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName) const
         }
         else
         {
-            typedef ECGetAndReleaseCachedString     GetAndReleaseCachedString;
-
-            const GetAndReleaseCachedString     elemLocalNameGuard(*m_executionContext);
-            const GetAndReleaseCachedString     prefixGuard(*m_executionContext);
+            const ECGetCachedString     elemLocalNameGuard(*m_executionContext);
+            const ECGetCachedString     prefixGuard(*m_executionContext);
 
             XalanDOMString&     elemLocalName = elemLocalNameGuard.get();
             XalanDOMString&     prefix = prefixGuard.get();
@@ -2702,13 +2529,15 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName) const
 
                 if(elemNS == 0)
                 {
-                    GetAndReleaseCachedString   theGuard(*m_executionContext);
+                    ECGetCachedString     theGuard(*m_executionContext);
 
                     error(
                         XalanMessageLoader::getMessage(
                             theGuard.get(),
                             XalanMessages::PrefixIsNotDeclared_1Param,
-                            prefix));
+                            prefix),
+                        0,
+                        m_executionContext->getCurrentNode());
                 }
                 else
                 {
@@ -2936,7 +2765,7 @@ XSLTEngineImpl::addResultNamespace(
     }
     else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
     {
-        const ECGetAndReleaseCachedString   prefixGuard(*m_executionContext);
+        const ECGetCachedString     prefixGuard(*m_executionContext);
 
         XalanDOMString&     thePrefix = prefixGuard.get();
 
@@ -3312,6 +3141,54 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 
     fireGenerateEvent(ge);
 }
+
+
+void
+XSLTEngineImpl::error(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode)
+{
+    problem(
+        eXSLTProcessor,
+        eError,
+        theMessage,
+        theLocator,
+        theSourceNode);
+}
+
+
+
+void
+XSLTEngineImpl::warn(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode)
+{
+    problem(
+        eXSLTProcessor,
+        eWarning,
+        theMessage,
+        theLocator,
+        theSourceNode);
+}
+
+
+
+void
+XSLTEngineImpl::message(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode)
+{
+    problem(
+        eXSLTProcessor,
+        eMessage,
+        theMessage,
+        theLocator,
+        theSourceNode);
+}
+
 
 
 void

@@ -75,11 +75,10 @@ XalanEXSLTFunctionAlign::execute(
 
     if (theSize != 2 && theSize != 3)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        executionContext.error(getError(theBuffer), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(
@@ -99,7 +98,7 @@ XalanEXSLTFunctionAlign::execute(
     }
     else
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theResult = theGuard.get();
 
@@ -180,12 +179,11 @@ XalanEXSLTFunctionConcat::execute(
             const LocatorType*              locator) const
 {
     if (args.size() != 1)
-    {        
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        executionContext.error(getError(theBuffer), context, locator);
+    {
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -199,7 +197,7 @@ XalanEXSLTFunctionConcat::execute(
     }
     else
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theResult = theGuard.get();
 
@@ -237,11 +235,10 @@ XalanEXSLTFunctionPadding::execute(
 
     if (theSize != 1 && theSize != 2)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        executionContext.error(getError(theBuffer), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(
@@ -258,7 +255,7 @@ XalanEXSLTFunctionPadding::execute(
     }
     else
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theResult = theGuard.get();
 
@@ -345,11 +342,10 @@ XalanEXSLTFunctionEncodeURI::execute(
 
     if (theSize != 2 && theSize != 3)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        XalanDOMString&     theBuffer = theGuard.get();
-
-        executionContext.error(getError(theBuffer), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(
@@ -370,12 +366,13 @@ XalanEXSLTFunctionEncodeURI::execute(
     {
         return executionContext.getXObjectFactory().createStringReference(s_emptyString);
     }   
-    
-    XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-    XalanDOMString &theResult = theGuard.get();
 
-    XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
-    XalanDOMString &theBuffer = theGuard1.get();
+    const GetCachedString   theGuard(executionContext);
+
+    XalanDOMString&     theResult = theGuard.get();
+
+    const GetCachedString   theGuard1(executionContext);
+    XalanDOMString&     theBuffer = theGuard1.get();
 
     XALAN_USING_STD(find)
 
@@ -479,9 +476,10 @@ XalanEXSLTFunctionDecodeURI::execute(
 
     if (theSize != 1 && theSize != 2)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(
@@ -640,12 +638,14 @@ XalanEXSLTFunctionDecodeURI::hexCharsToByte(
         {
             const XPathExecutionContext::GetCachedString    theGuard(executionContext);
 
-            executionContext.error(
+            executionContext.problem(
+                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
-                    XalanMessages::InvalidURI),
-                context, 
-                locator);
+                    XalanMessages::InvalidURI), 
+                locator,
+                context);
         }
 
         curChar = highHexChar;

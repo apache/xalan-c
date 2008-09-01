@@ -34,6 +34,10 @@
 
 
 
+#include <xalanc/XPath/XPathEnvSupport.hpp>
+
+
+
 #include <xalanc/XSLT/ElemTemplateElement.hpp>
 
 
@@ -42,30 +46,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanMessages::Codes s_messageCodes[ProblemListener::eSourceCount][ProblemListener::eClassificationCount] =
-{
-    {
-        XalanMessages::XMLMessage,
-        XalanMessages::XMLWarning,
-        XalanMessages::XMLError,
-    },
-    {
-        XalanMessages::XSLTMessage,
-        XalanMessages::XSLTWarning,
-        XalanMessages::XSLTError,
-    },
-    {
-        XalanMessages::XPathMessage,
-        XalanMessages::XPathWarning,
-        XalanMessages::XPathError,
-    }
-};
-
-
-
 ProblemListenerDefault::ProblemListenerDefault(
-            MemoryManagerType&  theManager,
-            PrintWriter*        pw) :
+            MemoryManager&  theManager,
+            PrintWriter*    pw) :
     ProblemListener(),
     m_memoryManager(theManager),
     m_pw(pw)
@@ -90,7 +73,7 @@ ProblemListenerDefault::setPrintWriter(PrintWriter*     pw)
 
 void
 ProblemListenerDefault::problem(
-            eProblemSource              source,
+            eSource                     source,
             eClassification             classification,
             const XalanNode*            sourceNode,
             const ElemTemplateElement*  styleNode,
@@ -101,7 +84,7 @@ ProblemListenerDefault::problem(
 {
     if (m_pw != 0)
     {
-        problem(
+        defaultFormat(
             *m_pw,
             source,
             classification,
@@ -118,8 +101,50 @@ ProblemListenerDefault::problem(
 
 void
 ProblemListenerDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode)
+{
+    if (m_pw != 0)
+    {
+        ProblemListener::defaultFormat(
+            *m_pw,
+            source,
+            classification,
+            msg,
+            locator,
+            sourceNode);
+    }
+}
+
+
+
+void
+ProblemListenerDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
+{
+    if (m_pw != 0)
+    {
+        ProblemListener::defaultFormat(
+                *m_pw,
+                source,
+                classification,
+                msg,
+                sourceNode);
+    }
+}
+
+
+
+void
+ProblemListenerDefault::defaultFormat(
             PrintWriter&                pw,
-            eProblemSource              source,
+            eSource                     source,
             eClassification             classification,
             const XalanNode*            sourceNode,
             const ElemTemplateElement*  styleNode,

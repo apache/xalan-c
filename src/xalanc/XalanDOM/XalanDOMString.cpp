@@ -96,20 +96,21 @@ XalanDOMString::XalanDOMString(
     invariants();
 }
 
+
+
 XalanDOMString*
-XalanDOMString::clone(MemoryManagerType&  theManager)
+XalanDOMString::clone(MemoryManager&  theManager)
 {
-        typedef XalanDOMString ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XalanDOMString ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(*this, theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(*this, theManager);
 
-        theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
 
 
@@ -172,7 +173,7 @@ XalanDOMString::resize(
 
 
 
-void
+XalanDOMString&
 XalanDOMString::erase(
             size_type   theStartPosition,
             size_type   theCount)
@@ -181,6 +182,7 @@ XalanDOMString::erase(
 
     const size_type     theActualCount =
             theCount == size_type(npos) ? length() - theStartPosition : theCount;
+    assert(theStartPosition + theActualCount <= length());
 
     if (theStartPosition == 0 && theCount >= size())
     {
@@ -208,6 +210,8 @@ XalanDOMString::erase(
     }
 
     invariants();
+
+    return *this;
 }
 
 

@@ -105,7 +105,7 @@ ElemLiteralResult::init(
     m_avts = constructionContext.allocateAVTPointerVector(nAttrs);
     assert(m_avts != 0);
 
-    const StylesheetConstructionContext::GetAndReleaseCachedString  theGuard(constructionContext);
+    const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
     XalanDOMString&     theBuffer = theGuard.get();
 
@@ -377,7 +377,7 @@ ElemLiteralResult::evaluateAVTs(StylesheetExecutionContext& executionContext) co
 {
     if (m_avtsCount > 0)
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theStringedValue = theGuard.get();
 
@@ -439,7 +439,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&  executionContext) const
 
     if(m_avtsCount > 0)
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     theStringedValue = theGuard.get();
 
@@ -487,7 +487,7 @@ ElemLiteralResult::isAttrOK(
         }
         else
         {
-            const StylesheetConstructionContext::GetAndReleaseCachedString  theGuard(constructionContext);
+            const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
             XalanDOMString&     thePrefix = theGuard.get();
 

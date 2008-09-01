@@ -52,16 +52,12 @@ public:
 		{
 		}
 
-		// Const version is suitable for use by
-		// multiple threads.
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
 			eCaseOrder				theCaseOrder = eDefault) const = 0;
 
-		// Const version is suitable for use by
-		// multiple threads.
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,

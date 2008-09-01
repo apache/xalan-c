@@ -29,8 +29,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XStringCached::XStringCached(
-            GetAndReleaseCachedString&  val,
-            MemoryManager&              theManager) :
+            GetCachedString&    val,
+            MemoryManager&      theManager) :
     XStringBase(theManager),
     m_value(val)
 {

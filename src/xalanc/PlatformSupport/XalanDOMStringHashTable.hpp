@@ -28,10 +28,6 @@
 #include <xalanc/Include/XalanVector.hpp>
 
 
-#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
-
-
-
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
@@ -48,6 +44,8 @@ public:
 	typedef XalanVector<const XalanDOMString*>	BucketType;
 	typedef BucketType::size_type				bucket_size_type;
 	typedef XalanVector<bucket_size_type>		BucketCountsType;
+    typedef ExplicitMemoryManagedConstructionTraits<BucketType>     ConstructionTraits;
+    typedef XalanVector<BucketType, ConstructionTraits>     BucketVectorType;
 
 	enum { eDefaultBucketCount = 101, eDefaultBucketSize = 15 };
 
@@ -179,43 +177,16 @@ public:
 			const XalanDOMString&	theString,
 			size_t					theBucketIndex);
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-	struct
-	equalsXalanDOMString
-	{
-		equalsXalanDOMString(
-				const XalanDOMChar*			theString,
-				XalanDOMString::size_type	theLength) :
-			m_string(theString),
-			m_length(theLength)
-		{
-		}
-
-		bool
-		operator()(const XalanDOMString*	theString) const;
-
-	private:
-
-		const XalanDOMChar* const			m_string;
-
-		const XalanDOMString::size_type		m_length;
-	};
-#endif
-
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
-        assert(m_buckets.getMemoryManager() != 0);
-
-        return *m_buckets.getMemoryManager();
+        return m_buckets.getMemoryManager();
     }
 
-    const MemoryManagerType&
+    const MemoryManager&
     getMemoryManager() const
     {
-        assert(m_buckets.getMemoryManager() != 0);
-
-        return *m_buckets.getMemoryManager();
+        return m_buckets.getMemoryManager();
     }
 
 private:
@@ -231,15 +202,15 @@ private:
 
 
 	// Data members...
-	const size_t					m_bucketCount;
+	const size_t            m_bucketCount;
 
-	const bucket_size_type			m_bucketSize;
+	const bucket_size_type  m_bucketSize;
 
-	XalanMemMgrAutoPtrArray<BucketType>	m_buckets;
+	BucketVectorType        m_buckets;
 
-	size_t							m_count;
+	size_t                  m_count;
 
-	size_t					        m_collisions;		
+	size_t                  m_collisions;		
 };
 
 

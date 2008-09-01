@@ -37,6 +37,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/PrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
@@ -66,7 +67,7 @@ XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_e
 const XalanDOMString                                    XPathEnvSupportDefault::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 void
-XPathEnvSupportDefault::initialize(MemoryManagerType&  theManager)
+XPathEnvSupportDefault::initialize(MemoryManager&   theManager)
 {
     XPathEnvSupportDefault::NamespaceFunctionTablesType tmpMap(theManager);
 
@@ -91,10 +92,12 @@ XPathEnvSupportDefault::terminate()
 
 
 
-XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManagerType&  theManager) :
+XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManager&   theManager) :
 	XPathEnvSupport(),
 	m_sourceDocs(theManager),
-	m_externalFunctions(theManager)
+	m_externalFunctions(theManager),
+    m_memoryManager(theManager),
+    m_pw(0)
 {
 }
 
@@ -157,7 +160,7 @@ XPathEnvSupportDefault::updateFunctionTable(
 			// Found it, so delete the function...
             const_cast<Function*>((*j).second)->~Function();
 
-            MemoryManagerType& theManager = theTable.getMemoryManager();
+            MemoryManager&  theManager = theTable.getMemoryManager();
 
             theManager.deallocate((void*)(*j).second);
 
@@ -233,7 +236,8 @@ XalanDocument*
 XPathEnvSupportDefault::parseXML(
             MemoryManagerType&      /* theManager */,
 			const XalanDOMString&	/* urlString */,
-			const XalanDOMString&	/* base */)
+			const XalanDOMString&	/* base */,
+            ErrorHandler*           /* theErrorHandler */)
 {
 	return 0;
 }
@@ -423,16 +427,12 @@ XPathEnvSupportDefault::extFunction(
 
 		theFunctionName += functionName;
 
-        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
 
-		if (locator != 0)
-		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionName, *locator, theGuard.get());
-		}
-		else
-		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionName,  theGuard.get());
-		}
+        throw XPathExceptionFunctionNotAvailable(
+                theFunctionName,
+                theGuard.get(),
+                locator);
 
 		// dummy return value...
 		return XObjectPtr();
@@ -441,37 +441,58 @@ XPathEnvSupportDefault::extFunction(
 
 
 
-bool
-XPathEnvSupportDefault::problem(
-			eSource					/* where */,
-			eClassification			classification,
-			const PrefixResolver*	/* resolver */,
-			const XalanNode*		/* sourceNode */,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			XalanFileLoc			lineNo,
-			XalanFileLoc			charOffset) const
+void
+XPathEnvSupportDefault::setPrintWriter(PrintWriter*     pw)
 {
-	cerr << msg;
-
-	if (uri != 0)
-	{
-		cerr << ",in " << uri;
-	}
-
-	cerr << ", at line number "
-		 << static_cast<long>(lineNo)
-		 << " at offset "
-		 << static_cast<long>(charOffset)
-		 << endl;
-
-	return classification == eError ? true : false;
+    m_pw = pw;
 }
 
 
 
-XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager) :
-	m_memMgr(theManager)
+void
+XPathEnvSupportDefault::problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
+{
+    if (m_pw != 0)
+    {
+        defaultFormat(
+            *m_pw,
+            source,
+            classification,
+            msg,
+            locator,
+            sourceNode);
+    }
+}
+
+
+
+void
+XPathEnvSupportDefault::problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
+{
+    if (m_pw != 0)
+    {
+        defaultFormat(
+            *m_pw,
+            source,
+            classification,
+            msg,
+            sourceNode);
+    }
+}
+
+
+
+XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManager&     theManager) :
+	m_memoryManager(theManager)
 {
 }
 
@@ -482,11 +503,11 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 {
 	FunctionTableInnerType::const_iterator	i = thePair.second.begin();
 
-	while(i != thePair.second.end())
+	while (i != thePair.second.end())
 	{
-        const_cast<Function*>((*i).second)->~Function();
-
-        m_memMgr.deallocate((void*)(*i).second);
+        XalanDestroy(
+            m_memoryManager,
+            const_cast<Function*>((*i).second));
 
         ++i;
 	}

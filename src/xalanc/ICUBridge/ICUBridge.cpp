@@ -75,7 +75,11 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 	}
 	else
 	{
-		return UnicodeString(theString, length(theString));
+        assert(theLength == static_cast<int32_t>(theLength));
+
+        return UnicodeString(
+                    theString,
+                    static_cast<int32_t>(theLength));
 	}
 }
 

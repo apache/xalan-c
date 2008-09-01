@@ -68,11 +68,12 @@ Function::execute(
 	}
 	else
 	{
-        XalanDOMString theBuffer(executionContext.getMemoryManager());
+        generalError(
+            executionContext,
+            context,
+            locator);
 
-		executionContext.error(getError(theBuffer), context, locator);
-
-		return XObjectPtr(0);
+        return XObjectPtr(0);
 	}
 }
 
@@ -84,11 +85,12 @@ Function::execute(
 			XalanNode*				context,			
 			const LocatorType*		locator) const
 {
-    XalanDOMString theBuffer(executionContext.getMemoryManager());
+    generalError(
+        executionContext,
+        context,
+        locator);
 
-	executionContext.error(getError(theBuffer), context, locator);
-
-	return XObjectPtr(0);
+    return XObjectPtr(0);
 }
 
 
@@ -100,11 +102,12 @@ Function::execute(
 			const XObjectPtr		/* arg1 */,
 			const LocatorType*		locator) const
 {
-    XalanDOMString theBuffer(executionContext.getMemoryManager());
+    generalError(
+        executionContext,
+        context,
+        locator);
 
-	executionContext.error(getError(theBuffer), context, locator);
-
-	return XObjectPtr(0);
+    return XObjectPtr(0);
 }
 
 
@@ -117,11 +120,12 @@ Function::execute(
 			const XObjectPtr		/* arg2 */,
 			const LocatorType*		locator) const
 {
-    XalanDOMString theBuffer(executionContext.getMemoryManager());
+    generalError(
+        executionContext,
+        context,
+        locator);
 
-	executionContext.error(getError(theBuffer), context, locator);
-
-	return XObjectPtr(0);
+    return XObjectPtr(0);
 }
 
 
@@ -135,11 +139,30 @@ Function::execute(
 			const XObjectPtr		/* arg3 */,
 			const LocatorType*		locator) const
 {
-    XalanDOMString theBuffer(executionContext.getMemoryManager());
+    generalError(
+        executionContext,
+        context,
+        locator);
 
-	executionContext.error(getError(theBuffer), context, locator);
+    return XObjectPtr(0);
+}
 
-	return XObjectPtr(0);
+
+
+void
+Function::generalError(
+			XPathExecutionContext&  executionContext,
+			const XalanNode*        context,
+			const Locator*          locator) const
+{
+    const GetCachedString   theGuard(executionContext);
+
+    executionContext.problem(
+        XPathExecutionContext::eXPath,
+        XPathExecutionContext::eError,
+        getError(theGuard.get()),
+        locator,
+        context);
 }
 
 

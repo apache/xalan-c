@@ -24,8 +24,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ExecutionContext::ExecutionContext(MemoryManager&   m_memoryManager) :
-    m_memoryManager(m_memoryManager),
+ExecutionContext::ExecutionContext(MemoryManager&   theMemoryManager) :
+    m_memoryManager(theMemoryManager),
     m_hasPreserveOrStripConditions(false)
 {
 }

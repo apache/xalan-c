@@ -37,11 +37,11 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
-#include <xalanc/PlatformSupport/XSLException.hpp>
 
 
 
 #include <xalanc/XPath/NameSpace.hpp>
+#include <xalanc/XPath/XalanXPathException.hpp>
 
 
 
@@ -343,7 +343,7 @@ public:
             const XalanDOMChar*         theQName,
             XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
-    class InvalidQNameException : public XSLException
+    class InvalidQNameException : public XalanXPathException
     {
     public:
 
@@ -352,44 +352,13 @@ public:
          * 
          * @param theQName The QName string that is not valid.
          * @param theQNameLength The length of the string.
-         * @param theURI the URI of the related document, if known
-         * @param theLineNumber the line number of the related document.
-         * @param theColumnNumber the column number of the related document.
          * @param theResult A temporary string for loading the error message.
          */
         InvalidQNameException(
                 const XalanDOMChar*         theQName,
                 XalanDOMString::size_type   theQNameLength,
-                const XalanDOMString&       theURI,
-                int                         theLineNumber,
-                int                         theColumnNumber,
-                XalanDOMString&             theResult);
-
-        /**
-         * Constructor
-         * 
-         * @param theLocator The locator instance for error reporting.
-         * @param theQName The QName string that is not valid.
-         * @param theQNameLength The length of the string.
-         * @param theResult A temporary string for loading the error message.
-         */
-        InvalidQNameException(
-                const LocatorType&          theLocator,
-                const XalanDOMChar*         theQName,
-                XalanDOMString::size_type   theQNameLength,
-                XalanDOMString&             theResult);
-
-        /**
-         * Constructor
-         * 
-         * @param theQName The QName string that is not valid.
-         * @param theQNameLength The length of the string.
-         * @param theResult A temporary string for loading the error message.
-         */
-        InvalidQNameException(
-                const XalanDOMChar*         theQName,
-                XalanDOMString::size_type   theQNameLength,
-                XalanDOMString&             theResult);
+                XalanDOMString&             theResult,
+                const Locator*              theLocator);
 
         /**
          * Constructor
@@ -399,32 +368,18 @@ public:
          */
         InvalidQNameException(
                 const XalanDOMString&   theMessage,
-                MemoryManager&          theManager);
+                MemoryManager&          theManager,
+                const Locator*          theLocator);
 
-        /**
-         * Constructor
-         * 
-         * @param theLocator The Locator to use when constructing the exception.
-         * @param theMessage The message for the exception
-         * @param theManager The MemoryManager instance to use when constructing the exception
-         */
-        InvalidQNameException(
-                const Locator&          theLocator,
-                const XalanDOMString&   theMessage,
-                MemoryManager&          theManager);
+        InvalidQNameException(const InvalidQNameException&  other);
 
         virtual
         ~InvalidQNameException();
 
         virtual const XalanDOMChar*
-        getType() const
-        {
-            return m_type;
-        }
+        getType() const;
 
     private:
-
-        static const XalanDOMChar   m_type[];
 
         static const XalanDOMString&
         format(

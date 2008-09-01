@@ -127,25 +127,19 @@ ElemMessage::endElement(StylesheetExecutionContext&     executionContext) const
 
     XalanDOMString& theResult = executionContext.getAndPopCachedString();
 
-    const LocatorType* const    theLocator = getLocator();
+    const Locator* const    theLocator = getLocator();
 
-    executionContext.message(
+    executionContext.problem(
+            StylesheetExecutionContext::eXSLTProcessor,
+            StylesheetExecutionContext::eMessage,
             theResult,
-            executionContext.getCurrentNode(),
-            theLocator);
+            theLocator,
+            executionContext.getCurrentNode());
 
     if (m_terminate == true)
     {
-        if (theLocator != 0)
-        {
-            throw ElemMessageTerminateException(executionContext.getMemoryManager(), *theLocator, theResult);
-        }
-        else
-        {
-            throw ElemMessageTerminateException(executionContext.getMemoryManager(), theResult);
-        }
+        throw ElemMessageTerminateException(executionContext.getMemoryManager(), theResult, theLocator);
     }
-
 }
 #endif
 
@@ -157,7 +151,7 @@ ElemMessage::execute(StylesheetExecutionContext&    executionContext) const
 {
     ElemTemplateElement::execute(executionContext);
 
-    StylesheetExecutionContext::GetAndReleaseCachedString   theResult(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theResult(executionContext);
 
     const XalanDOMString&   theString =
         childrenToString(
@@ -228,22 +222,13 @@ const XalanDOMChar  ElemMessage::ElemMessageTerminateException::m_type[] =
 
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
-                                    MemoryManagerType&          theManager,
-                                    const XalanDOMString&       theMessage) :
-    XSLTProcessorException(theManager, theMessage)
-{
-}
-
-
-
-ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
-            MemoryManagerType&      theManager,
-            const LocatorType&      theLocator,
-            const XalanDOMString&   theMessage) :
+            MemoryManager&          theManager,
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator) :
     XSLTProcessorException(
             theManager,
-            theLocator,
-            theMessage)
+            theMessage,
+            theLocator)
 {
 }
 

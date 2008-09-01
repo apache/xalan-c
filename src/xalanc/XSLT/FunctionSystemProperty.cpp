@@ -78,6 +78,7 @@ FunctionSystemProperty::~FunctionSystemProperty()
 
 
 
+
 inline void
 validateNCName(
             XPathExecutionContext&  executionContext,
@@ -87,15 +88,17 @@ validateNCName(
 {
     if (XalanQName::isValidNCName(ncname) == false)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const Function::GetCachedString     theGuard(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::PropertyIsNotValidQName_1Param,
                 "system-property()"),
-            context,
-            locator);
+            locator,
+            context);
     }
 }
 
@@ -116,7 +119,7 @@ FunctionSystemProperty::execute(
 
     if(indexOfNSSep < fullNameLength)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    guard(executionContext);
+        const GetCachedString   guard(executionContext);
 
         XalanDOMString&     theBuffer = guard.get();
 
@@ -128,15 +131,17 @@ FunctionSystemProperty::execute(
 
         if (nspace == 0)
         {
-            XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+            const GetCachedString   theGuard(executionContext);
 
-            executionContext.error(
+            executionContext.problem(
+                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard.get(),
                     XalanMessages::PrefixIsNotDeclared_1Param,
                     theBuffer),
-                context,
-                locator);
+                locator,
+                context);
         }
         else
         {
@@ -182,13 +187,13 @@ FunctionSystemProperty::execute(
 
         if (theEnvString != 0)
         {
-            XPathExecutionContext::GetAndReleaseCachedString    guard(executionContext);
+            GetCachedString     theResult(executionContext);
 
-            XalanDOMString&     result = guard.get();
+            XalanDOMString&     theString = theResult.get();
 
-            TranscodeFromLocalCodePage(theEnvString, result);
+            TranscodeFromLocalCodePage(theEnvString, theString);
 
-            return executionContext.getXObjectFactory().createString(result);
+            return executionContext.getXObjectFactory().createString(theResult);
         }
     }
 

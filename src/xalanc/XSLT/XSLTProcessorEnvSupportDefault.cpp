@@ -36,6 +36,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/URISupport.hpp>
+#include "xalanc/PlatformSupport/XSLException.hpp"
 
 
 
@@ -129,13 +130,18 @@ XSLTProcessorEnvSupportDefault::reset()
 
 XalanDocument*
 XSLTProcessorEnvSupportDefault::parseXML(
-        MemoryManager&          theManager,
-		const XalanDOMString&	urlString,
-		const XalanDOMString&	base)
+            MemoryManager&          theManager,
+		    const XalanDOMString&	urlString,
+		    const XalanDOMString&	base,
+            ErrorHandler*           theErrorHandler)
 {
 	if (m_processor == 0)
 	{
-		return m_defaultSupport.parseXML(theManager, urlString, base);
+		return m_defaultSupport.parseXML(
+                theManager,
+                urlString,
+                base,
+                theErrorHandler);
 	}
 	else
 	{
@@ -183,15 +189,30 @@ XSLTProcessorEnvSupportDefault::parseXML(
                     theXMLResolver->resolveEntity(&theIndentifier));
             }
 
+            typedef XMLParserLiaison::EnsureResetErrorHandler   EnsureResetErrorHandler;
+
+            EnsureResetErrorHandler     theGuard;
+
+            if (theErrorHandler != 0)
+            {
+                theGuard.set(
+                    &parserLiaison,
+                    theErrorHandler);
+            }
+
 		    if (resolverInputSource.get() != 0)
 			{
-				theDocument = parserLiaison.parseXMLStream(*resolverInputSource.get(), theEmptyString);
+				theDocument = parserLiaison.parseXMLStream(
+                                *resolverInputSource.get(),
+                                theEmptyString);
 			}
 			else
 			{
 				const XSLTInputSource	inputSource(urlText.c_str(), theManager);
 
-				theDocument = parserLiaison.parseXMLStream(inputSource, theEmptyString);
+				theDocument = parserLiaison.parseXMLStream(
+                                inputSource,
+                                theEmptyString);
 			}
 
 			if (theDocument != 0)
@@ -274,83 +295,36 @@ XSLTProcessorEnvSupportDefault::extFunction(
 
 
 
-bool
+void
 XSLTProcessorEnvSupportDefault::problem(
-			eSource						/* where */,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			/* uri */,
-			XalanFileLoc			    /* lineNo */,
-			XalanFileLoc			    /* charOffset */) const
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
 {
-	if (classification == XPathEnvSupport::eError)
-	{
-		m_processor->error(
-					msg,
-					sourceNode,
-					styleNode);
-
-		return true;
-	}
-	else if (classification == XPathEnvSupport::eWarning)
-	{
-		m_processor->warn(
-					msg,
-					sourceNode,
-					styleNode);
-
-		return false;
-	}
-	else
-	{
-		m_processor->message(
-					msg,
-					sourceNode,
-					styleNode);
-
-		return false;
-	}
+    m_processor->problem(
+        source,
+        classification,
+        msg,
+        locator,
+        sourceNode);
 }
 
 
 
-bool
+void
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					/* where */,
+			eSource					source,
 			eClassification			classification,
-			const PrefixResolver*	/* resolver */,
-			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
-			const XalanDOMChar*		/* uri */,
-			XalanFileLoc			/* lineNo */,
-			XalanFileLoc			/* charOffset */) const
+			const XalanNode*		sourceNode)
 {
-	if (classification == XPathEnvSupport::eError)
-	{
-		m_processor->error(
-					msg,
-					sourceNode);
-
-		return true;
-	}
-	else if (classification == XPathEnvSupport::eWarning)
-	{
-		m_processor->warn(
-					msg,
-					sourceNode);
-
-		return false;
-	}
-	else
-	{
-		m_processor->message(
-					msg,
-					sourceNode);
-
-		return false;
-	}
+    m_processor->problem(
+        source,
+        classification,
+        msg,
+        sourceNode);
 }
 
 

@@ -25,12 +25,7 @@
 
 
 
-// $$$ ToDo: Necessary while XalanDOMString is style a typedef.
-#include <xalanc/XalanDOM/XalanDOMString.hpp>
-
-
-
-#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include "xalanc/PlatformSupport/ProblemListenerBase.hpp"
 
 
 
@@ -46,22 +41,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-/**
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
- */
 class NodeRefListBase;
 class PrefixResolver;
 class XObject;
 class XPathExecutionContext;
 class XObjectFactory;
 class XalanDocument;
+class XalanDOMString;
 class XalanElement;
 class XalanNode;
 class XalanQName;
 
 
 
-class XALAN_XPATH_EXPORT XPathEnvSupport
+class XALAN_XPATH_EXPORT XPathEnvSupport : public ProblemListenerBase
 {
 public:
 
@@ -74,18 +67,40 @@ public:
 	virtual
 	~XPathEnvSupport();
 
+
+    // These methods are inherited from ProblemListener ...
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
+
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
+
+
+    // These interfaces are new to XPathEnvSupport
 	/**
 	 * Provides support for XML parsing service.
 	 *
+     * @param theManager The MemoryManager instance to use.
 	 * @param urlString location of the XML
 	 * @param base base location for URI
+     * @param theErrorHandler An optional ErrorHandler instance for error reporting.
 	 * @return parsed document
 	 */
 	virtual XalanDocument*
 	parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base) = 0;
+			const XalanDOMString&	base,
+            ErrorHandler*           theErrorHandler = 0) = 0;
 
 	/**
 	 * Get the source document for the given URI.
@@ -161,43 +176,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
 			const LocatorType*				locator) const = 0;
-
-	enum eSource { eXMLParser		= 1,
-				   eXSLTProcessor	= 2,
-				   eXPATHParser		= 3,
-				   eXPATHProcessor	= 4,
-				   eDataSource		= 5 };
-
-	enum eClassification { eMessage = 0,
-						   eWarning = 1,
-						   eError = 2 };
-
-	/**
-	 * Function that is called when a problem event occurs.
-	 * 
-	 * @param where 			either eXMLParser, eXSLTProcessor,
-	 *			 			      eXPATHParser, eXPATHProcessor, or eDataSource.
-	 * @param classification	either eWarning, or eError
-	 * @param resolver       resolver for namespace resolution
-	 * @param sourceNode     source tree node where the problem occurred
-	 *                       (may be 0)
-	 * @param msg            string message explaining the problem.
-	 * @param   uri				  the URI of the stylesheet, if available.  May be 0;
-	 * @param lineNo         line number where the problem occurred.
-	 * @param charOffset     character offset where the problem.
-	 * @return true if the return is an ERROR, in which case exception will be
-	 *         thrown.  Otherwise the processor will continue to process.
-	 */
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
-			const PrefixResolver*	resolver,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			XalanFileLoc			lineNo,
-			XalanFileLoc			charOffset) const = 0;
 
 	/**
 	 * Reset the instance.

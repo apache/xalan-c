@@ -469,7 +469,8 @@ const XalanDOMChar  XalanTranscodingServices::MakeTranscoderException::s_type[] 
 XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(
             eCode                   theCode,
             const XalanDOMChar*     theEncoding,
-            XalanDOMString&         theBuffer) :
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator) :
     XSLException(
         XalanMessageLoader::getMessage(
             theBuffer,
@@ -478,7 +479,8 @@ XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(
                 static_cast<long>(theCode),
                 theBuffer).c_str(),
             theEncoding),
-        theBuffer.getMemoryManager()),
+        theBuffer.getMemoryManager(),
+        theLocator),
     m_code(theCode),
     m_encoding(
         theEncoding,
@@ -548,7 +550,8 @@ const XalanDOMChar  XalanTranscodingServices::UnrepresentableCharacterException:
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
             XalanUnicodeChar        theCharacter,
             const XalanDOMString&   theEncoding,
-            XalanDOMString&         theBuffer) :
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator) :
     XSLException(
         XalanMessageLoader::getMessage(
             theBuffer,
@@ -557,7 +560,8 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
                 theCharacter,
                 theBuffer),
             theEncoding),
-        theBuffer.getMemoryManager()),
+        theBuffer.getMemoryManager(),
+        theLocator),
     m_badCharacter(theCharacter),
     m_encoding(
         theEncoding,

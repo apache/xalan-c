@@ -53,39 +53,24 @@ const XalanDOMChar	XSLTProcessorException::m_type[] =
 	0
 };
 
+
+
 XSLTProcessorException::XSLTProcessorException(
-            MemoryManagerType&      theManager,
-		    const XalanDOMString&	theMessage,
-		    const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber) :
+        MemoryManager&          theManager,
+		const XalanDOMString&	theMessage,
+        const Locator*          theLocator) :
 	XSLException(
         theMessage,
-        theURI,
-        theLineNumber,
-        theColumnNumber,
-        theManager)
+        theManager,
+        theLocator)
 {
 }
 
 
 
 XSLTProcessorException::XSLTProcessorException(
-            MemoryManagerType&      theManager,
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage) :
-	XSLException(
-        theLocator,
-        theMessage,
-        theManager)
-{
-}
-
-
-
-XSLTProcessorException::XSLTProcessorException(
-        MemoryManagerType&      theManager,
-		const XalanDOMString&	theMessage) :
+            MemoryManager&          theManager,
+            const XalanDOMString&	theMessage) :
 	XSLException(
         theMessage,
         theManager)

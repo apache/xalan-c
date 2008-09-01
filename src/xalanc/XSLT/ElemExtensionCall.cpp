@@ -63,7 +63,7 @@ ElemExtensionCall::ElemExtensionCall(
 
 ElemExtensionCall*
 ElemExtensionCall::create(
-            MemoryManagerType&              theManager,
+            MemoryManager&                  theManager,
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
@@ -74,19 +74,18 @@ ElemExtensionCall::create(
 {
     typedef ElemExtensionCall ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(constructionContext,
+                                stylesheetTree,
+                                name,
+                                atts,
+                                lineNumber,
+                                columnNumber,
+                                ns);
 
-    new (theResult) ThisType(constructionContext,
-                            stylesheetTree,
-                            name,
-                            atts,
-                            lineNumber,
-                            columnNumber,
-                            ns);
-
-   theGuard.release();
+    theGuard.release();
 
     return theResult;
 }

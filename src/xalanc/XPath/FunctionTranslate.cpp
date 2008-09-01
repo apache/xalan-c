@@ -68,7 +68,7 @@ FunctionTranslate::execute(
     typedef XalanVector<XalanDOMChar>       VectorType;
 
     // A string to hold the result.
-    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+    GetCachedString     theResult(executionContext);
 
     XalanDOMString&     theString = theResult.get();
 

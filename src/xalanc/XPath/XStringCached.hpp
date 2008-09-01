@@ -44,16 +44,14 @@ public:
 
 	typedef XStringBase		ParentType;
 
-	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
-
 	/**
 	 * Create a string XObject from a cached string.
 	 *
 	 * @param theValue	value used to create object 
 	 */
 	XStringCached(
-            GetAndReleaseCachedString&	val,
-            MemoryManager&              theManager);
+            GetCachedString&    val,
+            MemoryManager&      theManager);
 
 	XStringCached(
             const XStringCached&	source,
@@ -105,7 +103,7 @@ private:
 
     XStringCached();
 
-	const GetAndReleaseCachedString		m_value;
+	const GetCachedString   m_value;
 };
 
 

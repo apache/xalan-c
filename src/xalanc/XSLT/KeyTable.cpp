@@ -297,7 +297,7 @@ KeyTable::processKeyDeclaration(
         // able to use to look up the given node.
         const NodeRefListBase::size_type    nUseValues = nl.getLength();
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     nodeData = theGuard.get();
 

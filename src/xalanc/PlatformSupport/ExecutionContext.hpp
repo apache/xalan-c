@@ -23,7 +23,15 @@
 // Base include file.  Must be first.
 #include <xalanc/PlatformSupport/PlatformSupportDefinitions.hpp>
 
+
+
 #include <xalanc/Include/XalanMemoryManagement.hpp>
+
+
+
+#include "xalanc/PlatformSupport/ProblemListenerBase.hpp"
+
+
 
 XALAN_DECLARE_XERCES_CLASS(Locator)
 
@@ -46,53 +54,31 @@ class XalanText;
 //
 // An abstract class which provides support for execution.
 //
-class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext
+class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext : public ProblemListenerBase
 {
 public:
 
-	ExecutionContext(MemoryManager&     m_memoryManager);
+	ExecutionContext(MemoryManager&     theMemoryManager);
 
 	virtual
 	~ExecutionContext();
 
-	/**
-	 * Report an error and throw an exception.
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the error occurred.  May be 0.
-	 * @param locator A Locator to determine where the error occurred.  May be 0.
-	 */
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const = 0;
 
-	/**
-	 * Report a warning
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the warning occurred.  May be 0.
-	 * @param locator A Locator to determine where the warning occurred.  May be 0.
-	 */
+    // These interfaces are inherited from ProblemListenerBase
 	virtual void
-	warn(
+	problem(
+			eSource		            source,
+			eClassification			classification,
 			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const = 0;
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
 
-	/**
-	 * Output a message.
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the message occurred.  May be 0.
-	 * @param locator A Locator to determine where the message occurred.  May be 0.
-	 */
 	virtual void
-	message(
+	problem(
+            eSource                 source,
+            eClassification         classification,
 			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const = 0;
+			const XalanNode*		sourceNode) = 0;
 
     bool
     hasPreserveOrStripSpaceConditions() const
@@ -111,22 +97,22 @@ public:
     shouldStripSourceNode(const XalanText&  node) = 0;
 
     MemoryManager&
-    getMemoryManager()
+    getMemoryManager() const
     {
         return m_memoryManager;
     }
 
     MemoryManager&
-    getExceptionMemoryManager()
+    getExceptionMemoryManager() const
     {
         return *m_memoryManager.getExceptionMemoryManager();
     }
 
 protected:
 
-    MemoryManager&  m_memoryManager;
+    mutable MemoryManager&  m_memoryManager;
 
-    bool            m_hasPreserveOrStripConditions;
+    bool                    m_hasPreserveOrStripConditions;
 };
 
 

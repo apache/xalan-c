@@ -50,42 +50,24 @@ public:
 	/**
 	 * Construct an XPath exeption object.
 	 * 
-	 * @param message message explaining the problem. 
-	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document.
-	 * @param theColumnNumber the column number of the related document.
-	 * @param styleNode the node in the stylesheet where the problem occurred
-	 * @param theType type of exception, default is "XalanXPathException"
+	 * @param theMessage The message explaining the problem.
+	 * @param theManager The MemoryManager instance to use.
 	 */
 	XalanXPathException(
-			const XalanDOMString&	message,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-            MemoryManager&          theManager);
-
-	/**
-	 * Constructor
-	 * 
-	 * @param theLocator The locator instance for error reporting.
-	 * @param theMessage message to write when exception thrown
-	 * @param styleNode the node in the stylesheet where the problem occurred
-	 * @param theType type of exception, default is "XalanXPathException"
-	 */
-	XalanXPathException(
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&	theMessage,
             MemoryManager&          theManager);
 
 	/**
 	 * Construct an XPath exeption object.
 	 * 
-	 * @param message message explaining the problem. 
-	 * @param theType type of exception, default is "XalanXPathException"
+	 * @param theMessage The message explaining the problem.
+	 * @param theManager The MemoryManager instance to use.
+	 * @param theLocator The locator instance for error reporting, if any.
 	 */
 	XalanXPathException(
-            const XalanDOMString&	message,
-            MemoryManager&          theManager);
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*		    theLocator);
 
     XalanXPathException(const XalanXPathException&  other);
 
@@ -93,12 +75,9 @@ public:
 	~XalanXPathException();
 
 	virtual const XalanDOMChar*
-	getType() const
-	{
-		return s_type;
-	}
+	getType() const;
 
-protected:
+private:
 
 	/**
 	 * Construct an XPath exeption object.
@@ -108,12 +87,6 @@ protected:
 	XalanXPathException(MemoryManager&  theManager);
 
 private:
-
-	const XalanNode*	m_styleNode;
-
-	static const XalanDOMString		s_emptyString;
-
-    static const XalanDOMChar	    s_type[];
 };
 
 

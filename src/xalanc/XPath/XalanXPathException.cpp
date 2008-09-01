@@ -24,10 +24,44 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XalanXPathException::XalanXPathException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator) :
+	XSLException(
+        theMessage,
+        theManager,
+        theLocator)
+{
+}
 
-const XalanDOMString	XalanXPathException::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
-const XalanDOMChar	XalanXPathException::s_type[] = 
+
+XalanXPathException::XalanXPathException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager) :
+	XSLException(
+        theMessage,
+        theManager)
+{
+}
+
+
+    
+XalanXPathException::XalanXPathException(const XalanXPathException& other) :
+    XSLException(other)
+{
+}
+
+
+
+XalanXPathException::~XalanXPathException()
+{
+}
+
+
+
+static const XalanDOMChar   s_type[] = 
 {
 	XalanUnicode::charLetter_X,
 	XalanUnicode::charLetter_a,
@@ -53,65 +87,10 @@ const XalanDOMChar	XalanXPathException::s_type[] =
 
 
 
-XalanXPathException::XalanXPathException(
-			const XalanDOMString&	message,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-            MemoryManagerType&      theManager) :
-	XSLException(
-        message,
-        theURI,
-        theLineNumber,
-        theColumnNumber,
-        theManager)
+const XalanDOMChar*
+XalanXPathException::getType() const
 {
-}
-
-
-
-XalanXPathException::XalanXPathException(
-			const XalanDOMString&	message,
-            MemoryManagerType&      theManager) :
-	XSLException(
-        message,
-        theManager)
-{
-}
-
-
-
-XalanXPathException::XalanXPathException(
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager) :
-	XSLException(
-        theLocator,
-        theMessage,
-        theManager)
-{
-}
-
-
-
-XalanXPathException::XalanXPathException(MemoryManagerType& theManager) :
-	XSLException(
-        s_emptyString,
-        theManager)
-{
-}
-
-
-    
-XalanXPathException::XalanXPathException(const XalanXPathException& other) :
-    XSLException(other)
-{
-}
-
-
-
-XalanXPathException::~XalanXPathException()
-{
+    return s_type;
 }
 
 

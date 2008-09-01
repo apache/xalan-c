@@ -150,11 +150,21 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const
 {
+    const XalanDOMString::size_type     theLHSLength =
+        length(theLHS);
+
+    const XalanDOMString::size_type     theRHSLength =
+        length(theRHS);
+
+    assert(
+        theLHSLength == static_cast<int32_t>(theLHSLength) &&
+        theRHSLength == static_cast<int32_t>(theRHSLength));
+
 	return theCollator.compare(
 				theLHS,
-				length(theLHS),
+				static_cast<int32_t>(theLHSLength),
 				theRHS,
-				length(theRHS));
+				static_cast<int32_t>(theRHSLength));
 }
 
 
@@ -333,11 +343,21 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 				caseOrderConvert(theCaseOrder),
 				theStatus);
 
-	return theCollator.compare(
+    const XalanDOMString::size_type     theLHSLength =
+        length(theLHS);
+
+    const XalanDOMString::size_type     theRHSLength =
+        length(theRHS);
+
+    assert(
+        theLHSLength == static_cast<int32_t>(theLHSLength) &&
+        theRHSLength == static_cast<int32_t>(theRHSLength));
+
+    return theCollator.compare(
 					theLHS,
-					length(theLHS),
+					static_cast<int32_t>(theLHSLength),
 					theRHS,
-					length(theRHS));
+					static_cast<int32_t>(theRHSLength));
 }
 
 

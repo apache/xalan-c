@@ -25,7 +25,10 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-
+#if defined(XALAN_WINDOWS)
+#include <clocale>
+#include <cstring>
+#endif
 
 
 #include <algorithm>
@@ -424,8 +427,6 @@ substring(
 {
 	const XalanDOMString::size_type		theStringLength = length(theString);
 
-	// $$$ ToDo: In Java-land, any failing of this
-	// assertion would result in an exception being thrown.
 	assert(theStartIndex <= theStringLength);
 
 	if (theStartIndex == theStringLength)
@@ -746,6 +747,39 @@ doCollationCompare(
 
 
 
+template <class Type, class SizeType, class FunctionType>
+int
+doCollationCompare(
+			const Type*		theLHS,
+			const Type*		theRHS,
+			FunctionType	theTransformFunction)
+{
+    SizeType	i = 0;
+
+    Type  theLHSChar;
+    Type  theRHSChar;
+
+	for (;;)
+	{
+        theLHSChar = theTransformFunction(theLHS[i]);
+        theRHSChar = theTransformFunction(theRHS[i]);
+
+        if (theLHS == static_cast<Type>(0) ||
+            theLHSChar != theRHSChar)
+        {
+            break;
+        }
+        else
+        {
+            ++i;
+        }
+	}
+
+    return theLHSChar - theRHSChar;
+}
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const CharVectorType&	theLHS,
@@ -809,6 +843,28 @@ collationCompare(
 				theRHSLength,
 				makeXalanDOMCharIdentityTransform());
 }
+
+
+
+#if defined(XALAN_WINDOWS)
+static _locale_t   s_locale;
+#endif
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+collationCompare(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMChar*     theRHS)
+{
+#if defined(XALAN_WINDOWS)
+    return _wcscoll_l(theLHS, theRHS, s_locale);
+#else
+	return doCollationCompare(
+				theLHS,
+				theRHS,
+				makeXalanDOMCharIdentityTransform());
+#endif
+}
+
 
 
 
@@ -1830,6 +1886,27 @@ isXMLWhitespace(
 
 	return true;
 }
+
+
+
+void
+DOMStringHelper::initialize(MemoryManager&  /* theMemoryManager */)
+{
+#if defined(XALAN_WINDOWS)
+    s_locale = _create_locale(LC_COLLATE, "");
+#endif
+}
+
+
+
+void
+DOMStringHelper::terminate()
+{
+#if defined(XALAN_WINDOWS)
+    _free_locale(s_locale);
+#endif
+}
+
 
 
 XALAN_CPP_NAMESPACE_END

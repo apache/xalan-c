@@ -30,7 +30,15 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(MemoryManager)
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+XALAN_USING_XERCES(MemoryManager)
 
 
 
@@ -48,14 +56,30 @@ public:
 	virtual
 	~ProblemListenerDefault();
 
-	// These methods are inherited from ProblemListener ...
+
+    // These methods are inherited from ProblemListener ...
 
 	virtual void
 	setPrintWriter(PrintWriter*		pw);
 
 	virtual void
 	problem(
-			eProblemSource				source,
+            eSource                 source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+            eSource                     source,
 			eClassification				classification, 
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -73,9 +97,9 @@ public:
 	}
 
 	static void
-	problem(
-			PrintWriter&				pw,
-			eProblemSource				source,
+	defaultFormat(
+			PrintWriter&		        pw,
+            eSource                     source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -83,6 +107,10 @@ public:
 			const XalanDOMChar*			uri,
 			XalanFileLoc				lineNo,
 			XalanFileLoc				charOffset);
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ProblemListenerBase::defaultFormat;
+#endif
 
 private:
 

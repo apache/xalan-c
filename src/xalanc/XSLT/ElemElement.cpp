@@ -128,6 +128,8 @@ ElemElement::getElementName() const
 
 
 
+typedef const StylesheetExecutionContext::GetCachedString   GetCachedString;
+
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemElement::startElement(StylesheetExecutionContext&       executionContext) const
@@ -149,7 +151,7 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
     }
     else
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   elemNameSpaceGuard(executionContext);
+        const GetCachedString   elemNameSpaceGuard(executionContext);
 
         XalanDOMString&     elemNameSpace = elemNameSpaceGuard.get();
 
@@ -166,7 +168,7 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
 
         const bool  havePrefix = indexOfNSSep == len ? false : true;
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   prefixGuard(executionContext);
+        const GetCachedString   prefixGuard(executionContext);
 
         XalanDOMString&     prefix = prefixGuard.get();
 
@@ -325,7 +327,7 @@ ElemElement::executeChildElement(
 void
 ElemElement::execute(StylesheetExecutionContext&        executionContext) const
 {
-    StylesheetExecutionContext::GetAndReleaseCachedString   elemNameGuard(executionContext);
+    const GetCachedString   elemNameGuard(executionContext);
 
     XalanDOMString&     elemName = elemNameGuard.get();
 
@@ -346,7 +348,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
     }
     else
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   elemNameSpaceGuard(executionContext);
+        const GetCachedString   elemNameSpaceGuard(executionContext);
 
         XalanDOMString&     elemNameSpace = elemNameSpaceGuard.get();
 
@@ -365,7 +367,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
 
         const bool  havePrefix = indexOfNSSep == len ? false : true;
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   prefixGuard(executionContext);
+        const GetCachedString   prefixGuard(executionContext);
 
         XalanDOMString&     prefix = prefixGuard.get();
 

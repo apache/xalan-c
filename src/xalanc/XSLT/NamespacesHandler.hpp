@@ -206,7 +206,7 @@ public:
 	 * Create a default, empty instance.
 	 */
 	explicit
-	NamespacesHandler(MemoryManagerType& theManager);
+	NamespacesHandler(MemoryManager&    theManager);
 
 	/**
 	 * Create an instance namespace handler using the

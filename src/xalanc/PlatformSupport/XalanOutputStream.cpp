@@ -140,10 +140,7 @@ XalanOutputStream::transcode(
             {
                 XalanDOMString theBuffer(theDestination.getMemoryManager());
 
-                throw TranscodingException(theBuffer);
-            }
-            else
-            {
+                throw TranscodingException(theBuffer, 0);
             }
         }
     }
@@ -195,7 +192,7 @@ XalanOutputStream::transcode(
                 {
                     XalanDOMString theBuffer(theDestination.getMemoryManager());
 
-                    throw TranscodingException(theBuffer);
+                    throw TranscodingException(theBuffer, 0);
                 }
             }
 
@@ -267,13 +264,13 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
         {
             XalanDOMString theBuffer(getMemoryManager());
 
-            throw UnsupportedEncodingException(theEncoding, theBuffer);
+            throw UnsupportedEncodingException(theEncoding, theBuffer, 0);
         }
         else if (theCode != XalanTranscodingServices::OK)
         {
             XalanDOMString theBuffer(getMemoryManager());
 
-            throw TranscoderInternalFailureException(theEncoding, theBuffer);
+            throw TranscoderInternalFailureException(theEncoding, theBuffer, 0);
         }
 
         assert(m_transcoder != 0);
@@ -425,47 +422,32 @@ XalanOutputStream::getNewlineString() const
 
 
 
-const XalanDOMChar  XalanOutputStream::XalanOutputStreamException::m_type[] = 
-{   
-    XalanUnicode::charLetter_X,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_l,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_F,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_l,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_O,
-    XalanUnicode::charLetter_u,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_u,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_S,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_r,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_m,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_x,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_n,
-    0
-};
+XalanOutputStream::XalanOutputStreamException::XalanOutputStreamException(
+            const XalanDOMString&   theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator) :
+    XSLException(
+        theMessage,
+        theManager,
+        theLocator)
+{
+}
 
 
 
 XalanOutputStream::XalanOutputStreamException::XalanOutputStreamException(
             const XalanDOMString&   theMessage,
-            MemoryManagerType&      theManager) :
-    XSLException(theMessage, theManager)
+            MemoryManager&          theManager) :
+    XSLException(
+        theMessage,
+        theManager)
+{
+}
+
+
+
+    XalanOutputStream::XalanOutputStreamException::XalanOutputStreamException(const XalanOutputStreamException& other):
+    XSLException(other)
 {
 }
 
@@ -475,86 +457,108 @@ XalanOutputStream::XalanOutputStreamException::~XalanOutputStreamException()
 {
 }
 
-const XalanDOMChar  XalanOutputStream::UnknownEncodingException::m_type[] = 
-{   
-    XalanUnicode::charLetter_U,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_k,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_w,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_d,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_g,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_x,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_n,
-    0
-};
+
+
+const XalanDOMChar*
+XalanOutputStream::XalanOutputStreamException::getType() const
+{
+    static const XalanDOMChar   s_type[] = 
+    {   
+        XalanUnicode::charLetter_X,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_l,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_F,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_l,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_O,
+        XalanUnicode::charLetter_u,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_u,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_S,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_m,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_x,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_n,
+        0
+    };
+
+    return s_type;
+}
 
 
 
-XalanOutputStream::UnknownEncodingException::UnknownEncodingException(XalanDOMString& theBuffer) :
+const XalanDOMChar*
+XalanOutputStream::UnsupportedEncodingException::getType() const
+{
+    static const XalanDOMChar  s_type[] = 
+    {
+        XalanUnicode::charLetter_U,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_s,
+        XalanUnicode::charLetter_u,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_d,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_d,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_g,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_x,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_n,
+        0
+    };
+
+    return s_type;
+}
+
+
+
+XalanOutputStream::UnsupportedEncodingException::UnsupportedEncodingException(
+            const XalanDOMString&   theEncoding,
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator) :
     XalanOutputStreamException(
         XalanMessageLoader::getMessage(
             theBuffer,
-            XalanMessages::AnErrorOccurredWhileTranscoding),
-     theBuffer.getMemoryManager())
+            XalanMessages::UnsupportedEncoding_1Param,
+            theEncoding),
+        theBuffer.getMemoryManager(),
+        theLocator),
+   m_encoding(
+       theEncoding, 
+       theBuffer.getMemoryManager())
 {
 }
-
-
-
-XalanOutputStream::UnknownEncodingException::~UnknownEncodingException()
-{
-}
-
-
-
-const XalanDOMChar  XalanOutputStream::UnsupportedEncodingException::m_type[] = 
-{   
-    XalanUnicode::charLetter_U,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_s,
-    XalanUnicode::charLetter_u,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_r,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_d,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_d,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_g,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_x,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_n,
-    0
-};
 
 
 
@@ -583,16 +587,28 @@ XalanOutputStream::UnsupportedEncodingException::~UnsupportedEncodingException()
 
 XalanOutputStream::TranscoderInternalFailureException::TranscoderInternalFailureException(
             const XalanDOMString&   theEncoding,
-            XalanDOMString&         theBuffer) :
+            XalanDOMString&         theBuffer,
+            const Locator*          theLocator) :
     XalanOutputStreamException(
         XalanMessageLoader::getMessage(
             theBuffer, 
             XalanMessages::UnknownErrorOccurredWhileTranscodingToEncoding_1Param,
             theEncoding),
-        theBuffer.getMemoryManager()),
+        theBuffer.getMemoryManager(),
+        theLocator),
     m_encoding(
         theEncoding,
         theBuffer.getMemoryManager())
+{
+}
+
+
+
+XalanOutputStream::TranscoderInternalFailureException::TranscoderInternalFailureException(const TranscoderInternalFailureException& other) :
+    XalanOutputStreamException(other),
+    m_encoding(
+        other.m_encoding,
+        other.m_memoryManager)
 {
 }
 
@@ -604,12 +620,69 @@ XalanOutputStream::TranscoderInternalFailureException::~TranscoderInternalFailur
 
 
 
-XalanOutputStream::TranscodingException::TranscodingException(XalanDOMString&   theBuffer) :
+const XalanDOMChar*
+XalanOutputStream::TranscoderInternalFailureException::getType() const
+{
+    static const XalanDOMChar  s_type[] = 
+    {
+        XalanUnicode::charLetter_T,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_s,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_d,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_I,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_l,
+        XalanUnicode::charLetter_F,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_l,
+        XalanUnicode::charLetter_u,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_x,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_n,
+        0
+    };
+
+    return s_type;
+}
+
+
+
+XalanOutputStream::TranscodingException::TranscodingException(
+            XalanDOMString&     theBuffer,
+            const Locator*      theLocator) :
     XalanOutputStreamException(
         XalanMessageLoader::getMessage(
             theBuffer,
             XalanMessages::AnErrorOccurredWhileTranscoding),
-        theBuffer.getMemoryManager())
+        theBuffer.getMemoryManager(),
+        theLocator)
+{
+}
+
+
+
+XalanOutputStream::TranscodingException::TranscodingException(const TranscodingException& other) :
+    XalanOutputStreamException(other)
 {
 }
 
@@ -617,6 +690,39 @@ XalanOutputStream::TranscodingException::TranscodingException(XalanDOMString&   
 
 XalanOutputStream::TranscodingException::~TranscodingException()
 {
+}
+
+
+
+const XalanDOMChar*
+XalanOutputStream::TranscodingException::getType() const
+{
+    static const XalanDOMChar  s_type[] = 
+    {
+        XalanUnicode::charLetter_T,
+        XalanUnicode::charLetter_r,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_s,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_d,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_g,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_x,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_n,
+        0
+    };
+
+    return s_type;
 }
 
 

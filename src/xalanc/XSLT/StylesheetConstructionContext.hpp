@@ -160,12 +160,38 @@ public:
 	~StylesheetConstructionContext();
 
 
-	/**
-	 * Reset the StylesheetConstructionContext instance.  Any existing objects
-	 * created by the instance will be destroyed.
-	 */
+	// These are inherited from XPathConstructionContext...
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
+
 	virtual void
 	reset() = 0;
+
+	virtual const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString) = 0;
+
+	virtual const XalanDOMString&
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+
+	virtual XalanDOMString&
+	getCachedString() = 0;
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString) = 0;
 
 	/**
 	 * Create a new StylesheetRoot instance.  The StylesheetConstructionContext
@@ -406,7 +432,8 @@ public:
 	parseXML(
 			const XalanDOMString&	urlString,
 			DocumentHandler*	    docHandler, 
-			XalanDocument*			docToRegister) = 0;
+			XalanDocument*			docToRegister,
+            ErrorHandler*           theErrorHandler = 0) = 0;
 
 	/**
 	 * Given an name, determine if it is the xml:space attribute
@@ -470,20 +497,6 @@ public:
 	 */
 	virtual double
 	getXSLTVersionSupported() const = 0;
-
-	virtual const XalanDOMString&
-	getPooledString(const XalanDOMString&	theString) = 0;
-
-	virtual const XalanDOMString&
-	getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
-
-	virtual XalanDOMString&
-	getCachedString() = 0;
-
-	virtual bool
-	releaseCachedString(XalanDOMString&		theString) = 0;
 
 	/**
 	 * Allocate a vector of XalanDOMChar of the specified
@@ -710,7 +723,7 @@ public:
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
 			ExtensionNSHandler&		handler,
-			const Locator*			   locator = 0) = 0;
+			const Locator*			locator = 0) = 0;
 
 	/**
 	 * Create an instance of XalanMatchPatternData, which describes
@@ -736,45 +749,6 @@ public:
             const XPath&            theMatchPattern,
             const XalanDOMString&   thePatternString,
             XPath::eMatchScore      thePriority) = 0;
-
-
-	// These are inherited from XPathConstructionContext...
-
-	virtual void
-	error(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement*	styleNode = 0) const = 0;
-
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 		    locator) const = 0;
-
-	virtual void
-	warn(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement* 	styleNode = 0) const = 0;
-
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 		    locator) const = 0;
-
-	virtual void
-	message(
-			const XalanDOMString&		msg,
-			const XalanNode* 			sourceNode = 0,
-			const ElemTemplateElement* 	styleNode = 0) const = 0;
-
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const Locator* 		    locator) const = 0;
 };
 
 

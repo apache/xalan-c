@@ -593,7 +593,11 @@ XercesParserLiaison::fatalError(const SAXParseExceptionType&    e)
     {
         // We call warning() because we don't want the execution
         // context to potentially throw an exception.
-        m_executionContext->warn(theMessage);
+        m_executionContext->problem(
+            ExecutionContext::eXMLParser,
+            ExecutionContext::eWarning,
+            theMessage,
+            0);
     }
     else
     {
@@ -623,7 +627,11 @@ XercesParserLiaison::error(const SAXParseExceptionType&     e)
     {
         // We call warn() because we don't want the execution
         // context to potentially throw an exception.
-        m_executionContext->warn(theMessage);
+        m_executionContext->problem(
+            ExecutionContext::eXMLParser,
+            ExecutionContext::eWarning,
+            theMessage,
+            0);
     }
     else
     {
@@ -654,7 +662,11 @@ XercesParserLiaison::warning(const SAXParseExceptionType&   e)
 
     if (m_executionContext != 0)
     {
-        m_executionContext->warn(theMessage);
+        m_executionContext->problem(
+            ExecutionContext::eXMLParser,
+            ExecutionContext::eWarning,
+            theMessage,
+            0);
     }
     else
     {

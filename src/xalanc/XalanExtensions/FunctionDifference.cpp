@@ -53,10 +53,10 @@ FunctionDifference::execute(
 {
     if (args.size() != 2)
     {
-        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-        XalanDOMString& theBuffer = theGuard.get();
-
-        executionContext.error(getError(theBuffer), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);

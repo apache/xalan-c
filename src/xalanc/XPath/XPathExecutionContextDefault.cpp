@@ -104,12 +104,14 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
     m_contextNodeListStack.push_back(theContextNodeList == 0 ? &s_dummyList : theContextNodeList);
 }
 
+
+
 XPathExecutionContextDefault*
 XPathExecutionContextDefault::create(
-                                     MemoryManagerType&      theManager,
-                                     XalanNode*             theCurrentNode,
-                                     const NodeRefListBase* theContextNodeList,
-                                     const PrefixResolver*  thePrefixResolver)
+            MemoryManager&          theManager,
+            XalanNode*             theCurrentNode,
+            const NodeRefListBase* theContextNodeList,
+            const PrefixResolver*  thePrefixResolver)
 {
     typedef XPathExecutionContextDefault ThisType;
 
@@ -127,9 +129,44 @@ XPathExecutionContextDefault::create(
 }
 
 
+
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
 {
     reset();
+}
+
+
+
+void
+XPathExecutionContextDefault::problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
+{
+    m_xpathEnvSupport->problem(
+        source,
+        classification,
+        msg,
+        locator,
+        sourceNode);
+}
+
+
+
+void
+XPathExecutionContextDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
+{
+    m_xpathEnvSupport->problem(
+        source,
+        classification,
+        msg,
+        sourceNode);
 }
 
 
@@ -334,7 +371,13 @@ XPathExecutionContextDefault::extFunction(
 {
     assert(m_xpathEnvSupport != 0);
 
-    return m_xpathEnvSupport->extFunction(*this, theNamespace, functionName, context, argVec, locator);
+    return m_xpathEnvSupport->extFunction(
+                *this,
+                theNamespace,
+                functionName,
+                context,
+                argVec,
+                locator);
 }
 
 
@@ -343,11 +386,16 @@ XalanDocument*
 XPathExecutionContextDefault::parseXML(
             MemoryManagerType&      theManager,
             const XalanDOMString&   urlString,
-            const XalanDOMString&   base) const
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler) const
 {
     assert(m_xpathEnvSupport != 0);
 
-    return m_xpathEnvSupport->parseXML(theManager, urlString, base);
+    return m_xpathEnvSupport->parseXML(
+                theManager,
+                urlString,
+                base,
+                theErrorHandler);
 }
 
 
@@ -490,48 +538,23 @@ XPathExecutionContextDefault::error(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanFileLoc     lineNumber = XalanLocator::getUnknownValue();
-    XalanFileLoc     columnNumber = XalanLocator::getUnknownValue();
-
-    MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
+    m_xpathEnvSupport->problem(
+           XPathEnvSupport::eXPATH,
+           XPathEnvSupport::eError,
+           msg,
+           locator,
+           sourceNode);
+    
+    MemoryManager&  theManager =  getMemoryManager();
 
     XalanDOMString  uri(theManager);
 
-    if (locator != 0)
-    {
-        lineNumber = locator->getLineNumber();
-        columnNumber = locator->getColumnNumber();
+    uri = XalanLocator::getSystemId(locator, uri.c_str());
 
-        const XalanDOMChar*     id =
-            locator->getPublicId();
-
-        if (id != 0)
-        {
-            uri = id;
-        }
-        else
-        {
-            id = locator->getSystemId();
-
-            if (id != 0)
-            {
-                uri = id;
-            }
-        }
-    }
-
-    if (m_xpathEnvSupport->problem(
-            XPathEnvSupport::eXPATHProcessor, 
-            XPathEnvSupport::eError,
-            m_prefixResolver, 
-            sourceNode,
-            msg,
-            c_wstr(uri),
-            lineNumber,
-            columnNumber) == true)
-    {
-        throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
-    }
+    throw XalanXPathException(
+                msg,
+                theManager,
+                locator);
 }
 
 
@@ -544,48 +567,12 @@ XPathExecutionContextDefault::warn(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanFileLoc    lineNumber = XalanLocator::getUnknownValue();
-    XalanFileLoc    columnNumber = XalanLocator::getUnknownValue();
-
-    MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
-
-    XalanDOMString  uri(theManager);
-
-    if (locator != 0)
-    {
-        lineNumber = locator->getLineNumber();
-        columnNumber = locator->getColumnNumber();
-
-        const XalanDOMChar*     id =
-            locator->getPublicId();
-
-        if (id != 0)
-        {
-            uri = id;
-        }
-        else
-        {
-            id = locator->getSystemId();
-
-            if (id != 0)
-            {
-                uri = id;
-            }
-        }
-    }
-
-    if (m_xpathEnvSupport->problem(
-            XPathEnvSupport::eXPATHProcessor, 
+    m_xpathEnvSupport->problem(
+            XPathEnvSupport::eXPATH,
             XPathEnvSupport::eWarning,
-            m_prefixResolver, 
-            sourceNode,
             msg,
-            c_wstr(uri),
-            lineNumber,
-            columnNumber) == true)
-    {
-        throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
-    }
+            locator,
+            sourceNode);
 }
 
 
@@ -598,48 +585,12 @@ XPathExecutionContextDefault::message(
 {
     assert(m_xpathEnvSupport != 0);
 
-    XalanFileLoc    lineNumber = XalanLocator::getUnknownValue();
-    XalanFileLoc    columnNumber = XalanLocator::getUnknownValue();
-
-   MemoryManagerType& theManager =  const_cast<XPathExecutionContextDefault*>(this)->getMemoryManager();
-
-    XalanDOMString  uri(theManager);
-
-    if (locator != 0)
-    {
-        lineNumber = locator->getLineNumber();
-        columnNumber = locator->getColumnNumber();
-
-        const XalanDOMChar*     id =
-            locator->getPublicId();
-
-        if (id != 0)
-        {
-            uri = id;
-        }
-        else
-        {
-            id = locator->getSystemId();
-
-            if (id != 0)
-            {
-                uri = id;
-            }
-        }
-    }
-
-    if (m_xpathEnvSupport->problem(
-            XPathEnvSupport::eXPATHProcessor, 
-            XPathEnvSupport::eMessage,
-            m_prefixResolver, 
-            sourceNode,
-            msg,
-            c_wstr(uri),
-            lineNumber,
-            columnNumber) == true)
-    {
-        throw XalanXPathException(msg, uri, lineNumber, columnNumber, theManager);
-    }
+    m_xpathEnvSupport->problem(
+        XPathEnvSupport::eXPATH,
+        XPathEnvSupport::eWarning,
+        msg,
+        locator,
+        sourceNode);
 }
 
 
@@ -735,7 +686,7 @@ void XPathExecutionContextDefault::doFormatNumber(
     }
     else
     {
-        GetAndReleaseCachedString   theGuard(*this);
+        const GetCachedString   theGuard(*this);
 
         warn( 
             XalanMessageLoader::getMessage(

@@ -52,7 +52,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType&   theManager) :
+XPathProcessorImpl::XPathProcessorImpl(MemoryManager&   theManager) :
     m_token(theManager),
     m_tokenChar(0),
     m_xpath(0),
@@ -71,15 +71,14 @@ XPathProcessorImpl::XPathProcessorImpl(MemoryManagerType&   theManager) :
 
 
 XPathProcessorImpl*
-XPathProcessorImpl::create(MemoryManagerType& theManager)
+XPathProcessorImpl::create(MemoryManager&   theManager)
 {
     typedef XPathProcessorImpl ThisType;
-        
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    new (theResult) ThisType(theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
     theGuard.release();
 
@@ -100,7 +99,7 @@ XPathProcessorImpl::initXPath(
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        allowVariableReferences,
             bool                        allowKeyFunction)
 {
@@ -154,7 +153,7 @@ XPathProcessorImpl::initMatchPattern(
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        allowVariableReferences,
             bool                        allowKeyFunction)
 {
@@ -219,7 +218,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
     t_size_type     startSubstring = XalanDOMString::npos;
     t_size_type     posOfNSSep = XalanDOMString::npos;
 
-    const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
+    const XPathConstructionContext::GetCachedString     theGuard(*m_constructionContext);
 
     XalanDOMString&     theToken = theGuard.get();
 
@@ -515,7 +514,7 @@ XPathProcessorImpl::mapNSTokens(
 {
     assert(m_prefixResolver != 0);
 
-    const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
+    const XPathConstructionContext::GetCachedString     theGuard(*m_constructionContext);
 
     XalanDOMString&     scratchString = theGuard.get();
 
@@ -842,33 +841,17 @@ XPathProcessorImpl::error(const XalanDOMString&     msg) const
         m_expression->dumpRemainingTokenQueue(thePrintWriter);
     }
 
-    if (m_locator != 0)
-    {
-        const XalanDOMChar* const   theSystemID =
-                    m_locator->getSystemId();
+    m_constructionContext->problem(
+        XPathConstructionContext::eXPath,
+        XPathConstructionContext::eError,
+        emsg,
+        m_locator,
+        0);
 
-        const GetCachedString   theGuard(*m_constructionContext);
-
-        XalanDOMString& theURI = theGuard.get();
-
-        if (theSystemID != 0)
-        {
-            theURI = theSystemID;
-        }
-
-        throw XPathParserException(
-                    emsg,
-                    theURI,
-                    m_locator->getLineNumber(),
-                    m_locator->getColumnNumber(),
-                    m_constructionContext->getMemoryManager());
-    }
-    else
-    {
-        throw XPathParserException(
-                    emsg, 
-                    m_constructionContext->getMemoryManager());
-    }
+    throw XPathParserException(
+                emsg, 
+                m_constructionContext->getMemoryManager(),
+                m_locator);
 }
 
 
@@ -2642,7 +2625,7 @@ XPathProcessorImpl::Number()
     {
         const double    num = DoubleSupport::toDouble(m_token, m_constructionContext->getMemoryManager());
 
-        const XPathConstructionContext::GetAndReleaseCachedString   theGuard(*m_constructionContext);
+        const XPathConstructionContext::GetCachedString     theGuard(*m_constructionContext);
  
         XalanDOMString&     theStringValue = theGuard.get();
  

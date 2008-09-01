@@ -29,6 +29,10 @@
 
 
 
+#include "xalanc/PlatformSupport/ProblemListenerBase.hpp"
+
+
+
 XALAN_DECLARE_XERCES_CLASS(Locator)
 
 
@@ -47,22 +51,37 @@ class XalanNode;
 
 
 //
-/**
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
- */
 // An abstract class which provides support for constructing the internal
 // representation  of a stylesheet.
 //
-class XALAN_XPATH_EXPORT XPathConstructionContext
+class XALAN_XPATH_EXPORT XPathConstructionContext : public ProblemListenerBase
 {
 public:
 
-    XPathConstructionContext(MemoryManagerType&              theManager);
+    XPathConstructionContext(MemoryManager&     theManager);
 
     virtual
     ~XPathConstructionContext();
 
 
+    // These interfaces are inherited from ProblemListenerBase...
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
+
+
+    // These interfaces are new...
     /**
      * Reset the instance.  Any existing objects
      * created by the instance will be destroyed.
@@ -115,17 +134,17 @@ public:
     virtual bool
     releaseCachedString(XalanDOMString&     theString) = 0;
 
-    class GetAndReleaseCachedString
+    class GetCachedString
     {
     public:
 
-        GetAndReleaseCachedString(XPathConstructionContext&     theConstructionContext) :
+        GetCachedString(XPathConstructionContext&     theConstructionContext) :
             m_constructionContext(&theConstructionContext),
             m_string(&theConstructionContext.getCachedString())
         {
         }
 
-        ~GetAndReleaseCachedString()
+        ~GetCachedString()
         {
             assert(m_string != 0);
 
@@ -151,12 +170,12 @@ public:
     private:
 
         // Not implemented...
-        GetAndReleaseCachedString();
+        GetCachedString();
 
-        GetAndReleaseCachedString(const GetAndReleaseCachedString&);
+        GetCachedString(const GetCachedString&);
 
-        GetAndReleaseCachedString&
-        operator=(const GetAndReleaseCachedString&);
+        GetCachedString&
+        operator=(const GetCachedString&);
 
 
         // Data members...
@@ -165,27 +184,23 @@ public:
         XalanDOMString*             m_string;
     };
 
-    typedef GetAndReleaseCachedString   GetCachedString;
+    typedef GetCachedString     GetAndReleaseCachedString;
 
-    MemoryManagerType&
+    MemoryManager&
+    getMemoryManager() const
+    {
+        return m_memoryManager;
+    }
+
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
     }
 
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const Locator*          locator) const = 0;
+private:
 
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const Locator*          locator) const = 0;
-
-    MemoryManagerType&              m_memoryManager;
+    mutable MemoryManager&  m_memoryManager;
 };
 
 

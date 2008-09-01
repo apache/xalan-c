@@ -31,32 +31,38 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor(
-        MemoryManagerType& theManager, bool	fCacheCollators) :
+            MemoryManager&  theManager,
+            bool            fCacheCollators) :
     m_impl(ICUBridgeCollationCompareFunctorImpl::create(theManager, fCacheCollators))
 {
 }
 
+
+
 ICUBridgeCollationCompareFunctor*
-ICUBridgeCollationCompareFunctor::create (MemoryManagerType& theManager , bool	fCacheCollators) 
+ICUBridgeCollationCompareFunctor::create(
+            MemoryManager&  theManager,
+            bool            fCacheCollators) 
 {
     typedef ICUBridgeCollationCompareFunctor ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager, fCacheCollators);
 
-    new (theResult) ThisType(theManager, fCacheCollators);
-
-   theGuard.release();
+    theGuard.release();
 
     return theResult;
 }
 
+
+
 ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 {
-    MemoryManagerType& theManager = m_impl->getMemoryManager();
-
-	destroyObjWithMemMgr(m_impl, theManager);
+    XalanDestroy(
+        m_impl->getMemoryManager(),
+        *m_impl);
 }
 
 

@@ -19,6 +19,11 @@
 
 
 
+#include "xercesc/SAX/ErrorHandler.hpp"
+#include "xercesc/SAX/SAXParseException.hpp"
+
+
+
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>
 
@@ -54,42 +59,111 @@ FunctionDocument::~FunctionDocument()
 
 
 typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
+typedef Function::GetCachedString   GetCachedString;
 
 
 
 inline void
 doWarn(
-            XPathExecutionContext&              executionContext,
-            const XalanDOMString&               uri,
-            const XalanDOMString&               base,
-            const XalanNode*                    sourceNode,
-            const LocatorType*                  locator)
+            XPathExecutionContext&  executionContext,
+            const XalanDOMString&   uri,
+            const XalanDOMString&   base,
+            const XalanNode*        sourceNode,
+            const Locator*          locator)
 {
-    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+    const GetCachedString   theGuard(executionContext);
 
-    XalanDOMString& theMessage = theGuard.get();
+    XalanDOMString&     theMessage = theGuard.get();
+
+    const XalanMessages::Codes  theMessageID = base.empty() ?
+            XalanMessages::CantLoadReqDocument_1Param :
+            XalanMessages::CantLoadReqDocument_2Param;
 
     XalanMessageLoader::getMessage(
         theMessage,
-        XalanMessages::CantLoadReqDocument_1Param,
-        uri);
+        theMessageID,
+        uri,
+        base);
 
-    if (length(base) > 0)
+    executionContext.problem(
+        XPathExecutionContext::eXPath,
+        XPathExecutionContext::eWarning,
+        theMessage,
+        locator,
+        sourceNode);
+}
+
+
+
+class LocalErrorHandler : public ErrorHandler
+{
+public:
+
+    LocalErrorHandler(
+            XPathExecutionContext&  theExecutionContext,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode) :
+        m_executionContext(theExecutionContext),
+        m_locator(theLocator),
+        m_sourceNode(theSourceNode),
+        m_fatal(false)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-        XalanDOMString& theTmpString = theGuard.get();
-
-        TranscodeFromLocalCodePage(" (Base URI: ", theTmpString);
-
-        theMessage+= (theTmpString);
-        theMessage += base;
-
-        TranscodeFromLocalCodePage(")", theTmpString);
-        theMessage += theTmpString;
     }
 
-    executionContext.warn(theMessage, sourceNode, locator);
-}
+    virtual void
+    warning(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        const GetCachedString   theGuard(m_executionContext);
+
+        XalanDOMString&     theMessage = theGuard.get();
+
+        theMessage = exc.getMessage();
+
+        m_executionContext.problem(
+            XPathExecutionContext::eXMLParser,
+            XPathExecutionContext::eWarning,
+            theMessage,
+            m_locator,
+            m_sourceNode);
+    }
+
+    virtual void
+    error(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        warning(exc);
+    }
+
+    virtual void
+    fatalError(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    {
+        m_fatal = true;
+
+        warning(exc);
+
+        throw exc;
+    }
+
+    virtual void
+    resetErrors()
+    {
+    }
+
+    bool
+    getFatalError() const
+    {
+        return m_fatal;
+    }
+
+private:
+
+    XPathExecutionContext&  m_executionContext;
+
+    const Locator* const    m_locator;
+
+    const XalanNode* const  m_sourceNode;
+
+    bool                    m_fatal;
+};
 
 
 
@@ -99,15 +173,24 @@ parseDoc(
             const XalanDOMString&   uri,
             const XalanDOMString&   base,
             const XalanNode*        sourceNode,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
+    LocalErrorHandler   theErrorHandler(executionContext, locator, sourceNode);
+
     try
     {
-        return executionContext.parseXML(executionContext.getMemoryManager(), uri, base);
+        return executionContext.parseXML(
+                    executionContext.getMemoryManager(),
+                    uri,
+                    base,
+                    &theErrorHandler);
     }
     catch(...)
     {
-        doWarn(executionContext, uri, base, sourceNode, locator);
+        if (theErrorHandler.getFatalError())
+        {
+            doWarn(executionContext, uri, base, sourceNode, locator);
+        }
     }
 
     return 0;
@@ -126,9 +209,9 @@ getDoc(
 {
     XalanDocument*  newDoc = executionContext.getSourceDocument(uri);
 
-    if(newDoc == 0)
+    if (newDoc == 0)
     {
-        if(length(uri) != 0)
+        if (uri.length() != 0)
         {
             newDoc = parseDoc(executionContext, uri, base, sourceNode, locator);
         }
@@ -146,7 +229,7 @@ getDoc(
         }
     }
 
-    if(newDoc != 0)
+    if (newDoc != 0)
     {
         mnl->addNodeInDocOrder(newDoc, executionContext);
     }
@@ -213,7 +296,9 @@ FunctionDocument::execute(
     }
     else
     {
-        XalanDOMString              base(executionContext.getMemoryManager());
+        const GetCachedString   theGuard(executionContext);
+
+        XalanDOMString&     base = theGuard.get();
 
         assert(executionContext.getPrefixResolver() != 0);
 
@@ -235,7 +320,7 @@ FunctionDocument::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);
 
-    XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+    const GetCachedString   theGuard(executionContext);
 
     XalanDOMString& base = theGuard.get();
 
@@ -243,31 +328,35 @@ FunctionDocument::execute(
 
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
+        const GetCachedString   theGuard1(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "document"),
-            context,
-            locator);
+            locator,
+            context);
 
         return XObjectPtr();
     }
     else
     {
-        if(XObject::eTypeNodeSet != arg2->getType())
+        if (XObject::eTypeNodeSet != arg2->getType())
         {
-            XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
+            const GetCachedString   theGuard1(executionContext);
 
-            executionContext.error(
+            executionContext.problem(
+                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
                     XalanMessages::SecondArgumentToFunctionMustBeNode_set_1Param,
                     "document"),
-                context,
-                locator);
+                locator,
+                context);
         }
         else
         {
@@ -305,7 +394,7 @@ FunctionDocument::doExecute(
             const XObjectPtr&       arg,
             XalanDOMString*         base,
             int                     argCount,
-            const LocatorType*      locator,
+            const Locator*          locator,
             bool                    fNoRelativeURI) const
 {
     // This list will hold the nodes...
@@ -317,14 +406,14 @@ FunctionDocument::doExecute(
                                                 arg->nodeset().getLength()
                                                 : 1;
 
-    for(NodeRefListBase::size_type i = 0; i < nRefs; i++)
+    for (NodeRefListBase::size_type i = 0; i < nRefs; i++)
     {
         assert(XObject::eTypeNodeSet != theType ||
                             arg->nodeset().item(i) != 0);
 
         const XalanNode*    resolver = 0;
 
-        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString&     ref = theGuard.get();
 
@@ -342,17 +431,17 @@ FunctionDocument::doExecute(
 
         // This is the case where the function was called with
         // an empty string, which refers to the stylesheet itself.
-        if (nRefs == 1 && isEmpty(ref) == true && argCount == 1)
+        if (nRefs == 1 && ref.empty() == true && argCount == 1)
         {
             if (base != 0)
             {
-                clear(*base);
+                base->clear();
             }
 
             ref = executionContext.getPrefixResolver()->getURI();
         }
 
-        if(!isEmpty(ref))
+        if (!ref.empty())
         {
             // From http://www.ics.uci.edu/pub/ietf/uri/rfc1630.txt
             // A partial form can be distinguished from an absolute form in that the
@@ -360,7 +449,7 @@ FunctionDocument::doExecute(
             // characters. Systems not requiring partial forms should not use any
             // unencoded slashes in their naming schemes.  If they do, absolute URIs
             // will still work, but confusion may result.
-            const XalanDOMString::size_type     theLength = length(ref);
+            const XalanDOMString::size_type     theLength = ref.length();
 
             const XalanDOMString::size_type     indexOfColon = indexOf(ref, XalanUnicode::charColon);
             XalanDOMString::size_type           indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
@@ -376,9 +465,9 @@ FunctionDocument::doExecute(
             }
 #endif              
 
-            if(indexOfColon < theLength &&
-               indexOfSlash < theLength &&
-               indexOfColon < indexOfSlash)
+            if (indexOfColon < theLength &&
+                indexOfSlash < theLength &&
+                indexOfColon < indexOfSlash)
             {
                 // The ref is absolute...
                 getDoc(executionContext, ref, mnl, context, locator);
@@ -389,14 +478,16 @@ FunctionDocument::doExecute(
                 // provided, use that...
                 if (fNoRelativeURI == true)
                 {
-                    XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+                    const GetCachedString   theGuard(executionContext);
 
-                    executionContext.warn(
+                    executionContext.problem(
+                        XPathExecutionContext::eXPath,
+                        XPathExecutionContext::eWarning,
                         XalanMessageLoader::getMessage(
                             theGuard.get(),
                             XalanMessages::CannotResolveURIInDocumentFunction),
-                        context,
-                        locator);
+                        locator,
+                        context);
                 }
                 else if (base != 0)
                 {
@@ -433,7 +524,7 @@ Function*
 #else
 FunctionDocument*
 #endif
-FunctionDocument::clone(MemoryManagerType&  theManager) const
+FunctionDocument::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

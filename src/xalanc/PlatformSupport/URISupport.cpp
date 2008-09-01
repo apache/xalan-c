@@ -70,10 +70,11 @@ const XalanDOMChar	URISupport::s_fileProtocolString2[] =
 
 
 URISupport::URLAutoPtrType
-URISupport::getURLFromString(const XalanDOMChar*	urlString,
-                             MemoryManagerType&     theManager)
+URISupport::getURLFromString(
+            const XalanDOMChar*     urlString,
+            MemoryManager&          theManager)
 {
-	URLAutoPtrType	url(new (&theManager)XMLURLType(&theManager));
+	URLAutoPtrType	url(new (&theManager) XMLURLType(&theManager));
 
     XalanDOMString normalizedURL(theManager);
 
@@ -127,20 +128,17 @@ URISupport::getURLStringFromString(
 			XALAN_USING_XERCES(XMLPlatformUtils)
 
 			// Assume it's a file specification...
-#if _XERCES_VERSION >= 20300
 			XALAN_USING_XERCES(MemoryManager)
 
             MemoryManager&  theMemoryManager = theNormalizedURI.getMemoryManager();
 
             const ArrayJanitor<XMLCh>	theFullPathGuard(
                         XMLPlatformUtils::getFullPath(
-                            c_wstr(urlString),
+                            urlString,
                             &theMemoryManager),
                         &theMemoryManager);
-#else
-			const ArrayJanitor<XMLCh>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
-#endif
-			const XalanDOMChar* const	theFullPath = theFullPathGuard.get();
+
+            const XalanDOMChar* const	theFullPath = theFullPathGuard.get();
 			assert(theFullPath != 0);
 
 			const XalanDOMString::size_type		theFullPathLength =
@@ -182,7 +180,7 @@ URISupport::getURLStringFromString(
 			XalanDOMString::size_type	baseLen,
 			XalanDOMString&				theNormalizedURI)
 {
-    MemoryManagerType& theMemoryManager = theNormalizedURI.getMemoryManager();
+    MemoryManager&  theMemoryManager = theNormalizedURI.getMemoryManager();
 
 	XalanDOMString	context(base, theMemoryManager, baseLen);
 	XalanDOMString	url(urlString, theMemoryManager, urlStringLen);
@@ -223,7 +221,37 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 
 
-const XalanDOMChar	URISupport::InvalidURIException::m_type[] = 
+URISupport::InvalidURIException::InvalidURIException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator) :
+	XSLException(
+        theMessage,
+        theManager,
+        theLocator)
+{
+}
+
+
+
+URISupport::InvalidURIException::InvalidURIException(
+            const XalanDOMString&	theMessage,
+            MemoryManager&          theManager) :
+	XSLException(
+        theMessage,
+        theManager)
+{
+}
+
+
+
+URISupport::InvalidURIException::~InvalidURIException()
+{
+}
+
+
+
+static const XalanDOMChar   s_type[] = 
 {	
 	XalanUnicode::charLetter_I,
 	XalanUnicode::charLetter_n,
@@ -249,16 +277,10 @@ const XalanDOMChar	URISupport::InvalidURIException::m_type[] =
 
 
 
-URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage,
-                                                     MemoryManagerType&      theManager) :
-	XSLException(theMessage,theManager)
+const XalanDOMChar*
+URISupport::InvalidURIException::getType() const
 {
-}
-
-
-
-URISupport::InvalidURIException::~InvalidURIException()
-{
+    return s_type;
 }
 
 

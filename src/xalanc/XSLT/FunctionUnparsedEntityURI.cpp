@@ -58,15 +58,17 @@ FunctionUnparsedEntityURI::execute(
 
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "unparsed-entity-uri"),
-            context,
-            locator);
+            locator,
+            context);
 
         return XObjectPtr();
     }

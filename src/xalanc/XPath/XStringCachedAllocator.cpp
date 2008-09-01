@@ -41,7 +41,7 @@ XStringCachedAllocator::~XStringCachedAllocator()
 
 
 XStringCachedAllocator::string_type*
-XStringCachedAllocator::createString(GetAndReleaseCachedString&		theValue) 
+XStringCachedAllocator::createString(GetCachedString&   theValue) 
 {
 	string_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

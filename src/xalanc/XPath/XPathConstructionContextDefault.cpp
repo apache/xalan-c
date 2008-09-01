@@ -20,7 +20,20 @@
 
 
 
-#include "xalanc/XPath/XPathParserException.hpp"
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
+
+
+
+#include "xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp"
+#include "xalanc/PlatformSupport/XalanStdOutputStream.hpp"
+
+
+
+#include "XPathParserException.hpp"
 
 
 
@@ -28,28 +41,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathConstructionContextDefault::XPathConstructionContextDefault(MemoryManagerType& theManager) :
+XPathConstructionContextDefault::XPathConstructionContextDefault(MemoryManager&     theManager) :
 	XPathConstructionContext(theManager),
 	m_stringPool(theManager),
 	m_stringCache(theManager)
 {
 }
 
+
+    
 XPathConstructionContextDefault*
-XPathConstructionContextDefault::create(MemoryManagerType& theManager)
+XPathConstructionContextDefault::create(MemoryManager&  theManager)
 {
     typedef XPathConstructionContextDefault ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
+    ThisType* theResult = new (theGuard.get()) ThisType(theManager);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XPathConstructionContextDefault::~XPathConstructionContextDefault()
 {
@@ -101,32 +116,61 @@ XPathConstructionContextDefault::releaseCachedString(XalanDOMString&	theString)
 
 
 void
-XPathConstructionContextDefault::error(
+XPathConstructionContextDefault::problem(
+			eSource		            source,
+			eClassification			classification,
 			const XalanDOMString&	msg,
-			const XalanNode* 		/* sourceNode */,
-			const LocatorType* 		locator) const
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
 {
-    MemoryManagerType& theManager = const_cast<XPathConstructionContextDefault*>(this)-> getMemoryManager();
+    MemoryManager&  theManager = getMemoryManager();
 
-    if (locator != 0)
-	{
-        MemoryManagerType& theManager = const_cast<XPathConstructionContextDefault*>(this)-> getMemoryManager();
+    XALAN_USING_STD(cerr)
 
-		throw XPathParserException(*locator, msg, theManager);
-	}
-	else
-	{
-		throw XPathParserException(msg, theManager);
+    XalanStdOutputStream            theStream(cerr, theManager);
+    XalanOutputStreamPrintWriter    thePrintWriter(theStream);
+
+    defaultFormat(
+        thePrintWriter,
+        source,
+        classification,
+        msg,
+        locator,
+        sourceNode);
+
+    if (classification == eError)
+    {
+		throw XPathParserException(msg, theManager, locator);
 	}
 }
 
 
+
 void
-XPathConstructionContextDefault::warn(
-			const XalanDOMString&	/* msg */,
-			const XalanNode* 		/* sourceNode */,
-			const LocatorType* 		/* locator */) const
+XPathConstructionContextDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
 {
+    MemoryManager&  theManager = getMemoryManager();
+
+    XALAN_USING_STD(cerr)
+
+    XalanStdOutputStream            theStream(cerr, theManager);
+    XalanOutputStreamPrintWriter    thePrintWriter(theStream);
+
+    defaultFormat(
+        thePrintWriter,
+        source,
+        classification,
+        msg,
+        sourceNode);
+
+    if (classification == eError)
+    {
+		throw XPathParserException(msg, theManager);
+	}
 }
 
 

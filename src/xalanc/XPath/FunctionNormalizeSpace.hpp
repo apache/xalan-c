@@ -76,12 +76,12 @@ public:
 #else
 	virtual FunctionNormalizeSpace*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager&    theManager) const;
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+	getError(XalanDOMString&    theResult) const;
 
 private:
 
@@ -91,12 +91,24 @@ private:
 	XObjectPtr
 	normalize(
 		XPathExecutionContext&	executionContext,
-		const XalanDOMString&	theString) const;
+		const XalanDOMString&	theString) const
+    {
+        // A string contain the result...
+        GetCachedString     theResult(executionContext);
+
+        return normalize(executionContext, theString, theResult);
+    }
 
 	XObjectPtr
 	normalize(
 		XPathExecutionContext&	executionContext,
 		const XObjectPtr&		theArg) const;
+
+    XObjectPtr
+    normalize(
+            XPathExecutionContext&  executionContext,
+            const XalanDOMString&   theString,
+            GetCachedString&        theResult) const;
 
 	// Not implemented...
 	FunctionNormalizeSpace&

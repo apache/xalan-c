@@ -55,16 +55,19 @@ FunctionString::execute(
 {
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-        XalanDOMString&     theResult = theGuard.get();
+        const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+        XalanDOMString&         theResult = theGuard.get();
+
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theResult,
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "string"),
-            context,
-            locator);
+            locator,
+            context);
 
         // Dummy return value...
         return XObjectPtr();
@@ -78,7 +81,7 @@ FunctionString::execute(
         // DOMServices::getNodeData() will give us the data.
 
         // Get a cached string...
-        XPathExecutionContext::GetAndReleaseCachedString    theData(executionContext);
+        GetCachedString     theData(executionContext);
 
         XalanDOMString&     theString = theData.get();
 

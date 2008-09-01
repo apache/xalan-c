@@ -31,21 +31,24 @@ XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool(MemoryManagerTy
 {
 }
 
+
+
 XercesLiaisonXalanDOMStringPool*
 XercesLiaisonXalanDOMStringPool::    create(MemoryManagerType& theManager)
 {
     typedef XercesLiaisonXalanDOMStringPool ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesLiaisonXalanDOMStringPool::~XercesLiaisonXalanDOMStringPool()
 {

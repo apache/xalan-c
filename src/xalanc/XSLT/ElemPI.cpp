@@ -203,7 +203,7 @@ ElemPI::execute(StylesheetExecutionContext&     executionContext) const
 {
     ElemTemplateElement::execute(executionContext);
     
-    StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(executionContext);
+    const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
     XalanDOMString&     piName = theGuard.get();
 

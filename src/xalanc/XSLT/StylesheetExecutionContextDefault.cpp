@@ -255,6 +255,40 @@ StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 
 
 
+void
+StylesheetExecutionContextDefault::problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
+{
+    m_xsltProcessor->problem(
+        source,
+        classification,
+        msg,
+        locator,
+        sourceNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
+{
+    m_xsltProcessor->problem(
+        source,
+        classification,
+        msg,
+        sourceNode);
+}
+
+
+
 bool
 StylesheetExecutionContextDefault::getQuietConflictWarnings() const
 {
@@ -1256,27 +1290,15 @@ StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplat
     {
         const LocatorType* const    theLocator = theElement->getLocator();
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   theGuard(*this);
+        const GetCachedString   theGuard(*this);
 
-        if (theLocator == 0)
-        {
-            throw XSLTProcessorException(
-                    getMemoryManager(),
-                    XalanMessageLoader::getMessage(
-                        theGuard.get(),
-                        XalanMessages::InfiniteRecursion_1Param,
-                        theElement->getElementName()));
-        }
-        else
-        {
-            throw XSLTProcessorException(
-                    getMemoryManager(),
-                    *theLocator,
-                    XalanMessageLoader::getMessage(
-                        theGuard.get(),
-                        XalanMessages::InfiniteRecursion_1Param,
-                        theElement->getElementName()));
-        }
+        throw XSLTProcessorException(
+                getMemoryManager(),
+                XalanMessageLoader::getMessage(
+                    theGuard.get(),
+                    XalanMessages::InfiniteRecursion_1Param,
+                    theElement->getElementName()),
+                theLocator);
     }
 
     m_elementRecursionStack.push_back(theElement);
@@ -1758,15 +1780,17 @@ StylesheetExecutionContextDefault::formatNumber(
 
     if (theDFS == 0)
     {
-        GetAndReleaseCachedString   theGuard(*this);
+        const GetCachedString   theGuard(*this);
 
-        warn(
+        problem(
+            eXSLTProcessor,
+            eWarning,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::Decimal_formatElementNotFound_1Param,
                 "format-number()"),
-            context,
-            locator);
+            locator,
+            context);
 
         theDFS = getDecimalFormatSymbols(theEmptyQName);
         
@@ -2030,9 +2054,14 @@ XalanDocument*
 StylesheetExecutionContextDefault::parseXML(
             MemoryManagerType&      theManager,
             const XalanDOMString&   urlString,
-            const XalanDOMString&   base) const
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler) const
 {
-    return m_xpathExecutionContextDefault.parseXML(theManager, urlString, base);
+    return m_xpathExecutionContextDefault.parseXML(
+                theManager,
+                urlString,
+                base,
+                theErrorHandler);
 }
 
 
@@ -2171,15 +2200,17 @@ StylesheetExecutionContextDefault::getVariable(
     }
     else
     {
-        const GetAndReleaseCachedString     theGuard(*this);
+        const GetCachedString   theGuard(*this);
 
-        error(
+        problem(
+            eXSLTProcessor,
+            eWarning,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::VariableIsNotDefined_1Param,
                 name.getLocalPart()),
-            getCurrentNode(),
-            locator);
+            locator,
+            getCurrentNode());
 
         return getXObjectFactory().createUnknown(name.getLocalPart());
     }
@@ -2408,128 +2439,6 @@ StylesheetExecutionContextDefault::fireSelectEvent(const SelectionEvent&    se)
 
 
 
-void
-StylesheetExecutionContextDefault::error(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode) const
-{
-    assert(m_xsltProcessor != 0);
-
-    m_xsltProcessor->error(msg, sourceNode != 0 ? sourceNode : getCurrentNode(), &styleNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
-{
-    assert(m_xsltProcessor != 0);
-
-    if (sourceNode == 0)
-    {
-        sourceNode = getCurrentNode();
-    }
-
-    if (locator != 0)
-    {
-        m_xsltProcessor->error(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_xsltProcessor->error(msg, sourceNode);
-    }
-}
-
-
-void
-StylesheetExecutionContextDefault::warn(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode) const
-{
-    assert(m_xsltProcessor != 0);
-
-    if (sourceNode == 0)
-    {
-        sourceNode = getCurrentNode();
-    }
-
-    m_xsltProcessor->warn(msg, sourceNode, &styleNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
-{
-    assert(m_xsltProcessor != 0);
-
-    if (sourceNode == 0)
-    {
-        sourceNode = getCurrentNode();
-    }
-
-    if (locator != 0)
-    {
-        m_xsltProcessor->warn(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_xsltProcessor->warn(msg, sourceNode);
-    }
-}
-
-
-
-void
-StylesheetExecutionContextDefault::message(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode) const
-{
-    assert(m_xsltProcessor != 0);
-
-    if (sourceNode == 0)
-    {
-        sourceNode = getCurrentNode();
-    }
-
-    m_xsltProcessor->message(msg, sourceNode, &styleNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::message(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
-{
-    assert(m_xsltProcessor != 0);
-
-    if (sourceNode == 0)
-    {
-        sourceNode = getCurrentNode();
-    }
-
-    if (locator != 0)
-    {
-        m_xsltProcessor->message(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_xsltProcessor->message(msg, sourceNode);
-    }
-}
-
-
 class PopAndPushContextMarker
 {
 public:
@@ -2549,6 +2458,7 @@ private:
 
     StylesheetExecutionContext&     m_executionContext;
 };
+
 
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
@@ -3054,7 +2964,7 @@ XalanDOMString  StylesheetExecutionContextDefault::FormatterToTextDOMString::s_d
 
 
 
-StylesheetExecutionContextDefault::FormatterToTextDOMString::FormatterToTextDOMString(MemoryManagerType& theManager) :
+StylesheetExecutionContextDefault::FormatterToTextDOMString::FormatterToTextDOMString(MemoryManager&    theManager) :
     FormatterToText(theManager),
     m_printWriter(s_dummyString)
 {

@@ -122,6 +122,7 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
     m_externalSchemaLocation(m_memoryManager),
     m_externalNoNamespaceSchemaLocation(m_memoryManager),
     m_problemListener(0),
+    m_errorStream(0),
 #if defined(XALAN_NO_STD_NAMESPACE)
     m_warningStream(&cerr),
 #else

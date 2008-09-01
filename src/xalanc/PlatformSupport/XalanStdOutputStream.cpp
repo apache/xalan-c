@@ -244,7 +244,8 @@ XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWr
                 XalanMessages::ErrorWritingToStdStream),
         theErrorCode,
         theBuffer),
-    theBuffer.getMemoryManager())
+    theBuffer.getMemoryManager(),
+    0)
 {
 }
 

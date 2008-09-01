@@ -241,7 +241,7 @@ public:
 
     XalanMap(
             MemoryManagerType&  theMemoryManager,
-            float               loadFactor = 0.75,
+            double              loadFactor = 0.75,
             size_type           minBuckets = eDefaultMinBuckets,
             size_type           eraseThreshold = eDefaultEraseThreshold) :
         m_memoryManager(&theMemoryManager),
@@ -577,6 +577,8 @@ protected:
             const Key&  key,
             size_type   modulus) const
     {
+        assert(modulus != 0);
+
         return m_hash(key) % modulus;
     }
 
@@ -589,6 +591,7 @@ protected:
     {
         // grow the number of buckets by 60%
         const size_type     theNewSize = size_type(1.6 * size());
+        assert(theNewSize != 0);
 
         BucketTableType     temp(
                                 theNewSize,
@@ -713,7 +716,7 @@ protected:
 
     MemoryManagerType*					m_memoryManager;
 
-    float								m_loadFactor;
+    double								m_loadFactor;
 
     const size_type						m_minBuckets;
 

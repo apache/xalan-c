@@ -79,35 +79,25 @@ public:
 		/**
 		 * Construct an ElemMessageTerminateException object
 		 * 
-		 * @param theMessage message to print when exception thrown
-		 */
-		ElemMessageTerminateException(
-                    MemoryManagerType&          theManager,
-                    const XalanDOMString&		theMessage);
-		
-		/**
-		 * Construct an ElemMessageTerminateException object
-		 * 
 		 * @param theLocator The Locator to use for line number information, etc.
 		 * @param theMessage message to print when exception thrown
 		 */
 		ElemMessageTerminateException(
-                MemoryManagerType&      theManager,
-				const LocatorType&		theLocator,
-				const XalanDOMString&	theMessage);
+                MemoryManager&          theManager,
+				const XalanDOMString&	theMessage,
+				const Locator*		    theLocator);
 
 		virtual
 		~ElemMessageTerminateException();
 
-		
 		virtual const XalanDOMChar*
-			getType() const
+	    getType() const
 		{
 			return m_type;
 		}
-		
+
 	private:
-		
+
 		static const XalanDOMChar	m_type[];
 	};
 

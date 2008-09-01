@@ -268,6 +268,53 @@ public:
 	virtual void
 	setErrorHandler(ErrorHandler*	handler) = 0;
 
+    // A utility class for classes to use.
+    class EnsureResetErrorHandler
+    {
+    public:
+
+        EnsureResetErrorHandler(
+                XMLParserLiaison*   theLiaison = 0,
+                ErrorHandler*       theErrorHandler = 0) :
+            m_liaison(theLiaison),
+            m_errorHandler(theErrorHandler)
+        {
+            if (theLiaison != 0)
+            {
+                theLiaison->setErrorHandler(theErrorHandler);
+            }
+        }
+
+        ~EnsureResetErrorHandler()
+        {
+            if (m_liaison != 0)
+            {
+                m_liaison->setErrorHandler(m_errorHandler);
+            }
+        }
+
+        void
+        set(
+                XMLParserLiaison*   theLiaison,
+                ErrorHandler*       theErrorHandler)
+        {
+            m_liaison = theLiaison;
+
+            m_errorHandler = theErrorHandler;
+
+            if (theLiaison != 0)
+            {
+                theLiaison->setErrorHandler(theErrorHandler);
+            }
+        }
+
+    private:
+
+        XMLParserLiaison*   m_liaison;
+
+        ErrorHandler*       m_errorHandler;
+    };
+
 protected:
 
     // A utility class for derived classes to use.

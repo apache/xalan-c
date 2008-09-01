@@ -63,7 +63,9 @@ public:
 	virtual
 	~Function();
 
-	typedef XPathExecutionContext::XObjectArgVectorType	XObjectArgVectorType;
+	typedef XPathExecutionContext::XObjectArgVectorType     XObjectArgVectorType;
+    typedef XPathExecutionContext::GetCachedString          GetCachedString;
+    typedef XPathExecutionContext::GetCachedNodeList        GetCachedNodeList;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -146,7 +148,7 @@ public:
 	 * @param arg1             pointer to XObject arguments
 	 * @param arg2             pointer to XObject argument
 	 * @param arg3             pointer to XObject argument
-	 * @param locator		   LocatorType instance for the XPath expression that contains the function call
+	 * @param locator		   Locator instance for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
@@ -173,10 +175,25 @@ protected:
 	 * the function is called with the wrong
 	 * number of arguments.
 	 *
-	 * @return function error message
+	 * @param theBuffer The XalanDOMString for the message.
+	 * @return The error message
 	 */
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const = 0;
+	getError(XalanDOMString&    theBuffer) const = 0;
+
+	/**
+	 * Report the error returned from the getError()
+	 * call.
+	 *
+	 * @param executionContext The current XPathExecutionContext
+	 * @param context The context node
+	 * @param locator The Locator instance for the XPath expression that contains the function call
+	 */
+    void
+    generalError(
+			XPathExecutionContext&  executionContext,
+			const XalanNode*        context,
+			const Locator*          locator) const;
 
 private:
 

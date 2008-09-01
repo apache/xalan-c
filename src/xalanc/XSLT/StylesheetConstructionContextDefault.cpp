@@ -167,89 +167,37 @@ StylesheetConstructionContextDefault::~StylesheetConstructionContextDefault()
 
 
 void
-StylesheetConstructionContextDefault::error(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
+StylesheetConstructionContextDefault::problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
 {
-    m_processor.error(msg, sourceNode, styleNode);
+    m_processor.problem(
+        source,
+        classification,
+        msg,
+        locator,
+        sourceNode);
 }
 
 
 
 void
-StylesheetConstructionContextDefault::error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
+StylesheetConstructionContextDefault::problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
 {
-    if (locator != 0)
-    {
-        m_processor.error(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_processor.error(msg, sourceNode);
-    }
+    m_processor.problem(
+        source,
+        classification,
+        msg,
+        sourceNode);
 }
 
-
-
-
-void
-StylesheetConstructionContextDefault::warn(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
-{
-    m_processor.warn(msg, sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetConstructionContextDefault::warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
-{
-    if (locator != 0)
-    {
-        m_processor.warn(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_processor.warn(msg, sourceNode);
-    }
-}
-
-
-void
-StylesheetConstructionContextDefault::message(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode,
-            const ElemTemplateElement*  styleNode) const
-{
-    m_processor.message(msg, sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetConstructionContextDefault::message(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
-{
-    if (locator != 0)
-    {
-        m_processor.message(msg, *locator, sourceNode);
-    }
-    else
-    {
-        m_processor.message(msg, sourceNode);
-    }
-}
 
 
 void
@@ -336,7 +284,7 @@ StylesheetConstructionContextDefault::create(const XSLTInputSource&     theInput
     const XMLCh* const  theSystemID =
                 theInputSource.getSystemId();
 
-    GetAndReleaseCachedString theGuard(*this);
+    const GetCachedString   theGuard(*this);
 
     XalanDOMString& theBaseIdentifier = theGuard.get();
 
@@ -405,8 +353,9 @@ StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&    
 
 
 XalanDOMString&
-StylesheetConstructionContextDefault::getURLStringFromString(const XalanDOMString&  urlString,
-                                                             XalanDOMString&        theResult)
+StylesheetConstructionContextDefault::getURLStringFromString(
+            const XalanDOMString&  urlString,
+            XalanDOMString&        theResult)
 {
     URISupport::getURLStringFromString(
             urlString,
@@ -623,12 +572,14 @@ XalanDocument*
 StylesheetConstructionContextDefault::parseXML(
             const XalanDOMString&   urlString,
             DocumentHandler*        docHandler,
-            XalanDocument*          docToRegister)
+            XalanDocument*          docToRegister,
+            ErrorHandler*           theErrorHandler)
 {
     return m_processor.parseXML(
                 urlString,
                 docHandler,
-                docToRegister);
+                docToRegister,
+                theErrorHandler);
 }
 
 
@@ -1015,18 +966,20 @@ StylesheetConstructionContextDefault::createElement(
 
     default:
         {
-            const GetAndReleaseCachedString     theGuard1(*this);
-            const GetAndReleaseCachedString     theGuard2(*this);
+            const GetCachedString   theGuard1(*this);
+            const GetCachedString   theGuard2(*this);
 
-            error(
+            problem(
+                eXSLTProcessor,
+                eError,
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
                     XalanMessages::UnknownXSLTToken_1Param,
                     NumberToDOMString(
                         token,
                         theGuard2.get())),
-                0,
-                locator);
+                locator,
+                0);
         }
         break;
     };
@@ -1083,18 +1036,20 @@ StylesheetConstructionContextDefault::createElement(
     }
     else
     {
-        const GetAndReleaseCachedString     theGuard1(*this);
-        const GetAndReleaseCachedString     theGuard2(*this);
+        const GetCachedString   theGuard1(*this);
+        const GetCachedString   theGuard2(*this);
 
-        error(
+        problem(
+            eXSLTProcessor,
+            eError,
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::UnknownXSLTToken_1Param,
                 NumberToDOMString(
                     token,
                     theGuard2.get())),
-            0,
-            locator);
+            locator,
+            0);
     }
 
     return theElement;
@@ -1418,7 +1373,7 @@ StylesheetConstructionContextDefault::tokenizeQNames(
             doAllocateXalanQNamePointerVector(count);
         assert(theResult != 0);
 
-        const GetAndReleaseCachedString     theGuard(*this);
+        const GetCachedString   theGuard(*this);
 
         XalanDOMString&     qname = theGuard.get();
 

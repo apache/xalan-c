@@ -132,9 +132,10 @@ XalanEXSLTFunctionHighest::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -179,9 +180,10 @@ XalanEXSLTFunctionLowest::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -280,9 +282,10 @@ XalanEXSLTFunctionMin::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -325,9 +328,10 @@ XalanEXSLTFunctionMax::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -370,9 +374,10 @@ XalanEXSLTFunctionAbs::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -415,9 +420,10 @@ XalanEXSLTFunctionRandom::execute(
 {
     if (args.empty() == false)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
@@ -470,9 +476,10 @@ XalanEXSLTFunctionAcos::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -518,9 +525,10 @@ XalanEXSLTFunctionAsin::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -565,9 +573,10 @@ XalanEXSLTFunctionAtan::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -613,9 +622,10 @@ XalanEXSLTFunctionAtan2::execute(
 {
     if (args.size() != 2)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);
@@ -1023,9 +1033,10 @@ XalanEXSLTFunctionConstant::execute(
 {
     if (args.size() != 2)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);
@@ -1120,9 +1131,10 @@ XalanEXSLTFunctionCos::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -1166,9 +1178,10 @@ XalanEXSLTFunctionExp::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -1212,9 +1225,10 @@ XalanEXSLTFunctionLog::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -1260,9 +1274,10 @@ XalanEXSLTFunctionPower::execute(
 {
     if (args.size() != 2)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);
@@ -1309,9 +1324,10 @@ XalanEXSLTFunctionSin::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -1357,9 +1373,10 @@ XalanEXSLTFunctionSqrt::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -1403,9 +1420,10 @@ XalanEXSLTFunctionTan::execute(
 {
     if (args.size() != 1)
     {
-        const XPathExecutionContext::GetCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);

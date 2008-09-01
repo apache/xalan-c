@@ -46,6 +46,10 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -63,6 +67,10 @@ class XalanText;
 
 
 
+XALAN_USING_XERCES(ErrorHandler)
+
+
+
 //
 // An abstract class which provides support for executing XPath functions
 // and extension functions.
@@ -77,7 +85,9 @@ public:
     typedef NodeRefListBase::size_type  size_type;
 
     explicit
-    XPathExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*   theXObjectFactory = 0);
+    XPathExecutionContext(
+            MemoryManager&      theMemoryManager,
+            XObjectFactory*     theXObjectFactory = 0);
 
     virtual
     ~XPathExecutionContext();
@@ -227,6 +237,7 @@ public:
      *
      * @return whether the given element is available or not
      */
+
     virtual bool
     elementAvailable(const XalanQName&  theQName) const = 0;
 
@@ -265,7 +276,7 @@ public:
     virtual bool
     functionAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const = 0;
+            const Locator*          locator) const = 0;
 
     /**
      * Handle an extension function.
@@ -283,20 +294,23 @@ public:
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) = 0;
+            const Locator*                  locator) = 0;
 
     /**
      * Provides support for XML parsing service.
      *
+     * @param theManager The MemoryManager instance to use.
      * @param urlString location of the XML
      * @param base base location for URI
+     * @param theErrorHandler An optional ErrorHandler instance for error reporting.
      * @return parsed document
      */
     virtual XalanDocument*
     parseXML(
             MemoryManagerType&      theManager,
             const XalanDOMString&   urlString,
-            const XalanDOMString&   base) const = 0;
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler = 0) const = 0;
 
     /**
      * Borrow a cached MutableNodeRefList instance.
@@ -315,11 +329,11 @@ public:
     virtual bool
     returnMutableNodeRefList(MutableNodeRefList*    theList) = 0;
 
-    class BorrowReturnMutableNodeRefList
+    class GetCachedNodeList
     {
     public:
 
-        BorrowReturnMutableNodeRefList(XPathExecutionContext&   executionContext) :
+        GetCachedNodeList(XPathExecutionContext&    executionContext) :
             m_xpathExecutionContext(&executionContext),
             m_mutableNodeRefList(executionContext.borrowMutableNodeRefList())
         {
@@ -327,7 +341,7 @@ public:
         }
 
         // N.B. Non-const copy constructor semantics (like std::auto_ptr)
-        BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&    theSource) :
+        GetCachedNodeList(const GetCachedNodeList&  theSource) :
             m_xpathExecutionContext(theSource.m_xpathExecutionContext),
             m_mutableNodeRefList(theSource.m_mutableNodeRefList)
         {
@@ -336,7 +350,7 @@ public:
             ((BorrowReturnMutableNodeRefList&)theSource).m_mutableNodeRefList = 0;
         }
 
-        ~BorrowReturnMutableNodeRefList()
+        ~GetCachedNodeList()
         {
             release();
         }
@@ -374,12 +388,12 @@ public:
             }
         }
 
-        BorrowReturnMutableNodeRefList
+        GetCachedNodeList
         clone() const
         {
             assert(m_xpathExecutionContext != 0);
 
-            BorrowReturnMutableNodeRefList  theResult(*m_xpathExecutionContext);
+            GetCachedNodeList   theResult(*m_xpathExecutionContext);
 
             *theResult = *m_mutableNodeRefList;
 
@@ -387,8 +401,8 @@ public:
         }
 
         // N.B. Non-const assignment operator semantics.
-        BorrowReturnMutableNodeRefList&
-        operator=(BorrowReturnMutableNodeRefList&   theRHS)
+        GetCachedNodeList&
+        operator=(GetCachedNodeList&    theRHS)
         {
             release();
 
@@ -408,6 +422,8 @@ public:
         MutableNodeRefList*     m_mutableNodeRefList;
     };
 
+    typedef GetCachedNodeList   BorrowReturnMutableNodeRefList;
+
     /**
      * Get a cached string for temporary use.
      *
@@ -426,25 +442,25 @@ public:
     virtual bool
     releaseCachedString(XalanDOMString&     theString) = 0;
 
-    class GetAndReleaseCachedString
+    class GetCachedString
     {
     public:
 
-        GetAndReleaseCachedString(XPathExecutionContext&    theExecutionContext) :
+        GetCachedString(XPathExecutionContext&  theExecutionContext) :
             m_executionContext(&theExecutionContext),
             m_string(&theExecutionContext.getCachedString())
         {
         }
 
         // Note non-const copy semantics...
-        GetAndReleaseCachedString(GetAndReleaseCachedString&    theSource) :
+        GetCachedString(GetCachedString&    theSource) :
             m_executionContext(theSource.m_executionContext),
             m_string(theSource.m_string)
         {
             theSource.m_string = 0;
         }
 
-        ~GetAndReleaseCachedString()
+        ~GetCachedString()
         {
             if (m_string != 0)
             {
@@ -469,12 +485,12 @@ public:
     private:
 
         // Not implemented...
-        GetAndReleaseCachedString();
+        GetCachedString();
 
-        GetAndReleaseCachedString(const GetAndReleaseCachedString&);
+        GetCachedString(const GetCachedString&);
 
-        GetAndReleaseCachedString&
-        operator=(const GetAndReleaseCachedString&);
+        GetCachedString&
+        operator=(const GetCachedString&);
 
 
         // Data members...
@@ -483,7 +499,7 @@ public:
         XalanDOMString*         m_string;
     };
 
-    typedef GetAndReleaseCachedString   GetCachedString;
+    typedef GetCachedString     GetAndReleaseCachedString;
 
     /**
      * Create a MutableNodeRefList with the appropriate context.
@@ -686,23 +702,20 @@ public:
 
     // These interfaces are inherited from ExecutionContext...
 
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const = 0;
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
 
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const = 0;
-
-    virtual void
-    message(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const = 0;
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
 
     virtual bool
     shouldStripSourceNode(const XalanText&  node) = 0;

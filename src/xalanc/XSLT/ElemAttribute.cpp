@@ -44,6 +44,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+typedef StylesheetExecutionContext::GetCachedString     GetCachedString;
+
+
+
 ElemAttribute::ElemAttribute(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
@@ -146,7 +150,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
     else
     {
         // save original attribute name
-        StylesheetExecutionContext::GetAndReleaseCachedString   origAttrNameGuard(executionContext);
+        const GetCachedString   origAttrNameGuard(executionContext);
 
         XalanDOMString&     origAttrName = origAttrNameGuard.get();
 
@@ -156,7 +160,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
         XalanDOMString::size_type           indexOfNSSep = 0;
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   attrNameSpaceGuard(executionContext);
+        const GetCachedString   attrNameSpaceGuard(executionContext);
 
         XalanDOMString&     attrNameSpace = attrNameSpaceGuard.get();
 
@@ -215,7 +219,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                 }
                 else
                 {
-                    StylesheetExecutionContext::GetAndReleaseCachedString   newPrefixGuard(executionContext);
+                    const GetCachedString   newPrefixGuard(executionContext);
 
                     XalanDOMString&     newPrefix = newPrefixGuard.get();
 
@@ -271,7 +275,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                     }
 
                     // OK, now we have to generate a namespace declaration...
-                    StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
+                    const GetCachedString   nsDeclGuard(executionContext);
 
                     XalanDOMString&     nsDecl = nsDeclGuard.get();
 
@@ -305,7 +309,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                 if(indexOfNSSep < origAttrNameLength)
                 {
-                    StylesheetExecutionContext::GetAndReleaseCachedString   nsprefixGuard(executionContext);
+                    const GetCachedString   nsprefixGuard(executionContext);
 
                     XalanDOMString&     nsprefix = nsprefixGuard.get();
 
@@ -356,7 +360,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         if (prefix == 0)
                         {
                             // We need to generate a namespace declaration...
-                            StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
+                            const GetCachedString   nsDeclGuard(executionContext);
 
                             XalanDOMString&     nsDecl = nsDeclGuard.get();
 
@@ -433,7 +437,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
     ElemTemplateElement::execute(executionContext);
 
-    StylesheetExecutionContext::GetAndReleaseCachedString   attrNameGuard(executionContext);
+    const GetCachedString   attrNameGuard(executionContext);
 
     XalanDOMString&     attrName = attrNameGuard.get();
 
@@ -449,7 +453,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
     else
     {
         // save original attribute name
-        StylesheetExecutionContext::GetAndReleaseCachedString   origAttrNameGuard(executionContext);
+        const GetCachedString   origAttrNameGuard(executionContext);
 
         XalanDOMString&     origAttrName = origAttrNameGuard.get();
 
@@ -459,7 +463,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
         XalanDOMString::size_type           indexOfNSSep = 0;
 
-        StylesheetExecutionContext::GetAndReleaseCachedString   attrNameSpaceGuard(executionContext);
+        const GetCachedString   attrNameSpaceGuard(executionContext);
 
         XalanDOMString&     attrNameSpace = attrNameSpaceGuard.get();
 
@@ -518,7 +522,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                 }
                 else
                 {
-                    StylesheetExecutionContext::GetAndReleaseCachedString   newPrefixGuard(executionContext);
+                    const GetCachedString   newPrefixGuard(executionContext);
 
                     XalanDOMString&     newPrefix = newPrefixGuard.get();
 
@@ -574,7 +578,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                     }
 
                     // OK, now we have to generate a namespace declaration...
-                    StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
+                    const GetCachedString   nsDeclGuard(executionContext);
 
                     XalanDOMString&     nsDecl = nsDeclGuard.get();
 
@@ -608,7 +612,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
                 if(indexOfNSSep < origAttrNameLength)
                 {
-                    StylesheetExecutionContext::GetAndReleaseCachedString   nsprefixGuard(executionContext);
+                    const GetCachedString   nsprefixGuard(executionContext);
 
                     XalanDOMString&     nsprefix = nsprefixGuard.get();
 
@@ -661,7 +665,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                         if (prefix == 0)
                         {
                             // We need to generate a namespace declaration...
-                            StylesheetExecutionContext::GetAndReleaseCachedString   nsDeclGuard(executionContext);
+                            const GetCachedString   nsDeclGuard(executionContext);
 
                             XalanDOMString&     nsDecl = nsDeclGuard.get();
 

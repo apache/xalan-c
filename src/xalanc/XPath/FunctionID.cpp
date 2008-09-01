@@ -57,11 +57,9 @@ FunctionID::execute(
     assert(arg1.null() == false);   
     assert(context != 0);
 
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+    const GetCachedString   theGuard1(executionContext);
 
-    GetAndReleaseCachedString   theGuard1(executionContext);
-
-    XalanDOMString&             theResultString = theGuard1.get();
+    XalanDOMString&   theResultString = theGuard1.get();
 
     // Do the callback to get the data.
     FunctionIDXObjectTypeCallback   theCallback(executionContext, theResultString);
@@ -82,7 +80,7 @@ FunctionID::execute(
     {
         StringTokenizer     theTokenizer(theResultString);
 
-        GetAndReleaseCachedString   theGuard2(executionContext);
+        const GetCachedString   theGuard2(executionContext);
 
         XalanDOMString&     theToken = theGuard2.get();
 

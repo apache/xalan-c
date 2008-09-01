@@ -80,7 +80,7 @@ public:
 		{
             XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
-			executionContext.error(getError(theGuard.get()), context, locator);
+			generalError(executionContext, context, locator);
 		}
 
 		assert(args[0].null() == false);	
@@ -169,7 +169,7 @@ public:
 		{
             XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
-			executionContext.error(getError(theGuard.get()), context, locator);
+			generalError(executionContext, context, locator);
 		}
 
 		assert(args[0].null() == false);	
@@ -256,9 +256,7 @@ public:
 	{
 		if (args.empty() == false)
 		{
-            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
-
-			executionContext.error(getError(theGuard.get()), context, locator);
+			generalError(executionContext, context, locator);
 		}
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)

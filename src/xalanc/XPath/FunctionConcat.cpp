@@ -53,7 +53,7 @@ FunctionConcat::execute(
 {
     assert(arg1.null() == false && arg2.null() == false);   
 
-    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+    GetCachedString     theResult(executionContext);
 
     XalanDOMString&     theString = theResult.get();
 
@@ -76,9 +76,9 @@ FunctionConcat::execute(
 {
     assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);   
 
-    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+    GetCachedString     theResult(executionContext);
 
-    XalanDOMString&         theString = theResult.get();
+    XalanDOMString&     theString = theResult.get();
 
     arg1->str(executionContext, theString);
     arg2->str(executionContext, theString);
@@ -98,7 +98,7 @@ FunctionConcat::execute(
 {
     const XObjectArgVectorType::const_iterator  theEnd = args.end();
 
-    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+    GetCachedString     theResult(executionContext);
 
     XalanDOMString&     theString = theResult.get();
 

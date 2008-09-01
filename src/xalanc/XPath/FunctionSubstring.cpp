@@ -265,7 +265,7 @@ FunctionSubstring::execute(
             }
             else
             {
-                XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+                GetCachedString     theResult(executionContext);
 
                 XalanDOMString&     theString = theResult.get();
 

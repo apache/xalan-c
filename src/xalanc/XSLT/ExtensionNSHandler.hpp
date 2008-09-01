@@ -56,19 +56,23 @@ class XalanQName;
 class XALAN_XSLT_EXPORT ExtensionNSHandler : public ExtensionFunctionHandler
 {	 
 public:	
-	/**
+
+    /**
 	 * Construct a new extension namespace handler for a given extension NS.
 	 * This doesn't do anything - just hang on to the namespace URI.
 	 * 
 	 * @param namespaceUri extension namespace URI being implemented
 	 */
-	ExtensionNSHandler(const XalanDOMString&	namespaceUri,
-                        MemoryManagerType& theManager);
+	ExtensionNSHandler(
+            const XalanDOMString&	namespaceUri,
+            MemoryManager&          theManager);
 
 	static ExtensionNSHandler*
-    create(const XalanDOMString&	namespaceUri,
-                        MemoryManagerType& theManager);
-	/**
+    create(
+            const XalanDOMString&	namespaceUri,
+            MemoryManager&          theManager);
+
+    /**
 	 * Construct a new extension namespace handler given all the information
 	 * needed. 
 	 * 
@@ -82,7 +86,7 @@ public:
 	 * @param scriptSrc    the actual script code (if any)
 	 */
 	ExtensionNSHandler(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	elemNames,
 			const XalanDOMString&	funcNames,
@@ -172,7 +176,6 @@ protected:
 	 */
 	virtual void
 	startupComponent();
-
 
 private:
 

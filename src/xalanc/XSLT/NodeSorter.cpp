@@ -242,13 +242,13 @@ getResult(
 			const PrefixResolver&	thePrefixResolver,
 			XPathExecutionContext&	theExecutionContext)
 {
-	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+	typedef XPathExecutionContext::GetCachedString  GetCachedString;
 
 	if (theXPath == 0)
 	{
 		assert(theNode != 0);
 
-		const GetAndReleaseCachedString		temp(theExecutionContext);
+		const GetCachedString   temp(theExecutionContext);
 
 		DOMServices::getNodeData(*theNode, theExecutionContext, temp.get());
 

@@ -528,7 +528,7 @@ ElemTemplateElement::childrenToResultAttribute(
     }
     else
     {
-        StylesheetExecutionContext::GetAndReleaseCachedString   theResult(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theResult(executionContext);
 
         childrenToString(executionContext, theResult.get());
 
@@ -656,12 +656,14 @@ ElemTemplateElement::error(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetExecutionContext::eXSLTProcessor,
+        StylesheetExecutionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode),
-        theContext.getCurrentNode(),
-        getLocator());
+        getLocator(),
+        theContext.getCurrentNode());
 }
 
 
@@ -674,13 +676,15 @@ ElemTemplateElement::error(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetExecutionContext::eXSLTProcessor,
+        StylesheetExecutionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken),
-        theContext.getCurrentNode(),
-        getLocator());
+        getLocator(),
+        theContext.getCurrentNode());
 }
 
 
@@ -693,12 +697,14 @@ ElemTemplateElement::error(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+            StylesheetExecutionContext::eXSLTProcessor,
+            StylesheetExecutionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode),
-        theContext.getCurrentNode(),
-        theLocator);
+        theLocator,
+        theContext.getCurrentNode());
 }
 
 
@@ -710,12 +716,14 @@ ElemTemplateElement::warn(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.warn(
+    theContext.problem(
+        StylesheetExecutionContext::eXSLTProcessor,
+        StylesheetExecutionContext::eWarning,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode),
-        theContext.getCurrentNode(),
-        getLocator());
+        getLocator(),
+        theContext.getCurrentNode());
 }
 
 
@@ -728,12 +736,14 @@ ElemTemplateElement::warn(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.warn(
+    theContext.problem(
+        StylesheetExecutionContext::eXSLTProcessor,
+        StylesheetExecutionContext::eWarning,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode),
-        theContext.getCurrentNode(),
-        theLocator);
+        theLocator,
+        theContext.getCurrentNode());
 }
 
 
@@ -746,13 +756,15 @@ ElemTemplateElement::warn(
 {
     const ECGetCachedString     theGuard(theContext);
 
-    theContext.warn(
+    theContext.problem(
+        StylesheetExecutionContext::eXSLTProcessor,
+        StylesheetExecutionContext::eWarning,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken),
-        theContext.getCurrentNode(),
-        getLocator());
+        getLocator(),
+        theContext.getCurrentNode());
 }
 
 
@@ -767,15 +779,17 @@ ElemTemplateElement::warn(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.warn(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eWarning,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken1,
             theToken2,
             theToken3),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 
@@ -787,12 +801,14 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 
@@ -806,13 +822,15 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken),
-        0,
-        theLocator);
+        theLocator,
+        0);
 }
 
 
@@ -825,13 +843,15 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 
@@ -845,14 +865,16 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken1,
             theToken2),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 
@@ -866,14 +888,16 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken1,
             theToken2),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 
@@ -888,15 +912,17 @@ ElemTemplateElement::error(
 {
     const CCGetCachedString     theGuard(theContext);
 
-    theContext.error(
+    theContext.problem(
+        StylesheetConstructionContext::eXSLTProcessor,
+        StylesheetConstructionContext::eError,
         XalanMessageLoader::getMessage(
             theGuard.get(),
             theCode,
             theToken1,
             theToken2,
             theToken3),
-        0,
-        getLocator());
+        getLocator(),
+        0);
 }
 
 

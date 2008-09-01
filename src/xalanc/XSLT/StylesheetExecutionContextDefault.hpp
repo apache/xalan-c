@@ -217,24 +217,6 @@ public:
 
     // These interfaces are inherited from StylesheetExecutionContext...
 
-    virtual void
-    error(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const;
-
-    virtual void
-    warn(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const;
-
-    virtual void
-    message(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const;
-
     virtual bool
     getQuietConflictWarnings() const;
 
@@ -860,7 +842,8 @@ public:
     parseXML(
             MemoryManagerType&      theManager,
             const XalanDOMString&   urlString,
-            const XalanDOMString&   base) const;
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler = 0) const;
 
     virtual MutableNodeRefList*
     borrowMutableNodeRefList();
@@ -978,25 +961,20 @@ public:
             XalanDocument*          theDocument);
 
     // These interfaces are inherited from ExecutionContext...
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
 
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const;
-
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const;
-
-    virtual void
-    message(
-            const XalanDOMString&   msg,
-            const XalanNode*    sourceNode,
-            const LocatorType*  locator) const;
-
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
 
     class XPathCacheReturnFunctor
     {

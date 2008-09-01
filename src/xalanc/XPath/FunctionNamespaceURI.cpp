@@ -60,17 +60,19 @@ FunctionNamespaceURI::execute(
 {
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+        const GetCachedString   theGuard(executionContext);
 
         XalanDOMString& theResult = theGuard.get();
 
-        executionContext.error(
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theResult,
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "namespace-uri()"),
-            context,
-            locator);
+            locator,
+            context);
 
         // Dummy return value...
         return XObjectPtr(0);

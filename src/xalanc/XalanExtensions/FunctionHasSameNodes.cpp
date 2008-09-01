@@ -53,9 +53,10 @@ FunctionHasSameNodes::execute(
 {
     if (args.size() != 2)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false && args[1].null() == false);

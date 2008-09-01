@@ -44,7 +44,7 @@ public:
 
 	typedef XStringCached	string_type;
 
-	typedef string_type::GetAndReleaseCachedString	GetAndReleaseCachedString;
+	typedef string_type::GetCachedString    GetCachedString;
 
 	typedef ReusableArenaAllocator<string_type>		ArenaAllocatorType;
 	typedef ArenaAllocatorType::size_type			size_type;
@@ -68,7 +68,7 @@ public:
 	 * @return a pointer to the new XStringCached instance.
 	 */
 	string_type*
-	createString(GetAndReleaseCachedString&		theValue);
+	createString(GetCachedString&   theValue);
 
 
 	/**

@@ -193,7 +193,7 @@ openFile(const XalanDOMString&  theFileName,
 
 XalanFileOutputStream::XalanFileOutputStream(
             const XalanDOMString&   theFileName,
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
             size_type               theBufferSize) :
     XalanOutputStream(theManager, theBufferSize),
     m_fileName(theFileName, theManager),
@@ -217,6 +217,7 @@ XalanFileOutputStream::XalanFileOutputStream(
         throw XalanFileOutputStreamOpenException(
                     theFileName,
                     errno,
+                    0,
                     theBuffer);
     }
 #endif
@@ -313,6 +314,7 @@ XalanFileOutputStream::writeData(
         throw XalanFileOutputStreamWriteException(
             m_fileName,
             errno,
+            0,
             theBuffer);
     }
 #endif
@@ -330,7 +332,8 @@ FormatMessageLocal(
 XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
         const XalanDOMString&   theFileName,
         int                     theErrorCode,
-        XalanDOMString&         theBuffer) :
+        XalanDOMString&         theBuffer,
+        const Locator*          theLocator) :
     XalanOutputStreamException(
         FormatMessageLocal(
             XalanMessageLoader::getMessage(
@@ -339,7 +342,8 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStream
                 theFileName),
             theErrorCode,
             theBuffer),
-        theBuffer.getMemoryManager())
+        theBuffer.getMemoryManager(),
+        theLocator)
 {
 }
 
@@ -353,8 +357,9 @@ XalanFileOutputStream::XalanFileOutputStreamOpenException::~XalanFileOutputStrea
 
 XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStreamWriteException(
         const XalanDOMString&   theFileName,
-        int                 theErrorCode,
-        XalanDOMString&     theBuffer) :
+        int                     theErrorCode,
+        XalanDOMString&         theBuffer,
+        const Locator*          theLocator) :
     XalanOutputStreamException(
         FormatMessageLocal(
             XalanMessageLoader::getMessage(
@@ -363,7 +368,8 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
                 theFileName),
             theErrorCode,
             theBuffer),
-        theBuffer.getMemoryManager())
+        theBuffer.getMemoryManager(),
+        theLocator)
 {
 }
 

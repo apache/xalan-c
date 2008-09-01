@@ -152,7 +152,10 @@ XPathFunctionTable::InstallFunction(
 	{
         XalanDOMString theResult(*m_memoryManager);
 
-		throw XPathExceptionFunctionNotSupported(theFunctionName, theResult);
+		throw XPathExceptionFunctionNotSupported(
+                theFunctionName,
+                theResult,
+                0);
 	}
 	else
 	{
@@ -187,17 +190,16 @@ XPathFunctionTable::UninstallFunction(const XalanDOMChar*	theFunctionName)
 	}
 	else
 	{
-		const Function* const	theFunction = m_functionTable[theFunctionID];
+		Function* const	theFunction =
+            const_cast<Function*>(m_functionTable[theFunctionID]);
 
 		m_functionTable[theFunctionID] = 0;
 
-        if( theFunction!=0 )
-        {
-            const_cast<Function*>(theFunction)->~Function();
+        XalanDestroy(
+            *m_memoryManager,
+            theFunction);
 
-             m_memoryManager->deallocate((void*)theFunction);
-        }
-		return true;
+        return true;
 	}
 }
 
@@ -521,30 +523,23 @@ XPathFunctionTable::getFunctionIndex(
 
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
-            const XalanDOMString&    theFunctionNumber,
-            XalanDOMString&          theResult) :
-    XalanXPathException(
-        XalanMessageLoader::getMessage(
+			const XalanDOMString&	theFunctionNumber,
+            XalanDOMString&         theResult,
+            const Locator*          theLocator) :
+	XalanXPathException(
+		XalanMessageLoader::getMessage(
             theResult,
             XalanMessages::FunctionNumberIsNotAvailable_1Param,
             theFunctionNumber),
-        theResult.getMemoryManager())
+        theResult.getMemoryManager(),
+	    theLocator)
 {
 }
 
 
 
-XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
-			const XalanDOMString&	theFunctionNumber,
-			const LocatorType&	    theLocator,
-            XalanDOMString&         theResult) :
-	XalanXPathException(
-	    theLocator,
-		XalanMessageLoader::getMessage(
-            theResult,
-            XalanMessages::FunctionNumberIsNotAvailable_1Param,
-            theFunctionNumber),
-        theResult.getMemoryManager())
+XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(const XPathExceptionFunctionNotAvailable& other) :
+    XalanXPathException(other)
 {
 }
 
@@ -559,13 +554,22 @@ XPathExceptionFunctionNotAvailable::~XPathExceptionFunctionNotAvailable()
 
 XPathExceptionFunctionNotSupported::XPathExceptionFunctionNotSupported(
             const XalanDOMChar*     theFunctionName,
-            XalanDOMString&         theResult) :
+            XalanDOMString&         theResult,
+            const Locator*          theLocator) :
     XalanXPathException(
         XalanMessageLoader::getMessage(
             theResult,
             XalanMessages::FunctionIsNotSupported_1Param,
             theFunctionName),
-        theResult.getMemoryManager())
+        theResult.getMemoryManager(),
+        theLocator)
+{
+}
+
+
+
+XPathExceptionFunctionNotSupported::XPathExceptionFunctionNotSupported(const XPathExceptionFunctionNotSupported& other) :
+    XalanXPathException(other)
 {
 }
 

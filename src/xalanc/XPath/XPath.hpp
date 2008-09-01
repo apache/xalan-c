@@ -70,7 +70,7 @@ public:
     typedef XPathExpression::OpCodeMapPositionType              OpCodeMapPositionType;
     typedef XPathExpression::OpCodeMapValueType                 OpCodeMapValueType;
     typedef XPathExpression::TokenQueuePositionType             TokenQueuePositionType;
-    typedef XPathExecutionContext::GetAndReleaseCachedString    GetCachedString;
+    typedef XPathExecutionContext::GetCachedString              GetCachedString;
     typedef XPathExecutionContext::PrefixResolverSetAndRestore  PrefixResolverSetAndRestore;
     typedef XPathExecutionContext::CurrentNodePushAndPop        CurrentNodePushAndPop;
 
@@ -148,7 +148,7 @@ public:
      * Perform static initialization.  See class XPathInit.
      */
     static void
-    initialize(MemoryManagerType& theManager);
+    initialize(MemoryManager&   theManager);
 
     /**
      * Perform static shut down.  See class XPathInit.
@@ -162,16 +162,21 @@ public:
      * @param theLocator The applicable LocatorType, if any.
      */
     explicit
-    XPath(MemoryManagerType& theManager, const LocatorType*	theLocator = 0);
+    XPath(
+            MemoryManager&  theManager,
+            const Locator*	theLocator = 0);
 
     static XPath*
-    create(MemoryManagerType& theManager, const LocatorType*	theLocator = 0);
+    create(
+            MemoryManager&  theManager,
+            const Locator*	theLocator = 0);
 
-    MemoryManagerType&
-     getMemoryManager()
+    MemoryManager&
+    getMemoryManager()
     {
         return m_expression.getMemoryManager();
     }
+
     ~XPath();
 
     /**

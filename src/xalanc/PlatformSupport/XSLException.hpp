@@ -35,6 +35,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+XALAN_USING_XERCES(Locator)
 
 
 
@@ -42,42 +43,28 @@ class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
 
-	/**
+    /**
 	 * Constructor
-	 * 
-	 * @param theMessage message to write when exception thrown
-	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document.
-	 * @param theColumnNumber the column number of the related document.
-	 * @param theType type of exception, default is "XSLException"
+	 *
+	 * @param theMessage The message to display when exception thrown
+	 * @param theManager The MemoryManager instance to use.
+	 * @param theLocator The locator instance for error reporting, if any.
 	 */
 	XSLException(
 			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-            MemoryManager&          theManager);
-	/**
-	 * Constructor
-	 * 
-	 * @param theLocator The locator instance for error reporting.
-	 * @param theMessage message to write when exception thrown
-	 * @param theType type of exception, default is "XSLException"
-	 */
-	XSLException(
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-            MemoryManager&          theManager);
-	/**
-	 * Constructor
-	 * 
-	 * @param theMessage message to write when exception thrown
-	 * @param theType type of exception, default is "XSLException"
-	 */
-	XSLException(
-			const XalanDOMString&	theMessage,
-            MemoryManager&          theManager);
+            MemoryManager&          theManager,
+            const Locator*		    theLocator);
 
+    /**
+	 * Constructor.  Use this constructor when the message has 
+     * already been formatted.
+	 * 
+	 * @param theMessage The message to display when exception thrown
+	 * @param theManager The MemoryManager instance to use.
+	 */
+	XSLException(
+			const XalanDOMString&	theMessage,
+            MemoryManager&          theManager);
 
 	XSLException(const XSLException&	other);
 
@@ -181,17 +168,17 @@ public:
 			const XalanDOMChar*		theType,
 			XalanDOMString&			theBuffer)
 	{
-		assert(theMessage != 0 && theURI != 0 && theType != 0);
+		assert(theMessage != 0);
 
 		defaultFormat(
 			theMessage,
 			XalanDOMString::length(theMessage),
 			theURI,
-			XalanDOMString::length(theURI),
+            theURI == 0 ? 0 : XalanDOMString::length(theURI),
 			theLineNumber,
 			theColumnNumber,
 			theType,
-			XalanDOMString::length(theType),
+			theType == 0 ? 0 : XalanDOMString::length(theType),
 			theBuffer);
 	}
 
@@ -218,6 +205,9 @@ private:
 
 	const XalanFileLoc		m_lineNumber;
 	const XalanFileLoc	    m_columnNumber;
+
+    // When true, the message has already formatted.
+    const bool              m_formatted;
 };
 
 

@@ -254,7 +254,7 @@ XObject::number(
             XPathExecutionContext&  executionContext,
             const XalanNode&        theNode)
 {
-    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+    const GetCachedString   theGuard(executionContext);
 
     XalanDOMString&     theString = theGuard.get();
 
@@ -375,6 +375,8 @@ private:
 
 
 
+typedef XObject::GetCachedString    GetCachedString;
+
 struct
 getNumberFromNodeFunction
 {
@@ -402,7 +404,7 @@ private:
     double
     getNumberFromNode(const XalanNode&  theNode) const
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theString(m_executionContext);
+        const GetCachedString   theString(m_executionContext);
 
         getStringFromNode(theNode, m_executionContext, theString.get());
 
@@ -718,9 +720,9 @@ doCompareNodeSets(
 
         if (len2 > 0)
         {
-            XPathExecutionContext::GetAndReleaseCachedString    s1(executionContext);
+            const GetCachedString   s1(executionContext);
 
-            XPathExecutionContext::GetAndReleaseCachedString    s2(executionContext);
+            const GetCachedString   s2(executionContext);
 
             for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
             {
@@ -767,7 +769,7 @@ doCompareString(
 
     const NodeRefListBase::size_type    len1 = theLHSNodeSet.getLength();
 
-    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+    XPathExecutionContext::GetCachedString  theGuard(executionContext);
 
     XalanDOMString&     theLHS = theGuard.get();
 
@@ -1315,7 +1317,7 @@ XObject::throwInvalidConversionException(const XalanDOMString&  theTargetType) c
 
 
 
-const XalanDOMChar  XObject::XObjectException::m_type[] = 
+const XalanDOMChar  XObject::XObjectException::s_type[] = 
 {   
     XalanUnicode::charLetter_X,
     XalanUnicode::charLetter_O,
@@ -1339,16 +1341,29 @@ const XalanDOMChar  XObject::XObjectException::m_type[] =
 
 
 XObject::XObjectException::XObjectException(
-                const XalanDOMString&   message,
-                MemoryManager&          theManager) :
+            const XalanDOMString&   theMessage,
+            MemoryManager&          theManager) :
     XalanXPathException(
-        message,
+        theMessage,
         theManager)
 {
 }
 
     
     
+XObject::XObjectException::XObjectException(
+            const XalanDOMString&   theMessage,
+            MemoryManager&          theManager,
+            const Locator*          theLocator) :
+    XalanXPathException(
+        theMessage,
+        theManager,
+        theLocator)
+{
+}
+
+
+
 XObject::XObjectException::XObjectException(const XObjectException&     other):
     XalanXPathException(other)
 {
@@ -1362,7 +1377,15 @@ XObject::XObjectException::~XObjectException()
 
 
 
-const XalanDOMChar  XObject::XObjectInvalidConversionException::m_type[] = 
+const XalanDOMChar*
+XObject::XObjectException::getType() const
+{
+    return s_type;
+}
+
+
+
+const XalanDOMChar  XObject::XObjectInvalidConversionException::s_type[] = 
 {   
     XalanUnicode::charLetter_X,
     XalanUnicode::charLetter_O,
@@ -1428,6 +1451,14 @@ XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
 
 XObject::XObjectInvalidConversionException::~XObjectInvalidConversionException()
 {
+}
+
+
+
+const XalanDOMChar*
+XObject::XObjectInvalidConversionException::getType() const
+{
+    return s_type;
 }
 
 

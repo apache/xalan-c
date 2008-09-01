@@ -180,8 +180,8 @@ public:
     typedef XalanMemMgrAutoPtr<XPathProcessor, true>                XPathProcessorPtrType;
     typedef Function::XObjectArgVectorType              XObjectArgVectorType;
     typedef StylesheetExecutionContext::ParamVectorType ParamVectorType;
-    typedef XPathConstructionContext::GetAndReleaseCachedString     CCGetAndReleaseCachedString;
-    typedef XPathExecutionContext::GetAndReleaseCachedString        ECGetAndReleaseCachedString;
+    typedef XPathConstructionContext::GetCachedString   CCGetCachedString;
+    typedef XPathExecutionContext::GetCachedString      ECGetCachedString;
 
     typedef XalanMap<XalanDOMString, XalanParamHolder>  ParamMapType;
 
@@ -212,6 +212,12 @@ public:
     ~XSLTEngineImpl();
 
     MemoryManager&
+    getMemoryManager() const
+    {
+        return m_xpathConstructionContext.getMemoryManager();
+    }
+
+    MemoryManager&
     getMemoryManager()
     {
         return m_xpathConstructionContext.getMemoryManager();
@@ -231,7 +237,22 @@ public:
     terminate();
 
     // These methods are inherited from XSLTProcessor ...
-    
+
+    virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
+
     virtual void
     process(
             const XSLTInputSource&          inputSource, 
@@ -363,7 +384,8 @@ public:
     parseXML(
             const XalanDOMString&   urlString,
             DocumentHandler*        docHandler,
-            XalanDocument*          docToRegister);
+            XalanDocument*          docToRegister,
+            ErrorHandler*           theErrorHandler = 0);
 
     /**
      * Read in the XML file, either producing a Document or calling SAX events,
@@ -380,7 +402,8 @@ public:
     parseXML(
             const InputSource&  inputSource,
             DocumentHandler*    docHandler,
-            XalanDocument*      docToRegister);
+            XalanDocument*      docToRegister,
+            ErrorHandler*       theErrorHandler = 0);
 
     /**
      * Reset the state of the XSL processor by reading in a new XSL stylesheet
@@ -849,45 +872,6 @@ public:
     {
         return m_quietConflictWarnings;
     }
-
-    virtual void
-    message(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const;
-
-    virtual void
-    message(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const;
-
-    virtual void
-    warn(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const;
-
-
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const;
-
-    virtual void
-    error(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const;
-
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const;
-
-public:
 
     /**
      * Retrieve the result namespace corresponding to a prefix.
@@ -1542,6 +1526,11 @@ private:
             const LocatorType&                  locator,
             const XalanNode*                    sourceNode) const;
 
+    void
+    problem(
+            const XalanDOMString&               msg, 
+            ProblemListener::eClassification    classification) const;
+
   //==========================================================
   // SECTION: Function to do with attribute handling
   //==========================================================
@@ -1597,7 +1586,7 @@ private:
      * @return true if it should output as cdata
      */
     bool
-    isCDataResultElem(const XalanDOMString&     elementName) const;
+    isCDataResultElem(const XalanDOMString&     elementName);
 
     void
     fireCharacterGenerateEvent(
@@ -1626,7 +1615,23 @@ private:
             const XalanDOMString&   theElementName,
             const XalanDOMString&   theElementNamespaceURI);
 
+    void
+    error(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode);
 
+    void
+    warn(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode);
+
+    void
+    message(
+            const XalanDOMString&   theMessage,
+            const Locator*          theLocator,
+            const XalanNode*        theSourceNode);
 
     // Data members...
     XMLParserLiaison&   m_parserLiaison;

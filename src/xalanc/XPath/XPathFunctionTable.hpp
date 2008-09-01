@@ -55,13 +55,12 @@ public:
 
     typedef Function::LocatorType   LocatorType;
 
-    XPathExceptionFunctionNotAvailable(const XalanDOMString&    theFunctionNumber,
-                                        XalanDOMString&         theResult);
-
     XPathExceptionFunctionNotAvailable(
-        const XalanDOMString&   theFunctionNumber,
-        const LocatorType&      theLocator,
-        XalanDOMString&         theResult);
+            const XalanDOMString&   theFunctionName,
+            XalanDOMString&         theResult,
+            const Locator*          theLocator);
+
+    XPathExceptionFunctionNotAvailable(const XPathExceptionFunctionNotAvailable& other);
 
     ~XPathExceptionFunctionNotAvailable();
 };
@@ -76,8 +75,12 @@ class XALAN_XPATH_EXPORT XPathExceptionFunctionNotSupported : public XalanXPathE
 {
 public:
 
-    XPathExceptionFunctionNotSupported(const XalanDOMChar*  theFunctionName,
-                                        XalanDOMString&     theResult);
+    XPathExceptionFunctionNotSupported(
+            const XalanDOMChar*     theFunctionName,
+            XalanDOMString&         theResult,
+            const Locator*          theLocator);
+
+    XPathExceptionFunctionNotSupported(const XPathExceptionFunctionNotSupported& other);
 
     ~XPathExceptionFunctionNotSupported();
 };
@@ -124,8 +127,44 @@ public:
     DestroyTable();
 
     /**
-     * Retrieve the function object for a specified function name.
+     * Retrieve the function object for a specified function name.  If
+     * the named Function is not found, an exception is thrown.
      * 
+     * @param theFunctionName The name of function
+     * @param theLocator The Locator instance to use when reporting an error.
+     * @return function named
+     */
+    const Function&
+    get(
+            const XalanDOMString&   theFunctionName,
+            const Locator*          theLocator) const
+    {
+        const int   theFunctionID =
+            getFunctionIndex(theFunctionName);
+
+        if (theFunctionID != InvalidFunctionNumberID)
+        {
+            return *m_functionTable[theFunctionID];
+        }
+        else
+        {
+            MemoryManager* const    theManager = m_memoryManager;
+
+            XalanDOMString   theResult(*theManager);
+
+            throw XPathExceptionFunctionNotAvailable(
+                    theFunctionName,
+                    theResult,
+                    theLocator);
+        }
+    }
+
+private:
+
+    /**
+     * Retrieve the function object for a specified function name.
+     *
+     * @deprecated This operator is deprecated.
      * @param theFunctionName name of function
      * @return function named
      */
@@ -141,13 +180,18 @@ public:
         }
         else
         {
-            MemoryManagerType* theManager = const_cast<MemoryManagerType*>(m_memoryManager);
+            MemoryManager* const    theManager = m_memoryManager;
 
             XalanDOMString   theResult(*theManager);
 
-            throw XPathExceptionFunctionNotAvailable(theFunctionName, theResult);
+            throw XPathExceptionFunctionNotAvailable(
+                    theFunctionName,
+                    theResult,
+                    0);
         }
     }
+
+public:
 
     /**
      * Retrieve the function object for a specified function ID number.
@@ -458,7 +502,7 @@ private:
             const XalanDOMChar*     theName,
             StringSizeType          theNameLength);
 
-    MemoryManagerType*          m_memoryManager;
+    MemoryManager*              m_memoryManager;
 
     const Function*             m_functionTable[TableSize];
 

@@ -269,7 +269,7 @@ ElemValueOf::startElement(StylesheetExecutionContext&       executionContext) co
 
         if (0 != executionContext.getTraceListeners())
         {
-            const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
+            const StylesheetExecutionContext::GetCachedString   theString(executionContext);
 
             DOMServices::getNodeData(*sourceNode, executionContext, theString.get());
 
@@ -324,7 +324,7 @@ ElemValueOf::execute(StylesheetExecutionContext&    executionContext) const
 
         if (0 != executionContext.getTraceListeners())
         {
-            const StylesheetExecutionContext::GetAndReleaseCachedString     theString(executionContext);
+            const StylesheetExecutionContext::GetCachedString   theString(executionContext);
 
             DOMServices::getNodeData(*sourceNode, executionContext, theString.get());
 
@@ -392,7 +392,7 @@ ElemValueOf::fireSelectionEvent(
     }
     else
     {
-        const StylesheetExecutionContext::GetAndReleaseCachedString     thePattern(executionContext);
+        const StylesheetExecutionContext::GetCachedString   thePattern(executionContext);
 
         thePattern.get() = ".";
 

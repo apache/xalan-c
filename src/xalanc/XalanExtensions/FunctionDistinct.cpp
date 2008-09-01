@@ -66,9 +66,10 @@ FunctionDistinct::execute(
 {
     if (args.size() != 1)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-
-        executionContext.error(getError(theGuard.get()), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
     assert(args[0].null() == false);
@@ -87,14 +88,12 @@ FunctionDistinct::execute(
     }
     else if (theLength > 1)
     {
-        typedef XPathExecutionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+        const GetCachedString   theGuard(executionContext);
 
-        GetAndReleaseCachedString   theGuard(executionContext);
-
-        XalanDOMString&             theCachedString = theGuard.get();
+        XalanDOMString&         theCachedString = theGuard.get();
 
 
-        typedef XalanSet<XalanDOMString>                    SetType;
+        typedef XalanSet<XalanDOMString>    SetType;
 
         SetType     theStrings(executionContext.getMemoryManager());
 

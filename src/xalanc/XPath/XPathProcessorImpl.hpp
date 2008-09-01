@@ -90,7 +90,7 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true);
 
@@ -100,7 +100,7 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true);
 
@@ -762,7 +762,7 @@ private:
 
     bool                            m_isMatchPattern;
 
-    const LocatorType*              m_locator;
+    const Locator*                  m_locator;
 
     BoolVectorType                  m_positionPredicateStack;
 

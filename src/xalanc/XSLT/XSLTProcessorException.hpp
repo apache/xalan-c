@@ -41,36 +41,24 @@ public:
 	/**
 	 * Construct an XSLT Processor exception object
 	 * 
-	 * @param theMessage message to print when exception thrown
-	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document.
-	 * @param theColumnNumber the column number of the related document.
+	 * @param theManager The MemoryManager instance to use.
+	 * @param theMessage The message to print when exception thrown
+	 * @param theLocator The Locator instance for error reporting, if any.
 	 */
 	XSLTProcessorException(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 		    const XalanDOMString&	theMessage,
-		    const XalanDOMString&	theURI,
-	        XalanFileLoc			lineNumber,
-		    XalanFileLoc			columnNumber);
+            const Locator*          theLocator);
 
 	/**
-	 * Constructor
+	 * Construct an XSLT Processor exception object.  Use this
+     * constructor when the error message is already formatted.
 	 * 
-	 * @param theLocator The locator instance for error reporting.
-	 * @param theMessage message to write when exception thrown
+	 * @param theManager The MemoryManager instance to use.
+	 * @param theMessage The message to print when exception thrown
 	 */
 	XSLTProcessorException(
-            MemoryManagerType&      theManager,
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage);
-
-	/**
-	 * Construct an XSLT Processor exception object
-	 * 
-	 * @param theMessage message to print when exception thrown
-	 */
-	XSLTProcessorException(
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
 		    const XalanDOMString&	theMessage);
 
 	virtual

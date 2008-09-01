@@ -302,6 +302,8 @@ StylesheetRoot::setupFormatterListener(
             XSLTResultTarget&               outputTarget,
             StylesheetExecutionContext&     executionContext) const
 {
+    typedef StylesheetExecutionContext::GetCachedString     GetCachedString;
+
     FormatterListener*  flistener = outputTarget.getFormatterListener();
 
     if (flistener != 0)
@@ -344,12 +346,14 @@ StylesheetRoot::setupFormatterListener(
             {
                 const GetCachedString   theGuard(executionContext);
 
-                executionContext.error(
+                executionContext.problem(
+                    StylesheetExecutionContext::eXSLTProcessor,
+                    StylesheetExecutionContext::eError,
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::NoValidResultTarget),
-                    executionContext.getCurrentNode(),
-                    0);
+                    0,
+                    executionContext.getCurrentNode());
             }
         }
 
@@ -452,12 +456,14 @@ StylesheetRoot::setupFormatterListener(
     {
         const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+       executionContext.problem(
+           StylesheetExecutionContext::eXSLTProcessor,
+           StylesheetExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::NoValidResultTarget),
-            executionContext.getCurrentNode(),
-            0);
+            0,
+            executionContext.getCurrentNode());
     }
 
     executionContext.setFormatterListener(flistener);
@@ -501,13 +507,15 @@ StylesheetRoot::processOutputSpec(
             {
                 const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
-                constructionContext.warn(
+                constructionContext.problem(
+                    StylesheetConstructionContext::eXSLTProcessor,
+                    StylesheetConstructionContext::eWarning,
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::OutputHasAnUnknownMethod_1Param,
                         method),
-                    0,
-                    theLocator);
+                    theLocator,
+                    0);
             }
         }
         else if (equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
@@ -557,7 +565,7 @@ StylesheetRoot::processOutputSpec(
 
                 m_cdataSectionElems.reserve(m_cdataSectionElems.size() + theTokenCount);
 
-                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+                const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
                 XalanDOMString& theToken = theGuard.get();
 
@@ -601,27 +609,31 @@ StylesheetRoot::processOutputSpec(
                 {
                     const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
-                    constructionContext.warn(
+                    constructionContext.problem(
+                        StylesheetConstructionContext::eXSLTProcessor,
+                        StylesheetConstructionContext::eWarning,
                         XalanMessageLoader::getMessage(
                             theGuard.get(),
                             XalanMessages::UnsupportedXalanSpecificAttribute_1Param,
                             theAttributeName.getLocalPart()),
-                        0,
-                        theLocator);
+                        theLocator,
+                        0);
                 }
             }
             else if (isAttrOK(aname, atts, i, constructionContext) == false)
             {
                 const StylesheetConstructionContext::GetCachedString    theGuard(constructionContext);
 
-                constructionContext.error(
+                constructionContext.problem(
+                    StylesheetConstructionContext::eXSLTProcessor,
+                    StylesheetConstructionContext::eError,
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
                         XalanMessages::HasIllegalAttribute_2Param,
                         name,
                         aname),
-                    0,
-                    theLocator);
+                    theLocator,
+                    0);
             }
         }
     }
@@ -849,16 +861,20 @@ StylesheetRoot::getNodeSetByKey(
 
     if (nl == 0)
     {
+        typedef StylesheetExecutionContext::GetCachedString     GetCachedString;
+
         const GetCachedString   theGuard1(executionContext);
         const GetCachedString   theGuard2(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            StylesheetExecutionContext::eXSLTProcessor,
+            StylesheetExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
                 XalanMessages::UnknownKey_1Param,
                 qname.format(theGuard2.get())),
-            executionContext.getCurrentNode(),
-            locator);
+            locator,
+            executionContext.getCurrentNode());
     }
     else if (nodelist.empty() == true)
     {
@@ -931,15 +947,17 @@ StylesheetRoot::getAttributeSet(
 
     if (i == m_attributeSetsMap.end())
     {
-        const GetCachedString   theGuard(executionContext);
+        const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+        executionContext.problem(
+            StylesheetExecutionContext::eXSLTProcessor,
+            StylesheetExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard.get(),
                 XalanMessages::UnknownNodeType_1Param,
                 Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
-            executionContext.getCurrentNode(),
-            theLocator);
+            theLocator,
+            executionContext.getCurrentNode());
     }
     else
     {

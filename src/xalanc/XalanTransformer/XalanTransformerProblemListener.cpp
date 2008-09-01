@@ -41,7 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanTransformerProblemListener::XalanTransformerProblemListener(
-            MemoryManagerType& theManager,
+            MemoryManager&  theManager,
 			StreamType*		theWarningStream,
 			PrintWriter*	thePrintWriter) :
 	ProblemListener(),
@@ -60,16 +60,16 @@ XalanTransformerProblemListener::~XalanTransformerProblemListener()
 
 
 void
-XalanTransformerProblemListener::setPrintWriter(PrintWriter*	thePrintWriter)
+XalanTransformerProblemListener::setPrintWriter(PrintWriter*    pw)
 {
-	m_problemListener.setPrintWriter(thePrintWriter);
+    m_problemListener.setPrintWriter(pw);
 }
 
 
 
 void
 XalanTransformerProblemListener::problem(
-			eProblemSource				source,
+            eSource                     source,
 			eClassification				classification, 
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -96,7 +96,7 @@ XalanTransformerProblemListener::problem(
 
 		DOMStringPrintWriter	thePrintWriter(m_warningString);
 
-		ProblemListenerDefault::problem(
+		ProblemListenerDefault::defaultFormat(
 			thePrintWriter,
 			source,
 			classification,
@@ -106,6 +106,77 @@ XalanTransformerProblemListener::problem(
 			uri,
 			lineNo,
 			charOffset);
+
+		*m_warningStream << m_warningString;
+	}
+}
+
+
+
+void
+XalanTransformerProblemListener::problem(
+            eSource                     source,
+			eClassification				classification, 
+			const XalanDOMString&		msg,
+            const Locator*              locator,
+			const XalanNode*			sourceNode)
+{
+	if (classification == eERROR)
+	{
+		m_problemListener.problem(
+			source,
+			classification,
+			msg,
+            locator,
+            sourceNode);
+	}
+	else if (m_warningStream != 0)
+	{
+        m_warningString.erase();
+
+		DOMStringPrintWriter	thePrintWriter(m_warningString);
+
+		ProblemListenerDefault::defaultFormat(
+			thePrintWriter,
+			source,
+			classification,
+			msg,
+            locator,
+            sourceNode);
+
+		*m_warningStream << m_warningString;
+	}
+}
+
+
+
+void
+XalanTransformerProblemListener::problem(
+            eSource                     source,
+			eClassification				classification, 
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode)
+{
+	if (classification == eERROR)
+	{
+		m_problemListener.problem(
+			source,
+			classification,
+			msg,
+            sourceNode);
+	}
+	else if (m_warningStream != 0)
+	{
+        m_warningString.erase();
+
+		DOMStringPrintWriter	thePrintWriter(m_warningString);
+
+		ProblemListenerDefault::defaultFormat(
+			thePrintWriter,
+			source,
+			classification,
+			msg,
+            sourceNode);
 
 		*m_warningStream << m_warningString;
 	}

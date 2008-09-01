@@ -252,19 +252,6 @@ AttributesImpl::getValue(const XalanSize_t  index) const
 
 
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-bool
-AttributesImpl::NameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
-{
-	return equals(&*theEntry->m_Name.begin(), m_qname);
-}
-
-bool
-AttributesImpl::URIAndLocalNameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
-{
-	return equals(&*theEntry->m_uri.begin(), m_uri) && equals(&*theEntry->m_localName.begin(), m_localName) ;
-}
-#else
 struct NameCompareFunctor
 {
 	NameCompareFunctor(const XMLCh*		theQName) :
@@ -306,7 +293,6 @@ private:
 	const XMLCh* const	m_uri;
 	const XMLCh* const	m_localName;
 };
-#endif
 
 
 

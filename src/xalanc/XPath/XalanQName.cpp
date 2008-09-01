@@ -389,73 +389,15 @@ XalanQName::isValidQName(
 }
 
 
-const XalanDOMChar  XalanQName::InvalidQNameException::m_type[] = 
-{   
-    XalanUnicode::charLetter_I,
-    XalanUnicode::charLetter_n,
-    XalanUnicode::charLetter_v,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_l,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_d,
-    XalanUnicode::charLetter_Q,
-    XalanUnicode::charLetter_N,
-    XalanUnicode::charLetter_a,
-    XalanUnicode::charLetter_m,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_E,
-    XalanUnicode::charLetter_x,
-    XalanUnicode::charLetter_c,
-    XalanUnicode::charLetter_e,
-    XalanUnicode::charLetter_p,
-    XalanUnicode::charLetter_t,
-    XalanUnicode::charLetter_i,
-    XalanUnicode::charLetter_o,
-    XalanUnicode::charLetter_n,
-    0
-};
-
-
-
 XalanQName::InvalidQNameException::InvalidQNameException(
             const XalanDOMChar*         theQName,
             XalanDOMString::size_type   theQNameLength,
-            const XalanDOMString&       theURI,
-            int                         theLineNumber,
-            int                         theColumnNumber,
-            XalanDOMString&             theResult) :
-    XSLException(
+            XalanDOMString&             theResult,
+            const Locator*              theLocator) :
+    XalanXPathException(
         format(theQName, theQNameLength, theResult),
-        theURI,
-        theLineNumber,
-        theColumnNumber,
-        theResult.getMemoryManager())
-{
-}
-
-
-
-XalanQName::InvalidQNameException::InvalidQNameException(
-            const LocatorType&          theLocator,
-            const XalanDOMChar*         theQName,
-            XalanDOMString::size_type   theQNameLength,
-            XalanDOMString&             theResult) :
-    XSLException(
-        theLocator, 
-        format(theQName, theQNameLength, theResult),
-        theResult.getMemoryManager())
-{
-}
-
-
-
-XalanQName::InvalidQNameException::InvalidQNameException(
-            const XalanDOMChar*         theQName,
-            XalanDOMString::size_type   theQNameLength,
-            XalanDOMString&             theResult) :
-    XSLException(
-        format(theQName, theQNameLength, theResult),
-        theResult.getMemoryManager())
+        theResult.getMemoryManager(),
+        theLocator)
 {
 }
 
@@ -463,23 +405,19 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 
 XalanQName::InvalidQNameException::InvalidQNameException(
             const XalanDOMString&   theMessage,
-            MemoryManager&          theManager) :
-    XSLException(
+            MemoryManager&          theManager,
+            const Locator*          theLocator) :
+    XalanXPathException(
         theMessage,
-        theManager)
+        theManager,
+        theLocator)
 {
 }
 
 
 
-XalanQName::InvalidQNameException::InvalidQNameException(
-            const Locator&          theLocator,
-            const XalanDOMString&   theMessage,
-            MemoryManager&          theManager) :
-    XSLException(
-        theLocator,
-        theMessage,
-        theManager)
+XalanQName::InvalidQNameException::InvalidQNameException(const InvalidQNameException& other) :
+    XalanXPathException(other)
 {
 }
 
@@ -487,6 +425,40 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 
 XalanQName::InvalidQNameException::~InvalidQNameException()
 {
+}
+
+
+
+const XalanDOMChar*
+XalanQName::InvalidQNameException::getType() const
+{
+    static const XalanDOMChar  s_type[] = 
+    {
+        XalanUnicode::charLetter_I,
+        XalanUnicode::charLetter_n,
+        XalanUnicode::charLetter_v,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_l,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_d,
+        XalanUnicode::charLetter_Q,
+        XalanUnicode::charLetter_N,
+        XalanUnicode::charLetter_a,
+        XalanUnicode::charLetter_m,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_E,
+        XalanUnicode::charLetter_x,
+        XalanUnicode::charLetter_c,
+        XalanUnicode::charLetter_e,
+        XalanUnicode::charLetter_p,
+        XalanUnicode::charLetter_t,
+        XalanUnicode::charLetter_i,
+        XalanUnicode::charLetter_o,
+        XalanUnicode::charLetter_n,
+        0
+    };
+
+    return s_type;
 }
 
 

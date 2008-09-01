@@ -125,25 +125,6 @@ public:
 	/**
 	 * Create an instance.
 	 *
-	 * @param qname            QName string
-	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport       XPathEnvSupport class instance
-	 * @param domSupport       DOMSupport class instance
-	 * @param locator          The Locator instance for error reporting, if any
-	 *
-	 * @return A pointer to the new instance.
-	 */
-	data_type*
-	create(
-			const XalanDOMString&	qname,
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport,
-			const LocatorType*		locator = 0);
-
-	/**
-	 * Create an instance.
-	 *
 	 * @param qname       QName string
 	 * @param theResolver prefix resolver to use
 	 * @param locator     The Locator instance for error reporting, if any

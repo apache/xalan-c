@@ -149,11 +149,10 @@ public:
             XPathExecutionContext&  theExecutionContext);
 
 	virtual const XObjectPtr
-	createString(GetAndReleaseCachedString&		theValue);
+	createString(GetCachedString&   theValue);
 
 	virtual const XObjectPtr
-	createUnknown(
-			const XalanDOMString&	theValue);
+	createUnknown(const XalanDOMString&     theValue);
 
 	typedef XalanVector<XObject*>		XObjectCollectionType;
 	typedef XalanVector<XNumber*>		XNumberCacheType;

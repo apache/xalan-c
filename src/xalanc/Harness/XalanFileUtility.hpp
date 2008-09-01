@@ -83,7 +83,7 @@ public:
         int             fail;
         int             nogold;
 
-        reportStruct(MemoryManager& theManager);
+        reportStruct(MemoryManager&     theManager);
 
         void
         reset();
@@ -142,6 +142,18 @@ public:
     XalanFileUtility(MemoryManager& theManager);
 
     ~XalanFileUtility();
+
+    bool
+    getVerbose() const
+    {
+        return m_verbose;
+    }
+
+    void
+    setVerbose(bool flag)
+    {
+        m_verbose = flag;
+    }
 
     /** 
     * Utility method used to get test files from a specific directory.
@@ -391,7 +403,7 @@ public:
     const MemoryManager&
     getMemoryManager() const
     {
-        return *m_buffer.getMemoryManager();
+        return m_buffer.getMemoryManager();
     }
 
     MemoryManager&
@@ -439,6 +451,8 @@ private:
 private:
 
     CharVectorType  m_buffer;
+
+    bool            m_verbose;
 
     //Not implemented
     XalanFileUtility();

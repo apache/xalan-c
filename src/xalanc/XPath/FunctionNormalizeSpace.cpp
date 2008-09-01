@@ -20,6 +20,10 @@
 
 
 
+#include "xalanc/XalanDOM/XalanDOMString.hpp"
+
+
+
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
@@ -36,7 +40,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FunctionNormalizeSpace::FunctionNormalizeSpace()
+FunctionNormalizeSpace::FunctionNormalizeSpace() :
+    Function()
 {
 }
 
@@ -48,6 +53,10 @@ FunctionNormalizeSpace::~FunctionNormalizeSpace()
 
 
 
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
+
+
+
 XObjectPtr
 FunctionNormalizeSpace::execute(
             XPathExecutionContext&  executionContext,
@@ -56,16 +65,19 @@ FunctionNormalizeSpace::execute(
 {
     if (context == 0)
     {
-        XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
-        XalanDOMString& theResult = theGuard.get();
+        const GetCachedString   theGuard(executionContext);
 
-        executionContext.error(
+        XalanDOMString&         theResult = theGuard.get();
+
+        executionContext.problem(
+            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theResult,
                 XalanMessages::FunctionRequiresNonNullContextNode_1Param,
                 "normalize-space()"),
-            context,
-            locator);
+            locator,
+            context);
 
         // Dummy return value...
         return XObjectPtr(0);
@@ -77,7 +89,7 @@ FunctionNormalizeSpace::execute(
         // DOMServices::getNodeData() will give us the data.
 
         // Get a cached string...
-        XPathExecutionContext::GetAndReleaseCachedString    theData(executionContext);
+        const GetCachedString    theData(executionContext);
 
         XalanDOMString&     theString = theData.get();
 
@@ -106,66 +118,54 @@ FunctionNormalizeSpace::execute(
 XObjectPtr
 FunctionNormalizeSpace::normalize(
             XPathExecutionContext&  executionContext,
-            const XalanDOMString&   theString) const
+            const XalanDOMString&   theString,
+            GetCachedString&        theResult) const
 {
-    const XalanDOMString::size_type     theStringLength = length(theString);
-
-    // A string contain the result...
-    XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+    const XalanDOMString::size_type     theStringLength =
+        theString.length();
 
     XalanDOMString&     theNewString = theResult.get();
-    assert(length(theNewString) == 0);
+    assert(theNewString.length() == 0);
 
     // The result string can only be as large as the source string, so
     // just reserve the space now.
-    reserve(theNewString, theStringLength);
+    theNewString.reserve(theStringLength);
 
-    bool    fPreviousIsSpace = false;
+    enum  eLastCharState { eNonSpace, eSpace, eSpaceAppended };
+
+    eLastCharState  theState = eSpace;
 
     // OK, strip out any multiple spaces...
-    for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
+    for (XalanDOMString::const_iterator i = theString.begin();
+            i != theString.end(); ++i)
     {
-        const XalanDOMChar  theCurrentChar = charAt(theString, i);
+        const XalanDOMChar  theCurrentChar = *i;
 
-        if (isXMLWhitespace(theCurrentChar) == true)
+        if (isXMLWhitespace(theCurrentChar) == false)
         {
-            // If the previous character wasn't a space, and we've
-            // encountered some non-space characters, and it's not
-            // the last character in the string, then push the
-            // space character (not the original character).
-            if (fPreviousIsSpace == false)
-            {
-                if (length(theNewString) > 0 &&
-                    i < theStringLength - 1)
-                {
-                    append(theNewString, XalanDOMChar(XalanUnicode::charSpace));
-                }
+            theNewString.push_back(theCurrentChar);
 
-                fPreviousIsSpace = true;
-            }
+            theState = eNonSpace;
         }
-        else
+        else if (theState == eNonSpace)
         {
-            append(theNewString, theCurrentChar);
+            theNewString.push_back(XalanDOMChar(XalanUnicode::charSpace));
 
-            fPreviousIsSpace = false;
+            theState = eSpaceAppended;
         }
     }
 
-    const XalanDOMString::size_type     theNewStringLength = length(theNewString);
-
-    if (theNewStringLength == 0)
+    if (theNewString.empty() == true)
     {
-        return executionContext.getXObjectFactory().createString(XalanDOMString(executionContext.getMemoryManager()));
+        return executionContext.getXObjectFactory().createStringReference(s_emptyString);
     }
     else
     {
         // We may have a space character at end, since we don't look ahead,
         // so removed it now...
-        if (charAt(theNewString, theNewStringLength - 1) ==
-                XalanDOMChar(XalanUnicode::charSpace))
+        if (theState == eSpaceAppended)
         {
-            theNewString.erase(theNewStringLength - 1, 1);
+            theNewString.erase(theNewString.end() - 1);
         }
 
         return executionContext.getXObjectFactory().createString(theResult);

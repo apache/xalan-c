@@ -41,11 +41,6 @@
 
 
 
-// Base class header file...
-#include <xalanc/PlatformSupport/ExecutionContext.hpp>
-
-
-
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <xalanc/PlatformSupport/XalanNumberFormat.hpp>
 #endif
@@ -119,52 +114,14 @@ public:
 #endif
 
     explicit
-    StylesheetExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*  theXObjectFactory = 0);
+    StylesheetExecutionContext(
+            MemoryManager&      theMemoryManager,
+            XObjectFactory*     theXObjectFactory = 0);
 
     virtual
     ~StylesheetExecutionContext();
 
     // These interfaces are new...
-
-    /**
-     * Report an error and throw an exception.
-     * 
-     * @param msg The text of the message.
-     * @param styleNode The stylesheet node were the error occurred.
-     * @param sourceNode The source node where the error occurred.  May be 0.
-     */
-    virtual void
-    error(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const = 0;
-
-    /**
-     * Report a  warning.
-     * 
-     * @param msg The text of the message.
-     * @param styleNode The stylesheet node were the warning occurred.
-     * @param sourceNode The source node where the warning occurred.  May be 0.
-     */
-    virtual void
-    warn(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const = 0;
-
-    /**
-     * Report a  message.
-     * 
-     * @param msg The text of the message.
-     * @param styleNode The stylesheet node were the message occurred.
-     * @param sourceNode The source node where the message occurred.  May be 0.
-     */
-    virtual void
-    message(
-            const XalanDOMString&       msg,
-            const ElemTemplateElement&  styleNode,
-            const XalanNode*            sourceNode = 0) const = 0;
-
 
     /**
      * Determine whether conflicts should be reported.
@@ -1914,7 +1871,8 @@ public:
     parseXML(
             MemoryManagerType&      theManager,
             const XalanDOMString&   urlString,
-            const XalanDOMString&   base) const = 0;
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler = 0) const = 0;
 
     virtual MutableNodeRefList*
     borrowMutableNodeRefList() = 0;
@@ -2048,23 +2006,20 @@ public:
 
     // These interfaces are inherited from ExecutionContext...
 
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode,
-            const LocatorType*      locator) const = 0;
+	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
 
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const = 0;
-
-    virtual void
-    message(
-            const XalanDOMString&   msg,
-            const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const = 0;
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:

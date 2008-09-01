@@ -95,8 +95,8 @@ FunctionLang::execute(
 
             if (0 != length(langVal))
             {
-                XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
-                XPathExecutionContext::GetAndReleaseCachedString theGuard2(executionContext);
+                const GetCachedString   theGuard1(executionContext);
+                const GetCachedString   theGuard2(executionContext);
 
                 if (startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
                 {

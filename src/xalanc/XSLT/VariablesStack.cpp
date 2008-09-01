@@ -392,12 +392,14 @@ VariablesStack::findXObject(
                 {
                     const StylesheetExecutionContext::GetCachedString   theGuard(executionContext);
 
-                    executionContext.error(
+                    executionContext.problem(
+                        StylesheetExecutionContext::eXSLTProcessor,
+                        StylesheetExecutionContext::eError,
                         XalanMessageLoader::getMessage(
                             theGuard.get(),
                             XalanMessages::CircularVariableDefWasDetected),
-                        doc,
-                        var->getLocator());
+                        var->getLocator(),
+                        doc);
                 }
 
                 m_guardStack.push_back(var);

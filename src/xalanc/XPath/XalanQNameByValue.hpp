@@ -39,6 +39,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 class DOMSupport;
+class ProblemListenerBase;
 
 
 
@@ -52,9 +53,9 @@ public:
      * Construct an empty XalanQNameByValue.
      */
     explicit
-    XalanQNameByValue(MemoryManagerType& theManager);
+    XalanQNameByValue(MemoryManager&    theManager);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_namespace.getMemoryManager();
@@ -65,8 +66,9 @@ public:
      *
      * @param theSource The source of the copy.
      */
-    XalanQNameByValue(const XalanQNameByValue&  theSource,
-                    MemoryManagerType& theManager);
+    XalanQNameByValue(
+            const XalanQNameByValue&    theSource,
+            MemoryManager&              theManager);
 
     /**
      * Construct an instance from another XalanQName.
@@ -74,8 +76,9 @@ public:
      * @param theSource The source of the copy.
      */
     explicit
-    XalanQNameByValue(const XalanQName& theSource,
-                    MemoryManagerType& theManager);
+    XalanQNameByValue(
+        const XalanQName&   theSource,
+        MemoryManager&      theManager);
 
     /**
      * Construct a XalanQNameByValue, with the supplied namespace and local part.
@@ -86,13 +89,13 @@ public:
     XalanQNameByValue(
             const XalanDOMString&   theNamespace,
             const XalanDOMString&   theLocalPart,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
     static XalanQNameByValue*
     create(
             const XalanDOMString&   theNamespace,
             const XalanDOMString&   theLocalPart,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
     /**
      * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -106,8 +109,8 @@ public:
     XalanQNameByValue(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            MemoryManagerType&          theManager,
-            const LocatorType*          locator = 0,
+            MemoryManager&              theManager,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     /**
@@ -122,27 +125,9 @@ public:
     XalanQNameByValue(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            MemoryManagerType&          theManager,
-            const LocatorType*          locator = 0,
+            MemoryManager&              theManager,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
-
-    /**
-     * Construct a XalanQNameByValue from a string, resolving the prefix using the given
-     * namespace context. The default namespace is not resolved.
-     *
-     * @param qname            QName string
-     * @param namespaceContext context object for namespace resolution
-     * @param envSupport       XPathEnvSupport class instance
-     * @param domSupport       DOMSupport class instance
-     * @param locator          The Locator instance for error reporting, if any
-     */
-    XalanQNameByValue(
-            const XalanDOMString&   qname,
-            const XalanElement*     namespaceContext,
-            const XPathEnvSupport&  envSupport,
-            const DOMSupport&       domSupport,
-            MemoryManagerType&      theManager,
-            const LocatorType*      locator = 0);
 
     /**
      * Construct a XalanQNameByValue from a string, resolving the prefix using the given
@@ -154,9 +139,9 @@ public:
      */
     XalanQNameByValue(
             const XalanDOMString&   qname,
-            MemoryManagerType&      theManager,
+            MemoryManager&          theManager,
             const PrefixResolver*   theResolver = 0,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
 
     virtual
     ~XalanQNameByValue();

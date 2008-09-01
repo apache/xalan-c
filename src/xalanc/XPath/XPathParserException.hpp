@@ -40,55 +40,38 @@ class XALAN_XPATH_EXPORT XPathParserException : public XalanXPathException
 {
 public:
 
-	/**
+    /**
 	 * Constructor
 	 * 
 	 * @param theMessage message to write when exception thrown
-	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document, or -1 if not known
-	 * @param theColumnNumber the column number of the related document, or -1 if not known
-	 * @param theType type of exception, default is "XPathParserException"
+	 * @param theManager The MemoryManager instance to use.
+	 * @param theLocator The locator instance for error reporting, if any.
 	 */
 	XPathParserException(
 			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager,
+            const Locator*		    theLocator);
 
-	/**
-	 * Constructor
-	 * 
-	 * @param theLocator The locator instance for error reporting.
-	 * @param theMessage message to write when exception thrown
-	 * @param theType type of exception, default is "XPathParserException"
-	 */
-	XPathParserException(
-			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
-
-	/**
-	 * Constructor
+    /**
+	 * Constructor. Use this constructor when the error message has
+     * already been formatted.
 	 * 
 	 * @param theMessage message to write when exception thrown
-	 * @param theType type of exception, default is "XPathParserException"
+	 * @param theManager The MemoryManager instance to use.
 	 */
 	XPathParserException(
 			const XalanDOMString&	theMessage,
-            MemoryManagerType&      theManager);
+            MemoryManager&          theManager);
 
-	virtual
-		~XPathParserException();
+    XPathParserException(const XPathParserException&    other);
+
+    virtual
+	~XPathParserException();
 	
 	virtual const XalanDOMChar*
-		getType() const
-	{
-		return m_type;
-	}
+    getType() const;
+
 private:
-	
-	static const XalanDOMChar	m_type[];
 };
 
 

@@ -458,7 +458,7 @@ XObjectFactoryDefault::createStringAdapter(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(GetAndReleaseCachedString&	theValue)
+XObjectFactoryDefault::createString(GetCachedString&    theValue)
 {
 	XStringCached* const	theXStringCached = m_xstringCachedAllocator.createString(theValue);
 

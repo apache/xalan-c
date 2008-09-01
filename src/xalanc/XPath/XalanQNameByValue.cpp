@@ -89,14 +89,13 @@ XalanQNameByValue::create(
 {
     typedef XalanQNameByValue ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(
-                        theNamespace,
-                        theLocalPart,
-                        theManager);
+    ThisType* const     theResult = 
+        new (theGuard.get()) ThisType(
+                                theNamespace,
+                                theLocalPart,
+                                theManager);
 
 
     theGuard.release();
@@ -150,31 +149,9 @@ XalanQNameByValue::XalanQNameByValue(
 
 XalanQNameByValue::XalanQNameByValue(
             const XalanDOMString&   qname,
-            const XalanElement*     namespaceContext,
-            const XPathEnvSupport&  envSupport,
-            const DOMSupport&       domSupport,
-            MemoryManager&          theManager,
-            const Locator*          locator) :
-    XalanQName(),
-    m_namespace(theManager),
-    m_localpart(theManager)
-{
-    ElementPrefixResolverProxy  theProxy( namespaceContext, envSupport, domSupport, theManager);
-
-    resolvePrefix(
-        c_wstr(qname),
-        length(qname),
-        &theProxy,
-        locator);
-}
-
-
-
-XalanQNameByValue::XalanQNameByValue(
-            const XalanDOMString&   qname,
             MemoryManager&          theManager,
             const PrefixResolver*   theResolver,
-            const LocatorType*      locator) :
+            const Locator*          locator) :
     XalanQName(),
     m_namespace(theManager),
     m_localpart(theManager)
@@ -292,19 +269,10 @@ throwException(
         theCode,
         theParameter);
 
-    if (theLocator == 0)
-    {
-        throw XalanQName::InvalidQNameException(
-                theMessage,
-                theMemoryManager);
-    }
-    else
-    {
-        throw XalanQName::InvalidQNameException(
-                *theLocator,
-                theMessage,
-                theMemoryManager);
-    }
+    throw XalanQName::InvalidQNameException(
+            theMessage,
+            theMemoryManager,
+            theLocator);
 }
 
 
@@ -318,21 +286,11 @@ throwException(
 {
     XalanDOMString  theBuffer(theMemoryManager);
 
-    if (theLocator == 0)
-    {
-        throw XalanQName::InvalidQNameException(
-                theQName,
-                theLength,
-                theBuffer);
-    }
-    else
-    {
-        throw XalanQName::InvalidQNameException(
-                *theLocator,
-                theQName,
-                theLength,
-                theBuffer);
-    }
+    throw XalanQName::InvalidQNameException(
+            theQName,
+            theLength,
+            theBuffer,
+            theLocator);
 }
 
 
@@ -342,7 +300,7 @@ XalanQNameByValue::initialize(
             const XalanDOMChar*         qname,
             XalanDOMString::size_type   len,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     const XalanDOMString::size_type     indexOfNSSep = indexOf(qname, XalanUnicode::charColon);

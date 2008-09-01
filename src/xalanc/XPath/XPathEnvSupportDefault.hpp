@@ -25,29 +25,30 @@
 #include <xalanc/XPath/XPathEnvSupport.hpp>
 
 
+
 #include<xalanc/PlatformSupport/DOMStringHelper.hpp>
+
 
 
 #include<xalanc/Include/XalanMap.hpp>
 
 
+
 XALAN_CPP_NAMESPACE_BEGIN
+
+
 
 typedef XalanMap<XalanDOMString, const Function*>   FunctionTableTypeDefinition;
 XALAN_USES_MEMORY_MANAGER(FunctionTableTypeDefinition)
 
 
-/**
- * Dummy class in order to make the XPath object happy 
- * for diagnostic purposes.
- * @author <a href="mailto:david_n_bertoni@us.ibm.com">David N. Bertoni</a>
- */
+
 class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
 	typedef XalanMap<XalanDOMString, XalanDocument*>	SourceDocsTableType;
-	typedef FunctionTableTypeDefinition                         FunctionTableType;
+	typedef FunctionTableTypeDefinition                 FunctionTableType;
 	typedef XalanMap<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
 
 	/**
@@ -55,7 +56,7 @@ public:
 	 * processing occurs.  See class XPathInit.
 	 */
 	static void
-	initialize(MemoryManagerType&  theManager);
+	initialize(MemoryManager&   theManager);
 
 	/**
 	 * Perform termination of statics.  See class XPathInit.
@@ -64,16 +65,34 @@ public:
 	terminate();
 
 
-	XPathEnvSupportDefault(MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
+	XPathEnvSupportDefault(MemoryManager&   theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XPathEnvSupportDefault();
 
-    MemoryManagerType& 
-    getMemoryManager()
+    MemoryManager& 
+    getMemoryManager() const
     {
-        return m_sourceDocs.getMemoryManager();
+        return m_memoryManager;
     }
+
+	virtual void
+	setPrintWriter(PrintWriter*		pw);
+
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
 
 	// Interfaces to install and uninstall external functions globally.
 	// These calls are not thread-safe, and should happen during
@@ -136,7 +155,8 @@ public:
 	parseXML(
             MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base);
+			const XalanDOMString&	base,
+            ErrorHandler*           theErrorHandler = 0);
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&	theURI) const;
@@ -168,19 +188,6 @@ public:
 			const XObjectArgVectorType&		argVec,
 			const LocatorType*				locator) const;
 
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
-			const PrefixResolver*	resolver,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			XalanFileLoc			lineNo,
-			XalanFileLoc			charOffset) const;
-
-	// These interfaces are inherited from Resettable...
-
 	virtual void
 	reset();
 
@@ -190,7 +197,7 @@ public:
 		typedef FunctionTableType				FunctionTableInnerType;
 		typedef NamespaceFunctionTablesType		NamespaceFunctionTablesInnerType;
 
-        NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager);
+        NamespaceFunctionTableDeleteFunctor(MemoryManager&  theManager);
 		/**
 		 * Delete the value object in a map value pair.  The value of the pair must
 		 * be of pointer type.
@@ -199,8 +206,10 @@ public:
 		 */
 		void
 		operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const;
+
     private:
-        MemoryManagerType& m_memMgr;
+
+        MemoryManager&  m_memoryManager;
 	};
 
 protected:
@@ -267,6 +276,10 @@ private:
 	SourceDocsTableType						m_sourceDocs;
 
 	NamespaceFunctionTablesType				m_externalFunctions;
+
+    mutable MemoryManager&                  m_memoryManager;
+
+    PrintWriter*		                    m_pw;
 
 	static NamespaceFunctionTablesType		s_externalFunctions;
 

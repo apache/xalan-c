@@ -35,6 +35,10 @@ class ostream;
 
 
 // Xalan header files.
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <xalanc/XSLT/ProblemListenerDefault.hpp>
 
 
@@ -54,21 +58,21 @@ public:
 #endif
 
 	XalanTransformerProblemListener(
-            MemoryManagerType&  theManager,
-			StreamType*		    theStream,
-			PrintWriter*	    thePrintWriter);
+            MemoryManager&  theManager,
+			StreamType*		theStream,
+			PrintWriter*	thePrintWriter);
 
 	virtual
 	~XalanTransformerProblemListener();
 
 	// These methods are inherited from ProblemListener ...
-	
+
 	virtual void
-	setPrintWriter(PrintWriter*		pw);
+	setPrintWriter(PrintWriter*     pw);
 
 	virtual void
 	problem(
-			eProblemSource				source,
+            eSource                     source,
 			eClassification				classification,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode,
@@ -76,6 +80,21 @@ public:
 			const XalanDOMChar*			uri,
 			XalanFileLoc				lineNo,
 			XalanFileLoc				charOffset);
+
+	virtual void
+	problem(
+            eSource                 source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&   msg,
+			const XalanNode*		sourceNode);
 
 private:
 

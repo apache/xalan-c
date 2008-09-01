@@ -30,6 +30,10 @@
 
 
 
+#include "xalanc/PlatformSupport/ProblemListenerBase.hpp"
+
+
+
 XALAN_DECLARE_XERCES_CLASS(Locator)
 
 
@@ -38,7 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+XALAN_USING_XERCES(Locator);
 
 
 
@@ -78,7 +82,7 @@ class XSLTResultTarget;
  * 
  * If you reuse the processor instance, you should call reset() between calls.
  */
-class XALAN_XSLT_EXPORT XSLTProcessor
+class XALAN_XSLT_EXPORT XSLTProcessor : public ProblemListenerBase
 {
 public:
 
@@ -89,6 +93,25 @@ public:
     virtual
     ~XSLTProcessor();
 
+
+    // These interfaces are inherited from ProblemListenerBase.
+
+    virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode) = 0;
+
+	virtual void
+	problem(
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode) = 0;
+
+    // These interfaces are new to XSLTProcessor
     /**
      * Transform the source tree to the output in the given result tree target.
      * The processor will process the input source, the stylesheet source,
@@ -358,85 +381,6 @@ public:
      */
     virtual void
     setDiagnosticsOutput(PrintWriter* pw) = 0;
-
-    /**
-     * Report a message.
-     * 
-     * @param msg        text of message to output
-     * @param sourceNode node in source where message occurred
-     * @param styleNode  node in stylesheet where message occurred
-     */
-    virtual void
-    message(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const = 0;
-
-    /**
-     * Report a message.
-     * 
-     * @param msg        text of message to output
-     * @param locator  A LocatorType for error reporting
-     * @param sourceNode node in source where message occurred
-     */
-    virtual void
-    message(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const = 0;
-
-    /**
-     * Report a warning.
-     * 
-     * @param msg        text of message to output
-     * @param sourceNode node in source where warning occurred
-     * @param styleNode  node in stylesheet where warning occurred
-     */
-    virtual void
-    warn(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const = 0;
-
-    /**
-     * Report a warning.
-     * 
-     * @param msg        text of message to output
-     * @param locator  A LocatorType for error reporting
-     * @param sourceNode node in source where error occurred
-     */
-    virtual void
-    warn(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const = 0;
-
-
-    /**
-     * Report an error and throw an exception.
-     * 
-     * @param msg        text of message to output
-     * @param sourceNode node in source where error occurred
-     * @param styleNode  node in stylesheet where error occurred
-     */
-    virtual void
-    error(
-            const XalanDOMString&       msg,
-            const XalanNode*            sourceNode = 0,
-            const ElemTemplateElement*  styleNode = 0) const = 0;
-
-    /**
-     * Report an error and throw an exception.
-     * 
-     * @param msg        text of message to output
-     * @param locator  A LocatorType for error reporting
-     * @param sourceNode node in source where error occurred
-     */
-    virtual void
-    error(
-            const XalanDOMString&   msg,
-            const LocatorType&      locator,
-            const XalanNode*        sourceNode = 0) const = 0;
 };
 
 

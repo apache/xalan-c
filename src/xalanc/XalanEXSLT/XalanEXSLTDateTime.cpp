@@ -170,12 +170,13 @@ XalanEXSLTFunctionDateTime::execute(
 {
     if (args.size() != 0)
     {
-        XalanDOMString theResult(executionContext.getMemoryManager());
-
-        executionContext.error(getError(theResult), context, locator);
+        generalError(
+            executionContext,
+            context,
+            locator);
     }
 
-    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
+    const GetCachedString   theGuard(executionContext);
 
     XalanDOMString&     theResult = theGuard.get();
     

@@ -25,7 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanQNameByValueAllocator::XalanQNameByValueAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+XalanQNameByValueAllocator::XalanQNameByValueAllocator(
+            MemoryManager&  theManager,
+            size_type       theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }
@@ -76,7 +78,7 @@ XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const LocatorType*			locator,
+			const Locator*			    locator,
 			bool						fUseDefault)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
@@ -96,7 +98,7 @@ XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const LocatorType*			locator,
+			const Locator*			    locator,
 			bool						fUseDefault)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
@@ -115,29 +117,8 @@ XalanQNameByValueAllocator::create(
 XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
 			const XalanDOMString&	qname,
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport,
-			const LocatorType*		locator)
-{
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-	data_type* const	theResult =
-		new(theBlock) data_type(qname, namespaceContext, envSupport, domSupport, m_allocator.getMemoryManager(),locator);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theResult;
-}
-
-
-
-XalanQNameByValueAllocator::data_type*
-XalanQNameByValueAllocator::create(
-			const XalanDOMString&	qname,
 			const PrefixResolver*	theResolver,
-			const LocatorType*		locator)
+			const Locator*		    locator)
 {
 	data_type* const	theBlock = m_allocator.allocateBlock();
 	assert(theBlock != 0);

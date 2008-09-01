@@ -30,35 +30,38 @@ const XalanDOMString	XalanDOMStringPool::s_emptyString(XalanMemMgrs::getDummyMem
 
 
 XalanDOMStringPool::XalanDOMStringPool(
-           MemoryManagerType&   theManager,
-			block_size_type		theBlockSize,
-			bucket_count_type	theBucketCount,
-			bucket_size_type	theBucketSize) :
+            MemoryManager&      theManager,
+			block_size_type     theBlockSize,
+			bucket_count_type   theBucketCount,
+			bucket_size_type    theBucketSize) :
 	m_stringAllocator(theManager, theBlockSize),
 	m_stringCount(0),
 	m_hashTable(theManager, theBucketCount, theBucketSize)
 {
 }
 
+
+
 XalanDOMStringPool*
 XalanDOMStringPool::create(
-                           MemoryManagerType&  theManager,
-                           block_size_type		theBlockSize ,
-                           bucket_count_type	theBucketCount ,
-                           bucket_size_type	theBucketSize )
+            MemoryManager&      theManager,
+            block_size_type     theBlockSize,
+            bucket_count_type   theBucketCount,
+            bucket_size_type    theBucketSize)
 {
     typedef XalanDOMStringPool ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager, theBlockSize, theBucketCount, theBucketSize);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager, theBlockSize, theBucketCount, theBucketSize);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XalanDOMStringPool::~XalanDOMStringPool()
 {

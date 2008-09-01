@@ -238,7 +238,8 @@ public:
 	parseXML(
             MemoryManagerType&      theManager,
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base) const;
+			const XalanDOMString&	base,
+            ErrorHandler*           theErrorHandler = 0) const;
 
 	virtual MutableNodeRefList*
 	borrowMutableNodeRefList();
@@ -301,8 +302,6 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	// These interfaces are inherited from ExecutionContext...
-
 	virtual void formatNumber(
 			double								number,
 			const XalanDOMString&				pattern,
@@ -319,7 +318,24 @@ public:
 			const LocatorType*					locator = 0);
 
 
+	// These interfaces are inherited from ExecutionContext...
+
 	virtual void
+	problem(
+			eSource		            source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode);
+
+	virtual void
+	problem(
+            eSource                 source,
+            eClassification         classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode);
+
+    virtual void
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,

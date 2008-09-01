@@ -24,8 +24,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathExecutionContext::XPathExecutionContext(MemoryManagerType& m_memoryManager, XObjectFactory*	theXObjectFactory) :
-    ExecutionContext(m_memoryManager),
+XPathExecutionContext::XPathExecutionContext(
+            MemoryManager&      theMemoryManager,
+            XObjectFactory*     theXObjectFactory) :
+    ExecutionContext(theMemoryManager),
 	m_xobjectFactory(theXObjectFactory)
 {
 }

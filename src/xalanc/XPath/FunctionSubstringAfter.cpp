@@ -105,7 +105,7 @@ FunctionSubstringAfter::execute(
                 const XalanDOMString::size_type     theSubstringLength =
                     theFirstStringLength  - theIndex - theSecondStringLength;
 
-                XPathExecutionContext::GetAndReleaseCachedString    theResult(executionContext);
+                GetCachedString     theResult(executionContext);
 
                 XalanDOMString&     theString = theResult.get();
 
