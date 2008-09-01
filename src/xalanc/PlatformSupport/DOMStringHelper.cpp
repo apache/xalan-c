@@ -747,14 +747,14 @@ doCollationCompare(
 
 
 
-template <class Type, class SizeType, class FunctionType>
+template <class Type, class FunctionType>
 int
 doCollationCompare(
 			const Type*		theLHS,
 			const Type*		theRHS,
 			FunctionType	theTransformFunction)
 {
-    SizeType	i = 0;
+    size_t  i = 0;
 
     Type  theLHSChar;
     Type  theRHSChar;
