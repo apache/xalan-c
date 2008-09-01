@@ -233,17 +233,16 @@ public:
     
    static XalanDeque*
    create(
-            MemoryManagerType&  theManager,
-            size_type initialSize = 0,
-            size_type blockSize = 10)
+            MemoryManager&  theManager,
+            size_type       initialSize = 0,
+            size_type       blockSize = 10)
     {
         typedef XalanDeque ThisType;
 
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theManager, initialSize, blockSize);
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(theManager, initialSize, blockSize);
 
         theGuard.release();
 
