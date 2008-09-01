@@ -217,7 +217,6 @@ XalanFileOutputStream::XalanFileOutputStream(
         throw XalanFileOutputStreamOpenException(
                     theFileName,
                     errno,
-                    0,
                     theBuffer);
     }
 #endif
@@ -314,7 +313,6 @@ XalanFileOutputStream::writeData(
         throw XalanFileOutputStreamWriteException(
             m_fileName,
             errno,
-            0,
             theBuffer);
     }
 #endif
