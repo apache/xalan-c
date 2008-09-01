@@ -19,8 +19,8 @@
 
 
 
-#include "xercesc/SAX/ErrorHandler.hpp"
-#include "xercesc/SAX/SAXParseException.hpp"
+#include "xercesc/sax/ErrorHandler.hpp"
+#include "xercesc/sax/SAXParseException.hpp"
 
 
 

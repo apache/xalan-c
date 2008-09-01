@@ -108,7 +108,7 @@ public:
 
     static FormatterToXMLUnicode*
     create(
-                MemoryManagerType&      theManager,
+                MemoryManager&          theManager,
                 Writer&                 writer,
                 const XalanDOMString&   encoding,
                 const XalanDOMString&   doctypeSystem = s_emptyString,
@@ -120,19 +120,18 @@ public:
 
         typedef FormatterToXMLUnicode ThisType;
 
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(
-            theManager,
-            writer,
-            encoding,
-            doctypeSystem,
-            doctypePublic,
-            xmlDecl,
-            standalone,
-            indent);
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(
+                theManager,
+                writer,
+                encoding,
+                doctypeSystem,
+                doctypePublic,
+                xmlDecl,
+                standalone,
+                indent);
 
         theGuard.release();
 

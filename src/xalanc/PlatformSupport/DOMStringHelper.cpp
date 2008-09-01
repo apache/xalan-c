@@ -754,6 +754,9 @@ doCollationCompare(
 			const Type*		theRHS,
 			FunctionType	theTransformFunction)
 {
+    assert(theLHS != 0);
+    assert(theRHS != 0);
+
     size_t  i = 0;
 
     Type  theLHSChar;
@@ -764,7 +767,7 @@ doCollationCompare(
         theLHSChar = theTransformFunction(theLHS[i]);
         theRHSChar = theTransformFunction(theRHS[i]);
 
-        if (theLHS == static_cast<Type>(0) ||
+        if (theLHSChar == static_cast<Type>(0) ||
             theLHSChar != theRHSChar)
         {
             break;

@@ -40,21 +40,21 @@ class DefaultCacheCreateFunctor
 public:
 
     ObjectType*
-    operator()(MemoryManagerType& theManager) const
+    operator()(MemoryManager&   theManager) const
     {
         typedef ObjectType ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType();
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType();
 
         theGuard.release();
 
         return theResult;
     }
 };
+
 
 
 template<class ObjectType>
@@ -63,21 +63,21 @@ class DefaultCacheCreateFunctorMemMgr
 public:
 
     ObjectType*
-    operator()(MemoryManagerType& theManager) const
+    operator()(MemoryManager&   theManager) const
     {
         typedef ObjectType ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
-        ThisType* theResult = theGuard.get();
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theManager);
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(theManager);
 
         theGuard.release();
 
         return theResult;
     }
 };
+
 
 
 template<class ObjectType>
