@@ -558,6 +558,14 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp
 # End Source File
 # Begin Source File

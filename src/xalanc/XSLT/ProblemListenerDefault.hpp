@@ -98,6 +98,40 @@ public:
 
 	static void
 	defaultFormat(
+            PrintWriter&            pw,
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+            const Locator*          locator,
+			const XalanNode*		sourceNode)
+	{
+		ProblemListenerBase::defaultFormat(
+			pw,
+			source,
+			classification,
+			msg,
+			locator,
+			sourceNode);
+	}
+
+	static void
+	defaultFormat(
+            PrintWriter&            pw,
+			eSource					source,
+			eClassification			classification,
+			const XalanDOMString&	msg,
+			const XalanNode*		sourceNode)
+	{
+		ProblemListenerBase::defaultFormat(
+			pw,
+			source,
+			classification,
+			msg,
+			sourceNode);
+	}
+
+	static void
+	defaultFormat(
 			PrintWriter&		        pw,
             eSource                     source,
 			eClassification				classification,
@@ -107,10 +141,6 @@ public:
 			const XalanDOMChar*			uri,
 			XalanFileLoc				lineNo,
 			XalanFileLoc				charOffset);
-
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ProblemListenerBase::defaultFormat;
-#endif
 
 private:
 

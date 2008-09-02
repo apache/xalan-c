@@ -849,7 +849,7 @@ collationCompare(
 
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_USE_WINDOWS_COLLATION)
 static _locale_t   s_locale;
 #endif
 
@@ -858,7 +858,7 @@ collationCompare(
             const XalanDOMChar*     theLHS,
             const XalanDOMChar*     theRHS)
 {
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_USE_WINDOWS_COLLATION)
     return _wcscoll_l(theLHS, theRHS, s_locale);
 #else
 	return doCollationCompare(
@@ -1895,7 +1895,7 @@ isXMLWhitespace(
 void
 DOMStringHelper::initialize(MemoryManager&  /* theMemoryManager */)
 {
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_USE_WINDOWS_COLLATION)
     s_locale = _create_locale(LC_COLLATE, "");
 #endif
 }
@@ -1905,7 +1905,7 @@ DOMStringHelper::initialize(MemoryManager&  /* theMemoryManager */)
 void
 DOMStringHelper::terminate()
 {
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_USE_WINDOWS_COLLATION)
     _free_locale(s_locale);
 #endif
 }

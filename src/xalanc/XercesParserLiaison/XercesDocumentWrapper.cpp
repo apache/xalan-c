@@ -184,11 +184,12 @@ XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
 const DOMNodeType*
 XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 {
-	if (this == theXalanNode)
+	if (static_cast<const XalanNode*>(this) == theXalanNode)
 	{
 		return m_xercesDocument;
 	}
-	else if (theXalanNode == 0 || this != theXalanNode->getOwnerDocument())
+	else if (theXalanNode == 0 ||
+			 static_cast<const XalanNode*>(this) != theXalanNode->getOwnerDocument())
 	{
 		throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
 	}
@@ -812,7 +813,7 @@ XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
         // Delete the node...
         XalanDestroy(
             m_nodes.getMemoryManager(),
-            *i);
+            **i);
 
 		// Erase it from the map...
 		m_nodes.erase(i);

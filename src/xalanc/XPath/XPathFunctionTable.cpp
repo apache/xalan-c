@@ -197,7 +197,7 @@ XPathFunctionTable::UninstallFunction(const XalanDOMChar*	theFunctionName)
 
         XalanDestroy(
             *m_memoryManager,
-            theFunction);
+            *theFunction);
 
         return true;
 	}
