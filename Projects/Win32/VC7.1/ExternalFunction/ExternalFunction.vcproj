@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src;..\..\..\..\Build\Win32\VC7.1\Release\Nls\Include"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -33,6 +33,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\ExternalFunction/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -42,9 +43,10 @@
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Release/ExternalFunction.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Release/ExternalFunction.pdb"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -81,7 +83,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src;..\..\..\..\Build\Win32\VC7.1\Debug\Nls\Include"
 				PreprocessorDefinitions=""
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -103,8 +105,8 @@
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Debug/ExternalFunction.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Debug/ExternalFunction.pdb"
 				SubSystem="1"/>

@@ -33,6 +33,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\SimpleTransform/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -44,7 +45,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Release/SimpleTransform.pdb"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -120,66 +122,6 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-		</Configuration>
-		<Configuration
-			Name="Release with symbols|Win32"
-			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols"
-			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\SimpleTransform"
-			ConfigurationType="1"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
-			<Tool
-				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src"
-				PreprocessorDefinitions="NDEBUG"
-				StringPooling="TRUE"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\SimpleTransform/SimpleTransform.pch"
-				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\SimpleTransform/"
-				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\SimpleTransform/"
-				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\SimpleTransform/"
-				WarningLevel="4"
-				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/SimpleTransform.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/SimpleTransform.pdb"
-				SubSystem="1"/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release/SimpleTransform.tlb"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>

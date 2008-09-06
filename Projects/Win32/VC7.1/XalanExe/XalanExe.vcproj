@@ -39,6 +39,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\XalanExe/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -51,6 +52,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release"
 				IgnoreDefaultLibraryNames="libc"
+				GenerateDebugInformation="TRUE"
 				StackReserveSize="3096576"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -127,69 +129,6 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-		</Configuration>
-		<Configuration
-			Name="Release with symbols|Win32"
-			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols"
-			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\XalanExe"
-			ConfigurationType="1"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
-			<Tool
-				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7.1\Release.symbols\Nls\Include"
-				PreprocessorDefinitions="NDEBUG"
-				StringPooling="TRUE"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\XalanExe/XalanExe.pch"
-				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\XalanExe/"
-				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\XalanExe/"
-				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\XalanExe/"
-				WarningLevel="4"
-				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="3"
-				CompileAs="0"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386 /FIXED:NO"
-				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7.1\Release.symbols/Xalan.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release"
-				IgnoreDefaultLibraryNames="libc"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/Xalan.pdb"
-				StackReserveSize="3096576"/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/XalanExe.tlb"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
