@@ -193,11 +193,14 @@ XPathFunctionTable::UninstallFunction(const XalanDOMChar*	theFunctionName)
 		Function* const	theFunction =
             const_cast<Function*>(m_functionTable[theFunctionID]);
 
-		m_functionTable[theFunctionID] = 0;
+        if (theFunction != 0)
+        {
+		    m_functionTable[theFunctionID] = 0;
 
-        XalanDestroy(
-            *m_memoryManager,
-            *theFunction);
+            XalanDestroy(
+                *m_memoryManager,
+                *theFunction);
+        }
 
         return true;
 	}
