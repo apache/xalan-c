@@ -86,7 +86,7 @@ private:
 	// Data members...
 	const XalanNamedNodeMap&	m_nodeMap;
 
-	const XalanSize_t			m_lastIndex;
+	const XalanSize_t			m_length;
 
     MemoryManagerType&          m_memoryManager;
 

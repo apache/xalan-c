@@ -47,13 +47,13 @@ const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] =
 
 NamedNodeMapAttributeList::NamedNodeMapAttributeList(
             const XalanNamedNodeMap&    theMap,
-            MemoryManagerType&          theManager) :
+            MemoryManager&              theManager) :
 	ParentType(),
 	m_nodeMap(theMap),
-	m_lastIndex(theMap.getLength() - 1),
+	m_length(theMap.getLength()),
     m_memoryManager(theManager)
 {
-    assert(theMap.getLength() != 0);
+	assert(length(s_typeString) > 0);
 }
 
 
@@ -75,20 +75,32 @@ NamedNodeMapAttributeList::getLength() const
 const XMLCh*
 NamedNodeMapAttributeList::getName(const XalanSize_t    index) const
 {
-	const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
-	assert(theAttribute != 0);
+    if (index >= m_length)
+    {
+        return 0;
+    }
+    else
+    {
+	    const XalanNode* const	theAttribute = m_nodeMap.item(m_length - 1 - index);
+	    assert(theAttribute != 0);
 
-	return theAttribute->getNodeName().c_str();
+	    return theAttribute->getNodeName().c_str();
+    }
 }
 
 
 
 const XMLCh*
-NamedNodeMapAttributeList::getType(const XalanSize_t    /* index */) const
+NamedNodeMapAttributeList::getType(const XalanSize_t    index) const
 {
-	assert(length(s_typeString) > 0);
-
-	return s_typeString;
+    if (index >= m_length)
+    {
+        return 0;
+    }
+    else
+    {
+	    return s_typeString;
+    }
 }
 
 
@@ -96,22 +108,34 @@ NamedNodeMapAttributeList::getType(const XalanSize_t    /* index */) const
 const XMLCh*
 NamedNodeMapAttributeList::getValue(const XalanSize_t   index) const
 {
-    assert(index <= m_lastIndex);
+    if (index >= m_length)
+    {
+        return 0;
+    }
+    else
+    {
+        const XalanNode* const	theAttribute = m_nodeMap.item(m_length - 1 - index);
+	    assert(theAttribute != 0);
 
-    const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
-	assert(theAttribute != 0);
-
-	return theAttribute->getNodeValue().c_str();
+	    return theAttribute->getNodeValue().c_str();
+    }
 }
 
 
 
 const XMLCh*
-NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
+NamedNodeMapAttributeList::getType(const XMLCh* const   name) const
 {
-	assert(length(s_typeString) > 0);
+	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
 
-	return s_typeString;
+	if (theNode == 0)
+	{
+		return 0;
+	}
+	else
+    {
+	    return s_typeString;
+    }
 }
 
 
