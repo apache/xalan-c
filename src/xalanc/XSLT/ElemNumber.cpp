@@ -315,26 +315,26 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
             const XPath*                    countMatchPattern,
             XalanNode*                      context) const
 {  
-    XalanNode*  contextCopy = context;
+    XalanNode*  thePos = context;
 
-    while (contextCopy != 0)
+    while (thePos != 0)
     {
         if (0 != fromMatchPattern)
         {
             if (fromMatchPattern->getMatchScore(
-                    contextCopy,
+                    thePos,
                     *this,
                     executionContext) != XPath::eMatchScoreNone)
             {
-                contextCopy = 0;
+                thePos = 0;
                 break;
             }
         }
-        
+
         if (0 != countMatchPattern)
         {
             if (countMatchPattern->getMatchScore(
-                    contextCopy,
+                    thePos,
                     *this,
                     executionContext) != XPath::eMatchScoreNone)
             {
@@ -342,24 +342,33 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
             }
         }
 
-        XalanNode* const    prevSibling = contextCopy->getPreviousSibling();
+        XalanNode* const    previousSibling = thePos->getPreviousSibling();
 
-        if (prevSibling == 0)
+        if (previousSibling == 0)
         {
-            contextCopy = DOMServices::getParentOfNode(*contextCopy);
+            // Move up to the parent if thePos is the first child
+            // of its parent.  Note that we don't descend into the
+            // parent, since that's where we came from.
+            thePos = DOMServices::getParentOfNode(*thePos);
         }
         else
         {
-            // Now go down the chain of children of this sibling 
-            contextCopy = prevSibling->getLastChild();
-            if (contextCopy == 0)
+            thePos = previousSibling;
+
+            // Descend into the subtree all the way to the
+            // last node, which we reach by looking down
+            // the last child chain.
+            XalanNode* lastChild = thePos->getLastChild();
+
+            while (lastChild != 0)
             {
-                contextCopy = prevSibling;
+                thePos = lastChild;
+                lastChild = thePos->getLastChild();
             }
         }
     }
 
-    return contextCopy;
+    return thePos;
 }
 
 
@@ -650,7 +659,7 @@ ElemNumber::getPreviousNode(
         // the 'from' pattern, or a node is found that matches the 'count' pattern, 
         // or the top of the tree is found.
         while(0 != pos)
-        {            
+        {
             // Get the previous sibling, if there is no previous sibling, 
             // then count the parent, but if there is a previous sibling, 
             // dive down to the lowest right-hand (last) child of that sibling.
@@ -976,7 +985,7 @@ ElemNumber::formatNumberList(
 
     XalanDOMString&         theIntermediateResult = theGuard2.get();
 
-    for( NodeRefListBase::size_type i = 0; i < theListLength; i++)
+    for (NodeRefListBase::size_type i = 0; i < theListLength; i++)
     {
         if (it != trailerStrIt)
         {
