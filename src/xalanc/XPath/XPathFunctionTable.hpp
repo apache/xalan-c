@@ -299,34 +299,6 @@ public:
         return getFunctionIndex(theFunctionName) != InvalidFunctionNumberID ? true : false;
     }
 
-#if defined(XALAN_NO_MEMBER_TEMPLATES)
-
-    typedef XalanVector<XalanDOMString>         InstalledFunctionNameVectorType;
-
-    /**
-     * Add a list of the names of installed functions to a vector of names.
-     * 
-     * @param theVector vector of function name strings added to
-     */
-    void
-    getInstalledFunctionNames(InstalledFunctionNameVectorType&  theVector) const
-    {
-        XalanDOMString  theString;
-
-        for (int i = 0; i < TableSize; ++i)
-        {
-            if (m_functionTable[i] != 0)
-            {
-                theString.assign(
-                    s_functionNames[i].m_name,
-                    s_functionNames[i].m_size);
-
-                theVector.push_back(theString);
-            }
-        }
-    }
-#else
-
     /**
      * Add a list of the names of installed functions to a vector of names.
      * 
@@ -352,7 +324,6 @@ public:
             }
         }
     }
-#endif
 
     struct FunctionNameTableEntry
     {

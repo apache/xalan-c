@@ -984,21 +984,6 @@ public:
         return s_functions;
     }
 
-#if defined(XALAN_NO_MEMBER_TEMPLATES)
-    typedef XPathFunctionTable::InstalledFunctionNameVectorType
-                    InstalledFunctionNameVectorType;
-
-    /**
-     * Add the names for the installed functions to a vector strings.
-     * 
-     * @param theVector added to
-     */
-    static void
-    getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector)
-    {
-        s_functions.getInstalledFunctionNames(theVector);
-    }
-#else
     /**
      * Add the names for the installed functions to a vector strings.
      * 
@@ -1010,7 +995,6 @@ public:
     {
         s_functions.getInstalledFunctionNames(theIterator);
     }
-#endif
 
     static void
     destroyTable()
