@@ -99,9 +99,7 @@ public:
 	virtual void
 	str(XalanDOMString&     theBuffer) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::str;
-#endif
 
 	virtual double
 	stringLength(XPathExecutionContext&     executionContext) const;

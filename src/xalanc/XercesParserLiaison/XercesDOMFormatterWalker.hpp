@@ -58,10 +58,8 @@ protected:
 	virtual bool
 	endNode(const DOMNodeType*	node);
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::startNode;
 	using ParentType::endNode;
-#endif
 
 private:
 

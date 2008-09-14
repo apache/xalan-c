@@ -92,9 +92,7 @@ public:
 		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
 	}
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using Function::execute;
-#endif
 
 	/**
 	 * Create a copy of the function object.
@@ -181,9 +179,7 @@ public:
 		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
 	}
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using Function::execute;
-#endif
 
 	/**
 	 * Create a copy of the function object.
@@ -281,9 +277,7 @@ public:
 		return executionContext.getXObjectFactory().createString(XalanDOMString(theTimeString));
 	}
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using Function::execute;
-#endif
 
 	/**
 	 * Create a copy of the function object.

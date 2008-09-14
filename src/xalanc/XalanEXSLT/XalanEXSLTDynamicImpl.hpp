@@ -56,9 +56,7 @@ public:
     {
     }
 
-#if !defined(XALAN_NO_USING_DECLARATION)
     using ParentType::execute;
-#endif
 
     virtual XObjectPtr
     execute(

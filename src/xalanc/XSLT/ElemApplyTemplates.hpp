@@ -104,9 +104,7 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						child) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::transformChild;
-#endif
 
 	virtual void
 	selectAndSortChildren(

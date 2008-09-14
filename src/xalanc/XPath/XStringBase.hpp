@@ -87,9 +87,7 @@ public:
 	virtual bool
 	boolean(XPathExecutionContext&  executionContext) const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::str;
-#endif
 
 	virtual const XalanDOMString&
 	str(XPathExecutionContext&  executionContext) const = 0;

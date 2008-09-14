@@ -48,9 +48,7 @@ public:
 	virtual
 	~FunctionEvaluate();
 
-#if !defined(XALAN_NO_USING_DECLARATION)
 	using ParentType::execute;
-#endif
 
 	// These methods are inherited from Function ...
 
