@@ -43,15 +43,6 @@
 
 
 
-// Xerces header files
-#include <xercesc/util/XMLString.hpp>
-
-#if !defined(XML_LSTRSUPPORT)
-#include <xercesc/util/PlatformUtils.hpp>
-#endif
-
-
-
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -617,6 +608,20 @@ public:
 
 
 
+template <class CharType>
+class CaseFlipTransform
+{
+public:
+
+	CharType
+	operator()(CharType     theChar) const
+	{
+		return flipCaseASCII(theChar);
+	}
+};
+
+
+
 template<class InputCharType, class OutputCharType>
 IdentityTransform<InputCharType, OutputCharType>
 makeIdentityTransform(
@@ -861,10 +866,10 @@ collationCompare(
 #if defined(XALAN_USE_WINDOWS_COLLATION)
     return _wcscoll_l(theLHS, theRHS, s_locale);
 #else
-	return doCollationCompare(
-				theLHS,
-				theRHS,
-				makeXalanDOMCharIdentityTransform());
+    return doCollationCompare(
+                theLHS,
+                theRHS,
+                makeXalanDOMCharIdentityTransform());
 #endif
 }
 

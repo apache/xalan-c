@@ -1534,6 +1534,32 @@ toUpperASCII(XalanDOMChar   theChar)
 
 
 /**
+ * Flips the case to of the supplied character.  This function works only with
+ * the Unicode characters A-Z and a-z.
+ *
+ * @param theString target string
+ * @return string containing lower case characters
+ */
+inline XalanDOMChar
+flipCaseASCII(XalanDOMChar   theChar)
+{
+    if (theChar >= XalanUnicode::charLetter_A && theChar <= XalanUnicode::charLetter_Z)
+    {
+        return XalanDOMChar(theChar - (XalanUnicode::charLetter_A - XalanUnicode::charLetter_a));
+    }
+    else if (theChar >= XalanUnicode::charLetter_a && theChar <= XalanUnicode::charLetter_z)
+    {
+        return XalanDOMChar(theChar + (XalanUnicode::charLetter_A - XalanUnicode::charLetter_a));
+    }
+    else
+    {
+        return theChar;
+    }
+}
+
+
+
+/**
  * Converts ASCII alphabetic characters from upper case to
  * lower case.  This function works only with the characters
  * a-z and A-Z.
