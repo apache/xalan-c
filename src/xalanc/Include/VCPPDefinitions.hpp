@@ -41,8 +41,9 @@
     #define XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG
     #if _MSC_VER >= 1400
       #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
+      #define XALAN_USE_WINDOWS_COLLATION
     #endif
-   #endif
+  #endif
   #define XALAN_NEW_STD_ALLOCATOR
   #define XALAN_HAS_STD_ITERATORS
   #if _MSC_VER == 1300
