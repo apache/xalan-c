@@ -288,8 +288,6 @@ public:
 		append(data, text.getData());
 	}
 
-public:
-
 	/**
 	 * Retrieves data for node
 	 * 
