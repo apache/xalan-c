@@ -106,7 +106,7 @@ setHelp(XalanFileUtility&   h)
          << endl
          << "-gold dir	(base directory for gold files)"
          << endl
-         << "-src type	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
+         << "-source type	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
          << endl;
 }
 
@@ -114,7 +114,11 @@ setHelp(XalanFileUtility&   h)
 
 static const char* const    excludeStylesheets[] =
 {
-//  "output22.xsl",     // Excluded because it outputs EBCDIC
+    "idkey31.xsl",      // Excluded because Xalan-C++ deviates from the standard WRT namespace nodes.
+    "attribset29.xsl",  // Excluded because it's broken.  See Jira issue XALANJ-2412.
+    "output22.xsl",     // Excluded because it outputs EBCDIC and HTML, which cannot be parsed.
+    "variable20.xsl",   // Excluded because it shadows a variable name, which is illegal.
+    "variable56.xsl",   // Excluded because it shadows a variable name, which is illegal.
     0
 };
 
