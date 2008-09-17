@@ -235,9 +235,10 @@ ElemNumber::startElement(StylesheetExecutionContext&        executionContext) co
 
     getCountString(executionContext, countString);
 
-    if (!isEmpty(countString))
+    if (!countString.empty())
     {
-        executionContext.characters(toCharArray(countString), 0, length(countString));
+        executionContext.characters(
+            countString.c_str(), 0, countString.length());
     }
     
     return 0;
@@ -258,9 +259,9 @@ ElemNumber::execute(StylesheetExecutionContext&     executionContext) const
 
     getCountString(executionContext, countString);
 
-    if (!isEmpty(countString))
+    if (!countString.empty())
     {
-        executionContext.characters(toCharArray(countString), 0, length(countString));
+        executionContext.characters(countString.c_str(), 0, countString.length());
     }
 }
 #endif
@@ -389,14 +390,14 @@ ElemNumber::getCountMatchPattern(
             const XalanDOMString&   theNamespaceURI = contextNode->getNamespaceURI();
             const XalanDOMString&   theNodeName = contextNode->getNodeName();
 
-            if (isEmpty(theNamespaceURI) == true)
+            if (theNamespaceURI.empty() == true)
             {
                 // We can pass any PrefixResolver instance, so just
                 // pass ourself...
                 countMatchPattern =
                         executionContext.createMatchPattern(theNodeName, *this);
             }
-            else if (length(theNodeName) != length(contextNode->getLocalName()))
+            else if (theNodeName.length() != contextNode->getLocalName().length())
             {
                 // OK, there's a prefix, so create a prefix resolver so the
                 // prefix can be properly resolved...
@@ -573,11 +574,14 @@ ElemNumber::getCountString(
             const CountType     theNumber =
                 ctable.countNode(executionContext, *this, sourceNode);
 
-            formatNumberList(
-                executionContext,
-                &theNumber,
-                1,
-                theResult);
+            if (theNumber != 0)
+            {
+                formatNumberList(
+                    executionContext,
+                    &theNumber,
+                    1,
+                    theResult);
+            }
         }
         else
         {
@@ -854,7 +858,7 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&  executionContext) co
         m_groupingSeparator_avt->evaluate(digitGroupSepValue, *this, executionContext);
     }
                                      
-    if (length(digitGroupSepValue) > 1)
+    if (digitGroupSepValue.length() > 1)
     {
         error(
             executionContext,
@@ -871,7 +875,7 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&  executionContext) co
     }
 
     // 7.7.1 If one is empty, it is ignored (numb81 conf test)
-    if (!isEmpty(digitGroupSepValue) && !isEmpty(nDigitsPerGroupValue))
+    if (!digitGroupSepValue.empty() && !nDigitsPerGroupValue.empty())
     {
         formatter->setGroupingUsed(true);
         formatter->setGroupingSeparator(digitGroupSepValue);
@@ -890,8 +894,6 @@ ElemNumber::formatNumberList(
             NodeRefListBase::size_type      theListLength,
             XalanDOMString&                 theResult) const
 {
-    assert(theListLength > 0);
-
     XalanDOMChar    numberType = XalanUnicode::charDigit_1;
 
     XalanDOMString::size_type   numberWidth = 1;
@@ -918,7 +920,7 @@ ElemNumber::formatNumberList(
              m_format_avt->evaluate(formatValue, *this, executionContext);
         }
 
-        if (isEmpty(formatValue) == true)
+        if (formatValue.empty() == true)
         {
             formatValue = XalanUnicode::charDigit_1;
         }
@@ -991,7 +993,7 @@ ElemNumber::formatNumberList(
         {
             assert(isXMLLetterOrDigit(charAt(*it, 0)));
 
-            numberWidth = length(*it);
+            numberWidth = it->length();
 
             numberType = charAt(*it, numberWidth - 1);
 
@@ -1008,11 +1010,11 @@ ElemNumber::formatNumberList(
         }
 
         getFormattedNumber(
-                executionContext,
-                numberType,
-                numberWidth,
-                theList[i],
-                theIntermediateResult);
+            executionContext,
+            numberType,
+            numberWidth,
+            theList[i],
+            theIntermediateResult);
 
         theResult += theIntermediateResult;
 
@@ -1414,7 +1416,7 @@ ElemNumber::getFormattedNumber(
 
                 formatter->format(listElement, theResult);
 
-                const XalanDOMString::size_type     lengthNumString = length(theResult);
+                const XalanDOMString::size_type     lengthNumString = theResult.length();
 
                 if (numberWidth > lengthNumString)
                 {
@@ -1426,7 +1428,7 @@ ElemNumber::getFormattedNumber(
 
                     formatter->format(0, padString);
 
-                    reserve(theResult, nPadding * length(padString) + lengthNumString + 1);
+                    theResult.reserve(nPadding * padString.length() + lengthNumString + 1);
 
                     for (XalanDOMString::size_type i = 0; i < nPadding; i++)
                     {
@@ -1446,9 +1448,9 @@ ElemNumber::int2singlealphaCount(
         const XalanDOMString&   table,
         XalanDOMString&         theResult)
 {
-    assert(int(length(table)) == length(table));
+    assert(int(table.length()) == table.length());
 
-    const CountType     radix = length(table);
+    const CountType     radix = table.length();
 
     // TODO:  throw error on out of range input
     if (val > radix)
@@ -1611,7 +1613,7 @@ ElemNumber::toRoman(
 ElemNumber::NumberFormatStringTokenizer::NumberFormatStringTokenizer(
             const XalanDOMString&   theString) :
     m_currentPosition(0),
-    m_maxPosition(length(theString)),
+    m_maxPosition(theString.length()),
     m_string(&theString)
 {
 }
@@ -1624,7 +1626,7 @@ ElemNumber::NumberFormatStringTokenizer::setString(const XalanDOMString&    theS
     m_string = &theString;
 
     m_currentPosition = 0;
-    m_maxPosition = length(theString);
+    m_maxPosition = theString.length();
 }
 
 
