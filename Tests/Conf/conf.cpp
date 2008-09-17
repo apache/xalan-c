@@ -114,8 +114,16 @@ setHelp(XalanFileUtility&   h)
 
 static const char* const    excludeStylesheets[] =
 {
-    "idkey31.xsl",      // Excluded because Xalan-C++ deviates from the standard WRT namespace nodes.
     "attribset29.xsl",  // Excluded because it's broken.  See Jira issue XALANJ-2412.
+    "idkey31.xsl",      // Excluded because Xalan-C++ deviates from the standard WRT namespace nodes.
+    // $$$TODO: These are temporarily disabled, waiting for Xalan-J to implement erratum #23.
+    "numbering21.xsl",
+    "numbering29.xsl",
+    "numbering49.xsl",
+    "numbering61.xsl",
+    "numbering68.xsl",
+    "numbering69.xsl",
+    "numbering83.xsl",
     "output22.xsl",     // Excluded because it outputs EBCDIC and HTML, which cannot be parsed.
     "variable20.xsl",   // Excluded because it shadows a variable name, which is illegal.
     "variable56.xsl",   // Excluded because it shadows a variable name, which is illegal.
@@ -317,7 +325,7 @@ runTests(
                 //
                 const XalanDOMString&   currentDir = dirs[j];
 
-                if ((length(h.args.sub) == 0 ||
+                if ((h.args.sub.empty() == true ||
                      equals(currentDir, h.args.sub) == true) &&
                     currentDir[0] != XalanUnicode::charFullStop)
                 {
