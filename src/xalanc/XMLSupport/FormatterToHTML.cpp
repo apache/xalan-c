@@ -220,9 +220,9 @@ FormatterToHTML::startDocument()
 	m_hasNamespaceStack.clear();
 	m_elementPropertiesStack.clear();
 
-	const bool	isEmptySystem = isEmpty(m_doctypeSystem);
+    const bool	isEmptySystem = m_doctypeSystem.empty();
 
-	const bool	isEmptyPublic = isEmpty(m_doctypePublic);
+    const bool	isEmptyPublic = m_doctypePublic.empty();
 
 	// Output the header if either the System or Public attributes are
 	// specified
@@ -692,7 +692,7 @@ FormatterToHTML::processingInstruction(
 void
 FormatterToHTML::writeCharacters(const XalanDOMString&	theString)
 {
-	writeCharacters(toCharArray(theString), length(theString));
+    writeCharacters(theString.c_str(), theString.length());
 }
 
 
@@ -1091,11 +1091,11 @@ FormatterToHTML::accumHexNumber(XalanDOMChar	theChar)
 {
 	accumContent(XalanUnicode::charPercentSign);
 
-	assert(length(m_stringBuffer) == 0);
+    assert(m_stringBuffer.empty() == true);
 
 	NumberToHexDOMString(theChar, m_stringBuffer);
 
-	if (length(m_stringBuffer) == 1)
+	if (m_stringBuffer.length() == 1)
 	{
 		accumContent(XalanUnicode::charDigit_0);
 	}

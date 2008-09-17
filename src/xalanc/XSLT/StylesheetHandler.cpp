@@ -297,15 +297,15 @@ StylesheetHandler::startElement(
 
         const ElemTemplateStackType::size_type  origStackSize = m_elemStack.size();
 
-        if(equals(*ns, m_constructionContext.getXSLTNamespaceURI()))
+        if (equals(*ns, m_constructionContext.getXSLTNamespaceURI()))
         {
-            if(!isEmpty(m_stylesheet.getXSLTNamespaceURI()))
+            if (!m_stylesheet.getXSLTNamespaceURI().empty())
                 m_stylesheet.setXSLTNamespaceURI(*ns);
 
             const StylesheetConstructionContext::eElementToken  xslToken =
                 m_constructionContext.getElementToken(m_elementLocalName);
 
-            if(!m_inTemplate)
+            if (!m_inTemplate)
             {
                 processTopLevelElement(name, atts, xslToken, locator, fPreserveSpace, fSpaceAttrProcessed);
             }
@@ -622,7 +622,7 @@ StylesheetHandler::startElement(
                 {
                     elem = initWrapperless(name, atts, locator);
                 }
-                else if (length(*ns) == 0 && m_elemStack.size() == 1)
+                else if (ns->empty() == true && m_elemStack.size() == 1)
                 {
                     const GetCachedString   theGuard(m_constructionContext);
 
@@ -646,7 +646,7 @@ StylesheetHandler::startElement(
                 // is this an extension element call?
                 ExtensionNSHandler*     nsh = 0;
 
-                if (!isEmpty(*ns) &&
+                if (!ns->empty() &&
                     ((nsh = m_stylesheet.lookupExtensionNSHandler(*ns)) != 0))
                 {
                     elem = m_constructionContext.createElement(
@@ -745,7 +745,7 @@ StylesheetHandler::initWrapperless(
     {
         // If there's a default namespace, then we must output XML.
         // Otherwise, we'll set the output method to HTML.
-        if (atts.getValue(c_wstr(DOMServices::s_XMLNamespace)) == 0)
+        if (atts.getValue(DOMServices::s_XMLNamespace.c_str()) == 0)
         {
             m_stylesheet.getStylesheetRoot().setIndentResult(true);
             m_stylesheet.getStylesheetRoot().setOutputMethod(OUTPUT_METHOD_HTML);
@@ -1331,7 +1331,7 @@ StylesheetHandler::processImport(
                             includeStack.back(),
                             hrefUrl);
 
-            assert(length(hrefUrl) != 0);
+            assert(hrefUrl.empty() == false);
 
             Stylesheet::URLStackType&   importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
@@ -1422,7 +1422,7 @@ StylesheetHandler::processInclude(
 
             href.assign(atts.getValue(i));
         
-            assert(c_wstr(m_stylesheet.getIncludeStack().back()) != 0);
+            assert(m_stylesheet.getIncludeStack().back().c_str() != 0);
      
             m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back(), hrefUrl);
 
@@ -1734,9 +1734,9 @@ StylesheetHandler::accumulateText(
 void
 StylesheetHandler::processAccumulatedText()
 {
-    if (isEmpty(m_accumulateText) == false)
+    if (m_accumulateText.empty() == false)
     {
-        processText(m_accumulateText.c_str(), length(m_accumulateText));
+        processText(m_accumulateText.c_str(), m_accumulateText.length());
 
         clear(m_accumulateText);
     }   

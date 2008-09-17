@@ -104,8 +104,8 @@ ElemSort::ElemSort(
         m_dataTypeAVT =
             constructionContext.createAVT(
                 getLocator(),
-                c_wstr(Constants::ATTRNAME_DATATYPE),
-                c_wstr(Constants::ATTRVAL_DATATYPE_TEXT),
+                Constants::ATTRNAME_DATATYPE.c_str(),
+                Constants::ATTRVAL_DATATYPE_TEXT.c_str(),
                 *this);
     }
 
@@ -114,8 +114,8 @@ ElemSort::ElemSort(
         m_orderAVT =
             constructionContext.createAVT(
                 getLocator(),
-                c_wstr(Constants::ATTRNAME_ORDER),
-                c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
+                Constants::ATTRNAME_ORDER.c_str(),
+                Constants::ATTRVAL_ORDER_ASCENDING.c_str(),
                 *this);
     }
 }

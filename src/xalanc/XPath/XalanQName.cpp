@@ -305,7 +305,7 @@ XalanQName::getPrefixForNamespace(
 bool
 XalanQName::isValidNCName(const XalanDOMString&     theNCName)
 {
-    return isValidNCName(c_wstr(theNCName), length(theNCName));
+    return isValidNCName(theNCName.c_str(), theNCName.length());
 }
 
 
@@ -361,7 +361,7 @@ XalanQName::isValidNCName(
 bool
 XalanQName::isValidQName(const XalanDOMString&  theQName)
 {
-    return isValidQName(c_wstr(theQName), length(theQName));
+    return isValidQName(theQName.c_str(), theQName.length());
 }
 
 
@@ -380,7 +380,7 @@ XalanQName::isValidQName(
     }
     else
     {
-        const XalanDOMChar* const   thePrefix = c_wstr(theQName);
+        const XalanDOMChar* const   thePrefix = theQName;
         const XalanDOMChar* const   theLocalName = thePrefix + theIndex + 1;
 
         return XalanQName::isValidNCName(thePrefix, theIndex) &&

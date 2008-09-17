@@ -59,10 +59,10 @@ FunctionContains::execute(
     bool                    fResult = true;
 
     // If str2 is empty, then don't bother to check anything.
-    if (isEmpty(str2) == false)
+    if (str2.empty() == false)
     {
         // Is str1 empty?
-        if (isEmpty(str1) == true)
+        if (str1.empty() == true)
         {
             fResult = false;
         }
@@ -72,7 +72,7 @@ FunctionContains::execute(
             // the index...
             const XalanDOMString::size_type     theIndex = indexOf(str1, str2);
 
-            fResult = theIndex < length(str1) ? true : false;
+            fResult = theIndex < str1.length() ? true : false;
         }
     }
 

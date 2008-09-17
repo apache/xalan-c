@@ -361,7 +361,7 @@ FormatterToXercesDOM::createElement(
 		const XalanDOMString* const		theNamespace =
 				DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false, m_buffer);
 
-		if (theNamespace == 0 || length(*theNamespace) == 0)
+        if (theNamespace == 0 || theNamespace->empty() == true)
 		{
 			theElement = m_doc->createElement(theElementName);
 		}
@@ -403,7 +403,7 @@ FormatterToXercesDOM::addAttributes(
 			const XalanDOMString* const		theNamespace =
 					DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer);
 
-			if (theNamespace == 0 || length(*theNamespace) == 0)
+            if (theNamespace == 0 || theNamespace->empty() == true)
 			{
 				theElement->setAttribute(theName, attrs.getValue(i));
 			}
@@ -420,7 +420,7 @@ FormatterToXercesDOM::addAttributes(
 void
 FormatterToXercesDOM::processAccumulatedText()
 {
-	if (isEmpty(m_textBuffer) == false)
+    if (m_textBuffer.empty() == false)
 	{
 		append(m_doc->createTextNode(m_textBuffer.c_str()));
 

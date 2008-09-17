@@ -66,7 +66,7 @@ XNumber::num(XPathExecutionContext&     /* executionContext */) const
 const XalanDOMString&
 XNumber::str(XPathExecutionContext&     /* executionContext */) const
 {
-	if (isEmpty(m_cachedStringValue) == true)
+    if (m_cachedStringValue.empty() == true)
 	{
 		NumberToDOMString(m_value, m_cachedStringValue);
 	}
@@ -79,7 +79,7 @@ XNumber::str(XPathExecutionContext&     /* executionContext */) const
 const XalanDOMString&
 XNumber::str() const
 {
-	if (isEmpty(m_cachedStringValue) == true)
+    if (m_cachedStringValue.empty() == true)
 	{
 		NumberToDOMString(m_value, m_cachedStringValue);
 	}
@@ -97,11 +97,11 @@ XNumber::str(
 {
     const XalanDOMString&	theValue = str(executionContext);
 
-	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
+	assert(theValue.length() == FormatterListener::size_type(theValue.length()));
 
 	(formatterListener.*function)(
         theValue.c_str(),
-        FormatterListener::size_type(length(theValue)));
+        FormatterListener::size_type(theValue.length()));
 }
 
 
@@ -113,11 +113,11 @@ XNumber::str(
 {
     const XalanDOMString&	theValue = str();
 
-	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
+	assert(theValue.length() == FormatterListener::size_type(theValue.length()));
 
 	(formatterListener.*function)(
         theValue.c_str(),
-        FormatterListener::size_type(length(theValue)));
+        FormatterListener::size_type(theValue.length()));
 }
 
 
@@ -127,7 +127,7 @@ XNumber::str(
             XPathExecutionContext&  /* executionContext */,
             XalanDOMString&	        theBuffer) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+    if (m_cachedStringValue.empty() == false)
 	{
 		theBuffer.append(m_cachedStringValue);
 	}
@@ -142,7 +142,7 @@ XNumber::str(
 void
 XNumber::str(XalanDOMString&    theBuffer) const
 {
-	if (isEmpty(m_cachedStringValue) == false)
+    if (m_cachedStringValue.empty() == false)
 	{
 		theBuffer.append(m_cachedStringValue);
 	}

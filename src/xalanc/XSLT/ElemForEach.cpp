@@ -395,7 +395,7 @@ ElemForEach::sortChildren(
 
         bool    treatAsNumbers = false;
 
-        if (isEmpty(scratchString) == false)
+        if (scratchString.empty() == false)
         {
             if (equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) == true)
             {
@@ -433,7 +433,7 @@ ElemForEach::sortChildren(
 
         bool    descending = false;
         
-        if (isEmpty(scratchString) == false)
+        if (scratchString.empty() == false)
         {
             if (equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) == true)
             {
@@ -459,7 +459,7 @@ ElemForEach::sortChildren(
 
         XalanCollationServices::eCaseOrder  caseOrder = XalanCollationServices::eDefault;
 
-        if (isEmpty(scratchString) == false)
+        if (scratchString.empty() == false)
         {
             if (equals(scratchString, Constants::ATTRVAL_CASEORDER_UPPER) == true)
             {
@@ -589,7 +589,7 @@ ElemForEach::transformSelectedChildren(
 
             bool    treatAsNumbers = false;
 
-            if (isEmpty(scratchString) == false)
+            if (scratchString.empty() == false)
             {
                 if (equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) == true)
                 {
@@ -625,7 +625,7 @@ ElemForEach::transformSelectedChildren(
 
             bool    descending = false;
             
-            if (isEmpty(scratchString) == false)
+            if (scratchString.empty() == false)
             {
                 if (equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) == true)
                 {
@@ -650,7 +650,7 @@ ElemForEach::transformSelectedChildren(
 
             XalanCollationServices::eCaseOrder  caseOrder = XalanCollationServices::eDefault;
 
-            if (isEmpty(scratchString) == false)
+            if (scratchString.empty() == false)
             {
                 if (equals(scratchString, Constants::ATTRVAL_CASEORDER_UPPER) == true)
                 {

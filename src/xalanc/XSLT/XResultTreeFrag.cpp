@@ -175,7 +175,7 @@ XResultTreeFrag::str() const
 
 		return *m_singleTextChildValue;
 	}
-	else if (isEmpty(m_cachedStringValue) == true)
+    else if (m_cachedStringValue.empty() == true)
 	{
 		DOMServices::getNodeData(
             *m_value,
@@ -210,7 +210,7 @@ XResultTreeFrag::str(
 
         XObject::string(*m_singleTextChildValue, formatterListener, function);
     }
-	else if (isEmpty(m_cachedStringValue) == false)
+	else if (m_cachedStringValue.empty() == false)
 	{
         XObject::string(m_cachedStringValue, formatterListener, function);
 	}
@@ -242,7 +242,7 @@ XResultTreeFrag::str(XalanDOMString&    theBuffer) const
 	{
 		theBuffer.append(*m_singleTextChildValue);
 	}
-	else if (isEmpty(m_cachedStringValue) == false)
+	else if (m_cachedStringValue.empty() == false)
 	{
 		theBuffer.append(m_cachedStringValue);
 	}

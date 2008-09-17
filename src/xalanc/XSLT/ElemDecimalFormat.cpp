@@ -270,12 +270,12 @@ ElemDecimalFormat::ElemDecimalFormat(
         }
     }
 
-    if (length(m_decimalFormatSymbols.getInfinity()) == 0)
+    if (m_decimalFormatSymbols.getInfinity().empty() == true)
     {
         m_decimalFormatSymbols.setInfinity(Constants::ATTRVAL_INFINITY);
     }
 
-    if (length(m_decimalFormatSymbols.getNaN()) == 0)
+    if (m_decimalFormatSymbols.getNaN().empty() == true)
     {
         m_decimalFormatSymbols.setNaN(Constants::ATTRVAL_NAN);
     }

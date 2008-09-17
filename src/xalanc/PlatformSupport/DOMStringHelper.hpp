@@ -93,7 +93,9 @@ XalanTransform(
 /**
  * Get the underlying representation of the target XalanDOMString as a
  * null-terminated string
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return null-terminated string of XalanDOMChar
  */
@@ -142,7 +144,9 @@ c_str(const CharVectorType&     theString)
  *
  * On platforms where the compiler does generate Unicode wide
  * strings, this function will be called instead.
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return null-terminated string of XalanDOMChar
  */
@@ -157,7 +161,9 @@ c_wstr(const XalanDOMChar*  theString)
 /**
  * Get the underlying representation of the target XalanDOMString as an array of
  * XalanDOMChar, not guaranteed to be null-terminated.
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return array of XalanDOMChar
  */
@@ -171,7 +177,9 @@ toCharArray(const XalanDOMString&   theString)
 
 /**
  * Get the underlying representation of a XalanDOMChar.
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return array of XalanDOMChar
  */
@@ -186,7 +194,9 @@ toCharArray(const XalanDOMChar*     theString)
 /**
  * Get the underlying representation of the target CharVectorType as a
  * pointer to an array of characters
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return the pointer
  */
@@ -201,7 +211,9 @@ toCharArray(const CharVectorType&   theString)
 /**
  * Reserve some space in the string for more efficient
  * concatenation...
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param theCount The amount of space to reserve
  */
@@ -272,6 +284,8 @@ length(const char*  theString)
 /**
  * Determines if the target string contains any elements
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param str target string
  * @return true if the target string has a non-zero length
  */
@@ -356,7 +370,7 @@ indexOf(
             const XalanDOMString&   theString,
             XalanDOMChar            theChar)
 {
-    return length(theString) == 0 ? 0 : indexOf(c_wstr(theString), theChar);
+    return theString.length() == 0 ? 0 : indexOf(theString.c_str(), theChar);
 }
 
 
@@ -449,7 +463,7 @@ lastIndexOf(
             const XalanDOMString&   theString,
             XalanDOMChar            theChar)
 {
-    return lastIndexOf(c_wstr(theString), theChar);
+    return lastIndexOf(theString.c_str(), theChar);
 }
 
 
@@ -505,7 +519,11 @@ startsWith(
 {
     assert(theString != 0);
 
-    return startsWith(theString, length(theString), c_wstr(theSubstring), length(theSubstring));
+    return startsWith(
+                theString,
+                length(theString),
+                theSubstring.c_str(),
+                theSubstring.length());
 }
 
 
@@ -524,7 +542,11 @@ startsWith(
 {
     assert(theSubstring != 0);
 
-    return startsWith(c_wstr(theString), length(theString), theSubstring, length(theSubstring));
+    return startsWith(
+                theString.c_str(),
+                theString.length(),
+                theSubstring,
+                length(theSubstring));
 }
 
 
@@ -545,7 +567,11 @@ startsWith(
 {
     assert(theSubstring != 0);
 
-    return startsWith(c_wstr(theString), length(theString), theSubstring, theSubstringLength);
+    return startsWith(
+                theString.c_str(),
+                theString.length(),
+                theSubstring,
+                theSubstringLength);
 }
 
 
@@ -562,12 +588,12 @@ startsWith(
             const XalanDOMString&   theString,
             const XalanDOMString&   theSubstring)
 {
-    return startsWith(c_wstr(theString), length(theString), c_wstr(theSubstring), length(theSubstring));
+    return startsWith(
+                theString.c_str(),
+                theString.length(),
+                theSubstring.c_str(),
+                theSubstring.length());
 }
-
-
-
-
 
 
 
@@ -601,7 +627,11 @@ endsWith(
 {
     assert(theString != 0 && theSubstring != 0);
 
-    return endsWith(theString, length(theString), theSubstring, length(theSubstring));
+    return endsWith(
+                theString,
+                length(theString),
+                theSubstring,
+                length(theSubstring));
 }
 
 
@@ -618,7 +648,11 @@ endsWith(
             const XalanDOMString&   theString,
             const XalanDOMString&   theSubstring)
 {
-    return endsWith(c_wstr(theString), length(theString), c_wstr(theSubstring), length(theSubstring));
+    return endsWith(
+                theString.c_str(),
+                theString.length(),
+                theSubstring.c_str(),
+                theSubstring.length());
 }
 
 
@@ -1025,7 +1059,7 @@ WideStringToDouble(
 inline int
 DOMStringToInt(const XalanDOMString&    theString)
 {
-    return WideStringToInt(c_wstr(theString));
+    return WideStringToInt(theString.c_str());
 }
 
 
@@ -1039,7 +1073,7 @@ DOMStringToInt(const XalanDOMString&    theString)
 inline long
 DOMStringToLong(const XalanDOMString&   theString)
 {
-    return WideStringToLong(c_wstr(theString));
+    return WideStringToLong(theString.c_str());
 }
 
 
@@ -1053,7 +1087,7 @@ DOMStringToLong(const XalanDOMString&   theString)
 inline unsigned long
 DOMStringToUnsignedLong(const XalanDOMString&   theString)
 {
-    return WideStringToUnsignedLong(c_wstr(theString));
+    return WideStringToUnsignedLong(theString.c_str());
 }
 
 
@@ -1071,7 +1105,7 @@ DOMStringToDouble(
             MemoryManager&          theMemoryManager)
 {
     return WideStringToDouble(
-                c_wstr(theString),
+                theString.c_str(),
                 theMemoryManager);
 }
 
@@ -1154,11 +1188,11 @@ OutputString(
             XalanOutputStream&      theStream,
             const XalanDOMString&   theString)
 {
-    if (isEmpty(theString) == false)
+    if (theString.empty() == false)
     {
         OutputString(
             theStream,
-            c_wstr(theString));
+            theString.c_str());
     }
 }
 
@@ -1184,7 +1218,7 @@ OutputString(
 {
     OutputString(
         theStream,
-        c_wstr(theString),
+        theString.c_str(),
         theMemoryManager);
 }
 
@@ -1366,6 +1400,8 @@ operator<<(
 /**
  * Retrieves a character at a specified index in the target string
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param theIndex  index of character
  * @return character at specified index
@@ -1729,7 +1765,11 @@ compare(
             const XalanDOMString&   theLHS,
             const XalanDOMString&   theRHS)
 {
-    return compare(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+    return compare(
+        theLHS.c_str(),
+        theLHS.length(),
+        theRHS.c_str(),
+        theRHS.length());
 }
 
 
@@ -1750,7 +1790,11 @@ compare(
             const XalanDOMChar*     theLHS,
             const XalanDOMString&   theRHS)
 {
-    return compare(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+    return compare(
+            theLHS,
+            length(theLHS),
+            theRHS.c_str(),
+            theRHS.length());
 }
 
 
@@ -1771,7 +1815,11 @@ compare(
             const XalanDOMString&   theLHS,
             const XalanDOMChar*     theRHS)
 {
-    return compare(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+    return compare(
+            theLHS.c_str(),
+            theLHS.length(),
+            theRHS,
+            length(theRHS));
 }
 
 
@@ -1843,7 +1891,11 @@ compareIgnoreCaseASCII(
             const XalanDOMString&   theLHS,
             const XalanDOMString&   theRHS)
 {
-    return compareIgnoreCaseASCII(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
+    return compareIgnoreCaseASCII(
+                theLHS.c_str(),
+                theLHS.length(),
+                theRHS.c_str(),
+                theRHS.length());
 }
 
 
@@ -1866,7 +1918,11 @@ compareIgnoreCaseASCII(
             const XalanDOMString&   theLHS,
             const XalanDOMChar*     theRHS)
 {
-    return compareIgnoreCaseASCII(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+    return compareIgnoreCaseASCII(
+                theLHS.c_str(),
+                theLHS.length(),
+                theRHS,
+                length(theRHS));
 }
 
 
@@ -1889,7 +1945,11 @@ compareIgnoreCaseASCII(
             const XalanDOMChar*     theLHS,
             const XalanDOMString&   theRHS)
 {
-    return compareIgnoreCaseASCII(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
+    return compareIgnoreCaseASCII(
+                theLHS,
+                length(theLHS),
+                theRHS.c_str(),
+                theRHS.length());
 }
 
 
@@ -1981,7 +2041,11 @@ collationCompare(
             const XalanDOMString&   theLHS,
             const XalanDOMChar*     theRHS)
 {
-    return collationCompare(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
+    return collationCompare(
+                theLHS.c_str(),
+                theLHS.length(),
+                theRHS,
+                length(theRHS));
 }
 
 
@@ -2109,7 +2173,7 @@ equals(
             const XalanDOMChar*         theRHS,
             XalanDOMString::size_type   theRHSLength)
 {
-    return theRHSLength != length(theLHS) ? false : equals(c_wstr(theLHS), theRHSLength, theRHS, theRHSLength);
+    return theRHSLength != theLHS.length() ? false : equals(theLHS.c_str(), theRHSLength, theRHS, theRHSLength);
 }
 
 
@@ -2188,10 +2252,13 @@ equalsIgnoreCaseASCII(
             const XalanDOMString&   theLHS,
             const XalanDOMString&   theRHS)
 {
-    const XalanDOMString::size_type     theLength = length(theLHS);
+    const XalanDOMString::size_type     theLength = theLHS.length();
 
-    return theLength != length(theRHS) ? false :
-        equalsIgnoreCaseASCII(toCharArray(theLHS), toCharArray(theRHS), theLength);
+    return theLength != theRHS.length() ? false :
+        equalsIgnoreCaseASCII(
+            theLHS.c_str(),
+            theRHS.c_str(),
+            theLength);
 }
 
 
@@ -2209,10 +2276,13 @@ equalsIgnoreCaseASCII(
             const XalanDOMChar*     theLHS,
             const XalanDOMString&   theRHS)
 {
-    const XalanDOMString::size_type     theRHSLength = length(theRHS);
+    const XalanDOMString::size_type     theRHSLength = theRHS.length();
 
     return theRHSLength != length(theLHS) ? false :
-        equalsIgnoreCaseASCII(theLHS, toCharArray(theRHS), theRHSLength);
+        equalsIgnoreCaseASCII(
+            theLHS,
+            theRHS.c_str(),
+            theRHSLength);
 }
 
 
@@ -2581,7 +2651,7 @@ inline XalanDOMCharVectorType&
 MakeXalanDOMCharVector(const XalanDOMString&    data,
                        XalanDOMCharVectorType& result)
 {
-    return MakeXalanDOMCharVector(c_wstr(data),result);
+    return MakeXalanDOMCharVector(data.c_str(),result);
 }
 
 
@@ -2595,7 +2665,7 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
     result_type
     operator() (const argument_type&    theString) const
     {
-        return c_wstr(theString);
+        return theString.c_str();
     }
 };
 

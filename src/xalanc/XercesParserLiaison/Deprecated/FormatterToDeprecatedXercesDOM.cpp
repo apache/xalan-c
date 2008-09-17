@@ -455,7 +455,7 @@ FormatterToDeprecatedXercesDOM::addAttributes(
 void
 FormatterToDeprecatedXercesDOM::processAccumulatedText()
 {
-	if (isEmpty(m_textBuffer) == false)
+	if (m_textBuffer.empty() == false)
 	{
 		DOM_TextType theXercesNode =
 			m_doc.createTextNode(m_textBuffer.c_str());

@@ -90,7 +90,7 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 const XalanDOMString&
 ElementPrefixResolverProxy::getURI() const
 {
-	if (m_envSupport != 0 && m_namespaceContext != 0 && length(m_uri) == 0)
+	if (m_envSupport != 0 && m_namespaceContext != 0 && m_uri.empty() == true)
 	{
 		m_uri = m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
 	}

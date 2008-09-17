@@ -188,17 +188,17 @@ indexOf(
 			const XalanDOMString&	theString,
 			const XalanDOMString&	theSubstring)
 {
-	if (isEmpty(theString) == true)
+	if (theString.empty() == true)
 	{
 		return 0;
 	}
-	else if (isEmpty(theSubstring) == true)
+	else if (theSubstring.empty() == true)
 	{
 		return theString.length();
 	}
 	else
 	{
-		return indexOf(c_wstr(theString), c_wstr(theSubstring));
+        return indexOf(theString.c_str(), theSubstring.c_str());
 	}
 }
 
@@ -416,7 +416,7 @@ substring(
 			XalanDOMString::size_type	theStartIndex,
 			XalanDOMString::size_type	theEndIndex)
 {
-	const XalanDOMString::size_type		theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = theString.length();
 
 	assert(theStartIndex <= theStringLength);
 
@@ -489,7 +489,7 @@ TransformXalanDOMString(
 			FunctionType			theFunction,
             XalanDOMString&         theResult)
 {
-	const XalanDOMString::size_type		theStringLength = length(theInputString);
+	const XalanDOMString::size_type		theStringLength = theInputString.length();
 
 	if (theStringLength == 0)
 	{
@@ -497,7 +497,7 @@ TransformXalanDOMString(
 	}
 	else
 	{
-		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
+        const XalanDOMChar* const	theBuffer = theInputString.c_str();
 		assert(theBuffer != 0);
 
         TransformString(theBuffer, theStringLength, theFunction, theResult);	
@@ -794,9 +794,9 @@ compare(
 			const CharVectorType&	theRHS)
 {
 	return doCompare(
-				toCharArray(theLHS),
+				c_str(theLHS),
 				theLHS.size(),
-				toCharArray(theRHS),
+				c_str(theRHS),
 				theRHS.size(),
 				makeCharIdentityTransform());
 }
@@ -1140,8 +1140,9 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-WideStringToDouble(const XalanDOMChar*	theString,
-                   MemoryManagerType&   theManager)
+WideStringToDouble(
+            const XalanDOMChar*     theString,
+            MemoryManager&          theManager)
 {
 	return DoubleSupport::toDouble(theString, theManager);
 }
@@ -1149,16 +1150,17 @@ WideStringToDouble(const XalanDOMChar*	theString,
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-trim(const XalanDOMString&	theString,
-     XalanDOMString& theResult)
+trim(
+            const XalanDOMString&	theString,
+            XalanDOMString&         theResult)
 {
-	if (isEmpty(theString))
+    if (theString.empty())
     {
         theResult.erase();
 		return theResult;
     }
 
-	const XalanDOMString::size_type		strLen = length(theString);
+	const XalanDOMString::size_type		strLen = theString.length();
 	assert(strLen > 0);
 
 	// index of first non-whitespace character
@@ -1399,7 +1401,7 @@ PointerToDOMString(
 	const int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
 	assert(theCharsWritten != 0);
 
-	reserve(theResult, length(theResult) + theCharsWritten);
+	theResult.reserve(theResult.length() + theCharsWritten);
 
 	TranscodeNumber(
 			theBuffer,
@@ -1822,7 +1824,7 @@ NumberToDOMString(
 			}
 		}
 
-		reserve(theResult, length(theResult) + theCharsWritten);
+		theResult.reserve(theResult.length() + theCharsWritten);
 
 		TranscodeNumber(
 				theBuffer,
@@ -1859,7 +1861,7 @@ NumberToHexDOMString(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isXMLWhitespace(const XalanDOMString&	string)
 {
-	const XalanDOMString::size_type		theLength = length(string);
+	const XalanDOMString::size_type		theLength = string.length();
 
 	if (theLength == 0)
 	{
@@ -1868,7 +1870,7 @@ isXMLWhitespace(const XalanDOMString&	string)
 	else
 	{
 		const XalanDOMChar* const	theBuffer =
-			c_wstr(string);
+            string.c_str();
 
 		assert(theBuffer != 0);
 

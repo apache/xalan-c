@@ -170,7 +170,7 @@ TraceListenerDefault::trace(const TracerEvent&  ev)
                 const XalanDOMString&   theNamespace =
                     theName.getNamespace();
 
-                if (isEmpty(theNamespace) == false)
+                if (theNamespace.empty() == false)
                 {
                     m_printWriter.print(theNamespace);
                     m_printWriter.print(":");

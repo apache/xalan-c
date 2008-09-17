@@ -1173,7 +1173,7 @@ public:
     bool
     isElementPending() const
     {
-        return length(getPendingElementNameImpl()) != 0 ? true : false;
+        return !getPendingElementNameImpl().empty();
     }
 
     /**

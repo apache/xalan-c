@@ -66,7 +66,7 @@ FunctionSubstringBefore::execute(
 
     const XalanDOMString&               theFirstString = arg1->str(executionContext);
 
-    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
+    const XalanDOMString::size_type     theFirstStringLength = theFirstString.length();
 
     if (theFirstStringLength == 0)
     {
@@ -76,7 +76,7 @@ FunctionSubstringBefore::execute(
     {
         const XalanDOMString&               theSecondString = arg2->str(executionContext);
 
-        const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
+        const XalanDOMString::size_type     theSecondStringLength = theSecondString.length();
 
         if (theSecondStringLength == 0)
         {
@@ -98,7 +98,7 @@ FunctionSubstringBefore::execute(
                 XalanDOMString&     theString = theResult.get();
 
                 theString.assign(
-                        toCharArray(theFirstString),
+                        theFirstString.c_str(),
                         theIndex);
 
                 // Create a string of the appropriate length...

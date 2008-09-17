@@ -166,7 +166,7 @@ ElemCopy::endElement(StylesheetExecutionContext& executionContext) const
         {
             endExecuteChildren(executionContext);
 
-            executionContext.endElement(c_wstr(sourceNode->getNodeName()));
+            executionContext.endElement(sourceNode->getNodeName().c_str());
 
             ElemUse::endElement(executionContext);
         }
@@ -209,7 +209,7 @@ ElemCopy::execute(StylesheetExecutionContext&   executionContext) const
 
             executeChildren(executionContext);
 
-            executionContext.endElement(c_wstr(sourceNode->getNodeName()));
+            executionContext.endElement(sourceNode->getNodeName().c_str());
         }
         else
         {

@@ -227,7 +227,7 @@ FunctionNormalizeSpace::getError(XalanDOMString& theResult) const
 bool
 FunctionNormalizeSpace::needsNormalization(const XalanDOMString&    theString) const
 {
-    const XalanDOMString::size_type     theStringLength = length(theString);
+    const XalanDOMString::size_type     theStringLength = theString.length();
 
     bool    fNormalize = false;
 

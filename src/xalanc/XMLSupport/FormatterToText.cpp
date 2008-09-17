@@ -84,7 +84,7 @@ FormatterToText::FormatterToText(
 	m_newlineString(0),
 	m_newlineStringLength(0)
 {
-    if(isEmpty(encoding) == false)
+    if(encoding.empty() == false)
     {
         m_encoding = encoding;
     }

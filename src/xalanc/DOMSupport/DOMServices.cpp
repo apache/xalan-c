@@ -116,14 +116,14 @@ DOMServices::initialize(MemoryManagerType&  theManager)
 	::s_XMLNamespaceSeparatorString.reset( theManager, ":");
 	::s_XMLNamespacePrefixURI.reset( theManager, "http://www.w3.org/2000/xmlns/");
 
-	::s_XMLStringLength = length(DOMServices::s_XMLString);
-	::s_XMLStringWithSeparatorLength = length(DOMServices::s_XMLStringWithSeparator);
-	::s_XMLNamespacePrefixLength = length(DOMServices::s_XMLNamespacePrefix);
-	::s_XMLNamespaceURILength = length(DOMServices::s_XMLNamespaceURI);
-	::s_XMLNamespaceLength = length(DOMServices::s_XMLNamespace);
-	::s_XMLNamespaceWithSeparatorLength = length(DOMServices::s_XMLNamespaceWithSeparator);
-	::s_XMLNamespaceSeparatorStringLength = length(DOMServices::s_XMLNamespaceSeparatorString);
-	::s_XMLNamespacePrefixURILength = length(DOMServices::s_XMLNamespacePrefixURI);
+	::s_XMLStringLength = DOMServices::s_XMLString.length();
+	::s_XMLStringWithSeparatorLength = DOMServices::s_XMLStringWithSeparator.length();
+	::s_XMLNamespacePrefixLength = DOMServices::s_XMLNamespacePrefix.length();
+	::s_XMLNamespaceURILength = DOMServices::s_XMLNamespaceURI.length();
+	::s_XMLNamespaceLength = DOMServices::s_XMLNamespace.length();
+	::s_XMLNamespaceWithSeparatorLength = DOMServices::s_XMLNamespaceWithSeparator.length();
+	::s_XMLNamespaceSeparatorStringLength = DOMServices::s_XMLNamespaceSeparatorString.length();
+	::s_XMLNamespacePrefixURILength = DOMServices::s_XMLNamespacePrefixURI.length();
 }
 
 
@@ -938,7 +938,7 @@ DOMServices::getNamespaceForPrefix(
 	}
 	else
 	{
-		const bool				isDefaultNamespace = isEmpty(prefix);
+        const bool				isDefaultNamespace = prefix.empty();
 		XalanNode::NodeType		type;
 		const XalanNode*		parent = &namespaceContext;
 
@@ -978,7 +978,7 @@ DOMServices::getNamespaceForPrefix(
 					{
 						if (equals(
 								prefix,
-								c_wstr(aname) + s_XMLNamespaceWithSeparatorLength) == true)
+								aname.c_str() + s_XMLNamespaceWithSeparatorLength) == true)
 						{
 							theNamespace = &attr->getNodeValue();
 
@@ -1032,7 +1032,7 @@ DOMServices::getNamespaceForPrefix(
 		{
 			// Get the prefix from theName...
 			assign(thePrefix, theName, theColonIndex);
-			assert(length(thePrefix) != 0);
+            assert(thePrefix.empty() == false);
 
 			return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 		}

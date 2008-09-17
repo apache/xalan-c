@@ -591,7 +591,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
     // the XPath, once the namespace is resolved, but it may
     // not be worth it...
     const XalanDOMString::size_type     index = indexOf(str, XalanUnicode::charColon);
-    const XalanDOMString::size_type     len = length(str);
+    const XalanDOMString::size_type     len = str.length();
 
     // If we found a ':' before the end of the string, and
     // it's by itself (:: would indicate an axis), don't
@@ -693,7 +693,7 @@ StylesheetExecutionContextDefault::pushVariable(
 {
     assert(m_xsltProcessor != 0);
 
-    if (length(str) > 0)
+    if (str.empty() == false)
     {
         m_variablesStack.pushVariable(
             name,
@@ -1586,11 +1586,11 @@ StylesheetExecutionContextDefault::collationCompare(
 {
     if (m_collationCompareFunctor == 0)
     {
-        return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), theCaseOrder);
+        return s_defaultCollationFunctor(theLHS.c_str(), theRHS.c_str(), theCaseOrder);
     }
     else
     {
-        return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), theCaseOrder);
+        return (*m_collationCompareFunctor)(theLHS.c_str(), theRHS.c_str(), theCaseOrder);
     }
 }
 
@@ -1605,11 +1605,11 @@ StylesheetExecutionContextDefault::collationCompare(
 {
     if (m_collationCompareFunctor == 0)
     {
-        return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale), theCaseOrder);
+        return s_defaultCollationFunctor(theLHS.c_str(), theRHS.c_str(), theLocale.c_str(), theCaseOrder);
     }
     else
     {
-        return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale), theCaseOrder);
+        return (*m_collationCompareFunctor)(theLHS.c_str(), theRHS.c_str(), theLocale.c_str(), theCaseOrder);
     }
 }
 

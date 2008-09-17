@@ -227,7 +227,7 @@ public:
 
             const XalanDOMString::size_type     theColonIndex = indexOf(theName, XalanUnicode::charColon);
 
-            if (theColonIndex != length(theName))
+            if (theColonIndex != theName.length())
             {
                 if (thePrefix.length() == theColonIndex &&
                     startsWith(theName, thePrefix) == true)
@@ -323,7 +323,7 @@ ElemLiteralResult::startElement(StylesheetExecutionContext&     executionContext
 {
     const XalanDOMString&   theElementName = getElementName();
 
-    executionContext.startElement(c_wstr(theElementName));
+    executionContext.startElement(theElementName.c_str());
 
     ElemUse::startElement(executionContext);
 
@@ -365,7 +365,7 @@ ElemLiteralResult::endElement(StylesheetExecutionContext&       executionContext
 {
     endExecuteChildren(executionContext);
     
-    executionContext.endElement(c_wstr(getElementName()));
+    executionContext.endElement(getElementName().c_str());
 
     ElemUse::endElement(executionContext);
 }
@@ -405,7 +405,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&  executionContext) const
 {
     const XalanDOMString&   theElementName = getElementName();
 
-    executionContext.startElement(c_wstr(theElementName));
+    executionContext.startElement(theElementName.c_str());
 
     ElemUse::execute(executionContext);
 
@@ -459,7 +459,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&  executionContext) const
 
     executeChildren(executionContext);
 
-    executionContext.endElement(c_wstr(theElementName));
+    executionContext.endElement(theElementName.c_str());
 }
 #endif
 

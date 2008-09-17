@@ -1032,7 +1032,7 @@ XercesDocumentBridge::createElement(const XalanDOMString&	tagName)
 	try
 	{
 		const DOM_ElementType	theXercesNode =
-			m_xercesDocument.createElement(c_wstr(tagName));
+			m_xercesDocument.createElement(tagName.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1080,7 +1080,7 @@ XercesDocumentBridge::createTextNode(const XalanDOMString&	data)
 	try
 	{
 		const DOM_TextType	theXercesNode =
-			m_xercesDocument.createTextNode(c_wstr(data));
+			m_xercesDocument.createTextNode(data.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1104,7 +1104,7 @@ XercesDocumentBridge::createComment(const XalanDOMString&	data)
 	try
 	{
 		const DOM_CommentType	theXercesNode =
-			m_xercesDocument.createComment(c_wstr(data));
+			m_xercesDocument.createComment(data.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1128,7 +1128,7 @@ XercesDocumentBridge::createCDATASection(const XalanDOMString&	data)
 	try
 	{
 		const DOM_CDATASectionType	theXercesNode =
-			m_xercesDocument.createCDATASection(c_wstr(data));
+			m_xercesDocument.createCDATASection(data.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1154,7 +1154,7 @@ XercesDocumentBridge::createProcessingInstruction(
 	try
 	{
 		const DOM_ProcessingInstructionType		theXercesNode =
-			m_xercesDocument.createProcessingInstruction(c_wstr(target), c_wstr(data));
+			m_xercesDocument.createProcessingInstruction(target.c_str(), data.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1178,7 +1178,7 @@ XercesDocumentBridge::createAttribute(const XalanDOMString&		name)
 	try
 	{
 		const DOM_AttrType	theXercesNode =
-			m_xercesDocument.createAttribute(c_wstr(name));
+			m_xercesDocument.createAttribute(name.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1202,7 +1202,7 @@ XercesDocumentBridge::createEntityReference(const XalanDOMString&	name)
 	try
 	{
 		const DOM_EntityReferenceType	theXercesNode =
-			m_xercesDocument.createEntityReference(c_wstr(name));
+			m_xercesDocument.createEntityReference(name.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1280,7 +1280,7 @@ XercesDocumentBridge::createElementNS(
 	try
 	{
 		const DOM_ElementType	theXercesNode =
-			m_xercesDocument.createElementNS(c_wstr(namespaceURI), c_wstr(qualifiedName));
+			m_xercesDocument.createElementNS(namespaceURI.c_str(), qualifiedName.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);
@@ -1306,7 +1306,7 @@ XercesDocumentBridge::createAttributeNS(
 	try
 	{
 		const DOM_AttrType	theXercesNode =
-			m_xercesDocument.createAttributeNS(c_wstr(namespaceURI), c_wstr(qualifiedName));
+			m_xercesDocument.createAttributeNS(namespaceURI.c_str(), qualifiedName.c_str());
 		assert(theXercesNode.isNull() == false);
 
 		theBridgeNode = createBridgeNode(theXercesNode, 0, true);

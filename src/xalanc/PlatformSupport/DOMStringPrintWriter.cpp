@@ -112,8 +112,7 @@ DOMStringPrintWriter::write(
 			XalanDOMString::size_type	theOffset,
 			XalanDOMString::size_type	theLength)
 {
-	assert(c_wstr(s) != 0);
-	assert(theLength == npos || length(s) >= theOffset + theLength);
+	assert(theLength == npos || s.length() >= theOffset + theLength);
 
 	if (theOffset == 0 && theLength == npos)
 	{

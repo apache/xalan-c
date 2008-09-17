@@ -310,23 +310,23 @@ StylesheetRoot::setupFormatterListener(
     {
         // Do encoding stuff here...
     }
-    else if(0 != outputTarget.getCharacterStream() ||
-            0 != outputTarget.getByteStream() ||
-            0 != outputTarget.getStream() ||
-            0 != length(outputTarget.getFileName()))
+    else if (0 != outputTarget.getCharacterStream() ||
+             0 != outputTarget.getByteStream() ||
+             0 != outputTarget.getStream() ||
+             !outputTarget.getFileName().empty())
     {
         /*
          * Output target has a character or byte stream or file
          */
         Writer*     pw = 0;
 
-        if(0 != outputTarget.getCharacterStream())
+        if (0 != outputTarget.getCharacterStream())
         {
             pw = outputTarget.getCharacterStream();
         }
         else
         {
-            if(0 != outputTarget.getByteStream())
+            if (0 != outputTarget.getByteStream())
             {
                 pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
             }
@@ -334,7 +334,7 @@ StylesheetRoot::setupFormatterListener(
             {
                 pw = executionContext.createPrintWriter(outputTarget.getStream());
             }
-            else if(!isEmpty(outputTarget.getFileName()))
+            else if (!outputTarget.getFileName().empty())
             {
                 const GetCachedString   theGuard(executionContext);
 

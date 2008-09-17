@@ -139,7 +139,7 @@ doCollationCompare(
 			const XalanDOMString&				theLanguage,
 			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
-	if (length(theLanguage) == 0)
+	if (theLanguage.empty() == true)
 	{
 		return executionContext.collationCompare(
 				theLHS,

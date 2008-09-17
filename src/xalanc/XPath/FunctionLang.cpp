@@ -93,17 +93,17 @@ FunctionLang::execute(
             const XalanDOMString&   langVal = theAttribute == 0 ?
                         s_emptyString : theAttribute->getNodeValue();
 
-            if (0 != length(langVal))
+            if (langVal.empty() == false)
             {
                 const GetCachedString   theGuard1(executionContext);
                 const GetCachedString   theGuard2(executionContext);
 
                 if (startsWith(toLowerCaseASCII(langVal, theGuard1.get()), toLowerCaseASCII(lang, theGuard2.get())))
                 {
-                    const XalanDOMString::size_type     valLen = length(lang);
+                    const XalanDOMString::size_type     valLen = lang.length();
 
-                    if (length(langVal) == valLen ||
-                        charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
+                    if (langVal.length() == valLen ||
+                        langVal[valLen] == XalanUnicode::charHyphenMinus)
                     {
                         fMatch = true;
 

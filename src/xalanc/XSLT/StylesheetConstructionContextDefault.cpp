@@ -1382,7 +1382,7 @@ StylesheetConstructionContextDefault::tokenizeQNames(
         while(tokenizer.hasMoreTokens())
         {
             tokenizer.nextToken(qname);
-            assert(length(qname) != 0);
+            assert(qname.empty() == false);
 
             theResult[theCurrentIndex++] =
                     m_xalanQNameByValueAllocator.create(

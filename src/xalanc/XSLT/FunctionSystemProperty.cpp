@@ -114,7 +114,7 @@ FunctionSystemProperty::execute(
     assert(arg1.null() == false);
 
     const XalanDOMString&               fullName = arg1->str(executionContext);
-    const XalanDOMString::size_type     fullNameLength = length(fullName);
+    const XalanDOMString::size_type     fullNameLength = fullName.length();
     const XalanDOMString::size_type     indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
     if(indexOfNSSep < fullNameLength)

@@ -106,7 +106,7 @@ FunctionID::execute(
             {
                 theTokenizer.nextToken(theToken);
 
-                if (length(theToken) > 0)
+                if (theToken.empty() == false)
                 {
                     XalanNode* const    theNode = theDocContext->getElementById(theToken);
 

@@ -144,7 +144,7 @@ ExtensionNSHandler::setScript(
 void
 ExtensionNSHandler::setElements(const XalanDOMString&	elemNames)
 {
-    if (length(elemNames) != 0)
+    if (elemNames.empty() == false)
 	{
 		StringTokenizer		st(elemNames, s_tokenDelimiterCharacters, false);
 

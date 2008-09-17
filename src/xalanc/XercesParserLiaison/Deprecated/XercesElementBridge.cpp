@@ -301,7 +301,7 @@ XercesElementBridge::getTagName() const
 const XalanDOMString&
 XercesElementBridge::getAttribute(const XalanDOMString&		name) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(c_wstr(name)));
+	return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(name.c_str()));
 }
 
 
@@ -330,7 +330,7 @@ XercesElementBridge::setAttribute(
 {
 	try
 	{
-		m_xercesNode.setAttribute(c_wstr(name), c_wstr(value));
+		m_xercesNode.setAttribute(name.c_str(), value.c_str());
 	}
 	catch(const DOM_DOMExceptionType&	theException)
 	{
@@ -401,7 +401,7 @@ XercesElementBridge::removeAttribute(const XalanDOMString&	name)
 {
 	try
 	{
-		m_xercesNode.removeAttribute(c_wstr(name));
+		m_xercesNode.removeAttribute(name.c_str());
 	}
 	catch(const DOM_DOMExceptionType&	theException)
 	{
@@ -416,7 +416,7 @@ XercesElementBridge::getAttributeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(c_wstr(namespaceURI), c_wstr(localName)));
+	return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(namespaceURI.c_str(), localName.c_str()));
 }
 
 
@@ -429,7 +429,7 @@ XercesElementBridge::setAttributeNS(
 {
 	try
 	{
-		m_xercesNode.setAttributeNS(c_wstr(namespaceURI), c_wstr(qualifiedName), c_wstr(value));
+		m_xercesNode.setAttributeNS(namespaceURI.c_str(), qualifiedName.c_str(), value.c_str());
 	}
 	catch(const DOM_DOMExceptionType&	theException)
 	{
@@ -446,7 +446,7 @@ XercesElementBridge::removeAttributeNS(
 {
 	try
 	{
-		m_xercesNode.removeAttributeNS(c_wstr(namespaceURI), c_wstr(localName));
+		m_xercesNode.removeAttributeNS(namespaceURI.c_str(), localName.c_str());
 	}
 	catch(const DOM_DOMExceptionType&	theException)
 	{
@@ -462,7 +462,7 @@ XercesElementBridge::getAttributeNodeNS(
 			const XalanDOMString&	localName) const
 {
 	const DOM_AttrType	theAttrNode =
-		m_xercesNode.getAttributeNodeNS(c_wstr(namespaceURI), c_wstr(localName));
+		m_xercesNode.getAttributeNodeNS(namespaceURI.c_str(), localName.c_str());
 
 	if (theAttrNode.isNull() == true)
 	{

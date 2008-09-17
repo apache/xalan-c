@@ -303,7 +303,7 @@ public:
                 const XalanDOMString&   nodeName,
                 XalanDOMString&         theBuffer) const
     {
-        return getNamespaceFromStack(c_wstr(nodeName), theBuffer);
+        return getNamespaceFromStack(nodeName.c_str(), theBuffer);
     }
 
     /**

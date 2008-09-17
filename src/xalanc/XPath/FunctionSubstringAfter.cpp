@@ -66,7 +66,7 @@ FunctionSubstringAfter::execute(
 
     const XalanDOMString&               theFirstString = arg1->str(executionContext);
 
-    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
+    const XalanDOMString::size_type     theFirstStringLength = theFirstString.length();
 
     if (theFirstStringLength == 0)
     {
@@ -76,7 +76,7 @@ FunctionSubstringAfter::execute(
     {
         const XalanDOMString&   theSecondString = arg2->str(executionContext);
 
-        const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
+        const XalanDOMString::size_type     theSecondStringLength = theSecondString.length();
 
         if (theSecondStringLength == 0)
         {
@@ -85,7 +85,7 @@ FunctionSubstringAfter::execute(
         else
         {
             const XalanDOMString::size_type     theIndex = indexOf(theFirstString,
-                                                       theSecondString);
+                                                                    theSecondString);
 
             if (theIndex == theFirstStringLength)
             {
@@ -93,12 +93,10 @@ FunctionSubstringAfter::execute(
             }
             else
             {
-                const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
-
                 // Find the first character, which will be the offset of the index of the
                 // beginning of the second string, plus the length of the second string.
                 const XalanDOMChar* const   theFirstCharacter =
-                    toCharArray(theFirstString) + theIndex + theSecondStringLength;
+                    theFirstString.c_str() + theIndex + theSecondStringLength;
 
                 // The remaining length is just the opposite -- the length of the string,
                 // minus the index, minus the length of the second string.

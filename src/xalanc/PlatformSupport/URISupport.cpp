@@ -108,7 +108,7 @@ URISupport::getURLStringFromString(
 
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 			const XMLURLType::Protocols		theProtocol =
-                XMLURLType::lookupByName(c_wstr(theProtocolString));
+                XMLURLType::lookupByName(theProtocolString.c_str());
 
 			if (theProtocol != XMLURLType::Unknown)
 			{
@@ -202,7 +202,7 @@ XalanDOMString&
 URISupport::NormalizeURIText(XalanDOMString&	uriString)
 {
 	// OK, look for a quick, cheap exit...
-	const XalanDOMString::size_type		len = length(uriString);
+	const XalanDOMString::size_type		len = uriString.length();
 	const XalanDOMString::size_type		index = indexOf(uriString, XalanUnicode::charReverseSolidus);
 
 	if (index != len)
@@ -212,8 +212,8 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 		XALAN_STD_QUALIFIER replace(
 				uriString.begin() + index,
 				uriString.end(),
-				XalanDOMChar(XalanUnicode::charReverseSolidus),
-				XalanDOMChar(XalanUnicode::charSolidus));
+				XalanUnicode::charReverseSolidus,
+				XalanUnicode::charSolidus);
 	}
 
 	return uriString;

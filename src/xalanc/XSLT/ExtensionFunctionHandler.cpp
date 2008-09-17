@@ -87,7 +87,7 @@ ExtensionFunctionHandler::ExtensionFunctionHandler (
 void
 ExtensionFunctionHandler::setFunctions(const XalanDOMString&	funcNames) 
 {
-	if (isEmpty(funcNames)) 
+	if (funcNames.empty()) 
 	{
 		return;
 	}

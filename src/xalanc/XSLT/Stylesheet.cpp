@@ -118,7 +118,7 @@ Stylesheet::Stylesheet(
     m_elemDecimalFormats(constructionContext.getMemoryManager()),
     m_namespacesHandler(constructionContext.getMemoryManager())
 {
-    if (length(m_baseIdent) == 0)
+    if (m_baseIdent.empty() == true)
     {
         m_includeStack.push_back(m_baseIdent);
     }
@@ -132,7 +132,7 @@ Stylesheet::Stylesheet(
 
             constructionContext.getURLStringFromString(m_baseIdent, urlString);
 
-            if (length(urlString) != 0)
+            if (urlString.empty() == false)
             {
                 m_includeStack.push_back(urlString);
 
@@ -245,9 +245,9 @@ Stylesheet::initWrapperless(
 
     AttributeListImpl   templateAttrs(constructionContext.getMemoryManager());
 
-    templateAttrs.addAttribute(c_wstr(Constants::ATTRNAME_NAME),
-                               c_wstr(Constants::ATTRTYPE_CDATA),
-                               c_wstr(Constants::ATTRVAL_SIMPLE));
+    templateAttrs.addAttribute(Constants::ATTRNAME_NAME.c_str(),
+                               Constants::ATTRTYPE_CDATA.c_str(),
+                               Constants::ATTRVAL_SIMPLE.c_str());
 
     ElemTemplateElement* const  theNewTemplate =
         constructionContext.createElement(
@@ -1287,7 +1287,7 @@ Stylesheet::findTemplate(
                         const XalanDOMString*   patterns = matchPat->getPattern();
                         assert(patterns != 0);
 
-                        if(!isEmpty(*patterns) &&
+                        if(!patterns->empty() &&
                            !(prevMatchPat != 0 &&
                              (prevPat != 0 && equals(*prevPat, *patterns)) &&
                              prevMatchPat->getTemplate()->getPriority() == matchPat->getTemplate()->getPriority()))
@@ -1573,7 +1573,7 @@ Stylesheet::processNSAliasElement(
     }
     else
     {
-        assert(length(*stylesheetNamespace) != 0  && length(*resultNamespace) != 0);
+        assert(stylesheetNamespace->empty() == false && resultNamespace->empty() == false);
 
         m_namespacesHandler.setNamespaceAlias(
                 constructionContext,

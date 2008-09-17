@@ -92,13 +92,15 @@ equalsXalanDOMString
     bool
     operator()(const XalanDOMString*    theString) const
     {
-        if (m_length != length(*theString))
+        assert(theString != 0);
+
+        if (m_length != theString->length())
         {
             return false;
         }
         else
         {
-            return equals(m_string, c_wstr(*theString), m_length);
+            return equals(m_string, theString->c_str(), m_length);
         }
     }
 
@@ -116,7 +118,10 @@ XalanDOMStringHashTable::find(
             const XalanDOMString&   theString,
             size_t*                 theBucketIndex) const
 {
-    return find(c_wstr(theString), length(theString), theBucketIndex);
+    return find(
+                theString.c_str(),
+                theString.length(),
+                theBucketIndex);
 }
 
 

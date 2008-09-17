@@ -316,7 +316,7 @@ XPathEnvSupportDefault::functionAvailable(
 
 	// Any function without a namespace prefix is considered
 	// to be an intrinsic function.
-	if (isEmpty(theNamespace) == true)
+    if (theNamespace.empty() == true)
 	{
 		theResult = XPath::isInstalledFunction(functionName);
 	}
@@ -419,7 +419,7 @@ XPathEnvSupportDefault::extFunction(
 	{
         XalanDOMString	theFunctionName(executionContext.getMemoryManager());
 
-		if(length(theNamespace) > 0)
+        if(theNamespace.empty() == false)
 		{
 			theFunctionName += theNamespace;
 			theFunctionName += DOMServices::s_XMLNamespaceSeparatorString;

@@ -61,9 +61,9 @@ FunctionTranslate::execute(
     const XalanDOMString&   theSecondString = arg2->str(executionContext);
     const XalanDOMString&   theThirdString = arg3->str(executionContext);
 
-    const XalanDOMString::size_type     theFirstStringLength = length(theFirstString);
-    const XalanDOMString::size_type     theSecondStringLength = length(theSecondString);
-    const XalanDOMString::size_type     theThirdStringLength = length(theThirdString);
+    const XalanDOMString::size_type     theFirstStringLength = theFirstString.length();
+    const XalanDOMString::size_type     theSecondStringLength = theSecondString.length();
+    const XalanDOMString::size_type     theThirdStringLength = theThirdString.length();
 
     typedef XalanVector<XalanDOMChar>       VectorType;
 
@@ -75,7 +75,7 @@ FunctionTranslate::execute(
     // The result string can only be as large as the first string, so
     // just reserve the space now.  Also reserve space for the
     // terminating 0.
-    reserve(theString, theFirstStringLength + 1);
+    theString.reserve(theFirstStringLength + 1);
 
     for (XalanDOMString::size_type i = 0; i < theFirstStringLength; i++)
     {

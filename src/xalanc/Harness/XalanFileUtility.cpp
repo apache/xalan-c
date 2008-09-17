@@ -392,7 +392,7 @@ XalanFileUtility::getParams(
 		const XalanDOMString::size_type		ii =
 			lastIndexOf(args.base, s_pathSep[0]);
 
-        if (ii < length(args.base))
+        if (ii < args.base.length())
         {
             args.output.assign(args.base, 0, ii + 1);
         }

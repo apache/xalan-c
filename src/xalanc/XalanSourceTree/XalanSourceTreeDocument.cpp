@@ -304,7 +304,7 @@ XalanElement*
 XalanSourceTreeDocument::getElementById(const XalanDOMString&	elementId) const
 {
 	const ElementByIDMapType::const_iterator	i =
-		m_elementsByID.find(c_wstr(elementId));
+		m_elementsByID.find(elementId.c_str());
 
 	if (i == m_elementsByID.end())
 	{
@@ -413,10 +413,10 @@ XalanSourceTreeDocument::createAttributes(
 							false,
                             &theLocalName);
 
-				if (theNamespace == 0 || length(*theNamespace) == 0)
+                if (theNamespace == 0 || theNamespace->empty() == true)
 				{
 					// the prefix was returned by getNamespaceForPrefix()...
-					assert(length(m_stringBuffer) == 0);
+					assert(m_stringBuffer.empty() == true);
 
 					theAttributeVector[theStartIndex] =
 						m_attributeAllocator.create(
@@ -876,7 +876,7 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 	{
 		// Get the prefix from theName...
 		assign(thePrefix, theName, theColonIndex);
-		assert(length(thePrefix) != 0);
+		assert(thePrefix.empty() == false);
 
         if (theLocalName != 0)
         {
@@ -1007,10 +1007,10 @@ XalanSourceTreeDocument::createAttribute(
 				m_stringBuffer,
 				false);
 
-	assert(theNamespace == 0 && length(m_stringBuffer) == 0 ||
-		   theNamespace != 0 && length(m_stringBuffer) != 0);
+	assert(theNamespace == 0 && m_stringBuffer.empty() == true ||
+		   theNamespace != 0 && m_stringBuffer.empty() == false);
 
-	if (theNamespace == 0 || length(*theNamespace) == 0)
+	if (theNamespace == 0 || theNamespace->empty() == true)
 	{
 		return m_attributeAllocator.create(
 				m_namesStringPool.get(theName),
@@ -1035,7 +1035,7 @@ XalanSourceTreeDocument::createAttribute(
 		//
 		return m_attributeNSAllocator.create(
 				m_namesStringPool.get(theName),
-				m_namesStringPool.get(theName + length(m_stringBuffer) + 1),
+                m_namesStringPool.get(theName + m_stringBuffer.length() + 1),
 				m_namesStringPool.get(*theNamespace),
 				// This is the prefix...
 				m_namesStringPool.get(m_stringBuffer),
@@ -1064,10 +1064,10 @@ XalanSourceTreeDocument::createElementNode(
 				m_stringBuffer,
 				true);
 
-	if (theNamespace == 0 || length(*theNamespace) == 0)
+	if (theNamespace == 0 || theNamespace->empty() == true)
 	{
 		// the prefix was returned by getNamespaceForPrefix()...
-		assert(length(m_stringBuffer) == 0);
+		assert(m_stringBuffer.empty() == true);
 
 		if (theAttributeCount == 0)
 		{
@@ -1098,7 +1098,7 @@ XalanSourceTreeDocument::createElementNode(
 		// the local name is the same as the tag name.  Otherwise, we need
 		// to remove the prefix and the ':' that separates them.  If
 		// m_stringBuffer is of length 0, there's no prefix.
-		const XalanDOMString::size_type		thePrefixLength = length(m_stringBuffer);
+		const XalanDOMString::size_type		thePrefixLength = m_stringBuffer.length();
 
 		const XalanDOMChar* const			theLocalName =
 			thePrefixLength == 0 ? theTagName : theTagName + thePrefixLength + 1;
@@ -1238,7 +1238,7 @@ XalanSourceTreeDocument::createAttributes(
 				// always returned, so use insert(), rather than []
 				m_elementsByID.insert(
 					ElementByIDMapType::value_type(
-						c_wstr(theAttributeVector[theStartIndex]->getValue()),
+						theAttributeVector[theStartIndex]->getValue().c_str(),
 						theOwnerElement));
 			}
 

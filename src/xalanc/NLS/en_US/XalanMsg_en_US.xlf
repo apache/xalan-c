@@ -302,9 +302,9 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target> name="{0}" </target>
 </trans-unit>
 
-<trans-unit id="WrongAttemptingToAddAttrinbute">
-		<source>Attempting to add an attribute when there is no open element. The attribute will be ignored.</source>
-		<target>Attempting to add an attribute when there is no open element. The attribute will be ignored.</target>
+<trans-unit id="AttributeCannotBeAdded">
+		<source>An attribute cannot be added to the result tree when there is no open element. The attribute will be ignored.</source>
+		<target>An attribute cannot be added to the result tree when there is no open element. The attribute will be ignored.</target>
 </trans-unit>
 
 <trans-unit id="CantCreateItemInResultTree">

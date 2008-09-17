@@ -77,7 +77,7 @@ XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
 					theName,
 					theDocument);
 
-	if (length(theURI) != 0)
+	if (theURI.empty() == false)
 	{
 		return theURI;
 	}

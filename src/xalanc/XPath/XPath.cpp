@@ -4818,7 +4818,7 @@ XPath::NodeTester::initialize(
             const LocatorType*          theLocator)
 {
     const XalanDOMString::size_type     theLength =
-                length(theNameTest);
+                theNameTest.length();
 
     if (theLength == 1 && theNameTest[0] == XPath::PSEUDONAME_ANY[0])
     {
@@ -5400,8 +5400,8 @@ XPath::NodeTester::matchLocalName(const XalanNode&  context) const
 {
     assert(m_targetLocalName != 0);
 
-    return length(context.getNamespaceURI()) == 0 &&
-        DOMServices::getLocalNameOfNode(context) == *m_targetLocalName;
+    return context.getNamespaceURI().empty() == true &&
+           DOMServices::getLocalNameOfNode(context) == *m_targetLocalName;
 }
 
 

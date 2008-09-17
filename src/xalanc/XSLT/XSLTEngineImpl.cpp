@@ -449,7 +449,7 @@ XSLTEngineImpl::processStylesheet(
             StylesheetConstructionContext&  constructionContext)
 {
     const XSLTInputSource   input(
-                                c_wstr(xsldocURLString),
+                                xsldocURLString.c_str(),
                                 constructionContext.getMemoryManager());
 
     return processStylesheet(input, constructionContext);
@@ -917,7 +917,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
         // be active, so we never want to error out here.
         try
         {
-            if (length(xmlBaseIdent) == 0)
+            if (xmlBaseIdent.empty() == true)
             {
                 URISupport::getURLStringFromString(
                             localXSLURLString,
@@ -1295,7 +1295,7 @@ XSLTEngineImpl::addResultAttribute(
                 // OK, we're turning of the previous default namespace declaration.
                 // Check to see if there is one, and if there isn't, don't add
                 // the namespace declaration _and_ don't add the attribute.
-                if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
+                if (currentDefaultNamespace != 0 && currentDefaultNamespace->empty() == false)
                 {
                     addResultNamespaceDecl(s_emptyString, value, theLength);
                 }
@@ -1344,9 +1344,9 @@ XSLTEngineImpl::addResultAttribute(
         if (fExcludeAttribute == false)
         {
             attList.addAttribute(
-                c_wstr(aname),
-                c_wstr(Constants::ATTRTYPE_CDATA),
-                c_wstr(value));
+                aname.c_str(),
+                Constants::ATTRTYPE_CDATA.c_str(),
+                value);
         }
     }
 }
@@ -1413,7 +1413,7 @@ XSLTEngineImpl::pendingAttributesHasDefaultNS() const
 void
 XSLTEngineImpl::flushPending()
 {
-    if(getHasPendingStartDocument() == true && 0 != length(getPendingElementName()))
+    if(getHasPendingStartDocument() == true && isElementPending() == true)
     {
         assert(getFormatterListenerImpl() != 0);
         assert(m_executionContext != 0);
@@ -1484,7 +1484,7 @@ XSLTEngineImpl::flushPending()
 
     XalanDOMString&     thePendingElementName = getPendingElementNameImpl();
 
-    if(0 != length(thePendingElementName) &&
+    if(thePendingElementName.empty() == false &&
        getMustFlushPendingStartDocument() == true)
     {
         assert(getFormatterListenerImpl() != 0);
@@ -1499,7 +1499,7 @@ XSLTEngineImpl::flushPending()
                 getPendingAttributesImpl();
 
         getFormatterListenerImpl()->startElement(
-                c_wstr(thePendingElementName),
+                thePendingElementName.c_str(),
                 thePendingAttributes);
 
         if(getTraceListeners() > 0)
@@ -1515,7 +1515,7 @@ XSLTEngineImpl::flushPending()
 
         thePendingAttributes.clear();
 
-        clear(thePendingElementName);
+        thePendingElementName.clear();
     }
 }
 
@@ -1975,9 +1975,9 @@ XSLTEngineImpl::cloneToResultTree(
         m_executionContext->shouldStripSourceNode(node) == false)
     {
         const XalanDOMString&   data = node.getData();
-        assert(0 != length(data));
+        assert(data.empty() == false);
 
-        characters(toCharArray(data), 0, length(data));
+        characters(data.c_str(), 0, data.length());
     }
 }
 
@@ -2030,7 +2030,7 @@ XSLTEngineImpl::cloneToResultTree(
             {
                 if(XalanNode::ELEMENT_NODE == posNodeType)
                 {
-                    endElement(c_wstr(pos->getNodeName()));
+                    endElement(pos->getNodeName().c_str());
                 }
 
                 if(&node == pos)
@@ -2049,7 +2049,7 @@ XSLTEngineImpl::cloneToResultTree(
                     {
                         if(XalanNode::ELEMENT_NODE == posNodeType)
                         {
-                            endElement(c_wstr(pos->getNodeName()));
+                            endElement(pos->getNodeName().c_str());
                         }
 
                         nextNode = 0;
@@ -2181,7 +2181,7 @@ XSLTEngineImpl::cloneToResultTree(
                 const XalanDOMString&   theElementName =
                     node.getNodeName();
 
-                startElement(c_wstr(theElementName));
+                startElement(theElementName.c_str());
 
                 if(shouldCloneAttributes == true)
                 {
@@ -2200,12 +2200,12 @@ XSLTEngineImpl::cloneToResultTree(
             {
                 const XalanDOMString&   data = node.getNodeValue();
 
-                cdata(toCharArray(data), 0, length(data));
+                cdata(data.c_str(), 0, data.length());
             }
             break;
 
         case XalanNode::ATTRIBUTE_NODE:
-            if (length(getPendingElementName()) != 0)
+            if (isElementPending() == true)
             {
                 addResultAttribute(
                         getPendingAttributesImpl(),
@@ -2221,7 +2221,7 @@ XSLTEngineImpl::cloneToResultTree(
                 const XalanDOMString&   theMessage =
                     XalanMessageLoader::getMessage(
                         theGuard.get(),
-                        XalanMessages::WrongAttemptingToAddAttrinbute);
+                        XalanMessages::AttributeCannotBeAdded);
 
                 warn(
                     theMessage,
@@ -2231,17 +2231,17 @@ XSLTEngineImpl::cloneToResultTree(
             break;
 
         case XalanNode::COMMENT_NODE:
-            comment(c_wstr(node.getNodeValue()));
+            comment(node.getNodeValue().c_str());
             break;
 
         case XalanNode::ENTITY_REFERENCE_NODE:
-            entityReference(c_wstr(node.getNodeName()));
+            entityReference(node.getNodeName().c_str());
             break;
 
         case XalanNode::PROCESSING_INSTRUCTION_NODE:
             processingInstruction(
-                    c_wstr(node.getNodeName()),
-                    c_wstr(node.getNodeValue()));
+                    node.getNodeName().c_str(),
+                    node.getNodeValue().c_str());
             break;
 
         case XalanNode::DOCUMENT_FRAGMENT_NODE:
@@ -2291,7 +2291,7 @@ XSLTEngineImpl::outputToResultTree(
         {
             const XalanDOMString&   s = value.str(*m_executionContext);
 
-            characters(toCharArray(s), 0, length(s));
+            characters(s.c_str(), 0, s.length());
         }
         break;
 
@@ -2333,7 +2333,7 @@ XSLTEngineImpl::outputToResultTree(
                         {
                             if(XalanNode::ELEMENT_NODE == posNodeType)
                             {
-                                endElement(c_wstr(pos->getNodeName()));
+                                endElement(pos->getNodeName().c_str());
                             }
 
                             if(top == pos)
@@ -2352,7 +2352,7 @@ XSLTEngineImpl::outputToResultTree(
                                 {
                                     if(XalanNode::ELEMENT_NODE == posNodeType)
                                     {
-                                        endElement(c_wstr(pos->getNodeName()));
+                                        endElement(pos->getNodeName().c_str());
                                     }
 
                                     nextNode = 0;
@@ -2423,7 +2423,7 @@ XSLTEngineImpl::outputResultTreeFragment(
                 {
                     if(XalanNode::ELEMENT_NODE == posNodeType)
                     {
-                        endElement(c_wstr(pos->getNodeName()));
+                        endElement(pos->getNodeName().c_str());
                     }
 
                     if(top == pos)
@@ -2451,7 +2451,7 @@ XSLTEngineImpl::outputResultTreeFragment(
                             {
                                 if(XalanNode::ELEMENT_NODE == posNodeType)
                                 {
-                                    endElement(c_wstr(pos->getNodeName()));
+                                    endElement(pos->getNodeName().c_str());
                                 }
 
                                 nextNode = 0;
@@ -2489,7 +2489,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&     elementName)
     {
         const XalanDOMString::size_type     indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
 
-        if(indexOfNSSep == length(elementName))
+        if(indexOfNSSep == elementName.length())
         {
             const XalanDOMString* const     elemNS =
                         getResultNamespaceForPrefix(s_emptyString);
@@ -2617,7 +2617,7 @@ isPrefixUsed(
             XalanDOMString::size_type   thePrefixLength,
             const XalanDOMString&       theName)
 {
-    return isPrefixUsed(thePrefix, thePrefixLength, c_wstr(theName), length(theName));
+    return isPrefixUsed(thePrefix, thePrefixLength, theName.c_str(), theName.length());
 }
 
 
@@ -2642,7 +2642,7 @@ isPrefixUsedOrDeclared(
         // these conditions must be true...
         if (theDeclarationLength == theNameLength &&
             startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true &&
-            endsWith(theName, c_wstr(thePrefix)) == true)
+            endsWith(theName, thePrefix.c_str()) == true)
         {
             return true;
         }
@@ -2701,7 +2701,7 @@ isPendingAttributePrefix(
 bool
 XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&     thePrefix) const
 {
-    const XalanDOMString::size_type     thePrefixLength = length(thePrefix);
+    const XalanDOMString::size_type     thePrefixLength = thePrefix.length();
     assert(thePrefixLength > 0);
 
     // The element name must be greater than the length of the prefix + 1, since

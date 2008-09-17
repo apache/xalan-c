@@ -113,7 +113,7 @@ XercesNamedNodeMapBridge::item(unsigned int	index) const
 XalanNode*
 XercesNamedNodeMapBridge::getNamedItem(const XalanDOMString& 	name) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(c_wstr(name)));
+	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(name.c_str()));
 }
 
 
@@ -134,7 +134,7 @@ XercesNamedNodeMapBridge::removeNamedItem(const XalanDOMString&		name)
 	try
 	{
 		const DOM_NodeType	theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItem(c_wstr(name));
+			m_xercesNamedNodeMap.removeNamedItem(name.c_str());
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);
@@ -208,7 +208,7 @@ XercesNamedNodeMapBridge::removeNamedItemNS(
 	try
 	{
 		const DOM_NodeType	theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItemNS(c_wstr(namespaceURI), c_wstr(localName));
+			m_xercesNamedNodeMap.removeNamedItemNS(namespaceURI.c_str(), localName.c_str());
 
 		// A node was removed, so get it corresponding XalanNode...
 		theXalanNode = m_navigator.mapNode(theXercesNode);

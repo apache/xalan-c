@@ -156,7 +156,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
         assign(origAttrName, attrName);
 
-        const XalanDOMString::size_type     origAttrNameLength = length(origAttrName);
+        const XalanDOMString::size_type     origAttrNameLength = origAttrName.length();
 
         XalanDOMString::size_type           indexOfNSSep = 0;
 
@@ -170,7 +170,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
             indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-            if(isEmpty(attrNameSpace))
+            if (attrNameSpace.empty())
             {
                 // If there's no namespace, but the attribute has a
                 // prefix, then we must strip the prefix off.
@@ -195,23 +195,20 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                 // it's equal to the prefix on the attribute, then go ahead
                 // and use that prefix.
                 if(prefix != 0 &&
-                   length(*prefix) != 0 &&
+                   prefix->empty() == false &&
                    (indexOfNSSep == origAttrNameLength ||
-                    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
+                    equals(prefix->c_str(), attrName.c_str(), indexOfNSSep) == true))
                 {
                     if(indexOfNSSep < origAttrNameLength)
                     {
-                        reserve(
-                            attrName,
-                            length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                        attrName.reserve(attrName.length() - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + prefix->length() + 1);
 
                         attrName.erase(0, indexOfNSSep + 1);
                     }
                     else
                     {
-                        reserve(
-                            attrName,
-                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(*prefix) + 1);
+                        attrName.reserve(
+                            attrName.length() + DOMServices::s_XMLNamespaceSeparatorStringLength + prefix->length() + 1);
                     }
 
                     insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
@@ -253,7 +250,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         }
                     }
 
-                    if (length(newPrefix) == 0)
+                    if (newPrefix.empty() == true)
                     {
                         // If there's a prefix, and it's xmlns, then strip it
                         // off...
@@ -266,9 +263,8 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         executionContext.getUniqueNamespaceValue(newPrefix);
 
                         // Reserve some space in the string.
-                        reserve(
-                            attrName,
-                            length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+                        attrName.reserve(
+                            attrName.length() + DOMServices::s_XMLNamespaceSeparatorStringLength + newPrefix.length() + 1);
 
                         insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
                         insert(attrName, 0, newPrefix);
@@ -279,7 +275,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                     XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-                    reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
+                    nsDecl.reserve(DOMServices::s_XMLNamespaceWithSeparatorLength + newPrefix.length() + 1);
 
                     assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
@@ -344,7 +340,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         }
                     }
 
-                    if (isEmpty(attrNameSpace))
+                    if (attrNameSpace.empty())
                     {
                         warn(
                             executionContext,
@@ -364,7 +360,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                             XalanDOMString&     nsDecl = nsDeclGuard.get();
 
-                            reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
+                            nsDecl.reserve(DOMServices::s_XMLNamespaceWithSeparatorLength + nsprefix.length() + 1);
 
                             assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
 
@@ -387,7 +383,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
         // If there was no namespace, or the namespace was resolved, process
         // the result attribute.
         
-        if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
+        if (indexOfNSSep == origAttrNameLength || !attrNameSpace.empty())
         {
             executionContext.pushProcessCurrentAttribute(true);
             executionContext.pushCopyTextNodesOnly(true);
@@ -473,7 +469,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
             indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-            if(isEmpty(attrNameSpace))
+            if(attrNameSpace.empty())
             {
                 // If there's no namespace, but the attribute has a
                 // prefix, then we must strip the prefix off.
@@ -500,7 +496,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                 if(prefix != 0 &&
                    length(*prefix) != 0 &&
                    (indexOfNSSep == origAttrNameLength ||
-                    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
+                    equals(prefix->c_str(), attrName.c_str(), indexOfNSSep) == true))
                 {
                     if(indexOfNSSep < origAttrNameLength)
                     {
@@ -648,7 +644,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
                         }
                     }
 
-                    if (isEmpty(attrNameSpace))
+                    if (attrNameSpace.empty())
                     {
                         // Could not resolve prefix
                         warn(
@@ -691,7 +687,7 @@ ElemAttribute::execute(StylesheetExecutionContext&  executionContext) const
 
         // If there was no namespace, or the namespace was resolved, process
         // the result attribute.
-        if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
+        if (indexOfNSSep == origAttrNameLength || !attrNameSpace.empty())
         {
             StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly  theSetAndRestore(executionContext, true);
 

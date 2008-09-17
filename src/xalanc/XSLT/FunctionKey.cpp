@@ -68,7 +68,7 @@ getNodeSet(
 {
     assert(context != 0);
 
-    if (indexOf(keyname, XalanUnicode::charColon) < length(keyname))
+    if (indexOf(keyname, XalanUnicode::charColon) < keyname.length())
     {
         executionContext.getNodeSetByKey(
                 context,

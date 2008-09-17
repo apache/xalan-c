@@ -197,12 +197,12 @@ XercesParserLiaison::ensureDOMParser()
 
     if (m_externalSchemaLocation.length() > 0)
     {
-        m_domParser->setExternalSchemaLocation(c_wstr(m_externalSchemaLocation));
+        m_domParser->setExternalSchemaLocation(m_externalSchemaLocation.c_str());
     }
 
     if (m_externalNoNamespaceSchemaLocation.length() > 0)
     {
-        m_domParser->setExternalNoNamespaceSchemaLocation(c_wstr(m_externalNoNamespaceSchemaLocation));
+        m_domParser->setExternalNoNamespaceSchemaLocation(m_externalNoNamespaceSchemaLocation.c_str());
     }
 }
 

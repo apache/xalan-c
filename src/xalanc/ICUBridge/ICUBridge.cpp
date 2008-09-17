@@ -91,7 +91,7 @@ ICUBridge::XalanDOMStringToUnicodeString(
             const XalanDOMString&   theString)
 {
 	// Just call up to the XalanDOMChar* version...
-	return XalanDOMCharStringToUnicodeString(theManager, c_wstr(theString), length(theString));
+	return XalanDOMCharStringToUnicodeString(theManager, theString.c_str(), theString.length());
 }
 
 

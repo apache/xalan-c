@@ -115,14 +115,15 @@ const XalanDOMChar  XalanFileOutputStream::XalanFileOutputStreamWriteException::
 
 
 static  XalanFileOutputStream::HandleType
-openFile(const XalanDOMString&  theFileName,
-         MemoryManagerType&     theManager)
+openFile(
+            const XalanDOMString&   theFileName,
+            MemoryManager&          theManager)
 {
     typedef XalanFileOutputStream::HandleType   HandleType;
 
 #if defined(XALAN_WINDOWS)
     HandleType  theFileHandle = CreateFileW(
-            c_wstr(theFileName),
+            theFileName.c_str(),
             GENERIC_WRITE,
             0,
             0,

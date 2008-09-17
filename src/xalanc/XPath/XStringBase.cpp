@@ -106,7 +106,7 @@ XStringBase::num(XPathExecutionContext&     executionContext) const
 bool
 XStringBase::boolean(XPathExecutionContext&     executionContext) const
 {
-	return length(str(executionContext)) > 0 ? true : false;
+	return !str(executionContext).empty();
 }
 
 

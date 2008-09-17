@@ -377,7 +377,7 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 		return doCompare(
 				theLHS,
 				theRHS,
-				c_wstr(m_defaultCollatorLocaleName),
+				m_defaultCollatorLocaleName.c_str(),
 				theCaseOrder);
 	}
 }

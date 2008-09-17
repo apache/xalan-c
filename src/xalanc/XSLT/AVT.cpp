@@ -114,9 +114,9 @@ AVT::AVT(
         XalanDOMString  t(constructionContext.getMemoryManager()); // base token
         XalanDOMString  lookahead(constructionContext.getMemoryManager()); // next token
 
-        while(tokenizer.hasMoreTokens())
+        while (tokenizer.hasMoreTokens())
         {
-            if(length(lookahead))
+            if (lookahead.empty() == false)
             {
                 t = lookahead;
 
@@ -127,9 +127,9 @@ AVT::AVT(
                 nextToken(constructionContext, locator, tokenizer, t);
             }
 
-            if(length(t) == 1)
+            if (t.length() == 1)
             {
-                const XalanDOMChar  theChar = charAt(t, 0);
+                const XalanDOMChar  theChar = t[0];
 
                 switch(theChar)
                 {
@@ -149,31 +149,31 @@ AVT::AVT(
                         }
                         else
                         {
-                            if(length(buffer) > 0)
+                            if(buffer.empty() == false)
                             {
                                 assert(m_partsSize + 1 < nTokens);
 
                                 m_parts[m_partsSize++] =
                                     constructionContext.createAVTPart(
-                                        c_wstr(buffer),
-                                        length(buffer));
+                                        buffer.c_str(),
+                                        buffer.length());
 
-                                clear(buffer);
+                                buffer.clear();
                             }
                                     
-                            clear(exprBuffer);
+                            exprBuffer.clear();
 
-                            while(length(lookahead) > 0 && !equals(lookahead, theRightCurlyBracketString))
+                            while (lookahead.empty() == false && !equals(lookahead, theRightCurlyBracketString))
                             {
-                                if(length(lookahead) == 1)
+                                if (lookahead.length() == 1)
                                 {
-                                    switch(charAt(lookahead, 0))
+                                    switch(lookahead[0])
                                     {
                                         case XalanUnicode::charApostrophe:
                                         case XalanUnicode::charQuoteMark:
                                         {
                                             // String start
-                                            append(exprBuffer, lookahead);
+                                            exprBuffer.append(lookahead);
 
                                             const XalanDOMChar  quote[2] =
                                             {
@@ -238,8 +238,8 @@ AVT::AVT(
                             m_parts[m_partsSize++] =
                                 constructionContext.createAVTPart(
                                     locator,
-                                    c_wstr(exprBuffer),
-                                    length(exprBuffer),
+                                    exprBuffer.c_str(),
+                                    exprBuffer.length(),
                                     resolver);
 
                             clear(lookahead); // breaks out of inner while loop
@@ -250,12 +250,12 @@ AVT::AVT(
                     {
                         nextToken(constructionContext, locator, tokenizer, lookahead);
 
-                        if(equals(lookahead, theRightCurlyBracketString))
+                        if (equals(lookahead, theRightCurlyBracketString))
                         {
                             // Double brace mean escape to show brace
-                            append(buffer, lookahead);
+                            buffer.append(lookahead);
 
-                            clear(lookahead); // swallow
+                            lookahead.clear(); // swallow
                         }
                         else
                         {
@@ -276,7 +276,7 @@ AVT::AVT(
                     default:
                     {
                         // Anything else just add to string.
-                        append(buffer, theChar);
+                        buffer.append(1, theChar);
                     }
                 } // end switch t
             } // end if length == 1
@@ -287,13 +287,16 @@ AVT::AVT(
             }
         } // end while(tokenizer.hasMoreTokens())
 
-        if(length(buffer) > 0)
+        if (buffer.empty() == false)
         {
             assert(m_partsSize + 1 < nTokens);
 
-            m_parts[m_partsSize++] = constructionContext.createAVTPart(c_wstr(buffer), length(buffer));
+            m_parts[m_partsSize++] =
+                constructionContext.createAVTPart(
+                    buffer.c_str(),
+                    buffer.length());
 
-            clear(buffer);
+            buffer.clear();
         }
     } // end else nTokens > 1
 }

@@ -148,7 +148,7 @@ ElemComment::endElement(StylesheetExecutionContext&     executionContext) const
         ++theCurrent;
     }
 
-    executionContext.comment(c_wstr(theResult));
+    executionContext.comment(theResult.c_str());
 
     executionContext.popCopyTextNodesOnly();
 }

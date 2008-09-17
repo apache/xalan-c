@@ -178,7 +178,7 @@ XalanNumberFormat::applyGrouping(
 	}
 	else
 	{
-		const XalanDOMString::size_type		len = length(value);
+		const XalanDOMString::size_type     len = value.length();
 
 		if (len == 0)
 		{

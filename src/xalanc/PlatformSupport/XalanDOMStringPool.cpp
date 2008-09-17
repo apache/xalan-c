@@ -94,7 +94,7 @@ XalanDOMStringPool::size() const
 const XalanDOMString&
 XalanDOMStringPool::get(const XalanDOMString&	theString)
 {
-	return get(toCharArray(theString), length(theString));
+	return get(theString.c_str(), theString.length());
 }
 
 
@@ -129,7 +129,7 @@ XalanDOMStringPool::get(
 				m_stringAllocator.create(theString, theActualLength);
 			assert(theNewString != 0);
 
-			assert(theActualLength == length(*theNewString));
+			assert(theActualLength == theNewString->length());
 
 			++m_stringCount;
 

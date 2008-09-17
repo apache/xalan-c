@@ -82,7 +82,7 @@ FunctionFormatNumber::execute(
     const XalanDOMString&               thePattern = arg2->str(executionContext);
 
     const XalanDOMString&               theDFSName = arg3->str(executionContext);
-    assert(length(theDFSName) != 0);
+    assert(theDFSName.empty() == false);
 
     GetCachedString     theString(executionContext);
 

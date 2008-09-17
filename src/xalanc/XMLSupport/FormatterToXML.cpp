@@ -121,7 +121,7 @@ FormatterToXML::FormatterToXML(
     m_newlineStringLength(0),
     m_isXML1_1(false)
 {
-    if (isEmpty(encoding) == false)
+    if (encoding.empty() == false)
     {
         m_encoding = encoding;
     }
@@ -130,9 +130,9 @@ FormatterToXML::FormatterToXML(
         m_encoding = XalanDOMString(XalanTranscodingServices::s_utf8String, theManager);
     }
 
-    assert(isEmpty(m_encoding) == false);
+    assert(m_encoding.empty() == false);
 
-    if(isEmpty(m_doctypePublic) == false)
+    if(m_doctypePublic.empty() == false)
     {
         if(startsWith(
             m_doctypePublic,
@@ -380,7 +380,8 @@ FormatterToXML::initAttrCharsMap()
     memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
 #endif
 
-    const XalanDOMString::size_type     nSpecials = length(m_attrSpecialChars);
+    const XalanDOMString::size_type     nSpecials =
+        m_attrSpecialChars.length();
 
     {
         for(XalanDOMString::size_type i = 0; i < nSpecials; ++i)
@@ -452,7 +453,7 @@ FormatterToXML::outputDocTypeDecl(const XalanDOMChar*   name)
 
     accumName(name);
       
-    if(length(m_doctypePublic) != 0)
+    if (m_doctypePublic.empty() == false)
     {
         // " PUBLIC \""
         accumName(s_doctypeHeaderPublicString, 0, s_doctypeHeaderPublicStringLength);
@@ -759,7 +760,7 @@ FormatterToXML::accumArrayUTFDirect(
 void
 FormatterToXML::accumNameDOMString(const XalanDOMString&    str)
 {
-    accumName(c_wstr(str), 0, length(str));
+    accumName(str.c_str(), 0, str.length());
 }
 
 
@@ -767,7 +768,7 @@ FormatterToXML::accumNameDOMString(const XalanDOMString&    str)
 void
 FormatterToXML::accumContentDOMString(const XalanDOMString&     str)
 {
-    accumContent(c_wstr(str), 0, length(str));
+    accumContent(str.c_str(), 0, str.length());
 }
 
 
@@ -775,7 +776,7 @@ FormatterToXML::accumContentDOMString(const XalanDOMString&     str)
 void
 FormatterToXML::accumDOMStringUTF(const XalanDOMString&     str)
 {
-    accumArrayUTF(c_wstr(str), 0, length(str));
+    accumArrayUTF(str.c_str(), 0, str.length());
 }
 
 
@@ -786,7 +787,7 @@ FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&   str)
     assert(m_maxCharacter >= 65535);
     assert(m_stream != 0);
 
-    m_stream->write(c_wstr(str), length(str));
+    m_stream->write(str.c_str(), str.length());
 }
 
 
@@ -827,7 +828,7 @@ FormatterToXML::throwInvalidCharacterException(
 
     XALAN_USING_XERCES(SAXException)
 
-    throw SAXException(c_wstr(theMessage),&theManager);
+    throw SAXException(theMessage.c_str(), &theManager);
 }
 
 void
@@ -1058,7 +1059,7 @@ FormatterToXML::startDocument()
         // "<?xml version=\""
         accumName(s_xmlHeaderStartString, 0, s_xmlHeaderStartStringLength);
 
-        if (length(m_version) != 0)
+        if (m_version.empty() == false)
         {
             accumName(m_version);
         }
@@ -1072,7 +1073,7 @@ FormatterToXML::startDocument()
 
         accumName(m_encoding);
 
-        if (length(m_standalone) != 0)
+        if (m_standalone.empty() == false)
         {
             accumName(s_xmlHeaderStandaloneString, 0, s_xmlHeaderStandaloneStringLength);
             accumName(m_standalone);
@@ -1117,7 +1118,7 @@ FormatterToXML::startElement(
             AttributeListType&  attrs)
 {
     if(true == m_needToOutputDocTypeDecl &&
-        isEmpty(m_doctypeSystem) == false)
+        m_doctypeSystem.empty() == false)
     {
         outputDocTypeDecl(name);
 

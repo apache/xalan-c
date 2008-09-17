@@ -116,8 +116,8 @@ XalanQNameByValue::XalanQNameByValue(
     m_localpart(theManager)
 {
     initialize(
-        c_wstr(qname),
-        length(qname),
+        qname.c_str(),
+        qname.length(),
         namespaces,
         locator,
         fUseDefault);
@@ -157,8 +157,8 @@ XalanQNameByValue::XalanQNameByValue(
     m_localpart(theManager)
 {
     resolvePrefix(
-        c_wstr(qname),
-        length(qname),
+        qname.c_str(),
+        qname.length(),
         theResolver,
         locator);
 }
@@ -195,8 +195,8 @@ XalanQNameByValue::set(
             bool                        fUseDefault)
 {
     initialize(
-        c_wstr(qname),
-        length(qname),
+        qname.c_str(),
+        qname.length(),
         namespaces,
         locator,
         fUseDefault);
@@ -230,8 +230,8 @@ XalanQNameByValue::set(
             const LocatorType*      locator)
 {
     resolvePrefix(
-        c_wstr(qname),
-        length(qname),
+        qname.c_str(),
+        qname.length(),
         theResolver,
         locator);
 }
@@ -336,7 +336,7 @@ XalanQNameByValue::initialize(
             const XalanDOMString* const     theNamespace = 
                         getNamespaceForPrefix(namespaces, m_localpart);
 
-            if(theNamespace == 0 || 0 == length(*theNamespace))
+            if(theNamespace == 0 || theNamespace->empty() == true)
             {
                 throwException(
                     getMemoryManager(),
@@ -363,7 +363,7 @@ XalanQNameByValue::initialize(
             const XalanDOMString* const     theNamespace = 
                         getNamespaceForPrefix(namespaces, s_emptyString);
 
-            if(theNamespace != 0 && 0 != length(*theNamespace))
+            if(theNamespace != 0 && theNamespace->empty() == false)
             {
                 m_namespace = *theNamespace;
             }
@@ -437,7 +437,7 @@ XalanQNameByValue::resolvePrefix(
             }
         }  
 
-        if(0 == length(m_namespace))
+        if(m_namespace.empty() == true)
         {
             throwException(
                 getMemoryManager(),

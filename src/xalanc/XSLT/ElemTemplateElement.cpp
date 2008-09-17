@@ -349,7 +349,7 @@ ElemTemplateElement::beginChildrenToString(
     }
     else
     {
-        reserve(result, length(result) + 1024);
+        result.reserve(result.length() + 1024);
 
         executionContext.beginFormatToText(result);
 
@@ -1196,12 +1196,12 @@ ElemTemplateElement::findTemplateToTransformChild(
                 {
                     const XalanDOMString&   val = child->getNodeValue();
 
-                    const XalanDOMString::size_type     len = length(val);
+                    const XalanDOMString::size_type     len = val.length();
 
                     if (len > 0)
                     {
                         executionContext.characters(
-                            toCharArray(val), 
+                            val.c_str(), 
                             0,
                             len);
                     }
@@ -1331,7 +1331,7 @@ ElemTemplateElement::transformChild(
                     if (len > 0)
                     {
                         executionContext.characters(
-                            toCharArray(val), 
+                            val.c_str(), 
                             0,
                             len);
                     }

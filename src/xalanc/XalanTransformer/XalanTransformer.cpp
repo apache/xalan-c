@@ -608,7 +608,7 @@ XalanTransformer::compileStylesheet(
     }
     catch(const XSLException&   e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -621,7 +621,7 @@ XalanTransformer::compileStylesheet(
     }
     catch(const SAXParseException&  e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -637,7 +637,7 @@ XalanTransformer::compileStylesheet(
     }
     catch(const SAXException&   e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -650,7 +650,7 @@ XalanTransformer::compileStylesheet(
     }
     catch(const XMLException&   e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -663,7 +663,7 @@ XalanTransformer::compileStylesheet(
     }
     catch(const XalanDOMException&  e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -1189,7 +1189,7 @@ XalanTransformer::doTransform(
 
         const XalanDOMString&   theSourceURI = theParsedXML.getURI();
 
-        if (length(theSourceURI) > 0)
+        if (theSourceURI.empty() == false)
         {
             theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
         }
@@ -1269,7 +1269,7 @@ XalanTransformer::doTransform(
         XSLTInputSource     theDocumentInputSource(theSourceDocument, m_memoryManager);
 
         // Set the system ID, so relative URIs are resolved properly...
-        theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
+        theDocumentInputSource.setSystemId(theSourceURI.c_str());
 
         addTraceListeners(m_traceListeners, theProcessor);
 
@@ -1317,7 +1317,7 @@ XalanTransformer::doTransform(
     }
     catch(const XSLException&   e)
     {
-        if (length(theErrorMessage) == 0)
+        if (theErrorMessage.empty() == false)
         {
             e.defaultFormat(theErrorMessage);
         }
@@ -1328,7 +1328,7 @@ XalanTransformer::doTransform(
     }
     catch(const SAXParseException&  e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -1344,7 +1344,7 @@ XalanTransformer::doTransform(
     }
     catch(const SAXException&   e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -1357,7 +1357,7 @@ XalanTransformer::doTransform(
     }
     catch(const XMLException&   e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }
@@ -1370,7 +1370,7 @@ XalanTransformer::doTransform(
     }
     catch(const XalanDOMException&  e)
     {
-        if (length(theErrorMessage) != 0)
+        if (theErrorMessage.empty() == false)
         {
             TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
         }

@@ -54,8 +54,6 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	XALAN_USING_XALAN(AttributesImpl)
 	XALAN_USING_XALAN(XalanDOMChar)
 	XALAN_USING_XALAN(XalanDOMString)
-	XALAN_USING_XALAN(c_wstr)
-	XALAN_USING_XALAN(length)
 
 	// Get the SAX2 ContentHandler from the builder...
 	ContentHandler* const	theContentHandler = theBuilder->getContentHandler();
@@ -78,7 +76,11 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	// start the document element...
 	theElementName = "foo";
 
-	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
+	theContentHandler->startElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str(),
+        theAttributes);
 
 	// Create an element child...
 
@@ -89,46 +91,85 @@ BuildDocument(XalanDocumentBuilder*		theBuilder)
 	theAttributeName = "attribute1";
 	theAttributeValue = "value1";
 
-	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
+	theAttributes.addAttribute(
+        theAttributeName.c_str(),
+        theAttributeType.c_str(),
+        theAttributeValue.c_str());
 
-	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
+	theContentHandler->startElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str(),
+        theAttributes);
 
 	// Add a text node...
 	theTextValue = "The first foobar";
 
-	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
+	theContentHandler->characters(
+        theTextValue.c_str(),
+        theTextValue.length());
 
 	// End the element...
-	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
+	theContentHandler->endElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str());
 
 	theAttributes.clear();
 	theAttributeName = "attribute2";
 	theAttributeValue = "value2";
-	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
+	theAttributes.addAttribute(
+        theAttributeName.c_str(),
+        theAttributeType.c_str(),
+        theAttributeValue.c_str());
 
-	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
+	theContentHandler->startElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str(),
+        theAttributes);
 
 	theTextValue = "The second foobar";
-	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
+	theContentHandler->characters(
+        theTextValue.c_str(),
+        theTextValue.length());
 
-	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
+	theContentHandler->endElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str());
 
 	theAttributes.clear();
 	theAttributeName = "attribute3";
 	theAttributeValue = "value3";
-	theAttributes.addAttribute(c_wstr(theAttributeName), c_wstr(theAttributeType), c_wstr(theAttributeValue));
+	theAttributes.addAttribute(
+        theAttributeName.c_str(),
+        theAttributeType.c_str(),
+        theAttributeValue.c_str());
 
-	theContentHandler->startElement(&theEmptyString, &theEmptyString, c_wstr(theElementName), theAttributes);
+	theContentHandler->startElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str(),
+        theAttributes);
 
 	theTextValue = "The third foobar";
-	theContentHandler->characters(c_wstr(theTextValue), length(theTextValue));
+	theContentHandler->characters(
+        theTextValue.c_str(),
+        theTextValue.length());
 
-	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
+	theContentHandler->endElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str());
 
 	// end the document element...
 	theElementName = "foo";
 
-	theContentHandler->endElement(&theEmptyString, &theEmptyString, c_wstr(theElementName));
+	theContentHandler->endElement(
+        &theEmptyString,
+        &theEmptyString,
+        theElementName.c_str());
 
 	// end the document...
 	theContentHandler->endDocument();

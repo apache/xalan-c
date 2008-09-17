@@ -261,7 +261,7 @@ public:
 
         XALAN_USING_XERCES(SAXException)
 
-        throw SAXException(c_wstr(theMessage), &theManager);
+        throw SAXException(theMessage.c_str(), &theManager);
     }
 
     void
@@ -306,7 +306,7 @@ public:
 
         XALAN_USING_XERCES(SAXException)
 
-	    throw SAXException(c_wstr(theMessage),&theManager);
+        throw SAXException(theMessage.c_str(),&theManager);
     }
 
 protected:

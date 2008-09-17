@@ -523,7 +523,7 @@ NamespacesHandler::postConstruction(
 
     XalanDOMString&     thePrefix = theGuard.get();
 
-    if (indexOfNSSep < length(theElementName))
+    if (indexOfNSSep < theElementName.length())
     {
         substring(theElementName, thePrefix, 0, indexOfNSSep);
     }
@@ -609,10 +609,10 @@ NamespacesHandler::outputResultNamespaces(
             // there's a prefix (so it's not the default), we can continue
             // to see if we need to add the result namespace.
             if (supressDefault == false ||
-                length(thePrefix) != 0)
+                thePrefix.empty() == false)
             {
                 const XalanDOMString&       theResultURI = theNamespace.getURI();
-                assert(length(theNamespace.getResultAttributeName()) > 0);
+                assert(theNamespace.getResultAttributeName().empty() == false);
 
                 // Get the any namespace declaration currently active for the
                 // prefix.
@@ -718,12 +718,12 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&    
 
             const XalanDOMString&   thePrefix = theNamespace.getPrefix();
 
-            if (isEmpty(thePrefix) == false)
+            if (thePrefix.empty() == false)
             {
                 // Create a name of the form xmlns:prefix, where "prefix" is the
                 // text of the prefix.
                 // Reserve the appropriate amount of space in the string.
-                reserve(theName, DOMServices::s_XMLNamespaceWithSeparatorLength + length(thePrefix) + 1);
+                theName.reserve(DOMServices::s_XMLNamespaceWithSeparatorLength + thePrefix.length() + 1);
 
                 theName = DOMServices::s_XMLNamespaceWithSeparator;
                 theName += thePrefix;

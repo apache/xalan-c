@@ -226,7 +226,7 @@ FunctionSubstring::execute(
     assert(arg1.null() == false && arg2.null() == false);   
 
     const XalanDOMString&               theSourceString = arg1->str(executionContext);
-    const XalanDOMString::size_type     theSourceStringLength = length(theSourceString);
+    const XalanDOMString::size_type     theSourceStringLength = theSourceString.length();
 
     if (theSourceStringLength == 0)
     {
@@ -271,7 +271,7 @@ FunctionSubstring::execute(
 
                 assign(
                         theString,
-                        toCharArray(theSourceString) + theStartIndex,
+                        theSourceString.c_str() + theStartIndex,
                         theSubstringLength);
 
                 return executionContext.getXObjectFactory().createString(theResult);

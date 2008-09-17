@@ -37,8 +37,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FormatterTreeWalker::FormatterTreeWalker(FormatterListener& 	formatterListener,
-                                         MemoryManagerType& theManager) :
+FormatterTreeWalker::FormatterTreeWalker(
+            FormatterListener& 	formatterListener,
+            MemoryManager&      theManager) :
 	TreeWalker(),
 	m_formatterListener(formatterListener),
     m_memoryManager(theManager)
@@ -62,7 +63,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 	{
 	case XalanNode::COMMENT_NODE:
 		{
-			m_formatterListener.comment(c_wstr(node->getNodeValue()));
+            m_formatterListener.comment(node->getNodeValue().c_str());
 		}
 		break;
 
@@ -84,16 +85,17 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 
             NamedNodeMapAttributeList	theAttributeList(*atts, m_memoryManager);
 
-			m_formatterListener.startElement(c_wstr(theElementNode->getNodeName()),
-											 theAttributeList);
+			m_formatterListener.startElement(
+                theElementNode->getNodeName().c_str(),
+				theAttributeList);
 		}
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
 			m_formatterListener.processingInstruction(
-				c_wstr(node->getNodeName()),
-				c_wstr(node->getNodeValue()));
+				node->getNodeName().c_str(),
+				node->getNodeValue().c_str());
 		}
 		break;
 
@@ -101,9 +103,11 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 		{
 			const XalanDOMString&	data = node->getNodeValue();
 
-			assert(length(data) == FormatterListener::size_type(length(data)));
+			assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
 
-			m_formatterListener.cdata(c_wstr(data), FormatterListener::size_type(length(data)));
+			m_formatterListener.cdata(
+                data.c_str(),
+                static_cast<FormatterListener::size_type>(data.length()));
 		}
 		break;
 
@@ -111,14 +115,16 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 		{
 			const XalanDOMString&	data = node->getNodeValue();
 
-			assert(length(data) == FormatterListener::size_type(length(data)));
+			assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
 
-			m_formatterListener.characters(c_wstr(data), FormatterListener::size_type(length(data)));
+			m_formatterListener.characters(
+                data.c_str(),
+                static_cast<FormatterListener::size_type>(data.length()));
 		}
 		break;
 
 	case XalanNode::ENTITY_REFERENCE_NODE:
-		m_formatterListener.entityReference(c_wstr(node->getNodeName()));
+		m_formatterListener.entityReference(node->getNodeName().c_str());
 		break;
 
 	default:
@@ -153,7 +159,7 @@ FormatterTreeWalker::endNode(const XalanNode*	node)
 		break;
 
 	case XalanNode::ELEMENT_NODE:
-		m_formatterListener.endElement(c_wstr(node->getNodeName()));
+        m_formatterListener.endElement(node->getNodeName().c_str());
 		break;
 
 	default:

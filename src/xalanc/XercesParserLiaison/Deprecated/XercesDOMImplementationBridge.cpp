@@ -71,7 +71,7 @@ XercesDOMImplementationBridge::hasFeature(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
-	return m_xercesNode.hasFeature(c_wstr(feature), c_wstr(version));
+	return m_xercesNode.hasFeature(feature.c_str(), version.c_str());
 }
 
 

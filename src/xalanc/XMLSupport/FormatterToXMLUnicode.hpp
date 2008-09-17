@@ -303,7 +303,7 @@ protected:
             m_constants.s_xmlHeaderStartString,
             m_constants.s_xmlHeaderStartStringLength);
 
-        if (length(m_version) != 0)
+        if (m_version.empty() == false)
         {
             m_writer.write(m_version);
         }
@@ -321,7 +321,7 @@ protected:
 
         m_writer.write(m_encoding);
 
-        if (length(m_standalone) != 0)
+        if (m_standalone.empty() == false)
         {
             m_writer.write(
                 m_constants.s_xmlHeaderStandaloneString,
@@ -351,7 +351,7 @@ protected:
 
         m_writer.write(name);
 
-        if(length(m_doctypePublic) != 0)
+        if (m_doctypePublic.empty() == false)
         {
             // " PUBLIC \""
             m_writer.write(
@@ -398,7 +398,7 @@ protected:
 
         // We need to make sure there is a least one whitespace character
         // between the target and the data.
-        if ( len > 0 && !isXMLWhitespace(data[0]))
+        if (len > 0 && !isXMLWhitespace(data[0]))
         {
             m_writer.write(value_type(XalanUnicode::charSpace));
         }

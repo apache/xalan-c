@@ -111,7 +111,7 @@ XalanXMLSerializerBase::XalanXMLSerializerBase(
 {
     setXMLVersion(theXMLVersion);
 
-    if(isEmpty(m_doctypePublic) == false)
+    if(m_doctypePublic.empty() == false)
     {
         if(startsWith(
             m_doctypePublic,
@@ -166,7 +166,7 @@ XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(
         XalanMessages::InvalidHighSurrogate_1Param,
         NumberToHexDOMString(ch, theBuffer));
 
-    throw SAXException(c_wstr(theMessage), &theManager);
+    throw SAXException(theMessage.c_str(), &theManager);
 }
 
 

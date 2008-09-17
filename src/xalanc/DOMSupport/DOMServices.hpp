@@ -620,7 +620,7 @@ public:
 	{
 		const XalanDOMString&	theLocalName = n.getLocalName();
 
-		if (length(theLocalName) != 0)
+		if (theLocalName.empty() == false)
 		{
 			return theLocalName;
 		}

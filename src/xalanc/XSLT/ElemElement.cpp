@@ -160,9 +160,9 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
             m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
         }
 
-        XalanDOMString::size_type   namespaceLen = length(elemNameSpace);
+        XalanDOMString::size_type   namespaceLen = elemNameSpace.length();
 
-        XalanDOMString::size_type           len = length(elemName);
+        XalanDOMString::size_type           len = elemName.length();
 
         const XalanDOMString::size_type     indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
@@ -210,7 +210,7 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
 
         if (isIllegalElement == false)
         {
-            executionContext.startElement(c_wstr(elemName));   
+            executionContext.startElement(elemName.c_str());   
 
             if(0 == m_namespaceAVT &&
                havePrefix == false )
@@ -247,14 +247,8 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
                         const XalanDOMString&   theParentDefaultNamespace =
                                 getParentDefaultNamespace();
 
-                        if (length(theParentDefaultNamespace) == 0)
-                        {
-                            if (executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
-                            {
-                                executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-                            }
-                        }
-                        else
+                        if (theParentDefaultNamespace.empty() == false ||
+                            executionContext.getResultNamespaceForPrefix(s_emptyString) != 0)
                         {
                             executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
                         }
@@ -304,7 +298,7 @@ ElemElement::endElement(StylesheetExecutionContext&     executionContext) const
 
     if (!ignoreAttributeElements)
     {
-        executionContext.endElement(c_wstr(elemName));
+        executionContext.endElement(elemName.c_str());
         ElemUse::endElement(executionContext);
     }
 }
@@ -419,7 +413,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
 
         if (isIllegalElement == false)
         {
-            executionContext.startElement(c_wstr(elemName));   
+            executionContext.startElement(elemName.c_str());   
 
             if(0 == m_namespaceAVT &&
                (havePrefix == false || foundResultNamespaceForPrefix == true))
@@ -497,7 +491,7 @@ ElemElement::execute(StylesheetExecutionContext&        executionContext) const
 
             doExecuteChildren(executionContext, false);
 
-            executionContext.endElement(c_wstr(elemName));
+            executionContext.endElement(elemName.c_str());
         }
     }
 }

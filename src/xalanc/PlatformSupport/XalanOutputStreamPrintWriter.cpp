@@ -202,7 +202,7 @@ XalanOutputStreamPrintWriter::write(
 			XalanDOMString::size_type	theOffset,
 			XalanDOMString::size_type	theLength)
 {
-	write(c_wstr(s), theOffset, theLength);
+    write(s.c_str(), theOffset, theLength);
 }
 
 
@@ -297,7 +297,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 void
 XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 {
-	write(c_wstr(s), 0, length(s));
+    write(s.c_str(), 0, s.length());
 }
 
 
@@ -305,7 +305,7 @@ XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 void
 XalanOutputStreamPrintWriter::println()
 {
-	write(c_wstr(s_newlineString), 0, length(s_newlineString));
+	write(s_newlineString, 0, length(s_newlineString));
 
 	flush();
 }

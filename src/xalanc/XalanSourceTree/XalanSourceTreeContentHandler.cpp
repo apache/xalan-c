@@ -104,7 +104,7 @@ XalanSourceTreeContentHandler::endDocument()
 	assert(m_elementStack.empty() == true);
 	assert(m_lastChildStack.empty() == true);
 
-	assert(isEmpty(m_textBuffer) == true);
+    assert(m_textBuffer.empty() == true);
 }
 
 
@@ -265,7 +265,7 @@ XalanSourceTreeContentHandler::startDocument()
 	{
 		clear(m_textBuffer);
 
-		reserve(m_textBuffer, eDefaultTextBufferSize);
+		m_textBuffer.reserve(eDefaultTextBufferSize);
 	}
 
 	// Push a dummy value for the current element, so we
@@ -487,11 +487,11 @@ XalanSourceTreeContentHandler::processAccumulatedText()
 {
 	assert(m_inDTD == false);
 
-	if (isEmpty(m_textBuffer) == false)
+    if (m_textBuffer.empty() == false)
 	{
-		assert(unsigned(length(m_textBuffer)) == length(m_textBuffer));
-
-		doCharacters(c_wstr(m_textBuffer), length(m_textBuffer));
+		doCharacters(
+            m_textBuffer.c_str(),
+            m_textBuffer.length());
 
 		clear(m_textBuffer);
 	}

@@ -301,7 +301,7 @@ ParseXML(
             XMLParserLiaison&       theLiaison,
             const XalanDOMString&   theFileName)
 {
-    const URLInputSource    theURLInputSource(c_wstr(theFileName));
+    const URLInputSource    theURLInputSource(theFileName.c_str());
 
     const XalanDOMString    empty(XalanMemMgrs::getDummyMemMgr());
 
@@ -403,7 +403,7 @@ GetXSLInput(
             theContextNodeMatchPattern,
             theMemoryManager);
 
-        if (length(theContextNodeMatchPattern) != 0)
+        if (theContextNodeMatchPattern.empty() == false)
         {
             const XalanDOMString    theSelectNodeName("xsl:apply-templates", theMemoryManager);
 
@@ -415,7 +415,7 @@ GetXSLInput(
                 theXPathString,
                 theMemoryManager);
 
-            if (length(theXPathString) != 0)
+            if (theXPathString.empty() == false)
             {
                 fResult = true;
             }

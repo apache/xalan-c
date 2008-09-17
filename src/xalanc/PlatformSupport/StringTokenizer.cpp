@@ -52,8 +52,8 @@ StringTokenizer::StringTokenizer(
 	m_tokens(theTokens.c_str()),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
-	m_stringLength(length(theString)),
-	m_tokensLength(length(theTokens))
+	m_stringLength(theString.length()),
+	m_tokensLength(theTokens.length())
 {
 }
 
@@ -67,7 +67,7 @@ StringTokenizer::StringTokenizer(
 	m_tokens(theTokens),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
-	m_stringLength(length(theString)),
+	m_stringLength(theString.length()),
 	m_tokensLength(length(theTokens))
 {
 	assert(m_string != 0 && m_tokens != 0);
@@ -100,7 +100,7 @@ StringTokenizer::StringTokenizer(
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
 	m_stringLength(length(theString)),
-	m_tokensLength(length(theTokens))
+	m_tokensLength(theTokens.length())
 {
 	assert(m_string != 0 && m_tokens != 0);
 }

@@ -352,7 +352,7 @@ DoubleSupport::toDouble(
             const XalanDOMString&   theString,
             MemoryManager&          theManager)
 {
-    return toDouble(c_wstr(theString), theManager);
+    return toDouble(theString.c_str(), theManager);
 }
 
 
@@ -718,7 +718,7 @@ DoubleSupport::toDouble(
 bool
 DoubleSupport::isValid(const XalanDOMString&    theString)
 {
-    return isValid(c_wstr(theString));
+    return isValid(theString.c_str());
 }
 
 
