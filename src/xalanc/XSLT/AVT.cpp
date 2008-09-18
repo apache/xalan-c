@@ -120,7 +120,7 @@ AVT::AVT(
             {
                 t = lookahead;
 
-                clear(lookahead);
+                lookahead.clear();
             }
             else
             {
@@ -141,9 +141,9 @@ AVT::AVT(
                         if(equals(lookahead, theLeftCurlyBracketString))
                         {
                             // Double braces mean escape to show brace
-                            append(buffer, lookahead);
+                            buffer.append(lookahead);
 
-                            clear(lookahead);
+                            lookahead.clear();
 
                             break; // from switch
                         }
@@ -186,12 +186,12 @@ AVT::AVT(
 
                                             while(!equals(lookahead, quote))
                                             {
-                                                append(exprBuffer, lookahead);
+                                                exprBuffer.append(lookahead);
 
                                                 nextToken(constructionContext, locator, tokenizer, lookahead);
                                             }
 
-                                            append(exprBuffer,lookahead);
+                                            exprBuffer.append(lookahead);
 
                                             break;
                                         }
@@ -214,7 +214,7 @@ AVT::AVT(
 
                                         default:
                                             // part of the template stuff, just add it.
-                                            append(exprBuffer, lookahead);
+                                            exprBuffer.append(lookahead);
                                             break;
 
                                     } // end inner switch
@@ -222,7 +222,7 @@ AVT::AVT(
                                 else
                                 {
                                     // part of the template stuff, just add it.
-                                    append(exprBuffer,lookahead);
+                                    exprBuffer.append(lookahead);
                                 }
 
                                 nextToken(constructionContext, locator, tokenizer, lookahead);
@@ -231,7 +231,7 @@ AVT::AVT(
 
                             // Proper close of attribute template. Evaluate the
                             // expression.
-                            clear(buffer);
+                            buffer.clear();
 
                             assert(m_partsSize + 1 < nTokens);
 
@@ -242,7 +242,7 @@ AVT::AVT(
                                     exprBuffer.length(),
                                     resolver);
 
-                            clear(lookahead); // breaks out of inner while loop
+                            lookahead.clear(); // breaks out of inner while loop
                         }
                         break;
                     }
@@ -283,7 +283,7 @@ AVT::AVT(
             else
             {
                 // Anything else just add to string.
-                append(buffer,t);
+                buffer.append(t);
             }
         } // end while(tokenizer.hasMoreTokens())
 

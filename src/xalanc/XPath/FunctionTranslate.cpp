@@ -79,7 +79,7 @@ FunctionTranslate::execute(
 
     for (XalanDOMString::size_type i = 0; i < theFirstStringLength; i++)
     {
-        const XalanDOMChar                  theCurrentChar = charAt(theFirstString, i);
+        const XalanDOMChar                  theCurrentChar = theFirstString[i];
 
         const XalanDOMString::size_type     theIndex = indexOf(theSecondString, theCurrentChar);
 
@@ -87,13 +87,13 @@ FunctionTranslate::execute(
         {
             // Didn't find the character in the second string, so it
             // is not translated.
-            append(theString, theCurrentChar);
+            theString.append(1, theCurrentChar);
         }
         else if (theIndex < theThirdStringLength)
         {
             // OK, there's a corresponding character in the
             // third string, so do the translation...
-            append(theString, charAt(theThirdString, theIndex));
+            theString.append(1, theThirdString[theIndex]);
         }
         else
         {

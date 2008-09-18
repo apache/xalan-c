@@ -318,7 +318,7 @@ KeyTable::processKeyDeclaration(
                 theKeys[*kd.getQName()][nodeData],
                 testNode);
 
-            clear(nodeData);
+            nodeData.clear();
         }
     }  
 }

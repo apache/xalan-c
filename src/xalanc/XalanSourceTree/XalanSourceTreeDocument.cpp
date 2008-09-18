@@ -875,7 +875,7 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 	if (theColonIndex != theLength)
 	{
 		// Get the prefix from theName...
-		assign(thePrefix, theName, theColonIndex);
+		thePrefix.assign(theName, theColonIndex);
 		assert(thePrefix.empty() == false);
 
         if (theLocalName != 0)
@@ -887,7 +887,7 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 	}
 	else
 	{
-		clear(thePrefix);
+		thePrefix.clear();
 
         if (theLocalName != 0)
         {

@@ -112,7 +112,7 @@ FormatterToSourceTree::startDocument()
 
 	m_lastChildStack.reserve(eDefaultStackSize);
 
-	clear(m_textBuffer);
+	m_textBuffer.clear();
 
 	m_textBuffer.reserve(eDefaultTextBufferSize);
 
@@ -265,7 +265,7 @@ FormatterToSourceTree::characters(
 {
 	if (m_documentFragment != 0)
 	{
-		append(m_textBuffer, chars, length);
+		m_textBuffer.append(chars, length);
 	}
 	else if (m_currentElement == 0)
 	{
@@ -276,7 +276,7 @@ FormatterToSourceTree::characters(
 	}
 	else
 	{
-		append(m_textBuffer, chars, length);
+		m_textBuffer.append(chars, length);
 	}
 }
 
@@ -398,7 +398,7 @@ FormatterToSourceTree::processAccumulatedText()
             m_textBuffer.c_str(),
             m_textBuffer.length());
 
-		clear(m_textBuffer);
+		m_textBuffer.clear();
 	}
 }
 

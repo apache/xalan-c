@@ -733,8 +733,8 @@ private:
   
     /**
      * The first char in m_token, the theory being that this 
-     * is an optimization because we won't have to do charAt(0) as
-     * often.
+     * is an optimization because we won't have to do index
+     * into the string as often.
      */
     XalanDOMChar                    m_tokenChar;
 

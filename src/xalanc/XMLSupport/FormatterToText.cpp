@@ -132,7 +132,7 @@ FormatterToText::~FormatterToText()
 void
 FormatterToText::clearEncoding()
 {
-	clear(m_encoding);
+	m_encoding.clear();
 
 	m_maxCharacter = XalanDOMChar(~0);
 

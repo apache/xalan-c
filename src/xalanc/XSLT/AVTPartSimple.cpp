@@ -54,7 +54,7 @@ AVTPartSimple::evaluate(
 			XPathExecutionContext&	/* executionContext */) const
 
 {
-	append(buf, m_val, m_len);
+	buf.append(m_val, m_len);
 }
 
 
@@ -66,7 +66,7 @@ AVTPartSimple::evaluate(
 			XPathExecutionContext&	/* executionContext */) const
 
 {
-	append(buf, m_val, m_len);
+	buf.append(m_val, m_len);
 }
 
 

@@ -228,7 +228,7 @@ FunctionID::FunctionIDXObjectTypeCallback::NodeSet(
     {
         DOMServices::getNodeData(*theValue.item(i), m_executionContext, m_resultString);
 
-        append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));          
+        m_resultString.append(1, XalanUnicode::charSpace);          
     }
 }
 

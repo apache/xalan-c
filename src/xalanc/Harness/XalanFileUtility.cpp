@@ -150,11 +150,11 @@ XalanFileUtility::reportStruct::reportStruct(MemoryManager&     theManager) :
 void
 XalanFileUtility::reportStruct::reset()
 {
-    clear(testOrFile);
+    testOrFile.clear();
     msg = "";
-    clear(currentNode);
-    clear(actual);
-    clear(expected);
+    currentNode.clear();
+    actual.clear();
+    expected.clear();
 }
 
 
@@ -264,7 +264,7 @@ XalanFileUtility::getParams(
     {
         if (checkDir(XalanDOMString(argv[1], getMemoryManager())))
         {
-            assign(args.base, XalanDOMString(argv[1], getMemoryManager()));
+            args.base.assign(XalanDOMString(argv[1], getMemoryManager()));
         }
         else
         {
@@ -283,8 +283,8 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.output, XalanDOMString(argv[i], getMemoryManager()));
-                append(args.output, s_pathSep);
+                args.output.assign(XalanDOMString(argv[i], getMemoryManager()));
+                args.output.append(s_pathSep);
                 checkAndCreateDir(args.output);
                 fsetOut = false;
             }
@@ -299,7 +299,7 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.gold, XalanDOMString(argv[i], getMemoryManager()));
+                args.gold.assign(XalanDOMString(argv[i], getMemoryManager()));
 
                 if ( !checkDir(args.gold) )
                 {   
@@ -309,7 +309,7 @@ XalanFileUtility::getParams(
                     fSuccess = false;
                 }
 
-                append(args.gold, s_pathSep);
+                args.gold.append(s_pathSep);
                 fsetGold = false;
             }
             else
@@ -350,7 +350,7 @@ XalanFileUtility::getParams(
             ++i;
             if(i < argc && argv[i][0] != '-')
             {
-                assign(args.sub, XalanDOMString(argv[i], getMemoryManager()));
+                args.sub.assign(XalanDOMString(argv[i], getMemoryManager()));
             }
             else
             {
@@ -397,9 +397,9 @@ XalanFileUtility::getParams(
             args.output.assign(args.base, 0, ii + 1);
         }
 
-        append(args.output,XalanDOMString(outDir, getMemoryManager()));
+        args.output.append(XalanDOMString(outDir, getMemoryManager()));
         checkAndCreateDir(args.output);
-        append(args.output,s_pathSep); 
+        args.output.append(s_pathSep); 
 
     }
     // Do we need to set the default gold directory??
@@ -407,20 +407,20 @@ XalanFileUtility::getParams(
     if (fsetGold)
     {
         args.gold = args.base;
-        append(args.gold,XalanDOMString("-gold", getMemoryManager()));
+        args.gold.append(XalanDOMString("-gold", getMemoryManager()));
         if ( !checkDir(args.gold) )
         {   
             TranscodeToLocalCodePage(args.gold, m_buffer, true);
             cout << "Assumed Gold dir - " << &*m_buffer.begin() << " - does not exist" << endl;
             fSuccess = false;
         }
-        append(args.gold,s_pathSep);
+        args.gold.append(s_pathSep);
     }
     
     // Add the path seperator to the end of the base directory 
     // here after we've finished using it for all directory creation.
     //
-    append(args.base,s_pathSep);
+    args.base.append(s_pathSep);
     
     return fSuccess;
 }
@@ -2055,15 +2055,15 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
     // quotes so that it is not considered an expression.
     //
   #if defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
-    assign(paramValue, XalanDOMString("\'", getMemoryManager()));
+    paramValue.assign(XalanDOMString("\'", getMemoryManager()));
     if ( !pathStatus )
-        append(paramValue, resultPath);
-    append(paramValue, resultsFile);
-    append(paramValue, XalanDOMString("\'", getMemoryManager()));
+        paramValue.append(resultPath);
+    paramValue.append(resultsFile);
+    paramValue.append(XalanDOMString("\'", getMemoryManager()));
   #else 
-    assign(paramValue, XalanDOMString("'", getMemoryManager()));
-        append(paramValue, resultsFile);
-        append(paramValue, XalanDOMString("'", getMemoryManager()));
+    paramValue.assign(XalanDOMString("'", getMemoryManager()));
+    paramValue.append(resultsFile);
+    paramValue.append(XalanDOMString("'", getMemoryManager()));
   #endif
 
     // Set the parameter

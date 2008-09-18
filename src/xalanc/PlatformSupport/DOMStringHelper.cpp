@@ -393,7 +393,7 @@ substring(
 	if (theStartIndex == theStringLength)
 	{
 		// This is allowed, and should return an empty string.
-		clear(theSubstring);
+		theSubstring.clear();
 	}
 	else
 	{
@@ -423,7 +423,7 @@ substring(
 	if (theStartIndex == theStringLength)
 	{
 		// This is allowed, and should return an empty string.
-		clear(theSubstring);
+		theSubstring.clear();
 	}
 	else
 	{
@@ -432,7 +432,7 @@ substring(
 
 		if (theLength == 0)
 		{
-			clear(theSubstring);
+			theSubstring.clear();
 		}
 		else
 		{
@@ -1167,17 +1167,17 @@ trim(
 	XalanDOMString::size_type	leadingSpace = 0;
 
 	for (; leadingSpace < strLen; ++leadingSpace)
-		if (!isXMLWhitespace(charAt(theString, leadingSpace)))
+		if (!isXMLWhitespace(theString[leadingSpace]))
 			break;
 
 	// index of last non-whitespace character
 	XalanDOMString::size_type	trailingSpace = strLen -1;
 
 	for (; trailingSpace > 0; --trailingSpace)
-		if (!isXMLWhitespace(charAt(theString, trailingSpace)))
+		if (!isXMLWhitespace(theString[trailingSpace]))
 			break;
 
-    substring(theString, theResult, leadingSpace, trailingSpace +1);
+    substring(theString, theResult, leadingSpace, trailingSpace + 1);
 
 	return theResult;
 }
@@ -1584,8 +1584,7 @@ ScalarToDecimalString(
 
 	XalanDOMChar* const		theBegin = ScalarToDecimalString(theValue, theEnd);
 
-	append(
-        theResult,
+	theResult.append(
         theBegin,
         XalanDOMString::size_type(theEnd - theBegin));
 
@@ -1651,8 +1650,7 @@ UnsignedScalarToHexadecimalString(
 
 		XalanDOMChar* const		theBegin = UnsignedScalarToHexadecimalString(theValue, theEnd);
 
-		append(
-            theResult,
+		theResult.append(
             theBegin,
             XalanDOMString::size_type(theEnd - theBegin));
 	}
@@ -1725,30 +1723,26 @@ NumberToDOMString(
 {
 	if (DoubleSupport::isNaN(theValue) == true)
 	{
-		append(
-			theResult,
+	    theResult.append(
 			theNaNString,
 			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
 	}
 	else if (DoubleSupport::isPositiveInfinity(theValue) == true)
 	{
-		append(
-			theResult,
+	    theResult.append(
 			thePositiveInfinityString,
 			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
 	}
 	else if (DoubleSupport::isNegativeInfinity(theValue) == true)
 	{
-		append(
-			theResult,
+	    theResult.append(
 			theNegativeInfinityString,
 			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
 	}
 	else if (DoubleSupport::isPositiveZero(theValue) == true ||
 			 DoubleSupport::isNegativeZero(theValue) == true)
 	{
-		append(
-			theResult,
+	    theResult.append(
 			theZeroString,
 			sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
 	}

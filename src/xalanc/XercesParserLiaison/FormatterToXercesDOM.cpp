@@ -245,7 +245,7 @@ FormatterToXercesDOM::ignorableWhitespace(
 	{
 		processAccumulatedText();
 
-		assign(m_buffer, chars, length);
+		m_buffer.assign(chars, length);
 
 		append(m_doc->createTextNode(m_buffer.c_str()));
 	}
@@ -309,7 +309,7 @@ FormatterToXercesDOM::cdata(
 	{
 		processAccumulatedText();
 
-		assign(m_buffer, ch, length);
+		m_buffer.assign(ch, length);
 
 		append(m_doc->createCDATASection(m_buffer.c_str()));
 	}
@@ -424,7 +424,7 @@ FormatterToXercesDOM::processAccumulatedText()
 	{
 		append(m_doc->createTextNode(m_textBuffer.c_str()));
 
-		clear(m_textBuffer);
+		m_textBuffer.clear();
 	}
 }
 

@@ -419,9 +419,9 @@ ElemNumber::getCountMatchPattern(
 
                 const GetCachedString   theMatchPatternString(executionContext);
 
-                assign(theMatchPatternString.get(), thePrefix.get());
-                append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charColon));
-                append(theMatchPatternString.get(), theNodeName);
+                theMatchPatternString.get().assign(thePrefix.get());
+                theMatchPatternString.get().append(1, XalanUnicode::charColon);
+                theMatchPatternString.get().append(theNodeName);
 
                 // Use this class to resolve the synthesized prefix to the
                 // appropriate namespace URI.  We could see if a prefix is
@@ -454,8 +454,8 @@ ElemNumber::getCountMatchPattern(
 
             const GetCachedString   theMatchPatternString(executionContext);
 
-            assign(theMatchPatternString.get(), s_atString);
-            append(theMatchPatternString.get(), theNodeName);
+            theMatchPatternString.get().assign(s_atString);
+            theMatchPatternString.get().append(theNodeName);
 
             countMatchPattern = executionContext.createMatchPattern(
                             theMatchPatternString.get(),
@@ -484,8 +484,8 @@ ElemNumber::getCountMatchPattern(
             const GetCachedString   theMatchPatternString(executionContext);
 
             theMatchPatternString.get() = s_piString;
-            append(theMatchPatternString.get(), contextNode->getNodeName());
-            append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charRightParenthesis));
+            theMatchPatternString.get().append(contextNode->getNodeName());
+            theMatchPatternString.get().append(1, XalanUnicode::charRightParenthesis);
 
             countMatchPattern = executionContext.createMatchPattern(
                     theMatchPatternString.get(),
@@ -954,7 +954,7 @@ ElemNumber::formatNumberList(
 
     if (theVectorSize > 0)
     {
-        if (!isXMLLetterOrDigit(charAt(*it, 0)))
+        if (!isXMLLetterOrDigit((*it)[0]))
         {
             leaderStrIt = it;
 
@@ -965,7 +965,7 @@ ElemNumber::formatNumberList(
 
         if (theVectorSize > 1)
         {
-            if (!isXMLLetterOrDigit(charAt(tokenVector.back(), 0)))
+            if (!isXMLLetterOrDigit(tokenVector.back()[0]))
             {
                 // Move the iterator back one, so it's pointing
                 // at the trailing string...
@@ -991,18 +991,18 @@ ElemNumber::formatNumberList(
     {
         if (it != trailerStrIt)
         {
-            assert(isXMLLetterOrDigit(charAt(*it, 0)));
+            assert(isXMLLetterOrDigit((*it)[0]));
 
             numberWidth = it->length();
 
-            numberType = charAt(*it, numberWidth - 1);
+            numberType = (*it)[numberWidth - 1];
 
             ++it;
         }
 
         if (it != trailerStrIt)
         {
-            assert(!isXMLLetterOrDigit(charAt(*it, 0)));
+            assert(!isXMLLetterOrDigit((*it)[0]));
 
             sepStringIt = it;
 
@@ -1030,7 +1030,7 @@ ElemNumber::formatNumberList(
                 theResult += XalanUnicode::charFullStop;
             }
 
-            clear(theIntermediateResult);
+            theIntermediateResult.clear();
         }
     }
 
@@ -1049,7 +1049,7 @@ ElemNumber::evaluateLetterValueAVT(
 {
     if (m_lettervalue_avt == 0)
     {
-        clear(value);
+        value.clear();
     }
     else
     {
@@ -1321,7 +1321,7 @@ ElemNumber::traditionalAlphaCount(
     }
     else
     {
-        assign(theResult, buf, charPos);
+        theResult.assign(buf, charPos);
     }
 }
 
@@ -1432,7 +1432,7 @@ ElemNumber::getFormattedNumber(
 
                     for (XalanDOMString::size_type i = 0; i < nPadding; i++)
                     {
-                        insert(theResult, 0, padString);
+                        theResult.insert(0, padString);
                     }
                 }
             }
@@ -1459,9 +1459,9 @@ ElemNumber::int2singlealphaCount(
     }
     else
     {
-        const XalanDOMChar  theChar = charAt(table, val - 1);
+        const XalanDOMChar  theChar = table[val - 1];
 
-        assign(theResult, &theChar, 1);
+        theResult.assign(1, theChar);
     }
 }
 
@@ -1551,7 +1551,7 @@ ElemNumber::int2alphaCount(
     }
     while (val > 0);
 
-    assign(theResult, buf + charPos + 1, buflen - charPos - 1);
+    theResult.assign(buf + charPos + 1, buflen - charPos - 1);
 }
 
 
@@ -1572,7 +1572,7 @@ ElemNumber::toRoman(
     }
     else
     {
-        clear(theResult);
+        theResult.clear();
 
         size_t  place = 0;
 
@@ -1636,15 +1636,15 @@ ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&  theToken)
 {
     if (m_currentPosition >= m_maxPosition) 
     {
-        clear(theToken);
+        theToken.clear();
     }
 
     const size_type     start = m_currentPosition;
 
-    if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+    if (isXMLLetterOrDigit((*m_string)[m_currentPosition]))
     {
         while (m_currentPosition < m_maxPosition &&
-               isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+               isXMLLetterOrDigit((*m_string)[m_currentPosition]))
         {
             m_currentPosition++;
         }
@@ -1652,7 +1652,7 @@ ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&  theToken)
     else
     {
         while (m_currentPosition < m_maxPosition &&
-               !isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+               !isXMLLetterOrDigit((*m_string)[m_currentPosition]))
         {
             m_currentPosition++;
         }
@@ -1673,10 +1673,10 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
     // non-alphabetic characters
     while (currpos < m_maxPosition) 
     {
-        if (isXMLLetterOrDigit(charAt(*m_string, currpos)))
+        if (isXMLLetterOrDigit((*m_string)[currpos]))
         {
             while (currpos < m_maxPosition &&
-                   isXMLLetterOrDigit(charAt(*m_string, currpos)))
+                   isXMLLetterOrDigit((*m_string)[currpos]))
             {
                 currpos++;
             }
@@ -1684,7 +1684,7 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
         else
         {
             while (currpos < m_maxPosition &&
-                   !isXMLLetterOrDigit(charAt(*m_string, currpos)))
+                   !isXMLLetterOrDigit((*m_string)[currpos]))
             {
                 currpos++;
             }

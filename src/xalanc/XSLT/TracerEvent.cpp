@@ -56,7 +56,7 @@ TracerEvent::printNode(const XalanNode&		n,
 
 	PointerToDOMString(&n, r);
 
-	append(r, " ");
+	r.append(" ");
 
 	if (n.getNodeType() == XalanNode::ELEMENT_NODE)
 	{
@@ -115,7 +115,7 @@ TracerEvent::printNodeList(const XalanNodeList&	l, XalanDOMString& r)
 	PointerToDOMString(&l, r);
 
     
-	append(r, XalanDOMString("[", r.getMemoryManager()));
+	r.append(XalanDOMString("[", r.getMemoryManager()));
 
 	const XalanSize_t	len = l.getLength();
 	XalanSize_t	        i = 0;

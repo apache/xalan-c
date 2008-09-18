@@ -154,7 +154,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
         XalanDOMString&     origAttrName = origAttrNameGuard.get();
 
-        assign(origAttrName, attrName);
+        origAttrName.assign(attrName);
 
         const XalanDOMString::size_type     origAttrNameLength = origAttrName.length();
 
@@ -211,8 +211,8 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                             attrName.length() + DOMServices::s_XMLNamespaceSeparatorStringLength + prefix->length() + 1);
                     }
 
-                    insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-                    insert(attrName, 0, *prefix);
+                    attrName.insert(0, DOMServices::s_XMLNamespaceSeparatorString);
+                    attrName.insert(0, *prefix);
                 }
                 else
                 {
@@ -243,7 +243,7 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         {
                             // It doesn't, so we'll need to manufacture a
                             // prefix.
-                            clear(newPrefix);
+                            newPrefix.clear();
 
                             // Strip the user-supplied prefix from the name...
                             substring(origAttrName, attrName, indexOfNSSep + 1);
@@ -266,8 +266,8 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
                         attrName.reserve(
                             attrName.length() + DOMServices::s_XMLNamespaceSeparatorStringLength + newPrefix.length() + 1);
 
-                        insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-                        insert(attrName, 0, newPrefix);
+                        attrName.insert(0, DOMServices::s_XMLNamespaceSeparatorString);
+                        attrName.insert(0, newPrefix);
                     }
 
                     // OK, now we have to generate a namespace declaration...
@@ -277,9 +277,9 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                     nsDecl.reserve(DOMServices::s_XMLNamespaceWithSeparatorLength + newPrefix.length() + 1);
 
-                    assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                    nsDecl.assign(DOMServices::s_XMLNamespaceWithSeparator);
 
-                    append(nsDecl, newPrefix);
+                    nsDecl.append(newPrefix);
 
                     // Add the namespace declaration...
                     executionContext.addResultAttribute(nsDecl, attrNameSpace);
@@ -316,7 +316,8 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                     if (theNamespace != 0)
                     {
-                        assign(attrNameSpace, *theNamespace);
+                        attrNameSpace.assign(*theNamespace);
+
                         const XalanDOMString* const     theResultNamespace =
                             executionContext.getResultNamespaceForPrefix(nsprefix);
 
@@ -362,9 +363,9 @@ ElemAttribute::startElement(StylesheetExecutionContext& executionContext) const
 
                             nsDecl.reserve(DOMServices::s_XMLNamespaceWithSeparatorLength + nsprefix.length() + 1);
 
-                            assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+                            nsDecl.assign(DOMServices::s_XMLNamespaceWithSeparator);
 
-                            append(nsDecl, nsprefix);
+                            nsDecl.append(nsprefix);
 
                             // Add the namespace declaration...
                             executionContext.addResultAttribute(nsDecl, attrNameSpace);

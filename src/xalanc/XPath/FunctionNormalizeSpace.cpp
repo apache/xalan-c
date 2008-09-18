@@ -237,7 +237,7 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&    theString) c
     // space character...
     for (XalanDOMString::size_type i = 0; i < theStringLength && fNormalize == false; ++i)
     {
-        const XalanDOMChar  theCurrentChar = charAt(theString, i);
+        const XalanDOMChar  theCurrentChar = theString[i];
 
         if (isXMLWhitespace(theCurrentChar) == false)
         {

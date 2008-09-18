@@ -743,10 +743,10 @@ doCompareNodeSets(
                         theResult = true;
                     }
 
-                    clear(s2.get());
+                    s2.get().clear();
                 }
 
-                clear(s1.get());
+                s1.get().clear();
             }
         }
     }
@@ -785,7 +785,7 @@ doCompareString(
             theResult = true;
         }
 
-        clear(theLHS);
+        theLHS.clear();
     }
 
     return theResult;

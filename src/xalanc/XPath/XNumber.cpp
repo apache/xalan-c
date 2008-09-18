@@ -167,7 +167,7 @@ XNumber::set(double		theValue)
 {
 	m_value = theValue;
 
-	clear(m_cachedStringValue);
+	m_cachedStringValue.clear();
 }
 
 

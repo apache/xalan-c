@@ -781,31 +781,31 @@ XalanXMLFileReporter::escapestring(const XalanDOMString&  s, XalanDOMString&    
 
     for (XalanDOMString::size_type i = 0; i < length; i++)
     {
-        const XalanDOMChar  ch = charAt(s, i);
+        const XalanDOMChar  ch = s[i];
 
         if (XalanUnicode::charLessThanSign == ch)
         {
-            append(sb, theLessThanString);
+            sb.append(theLessThanString);
         }
         else if (XalanUnicode::charGreaterThanSign == ch)
         {
-            append(sb, theGreaterThanString);
+            sb.append(theGreaterThanString);
         }
         else if (XalanUnicode::charAmpersand == ch) 
         {
-            append(sb, theAmpersandString);
+            sb.append(theAmpersandString);
         }
         else if (XalanUnicode::charQuoteMark == ch) 
         {
-            append(sb, theQuoteString);
+            sb.append(theQuoteString);
         }
         else if (XalanUnicode::charApostrophe == ch) 
         {
-            append(sb, theApostropheString);
+            sb.append(theApostropheString);
         }
         else
         {
-            append(sb, ch);
+            sb.append(1, ch);
         }
     }
 

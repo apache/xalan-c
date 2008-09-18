@@ -80,7 +80,7 @@ XalanSourceTreeContentHandler::characters(
 	}
 	else if (m_accumulateText == true)
 	{
-		append(m_textBuffer, chars, length);
+		m_textBuffer.append(chars, length);
 	}
 	else
 	{
@@ -263,7 +263,7 @@ XalanSourceTreeContentHandler::startDocument()
 
 	if (m_accumulateText == true)
 	{
-		clear(m_textBuffer);
+		m_textBuffer.clear();
 
 		m_textBuffer.reserve(eDefaultTextBufferSize);
 	}
@@ -493,7 +493,7 @@ XalanSourceTreeContentHandler::processAccumulatedText()
             m_textBuffer.c_str(),
             m_textBuffer.length());
 
-		clear(m_textBuffer);
+		m_textBuffer.clear();
 	}
 }
 

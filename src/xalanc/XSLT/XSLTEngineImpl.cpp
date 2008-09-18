@@ -2976,12 +2976,12 @@ XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&     theValue)
 {
     do
     {
-        assign(m_scratchString, s_uniqueNamespacePrefix);
+        m_scratchString.assign(s_uniqueNamespacePrefix);
 
         NumberToDOMString(m_uniqueNSValue++, m_scratchString);
     } while(getResultNamespaceForPrefix(m_scratchString) != 0);
 
-    append(theValue, m_scratchString);
+    theValue.append(m_scratchString);
 }
 
 

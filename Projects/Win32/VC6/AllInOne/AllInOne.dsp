@@ -566,14 +566,6 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp
 # End Source File
 # Begin Source File

@@ -446,7 +446,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 {
     assert(str != 0);
 
-    assign(m_tempBuffer, str);
+    m_tempBuffer.assign(str);
 
     return createMatchPattern(
                 locator,
@@ -501,7 +501,7 @@ StylesheetConstructionContextDefault::createXPath(
 {
     assert(str != 0);
 
-    assign(m_tempBuffer, str);
+    m_tempBuffer.assign(str);
 
     return createXPath(
                 locator,
@@ -524,7 +524,7 @@ StylesheetConstructionContextDefault::createXPath(
 {
     assert(str != 0);
 
-    assign(m_tempBuffer, str, len);
+    m_tempBuffer.assign(str, len);
 
     return createXPath(
                 locator,

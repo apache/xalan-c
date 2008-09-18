@@ -66,7 +66,7 @@ getSuffix(
     // unique address that we can convert into a string...
     PointerToDOMString(theNode->getOwnerDocument(), theResult);
 
-    append(theResult, XalanDOMChar(XalanUnicode::charLetter_N));
+    theResult.append(1, XalanUnicode::charLetter_N);
 
     PointerToDOMString(theNode, theResult);
 }

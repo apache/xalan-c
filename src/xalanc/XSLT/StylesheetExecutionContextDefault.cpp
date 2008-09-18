@@ -596,7 +596,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
     // If we found a ':' before the end of the string, and
     // it's by itself (:: would indicate an axis), don't
     // try to cache the XPath...
-    if (index < len - 1 && (charAt(str, index + 1) != XalanUnicode::charColon))
+    if (index < len - 1 && str[index + 1] != XalanUnicode::charColon)
     {
         theResult = m_xsltProcessor->createMatchPattern(str, resolver);
     }

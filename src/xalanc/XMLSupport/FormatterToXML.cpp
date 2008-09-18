@@ -386,7 +386,7 @@ FormatterToXML::initAttrCharsMap()
     {
         for(XalanDOMString::size_type i = 0; i < nSpecials; ++i)
         {
-            m_attrCharsMap[charAt(m_attrSpecialChars, i)] = 'S';
+            m_attrCharsMap[m_attrSpecialChars[i]] = 'S';
         }
     }
 
@@ -1049,7 +1049,7 @@ void
 FormatterToXML::startDocument()
 {
     // Clear the buffer, just in case...
-    clear(m_stringBuffer);
+    m_stringBuffer.clear();
 
     m_needToOutputDocTypeDecl = true;
     m_startNewLine = false;
@@ -1564,7 +1564,7 @@ FormatterToXML::writeNumberedEntityReference(unsigned long  theNumber)
     accumContent(XalanUnicode::charNumberSign);
 
     accumContent(NumberToDOMString(theNumber, m_stringBuffer));
-    clear(m_stringBuffer);
+    m_stringBuffer.clear();
 
     accumContent(XalanUnicode::charSemicolon);
 }

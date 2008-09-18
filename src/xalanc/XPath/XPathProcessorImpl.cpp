@@ -224,7 +224,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
     for(t_size_type i = 0; i < nChars; i++)
     {
-        XalanDOMChar    c = charAt(pat, i);
+        XalanDOMChar    c = pat[i];
 
         switch(c)
         {
@@ -246,7 +246,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
                 startSubstring = i;
 
-                for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charQuoteMark; ++i);
+                for(++i; i < nChars && (c = pat[i]) != XalanUnicode::charQuoteMark; ++i);
 
                 if(c == XalanUnicode::charQuoteMark && i < nChars)
                 {
@@ -281,7 +281,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
 
                 startSubstring = i;
 
-                for(++i; i < nChars && (c = charAt(pat, i)) != XalanUnicode::charApostrophe; ++i);
+                for(++i; i < nChars && (c = pat[i]) != XalanUnicode::charApostrophe; ++i);
 
                 if(c == XalanUnicode::charApostrophe && i < nChars)
                 {
@@ -414,7 +414,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&  pat)
                         {
                             ++i;
 
-                            const XalanDOMChar  currentChar = charAt(pat, i);
+                            const XalanDOMChar  currentChar = pat[i];
 
                             if (currentChar == XalanUnicode::charFullStop)
                             {
@@ -1510,7 +1510,7 @@ XPathProcessorImpl::PrimaryExpr()
     }
     else if((tokenIs(XalanUnicode::charFullStop) == true &&
                 m_token.length() > 1 &&
-                XalanXMLChar::isDigit(charAt(m_token, 1)) == true) ||
+                XalanXMLChar::isDigit(m_token[1]) == true) ||
                 XalanXMLChar::isDigit(m_tokenChar) == true)
     {
         m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
@@ -2296,7 +2296,7 @@ XPathProcessorImpl::Step()
              tokenIs(XalanUnicode::charCommercialAt) ||
              tokenIs(XalanUnicode::charSolidus) ||
              (tokenIs(XalanUnicode::charLowLine) ||
-              XalanXMLChar::isLetter(charAt(m_token, 0))))
+              XalanXMLChar::isLetter(m_token[0])))
     {
         Basis();
 
@@ -2948,7 +2948,7 @@ XPathProcessorImpl::isCurrentLiteral() const
         const t_size_type   last = theLength - 1;
 
         const XalanDOMChar  c0 = m_tokenChar;
-        const XalanDOMChar  cX = charAt(m_token, last);
+        const XalanDOMChar  cX = m_token[last];
 
         if((c0 == XalanUnicode::charQuoteMark && cX == XalanUnicode::charQuoteMark) ||
            (c0 == XalanUnicode::charApostrophe && cX == XalanUnicode::charApostrophe))
@@ -2975,7 +2975,7 @@ XPathProcessorImpl::isAxis(const XalanDOMString&    theToken)
         return false;
     }
     else if (theLength == 1 &&
-             charAt(theToken, 0) == XalanUnicode::charCommercialAt)
+             theToken[0] == XalanUnicode::charCommercialAt)
     {
         return true;
     }
@@ -3012,12 +3012,12 @@ XPathProcessorImpl::isNodeTest(const XalanDOMString&    theToken)
         return false;
     }
     else if (theLength == 1 &&
-             charAt(theToken, 0) == XalanUnicode::charAsterisk)
+             theToken[0] == XalanUnicode::charAsterisk)
     {
         return true;
     }
-    else if (charAt(theToken, 0) == XalanUnicode::charLowLine ||
-             XalanXMLChar::isLetter(charAt(theToken, 0)) == true)
+    else if (theToken[0] == XalanUnicode::charLowLine ||
+             XalanXMLChar::isLetter(theToken[0]) == true)
     {
         return true;
     }

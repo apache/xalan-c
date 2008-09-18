@@ -670,7 +670,7 @@ protected:
         m_writer.write(value_type(XalanUnicode::charNumberSign));
 
         m_writer.write(NumberToDOMString(theNumber, m_stringBuffer));
-        clear(m_stringBuffer);
+        m_stringBuffer.clear();
 
         m_writer.write(value_type(XalanUnicode::charSemicolon));
     }
@@ -681,7 +681,7 @@ protected:
             size_type           start,
             size_type           length)
     {
-        assert( start < length);
+        assert(start < length);
 
         const XalanDOMChar  ch = chars[start];
 

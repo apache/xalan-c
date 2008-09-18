@@ -342,7 +342,7 @@ protected:
     const XalanDOMString&
     formatNumericCharacterReference(XalanUnicodeChar    theChar)
     {
-        clear(m_stringBuffer);
+        m_stringBuffer.clear();
 
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charAmpersand));
         m_stringBuffer.push_back(XalanDOMChar(XalanUnicode::charNumberSign));

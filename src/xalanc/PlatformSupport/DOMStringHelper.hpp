@@ -230,6 +230,8 @@ reserve(
 /**
  * Get the length of a XalanDOMString
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @return the length of the target string
  */
@@ -2345,7 +2347,9 @@ operator<(
 
 /**
  * Assign one string to another
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString         target string
  * @param theStringToAppend string to assign
  * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
@@ -2365,7 +2369,9 @@ assign(
 
 /**
  * Assign one string to another
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString         target string
  * @param theStringToAppend string to assign
  * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
@@ -2394,6 +2400,8 @@ assign(
 /**
  * Concatenate two strings
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param theString         target string
  * @param theStringToAppend string to add to target
  * @return a reference to the target string
@@ -2412,7 +2420,9 @@ append(
 
 /**
  * Concatenate two strings
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString         target string
  * @param theStringToAppend string to add to target
  * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
@@ -2442,7 +2452,9 @@ append(
 
 /**
  * Concatenate two strings
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString         target string
  * @param theStringToAppend string to add to target
  * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
@@ -2467,7 +2479,9 @@ append(
 
 /**
  * Concatenate a string and a character
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param theCharToAppend the character to add to the target
  * @return string with the character appended
@@ -2487,6 +2501,8 @@ append(
 /**
  * Concatenate a string and a character
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param theCharToAppend the character to add to the target
  * @return string with the character appended
@@ -2506,7 +2522,9 @@ append(
 
 /**
  * Insert a string into another string.
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param thePosition The position in the target string to insert
  * @param theStringToInsert The string to insert
@@ -2527,7 +2545,9 @@ insert(
 
 /**
  * Insert a string into another string.
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  * @param thePosition The position in the target string to insert
  * @param theStringToInsert The string to insert
@@ -2547,19 +2567,24 @@ insert(
 
 
 /**
- * Remove trailing whitespace
+ * Remove leading and trailing whitespace.
  * 
- * @param theString         target string
- * @return string with contents of target string less trailing whitespace
+ * @param theString The string to trim.
+ * @param theResult The result string.
+ * @return A reference to theResult.
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
-trim(const XalanDOMString&  theString, XalanDOMString& theResult);
+trim(
+            const XalanDOMString&   theString,
+            XalanDOMString&         theResult);
 
 
 
 /**
  * Remove all elements from target string
  * 
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  */
 inline void
@@ -2572,7 +2597,9 @@ clear(XalanDOMString&   theString)
 
 /**
  * Remove all elements from target string
- * 
+ *
+ * @deprecated This function is deprecated.
+ *
  * @param theString target string
  */
 inline void

@@ -107,10 +107,9 @@ FunctionSubstringAfter::execute(
 
                 XalanDOMString&     theString = theResult.get();
 
-                assign(
-                        theString,
-                        theFirstCharacter,
-                        theSubstringLength);
+                theString.assign(
+                    theFirstCharacter,
+                    theSubstringLength);
 
                 return executionContext.getXObjectFactory().createString(theResult);
             }

@@ -114,7 +114,7 @@ FunctionDistinct::execute(
             }
 
 
-            clear(theCachedString);
+            theCachedString.clear();
         }
     }
 

@@ -262,7 +262,7 @@ ElemElement::startElement(StylesheetExecutionContext&       executionContext) co
                     if (theNamespace == 0 ||
                         equals(*theNamespace, elemNameSpace) == false)
                     {
-                        insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+                        prefix.insert(0, DOMServices::s_XMLNamespaceWithSeparator);
 
                         executionContext.addResultAttribute(prefix, elemNameSpace);
                     }

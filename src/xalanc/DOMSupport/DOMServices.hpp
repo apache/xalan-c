@@ -139,7 +139,7 @@ public:
 			const XalanAttr&	attribute,
 			XalanDOMString&		data)
 	{
-		append(data, attribute.getNodeValue());
+		data.append(attribute.getNodeValue());
 	}
 
 
@@ -155,7 +155,7 @@ public:
 			const XalanComment&		comment,
 			XalanDOMString&			data)
 	{
-		append(data, comment.getData());
+		data.append(comment.getData());
 	}
 
 	/**
@@ -271,7 +271,7 @@ public:
 			const XalanProcessingInstruction&	pi,
 			XalanDOMString&						data)
 	{
-		append(data, pi.getData());
+		data.append(pi.getData());
 	}
 
 	/**
@@ -285,7 +285,7 @@ public:
 			const XalanText&	text,
 			XalanDOMString&		data)
 	{
-		append(data, text.getData());
+		data.append(text.getData());
 	}
 
 	/**
@@ -820,7 +820,7 @@ private:
 
         if (context.shouldStripSourceNode(text) == false)
         {
-		    append(data, text.getData());
+		    data.append(text.getData());
         }
 	}
 

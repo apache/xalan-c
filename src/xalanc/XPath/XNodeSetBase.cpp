@@ -300,7 +300,7 @@ XNodeSetBase::clearCachedValues()
 {
 	m_cachedNumberValue = theBogusNumberValue;
 
-	clear(m_cachedStringValue);
+	m_cachedStringValue.clear();
 }
 
 

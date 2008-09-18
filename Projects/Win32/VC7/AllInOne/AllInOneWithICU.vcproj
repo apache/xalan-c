@@ -510,12 +510,6 @@
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\Resettable.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp">
 			</File>
 			<File

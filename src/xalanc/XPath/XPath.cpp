@@ -2826,7 +2826,7 @@ XPath::functionSum(
 
             sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString, executionContext.getMemoryManager()));
 
-            clear(theString);
+            theString.clear();
         }
     }
 

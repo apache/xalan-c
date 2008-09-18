@@ -318,7 +318,7 @@ XResultTreeFrag::release()
 {
 	m_singleTextChildValue = 0;
 
-	clear(m_cachedStringValue);
+	m_cachedStringValue.clear();
 
 	m_cachedNumberValue = theBogusNumberValue;
 

@@ -269,8 +269,7 @@ FunctionSubstring::execute(
 
                 XalanDOMString&     theString = theResult.get();
 
-                assign(
-                        theString,
+                theString.assign(
                         theSourceString.c_str() + theStartIndex,
                         theSubstringLength);
 

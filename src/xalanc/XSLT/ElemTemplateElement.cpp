@@ -343,7 +343,7 @@ ElemTemplateElement::beginChildrenToString(
     {
         assert(m_textLiteralChild != 0);
 
-        assign(result, m_textLiteralChild->getText(), m_textLiteralChild->getLength());
+        result.assign(m_textLiteralChild->getText(), m_textLiteralChild->getLength());
 
         return 0;
     }

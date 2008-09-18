@@ -1587,7 +1587,7 @@ StylesheetHandler::processingInstruction(
     }
     else
     {
-        clear(m_accumulateText);
+        m_accumulateText.clear();
     }
 }
 
@@ -1612,7 +1612,7 @@ StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 void
 StylesheetHandler::resetDocument()
 {
-    clear(m_accumulateText);
+    m_accumulateText.clear();
 }
 
 
@@ -1725,7 +1725,7 @@ StylesheetHandler::accumulateText(
 {   
     if (m_inTemplate)
     {
-        append(m_accumulateText, chars, length);
+        m_accumulateText.append(chars, length);
     }
 }
 
@@ -1738,7 +1738,7 @@ StylesheetHandler::processAccumulatedText()
     {
         processText(m_accumulateText.c_str(), m_accumulateText.length());
 
-        clear(m_accumulateText);
+        m_accumulateText.clear();
     }   
 }
 
@@ -1914,7 +1914,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&  
     m_inExtensionElementStack(theHandler.getMemoryManager()),
     m_preserveSpaceStack(theHandler.getMemoryManager())
 {
-    clear(m_handler.m_accumulateText);
+    m_handler.m_accumulateText.clear();
 
     m_handler.m_elemStack.clear();
     m_handler.m_pTemplate = 0;
@@ -1938,7 +1938,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&  
 
 StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 {
-    clear(m_handler.m_accumulateText);
+    m_handler.m_accumulateText.clear();
     m_handler.m_elemStack = m_elemStack;
     m_handler.m_pTemplate = m_pTemplate;
 

@@ -205,7 +205,7 @@ void
 FormatterToHTML::startDocument()
 {
 	// Clear the buffer, just in case...
-	clear(m_stringBuffer);
+	m_stringBuffer.clear();
 
 	// Reset this, just in case...
 	m_elementLevel = 0;
@@ -832,7 +832,7 @@ FormatterToHTML::writeAttrString(
 					accumContent(XalanUnicode::charNumberSign);
 
 					accumContent(NumberToDOMString(next, m_stringBuffer));
-					clear(m_stringBuffer);
+					m_stringBuffer.clear();
 
 					accumContent(XalanUnicode::charSemicolon);
 				}
@@ -1052,7 +1052,7 @@ FormatterToHTML::writeAttrURI(
 				accumContent(XalanUnicode::charNumberSign);
     
 				accumContent(NumberToDOMString(ch, m_stringBuffer));
-				clear(m_stringBuffer);
+				m_stringBuffer.clear();
 
 				accumContent(XalanUnicode::charSemicolon);
 			}
@@ -1102,7 +1102,7 @@ FormatterToHTML::accumHexNumber(XalanDOMChar	theChar)
 
 	accumContent(m_stringBuffer);
 
-	clear(m_stringBuffer);
+	m_stringBuffer.clear();
 }
 
 

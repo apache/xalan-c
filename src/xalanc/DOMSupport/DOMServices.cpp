@@ -1017,7 +1017,7 @@ DOMServices::getNamespaceForPrefix(
 
 		if (theColonIndex == theLength)
 		{
-			clear(thePrefix);
+            thePrefix.clear();
 
 			if (isAttribute == true)
 			{
@@ -1031,7 +1031,7 @@ DOMServices::getNamespaceForPrefix(
 		else
 		{
 			// Get the prefix from theName...
-			assign(thePrefix, theName, theColonIndex);
+			thePrefix.assign(theName, theColonIndex);
             assert(thePrefix.empty() == false);
 
 			return thePrefixResolver.getNamespaceForPrefix(thePrefix);

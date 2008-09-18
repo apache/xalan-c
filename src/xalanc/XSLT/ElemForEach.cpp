@@ -422,7 +422,7 @@ ElemForEach::sortChildren(
             }
         }
 
-        clear(scratchString);
+        scratchString.clear();
 
         avt = sort->getOrderAVT();
 
@@ -448,7 +448,7 @@ ElemForEach::sortChildren(
             }
         }
 
-        clear(scratchString);
+        scratchString.clear();
 
         avt = sort->getCaseOrderAVT();
 
@@ -478,7 +478,7 @@ ElemForEach::sortChildren(
             }
         }
 
-        clear(scratchString);
+        scratchString.clear();
 
         keys.push_back(
                 NodeSortKey(

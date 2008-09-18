@@ -93,7 +93,7 @@ DOMStringPrintWriter::write(
 {
 	assert(s != 0);
 
-	append(*m_outputString, (s + theOffset), theLength);
+	m_outputString->append(s + theOffset, theLength);
 }
 
 
