@@ -114,8 +114,12 @@ setHelp(XalanFileUtility&   h)
 
 static const char* const    excludeStylesheets[] =
 {
-    "attribset29.xsl",  // Excluded because it's broken.  See Jira issue XALANJ-2412.
-    "idkey31.xsl",      // Excluded because Xalan-C++ deviates from the standard WRT namespace nodes.
+    // Excluded because it's broken.  See Jira issue XALANJ-2412.
+    "attribset29.xsl",
+
+    // Excluded because Xalan-C++ deviates from the standard WRT namespace nodes.
+    "idkey31.xsl",
+
     // $$$TODO: These are temporarily disabled, waiting for Xalan-J to implement erratum #23.
     "numbering21.xsl",
     "numbering29.xsl",
@@ -124,25 +128,119 @@ static const char* const    excludeStylesheets[] =
     "numbering68.xsl",
     "numbering69.xsl",
     "numbering83.xsl",
-    "output22.xsl",     // Excluded because it outputs EBCDIC and HTML, which cannot be parsed.
-    "variable20.xsl",   // Excluded because it shadows a variable name, which is illegal.
-    "variable56.xsl",   // Excluded because it shadows a variable name, which is illegal.
+
+    // These numberformat tests fail because they test edge cases, and the ICU handles these
+    // differently than Java does.
+    // $$$TODO: Perhaps ICU will address these issues at some point.
+    "numberformat11.xsl",
+    "numberformat17.xsl",
+    "numberformat25.xsl",
+    "numberformat30.xsl",
+    "numberformat34.xsl",
+    "numberformat35.xsl",
+
+    // Excluded because it outputs EBCDIC and HTML, which cannot be parsed.
+    "output22.xsl",
+
+    // These sort tests are disabled because the ICU implements a more recent version of the
+    // the Unicode collation algorithm, so we won't match the Java results.
+    "sort08.xsl",
+    "sort27.xsl",
+
+    // These string tests exceed the resolution of printf, so until we have a better
+    // implementation, these will fail.
+    "string132.xsl",
+    "string134.xsl",
+    "string135.xsl",
+
+    // These variable tests are incorrect, because they violate the XSLT recommendation,
+    // which disallows shadowing a variable name.
+    "variable20.xsl",
+    "variable56.xsl",
     0
 };
 
+static const char* const    excludeStylesheetsWithoutICU[] =
+{
+    // These numberformat tests fail because we don't implement format-number without
+    // ICU integration.
+    "numberformat01.xsl",
+    "numberformat02.xsl",
+    "numberformat03.xsl",
+    "numberformat04.xsl",
+    "numberformat05.xsl",
+    "numberformat06.xsl",
+    "numberformat07.xsl",
+    "numberformat08.xsl",
+    "numberformat09.xsl",
+    "numberformat12.xsl",
+    "numberformat13.xsl",
+    "numberformat16.xsl",
+    "numberformat18.xsl",
+    "numberformat19.xsl",
+    "numberformat20.xsl",
+    "numberformat21.xsl",
+    "numberformat22.xsl",
+    "numberformat23.xsl",
+    "numberformat24.xsl",
+    "numberformat26.xsl",
+    "numberformat27.xsl",
+    "numberformat28.xsl",
+    "numberformat29.xsl",
+    "numberformat31.xsl",
+    "numberformat32.xsl",
+    "numberformat36.xsl",
+    "numberformat45.xsl",
+    "numberformat46.xsl",
+
+    // These sort tests are disabled because, without the ICU, we don't implement proper
+    // sorting, including support for the case-order attribute of xsl:sort.
+    // $$$TODO: Basic support for ASCII-only case order is being worked on.
+    "sort15.xsl",
+
+    // These string tests using format-number(), which is not implemented without ICU
+    // integration.
+    "string108.xsl",
+    "string109.xsl",
+    "string110.xsl",
+    "string132.xsl",
+    "string134.xsl",
+    "string135.xsl",
+    0
+};
 
 
 
 inline bool
 checkForExclusion(
             const XalanDOMString&   currentFile,
+            bool                    isICUIntegrated,
             MemoryManager&          theMemoryManager)
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::strcmp;
+#endif
+
+    CharVectorType  theFileName(theMemoryManager);
+
+    currentFile.transcode(theFileName);
+
     for (size_t i = 0; excludeStylesheets[i] != 0; ++i)
-    {   
-        if (currentFile == XalanDOMString(excludeStylesheets[i], theMemoryManager))
+    {
+        if (!strcmp(c_str(theFileName), excludeStylesheets[i]))
         {
             return true;
+        }
+    }
+
+    if (!isICUIntegrated)
+    {
+        for (size_t i = 0; excludeStylesheetsWithoutICU[i] != 0; ++i)
+        {
+            if (!strcmp(c_str(theFileName), excludeStylesheetsWithoutICU[i]))
+            {
+                return true;
+            }
         }
     }
 
@@ -289,6 +387,8 @@ runTests(
         {
             XalanTransformer    xalan(theMemoryManager);
 
+            const bool          isICUAvailable = xalan.getICUAvailable();
+
             const XalanDOMString  resultFilePrefix("conf", theMemoryManager);       // This & UniqRunid used for log file name.
             XalanDOMString  UniqRunid(theMemoryManager); 
             h.generateUniqRunid(UniqRunid);
@@ -352,7 +452,7 @@ runTests(
                         XalanXMLFileReporter::Hashtable attrs(theMemoryManager);
 
                         const XalanDOMString&   currentFile = files[i];
-                        if (checkForExclusion(currentFile, theMemoryManager))
+                        if (checkForExclusion(currentFile, isICUAvailable, theMemoryManager))
                             continue;
 
                         h.data.testOrFile = currentFile;

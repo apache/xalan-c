@@ -923,6 +923,9 @@ public:
         return m_warningStream;
     }
 
+    bool
+    getICUAvailable() const;
+
     typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
     typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;
 

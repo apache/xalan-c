@@ -248,6 +248,18 @@ ICUStartUp(MemoryManager&   /*theManager*/)
 
 
 
+bool
+XalanTransformer::getICUAvailable() const
+{
+#if defined(XALAN_USE_ICU)
+    return true;
+#else
+    return false;
+#endif
+}
+
+
+
 static void
 addTraceListeners(
              const XalanTransformer::TraceListenerVectorType&   theTraceListeners,
