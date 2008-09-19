@@ -124,13 +124,13 @@ ICUResHandler::startDocument()
 
 void
 ICUResHandler::endElement(
-            const XMLCh* const,
-            const XMLCh* const  localname,
-            const XMLCh* const)
+            const XMLCh* const  /* uri */,
+            const XMLCh* const  /* localname */,
+            const XMLCh* const  qname)
 {
     if (m_startCollectingCharacters == true)
     {
-        if(!XMLString::compareString(localname, s_targetXMLCh))
+        if(!XMLString::compareString(qname, s_targetXMLCh))
         {
             m_startCollectingCharacters = false;
 
@@ -148,13 +148,13 @@ ICUResHandler::startElement(
             const XMLCh* const  qname,
             const Attributes&   attributes)
 {
-    if(!XMLString::compareString(localname, s_transUnitXMLCh))
+    if(!XMLString::compareString(qname, s_transUnitXMLCh))
     {
         // this is an elemente, SAX2Handler class is responsible to handle:
         // creating Index file, commom for all localization styles
         SAX2Handler::startElement(uri, localname, qname, attributes);
     }
-    else if(!XMLString::compareString(localname, s_targetXMLCh))
+    else if(!XMLString::compareString(qname, s_targetXMLCh))
     {
         if (m_locale != 0)
         {

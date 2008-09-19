@@ -114,12 +114,12 @@ SAX2Handler::printToIndexFile(const char*   sArrayOfStrings[])
 
 void
 SAX2Handler::startElement(
-            const   XMLCh* const,
-            const   XMLCh* const    localname,
-            const   XMLCh* const,
+            const   XMLCh* const    /* uri */,
+            const   XMLCh* const    /* localname */,
+            const   XMLCh* const    qname,
             const   Attributes&     attributes)
 {
-    if(!XMLString::compareString(localname, s_transUnitXMLCh))
+    if(!XMLString::compareString(qname, s_transUnitXMLCh))
     {
         const XalanSize_t  len =
             attributes.getLength();
