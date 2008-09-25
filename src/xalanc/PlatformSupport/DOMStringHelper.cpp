@@ -327,7 +327,11 @@ OutputString(XalanOutputStream&		theStream,
 
 
 XALAN_USING_STD(ostream)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+typedef int     streamsize;
+#else
 XALAN_USING_STD(streamsize)
+#endif
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
