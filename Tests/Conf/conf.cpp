@@ -139,8 +139,11 @@ static const char* const    excludeStylesheets[] =
     "numberformat34.xsl",
     "numberformat35.xsl",
 
-    // Excluded because it outputs EBCDIC and HTML, which cannot be parsed.
+#if defined(XALAN_WINDOWS)
+    // Excluded because it outputs HTML, which cannot be parsed.  Text comparison fails because
+    // linefeeds are Unix-style, and those fail on Windows.
     "output22.xsl",
+#endif
 
     // These sort tests are disabled because the ICU implements a more recent version of the
     // the Unicode collation algorithm, so we won't match the Java results.
@@ -193,10 +196,29 @@ static const char* const    excludeStylesheetsWithoutICU[] =
     "numberformat45.xsl",
     "numberformat46.xsl",
 
+    // Excluded because it outputs SHIFT_JIS, and not all platforms support this encoding, so
+    // the gold file cannot be parsed.
+    "output20.xsl",
+
+    // Excluded because it outputs BIG5, and not all platforms support this encoding.
+    "output21.xsl",
+
+    // Excluded because it outputs ISO-2022-JP, and not all platforms support this encoding.
+    "output23.xsl",
+
+    // Excluded because it outputs HTML, which cannot be parsed.  Text comparison fails because
+    // it try to use SHIFT_JIS for the output encoding, which not all platforms support.
+    "output73.xsl",
+
     // These sort tests are disabled because, without the ICU, we don't implement proper
     // sorting, including support for the case-order attribute of xsl:sort.
     // $$$TODO: Basic support for ASCII-only case order is being worked on.
+    "sort02.xsl",
+    "sort10.xsl",
+    "sort14.xsl",
     "sort15.xsl",
+    "sort16.xsl",
+    "sort34.xsl",
 
     // These string tests using format-number(), which is not implemented without ICU
     // integration.
@@ -261,13 +283,13 @@ parseWithTransformer(
 {
     const XalanParsedSource* parsedSource = 0;
 
-    MemoryManagerType& mgr = h.getMemoryManager();
+    MemoryManager&  mgr = h.getMemoryManager();
 
     int theResult = 0;
 
     // Parse the XML source accordingly.
     //
-    if (sourceType != 0 )
+    if (sourceType != 0)
     {
         theResult = xalan.parseSource(xmlInput, parsedSource, true);
         h.data.xmlFormat = XalanDOMString("XercesParserLiasion", mgr);
@@ -277,7 +299,7 @@ parseWithTransformer(
         theResult = xalan.parseSource(xmlInput, parsedSource, false);
         h.data.xmlFormat = XalanDOMString("XalanSourceTree", mgr);
     }
-                
+
     // If the source was parsed correctly then perform the transform else report the failure.
     //
     if (parsedSource == 0)
