@@ -200,7 +200,7 @@ theThread(LPVOID	param)
 void
 doThreads(size_t    nThreads)
 {
-    size_t   i=0;
+    size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
 	XALAN_USING_STD(vector)
@@ -237,44 +237,43 @@ doThreads(size_t    nThreads)
 
 #elif defined(XALAN_POSIX2_AVAILABLE)
 
-  int result;
-  void *thread_result;
+    int     result;
+    void*   thread_result;
   
-  for(; i < nThreads; ++i)
-  { 
-   result = pthread_create(
+    for (; i < nThreads; ++i)
+    {
+        result = pthread_create(
                           &hThreads[i],    //thread pointer
                           NULL,            //thread's attribute default
                           theThread,       //thread function
-                          (void *) &i      //thread function argument
-                         );
-  if (result != 0)
-    {
-      perror ("Thread creation failed");
-      exit(EXIT_FAILURE);
-    }
-  }
+                          (void *)&i);     //thread function argument
 
-  cout << endl << "Waiting for threads to finish..." << endl << endl;
-  for( i = nThreads - 1; i>=0; i-- )
-  {
-    result = pthread_join(
-                           hThreads[i],
-                           &thread_result
-                         );
-    if (result != 0)
-     {
-       perror ("Thread join failed");
-       exit (EXIT_FAILURE);
-     }
-   //for UNIX debugging
-   // cout << "Thread joined, return value: " << (char *)thread_result << endl;
-  } 
- 
+        if (result != 0)
+        {
+            perror ("Thread creation failed");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    cout << endl << "Waiting for threads to finish..." << endl << endl;
+  
+    for (i = nThreads; i > 0; --i)
+    {
+        result = pthread_join(
+                           hThreads[i - 1],
+                           &thread_result);
+
+        if (result != 0)
+        {
+            perror ("Thread join failed");
+            exit(EXIT_FAILURE);
+        }
+        //for UNIX debugging
+        // cout << "Thread joined, return value: " << (char *)thread_result << endl;
+    }
 #endif
 
-cout << endl << endl << "Clock after threads: " << clock() << endl;
-
+    cout << endl << endl << "Clock after threads: " << clock() << endl;
 }
 
 
