@@ -40,7 +40,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
-                                           MemoryManagerType&  theManager) :
+                                           MemoryManager&  theManager) :
     XalanOutputStream(theManager),
 #if !defined(XALAN_NEWLINE_IS_CRLF)
     m_outputStream(theOutputStream)

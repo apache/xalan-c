@@ -51,7 +51,7 @@ public:
 			const XercesWrapperNavigator&	theNavigator);
 
     static XercesNotationWrapper*
-    create( MemoryManagerType& theManager,
+    create( MemoryManager& theManager,
 			const DOMNotationType*			theXercesDOMNotation,
 			const XercesWrapperNavigator&	theNavigator);
 

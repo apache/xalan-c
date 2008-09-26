@@ -39,7 +39,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT NullPrintWriter : public PrintWriter
 public:
 
 	explicit
-	NullPrintWriter(MemoryManagerType& theManager);
+	NullPrintWriter(MemoryManager& theManager);
 
 	virtual
 	~NullPrintWriter();

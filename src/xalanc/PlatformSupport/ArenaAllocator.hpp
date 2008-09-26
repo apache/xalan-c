@@ -60,7 +60,7 @@ public:
 	 * @param theBlockSize The block size.
 	 */
 	ArenaAllocator(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type	        theBlockSize) :
 		m_blockSize(theBlockSize),
 		m_blocks(theManager)
@@ -73,13 +73,13 @@ public:
 		reset();
 	}
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_blocks.getMemoryManager();
     }
 
-    const MemoryManagerType&
+    const MemoryManager&
     getMemoryManager() const
     {
         return m_blocks.getMemoryManager();

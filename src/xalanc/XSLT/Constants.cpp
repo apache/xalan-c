@@ -286,7 +286,7 @@ const XalanDOMString&		Constants::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
 
 
 void
-Constants::initialize(MemoryManagerType&  theManager)
+Constants::initialize(MemoryManager&  theManager)
 {
 
 	::ATTRNAME_CASEORDER.reset( theManager, "case-order");
@@ -420,7 +420,7 @@ Constants::initialize(MemoryManagerType&  theManager)
 void
 Constants::terminate()
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDummyMemMgr();
 
 	releaseMemory(::ATTRNAME_CASEORDER, theManager );
 	releaseMemory(::ATTRNAME_COUNT, theManager );

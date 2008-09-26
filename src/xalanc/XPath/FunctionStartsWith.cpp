@@ -68,7 +68,7 @@ Function*
 #else
 FunctionStartsWith*
 #endif
-FunctionStartsWith::clone(MemoryManagerType& theManager) const
+FunctionStartsWith::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

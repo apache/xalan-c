@@ -96,7 +96,7 @@ Function*
 #else
 FunctionHasSameNodes*
 #endif
-FunctionHasSameNodes::clone(MemoryManagerType&  theManager) const
+FunctionHasSameNodes::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

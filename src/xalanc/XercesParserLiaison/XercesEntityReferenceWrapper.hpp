@@ -52,7 +52,7 @@ public:
 			const XercesWrapperNavigator&	theNavigator);
 
     static XercesEntityReferenceWrapper*
-    create( MemoryManagerType& theManager,
+    create( MemoryManager& theManager,
 			const DOMEntityReferenceType*	theXercesDOMEntityReference,
 			const XercesWrapperNavigator&	theNavigator);
 

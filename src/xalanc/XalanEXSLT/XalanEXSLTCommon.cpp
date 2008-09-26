@@ -276,7 +276,7 @@ XalanEXSLTCommonFunctionsInstaller::installLocal(XPathEnvSupportDefault&    theS
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanEXSLTCommonFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
     doInstallGlobal( theManager, s_commonNamespace, theFunctionTable);
 }
@@ -292,7 +292,7 @@ XalanEXSLTCommonFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&  theS
 
 
 void
-XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
     doUninstallGlobal(theManager, s_commonNamespace, theFunctionTable);
 }

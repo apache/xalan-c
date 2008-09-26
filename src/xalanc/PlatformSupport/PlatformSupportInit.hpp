@@ -38,7 +38,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT PlatformSupportInit
 {
 public:
 
-	PlatformSupportInit(MemoryManagerType&      theManager);
+	PlatformSupportInit(MemoryManager&      theManager);
 
 	~PlatformSupportInit();
 
@@ -52,7 +52,7 @@ private:
 
 	
 	static void
-	initialize(MemoryManagerType&      theManager);
+	initialize(MemoryManager&      theManager);
 
 	static void
 	terminate();

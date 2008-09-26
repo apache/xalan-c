@@ -83,7 +83,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 
 XPathExecutionContextDefault::XPathExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanNode*              theCurrentNode,
             const NodeRefListBase*  theContextNodeList,
             const PrefixResolver*   thePrefixResolver) :
@@ -384,7 +384,7 @@ XPathExecutionContextDefault::extFunction(
 
 XalanDocument*
 XPathExecutionContextDefault::parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   urlString,
             const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler) const
@@ -417,7 +417,7 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*  theL
 
 
 MutableNodeRefList*
-XPathExecutionContextDefault::createMutableNodeRefList(MemoryManagerType& theManager) const
+XPathExecutionContextDefault::createMutableNodeRefList(MemoryManager& theManager) const
 {
     return MutableNodeRefList::create(theManager);
 }

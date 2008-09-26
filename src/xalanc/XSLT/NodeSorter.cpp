@@ -46,7 +46,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-NodeSorter::NodeSorter(MemoryManagerType& theManager) :
+NodeSorter::NodeSorter(MemoryManager& theManager) :
 	m_numberResultsCache(theManager),
 	m_stringResultsCache(theManager),
 	m_keys(theManager),

@@ -130,7 +130,7 @@ Function*
 #else
 FunctionDistinct*
 #endif
-FunctionDistinct::clone(MemoryManagerType&  theManager) const
+FunctionDistinct::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

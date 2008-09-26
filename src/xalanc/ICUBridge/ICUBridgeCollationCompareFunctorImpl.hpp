@@ -50,7 +50,7 @@ typedef Collator					CollatorType;
 struct CollationCacheStruct
 {
     CollationCacheStruct(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
         const XalanDOMString&	theLocale,
         CollatorType*			theCollator) :
     m_locale(theLocale, theManager),
@@ -58,14 +58,14 @@ struct CollationCacheStruct
     {
     }
 
-    CollationCacheStruct(MemoryManagerType& theManager) :
+    CollationCacheStruct(MemoryManager& theManager) :
     m_locale(theManager),
         m_collator(0)
     {
     }
 
     CollationCacheStruct(   const CollationCacheStruct& other,
-                            MemoryManagerType&          theManager) :
+                            MemoryManager&          theManager) :
     m_locale(other.m_locale,theManager),
     m_collator(other.m_collator)
     {
@@ -102,7 +102,7 @@ struct CollationCacheStruct
 
     struct CollatorDeleteFunctor
     {
-     CollatorDeleteFunctor(MemoryManagerType& theManager):
+     CollatorDeleteFunctor(MemoryManager& theManager):
         m_memoryManager(theManager)
     {
     }
@@ -113,7 +113,7 @@ struct CollationCacheStruct
         delete theStruct.m_collator;
     }
     private:
-        MemoryManagerType& m_memoryManager;
+        MemoryManager& m_memoryManager;
     };
 
     struct CollatorFindFunctor
@@ -144,17 +144,17 @@ public:
 	 * 
 	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
 	 */
-	ICUBridgeCollationCompareFunctorImpl(   MemoryManagerType&  theManager ,
+	ICUBridgeCollationCompareFunctorImpl(   MemoryManager&  theManager ,
                                             bool	            fCacheCollators = false);
 
 	static ICUBridgeCollationCompareFunctorImpl*
-    create( MemoryManagerType&  theManager,
+    create( MemoryManager&  theManager,
             bool	            fCacheCollators = false);
 
 
 	~ICUBridgeCollationCompareFunctorImpl();
 
-    MemoryManagerType& 
+    MemoryManager& 
     getMemoryManager()const
     {
         return m_collatorCache.getMemoryManager();

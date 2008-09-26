@@ -98,7 +98,7 @@ public:
     virtual
     ~XalanXMLSerializerBase();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_elemStack.getMemoryManager();

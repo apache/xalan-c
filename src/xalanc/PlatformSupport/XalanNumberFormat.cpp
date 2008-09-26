@@ -43,7 +43,7 @@ const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] =
 
 
 
-XalanNumberFormat::XalanNumberFormat(MemoryManagerType&     theManager) :
+XalanNumberFormat::XalanNumberFormat(MemoryManager&     theManager) :
 	m_isGroupingUsed(false),
 	m_groupingSeparator(s_defaultGroupingSeparator, theManager),
 	m_groupingSize(3)	// Default to US values

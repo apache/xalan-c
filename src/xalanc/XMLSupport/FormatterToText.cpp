@@ -33,7 +33,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FormatterToText::FormatterToText(MemoryManagerType& theManager) :
+FormatterToText::FormatterToText(MemoryManager& theManager) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(0),
 	m_maxCharacter(XalanDOMChar(~0)),
@@ -52,7 +52,7 @@ FormatterToText::FormatterToText(
 			Writer&		writer,
 			bool		normalizeLinefeed,
 			bool		handleIgnorableWhitespace,
-            MemoryManagerType& theManager) :
+            MemoryManager& theManager) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(&writer),
 	m_maxCharacter(XalanDOMChar(~0)),
@@ -73,7 +73,7 @@ FormatterToText::FormatterToText(
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed,
 			bool					handleIgnorableWhitespace,
-            MemoryManagerType&      theManager ) :
+            MemoryManager&      theManager ) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(&writer),
 	m_maxCharacter(0),
@@ -98,7 +98,7 @@ FormatterToText::FormatterToText(
 
 FormatterToText*
 FormatterToText::create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed,

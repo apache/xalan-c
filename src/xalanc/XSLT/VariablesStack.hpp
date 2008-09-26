@@ -67,7 +67,7 @@ public:
 	 * Constructor for a variable stack.
 	 */
 	explicit
-	VariablesStack(MemoryManagerType& theManager);
+	VariablesStack(MemoryManager& theManager);
 
 	~VariablesStack();
 

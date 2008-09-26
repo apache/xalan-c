@@ -214,7 +214,7 @@ XalanExtensionsInstaller::installLocal(XPathEnvSupportDefault&	theSupport)
 
 
 void
-XalanExtensionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanExtensionsInstaller::installGlobal(MemoryManager& theManager)
 {
 	doInstallGlobal( theManager, s_extensionsNamespace, theFunctionTable);
 }
@@ -230,7 +230,7 @@ XalanExtensionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSupport)
 
 
 void
-XalanExtensionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanExtensionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
 	doUninstallGlobal(theManager, s_extensionsNamespace, theFunctionTable);
 }
@@ -262,7 +262,7 @@ XalanExtensionsInstaller::doInstallLocal(
 
 void
 XalanExtensionsInstaller::doInstallGlobal(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[])
 {
@@ -306,7 +306,7 @@ XalanExtensionsInstaller::doUninstallLocal(
 
 void
 XalanExtensionsInstaller::doUninstallGlobal(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[])
 {

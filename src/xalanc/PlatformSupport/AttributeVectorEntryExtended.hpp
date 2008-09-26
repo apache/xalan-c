@@ -43,7 +43,7 @@ public:
 			const XMLChVectorType&	theType,
 			const XMLChVectorType&	theURI ,
 			const XMLChVectorType&	theLocalName,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		AttributeVectorEntry(theName, theValue, theType, theManager),
 		m_uri(theURI, theManager),
 		m_localName(theLocalName, theManager)
@@ -56,7 +56,7 @@ public:
 			const XMLCh*	theType,
 			const XMLCh*	theURI,
 			const XMLCh*	theLocalName,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		AttributeVectorEntry(theName, theValue, theType, theManager),
 		m_uri(theURI, theURI + length(theURI) + 1, theManager),
 		m_localName(theLocalName, theLocalName + length(theLocalName) + 1,theManager)
@@ -67,14 +67,14 @@ public:
 			const XMLCh*	theName,
 			const XMLCh*	theValue,
 			const XMLCh*	theType,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		AttributeVectorEntry(theName, theValue, theType,theManager),
 		m_uri(theManager),
 		m_localName(theManager)
 	{
 	}
 
-	AttributeVectorEntryExtended(MemoryManagerType&      theManager) :
+	AttributeVectorEntryExtended(MemoryManager&      theManager) :
 		AttributeVectorEntry(theManager),
 		m_uri(theManager),
 		m_localName(theManager)
@@ -88,7 +88,7 @@ public:
 			const XMLCh*	theType,
 			const XMLCh*	theURI,
 			const XMLCh*	theLocalName,
-            MemoryManagerType&      theManager)
+            MemoryManager&      theManager)
     {
         typedef AttributeVectorEntryExtended ThisType;
         

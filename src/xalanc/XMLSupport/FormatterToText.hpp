@@ -53,7 +53,7 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 */
-	FormatterToText(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	FormatterToText(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -66,7 +66,7 @@ public:
 			Writer&		        writer,
 			bool		        normalizeLinefeed = true,
 			bool		        handleIgnorableWhitespace = true,
-            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -81,11 +81,11 @@ public:
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed = true,
 			bool					handleIgnorableWhitespace = true,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
 	static FormatterToText*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed = true,
@@ -94,7 +94,7 @@ public:
 	virtual
 	~FormatterToText();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_encoding.getMemoryManager();

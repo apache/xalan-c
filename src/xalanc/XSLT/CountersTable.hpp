@@ -85,7 +85,7 @@ struct Counter
 	 * Construct a counter object.
 	 */
 	Counter(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			const ElemNumber*	numberElem,
 			NodeVectorType&		countNodes) :
 		m_countNodesStartCount(0),
@@ -98,7 +98,7 @@ struct Counter
 	/**
 	 * Construct a counter object.
 	 */
-	Counter(MemoryManagerType& theManager, const ElemNumber*	numberElem = 0) :
+	Counter(MemoryManager& theManager, const ElemNumber*	numberElem = 0) :
 		m_countNodesStartCount(0),
 		m_countNodes(theManager),
 		m_fromNode(0),
@@ -106,7 +106,7 @@ struct Counter
 	{
 	}
 
-	Counter(const Counter& other, MemoryManagerType& theManager) :
+	Counter(const Counter& other, MemoryManager& theManager) :
 		m_countNodesStartCount(other.m_countNodesStartCount),
 		m_countNodes(other.m_countNodes, theManager),
 		m_fromNode(other.m_fromNode),
@@ -168,7 +168,7 @@ public:
 	/**
 	 * Construct a CountersTable.
 	 */
-	CountersTable(MemoryManagerType& theManager,
+	CountersTable(MemoryManager& theManager,
                     unsigned long		theSize = 0) :
 		m_countersVector(theManager),
 		m_newFound(theManager)

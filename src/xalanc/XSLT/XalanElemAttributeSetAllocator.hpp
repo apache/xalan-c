@@ -60,7 +60,7 @@ public:
 	 * @param theBlockSize The block size.
 	 */
 	XalanElemAttributeSetAllocator(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             size_type		    theBlockCount);
 
 	~XalanElemAttributeSetAllocator();

@@ -76,14 +76,14 @@ public:
      */
     XalanSourceTreeParserLiaison(
                 XalanSourceTreeDOMSupport&  theSupport, 
-                MemoryManagerType&          theManager XALAN_DEFAULT_MEMMGR);
+                MemoryManager&          theManager XALAN_DEFAULT_MEMMGR);
 
     /**
      * Construct a XalanSourceTreeParserLiaison instance.
      */
-    XalanSourceTreeParserLiaison(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+    XalanSourceTreeParserLiaison(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_documentMap.getMemoryManager();

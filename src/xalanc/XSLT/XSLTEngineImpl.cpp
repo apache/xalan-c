@@ -126,7 +126,7 @@ const XalanDOMString    XSLTEngineImpl::s_emptyString(XalanMemMgrs::getDummyMemM
 //==========================================================
 
 XSLTEngineImpl::XSLTEngineImpl(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             XMLParserLiaison&   parserLiaison,
             XPathEnvSupport&    xpathEnvSupport,
             DOMSupport&         domSupport,
@@ -3192,7 +3192,7 @@ XSLTEngineImpl::message(
 
 
 void
-XSLTEngineImpl::installFunctions(MemoryManagerType& theManager)
+XSLTEngineImpl::installFunctions(MemoryManager& theManager)
 {
     XPath::installFunction(XPathFunctionTable::s_current, FunctionCurrent());
     XPath::installFunction(XPathFunctionTable::s_document, FunctionDocument());
@@ -3366,7 +3366,7 @@ dumpTable(
 
 
 void
-XSLTEngineImpl::initialize(MemoryManagerType&      theManager)
+XSLTEngineImpl::initialize(MemoryManager&      theManager)
 {
     ::s_XSLNameSpaceURL.reset( theManager, "http://www.w3.org/1999/XSL/Transform");
 
@@ -3402,7 +3402,7 @@ XSLTEngineImpl::terminate()
 {
     uninstallFunctions();
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDummyMemMgr();
 
     releaseMemory(::s_uniqueNamespacePrefix, theManager);
 

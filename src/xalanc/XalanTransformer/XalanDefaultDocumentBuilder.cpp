@@ -32,7 +32,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManagerType&     theManager,
+XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManager&     theManager,
                                                          const XalanDOMString&	theURI) :
 	m_domSupport(),
 	m_parserLiaison(theManager),
@@ -43,7 +43,7 @@ XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManagerType&     
 }
 
 XalanDefaultDocumentBuilder*
-XalanDefaultDocumentBuilder::create(MemoryManagerType& theManager, const XalanDOMString&	theURI)
+XalanDefaultDocumentBuilder::create(MemoryManager& theManager, const XalanDOMString&	theURI)
 {
         typedef XalanDefaultDocumentBuilder ThisType;
         
@@ -73,7 +73,7 @@ XalanDefaultDocumentBuilder::getDocument() const
 
 
 XalanParsedSourceHelper*
-XalanDefaultDocumentBuilder::createHelper(MemoryManagerType& theManager) const
+XalanDefaultDocumentBuilder::createHelper(MemoryManager& theManager) const
 {
 	return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }

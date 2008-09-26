@@ -117,10 +117,10 @@ runTests(
 			int		argc,
 			char*	argv[])
 {
-    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XALAN(MemoryManager)
     XALAN_USING_XALAN(XalanMemMgrs)
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	XalanFileUtility	h(theManager);
 

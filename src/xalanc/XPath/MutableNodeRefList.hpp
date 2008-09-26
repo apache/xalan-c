@@ -51,17 +51,17 @@ public:
 	 * Construct an empty mutable node list.
 	 */
 	explicit
-	MutableNodeRefList(MemoryManagerType& theManager);
+	MutableNodeRefList(MemoryManager& theManager);
 
     static MutableNodeRefList*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
 	/**
 	 * Construct a mutable node list from another list.
 	 * 
 	 * @param theSource source list
 	 */
 	MutableNodeRefList(const MutableNodeRefList&	theSource,
-                        MemoryManagerType& theManager);
+                        MemoryManager& theManager);
 
 	/**
 	 * Construct a mutable node list from another list.
@@ -70,7 +70,7 @@ public:
 	 */
 	explicit
 	MutableNodeRefList(const NodeRefListBase&	theSource,
-                        MemoryManagerType& theManager);
+                        MemoryManager& theManager);
 
 	virtual
 	~MutableNodeRefList();

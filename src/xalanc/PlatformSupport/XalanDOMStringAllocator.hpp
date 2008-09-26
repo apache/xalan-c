@@ -64,7 +64,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanDOMStringAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
+	XalanDOMStringAllocator(MemoryManager&      theManager, size_type	theBlockCount);
 
 	~XalanDOMStringAllocator();
 
@@ -177,24 +177,24 @@ public:
 	}
 
 	/**
-	 * Get a reference to the MemoryManagerType instance
+	 * Get a reference to the MemoryManager instance
 	 * for this instance.
 	 *
-	 * @return A reference to the MemoryManagerType instance.
+	 * @return A reference to the MemoryManager instance.
 	 */
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_allocator.getMemoryManager();
     }
 
 	/**
-	 * Get a reference to the MemoryManagerType instance
+	 * Get a reference to the MemoryManager instance
 	 * for this instance.
 	 *
-	 * @return A reference to the MemoryManagerType instance.
+	 * @return A reference to the MemoryManager instance.
 	 */
-    const MemoryManagerType&
+    const MemoryManager&
     getMemoryManager() const
     {
         return m_allocator.getMemoryManager();

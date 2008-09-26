@@ -39,7 +39,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			XalanSourceTreeDocument*	theDocument,
 			bool						fAccumulateText) :
 	ContentHandler(),

@@ -99,11 +99,11 @@ public:
             const XalanDOMString&   standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
             eFormat                 format = OUTPUT_METHOD_XML,
             bool                    fBufferData = true,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
     
     static FormatterToXML*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             Writer&                 writer,
             const XalanDOMString&   version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
             bool                    doIndent = false,
@@ -120,7 +120,7 @@ public:
     virtual
     ~FormatterToXML();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_stringBuffer.getMemoryManager();
@@ -555,7 +555,7 @@ protected:
     static void
     throwInvalidUTF16SurrogateException(
             XalanDOMChar        ch,
-            MemoryManagerType&  theManager);
+            MemoryManager&  theManager);
 
     /**
      * Throw an exception when an invalid
@@ -568,7 +568,7 @@ protected:
     throwInvalidUTF16SurrogateException(
             XalanDOMChar        ch,
             XalanDOMChar        next,
-            MemoryManagerType& theManager);
+            MemoryManager& theManager);
 
 
 	/**
@@ -580,7 +580,7 @@ protected:
     static void
     throwInvalidCharacterException( 
             XalanUnicodeChar    ch,
-            MemoryManagerType&  theManager);
+            MemoryManager&  theManager);
 
     static bool
     isUTF16Surrogate(XalanDOMChar   ch)

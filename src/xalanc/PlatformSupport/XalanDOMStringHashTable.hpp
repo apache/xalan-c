@@ -58,7 +58,7 @@ public:
 	 */
 	explicit
 	XalanDOMStringHashTable(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			size_t				theBucketCount = eDefaultBucketCount,
 			bucket_size_type	theBucketSize = eDefaultBucketSize);
 

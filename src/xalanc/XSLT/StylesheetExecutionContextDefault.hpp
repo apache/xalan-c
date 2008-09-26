@@ -118,7 +118,7 @@ public:
      * @param thePrefixResolver  pointer to prefix resolver to use
      */ 
     StylesheetExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XSLTEngineImpl&         xsltProcessor,
             XPathEnvSupport&        theXPathEnvSupport,
             DOMSupport&             theDOMSupport,
@@ -139,14 +139,14 @@ public:
      */
     explicit
     StylesheetExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanNode*              theCurrentNode = 0,
             const NodeRefListBase*  theContextNodeList = 0,
             const PrefixResolver*   thePrefixResolver = 0);
 
     static StylesheetExecutionContextDefault*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanNode*              theCurrentNode = 0,
             const NodeRefListBase*  theContextNodeList = 0,
             const PrefixResolver*   thePrefixResolver = 0);
@@ -606,7 +606,7 @@ public:
         ~XalanNumberFormatFactory();
 
         virtual XalanNumberFormat*
-        create(MemoryManagerType& theManager);
+        create(MemoryManager& theManager);
     };
 
     static XalanNumberFormatFactory&
@@ -840,7 +840,7 @@ public:
 
     virtual XalanDocument*
     parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   urlString,
             const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler = 0) const;
@@ -852,7 +852,7 @@ public:
     returnMutableNodeRefList(MutableNodeRefList*    theList);
 
     virtual MutableNodeRefList*
-    createMutableNodeRefList(MemoryManagerType& theManager) const;
+    createMutableNodeRefList(MemoryManager& theManager) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     virtual void
@@ -998,7 +998,7 @@ public:
      * tree fragments.
      */
     XalanSourceTreeDocument*
-    getSourceTreeFactory(MemoryManagerType& theManager) const;
+    getSourceTreeFactory(MemoryManager& theManager) const;
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:
@@ -1153,7 +1153,7 @@ private:
     {
     public:
 
-        FormatterToTextDOMString(MemoryManagerType& theManager);
+        FormatterToTextDOMString(MemoryManager& theManager);
 
         virtual
         ~FormatterToTextDOMString();

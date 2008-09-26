@@ -35,7 +35,7 @@ unsigned long   PlatformSupportInit::s_initCounter = 0;
 
 
 
-PlatformSupportInit::PlatformSupportInit(MemoryManagerType&      theManager) :
+PlatformSupportInit::PlatformSupportInit(MemoryManager&      theManager) :
     m_xalanDOMInit(theManager)
 {
     ++s_initCounter;

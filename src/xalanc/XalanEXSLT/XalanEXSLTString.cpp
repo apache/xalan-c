@@ -787,7 +787,7 @@ XalanEXSLTStringFunctionsInstaller::installLocal(XPathEnvSupportDefault&        
 
 
 void
-XalanEXSLTStringFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanEXSLTStringFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
     doInstallGlobal(theManager, s_stringNamespace, theFunctionTable);
 }
@@ -803,7 +803,7 @@ XalanEXSLTStringFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&  theS
 
 
 void
-XalanEXSLTStringFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanEXSLTStringFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
     doUninstallGlobal(theManager, s_stringNamespace, theFunctionTable);
 }

@@ -63,7 +63,7 @@ public:
 	 * @return pointer to the new object
 	 */
 	virtual Function*
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManager& theManager) const
 	{
         typedef FunctionNotImplemented Type;
 

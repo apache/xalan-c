@@ -40,7 +40,7 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
 		const NumberTypeVectorType&		theDigitsTableTable,
-        MemoryManagerType&              theManager) :
+        MemoryManager&              theManager) :
 	m_language(theHelpLanguage, theManager),
 	m_uiLanguage(theLanguage, theManager),
 	m_helpLanguage(theUILanguage, theManager),
@@ -61,7 +61,7 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(
 
 
 
-XalanNumberingResourceBundle::XalanNumberingResourceBundle(MemoryManagerType&  theManager) :
+XalanNumberingResourceBundle::XalanNumberingResourceBundle(MemoryManager&  theManager) :
 	m_language(theManager),
 	m_uiLanguage(theManager),
 	m_helpLanguage(theManager),
@@ -83,7 +83,7 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(MemoryManagerType&  t
 
 
 XalanNumberingResourceBundle::XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource,
-                                                           MemoryManagerType&  theManager) :
+                                                           MemoryManager&  theManager) :
 	m_language(theSource.m_language, theManager),
 	m_uiLanguage(theSource.m_uiLanguage, theManager),
 	m_helpLanguage(theSource.m_helpLanguage, theManager),

@@ -207,7 +207,7 @@ public:
     typedef typename Constructor::ConstructableType     ConstructibleType;
 
     XalanDeque(
-            MemoryManagerType& memoryManager,
+            MemoryManager& memoryManager,
             size_type initialSize = 0,
             size_type blockSize = 10) :
         m_memoryManager(&memoryManager),
@@ -221,7 +221,7 @@ public:
         XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, defaultValue.value);
     }
 
-    XalanDeque(const XalanDeque& theRhs, MemoryManagerType& memoryManager) :
+    XalanDeque(const XalanDeque& theRhs, MemoryManager& memoryManager) :
         m_memoryManager(&memoryManager),
         m_blockSize(theRhs.m_blockSize),
         m_blockIndex(*theRhs.m_memoryManager,
@@ -381,7 +381,7 @@ public:
 
     void swap(XalanDeque& theRhs)
     {
-        MemoryManagerType* tempMemoryManager = m_memoryManager;
+        MemoryManager* tempMemoryManager = m_memoryManager;
         m_memoryManager = theRhs.m_memoryManager;
         theRhs.m_memoryManager = tempMemoryManager;
 
@@ -396,7 +396,7 @@ public:
         return *this;
     }
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         assert (m_memoryManager != 0);
@@ -458,7 +458,7 @@ protected:
         m_memoryManager->deallocate(pointer);
     }
 
-    MemoryManagerType*  m_memoryManager;
+    MemoryManager*  m_memoryManager;
     const size_type     m_blockSize;
 
     BlockIndexType     m_blockIndex; 

@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XResultTreeFragAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XResultTreeFragAllocator(MemoryManager&  theManager, size_type	theBlockCount);
 
 	~XResultTreeFragAllocator();
 	

@@ -45,10 +45,10 @@ public:
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLTranscoder	XMLTranscoderType;
 
 	explicit
-	XalanToXercesTranscoderWrapper(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder);
+	XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&	theTranscoder);
 
     static XalanToXercesTranscoderWrapper*
-    create(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder);
+    create(MemoryManager& theManager, XMLTranscoderType&	theTranscoder);
 
 	virtual
 	~XalanToXercesTranscoderWrapper();

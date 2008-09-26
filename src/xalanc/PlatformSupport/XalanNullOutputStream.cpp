@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanNullOutputStream::XalanNullOutputStream(MemoryManagerType&      theManager) :
+XalanNullOutputStream::XalanNullOutputStream(MemoryManager&      theManager) :
 	XalanOutputStream(theManager, 1)
 {
 }

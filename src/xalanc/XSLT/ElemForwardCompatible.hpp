@@ -58,7 +58,7 @@ public:
 
     static ElemForwardCompatible*
     create(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,

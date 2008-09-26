@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesWrapperNavigatorAllocator::XercesWrapperNavigatorAllocator(MemoryManagerType& theManager, size_type	theBlockCount) :
+XercesWrapperNavigatorAllocator::XercesWrapperNavigatorAllocator(MemoryManager& theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

@@ -51,7 +51,7 @@ XercesEntityWrapper::XercesEntityWrapper(
 }
 
 XercesEntityWrapper*
-XercesEntityWrapper::create( MemoryManagerType& theManager,
+XercesEntityWrapper::create( MemoryManager& theManager,
 			const DOMEntityType*			theXercesDOMEntity,
 			const XercesWrapperNavigator&	theNavigator)
 

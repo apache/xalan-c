@@ -126,7 +126,7 @@ Function*
 #else
 FunctionLang*
 #endif
-FunctionLang::clone(MemoryManagerType&  theManager) const
+FunctionLang::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }
@@ -164,7 +164,7 @@ const XalanDOMString&   FunctionLang::s_attributeName = s_localString;
 
 
 void
-FunctionLang::initialize(MemoryManagerType&     theManager)
+FunctionLang::initialize(MemoryManager&     theManager)
 {
     s_localString.reset(theManager, s_langString);
 }

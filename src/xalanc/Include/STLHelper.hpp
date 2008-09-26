@@ -63,7 +63,7 @@ XalanDestroyFunctor
     void
     operator()(
                 Type*               theArg,
-                MemoryManagerType&  theMemoryManager)
+                MemoryManager&  theMemoryManager)
     {
         if (theArg != 0)
         {
@@ -76,7 +76,7 @@ XalanDestroyFunctor
     void
     operator()(
                 const Type*         theArg,
-                MemoryManagerType&  theMemoryManager)
+                MemoryManager&  theMemoryManager)
     {
         (*this)(const_cast<Type*>(theArg), theMemoryManager);
     }
@@ -112,7 +112,7 @@ struct DeleteFunctor : public std::unary_function<const Type*, void>
     typedef typename BaseClassType::result_type     result_type;
     typedef typename BaseClassType::argument_type   argument_type;
 
-    DeleteFunctor(MemoryManagerType&    theManager) :
+    DeleteFunctor(MemoryManager&    theManager) :
         m_memoryManager(theManager)
     {
     }
@@ -130,7 +130,7 @@ struct DeleteFunctor : public std::unary_function<const Type*, void>
 
 private:
 
-   MemoryManagerType&   m_memoryManager;
+   MemoryManager&   m_memoryManager;
 };
 
 
@@ -268,7 +268,7 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
     typedef typename BaseClassType::result_type     result_type;
     typedef typename BaseClassType::argument_type   argument_type;
 
-    MapValueDeleteFunctor(MemoryManagerType&    theManager) :
+    MapValueDeleteFunctor(MemoryManager&    theManager) :
         m_memoryManager(theManager)
     {
     }
@@ -287,7 +287,7 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 
 private:
 
-    MemoryManagerType&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 };
 
 

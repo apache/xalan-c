@@ -52,7 +52,7 @@ public:
 
 	struct OutputContext
 	{
-		OutputContext(MemoryManagerType&      theManager,
+		OutputContext(MemoryManager&      theManager,
                     FormatterListener*	theListener = 0) :
 			m_flistener(theListener),
 			m_pendingAttributes(theManager),
@@ -63,7 +63,7 @@ public:
 		}
 
 		OutputContext( const OutputContext&		other, 
-			MemoryManagerType&      theManager) :
+			MemoryManager&      theManager) :
 			m_flistener(other.m_flistener),
 			m_pendingAttributes(other.m_pendingAttributes , theManager),
 			m_pendingElementName(other.m_pendingElementName , theManager),
@@ -106,7 +106,7 @@ public:
 	typedef OutputContextStackType::size_type	size_type;
 
 	explicit
-	OutputContextStack(MemoryManagerType& theManager);
+	OutputContextStack(MemoryManager& theManager);
 
 	~OutputContextStack();
 

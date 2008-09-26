@@ -32,7 +32,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNLSMessageLoader : public XalanMessageLo
 {
 public:
 
-	XalanNLSMessageLoader(MemoryManagerType& theManager);
+	XalanNLSMessageLoader(MemoryManager& theManager);
 
 	virtual
 	~XalanNLSMessageLoader();
@@ -59,7 +59,7 @@ private:
  
     nl_catd 	m_catalogHandle;
     
-    MemoryManagerType& m_memoryManager;
+    MemoryManager& m_memoryManager;
 };
 
 XALAN_CPP_NAMESPACE_END

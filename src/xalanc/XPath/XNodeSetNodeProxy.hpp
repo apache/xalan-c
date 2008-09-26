@@ -48,14 +48,14 @@ public:
 	/**
 	 * Create an XNodeSetNodeProxy
 	 */
-	XNodeSetNodeProxy(MemoryManagerType& theManager, XalanNode*	theNode);
+	XNodeSetNodeProxy(MemoryManager& theManager, XalanNode*	theNode);
 
 	/**
 	 * Create an XNodeSetNodeProxy from another.
 	 *
 	 * @param source    object to copy
 	 */
-	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManagerType& theManager);
+	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManager& theManager);
 
 	virtual
 	~XNodeSetNodeProxy();

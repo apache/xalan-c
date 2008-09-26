@@ -243,7 +243,7 @@ NamespacesHandler::PrefixChecker::~PrefixChecker()
 
 
 
-NamespacesHandler::NamespacesHandler(MemoryManagerType& theManager) :
+NamespacesHandler::NamespacesHandler(MemoryManager& theManager) :
     m_excludedResultPrefixes(theManager),
     m_namespaceDeclarations(theManager),
     m_extensionNamespaceURIs(theManager),

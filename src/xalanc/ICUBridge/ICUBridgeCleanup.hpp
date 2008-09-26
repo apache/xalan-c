@@ -37,7 +37,7 @@ public:
 	cleanup();
 
 	static void
-	startup(MemoryManagerType&  theManager);
+	startup(MemoryManager&  theManager);
 };
 
 

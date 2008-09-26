@@ -96,7 +96,7 @@ Function*
 #else
 FunctionDifference*
 #endif
-FunctionDifference::clone(MemoryManagerType&    theManager) const
+FunctionDifference::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

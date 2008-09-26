@@ -49,10 +49,10 @@ public:
 	 * @param value      source string
 	 */
 	XStringReference(const XalanDOMString&	val,
-                        MemoryManagerType&  theManager);
+                        MemoryManager&  theManager);
 
 	XStringReference(const XStringReference&	source,
-                        MemoryManagerType&      theManager);
+                        MemoryManager&      theManager);
 
 	virtual
 	~XStringReference();

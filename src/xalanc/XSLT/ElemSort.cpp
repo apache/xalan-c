@@ -124,7 +124,7 @@ ElemSort::ElemSort(
 
 ElemSort*
 ElemSort::create(
-            MemoryManagerType& theManager,
+            MemoryManager& theManager,
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,

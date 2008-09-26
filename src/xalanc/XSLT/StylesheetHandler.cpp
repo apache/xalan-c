@@ -1985,7 +1985,7 @@ const XalanDOMString    StylesheetHandler::s_emptyString(XalanMemMgrs::getDummyM
 
 
 void
-StylesheetHandler::initialize(MemoryManagerType& /* theManager*/)
+StylesheetHandler::initialize(MemoryManager& /* theManager*/)
 {
 }
 

@@ -113,7 +113,7 @@ getParams(
 			XalanDOMString&		basedir,
 			XalanDOMString&		outdir)
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fSetOut = true;	// Set default output directory
@@ -243,7 +243,7 @@ runTests(
 		  int		argc,
 		  char*		argv[])
 {
-    MemoryManagerType&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	XalanFileUtility	f(theManager);
 

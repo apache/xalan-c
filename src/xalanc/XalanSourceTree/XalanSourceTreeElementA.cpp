@@ -38,7 +38,7 @@ static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 XalanSourceTreeElementA::XalanSourceTreeElementA(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,

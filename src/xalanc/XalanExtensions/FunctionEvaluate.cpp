@@ -164,7 +164,7 @@ Function*
 #else
 FunctionEvaluate*
 #endif
-FunctionEvaluate::clone(MemoryManagerType&  theManager) const
+FunctionEvaluate::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

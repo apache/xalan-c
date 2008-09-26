@@ -59,7 +59,7 @@ public:
      *
      * @param theBlockSize The block size.
      */
-    XercesWrapperNavigatorAllocator(MemoryManagerType&  theManager, 
+    XercesWrapperNavigatorAllocator(MemoryManager&  theManager, 
                                         size_type       theBlockCount);
 
     ~XercesWrapperNavigatorAllocator();

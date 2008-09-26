@@ -53,7 +53,7 @@ XalanOutputStreamPrintWriter::create(
 {
     typedef XalanOutputStreamPrintWriter ThisType;
 
-    MemoryManagerType& theManager = theOutputStream.getMemoryManager();
+    MemoryManager& theManager = theOutputStream.getMemoryManager();
 
     XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 

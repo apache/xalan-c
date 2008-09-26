@@ -52,7 +52,7 @@ public:
 	 * Perform static initialization.  See class XalanSourceTreeInit.
 	 */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	/**
 	 * Perform static shut down.  See class XalanSourceTreeInit.

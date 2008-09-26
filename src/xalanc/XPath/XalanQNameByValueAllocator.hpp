@@ -61,7 +61,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanQNameByValueAllocator(MemoryManagerType&      theManager, size_type		theBlockCount);
+	XalanQNameByValueAllocator(MemoryManager&      theManager, size_type		theBlockCount);
 
 	~XalanQNameByValueAllocator();
 	

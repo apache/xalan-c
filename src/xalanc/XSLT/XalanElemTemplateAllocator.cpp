@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemTemplateAllocator::XalanElemTemplateAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanElemTemplateAllocator::XalanElemTemplateAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

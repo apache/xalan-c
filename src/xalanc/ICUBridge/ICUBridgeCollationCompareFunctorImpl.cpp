@@ -96,7 +96,7 @@ createCollator(
 
 
 
-ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(MemoryManagerType&   theManager,
+ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(MemoryManager&   theManager,
                                                                            bool		            fCacheCollators) :
 	m_isValid(false),
 	m_defaultCollator(0),
@@ -115,7 +115,7 @@ ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(Memor
 }
 
 ICUBridgeCollationCompareFunctorImpl*
-ICUBridgeCollationCompareFunctorImpl::create (MemoryManagerType& theManager , bool	fCacheCollators) 
+ICUBridgeCollationCompareFunctorImpl::create (MemoryManager& theManager , bool	fCacheCollators) 
 {
     typedef ICUBridgeCollationCompareFunctorImpl ThisType;
 

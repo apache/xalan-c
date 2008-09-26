@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ResultNamespacesStack::ResultNamespacesStack(MemoryManagerType& theManager) :
+ResultNamespacesStack::ResultNamespacesStack(MemoryManager& theManager) :
 	m_resultNamespaces(theManager, 1),
 	m_stackBegin(m_resultNamespaces.begin()),
 	m_stackPosition(m_stackBegin),

@@ -34,7 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDOMStringCache::XalanDOMStringCache(
-            MemoryManagerType&     theManager,
+            MemoryManager&     theManager,
             XalanSize_t	            theMaximumSize) :
 	m_availableList(theManager),
     m_busyList(theManager),

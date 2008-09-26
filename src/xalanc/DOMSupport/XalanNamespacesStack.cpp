@@ -61,7 +61,7 @@ XalanNamespacesStack::PrefixResolverProxy::getURI() const
 
 
 
-XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(MemoryManagerType& theManager) :
+XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(MemoryManager& theManager) :
 	m_namespaces(theManager),
 	m_position(m_namespaces.begin())
 {
@@ -70,7 +70,7 @@ XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(Memor
 
 
 XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(const XalanNamespacesStackEntry&		theSource,
-                                                                                        MemoryManagerType&      theManager) :
+                                                                                        MemoryManager&      theManager) :
 	m_namespaces(theSource.m_namespaces, theManager),
 	m_position(m_namespaces.begin() + (const_iterator(theSource.m_position) - theSource.m_namespaces.begin()))
 {
@@ -80,7 +80,7 @@ XalanNamespacesStack::XalanNamespacesStackEntry::XalanNamespacesStackEntry(const
 
 XalanNamespacesStack::XalanNamespacesStackEntry&
 XalanNamespacesStack::XalanNamespacesStackEntry::set(const XalanNamespacesStackEntry&		theRHS,
-                                                           MemoryManagerType&                   theManager)
+                                                           MemoryManager&                   theManager)
 {
 	if (this != &theRHS)
 	{
@@ -180,7 +180,7 @@ XalanNamespacesStack::XalanNamespacesStackEntry::clear()
 
 
 
-XalanNamespacesStack::XalanNamespacesStack(MemoryManagerType& theManager) :
+XalanNamespacesStack::XalanNamespacesStack(MemoryManager& theManager) :
 	m_resultNamespaces(theManager, 1),
 	m_stackBegin(m_resultNamespaces.begin()),
 	m_stackPosition(m_stackBegin),

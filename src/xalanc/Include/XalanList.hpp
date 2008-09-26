@@ -214,7 +214,7 @@ public:
     typedef typename MemoryManagedConstructionTraits<value_type>::Constructor Constructor;
 
     XalanList(
-            MemoryManagerType&  theManager) :
+            MemoryManager&  theManager) :
         m_memoryManager(&theManager),
         m_listHead(0),
 		m_freeListHeadPtr(0)
@@ -243,7 +243,7 @@ public:
 		}
     }
     
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
     	assert(m_memoryManager != 0 );
@@ -251,7 +251,7 @@ public:
         return *m_memoryManager;
     }
     
-    const MemoryManagerType&
+    const MemoryManager&
     getMemoryManager() const
     {
     	assert(m_memoryManager != 0 );
@@ -545,7 +545,7 @@ protected:
 		m_memoryManager->deallocate(pointer);
 	}
 
-	MemoryManagerType *	m_memoryManager;
+	MemoryManager *	m_memoryManager;
 
 	Node*				m_listHead;
 

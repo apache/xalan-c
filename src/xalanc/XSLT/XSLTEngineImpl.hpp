@@ -201,7 +201,7 @@ public:
      * @param xpathFactory     object responsible for XPath objects
      */
     XSLTEngineImpl(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             XMLParserLiaison&   parserLiaison,
             XPathEnvSupport&    xpathEnvSupport,
             DOMSupport&         domSupport,
@@ -1671,7 +1671,7 @@ private:
     ParamMapType                        m_stylesheetParams;
 
     static void
-    installFunctions(MemoryManagerType& theManager);
+    installFunctions(MemoryManager& theManager);
 
     static void
     uninstallFunctions();

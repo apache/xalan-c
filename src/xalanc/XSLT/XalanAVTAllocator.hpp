@@ -59,7 +59,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanAVTAllocator(MemoryManagerType&  theManager, size_type		theBlockCount);
+	XalanAVTAllocator(MemoryManager&  theManager, size_type		theBlockCount);
 
 	~XalanAVTAllocator();
 	

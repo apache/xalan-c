@@ -33,14 +33,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathFactoryDefault::XPathFactoryDefault(MemoryManagerType& theManager) :
+XPathFactoryDefault::XPathFactoryDefault(MemoryManager& theManager) :
 	XPathFactory(),
 	m_xpaths(theManager)
 {
 }
 
 XPathFactoryDefault*
-XPathFactoryDefault::createXPathFactoryDefault(MemoryManagerType& theManager)
+XPathFactoryDefault::createXPathFactoryDefault(MemoryManager& theManager)
 {
     typedef XPathFactoryDefault ThisType;
 

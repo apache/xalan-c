@@ -37,7 +37,7 @@ unsigned long	XPathInit::s_initCounter = 0;
 
 
 
-XPathInit::XPathInit(MemoryManagerType& theManager) :
+XPathInit::XPathInit(MemoryManager& theManager) :
 	m_platformSupportInit(theManager),
 	m_domSupportInit(theManager)
 {
@@ -52,7 +52,7 @@ XPathInit::XPathInit(MemoryManagerType& theManager) :
 
 
 XPathInit*
-XPathInit::create(MemoryManagerType&    theManager)
+XPathInit::create(MemoryManager&    theManager)
 {
     XPathInit*  theResult;
 
@@ -74,7 +74,7 @@ XPathInit::~XPathInit()
 
 
 void
-XPathInit::initialize(MemoryManagerType& theManager)
+XPathInit::initialize(MemoryManager& theManager)
 {
     FunctionLang::initialize(theManager);
 

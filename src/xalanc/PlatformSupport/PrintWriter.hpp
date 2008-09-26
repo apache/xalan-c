@@ -43,7 +43,7 @@ public:
 	 * 
 	 * @param fAutoFlush if true, the output will not be buffered
 	 */
-	PrintWriter( bool	fAutoFlush = false, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	PrintWriter( bool	fAutoFlush = false, MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
     MemoryManager& 
     getMemoryManager()

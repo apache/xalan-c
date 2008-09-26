@@ -130,7 +130,7 @@ public:
 
     explicit
     XalanObjectCache(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 XalanSize_t         initialListSize = 0) :
         m_availableList(theManager),
         m_busyList(theManager)
@@ -273,7 +273,7 @@ public:
     typedef ObjectType  CacheObjectType;
 
     explicit
-    XalanObjectCache(MemoryManagerType&     theManager,
+    XalanObjectCache(MemoryManager&     theManager,
                     XalanSize_t             initialListSize = 0) :
         m_deleteFunctor(theManager),
         m_availableList(theManager)
@@ -424,7 +424,7 @@ public:
 
     explicit
     XalanObjectCacheDefault(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 XalanSize_t         initialListSize = 0) :
         BaseClassType(theManager, initialListSize)
     {
@@ -451,7 +451,7 @@ public:
 
     explicit
     XalanMemoryManagerObjectCacheDefault(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 XalanSize_t         initialListSize = 0) :
         BaseClassType(theManager, initialListSize)
     {

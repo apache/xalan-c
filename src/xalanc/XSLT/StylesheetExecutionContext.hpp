@@ -1869,7 +1869,7 @@ public:
 
     virtual XalanDocument*
     parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   urlString,
             const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler = 0) const = 0;
@@ -1881,7 +1881,7 @@ public:
     returnMutableNodeRefList(MutableNodeRefList*    theList) = 0;
 
     virtual MutableNodeRefList*
-    createMutableNodeRefList(MemoryManagerType& theManager) const = 0;
+    createMutableNodeRefList(MemoryManager& theManager) const = 0;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 

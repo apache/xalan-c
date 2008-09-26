@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-OutputContextStack::OutputContextStack(MemoryManagerType& theManager) :
+OutputContextStack::OutputContextStack(MemoryManager& theManager) :
 	m_stack(theManager, 1 ),
 	m_stackPosition(m_stack.begin()),
 	m_stackSize(0)

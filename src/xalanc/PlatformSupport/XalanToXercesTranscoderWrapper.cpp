@@ -37,14 +37,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder) :
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&	theTranscoder) :
 	XalanOutputTranscoder(theManager),
 	m_transcoder(&theTranscoder)
 {
 }
 
 XalanToXercesTranscoderWrapper*
-XalanToXercesTranscoderWrapper::create(MemoryManagerType& theManager, XMLTranscoderType&	theTranscoder)
+XalanToXercesTranscoderWrapper::create(MemoryManager& theManager, XMLTranscoderType&	theTranscoder)
 {
     typedef XalanToXercesTranscoderWrapper ThisType;
 

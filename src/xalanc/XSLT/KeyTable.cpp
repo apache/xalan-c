@@ -199,7 +199,7 @@ KeyTable::KeyTable(
 } // end constructor
 
 KeyTable*
-KeyTable::create(MemoryManagerType& theManager,
+KeyTable::create(MemoryManager& theManager,
             XalanNode*                          startNode,
             const PrefixResolver&               resolver,
             const KeyDeclarationVectorType&     keyDeclarations,

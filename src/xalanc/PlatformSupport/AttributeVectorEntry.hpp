@@ -45,7 +45,7 @@ public:
 			const XMLChVectorType&	theName,
 			const XMLChVectorType&	theValue,
 			const XMLChVectorType&	theType,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		m_Name(theName,theManager),
 		m_Value(theValue,theManager),
 		m_Type(theType,theManager)
@@ -56,14 +56,14 @@ public:
 			const XMLCh*	        theName,
 			const XMLCh*	        theValue,
 			const XMLCh*	        theType,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		m_Name(theName, theName + length(theName) + 1, theManager),
 		m_Value(theValue, theValue + length(theValue) + 1, theManager),
 		m_Type(theType, theType + length(theType) + 1, theManager)
 	{
 	}
 
-	AttributeVectorEntry(MemoryManagerType&      theManager) :
+	AttributeVectorEntry(MemoryManager&      theManager) :
 		m_Name(theManager),
 		m_Value(theManager),
 		m_Type(theManager)
@@ -74,7 +74,7 @@ public:
     create( const XMLCh*	theName,
 			const XMLCh*	theValue,
 			const XMLCh*	theType,
-            MemoryManagerType&      theManager)
+            MemoryManager&      theManager)
     {
         typedef AttributeVectorEntry ThisType;
         

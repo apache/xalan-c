@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeAttributeNSAllocator::XalanSourceTreeAttributeNSAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanSourceTreeAttributeNSAllocator::XalanSourceTreeAttributeNSAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

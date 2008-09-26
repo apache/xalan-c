@@ -42,7 +42,7 @@ public:
 	typedef Type			value_type;
 
 	
-	XalanAllocator(MemoryManagerType&      theManager) :
+	XalanAllocator(MemoryManager&      theManager) :
         m_memoryManager(theManager)
 	{
 	}
@@ -52,7 +52,7 @@ public:
 	{
 	}
 	
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
@@ -117,7 +117,7 @@ private:
     XalanAllocator<Type>&
     operator=(const XalanAllocator<Type>&);
     
-    MemoryManagerType&      m_memoryManager;
+    MemoryManager&      m_memoryManager;
 };
 
 

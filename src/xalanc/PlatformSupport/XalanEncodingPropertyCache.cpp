@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanEncodingPropertyCache::XalanEncodingPropertyCache(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
 			size_t							theCacheSize,
 			const XalanOutputTranscoder*	theTranscoder) :
 	m_transcoder(theTranscoder),

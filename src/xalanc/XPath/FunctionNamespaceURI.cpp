@@ -115,7 +115,7 @@ Function*
 #else
 FunctionNamespaceURI*
 #endif
-FunctionNamespaceURI::clone(MemoryManagerType&  theManager) const
+FunctionNamespaceURI::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

@@ -33,9 +33,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 unsigned long	XSLTInit::s_initCounter = 0;
 
-static MemoryManagerType* s_staticMemoryManager = 0;
+static MemoryManager* s_staticMemoryManager = 0;
 
-XSLTInit::XSLTInit(MemoryManagerType&      theManager) :
+XSLTInit::XSLTInit(MemoryManager&      theManager) :
 	m_platformSupportInit(theManager),
 	m_domSupportInit(theManager),
 	m_xmlSupportInit(theManager),
@@ -51,7 +51,7 @@ XSLTInit::XSLTInit(MemoryManagerType&      theManager) :
 }
 
 XSLTInit*
-XSLTInit::create(MemoryManagerType&      theManager)
+XSLTInit::create(MemoryManager&      theManager)
 {
         typedef XSLTInit ThisType;
         
@@ -77,7 +77,7 @@ XSLTInit::~XSLTInit()
 	}
 }
 
-MemoryManagerType&
+MemoryManager&
 XSLTInit::getMemoryManager()
 {
     assert( s_staticMemoryManager !=0);
@@ -86,7 +86,7 @@ XSLTInit::getMemoryManager()
 }
 
 void
-XSLTInit::initialize(MemoryManagerType&  theManager)
+XSLTInit::initialize(MemoryManager&  theManager)
 {
 	Constants::initialize(theManager);
 

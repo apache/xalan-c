@@ -40,7 +40,7 @@ class XalanMemMngArrayAllocate
 public:
 	static Type*
 	allocate(	size_t				size, 
-				MemoryManagerType& 	memoryManager)
+				MemoryManager& 	memoryManager)
 	{		
 		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
 													(Type*)memoryManager.allocate( sizeof(Type)*size),
@@ -64,7 +64,7 @@ public:
 	
 	static Type*
 	allocateMemMgr(	size_t				size, 
-				MemoryManagerType& 	memoryManager)
+				MemoryManager& 	memoryManager)
 	{		
 		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
 													(Type*)memoryManager.allocate( sizeof(Type)*size),
@@ -89,7 +89,7 @@ public:
 	static void
 	deallocate (	Type*				ptr,
 					size_t				size,
-					MemoryManagerType& 	memoryManager)
+					MemoryManager& 	memoryManager)
 	{
 		assert ( ptr != 0 );
 

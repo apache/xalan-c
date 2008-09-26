@@ -177,7 +177,7 @@ Function*
 #else
 FunctionNodeSet*
 #endif
-FunctionNodeSet::clone(MemoryManagerType&   theManager) const
+FunctionNodeSet::clone(MemoryManager&   theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

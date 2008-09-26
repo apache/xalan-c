@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

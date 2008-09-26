@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanAVTPartSimpleAllocator::XalanAVTPartSimpleAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanAVTPartSimpleAllocator::XalanAVTPartSimpleAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

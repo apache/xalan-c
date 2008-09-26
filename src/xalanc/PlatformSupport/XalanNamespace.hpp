@@ -38,7 +38,7 @@ class XalanNamespace
 public:
 
 	explicit
-	XalanNamespace(MemoryManagerType&      theManager) :
+	XalanNamespace(MemoryManager&      theManager) :
 		m_prefix(theManager),
 		m_uri(theManager)
 	{
@@ -54,7 +54,7 @@ public:
 	XalanNamespace(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		m_prefix(thePrefix,theManager),
 		m_uri(theURI, theManager)
 	{
@@ -62,7 +62,7 @@ public:
 
 	XalanNamespace(
             const XalanNamespace&   other,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		m_prefix(other.m_prefix,theManager),
 		m_uri(other.m_uri, theManager)
 	{

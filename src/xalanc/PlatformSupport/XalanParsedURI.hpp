@@ -62,7 +62,7 @@ public:
 	/** 
 	 * Default constructor 
 	 */
-	XalanParsedURI(MemoryManagerType&      theManager) :
+	XalanParsedURI(MemoryManager&      theManager) :
         m_scheme(theManager),
         m_authority(theManager),
         m_path(theManager),
@@ -81,7 +81,7 @@ public:
 	XalanParsedURI(
 		const XalanDOMChar*			uriString,
 		XalanDOMString::size_type	uriStringLen,
-        MemoryManagerType&          theManager) : 
+        MemoryManager&          theManager) : 
         m_scheme(theManager),
         m_authority(theManager),
         m_path(theManager),
@@ -99,7 +99,7 @@ public:
 	 */
 	XalanParsedURI(
 		const XalanDOMString		&uriString,
-        MemoryManagerType&          theManager) :
+        MemoryManager&          theManager) :
         m_scheme(theManager),
         m_authority(theManager),
         m_path(theManager),
@@ -110,7 +110,7 @@ public:
 		parse(uriString.c_str(), uriString.length());
 	}
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_scheme.getMemoryManager();

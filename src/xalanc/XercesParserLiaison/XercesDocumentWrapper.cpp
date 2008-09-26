@@ -75,7 +75,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentWrapper::XercesDocumentWrapper(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,
@@ -119,7 +119,7 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 
 XercesDocumentWrapper*
 XercesDocumentWrapper::create( 
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,

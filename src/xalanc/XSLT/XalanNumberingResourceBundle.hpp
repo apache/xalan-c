@@ -74,17 +74,17 @@ public:
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
 		const NumberTypeVectorType&		theDigitsTableTable,
-        MemoryManagerType&              theManager);
+        MemoryManager&              theManager);
 
 	explicit
-	XalanNumberingResourceBundle(MemoryManagerType&  theManager);
+	XalanNumberingResourceBundle(MemoryManager&  theManager);
 
 	XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource,
-                                    MemoryManagerType&                  theManager);
+                                    MemoryManager&                  theManager);
 
 	~XalanNumberingResourceBundle();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_language.getMemoryManager();

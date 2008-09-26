@@ -37,7 +37,7 @@ ICUBridgeCleanup::cleanup()
 }
 
 void
-ICUBridgeCleanup::startup(MemoryManagerType&  /*theManager*/)
+ICUBridgeCleanup::startup(MemoryManager&  /*theManager*/)
 {
     //TBD
 }

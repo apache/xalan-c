@@ -60,7 +60,7 @@ public:
 	 * @param theBlockSize The block size.
 	 */
 	XalanElemLiteralResultAllocator(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             size_type		    theBlockCount);
 
 	~XalanElemLiteralResultAllocator();

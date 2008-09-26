@@ -38,10 +38,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNumberFormat
 public:
 
 	explicit
-	XalanNumberFormat(MemoryManagerType&      theManager);
+	XalanNumberFormat(MemoryManager&      theManager);
 
     static XalanNumberFormat*
-    create(MemoryManagerType&      theManager)
+    create(MemoryManager&      theManager)
     {
         XalanNumberFormat*  theInstance;
 
@@ -54,7 +54,7 @@ public:
 	virtual
 	~XalanNumberFormat();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_groupingSeparator.getMemoryManager();

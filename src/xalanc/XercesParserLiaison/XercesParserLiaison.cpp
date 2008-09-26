@@ -715,7 +715,7 @@ XercesParserLiaison::resetErrors()
 XercesParserLiaison::DOMParserType*
 XercesParserLiaison::createDOMParser()
 {
-    MemoryManagerType&  theMemoryManager =
+    MemoryManager&  theMemoryManager =
         getMemoryManager();
 
     DOMParserType* const    theParser =
@@ -737,7 +737,7 @@ XercesParserLiaison::createDOMParser()
 XercesParserLiaison::SAXParserType*
 XercesParserLiaison::createSAXParser()
 {
-    MemoryManagerType&  theMemoryManager =
+    MemoryManager&  theMemoryManager =
         getMemoryManager();
 
     SAXParserType* const    theParser =

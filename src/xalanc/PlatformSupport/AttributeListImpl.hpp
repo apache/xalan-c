@@ -51,16 +51,16 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeListImpl : public AttributeListType
 public:
 
 	explicit
-	AttributeListImpl(MemoryManagerType&      theManager);
+	AttributeListImpl(MemoryManager&      theManager);
 
 	virtual
 	~AttributeListImpl();
 
     AttributeListImpl(const AttributeListImpl&	theSource,
-                        MemoryManagerType&      theManager);
+                        MemoryManager&      theManager);
 
     AttributeListImpl(const AttributeListType&	theSource,
-                        MemoryManagerType&      theManager);
+                        MemoryManager&      theManager);
 
     AttributeListImpl&
 	operator=(const AttributeListImpl&	theRHS);
@@ -68,7 +68,7 @@ public:
 	AttributeListImpl&
 	operator=(const AttributeListType&	theRHS);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_AttributeVector.getMemoryManager();

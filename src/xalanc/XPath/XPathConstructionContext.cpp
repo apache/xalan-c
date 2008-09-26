@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathConstructionContext::XPathConstructionContext(MemoryManagerType&  theManager):
+XPathConstructionContext::XPathConstructionContext(MemoryManager&  theManager):
     m_memoryManager(theManager)
 {
 }

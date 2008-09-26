@@ -70,7 +70,7 @@ public:
 #else
 	virtual FunctionGenerateID*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

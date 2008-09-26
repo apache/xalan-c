@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XStringAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XStringAllocator(MemoryManager&  theManager, size_type	theBlockCount);
 
 	~XStringAllocator();
 

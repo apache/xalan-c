@@ -81,7 +81,7 @@ public:
 #else
 	virtual FunctionID*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

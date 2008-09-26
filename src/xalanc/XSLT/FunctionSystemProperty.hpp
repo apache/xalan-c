@@ -41,9 +41,9 @@ public:
 
 	typedef Function	ParentType;
 
-	FunctionSystemProperty(MemoryManagerType& theManager);
+	FunctionSystemProperty(MemoryManager& theManager);
 
-    FunctionSystemProperty( const FunctionSystemProperty& other, MemoryManagerType& theManager);
+    FunctionSystemProperty( const FunctionSystemProperty& other, MemoryManager& theManager);
 
 	virtual
 	~FunctionSystemProperty();
@@ -64,7 +64,7 @@ public:
 #else
 	virtual FunctionSystemProperty*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

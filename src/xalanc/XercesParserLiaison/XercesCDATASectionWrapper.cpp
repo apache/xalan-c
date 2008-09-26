@@ -53,7 +53,7 @@ XercesCDATASectionWrapper::XercesCDATASectionWrapper(
 }
 
 XercesCDATASectionWrapper*
-XercesCDATASectionWrapper::create( MemoryManagerType& theManager,
+XercesCDATASectionWrapper::create( MemoryManager& theManager,
 			const DOMCDATASectionType*		theXercesCDATASection,
 			const XercesWrapperNavigator&	theNavigator)
 

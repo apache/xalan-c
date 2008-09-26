@@ -142,7 +142,7 @@ public:
 	 * @param thePointerVectorAllocatorBlockSize The block size to use for allocating vectors of pointers.
 	 */
 	StylesheetConstructionContextDefault(
-            MemoryManagerType&                      theManager,
+            MemoryManager&                      theManager,
 			XSLTEngineImpl&							processor,
 			XPathFactory&							xpathFactory,
 			VectorAllocatorSizeType					theXalanDOMCharVectorAllocatorBlockSize = eDefaultXalanDOMCharVectorBlockSize,

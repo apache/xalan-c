@@ -61,7 +61,7 @@ public:
 	 *
 	 * @param theBlockSize The block size when allocating.
 	 */
-	XalanArrayAllocator(MemoryManagerType&       theManager,
+	XalanArrayAllocator(MemoryManager&       theManager,
                         size_type	theBlockSize = eDefaultBlockSize) :
 		m_list(theManager),
 		m_blockSize(theBlockSize),
@@ -73,7 +73,7 @@ public:
     {        
         typename ListType::iterator iter = m_list.begin();
 
-        MemoryManagerType& theManager = m_list.getMemoryManager();
+        MemoryManager& theManager = m_list.getMemoryManager();
 
         for( iter = m_list.begin(); iter != m_list.end(); ++iter)
         {

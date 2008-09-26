@@ -46,11 +46,11 @@ public:
 	 * 
 	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
 	 */
-	ICUBridgeCollationCompareFunctor(MemoryManagerType& theManager, 
+	ICUBridgeCollationCompareFunctor(MemoryManager& theManager, 
                                                 bool	fCacheCollators = false);
 
 	static ICUBridgeCollationCompareFunctor*
-    create(MemoryManagerType& theManager, bool	fCacheCollators = false);
+    create(MemoryManager& theManager, bool	fCacheCollators = false);
 
 	virtual
 	~ICUBridgeCollationCompareFunctor();

@@ -93,7 +93,7 @@ Function*
 #else
 FunctionIntersection*
 #endif
-FunctionIntersection::clone(MemoryManagerType&  theManager) const
+FunctionIntersection::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

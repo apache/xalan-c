@@ -64,7 +64,7 @@ public:
 #else
 	virtual FunctionDifference*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

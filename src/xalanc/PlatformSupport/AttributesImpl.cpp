@@ -38,7 +38,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-AttributesImpl::AttributesImpl(MemoryManagerType&      theManager) :
+AttributesImpl::AttributesImpl(MemoryManager&      theManager) :
 	AttributesType(),
 	m_attributesVector(theManager),
 	m_cacheVector(theManager)
@@ -60,7 +60,7 @@ AttributesImpl::~AttributesImpl()
 
 
 AttributesImpl::AttributesImpl(const AttributesImpl&	theSource,
-                               MemoryManagerType&      theManager) :
+                               MemoryManager&      theManager) :
 	AttributesType(),
 	m_attributesVector(theManager),
     m_cacheVector(theManager)
@@ -74,7 +74,7 @@ AttributesImpl::AttributesImpl(const AttributesImpl&	theSource,
 
 
 AttributesImpl::AttributesImpl(const AttributesType&	theSource,
-                               MemoryManagerType&      theManager) :
+                               MemoryManager&      theManager) :
 	AttributesType(),
 	m_attributesVector(theManager),
     m_cacheVector(theManager)

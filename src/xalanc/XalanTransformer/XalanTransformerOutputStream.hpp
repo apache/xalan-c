@@ -48,7 +48,7 @@ public:
 	 * @param theFlushHandler	a user defined (callback) function.
 	 */
     XalanTransformerOutputStream(
-        MemoryManagerType&          theManager,
+        MemoryManager&          theManager,
 		void*						theOutputHandle, 
 		XalanOutputHandlerType		theOutputHandler,
 		XalanFlushHandlerType		theFlushHandler = 0);

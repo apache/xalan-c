@@ -38,7 +38,7 @@ const XalanDOMString::size_type     XalanDOMString::npos;
  
 
 
-XalanDOMString::XalanDOMString(MemoryManagerType&  theManager) :
+XalanDOMString::XalanDOMString(MemoryManager&  theManager) :
     m_data(theManager),
     m_size(0)
 {
@@ -48,7 +48,7 @@ XalanDOMString::XalanDOMString(MemoryManagerType&  theManager) :
 
 XalanDOMString::XalanDOMString(
             const XalanDOMString&   theSource,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             size_type               theStartPosition,
             size_type               theCount) :
     m_data(theManager),
@@ -64,7 +64,7 @@ XalanDOMString::XalanDOMString(
 
 XalanDOMString::XalanDOMString(
             const XalanDOMChar*     theString,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             size_type               theCount) :
     m_data(theManager),
     m_size(0)
@@ -81,7 +81,7 @@ XalanDOMString::XalanDOMString(
 
 XalanDOMString::XalanDOMString(
             const char*         theString,
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             size_type           theCount) :
     m_data(theManager),
     m_size(0)
@@ -118,7 +118,7 @@ XalanDOMString::clone(MemoryManager&  theManager)
 XalanDOMString::XalanDOMString(
             size_type           theCount,
             XalanDOMChar        theChar,
-            MemoryManagerType&  theManager) :
+            MemoryManager&  theManager) :
     m_data(theManager),
     m_size(0)
 {
@@ -660,7 +660,7 @@ XalanDOMString::compare(
 
 template<class Type>
 inline void
-reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
+reset_func(XalanDOMString& obj, MemoryManager&    theManager, Type string)
 {
     assert( string != 0 );
 
@@ -672,7 +672,7 @@ reset_func(XalanDOMString& obj, MemoryManagerType&    theManager, Type string)
 
 
 void 
-XalanDOMString::reset(MemoryManagerType&    theManager,
+XalanDOMString::reset(MemoryManager&    theManager,
                       const char*           theString)
 {
     reset_func(*this, theManager, theString);
@@ -681,7 +681,7 @@ XalanDOMString::reset(MemoryManagerType&    theManager,
 
 
 void 
-XalanDOMString::reset(MemoryManagerType&    theManager,
+XalanDOMString::reset(MemoryManager&    theManager,
                       const XalanDOMChar*   theString)
 {
     reset_func(*this, theManager, theString);

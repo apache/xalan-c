@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 TopLevelArg::TopLevelArg(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XalanDOMString&	expr) :
 	m_qname(name, theManager),
@@ -35,7 +35,7 @@ TopLevelArg::TopLevelArg(
 }
 TopLevelArg*
 TopLevelArg::create(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XalanDOMString&	expr)
 {
@@ -53,7 +53,7 @@ TopLevelArg::create(
 }
 
 TopLevelArg::TopLevelArg(
-        MemoryManagerType&  theManager,
+        MemoryManager&  theManager,
 		const XalanQName&	name,
 		const XObjectPtr	variable) :
 	m_qname(name, theManager),
@@ -64,7 +64,7 @@ TopLevelArg::TopLevelArg(
 
 TopLevelArg*
 TopLevelArg::create(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XObjectPtr	    variable)
 {
@@ -83,7 +83,7 @@ TopLevelArg::create(
 
 
 TopLevelArg::TopLevelArg(const TopLevelArg&		theSource,
-                         MemoryManagerType&     theManager) :
+                         MemoryManager&     theManager) :
 	m_qname(theSource.m_qname, theManager),
 	m_expression(theSource.m_expression, theManager),
 	m_xobject(theSource.m_xobject)

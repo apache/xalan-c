@@ -46,7 +46,7 @@ public:
 			const XercesWrapperNavigator&	theNavigator);
 
     static XercesCommentWrapper*
-    create( MemoryManagerType& theManager,
+    create( MemoryManager& theManager,
 			const DOMCommentType*			theXercesComment,
 			const XercesWrapperNavigator&	theNavigator);
 

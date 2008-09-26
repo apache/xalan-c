@@ -42,7 +42,7 @@ public:
 
 	typedef XalanVector<const XalanNode*>		NodeVectorType;
 
-	NodeNameTreeWalker(MemoryManagerType& theManager);
+	NodeNameTreeWalker(MemoryManager& theManager);
 
 	virtual
 	~NodeNameTreeWalker();

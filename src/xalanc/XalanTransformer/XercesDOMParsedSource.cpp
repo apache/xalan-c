@@ -174,7 +174,7 @@ XercesDOMParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XercesDOMParsedSource::createHelper(MemoryManagerType& theManager) const
+XercesDOMParsedSource::createHelper(MemoryManager& theManager) const
 {
     return XercesDOMParsedSourceHelper::create(theManager);
 }

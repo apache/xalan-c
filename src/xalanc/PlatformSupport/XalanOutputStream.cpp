@@ -65,7 +65,7 @@ const XalanDOMString::size_type     XalanOutputStream::s_nlCRStringLength =
 
 
 XalanOutputStream::XalanOutputStream(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             size_type               theBufferSize,
             size_type               theTranscoderBlockSize,
             bool                    fThrowTranscodeException) :

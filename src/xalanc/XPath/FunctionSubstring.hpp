@@ -82,7 +82,7 @@ public:
 #else
 	virtual FunctionSubstring*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

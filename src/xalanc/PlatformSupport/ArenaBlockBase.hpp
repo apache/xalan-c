@@ -50,7 +50,7 @@ public:
 	typedef const Type&		const_reference;
 	typedef Type			value_type;
 
-    ArenaBlockAllocator(MemoryManagerType&  theManager) :
+    ArenaBlockAllocator(MemoryManager&  theManager) :
         m_memoryManager(theManager)
 	{
 	}
@@ -59,7 +59,7 @@ public:
 	{
 	}
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
@@ -92,7 +92,7 @@ private:
     ArenaBlockAllocator<Type>&
     operator=(const ArenaBlockAllocator<Type>&);
 
-    MemoryManagerType&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 };
 #endif
 
@@ -118,7 +118,7 @@ public:
 
 	typedef SizeType							size_type;
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_allocator.getMemoryManager();
@@ -187,7 +187,7 @@ public:
 protected:
 
 	ArenaBlockBase(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type	        theBlockSize) :	
 		m_allocator(theManager),
 		m_objectCount(0),

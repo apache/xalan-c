@@ -240,7 +240,7 @@ public:
 
 
     XalanMap(
-            MemoryManagerType&  theMemoryManager,
+            MemoryManager&  theMemoryManager,
             double              loadFactor = 0.75,
             size_type           minBuckets = eDefaultMinBuckets,
             size_type           eraseThreshold = eDefaultEraseThreshold) :
@@ -258,7 +258,7 @@ public:
 
     XalanMap(
             const XalanMap&     theRhs,
-            MemoryManagerType&  theMemoryManager) :
+            MemoryManager&  theMemoryManager) :
         m_memoryManager(&theMemoryManager),
         m_loadFactor(theRhs.m_loadFactor),
         m_minBuckets(theRhs.m_minBuckets),
@@ -283,7 +283,7 @@ public:
         assert(m_size == theRhs.m_size);
     }
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         assert (m_memoryManager != 0);
@@ -453,7 +453,7 @@ public:
         m_size = theRhs.m_size;
         theRhs.m_size = tempSize;
 
-        MemoryManagerType* const    tempMemoryManager = m_memoryManager;
+        MemoryManager* const    tempMemoryManager = m_memoryManager;
         m_memoryManager = theRhs.m_memoryManager;
         theRhs.m_memoryManager = tempMemoryManager;
 
@@ -714,7 +714,7 @@ protected:
         
     typename KeyTraits::Comparator		m_equals;
 
-    MemoryManagerType*					m_memoryManager;
+    MemoryManager*					m_memoryManager;
 
     double								m_loadFactor;
 

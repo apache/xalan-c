@@ -59,14 +59,14 @@ public:
 	 */
 	explicit
 	XalanDOMStringPool(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			block_size_type		theBlockSize = eDefaultBlockSize,
 			bucket_count_type	theBucketCount = eDefaultBucketCount,
 			bucket_size_type	theBucketSize = eDefaultBucketSize);
 
     static XalanDOMStringPool*
     create(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			block_size_type		theBlockSize = eDefaultBlockSize,
 			bucket_count_type	theBucketCount = eDefaultBucketCount,
 			bucket_size_type	theBucketSize = eDefaultBucketSize);
@@ -123,13 +123,13 @@ public:
 		return m_hashTable;
 	}
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_hashTable.getMemoryManager();
     }
 
-    const MemoryManagerType&
+    const MemoryManager&
     getMemoryManager() const
     {
         return m_hashTable.getMemoryManager();

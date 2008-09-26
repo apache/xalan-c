@@ -349,7 +349,7 @@ FindNodeAndGetAttributeValue(
             const XalanDOMString&   theNodeName,
             const XalanDOMString&   theAttributeName,
             XalanDOMString&         theResult,
-            MemoryManagerType&      theMemoryManager)
+            MemoryManager&      theMemoryManager)
 {
     NodeNameTreeWalker  theTreeWalker(theMemoryManager);
 
@@ -382,7 +382,7 @@ GetXSLInput(
             const XalanDOMString&   theXSLFileURL,
             XalanDOMString&         theContextNodeMatchPattern,
             XalanDOMString&         theXPathString,
-            MemoryManagerType&      theMemoryManager)
+            MemoryManager&      theMemoryManager)
 {
     bool                    fResult = false;
 
@@ -440,7 +440,7 @@ FindContextNode(
 {
     XalanNode*      theResult = 0;
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     XPath* const    theXPath = theXPathFactory.create();
@@ -521,7 +521,7 @@ TestAxisResult(
     XalanDocument* const    theXMLDocument = ParseXML(theLiaison,
                                                       theXMLFileURL);
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     if (theXMLDocument != 0)
@@ -640,7 +640,7 @@ TestPredicateResult(
                 ParseXML(theLiaison,
                          theXMLFileURL);
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     if (theXMLDocument != 0)
@@ -843,7 +843,7 @@ TestNumericResults(
     assert(sizeof(theNumericTestInput) / sizeof(theNumericTestInput[0]) ==
             sizeof(theNumericTestExpectedOutput) / sizeof(theNumericTestExpectedOutput[0]));
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     for(int i = 0; theNumericTestInput[i] != 0; i++)
@@ -989,7 +989,7 @@ TestStringResults(
 {
     assert(sizeof(theStringTestInput) == sizeof(theStringTestExpectedOutput));
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     for(int i = 0; theStringTestInput[i] != 0; i++)
@@ -1141,7 +1141,7 @@ TestBooleanResults(
     assert(sizeof(theBooleanTestInput) / sizeof(theBooleanTestInput[0]) ==
                 sizeof(theBooleanTestExpectedOutput) / sizeof(theBooleanTestExpectedOutput[0]));
 
-    MemoryManagerType&      theMemoryManager =
+    MemoryManager&      theMemoryManager =
         theExecutionContext.getMemoryManager();
 
     for(int i = 0; theBooleanTestInput[i] != 0; i++)
@@ -1222,7 +1222,7 @@ TestAxes(
             PrintWriter&            thePrintWriter,
             XPathExecutionContext&  theExecutionContext)
 {
-    MemoryManagerType& theMemoryManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager& theMemoryManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
     const XalanDOMString    theProtocol("file://", theMemoryManager);
 
@@ -1355,7 +1355,7 @@ main(
     XalanTransformer::initialize();
 
     {
-        MemoryManagerType& theMemoryManager = XalanMemMgrs::getDefaultXercesMemMgr();
+        MemoryManager& theMemoryManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
         XMLSupportInit                  theXMLSupportInit;
         XPathInit                       theXPathInit( theMemoryManager );

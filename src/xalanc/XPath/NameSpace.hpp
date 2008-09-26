@@ -42,7 +42,7 @@ class XALAN_XPATH_EXPORT NameSpace
 public:
 
 	explicit
-	NameSpace(MemoryManagerType&  theManager) :
+	NameSpace(MemoryManager&  theManager) :
 		m_prefix(theManager),
 		m_uri(theManager)
 	{
@@ -58,7 +58,7 @@ public:
 	NameSpace(
 			const XalanDOMString&	prefix,
 			const XalanDOMString&	uri,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 		m_prefix(prefix, theManager),
 		m_uri(uri, theManager)
 	{
@@ -68,7 +68,7 @@ public:
 	create(
 			const XalanDOMString&	prefix,
 			const XalanDOMString&	uri,
-            MemoryManagerType&      theManager)
+            MemoryManager&      theManager)
 	{
 		typedef NameSpace ThisType;
 		
@@ -83,7 +83,7 @@ public:
 		return theResult;
 	}
     NameSpace( const NameSpace&     other,
-        MemoryManagerType&      theManager) :
+        MemoryManager&      theManager) :
 		m_prefix(other.m_prefix, theManager),
 		m_uri(other.m_uri, theManager)        
     {

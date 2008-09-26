@@ -53,7 +53,7 @@ XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
 }
 
 XercesDocumentTypeWrapper*
-XercesDocumentTypeWrapper::create( MemoryManagerType& theManager,
+XercesDocumentTypeWrapper::create( MemoryManager& theManager,
 			const DOMDocumentType_Type*		theXercesDOMDocumentType,
 			const XercesWrapperNavigator&	theNavigator)
 {

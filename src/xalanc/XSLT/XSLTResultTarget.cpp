@@ -35,7 +35,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XSLTResultTarget::XSLTResultTarget(MemoryManagerType& theManager) :
+XSLTResultTarget::XSLTResultTarget(MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -48,7 +48,7 @@ XSLTResultTarget::XSLTResultTarget(MemoryManagerType& theManager) :
 
 
 XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(fileName, theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -61,7 +61,7 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName,
 
 
 XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*	fileName,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(fileName, theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -74,7 +74,7 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*	fileName,
 
 
 XSLTResultTarget::XSLTResultTarget(const char*	fileName,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(fileName, theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -85,7 +85,7 @@ XSLTResultTarget::XSLTResultTarget(const char*	fileName,
 }
 
 XSLTResultTarget::XSLTResultTarget(const XSLTResultTarget& other,
-                                   MemoryManagerType&   theManager) :
+                                   MemoryManager&   theManager) :
 	m_fileName(other.m_fileName, theManager),
 	m_byteStream(other.m_byteStream),
 	m_encoding(other.m_encoding, theManager),
@@ -97,7 +97,7 @@ XSLTResultTarget::XSLTResultTarget(const XSLTResultTarget& other,
 
 
 XSLTResultTarget::XSLTResultTarget(StreamType*	theStream,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(theStream),
 	m_encoding(theManager),
@@ -111,7 +111,7 @@ XSLTResultTarget::XSLTResultTarget(StreamType*	theStream,
 
 
 XSLTResultTarget::XSLTResultTarget(StreamType&	theStream,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(&theStream),
 	m_encoding(theManager),
@@ -124,7 +124,7 @@ XSLTResultTarget::XSLTResultTarget(StreamType&	theStream,
 
 
 XSLTResultTarget::XSLTResultTarget(Writer*	characterStream,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -138,7 +138,7 @@ XSLTResultTarget::XSLTResultTarget(Writer*	characterStream,
 
 
 XSLTResultTarget::XSLTResultTarget(FILE*	stream,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(0),
 	m_encoding(theManager),
@@ -152,7 +152,7 @@ XSLTResultTarget::XSLTResultTarget(FILE*	stream,
 
 
 XSLTResultTarget::XSLTResultTarget(FormatterListener&	flistener,
-                                   MemoryManagerType& theManager) :
+                                   MemoryManager& theManager) :
 	m_fileName(theManager),
 	m_byteStream(0),
 	m_encoding(theManager),

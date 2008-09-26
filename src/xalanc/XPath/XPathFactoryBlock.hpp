@@ -47,7 +47,7 @@ public:
 
 	explicit
 	XPathFactoryBlock(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanSize_t             theBlockSize = eDefaultBlockSize);
 
 	virtual

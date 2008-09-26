@@ -63,7 +63,7 @@ public:
 #else
 	virtual XalanEXSLTFunctionDateTime*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManager& theManager) const
 	{
 	    return XalanCopyConstruct(theManager, *this);
 	}

@@ -36,7 +36,7 @@ class XALAN_DOM_EXPORT XalanDOMInit
 public:
 
 	explicit
-	XalanDOMInit(MemoryManagerType&      theManager);
+	XalanDOMInit(MemoryManager&      theManager);
 
 	~XalanDOMInit();
 
@@ -50,7 +50,7 @@ private:
 
 
 	static void
-	initialize(MemoryManagerType&      theManager);
+	initialize(MemoryManager&      theManager);
 
 	static void
 	terminate();

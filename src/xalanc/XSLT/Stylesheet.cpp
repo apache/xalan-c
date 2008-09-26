@@ -154,7 +154,7 @@ Stylesheet::Stylesheet(
     
 Stylesheet*
 Stylesheet::create(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
             StylesheetRoot&                 root,
             const XalanDOMString&           baseIdentifier,
             StylesheetConstructionContext&  constructionContext)

@@ -609,7 +609,7 @@ public:
          * @param theMessage string error message
          */
         XPathExpressionException(const XalanDOMString&  theMessage,
-                                    MemoryManagerType& theManager);
+                                    MemoryManager& theManager);
 
         virtual~
         XPathExpressionException();
@@ -721,11 +721,11 @@ public:
 #endif
 
     explicit
-    XPathExpression(MemoryManagerType& theManager);
+    XPathExpression(MemoryManager& theManager);
 
     ~XPathExpression();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_opMap.getMemoryManager();
@@ -878,7 +878,7 @@ public:
      */
     OpCodeMapValueType
     getOpCodeLengthFromOpMap(OpCodeMapPositionType  opPos,
-                             MemoryManagerType&     theManager) const;
+                             MemoryManager&     theManager) const;
 
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
     /**
@@ -890,7 +890,7 @@ public:
      */
     OpCodeMapValueType
     getOpCodeLengthFromOpMap(OpCodeMapSizeType      theIndex,
-                                MemoryManagerType& theManager) const;
+                                MemoryManager& theManager) const;
 #endif
 
 #if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)

@@ -44,7 +44,7 @@ class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatProxy : public XalanNumberForma
 public:
 
 	explicit
-	ICUXalanNumberFormatProxy(MemoryManagerType& theManager);
+	ICUXalanNumberFormatProxy(MemoryManager& theManager);
 
 	virtual
 	~ICUXalanNumberFormatProxy();

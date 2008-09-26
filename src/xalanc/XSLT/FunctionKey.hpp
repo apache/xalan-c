@@ -68,7 +68,7 @@ public:
 #else
 	virtual FunctionKey*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

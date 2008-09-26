@@ -74,7 +74,7 @@ XalanSourceTreeElement::~XalanSourceTreeElement()
 
 /*
 XalanSourceTreeElement::XalanSourceTreeElement(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
 			const XalanSourceTreeElement&	theSource,
 			bool								deep) :
 	XalanElement(theSource),

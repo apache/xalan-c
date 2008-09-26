@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemEmptyAllocator::XalanElemEmptyAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanElemEmptyAllocator::XalanElemEmptyAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

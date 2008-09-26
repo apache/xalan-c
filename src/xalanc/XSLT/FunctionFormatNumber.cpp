@@ -104,7 +104,7 @@ Function*
 #else
 FunctionFormatNumber*
 #endif
-FunctionFormatNumber::clone(MemoryManagerType&  theManager) const
+FunctionFormatNumber::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

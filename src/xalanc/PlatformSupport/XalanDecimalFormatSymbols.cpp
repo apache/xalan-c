@@ -58,7 +58,7 @@ static XalanDOMChar		theCurrencySymbol[] =
 
 
 
-XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(MemoryManagerType&  theManager) :
+XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(MemoryManager&  theManager) :
 	m_currencySymbol(theCurrencySymbol,theManager),
 	m_decimalSeparator(XalanUnicode::charFullStop),
 	m_digit(XalanUnicode::charNumberSign),
@@ -78,7 +78,7 @@ XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(MemoryManagerType&  theMana
 
 
 XalanDecimalFormatSymbols::XalanDecimalFormatSymbols(const XalanDecimalFormatSymbols&	theSource,
-                                                     MemoryManagerType&                 theManager) :
+                                                     MemoryManager&                 theManager) :
 	m_currencySymbol(theSource.m_currencySymbol,theManager),
 	m_decimalSeparator(theSource.m_decimalSeparator),
 	m_digit(theSource.m_digit),

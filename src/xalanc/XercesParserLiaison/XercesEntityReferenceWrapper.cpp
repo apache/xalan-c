@@ -51,7 +51,7 @@ XercesEntityReferenceWrapper::XercesEntityReferenceWrapper(
 }
 
 XercesEntityReferenceWrapper*
-XercesEntityReferenceWrapper::create( MemoryManagerType& theManager,
+XercesEntityReferenceWrapper::create( MemoryManager& theManager,
 			const DOMEntityReferenceType*	theXercesDOMEntityReference,
 			const XercesWrapperNavigator&	theNavigator)
 

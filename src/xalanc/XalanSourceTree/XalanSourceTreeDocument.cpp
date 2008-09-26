@@ -54,7 +54,7 @@ bool    XalanSourceTreeDocument::s_poolAllTextNodes = false;
 
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			bool				fPoolAllText,
 			block_size_type		theNamesStringPoolBlockSize,
 			bucket_count_type	theNamesStringPoolBucketCount,
@@ -89,7 +89,7 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 
 XalanSourceTreeDocument*
 XalanSourceTreeDocument::create( 
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			bool				fPoolAllText,
 			block_size_type		theNamesStringPoolBlockSize ,
 			bucket_count_type	theNamesStringPoolBucketCount,
@@ -118,7 +118,7 @@ XalanSourceTreeDocument::create(
 }
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			allocator_size_type		theAttributeBlockSize,
 			allocator_size_type		theAttributeNSBlockSize,
 			allocator_size_type		theCommentBlockSize,
@@ -648,7 +648,7 @@ XalanSourceTreeDocument::createElementNode(
 
 inline const XalanDOMString&
 getElementNodePrefix(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			qname,
 			XalanDOMStringPool*			theStringPool,
 			XalanDOMString::size_type	theLength,			
@@ -1362,7 +1362,7 @@ static const XalanDOMChar	s_document[] =
 
 
 void
-XalanSourceTreeDocument::initialize(MemoryManagerType& theManager)
+XalanSourceTreeDocument::initialize(MemoryManager& theManager)
 {
     XalanDOMString tmpString(s_document, theManager);
 

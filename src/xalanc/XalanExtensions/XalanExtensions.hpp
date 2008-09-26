@@ -52,13 +52,13 @@ public:
 	installLocal(XPathEnvSupportDefault&	theSupport);
 
 	static void
-	installGlobal(MemoryManagerType& theManager);
+	installGlobal(MemoryManager& theManager);
 
 	static void
 	uninstallLocal(XPathEnvSupportDefault&	theSupport);
 
 	static void
-	uninstallGlobal(MemoryManagerType& theManager);
+	uninstallGlobal(MemoryManager& theManager);
 
 protected:
 
@@ -70,7 +70,7 @@ protected:
 
 	static void
 	doInstallGlobal(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[]);
 
@@ -82,7 +82,7 @@ protected:
 
 	static void
 	doUninstallGlobal(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[]);
 };

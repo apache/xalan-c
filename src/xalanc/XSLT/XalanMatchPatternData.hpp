@@ -74,7 +74,7 @@ public:
      * @param thePriority The priority for the match pattern.
      */
     XalanMatchPatternData(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const ElemTemplate&     theTemplate,
             size_type               thePosition,
             const XalanDOMString&   theTargetString,

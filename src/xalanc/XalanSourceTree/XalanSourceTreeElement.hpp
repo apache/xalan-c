@@ -204,7 +204,7 @@ protected:
 
     /*
 	XalanSourceTreeElement(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
 			const XalanSourceTreeElement&	theSource,
 			bool							deep = false);
     */
@@ -226,7 +226,7 @@ private:
 
 
 	// Data members...
-    MemoryManagerType&          m_memoryManager;
+    MemoryManager&          m_memoryManager;
 
 	XalanSourceTreeDocument*	m_ownerDocument;
 

@@ -91,7 +91,7 @@ public:
 	 * Perform static initialization.  See class XalanSourceTreeInit.
 	 */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	/**
 	 * Perform static shut down.  See class XalanSourceTreeInit.
@@ -135,7 +135,7 @@ public:
 	 *
 	 */
 	XalanSourceTreeDocument(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			bool				fPoolAllText = s_poolAllTextNodes,
 			block_size_type		theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
 			bucket_count_type	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
@@ -147,7 +147,7 @@ public:
 
     static XalanSourceTreeDocument*
     create( 
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			bool				fPoolAllText = s_poolAllTextNodes,
 			block_size_type		theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
 			bucket_count_type	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
@@ -171,7 +171,7 @@ public:
 	 *
 	 */
 	XalanSourceTreeDocument(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			allocator_size_type		theAttributeBlockSize,
 			allocator_size_type		theAttributeNSBlockSize,
 			allocator_size_type		theCommentBlockSize,
@@ -349,7 +349,7 @@ public:
 
 private:
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_stringBuffer.getMemoryManager();

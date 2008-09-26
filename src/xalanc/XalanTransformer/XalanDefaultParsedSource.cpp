@@ -105,7 +105,7 @@ XalanDefaultParsedSourceDOMSupport::isNodeAfter(
 
 
 XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-                                                               MemoryManagerType&                   theManager) :
+                                                               MemoryManager&                   theManager) :
 	m_parserLiaison(theManager),
 	m_domSupport(m_parserLiaison, theSourceDOMSupport)
 {
@@ -113,7 +113,7 @@ XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSource
 
 XalanDefaultParsedSourceHelper*
 XalanDefaultParsedSourceHelper::create(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-                                       MemoryManagerType&                   theManager)
+                                       MemoryManager&                   theManager)
 {
     typedef XalanDefaultParsedSourceHelper ThisType;
 
@@ -252,7 +252,7 @@ XalanDefaultParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XalanDefaultParsedSource::createHelper(MemoryManagerType& theManager) const
+XalanDefaultParsedSource::createHelper(MemoryManager& theManager) const
 {
     return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }

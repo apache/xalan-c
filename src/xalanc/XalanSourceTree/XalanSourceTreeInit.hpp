@@ -53,7 +53,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeInit
 public:
 
 	explicit
-	XalanSourceTreeInit(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XalanSourceTreeInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
 	~XalanSourceTreeInit();
 
@@ -67,7 +67,7 @@ private:
 
 	
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	static void
 	terminate();

@@ -124,7 +124,7 @@ Function*
 #else
 FunctionSubstringAfter*
 #endif
-FunctionSubstringAfter::clone(MemoryManagerType&    theManager) const
+FunctionSubstringAfter::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

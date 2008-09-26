@@ -47,10 +47,10 @@ public:
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock		XMLMutexLockType;
 
 	explicit
-	XercesLiaisonXalanDOMStringPool(MemoryManagerType& theManager);
+	XercesLiaisonXalanDOMStringPool(MemoryManager& theManager);
 
     static XercesLiaisonXalanDOMStringPool*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
 
 	virtual
 	~XercesLiaisonXalanDOMStringPool();

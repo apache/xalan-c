@@ -64,7 +64,7 @@ makeNewUTF8Transcoder(MemoryManager&    theMemoryManager)
 
 
 
-XalanXMLFileReporter::XalanXMLFileReporter( MemoryManagerType& theManager, const XalanDOMString&  fileName) :
+XalanXMLFileReporter::XalanXMLFileReporter( MemoryManager& theManager, const XalanDOMString&  fileName) :
     OPT_FILENAME(theManager),
     ELEM_RESULTSFILE(theManager),
     ELEM_TESTFILE(theManager),

@@ -205,7 +205,7 @@ Function*
 #else
 FunctionNormalizeSpace*
 #endif
-FunctionNormalizeSpace::clone(MemoryManagerType& theManager) const
+FunctionNormalizeSpace::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

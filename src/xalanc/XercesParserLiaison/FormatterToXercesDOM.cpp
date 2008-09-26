@@ -68,7 +68,7 @@ FormatterToXercesDOM::FormatterToXercesDOM(
 			DOMDocument_Type*			doc,
 			DOMDocumentFragmentType*	docFrag,
 			DOMElementType*				currentElement,
-            MemoryManagerType&          theManager) :
+            MemoryManager&          theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(docFrag),
@@ -85,7 +85,7 @@ FormatterToXercesDOM::FormatterToXercesDOM(
 FormatterToXercesDOM::FormatterToXercesDOM(
 			DOMDocument_Type*	doc,
 			DOMElementType*		elem,
-            MemoryManagerType& theManager) :
+            MemoryManager& theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(0),

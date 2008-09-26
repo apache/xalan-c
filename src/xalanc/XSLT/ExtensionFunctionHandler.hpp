@@ -69,7 +69,7 @@ public:
 	 * @param namespaceUri the extension namespace URI that I'm implementing
 	 */
 	ExtensionFunctionHandler(const XalanDOMString&	namespaceUri,
-                            MemoryManagerType& theManager);
+                            MemoryManager& theManager);
 
 	/**
 	 * Construct a new extension namespace handler given all the information
@@ -84,7 +84,7 @@ public:
 	 * @param scriptSrc    the actual script code (if any)
 	 */
 	ExtensionFunctionHandler(
-            MemoryManagerType& theManager,
+            MemoryManager& theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	funcNames,
 			const XalanDOMString&	lang,
@@ -95,7 +95,7 @@ public:
 	virtual
 	~ExtensionFunctionHandler();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_namespaceUri.getMemoryManager();

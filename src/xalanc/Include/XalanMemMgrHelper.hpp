@@ -34,7 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 template <class Type>
 inline Type*
-cloneObjWithMemMgr(const Type& other, MemoryManagerType& theManager)
+cloneObjWithMemMgr(const Type& other, MemoryManager& theManager)
 {
 
     XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
@@ -52,7 +52,7 @@ cloneObjWithMemMgr(const Type& other, MemoryManagerType& theManager)
 
 template <class Type>
 inline Type*
-cloneObj(const Type& other, MemoryManagerType& theManager)
+cloneObj(const Type& other, MemoryManager& theManager)
 {
 
     XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
@@ -73,7 +73,7 @@ class CreateObjFunctor
 {
 public:
 	Type*
-	operator()(MemoryManagerType& theManager)
+	operator()(MemoryManager& theManager)
 	{
 		
 		XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
@@ -90,7 +90,7 @@ public:
 
 template <class Type>
 inline void
-destroyObjWithMemMgr(const Type* ptr, MemoryManagerType& theManager)
+destroyObjWithMemMgr(const Type* ptr, MemoryManager& theManager)
 {
     if (ptr != 0)
     {

@@ -70,7 +70,7 @@ FormatterToXML::FormatterToXML(
             const XalanDOMString&   standalone,
             eFormat                 format,
             bool                    fBufferData,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
     FormatterListener(format),
     m_writer(&writer),
     m_stream(m_writer->getStream()),
@@ -325,7 +325,7 @@ FormatterToXML::FormatterToXML(
 
 FormatterToXML*
 FormatterToXML::create(
-                       MemoryManagerType&      theManager,
+                       MemoryManager&      theManager,
                        Writer&                  writer,
                        const XalanDOMString&    version,
                        bool                     doIndent ,
@@ -797,7 +797,7 @@ XALAN_USING_XERCES(SAXException)
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
             XalanDOMChar        ch,
-            MemoryManagerType&  theManager)
+            MemoryManager&  theManager)
 {
     XalanDOMString  chStr(theManager);
 
@@ -816,7 +816,7 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 void
 FormatterToXML::throwInvalidCharacterException(
             XalanUnicodeChar    ch,
-            MemoryManagerType&  theManager)
+            MemoryManager&  theManager)
 {
     XalanDOMString  theMessage(theManager);
     XalanDOMString  theBuffer(theManager);  
@@ -835,7 +835,7 @@ void
 FormatterToXML::throwInvalidUTF16SurrogateException(
             XalanDOMChar        ch,
             XalanDOMChar        next,
-            MemoryManagerType&  theManager)
+            MemoryManager&  theManager)
 {
 
     XalanDOMString  chStr1(theManager); 

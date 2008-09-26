@@ -125,7 +125,7 @@ runTests(
 	// Just hoist everything...
 	XALAN_CPP_NAMESPACE_USE
 
-	MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+	MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	XalanFileUtility	h(theManager);
 

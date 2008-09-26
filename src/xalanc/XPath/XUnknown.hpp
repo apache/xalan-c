@@ -48,7 +48,7 @@ public:
 	 * Perform static initialization.  See class XPathInit.
 	 */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	/**
 	 * Perform static shut down.  See class XPathInit.

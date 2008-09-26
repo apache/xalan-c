@@ -117,7 +117,7 @@ StylesheetRoot::StylesheetRoot(
 
 StylesheetRoot*
 StylesheetRoot::create(
-                           MemoryManagerType&              theManager,
+                           MemoryManager&              theManager,
                            const XalanDOMString&            baseIdentifier,
                            StylesheetConstructionContext&   constructionContext)
 {

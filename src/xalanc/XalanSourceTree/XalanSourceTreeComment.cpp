@@ -324,7 +324,7 @@ static const XalanDOMChar	s_comment[] =
 
 
 void
-XalanSourceTreeComment::initialize(MemoryManagerType& theManager)
+XalanSourceTreeComment::initialize(MemoryManager& theManager)
 {
     XalanDOMString tmpBuffer(s_comment, theManager);
 

@@ -63,7 +63,7 @@ public:
 #else
 	virtual FunctionUnparsedEntityURI*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

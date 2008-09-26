@@ -55,7 +55,7 @@ public:
 
 	explicit
 	XalanObjectStackCache(
-            MemoryManagerType&  theManager, 
+            MemoryManager&  theManager, 
             XalanSize_t	        initialListSize = 0) :
         m_createFunctor(),
         m_deleteFunctor(theManager),

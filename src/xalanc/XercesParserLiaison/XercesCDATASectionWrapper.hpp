@@ -51,7 +51,7 @@ public:
 			const XercesWrapperNavigator&	theNavigator);
 
     static XercesCDATASectionWrapper*
-    create( MemoryManagerType& theManager,
+    create( MemoryManager& theManager,
 			const DOMCDATASectionType*		theXercesCDATASection,
 			const XercesWrapperNavigator&	theNavigator);
 

@@ -83,7 +83,7 @@ public:
      * Perform static initialization.  See class XMLSupportInit.
      */
     static void
-    initialize(MemoryManagerType&  theManager);
+    initialize(MemoryManager&  theManager);
 
     /**
      * Perform static shut down.  See class XMLSupportInit.
@@ -99,7 +99,7 @@ public:
             Stylesheet&                     stylesheetTree,
             StylesheetConstructionContext&  constructionContext);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_constructionContext.getMemoryManager();

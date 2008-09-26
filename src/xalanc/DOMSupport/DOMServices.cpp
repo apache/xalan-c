@@ -104,7 +104,7 @@ const XalanDOMString::size_type&	DOMServices::s_XMLNamespacePrefixURILength = ::
 
 
 void
-DOMServices::initialize(MemoryManagerType&  theManager)
+DOMServices::initialize(MemoryManager&  theManager)
 {
     ::s_XMLString.reset( theManager, "xml");
 
@@ -131,7 +131,7 @@ DOMServices::initialize(MemoryManagerType&  theManager)
 void
 DOMServices::terminate()
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDummyMemMgr();
 
 	releaseMemory(::s_XMLString, theManager );
 	releaseMemory(::s_XMLStringWithSeparator, theManager );

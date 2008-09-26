@@ -48,11 +48,11 @@ public:
 	typedef XalanMap<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
 
 
-	XercesWrapperToXalanNodeMap(MemoryManagerType& theManager);
+	XercesWrapperToXalanNodeMap(MemoryManager& theManager);
 
 	~XercesWrapperToXalanNodeMap();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_xercesMap.getMemoryManager();

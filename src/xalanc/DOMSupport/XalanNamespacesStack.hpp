@@ -93,16 +93,16 @@ public:
 		typedef NamespaceCollectionType::const_iterator				const_iterator;
 		typedef NamespaceCollectionType::const_reverse_iterator		const_reverse_iterator;
 
-		XalanNamespacesStackEntry(MemoryManagerType& theManager);
+		XalanNamespacesStackEntry(MemoryManager& theManager);
 
 		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource,
-                                    MemoryManagerType&              theManager);
+                                    MemoryManager&              theManager);
 
 		~XalanNamespacesStackEntry();
 
 		XalanNamespacesStackEntry&
 		set(const XalanNamespacesStackEntry&	theRHS,
-                  MemoryManagerType&                theManager);
+                  MemoryManager&                theManager);
 
 		void
 		addDeclaration(
@@ -233,7 +233,7 @@ public:
 
 
 	explicit
-	XalanNamespacesStack(MemoryManagerType& theManager);
+	XalanNamespacesStack(MemoryManager& theManager);
 
 	~XalanNamespacesStack();
 

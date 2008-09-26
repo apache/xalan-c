@@ -89,11 +89,11 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanPars
 public:
 
 	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-                                    MemoryManagerType&                  theManager XALAN_DEFAULT_MEMMGR);
+                                    MemoryManager&                  theManager XALAN_DEFAULT_MEMMGR);
 
     static XalanDefaultParsedSourceHelper*
     create(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-            MemoryManagerType&                  theManager);
+            MemoryManager&                  theManager);
 
 	~XalanDefaultParsedSourceHelper();
 

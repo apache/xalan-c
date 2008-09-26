@@ -2617,7 +2617,7 @@ erase(XalanDOMString&   theString)
  * @param theString target string
  */
 inline void
-releaseMemory(XalanDOMString&   theString,MemoryManagerType&  theManager)
+releaseMemory(XalanDOMString&   theString,MemoryManager&  theManager)
 {
     XalanDOMString(theManager).swap(theString);
 }

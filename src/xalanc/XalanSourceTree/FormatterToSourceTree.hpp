@@ -67,7 +67,7 @@ public:
 	 * Perform static initialization.  See class XalanSourceTreeInit.
 	 */
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	/**
 	 * Perform static shut down.  See class XalanSourceTreeInit.
@@ -84,7 +84,7 @@ public:
 	 */
 	explicit
 	FormatterToSourceTree(
-            MemoryManagerType&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
+            MemoryManager&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
             XalanSourceTreeDocument*	theDocument = 0);
 
 	/**
@@ -97,7 +97,7 @@ public:
 	FormatterToSourceTree(
 			XalanSourceTreeDocument*			theDocument,
 			XalanSourceTreeDocumentFragment*	theDocumentFragment,
-            MemoryManagerType&                  theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&                  theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~FormatterToSourceTree();

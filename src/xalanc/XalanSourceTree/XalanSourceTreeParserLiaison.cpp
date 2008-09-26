@@ -50,7 +50,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
             XalanSourceTreeDOMSupport&  /* theSupport */,
-            MemoryManagerType&          theManager) :
+            MemoryManager&          theManager) :
     m_xercesParserLiaison(theManager),
     m_documentMap(theManager),
     m_poolAllText(true),
@@ -60,7 +60,7 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManagerType&   theManager) :
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManager&   theManager) :
     m_xercesParserLiaison(theManager),
     m_documentMap(theManager),
     m_poolAllText(true),

@@ -97,7 +97,7 @@ public:
      *
      */
     XercesDocumentWrapper(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
             const DOMDocument_Type*     theXercesDocument,
             bool                        threadSafe = true,
             bool                        buildWrapper = true,
@@ -105,13 +105,13 @@ public:
 
     static XercesDocumentWrapper*
     create( 
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const DOMDocument_Type*		theXercesDocument,
 			bool						threadSafe,
 			bool						buildWrapper,
  			bool						buildMaps);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager() const
     {
         return m_nodeMap.getMemoryManager();

@@ -307,7 +307,7 @@ public:
      */
     virtual XalanDocument*
     parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   urlString,
             const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler = 0) const = 0;
@@ -507,7 +507,7 @@ public:
      * @return pointer to node list created
      */
     virtual MutableNodeRefList*
-    createMutableNodeRefList(MemoryManagerType& theManager) const = 0;
+    createMutableNodeRefList(MemoryManager& theManager) const = 0;
 
     /**
      * Given a valid element key, return the corresponding node list.

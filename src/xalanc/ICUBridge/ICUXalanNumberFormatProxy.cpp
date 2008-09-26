@@ -41,7 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManagerType& theManager) :
+ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManager& theManager) :
 	XalanNumberFormat(theManager),
 	m_decimalFormat(0)
 {

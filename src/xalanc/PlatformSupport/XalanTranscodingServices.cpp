@@ -242,7 +242,7 @@ translateCode(XMLTransService::Codes    theCode)
 
 XalanOutputTranscoder*
 XalanTranscodingServices::makeNewTranscoder(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   theEncodingName,
             eCode&                  theResult,
             size_type               theBlockSize)
@@ -258,7 +258,7 @@ XalanTranscodingServices::makeNewTranscoder(
 
 XalanOutputTranscoder*
 XalanTranscodingServices::makeNewTranscoder(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMChar*     theEncodingName,
             eCode&                  theResult,
             size_type               theBlockSize)

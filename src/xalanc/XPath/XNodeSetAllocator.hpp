@@ -54,7 +54,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XNodeSetAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
+	XNodeSetAllocator(MemoryManager&      theManager, size_type	theBlockCount);
 
 	~XNodeSetAllocator();
 	

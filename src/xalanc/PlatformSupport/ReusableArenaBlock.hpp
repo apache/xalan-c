@@ -78,7 +78,7 @@ public:
      * number of objects it can contain).
      */
     ReusableArenaBlock(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type           theBlockSize) :
         BaseClassType(theManager, theBlockSize),
         m_firstFreeBlock(0),
@@ -113,7 +113,7 @@ public:
 
     static ThisType*
     create(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type           theBlockSize)
     {
         ThisType* theInstance;

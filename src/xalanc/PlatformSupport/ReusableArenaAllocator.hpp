@@ -63,7 +63,7 @@ public:
 	 * @param theBlockSize The block size.
 	 */
 	ReusableArenaAllocator(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type	        theBlockSize, 
                 bool                destroyBlocks = false) :
 		BaseClassType(theManager, theBlockSize),

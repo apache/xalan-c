@@ -86,11 +86,11 @@ public:
 
     static StylesheetRoot*
     create(
-        MemoryManagerType&              theManager,
+        MemoryManager&              theManager,
         const XalanDOMString&			baseIdentifier,
         StylesheetConstructionContext&	constructionContext);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_version.getMemoryManager();

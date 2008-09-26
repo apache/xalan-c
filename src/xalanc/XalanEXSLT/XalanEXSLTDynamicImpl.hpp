@@ -70,7 +70,7 @@ public:
 #else
     virtual XalanEXSLTFunctionEvaluate*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }

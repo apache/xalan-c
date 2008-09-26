@@ -182,7 +182,7 @@ public:
         assert(m_newlineString != 0);
     }
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
@@ -284,7 +284,7 @@ public:
     throwInvalidUTF16SurrogateException(
 			    XalanDOMChar	    ch,
 			    XalanDOMChar	    next,
-                MemoryManagerType&  theManager)
+                MemoryManager&  theManager)
     {
 
 	    XalanDOMString  chStr(theManager); 

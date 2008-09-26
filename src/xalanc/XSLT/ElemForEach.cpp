@@ -133,7 +133,7 @@ ElemForEach::~ElemForEach()
 {
     XALAN_USING_STD(for_each)
 
-     MemoryManagerType& theManager = m_sortElems.getMemoryManager();
+     MemoryManager& theManager = m_sortElems.getMemoryManager();
 
     for_each(m_sortElems.begin(),
              m_sortElems.end(),

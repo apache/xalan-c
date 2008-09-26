@@ -65,7 +65,7 @@ public :
 	 */
 	explicit
 	XalanOutputStream(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			size_type	        theBufferSize = eDefaultBufferSize,
 			size_type	        theTranscoderBlockSize = eDefaultTranscoderBlockSize,
 			bool		        fThrowTranscodeException = true);
@@ -73,7 +73,7 @@ public :
 	virtual
 	~XalanOutputStream();
 
-    MemoryManagerType& 
+    MemoryManager& 
     getMemoryManager()
     {
         return m_buffer.getMemoryManager();

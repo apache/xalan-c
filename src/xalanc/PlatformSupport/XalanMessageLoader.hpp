@@ -86,7 +86,7 @@ public:
     }
 
     static void
-    initialize(MemoryManagerType&      theManager);
+    initialize(MemoryManager&      theManager);
 
     static void
     terminate();
@@ -159,7 +159,7 @@ private:
     bool
     load(
                 XalanMessages::Codes        msgToLoad,
-                MemoryManagerType&          theManager,
+                MemoryManager&          theManager,
                 XalanDOMChar*               toFill, 
                 XalanSize_t                 maxChars, 
                 const char*                 repText1 , 

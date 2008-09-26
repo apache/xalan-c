@@ -42,7 +42,7 @@ XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
 			const XalanDOMString&			theURI,
-            MemoryManagerType&              theManager) :
+            MemoryManager&              theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
@@ -73,7 +73,7 @@ XalanSourceTreeWrapperParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XalanSourceTreeWrapperParsedSource::createHelper(MemoryManagerType& theManager) const
+XalanSourceTreeWrapperParsedSource::createHelper(MemoryManager& theManager) const
 {
 	return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }

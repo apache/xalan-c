@@ -89,7 +89,7 @@ public:
 	typedef XalanVector<NodeSortKey>			NodeSortKeyVectorType;
 
 	explicit
-	NodeSorter(MemoryManagerType& theManager);
+	NodeSorter(MemoryManager& theManager);
   
 	~NodeSorter();
 

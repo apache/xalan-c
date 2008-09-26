@@ -51,7 +51,7 @@ public:
 			const XercesWrapperNavigator&	theNavigator);
 
     static XercesDocumentTypeWrapper*
-    create( MemoryManagerType& theManager,
+    create( MemoryManager& theManager,
         const DOMDocumentType_Type*		theXercesDOMDocumentType,
         const XercesWrapperNavigator&	theNavigator);
 

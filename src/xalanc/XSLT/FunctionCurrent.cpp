@@ -61,7 +61,7 @@ Function*
 #else
 FunctionCurrent*
 #endif
-FunctionCurrent::clone(MemoryManagerType&   theManager) const
+FunctionCurrent::clone(MemoryManager&   theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

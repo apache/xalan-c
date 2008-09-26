@@ -42,7 +42,7 @@ static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManagerType&         theManager, 
+XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManager&         theManager, 
                                                                  XalanSourceTreeDocument&	theOwnerDocument) :
 	XalanDocumentFragment(),
     m_manager(theManager),
@@ -54,7 +54,7 @@ XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManagerTy
 
 /*
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
-            MemoryManagerType&                      theManager,
+            MemoryManager&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
 			bool									deep) :
 	XalanDocumentFragment(),

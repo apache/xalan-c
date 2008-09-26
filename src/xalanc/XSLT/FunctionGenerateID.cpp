@@ -137,7 +137,7 @@ Function*
 #else
 FunctionGenerateID*
 #endif
-FunctionGenerateID::clone(MemoryManagerType&    theManager) const
+FunctionGenerateID::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

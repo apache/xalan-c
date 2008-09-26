@@ -94,7 +94,7 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor     Styl
 
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XSLTEngineImpl&         xsltProcessor,
             XPathEnvSupport&        theXPathEnvSupport,
             DOMSupport&             theDOMSupport,
@@ -162,7 +162,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanNode*              theCurrentNode,
             const NodeRefListBase*  theContextNodeList,
             const PrefixResolver*   thePrefixResolver) :
@@ -225,7 +225,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 
 StylesheetExecutionContextDefault*
 StylesheetExecutionContextDefault::create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanNode*              theCurrentNode,
             const NodeRefListBase*  theContextNodeList,
             const PrefixResolver*   thePrefixResolver)
@@ -1551,7 +1551,7 @@ StylesheetExecutionContextDefault::XalanNumberFormatFactory::~XalanNumberFormatF
 
 
 XalanNumberFormat*
-StylesheetExecutionContextDefault::XalanNumberFormatFactory::create(MemoryManagerType& theManager)
+StylesheetExecutionContextDefault::XalanNumberFormatFactory::create(MemoryManager& theManager)
 {
     return XalanNumberFormat::create(theManager);
 }
@@ -2052,7 +2052,7 @@ StylesheetExecutionContextDefault::extFunction(
 
 XalanDocument*
 StylesheetExecutionContextDefault::parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   urlString,
             const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler) const
@@ -2105,7 +2105,7 @@ StylesheetExecutionContextDefault::popCopyTextNodesOnly()
 
 
 MutableNodeRefList*
-StylesheetExecutionContextDefault::createMutableNodeRefList(MemoryManagerType& theManager) const
+StylesheetExecutionContextDefault::createMutableNodeRefList(MemoryManager& theManager) const
 {
     return m_xpathExecutionContextDefault.createMutableNodeRefList(theManager);
 }
@@ -2518,7 +2518,7 @@ StylesheetExecutionContextDefault::getParams(
 
 
 XalanSourceTreeDocument*
-StylesheetExecutionContextDefault::getSourceTreeFactory(MemoryManagerType& theManager) const
+StylesheetExecutionContextDefault::getSourceTreeFactory(MemoryManager& theManager) const
 {
     assert(m_xsltProcessor != 0);
 

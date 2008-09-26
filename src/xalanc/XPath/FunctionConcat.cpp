@@ -119,7 +119,7 @@ Function*
 #else
 FunctionConcat*
 #endif
-FunctionConcat::clone(MemoryManagerType&    theManager) const
+FunctionConcat::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

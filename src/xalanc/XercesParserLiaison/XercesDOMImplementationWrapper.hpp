@@ -47,7 +47,7 @@ public:
 	XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation);
 
     static XercesDOMImplementationWrapper*
-    create(MemoryManagerType& theManager, DOMImplementationType*	theXercesDOMImplementation);
+    create(MemoryManager& theManager, DOMImplementationType*	theXercesDOMImplementation);
 
 	virtual
 	~XercesDOMImplementationWrapper();

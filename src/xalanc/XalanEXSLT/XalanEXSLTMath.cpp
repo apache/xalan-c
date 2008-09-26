@@ -1546,7 +1546,7 @@ XalanEXSLTMathFunctionsInstaller::installLocal(XPathEnvSupportDefault&      theS
 
 
 void
-XalanEXSLTMathFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanEXSLTMathFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
     doInstallGlobal(theManager, s_mathNamespace, theFunctionTable);
 
@@ -1570,7 +1570,7 @@ XalanEXSLTMathFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&    theS
 
 
 void
-XalanEXSLTMathFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanEXSLTMathFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
     doUninstallGlobal(theManager, s_mathNamespace, theFunctionTable);
 }

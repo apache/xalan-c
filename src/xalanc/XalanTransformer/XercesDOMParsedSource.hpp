@@ -42,12 +42,12 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedS
 {
 public:
 
-	XercesDOMParsedSourceHelper(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+	XercesDOMParsedSourceHelper(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
 	~XercesDOMParsedSourceHelper();
 
     static XercesDOMParsedSourceHelper*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
 
 	virtual DOMSupport&
 	getDOMSupport();

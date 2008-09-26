@@ -40,7 +40,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-VariablesStack::VariablesStack(MemoryManagerType& theManager) :
+VariablesStack::VariablesStack(MemoryManager& theManager) :
     m_stack(theManager),
     m_globalStackFrameIndex(~0u),
     m_globalStackFrameMarked(false),

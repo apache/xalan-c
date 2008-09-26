@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XResultTreeFragAllocator::XResultTreeFragAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XResultTreeFragAllocator::XResultTreeFragAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

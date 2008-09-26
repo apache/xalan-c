@@ -48,7 +48,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManagerType& theManager) :
+ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManager& theManager) :
     m_decimalFormatCache(theManager),
     m_defaultDecimalFormat(theManager, createDecimalFormat(theManager)),
     m_memoryManager(theManager)
@@ -58,7 +58,7 @@ ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManagerType& theManager) :
 
 
 ICUFormatNumberFunctor*
-ICUFormatNumberFunctor::create(MemoryManagerType& theManager) 
+ICUFormatNumberFunctor::create(MemoryManager& theManager) 
 {
     typedef ICUFormatNumberFunctor ThisType;
 

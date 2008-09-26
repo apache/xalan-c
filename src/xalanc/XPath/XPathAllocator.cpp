@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathAllocator::XPathAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+XPathAllocator::XPathAllocator(MemoryManager&      theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

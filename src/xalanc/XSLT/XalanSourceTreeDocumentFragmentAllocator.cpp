@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(MemoryManagerType&      theManager,
+XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(MemoryManager&      theManager,
                                                                                    size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {

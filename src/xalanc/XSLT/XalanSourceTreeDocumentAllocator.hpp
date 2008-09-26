@@ -71,7 +71,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeDocumentAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XalanSourceTreeDocumentAllocator(MemoryManager&  theManager, size_type	theBlockCount);
 
 	~XalanSourceTreeDocumentAllocator();
 

@@ -74,14 +74,14 @@ public:
 
     typedef XalanDOMString::size_type   t_size_type;
 
-    XPathProcessorImpl(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+    XPathProcessorImpl(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
     virtual
     ~XPathProcessorImpl();
 
 
     static XPathProcessorImpl*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
     // These are inherited from XPathProcessor...
 
     virtual void

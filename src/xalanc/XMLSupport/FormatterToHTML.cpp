@@ -66,7 +66,7 @@ FormatterToHTML::FormatterToHTML(
 			int						indent,
 			bool					escapeURLs,
 			bool					omitMetaTag,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 	FormatterToXML(
 			writer,
 			s_emptyString,
@@ -105,7 +105,7 @@ FormatterToHTML::FormatterToHTML(
 
 FormatterToHTML*
 FormatterToHTML::create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding, 
 			const XalanDOMString&	mediaType,

@@ -67,7 +67,7 @@ public:
 #else
 	virtual FunctionFunctionAvailable*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

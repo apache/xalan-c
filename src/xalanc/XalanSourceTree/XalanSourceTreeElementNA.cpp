@@ -34,7 +34,7 @@ const XalanEmptyNamedNodeMap	XalanSourceTreeElementNA::s_emptyAttributes;
 
 
 XalanSourceTreeElementNA::XalanSourceTreeElementNA(
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanNode*					theParentNode,

@@ -59,7 +59,7 @@ public:
      *
      * @param theBlockSize The block size.
      */
-    XalanMatchPatternDataAllocator(MemoryManagerType&  theManager, size_type    theBlockCount);
+    XalanMatchPatternDataAllocator(MemoryManager&  theManager, size_type    theBlockCount);
 
     ~XalanMatchPatternDataAllocator();
 

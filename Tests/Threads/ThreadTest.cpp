@@ -275,10 +275,10 @@ thePreparsedThreadRoutine(void*		param)
 
 	theInfo->m_counter->increment();
 
-    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XALAN(MemoryManager)
     XALAN_USING_XALAN(XalanMemMgrs)
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	try
 	{
@@ -350,10 +350,10 @@ theUnparsedThreadRoutine(void*		param)
 		// Our input file.  The assumption is that the executable will be run
 		// from same directory as the input files.
 
-        XALAN_USING_XALAN(MemoryManagerType)
+        XALAN_USING_XALAN(MemoryManager)
         XALAN_USING_XALAN(XalanMemMgrs)
 
-        MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+        MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
         // Generate the output file name.
         XalanDOMString	theOutputFile("birds", theManager);
@@ -717,10 +717,10 @@ main(
 					// pre-parsed source document.  Note that we can't let the individual
 					// threads use this as a factory without serializing access to it, but
 					// we can share the stylesheet and source document.
-                    XALAN_USING_XALAN(MemoryManagerType)
+                    XALAN_USING_XALAN(MemoryManager)
                     XALAN_USING_XALAN(XalanMemMgrs)
 
-                    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+                    MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
                     XalanTransformer		theXalanTransformer(theManager);
 

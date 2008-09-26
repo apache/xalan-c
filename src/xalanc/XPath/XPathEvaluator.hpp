@@ -75,7 +75,7 @@ public:
 	// it once, unless you have called terminate previously, and
 	// you want to re-initialize the library.
 	static void
-	initialize(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	initialize(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
 	// Static terminator to be called after all instances
 	// are destroyed.  The call is _not_ thread-safe.  Once

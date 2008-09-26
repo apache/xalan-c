@@ -61,7 +61,7 @@ public:
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct an instance of an element prefix resolver proxy.
@@ -72,7 +72,7 @@ public:
 	 */
 	ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR,
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR,
 			const XPathEnvSupport*	envSupport = 0);
 
 	virtual

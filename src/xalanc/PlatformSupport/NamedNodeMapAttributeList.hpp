@@ -47,7 +47,7 @@ public:
 	explicit
 	NamedNodeMapAttributeList(
                 const XalanNamedNodeMap&	theMap,
-                MemoryManagerType&          theManager);
+                MemoryManager&          theManager);
 
 	virtual
 	~NamedNodeMapAttributeList();
@@ -88,7 +88,7 @@ private:
 
 	const XalanSize_t			m_length;
 
-    MemoryManagerType&          m_memoryManager;
+    MemoryManager&          m_memoryManager;
 
 	static const XalanDOMChar	s_typeString[];
 };

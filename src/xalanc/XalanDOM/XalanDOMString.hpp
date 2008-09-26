@@ -67,33 +67,33 @@ public:
     enum { npos = ~0u };
 #endif
 
-    XalanDOMString(MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    XalanDOMString(MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
     explicit
     XalanDOMString(
             const char*         theString,
-            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR,
+            MemoryManager&  theManager XALAN_DEFAULT_MEMMGR,
             size_type           theCount = size_type(npos));
 
     XalanDOMString(
             const XalanDOMString&   theSource,
-            MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
+            MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
             size_type               theStartPosition = 0,
             size_type               theCount = size_type(npos));
 
     explicit
     XalanDOMString(
             const XalanDOMChar*     theString,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR,
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR,
             size_type               theCount = size_type(npos));
 
     XalanDOMString(
             size_type       theCount,
             XalanDOMChar    theChar,
-            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
     XalanDOMString*
-    clone(MemoryManagerType&  theManager);
+    clone(MemoryManager&  theManager);
 
     ~XalanDOMString()
     {
@@ -660,10 +660,10 @@ public:
 
 
     void 
-    reset(MemoryManagerType& theManager, const char*    theString);
+    reset(MemoryManager& theManager, const char*    theString);
 
     void 
-    reset(MemoryManagerType& theManager, const XalanDOMChar* theString);
+    reset(MemoryManager& theManager, const XalanDOMChar* theString);
 
     class TranscodingError : public XalanDOMException
     {
@@ -692,7 +692,7 @@ public:
     void
     transcode(CharVectorType&   theResult) const;
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_data.getMemoryManager();

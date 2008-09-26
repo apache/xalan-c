@@ -45,7 +45,7 @@ ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		/* domSupport */,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(&envSupport),
 	m_uri(theManager)
@@ -56,7 +56,7 @@ ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XPathEnvSupport*	envSupport) :
 	m_namespaceContext(namespaceContext),
 	m_envSupport(envSupport),

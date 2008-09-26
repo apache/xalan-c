@@ -45,7 +45,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
 			const XalanDOMString&		theURI,
-            MemoryManagerType&          theManager) :
+            MemoryManager&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
@@ -67,7 +67,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
 			const XalanDOMString&		theURI,
-            MemoryManagerType&          theManager) :
+            MemoryManager&          theManager) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
@@ -100,7 +100,7 @@ XercesDOMWrapperParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper(MemoryManagerType& theManager) const
+XercesDOMWrapperParsedSource::createHelper(MemoryManager& theManager) const
 {
     return XercesDOMParsedSourceHelper::create(theManager);
 }

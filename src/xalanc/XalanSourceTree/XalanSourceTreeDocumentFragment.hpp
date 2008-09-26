@@ -52,12 +52,12 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocumentFragment : public Xala
 {
 public:
 
-	XalanSourceTreeDocumentFragment(MemoryManagerType&  theManager,
+	XalanSourceTreeDocumentFragment(MemoryManager&  theManager,
                             XalanSourceTreeDocument&	theOwnerDocument);
 
     /*
 	XalanSourceTreeDocumentFragment(
-            MemoryManagerType&                      theManager,
+            MemoryManager&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
 			bool									deep = false);
     */
@@ -144,7 +144,7 @@ protected:
 	operator==(const XalanSourceTreeDocumentFragment&		theRHS) const;
 
 private:
-    	MemoryManagerType&      m_manager;
+    	MemoryManager&      m_manager;
 
 	XalanSourceTreeDocument* const	m_ownerDocument;
 

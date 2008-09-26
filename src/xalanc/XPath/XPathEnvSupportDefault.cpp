@@ -234,7 +234,7 @@ XPathEnvSupportDefault::reset()
 
 XalanDocument*
 XPathEnvSupportDefault::parseXML(
-            MemoryManagerType&      /* theManager */,
+            MemoryManager&      /* theManager */,
 			const XalanDOMString&	/* urlString */,
 			const XalanDOMString&	/* base */,
             ErrorHandler*           /* theErrorHandler */)

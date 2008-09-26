@@ -96,7 +96,7 @@ Function*
 #else
 FunctionUnparsedEntityURI*
 #endif
-FunctionUnparsedEntityURI::clone(MemoryManagerType&     theManager) const
+FunctionUnparsedEntityURI::clone(MemoryManager&     theManager) const
 {
    return XalanCopyConstruct(theManager, *this);
 }

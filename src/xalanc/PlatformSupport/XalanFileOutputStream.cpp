@@ -226,7 +226,7 @@ XalanFileOutputStream::XalanFileOutputStream(
 XalanFileOutputStream*
 XalanFileOutputStream::create(
             const XalanDOMString&   theFileName,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             size_type               theBufferSize)
 {
     typedef XalanFileOutputStream ThisType;

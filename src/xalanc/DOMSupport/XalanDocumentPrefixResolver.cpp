@@ -37,7 +37,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanDocumentPrefixResolver::XalanDocumentPrefixResolver(
 			const XalanDocument*	theDocument,
 			const XalanDOMString&	theURI,
-            MemoryManagerType&      theManager) :
+            MemoryManager&      theManager) :
 	m_namespaces(theManager),
 	m_uri(theURI, theManager)
 {

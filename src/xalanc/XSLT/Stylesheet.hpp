@@ -125,12 +125,12 @@ public:
     ~Stylesheet();
 
     static Stylesheet*
-    create(MemoryManagerType& theManager,
+    create(MemoryManager& theManager,
             StylesheetRoot&                 root,
             const XalanDOMString&           baseIdentifier,
             StylesheetConstructionContext&  constructionContext);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_elementPatternTable.getMemoryManager();

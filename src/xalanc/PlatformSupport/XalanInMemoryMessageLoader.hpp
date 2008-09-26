@@ -38,7 +38,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanInMemoryMessageLoader :	public XalanMess
 {
 public:
 
-	XalanInMemoryMessageLoader(MemoryManagerType& theManager);
+	XalanInMemoryMessageLoader(MemoryManager& theManager);
 
 	virtual
 	~XalanInMemoryMessageLoader();

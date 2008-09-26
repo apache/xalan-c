@@ -115,7 +115,7 @@ Function*
 #else
 FunctionTranslate*
 #endif
-FunctionTranslate::clone(MemoryManagerType&     theManager) const
+FunctionTranslate::clone(MemoryManager&     theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

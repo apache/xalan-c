@@ -61,7 +61,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeProcessingInstructionAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XalanSourceTreeProcessingInstructionAllocator(MemoryManager&  theManager, size_type	theBlockCount);
 
 	~XalanSourceTreeProcessingInstructionAllocator();
 

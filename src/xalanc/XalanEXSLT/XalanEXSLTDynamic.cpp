@@ -122,7 +122,7 @@ XalanEXSLTDynamicFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSup
 
 
 void
-XalanEXSLTDynamicFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanEXSLTDynamicFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
 	doInstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
 
@@ -139,7 +139,7 @@ XalanEXSLTDynamicFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theS
 
 
 void
-XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
 	doUninstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
 

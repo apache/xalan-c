@@ -76,7 +76,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
-            MemoryManagerType&                      theManager,
+            MemoryManager&                      theManager,
             XSLTEngineImpl&                         processor,
             XPathFactory&                           xpathFactory,
             VectorAllocatorSizeType                 theXalanDOMCharVectorAllocatorBlockSize,
@@ -648,7 +648,7 @@ public:
 
     Type*
     operator()(         
-        MemoryManagerType&              theManager,
+        MemoryManager&              theManager,
         StylesheetConstructionContext&  constructionContext,
         Stylesheet&                     stylesheetTree,
         const AttributeListType&        atts,

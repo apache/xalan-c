@@ -49,7 +49,7 @@ XercesProcessingInstructionWrapper::XercesProcessingInstructionWrapper(
 }
 
 XercesProcessingInstructionWrapper*
-XercesProcessingInstructionWrapper::create( MemoryManagerType& theManager,
+XercesProcessingInstructionWrapper::create( MemoryManager& theManager,
 			const DOMProcessingInstructionType*		theXercesDOMProcessingInstruction,
 			const XercesWrapperNavigator&			theNavigator)
 

@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetAllocator::XNodeSetAllocator(MemoryManagerType&      theManager, size_type	theBlockCount) :
+XNodeSetAllocator::XNodeSetAllocator(MemoryManager&      theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

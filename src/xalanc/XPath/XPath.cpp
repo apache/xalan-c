@@ -63,7 +63,7 @@ const XalanDOMString    XPath::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XPath::XPath(MemoryManagerType& theManager, const LocatorType*      theLocator) :
+XPath::XPath(MemoryManager& theManager, const LocatorType*      theLocator) :
     m_expression(theManager),
     m_locator(theLocator),
     m_inStylesheet(false)
@@ -71,7 +71,7 @@ XPath::XPath(MemoryManagerType& theManager, const LocatorType*      theLocator) 
 }
 
 XPath*
-XPath::create(MemoryManagerType& theManager, const LocatorType* theLocator)
+XPath::create(MemoryManager& theManager, const LocatorType* theLocator)
 {
     typedef XPath Type;
 
@@ -5503,7 +5503,7 @@ XPath::FunctionTableType        XPath::s_functions(false);
 
 
 void
-XPath::initialize(MemoryManagerType& theManager)
+XPath::initialize(MemoryManager& theManager)
 {
     s_functions.setMemoryManager(theManager);
 

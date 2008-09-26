@@ -81,7 +81,7 @@ public:
 #else
 	virtual FunctionConcat*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 

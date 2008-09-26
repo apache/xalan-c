@@ -66,7 +66,7 @@ Function*
 #else
 FunctionFunctionAvailable*
 #endif
-FunctionFunctionAvailable::clone(MemoryManagerType&     theManager) const
+FunctionFunctionAvailable::clone(MemoryManager&     theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
 }

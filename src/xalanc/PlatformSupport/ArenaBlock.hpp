@@ -53,7 +53,7 @@ public:
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
 	ArenaBlock(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type	        theBlockSize) :	
 	    BaseClassType(theManager, theBlockSize)
 	{
@@ -71,7 +71,7 @@ public:
 
     static ThisType*
     create(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 size_type	        theBlockSize)
     {
         ThisType* theInstance;

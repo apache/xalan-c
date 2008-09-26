@@ -101,7 +101,7 @@ public:
 
 #if !defined(NDEBUG)
 	bool
-	checkForDuplicates(MemoryManagerType& theManager) const;
+	checkForDuplicates(MemoryManager& theManager) const;
 #endif
 
 	typedef XalanVector<XalanNode*>			NodeListVectorType;

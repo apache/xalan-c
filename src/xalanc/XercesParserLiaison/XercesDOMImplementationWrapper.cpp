@@ -57,7 +57,7 @@ XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(const XercesDOMIm
 }
 
 XercesDOMImplementationWrapper*
-XercesDOMImplementationWrapper::create(MemoryManagerType& theManager, DOMImplementationType*	theXercesDOMImplementation)
+XercesDOMImplementationWrapper::create(MemoryManager& theManager, DOMImplementationType*	theXercesDOMImplementation)
 {
         typedef XercesDOMImplementationWrapper ThisType;
         

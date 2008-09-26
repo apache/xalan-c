@@ -53,13 +53,13 @@ public :
 	 */
     XalanFStreamOutputStream(
 			FILE*			    theFileHandle,
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			size_type	        theBufferSize = eDefaultBufferSize);
 
     static XalanFStreamOutputStream*
     create(
             FILE*			    theFileHandle,
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
 			size_type	        theBufferSize = eDefaultBufferSize);
     virtual
 	~XalanFStreamOutputStream();

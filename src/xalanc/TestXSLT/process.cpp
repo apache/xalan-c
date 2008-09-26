@@ -554,7 +554,7 @@ createFormatter(
 			const PrefixResolver&			prefixResolver,
 			const XalanDocument*&			theResultDocument)
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	FormatterListener*	formatter = 0;
 
@@ -696,7 +696,7 @@ createFormatter(
 
 
 XalanOutputStream*
-createOutputStream(MemoryManagerType& theManager , const CmdLineParams&		params)
+createOutputStream(MemoryManager& theManager , const CmdLineParams&		params)
 {
 	if (params.outFileName == 0)
 	{

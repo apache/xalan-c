@@ -59,7 +59,7 @@ public:
 #else
     virtual XalanEXSLTFunctionNodeSet*
 #endif
-    clone(MemoryManagerType& theManager) const
+    clone(MemoryManager& theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -107,7 +107,7 @@ public:
 
     typedef Function    ParentType;
 
-    XalanEXSLTFunctionObjectType(MemoryManagerType& theManager) :
+    XalanEXSLTFunctionObjectType(MemoryManager& theManager) :
         Function(),
         m_boolean(s_booleanString, theManager),
         m_external(s_externalString, theManager),
@@ -119,7 +119,7 @@ public:
     }
 
     // A dummy constructor for use internally.  Do not use this one!!!!
-    XalanEXSLTFunctionObjectType(MemoryManagerType& theManager, int /* theDummy */) :
+    XalanEXSLTFunctionObjectType(MemoryManager& theManager, int /* theDummy */) :
         Function(),
         m_boolean(theManager),
         m_external(theManager),
@@ -151,7 +151,7 @@ public:
 #else
     virtual XalanEXSLTFunctionObjectType*
 #endif
-    clone(MemoryManagerType& theManager) const
+    clone(MemoryManager& theManager) const
     {
         typedef  XalanEXSLTFunctionObjectType Type;
 

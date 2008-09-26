@@ -63,7 +63,7 @@ public:
 	 */
 	static URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString,
-                        MemoryManagerType&     theManager)
+                        MemoryManager&     theManager)
 	{
 		return getURLFromString(urlString.c_str(), theManager);
 	}
@@ -78,7 +78,7 @@ public:
 	getURLFromString(
 			const XalanDOMString&	urlString,
 			XMLURLType&				url,
-            MemoryManagerType&      theManager)
+            MemoryManager&      theManager)
 	{
 		getURLFromString(urlString.c_str(), url, theManager);
 	}
@@ -91,7 +91,7 @@ public:
 	 */
 	static URLAutoPtrType
 	getURLFromString(const XalanDOMChar*	    urlString,
-                        MemoryManagerType&     theManager);
+                        MemoryManager&     theManager);
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -103,7 +103,7 @@ public:
 	getURLFromString(
 			const XalanDOMChar*		urlString,
 			XMLURLType&				url,
-            MemoryManagerType&      theManager)
+            MemoryManager&      theManager)
 	{
         XalanDOMString buffer(theManager);
 
@@ -123,7 +123,7 @@ public:
 	getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base,
-            MemoryManagerType&  theManager)
+            MemoryManager&  theManager)
 	{
         XalanDOMString theResult(theManager);
 

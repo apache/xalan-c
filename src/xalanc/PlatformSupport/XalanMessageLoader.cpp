@@ -49,7 +49,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanMessageLoader*     XalanMessageLoader::s_msgLoader = 0;
 
-static MemoryManagerType*      s_initManager;
+static MemoryManager*      s_initManager;
 
 XalanMessageLoader::~XalanMessageLoader()
 {
@@ -58,7 +58,7 @@ XalanMessageLoader::~XalanMessageLoader()
 
 
 void
-XalanMessageLoader::initialize(MemoryManagerType&      theManager)
+XalanMessageLoader::initialize(MemoryManager&      theManager)
 {
 #if defined (XALAN_INMEM_MSG_LOADER)
         typedef XalanMessageLoader::XalanMessageLoaderCreateFunct <XalanInMemoryMessageLoader> LoaderCreatorType;
@@ -287,7 +287,7 @@ XalanMessageLoader::getMessage(
 bool 
 XalanMessageLoader::load(
             XalanMessages::Codes    msgToLoad,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             XalanDOMChar*           toFill,
             XalanSize_t             maxChars,
             const char*             repText1, 

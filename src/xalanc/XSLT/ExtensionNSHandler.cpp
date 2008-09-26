@@ -76,7 +76,7 @@ struct XSLProcessorContext
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
 ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri,
-                                       MemoryManagerType& theManager) :
+                                       MemoryManager& theManager) :
 	ExtensionFunctionHandler(namespaceUri, theManager),
 	m_elements(theManager),
 	m_componentDescLoaded(false)
@@ -85,7 +85,7 @@ ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri,
 
 ExtensionNSHandler*
 ExtensionNSHandler::create(const XalanDOMString&	namespaceUri,
-                           MemoryManagerType&       theManager)
+                           MemoryManager&       theManager)
 {
     typedef ExtensionNSHandler ThisType;
 
@@ -101,7 +101,7 @@ ExtensionNSHandler::create(const XalanDOMString&	namespaceUri,
 }
 
 ExtensionNSHandler::ExtensionNSHandler (
-            MemoryManagerType&    theManager,
+            MemoryManager&    theManager,
 			const XalanDOMString& namespaceUri,
 			const XalanDOMString& elemNames,
 			const XalanDOMString& funcNames,

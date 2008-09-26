@@ -95,7 +95,7 @@ public:
 			StylesheetExecutionContext&			executionContext);
 
     static KeyTable*
-    create(MemoryManagerType& theManager,
+    create(MemoryManager& theManager,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
 			const KeyDeclarationVectorType&		keyDeclarations,

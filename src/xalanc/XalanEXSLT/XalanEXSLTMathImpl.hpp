@@ -67,7 +67,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAbs*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -120,7 +120,7 @@ public:
 #else
     virtual XalanEXSLTFunctionRandom*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -173,7 +173,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAcos*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -226,7 +226,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAsin*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -279,7 +279,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAtan*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -332,7 +332,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAtan2*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -385,7 +385,7 @@ public:
 #else
     virtual XalanEXSLTFunctionConstant*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -461,7 +461,7 @@ public:
 #else
     virtual XalanEXSLTFunctionCos*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -514,7 +514,7 @@ public:
 #else
     virtual XalanEXSLTFunctionExp*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -567,7 +567,7 @@ public:
 #else
     virtual XalanEXSLTFunctionHighest*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -620,7 +620,7 @@ public:
 #else
     virtual XalanEXSLTFunctionLog*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -673,7 +673,7 @@ public:
 #else
     virtual XalanEXSLTFunctionLowest*
 #endif
-    clone(MemoryManagerType&  theManager) const
+    clone(MemoryManager&  theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -726,7 +726,7 @@ public:
 #else
     virtual XalanEXSLTFunctionMax*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -779,7 +779,7 @@ public:
 #else
     virtual XalanEXSLTFunctionMin*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -832,7 +832,7 @@ public:
 #else
     virtual XalanEXSLTFunctionPower*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -885,7 +885,7 @@ public:
 #else
     virtual XalanEXSLTFunctionSin*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -938,7 +938,7 @@ public:
 #else
     virtual XalanEXSLTFunctionSqrt*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -991,7 +991,7 @@ public:
 #else
     virtual XalanEXSLTFunctionTan*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }

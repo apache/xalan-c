@@ -71,11 +71,11 @@ public:
      * @param theOutputStream output stream to use
      */
     XalanStdOutputStream(StreamType&    theOutputStream,
-                         MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
+                         MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
     static XalanStdOutputStream*
     create( StreamType& theOutputStream,
-            MemoryManagerType&  theManager);
+            MemoryManager&  theManager);
 
     virtual
     ~XalanStdOutputStream();

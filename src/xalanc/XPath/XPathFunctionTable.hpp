@@ -110,7 +110,7 @@ public:
     ~XPathFunctionTable();
 
     void
-    setMemoryManager(MemoryManagerType& theManager)
+    setMemoryManager(MemoryManager& theManager)
     {
         m_memoryManager = &theManager;
     }

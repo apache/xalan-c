@@ -74,7 +74,7 @@ public:
 	XalanDocumentPrefixResolver(
 			const XalanDocument*	theDocument,
 			const XalanDOMString&	theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XalanDocumentPrefixResolver();

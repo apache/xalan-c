@@ -68,7 +68,7 @@ public:
 #else
     virtual XalanEXSLTFunctionAlign*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -133,7 +133,7 @@ public:
 #else
     virtual XalanEXSLTFunctionConcat*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -167,7 +167,7 @@ public:
 
     typedef Function    ParentType;
 
-    XalanEXSLTFunctionPadding(MemoryManagerType&  theManager) :
+    XalanEXSLTFunctionPadding(MemoryManager&  theManager) :
         Function(),
         m_space(s_spaceString, theManager)
     {
@@ -175,7 +175,7 @@ public:
 
     // A dummy constructor for use internally.  Do not use this one!!!!
     XalanEXSLTFunctionPadding(
-                MemoryManagerType&  theManager,
+                MemoryManager&  theManager,
                 int                 /* theDummy */) :
         Function(),
         m_space(theManager)
@@ -184,7 +184,7 @@ public:
 
     XalanEXSLTFunctionPadding(
                 const XalanEXSLTFunctionPadding&    other,
-                MemoryManagerType&                  theManager) :
+                MemoryManager&                  theManager) :
         Function(other),
         m_space(s_spaceString, theManager)
     {
@@ -211,7 +211,7 @@ public:
 #else
     virtual XalanEXSLTFunctionPadding*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this, theManager);
     }
@@ -278,7 +278,7 @@ public:
 #else
     virtual XalanEXSLTFunctionEncodeURI*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -349,7 +349,7 @@ public:
 #else
     virtual XalanEXSLTFunctionDecodeURI*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }

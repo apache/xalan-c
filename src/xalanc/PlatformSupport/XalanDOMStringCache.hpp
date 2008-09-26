@@ -51,7 +51,7 @@ public:
 
 	explicit
 	XalanDOMStringCache(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             XalanSize_t	        theMaximumSize = eDefaultMaximumSize);
 
 	~XalanDOMStringCache();

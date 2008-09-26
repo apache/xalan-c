@@ -61,7 +61,7 @@ public:
 #else
     virtual XalanEXSLTFunctionDifference*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -108,7 +108,7 @@ public:
 #else
     virtual XalanEXSLTFunctionDistinct*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -169,7 +169,7 @@ public:
 #else
     virtual XalanEXSLTFunctionHasSameNode*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -218,7 +218,7 @@ public:
 #else
     virtual XalanEXSLTFunctionIntersection*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -278,7 +278,7 @@ public:
 #else
     virtual XalanEXSLTFunctionLeading*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }
@@ -338,7 +338,7 @@ public:
 #else
     virtual XalanEXSLTFunctionTrailing*
 #endif
-    clone(MemoryManagerType&    theManager) const
+    clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
     }

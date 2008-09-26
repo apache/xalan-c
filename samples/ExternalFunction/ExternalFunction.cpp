@@ -48,7 +48,7 @@ XALAN_USING_XALAN(XPathExecutionContext)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanNode)
 XALAN_USING_XALAN(XObjectPtr)
-XALAN_USING_XALAN(MemoryManagerType)
+XALAN_USING_XALAN(MemoryManager)
 XALAN_USING_XALAN(XalanCopyConstruct)
 
 // This class defines a function that will return the square root
@@ -104,7 +104,7 @@ public:
 #else
 	virtual FunctionSquareRoot*
 #endif
-	clone(MemoryManagerType&    theManager) const
+	clone(MemoryManager&    theManager) const
 	{
 	    return XalanCopyConstruct(theManager, *this);
 	}
@@ -191,7 +191,7 @@ public:
 #else
 	virtual FunctionCube*
 #endif
-	clone(MemoryManagerType&    theManager) const
+	clone(MemoryManager&    theManager) const
 	{
 	    return XalanCopyConstruct(theManager, *this);
 	}
@@ -289,7 +289,7 @@ public:
 #else
 	virtual FunctionAsctime*
 #endif
-	clone(MemoryManagerType&    theManager) const
+	clone(MemoryManager&    theManager) const
 	{
 	    return XalanCopyConstruct(theManager, *this);
 	}

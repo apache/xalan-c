@@ -280,7 +280,7 @@ XalanEXSLTDateTimeFunctionsInstaller::installLocal(XPathEnvSupportDefault&      
 
 
 void
-XalanEXSLTDateTimeFunctionsInstaller::installGlobal(MemoryManagerType& theManager)
+XalanEXSLTDateTimeFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
     doInstallGlobal(theManager, s_dateTimeNamespace, theFunctionTable);
 }
@@ -296,7 +296,7 @@ XalanEXSLTDateTimeFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&    
 
 
 void
-XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
+XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
     doUninstallGlobal(theManager, s_dateTimeNamespace, theFunctionTable);
 }

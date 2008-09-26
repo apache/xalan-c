@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory(MemoryManagerType& theManager) :
+ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory(MemoryManager& theManager) :
 	StylesheetExecutionContextDefault::XalanNumberFormatFactory(),
     m_memoryManager(theManager)
 {

@@ -80,7 +80,7 @@ XalanInMemoryMessageLoader::~XalanInMemoryMessageLoader()
 
 
 
-XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManagerType& theManager) :
+XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManager& theManager) :
 	m_unknownMessage("The message was not found in the message library.", theManager)
 {
 }

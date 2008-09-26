@@ -53,10 +53,10 @@ public:
 	 *
 	 * @param theURI An optional string to identify the document.
 	 */
-	XalanDefaultDocumentBuilder(MemoryManagerType& theManager, const XalanDOMString&	theURI);
+	XalanDefaultDocumentBuilder(MemoryManager& theManager, const XalanDOMString&	theURI);
 
     static XalanDefaultDocumentBuilder*
-    create(MemoryManagerType& theManager, const XalanDOMString&	theURI);
+    create(MemoryManager& theManager, const XalanDOMString&	theURI);
 
 	virtual
 	~XalanDefaultDocumentBuilder();
@@ -65,7 +65,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager) const;
+	createHelper(MemoryManager& theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

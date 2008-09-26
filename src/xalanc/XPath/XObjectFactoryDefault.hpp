@@ -83,7 +83,7 @@ public:
 	 */
 	explicit
 	XObjectFactoryDefault(
-            MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR,
+            MemoryManager& theManager XALAN_DEFAULT_MEMMGR,
 			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
 			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
 			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
@@ -91,7 +91,7 @@ public:
 
     static XObjectFactoryDefault*
     create(
-            MemoryManagerType& theManager,
+            MemoryManager& theManager,
 			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
 			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
 			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
@@ -101,7 +101,7 @@ public:
 	virtual
 	~XObjectFactoryDefault();
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_xobjects.getMemoryManager();

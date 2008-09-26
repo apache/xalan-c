@@ -41,7 +41,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanICUMessageLoader : public XalanMessageLo
 {
 public:
 
-	XalanICUMessageLoader(MemoryManagerType& theManager);
+	XalanICUMessageLoader(MemoryManager& theManager);
 
 	virtual
 	~XalanICUMessageLoader();

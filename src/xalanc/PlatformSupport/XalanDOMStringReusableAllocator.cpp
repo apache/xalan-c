@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDOMStringReusableAllocator::XalanDOMStringReusableAllocator(
-            MemoryManagerType&  theManager,
+            MemoryManager&  theManager,
             size_type           theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {

@@ -166,7 +166,7 @@ public:
 	 * @return pointer to the new object
 	 */
 	virtual Function*
-	clone(MemoryManagerType&  theManager) const = 0;
+	clone(MemoryManager&  theManager) const = 0;
 
 protected:
 

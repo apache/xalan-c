@@ -75,7 +75,7 @@ public:
 	 * Perform static initialization.  See class XSLTInit.
 	 */
 	static void
-	initialize(MemoryManagerType&  theManager);
+	initialize(MemoryManager&  theManager);
 
 	/**
 	 * Perform static shut down.  See class XSLTInit.
@@ -103,7 +103,7 @@ public:
 
     static ElemNumber*
     create(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const AttributeListType&		atts,

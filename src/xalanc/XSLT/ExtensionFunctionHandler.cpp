@@ -45,7 +45,7 @@ const XalanDOMChar	ExtensionFunctionHandler::s_tokenDelimiterCharacters[] =
 
 
 ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&	namespaceUri,
-                                                   MemoryManagerType& theManager) :
+                                                   MemoryManager& theManager) :
 	m_namespaceUri(namespaceUri,theManager),
 	m_scriptLang(theManager),
 	m_scriptSrc(theManager),
@@ -65,7 +65,7 @@ ExtensionFunctionHandler::~ExtensionFunctionHandler()
 
 
 ExtensionFunctionHandler::ExtensionFunctionHandler (
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XalanDOMString&	namespaceUri,
 			const XalanDOMString&	funcNames,
 			const XalanDOMString&	lang,

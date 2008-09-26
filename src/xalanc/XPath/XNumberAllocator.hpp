@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XNumberAllocator(MemoryManagerType&      theManager, size_type	theBlockCount);
+	XNumberAllocator(MemoryManager&      theManager, size_type	theBlockCount);
 
 	~XNumberAllocator();
 

@@ -97,14 +97,14 @@ public:
 	 */
 	explicit
 	XPathExecutionContextDefault(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
 
     static XPathExecutionContextDefault*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
@@ -236,7 +236,7 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base,
             ErrorHandler*           theErrorHandler = 0) const;
@@ -248,7 +248,7 @@ public:
 	returnMutableNodeRefList(MutableNodeRefList*	theList);
 
 	virtual MutableNodeRefList*
-	createMutableNodeRefList(MemoryManagerType& theManager) const;
+	createMutableNodeRefList(MemoryManager& theManager) const;
 
 	virtual XalanDOMString&
 	getCachedString();

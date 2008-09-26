@@ -66,7 +66,7 @@ public:
 #else
 	virtual FunctionTranslate*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 protected:
 	virtual const XalanDOMString&

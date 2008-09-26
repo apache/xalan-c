@@ -70,7 +70,7 @@ public:
 #else
 	virtual FunctionFormatNumber*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManager& theManager) const;
 
 private:
 

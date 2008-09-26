@@ -23,7 +23,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-GenerateEvent::GenerateEvent(EventType	eventType, MemoryManagerType& theManager) :
+GenerateEvent::GenerateEvent(EventType	eventType, MemoryManager& theManager) :
 	m_eventType(eventType),
 	m_characters(theManager),
 	m_start(0),
@@ -38,7 +38,7 @@ GenerateEvent::GenerateEvent(EventType	eventType, MemoryManagerType& theManager)
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XalanDOMChar*		name,
 			AttributeListType*		atts) :
 	m_eventType(eventType),
@@ -55,7 +55,7 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType					eventType,
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMString&		name,
 			const AttributeListType*	atts) :
 	m_eventType(eventType),
@@ -71,7 +71,7 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType					eventType,
-            MemoryManagerType&          theManager,
+            MemoryManager&          theManager,
 			const XalanDOMChar*			ch,
 			XalanDOMString::size_type	start,
 			XalanDOMString::size_type	length) :
@@ -89,7 +89,7 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XalanDOMChar*		name,
 			const XalanDOMChar*		data) :
 	m_eventType(eventType),
@@ -106,7 +106,7 @@ GenerateEvent::GenerateEvent(
 
 GenerateEvent::GenerateEvent(
 			EventType				eventType,
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			const XalanDOMChar*		data) :
 	m_eventType(eventType),
 	m_characters(theManager),

@@ -49,7 +49,7 @@ XercesCommentWrapper::XercesCommentWrapper(
 }
 
 XercesCommentWrapper*
-XercesCommentWrapper::create( MemoryManagerType& theManager,
+XercesCommentWrapper::create( MemoryManager& theManager,
                              const DOMCommentType*			theXercesComment,
                              const XercesWrapperNavigator&	theNavigator)
 

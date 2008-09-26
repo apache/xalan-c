@@ -316,7 +316,7 @@ const XalanDOMChar	s_text[] =
 
 
 void
-XalanSourceTreeText::initialize(MemoryManagerType& theManager)
+XalanSourceTreeText::initialize(MemoryManager& theManager)
 {
     XalanDOMString theBuffer(s_text, theManager);
 

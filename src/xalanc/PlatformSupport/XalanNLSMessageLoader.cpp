@@ -50,7 +50,7 @@ XalanNLSMessageLoader::~XalanNLSMessageLoader()
 	}
 }
 
-XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManagerType& theManager) :
+XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
 	m_catalogHandle(nl_catd(-1)),
 	m_memoryManager(theManager)
 {

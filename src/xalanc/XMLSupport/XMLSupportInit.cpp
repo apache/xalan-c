@@ -32,7 +32,7 @@ unsigned long	XMLSupportInit::s_initCounter = 0;
 
 
 
-XMLSupportInit::XMLSupportInit(MemoryManagerType& theManager) :
+XMLSupportInit::XMLSupportInit(MemoryManager& theManager) :
 	m_platformSupportInit(theManager),
 	m_domSupportInit(theManager)
 {
@@ -59,7 +59,7 @@ XMLSupportInit::~XMLSupportInit()
 
 
 void
-XMLSupportInit::initialize(MemoryManagerType& theManager)
+XMLSupportInit::initialize(MemoryManager& theManager)
 {
 	XalanXMLSerializerBase::initialize(theManager);
 }

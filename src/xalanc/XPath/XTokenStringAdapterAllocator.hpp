@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XTokenStringAdapterAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
+	XTokenStringAdapterAllocator(MemoryManager&  theManager, size_type	theBlockCount);
 
 	~XTokenStringAdapterAllocator();
 

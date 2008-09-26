@@ -49,7 +49,7 @@ XercesNotationWrapper::XercesNotationWrapper(
 }
 
 XercesNotationWrapper*
-XercesNotationWrapper::create( MemoryManagerType& theManager,
+XercesNotationWrapper::create( MemoryManager& theManager,
 			const DOMNotationType*			theXercesDOMNotation,
 			const XercesWrapperNavigator&	theNavigator)
 

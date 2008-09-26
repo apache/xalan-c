@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
 	m_allocator(theManager, theBlockCount)
 {
 }

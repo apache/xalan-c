@@ -59,7 +59,7 @@ typedef StylesheetExecutionContextDefault::FormatNumberFunctor FormatNumberFunct
 struct DecimalFormatCacheStruct
 {
     DecimalFormatCacheStruct(
-        MemoryManagerType&                  theManager,
+        MemoryManager&                  theManager,
         const XalanDecimalFormatSymbols&    theDFS,
         DecimalFormatType*                  theFormatter) :
 
@@ -68,7 +68,7 @@ struct DecimalFormatCacheStruct
     {
     }
 
-    DecimalFormatCacheStruct(MemoryManagerType&     theManager) :
+    DecimalFormatCacheStruct(MemoryManager&     theManager) :
         m_DFS(theManager),
         m_formatter(0)
     {
@@ -76,7 +76,7 @@ struct DecimalFormatCacheStruct
 
     DecimalFormatCacheStruct(
                 const DecimalFormatCacheStruct&     other,
-                MemoryManagerType&                  theManager) :
+                MemoryManager&                  theManager) :
         m_DFS(other.m_DFS, theManager),
         m_formatter(other.m_formatter)
     {
@@ -160,10 +160,10 @@ class XALAN_ICUBRIDGE_EXPORT ICUFormatNumberFunctor : public FormatNumberFunctor
 {
 public:
 
-    ICUFormatNumberFunctor(MemoryManagerType& theManager);
+    ICUFormatNumberFunctor(MemoryManager& theManager);
 
     static ICUFormatNumberFunctor*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
 
     virtual
     ~ICUFormatNumberFunctor();
@@ -255,7 +255,7 @@ private:
 
     const DFAutoPtrType                 m_defaultDecimalFormat;
 
-    MemoryManagerType&                  m_memoryManager;
+    MemoryManager&                  m_memoryManager;
 };
 
 

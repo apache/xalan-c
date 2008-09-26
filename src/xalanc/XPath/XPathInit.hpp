@@ -43,10 +43,10 @@ class XALAN_XPATH_EXPORT XPathInit
 public:
 
 	explicit
-	XPathInit(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	XPathInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
     static XPathInit*
-    create(MemoryManagerType& theManager);
+    create(MemoryManager& theManager);
 
 	~XPathInit();
 
@@ -60,7 +60,7 @@ private:
 
 	
 	static void
-	initialize(MemoryManagerType& theManager);
+	initialize(MemoryManager& theManager);
 
 	static void
 	terminate();

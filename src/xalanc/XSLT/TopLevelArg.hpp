@@ -58,13 +58,13 @@ public:
 	 * @param expr	expression argument represents
 	 */
 	TopLevelArg(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XalanDOMString&	expr);
 
 	static TopLevelArg*
     create(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XalanDOMString&	expr);
 	/**
@@ -74,13 +74,13 @@ public:
 	 * @param variable	the XObject instance.
 	 */
 	TopLevelArg(
-        MemoryManagerType&  theManager,
+        MemoryManager&  theManager,
 		const XalanQName&	name,
 		const XObjectPtr	variable = XObjectPtr());
 
 	static TopLevelArg*
     create(
-        MemoryManagerType&      theManager,
+        MemoryManager&      theManager,
 		const XalanQName&		name,
 		const XObjectPtr	variable = XObjectPtr());
 	/**
@@ -90,7 +90,7 @@ public:
 	 */
 	TopLevelArg(
                 const TopLevelArg&	theSource,
-                MemoryManagerType&  theManager);
+                MemoryManager&  theManager);
 
 
 	/**

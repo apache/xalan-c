@@ -190,7 +190,7 @@ getOpCodeLength(int     theOpCode)
 
 
 XPathExpression::XPathExpressionException::XPathExpressionException(const XalanDOMString&   theMessage,
-                                                                    MemoryManagerType&      theManager) :
+                                                                    MemoryManager&      theManager) :
     XalanXPathException(theMessage, theManager)
 {
 }
@@ -330,7 +330,7 @@ static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XPathExpression::XPathExpression(MemoryManagerType& theManager) :
+XPathExpression::XPathExpression(MemoryManager& theManager) :
     m_opMap(theManager),
     m_lastOpCodeIndex(0),
     m_tokenQueue(theManager),
@@ -381,7 +381,7 @@ XPathExpression::shrink()
 XPathExpression::OpCodeMapValueType
 XPathExpression::getOpCodeLengthFromOpMap(
             OpCodeMapPositionType     opPos,
-            MemoryManagerType&        theManager) const
+            MemoryManager&        theManager) const
 {
     assert(opPos - getInitialOpCodePosition() >= 0 &&
            opPos - getInitialOpCodePosition() < opCodeMapSize());
@@ -419,7 +419,7 @@ XPathExpression::getOpCodeLengthFromOpMap(
 #else
             OpCodeMapPositionType theIndex,
 #endif
-            MemoryManagerType&    theManager) const
+            MemoryManager&    theManager) const
 {
     OpCodeMapValueType  theResult = 0;
 

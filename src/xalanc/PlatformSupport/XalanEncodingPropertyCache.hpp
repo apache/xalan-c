@@ -46,7 +46,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanEncodingPropertyCache
 public:
 
 	XalanEncodingPropertyCache(
-            MemoryManagerType&                  theManager,
+            MemoryManager&                  theManager,
 			size_t								theCacheSize = XalanDOMChar(~0),
 			const XalanOutputTranscoder*		theTranscoder = 0);
 

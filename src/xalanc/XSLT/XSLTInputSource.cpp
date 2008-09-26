@@ -242,7 +242,7 @@ XSLTInputSource::makeStream() const
 {
 	BinInputStreamType*		theResult = 0;
 
-    MemoryManagerType*  theManager = getMemoryManager();
+    MemoryManager*  theManager = getMemoryManager();
 
     assert(theManager != 0 );
 

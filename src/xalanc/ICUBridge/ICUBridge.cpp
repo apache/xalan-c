@@ -47,7 +47,7 @@ const XalanSize_t	theStackBufferSize = 200u;
 
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMChar*	    theString)
 {
 	if (theString == 0)
@@ -63,7 +63,7 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(
-            MemoryManagerType&        /*  theManager */,
+            MemoryManager&        /*  theManager */,
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength)
 {
@@ -87,7 +87,7 @@ ICUBridge::XalanDOMCharStringToUnicodeString(
 
 const UnicodeString
 ICUBridge::XalanDOMStringToUnicodeString(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
             const XalanDOMString&   theString)
 {
 	// Just call up to the XalanDOMChar* version...

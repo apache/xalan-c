@@ -28,13 +28,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManagerType& theManager) :
+XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManager& theManager) :
 	XalanOutputTranscoder(theManager)
 {
 }
 
 XalanUTF16Transcoder*
-XalanUTF16Transcoder::create(MemoryManagerType& theManager)
+XalanUTF16Transcoder::create(MemoryManager& theManager)
 {
         typedef XalanUTF16Transcoder ThisType;
         

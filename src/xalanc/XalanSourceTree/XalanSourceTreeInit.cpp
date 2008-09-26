@@ -34,7 +34,7 @@ unsigned long	XalanSourceTreeInit::s_initCounter = 0;
 
 
 
-XalanSourceTreeInit::XalanSourceTreeInit(MemoryManagerType& theManager) :
+XalanSourceTreeInit::XalanSourceTreeInit(MemoryManager& theManager) :
 	m_platformSupportInit(theManager),
 	m_domSupportInit(theManager),
 	m_xmlSupportInit(theManager)
@@ -62,7 +62,7 @@ XalanSourceTreeInit::~XalanSourceTreeInit()
 
 
 void
-XalanSourceTreeInit::initialize(MemoryManagerType& theManager)
+XalanSourceTreeInit::initialize(MemoryManager& theManager)
 {
 	XalanSourceTreeDocument::initialize(theManager);
 

@@ -45,10 +45,10 @@ public:
 	// all of the stuff it needs to know.  But locales are implemented
 	// on all of our platforms yet.
 	explicit
-	XalanDecimalFormatSymbols(MemoryManagerType&  theManager);
+	XalanDecimalFormatSymbols(MemoryManager&  theManager);
 
 	XalanDecimalFormatSymbols(const XalanDecimalFormatSymbols&	theSource,
-                                MemoryManagerType&              theManager);
+                                MemoryManager&              theManager);
 
 	~XalanDecimalFormatSymbols();
 

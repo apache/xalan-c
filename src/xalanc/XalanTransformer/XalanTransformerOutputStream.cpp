@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanTransformerOutputStream::XalanTransformerOutputStream(
-    MemoryManagerType&          theManager,
+    MemoryManager&          theManager,
     void*                       theOutputHandle, 
     XalanOutputHandlerType      theOutputHandler,
     XalanFlushHandlerType       theFlushHandler):

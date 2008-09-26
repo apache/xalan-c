@@ -84,11 +84,11 @@ public:
 			int						indent = eDefaultIndentAmount,
 			bool					escapeURLs = true,
 			bool					omitMetaTag = false,
-            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
     static FormatterToHTML*
     create(
-            MemoryManagerType&      theManager,
+            MemoryManager&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding, 
 			const XalanDOMString&	mediaType,

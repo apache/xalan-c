@@ -67,14 +67,14 @@ public:
 
     // Construct and initialize this reporter with specified filename, if
     // the filename is not empty.
-    XalanXMLFileReporter(MemoryManagerType& theManager, const XalanDOMString& fileName);
+    XalanXMLFileReporter(MemoryManager& theManager, const XalanDOMString& fileName);
 
     ~XalanXMLFileReporter();
 
     // Initialize this XalanXMLFileReporter.  Must be called before attempting to log anything.
-    bool initialize(MemoryManagerType& theManager);
+    bool initialize(MemoryManager& theManager);
 
-    MemoryManagerType&
+    MemoryManager&
     getMemoryManager()
     {
         return m_fileName.getMemoryManager();
@@ -90,7 +90,7 @@ public:
     void setFileName(const XalanDOMString& fileName);
 
     // Accessor methods for our properties block.
-    void setFileName(const char* fileName, MemoryManagerType& theManager)
+    void setFileName(const char* fileName, MemoryManager& theManager)
     {
         setFileName(XalanDOMString(fileName, theManager));
     }

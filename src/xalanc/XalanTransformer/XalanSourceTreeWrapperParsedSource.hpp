@@ -57,7 +57,7 @@ public:
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
 			const XalanDOMString&			theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
-            MemoryManagerType&              theManager XALAN_DEFAULT_MEMMGR);
+            MemoryManager&              theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~XalanSourceTreeWrapperParsedSource();
@@ -66,7 +66,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR) const;
+	createHelper(MemoryManager& theManager XALAN_DEFAULT_MEMMGR) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

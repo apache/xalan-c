@@ -179,7 +179,7 @@ ElemNumber::ElemNumber(
 
 ElemNumber*
 ElemNumber::create(
-            MemoryManagerType&              theManager,
+            MemoryManager&              theManager,
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
@@ -1972,7 +1972,7 @@ const XalanNumberingResourceBundle& ElemNumber::s_elalphaResourceBundle =
 
 static void
 initializeTraditionalElalphaBundle(
-            MemoryManagerType&              theManager, 
+            MemoryManager&              theManager, 
             XalanNumberingResourceBundle&   theBundle)
 {
 
@@ -2145,7 +2145,7 @@ static const XalanDOMChar   s_solidusStringChars[] =
 
 
 void
-ElemNumber::initialize(MemoryManagerType&  theManager)
+ElemNumber::initialize(MemoryManager&  theManager)
 {
     s_staticTextString.reset(theManager, s_textStringChars);
 
@@ -2161,7 +2161,7 @@ ElemNumber::initialize(MemoryManagerType&  theManager)
 void
 ElemNumber::terminate()
 {
-    MemoryManagerType& theManager = XalanMemMgrs::getDummyMemMgr();
+    MemoryManager& theManager = XalanMemMgrs::getDummyMemMgr();
 
     releaseMemory(s_staticTextString, theManager);
     releaseMemory(s_staticCommentString, theManager);
