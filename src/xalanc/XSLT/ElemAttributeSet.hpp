@@ -38,91 +38,91 @@ class ElemAttributeSet : public ElemUse
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:attribute-set" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemAttributeSet (
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc				    lineNumber,
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:attribute-set" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemAttributeSet (
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemAttributeSet();
+    virtual
+    ~ElemAttributeSet();
 
-	/**
-	 * Retrieves qualified name of object
-	 *
-	 * @return qualified name
-	 */
-	const XalanQName&
-	getQName() const
-	{
-		assert(m_qname != 0);
+    /**
+     * Retrieves qualified name of object
+     *
+     * @return qualified name
+     */
+    const XalanQName&
+    getQName() const
+    {
+        assert(m_qname != 0);
 
-		return *m_qname;
-	}
+        return *m_qname;
+    }
 
 
-	// These methods are inherited from ElemUse ...
+    // These methods are inherited from ElemUse ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	const ElemTemplateElement*
-	getInvoker(StylesheetExecutionContext&	executionContext) const;
+    const ElemTemplateElement*
+    getInvoker(StylesheetExecutionContext&  executionContext) const;
 #else
-	virtual	void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
-	virtual void
-	addToStylesheet(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						theStylesheet);
+    virtual void
+    addToStylesheet(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     theStylesheet);
 
 protected:
 
-	virtual bool
-	childTypeAllowed(int	xslToken) const;
+    virtual bool
+    childTypeAllowed(int    xslToken) const;
 
 private:
 
-	const XalanQName*	m_qname;
+    const XalanQName*   m_qname;
 };
 
 
 
 inline bool
 operator==(
-			const ElemAttributeSet&		theLHS,
-			const ElemAttributeSet&		theRHS)
+            const ElemAttributeSet&     theLHS,
+            const ElemAttributeSet&     theRHS)
 {
-	return theLHS.getQName() == theRHS.getQName();
+    return theLHS.getQName() == theRHS.getQName();
 }
 
 
 
 inline bool
 operator<(
-			const ElemAttributeSet&		theLHS,
-			const ElemAttributeSet&		theRHS)
+            const ElemAttributeSet&     theLHS,
+            const ElemAttributeSet&     theRHS)
 {
-	return theLHS.getQName() < theRHS.getQName();
+    return theLHS.getQName() < theRHS.getQName();
 }
 
 
@@ -131,4 +131,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMATTRIBUTESET_HEADER_GUARD
+#endif  // XALAN_ELEMATTRIBUTESET_HEADER_GUARD

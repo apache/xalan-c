@@ -28,187 +28,187 @@
 
 int
 CreateXPath(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			const char*					theXPathExpression,
-			XalanXPathHandle*			theXPathHandle)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            const char*                 theXPathExpression,
+            XalanXPathHandle*           theXPathHandle)
 {
-	int					theResult = 0;
+    int                 theResult = 0;
 
-	assert(theXalanHandle);
-	assert(theXPathHandle);
+    assert(theXalanHandle);
+    assert(theXPathHandle);
 
-	theResult = XalanCreateXPath(theXalanHandle, theXPathExpression, 0, theXPathHandle);
+    theResult = XalanCreateXPath(theXalanHandle, theXPathExpression, 0, theXPathHandle);
 
-	if (theResult != XALAN_XPATH_API_SUCCESS)
-	{
-		fprintf(stderr, "Error creating XPath.  Error code was %d.\n", theResult);
-	}
+    if (theResult != XALAN_XPATH_API_SUCCESS)
+    {
+        fprintf(stderr, "Error creating XPath.  Error code was %d.\n", theResult);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 int
 DestroyXPath(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			XalanXPathHandle			theXPathHandle)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            XalanXPathHandle            theXPathHandle)
 {
-	int					theResult = 0;
+    int                 theResult = 0;
 
-	theResult = XalanDestroyXPath(theXalanHandle, theXPathHandle);
+    theResult = XalanDestroyXPath(theXalanHandle, theXPathHandle);
 
-	if (theResult != XALAN_XPATH_API_SUCCESS)
-	{
-		fprintf(stderr, "Error creating XPath.  Error code was %d.\n", theResult);
-	}
+    if (theResult != XALAN_XPATH_API_SUCCESS)
+    {
+        fprintf(stderr, "Error creating XPath.  Error code was %d.\n", theResult);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 char*
-ReadFile(const char*	theXMLFileName)
+ReadFile(const char*    theXMLFileName)
 {
-	char*	theBuffer = 0;
-	FILE*	theFile = fopen(theXMLFileName, "rb");
+    char*   theBuffer = 0;
+    FILE*   theFile = fopen(theXMLFileName, "rb");
 
-	if (theFile == 0)
-	{
-		fprintf(stderr, "Unable to open input file %s\n", theXMLFileName);
-	}
-	else
-	{
-		fseek(theFile, 0, SEEK_END);
+    if (theFile == 0)
+    {
+        fprintf(stderr, "Unable to open input file %s\n", theXMLFileName);
+    }
+    else
+    {
+        fseek(theFile, 0, SEEK_END);
 
-		{
-			const int	theSize = ftell(theFile);
+        {
+            const int   theSize = ftell(theFile);
 
-			if (theSize == -1)
-			{
-				fprintf(stderr, "Unable to determine the size of the input file\n");
-			}
-			else
-			{
-				fseek(theFile, SEEK_SET, 0);
+            if (theSize == -1)
+            {
+                fprintf(stderr, "Unable to determine the size of the input file\n");
+            }
+            else
+            {
+                fseek(theFile, SEEK_SET, 0);
 
-				theBuffer = (char*)malloc(theSize + 1);
+                theBuffer = (char*)malloc(theSize + 1);
 
-				if (theBuffer == 0)
-				{
-					fprintf(stderr, "Unable to allocate enough memory.  The input file size is %d\n", theSize);
-				}
-				else
-				{
-					fread(theBuffer, 1, theSize, theFile);
+                if (theBuffer == 0)
+                {
+                    fprintf(stderr, "Unable to allocate enough memory.  The input file size is %d\n", theSize);
+                }
+                else
+                {
+                    fread(theBuffer, 1, theSize, theFile);
 
-					theBuffer[theSize] = '\0';
-				}
-			}
-		}
+                    theBuffer[theSize] = '\0';
+                }
+            }
+        }
 
         fclose(theFile);
-	}
+    }
 
-	return theBuffer;
+    return theBuffer;
 }
 
 
 
 int
 EvaluateXPath(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			const char*					theXMLFileName,
-			const char*					theXPathExpression,
-			int*						theBoolean)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            const char*                 theXMLFileName,
+            const char*                 theXPathExpression,
+            int*                        theBoolean)
 {
-	XalanXPathHandle	theXPathHandle;
+    XalanXPathHandle    theXPathHandle;
 
-	int					theResult = CreateXPath(theXalanHandle, theXPathExpression, &theXPathHandle);
+    int                 theResult = CreateXPath(theXalanHandle, theXPathExpression, &theXPathHandle);
 
-	if (theResult == XALAN_XPATH_API_SUCCESS)
-	{
-		char*	theBuffer = ReadFile(theXMLFileName);
+    if (theResult == XALAN_XPATH_API_SUCCESS)
+    {
+        char*   theBuffer = ReadFile(theXMLFileName);
 
-		if (theBuffer != NULL)
-		{
-			theResult = XalanEvaluateXPathAsBoolean(theXalanHandle, theXPathHandle, theBuffer, theBoolean);
+        if (theBuffer != NULL)
+        {
+            theResult = XalanEvaluateXPathAsBoolean(theXalanHandle, theXPathHandle, theBuffer, theBoolean);
 
-			if (theResult != XALAN_XPATH_API_SUCCESS)
-			{
-				fprintf(stderr, "Unable to evaluate XPath expression.  Error code was %d.\n", theResult);
-			}
+            if (theResult != XALAN_XPATH_API_SUCCESS)
+            {
+                fprintf(stderr, "Unable to evaluate XPath expression.  Error code was %d.\n", theResult);
+            }
 
-			free(theBuffer);
-		}
+            free(theBuffer);
+        }
 
-		DestroyXPath(theXalanHandle, theXPathHandle);
-	}
+        DestroyXPath(theXalanHandle, theXPathHandle);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
-	int		theResult = 0;
+    int     theResult = 0;
 
-	if (argc != 3)
-	{
-		fprintf(stderr, "Usage: SimpleXPathAPI XMLFilePath XPathExpression\n");
+    if (argc != 3)
+    {
+        fprintf(stderr, "Usage: SimpleXPathAPI XMLFilePath XPathExpression\n");
 
-		theResult = -1;
-	}
-	else
-	{
-		theResult = XalanXPathAPIInitialize();
+        theResult = -1;
+    }
+    else
+    {
+        theResult = XalanXPathAPIInitialize();
 
-		if (theResult != XALAN_XPATH_API_SUCCESS)
-		{
-			fprintf(stderr, "Unable to initialize the API.  Error code was %d.\n", theResult);
-		}
-		else
-		{
-			XalanXPathEvaluatorHandle	theXalanHandle;
+        if (theResult != XALAN_XPATH_API_SUCCESS)
+        {
+            fprintf(stderr, "Unable to initialize the API.  Error code was %d.\n", theResult);
+        }
+        else
+        {
+            XalanXPathEvaluatorHandle   theXalanHandle;
 
-			theResult = XalanCreateXPathEvaluator(&theXalanHandle);
+            theResult = XalanCreateXPathEvaluator(&theXalanHandle);
 
-			if (theResult != XALAN_XPATH_API_SUCCESS)
-			{
-				fprintf(stderr, "Error creating evaluator.  Error code was %d.\n", theResult);
-			}
-			else
-			{
-				int	theBoolean = 0;
+            if (theResult != XALAN_XPATH_API_SUCCESS)
+            {
+                fprintf(stderr, "Error creating evaluator.  Error code was %d.\n", theResult);
+            }
+            else
+            {
+                int theBoolean = 0;
 
-				theResult = EvaluateXPath(theXalanHandle, argv[1], argv[2], &theBoolean);
+                theResult = EvaluateXPath(theXalanHandle, argv[1], argv[2], &theBoolean);
 
-				if (theResult == XALAN_XPATH_API_SUCCESS)
-				{
-					fprintf(stdout, "The result of the expression was '%s'.\n", theBoolean == 0 ? "false" : "true");
-				}
+                if (theResult == XALAN_XPATH_API_SUCCESS)
+                {
+                    fprintf(stdout, "The result of the expression was '%s'.\n", theBoolean == 0 ? "false" : "true");
+                }
 
-				theResult = XalanDestroyXPathEvaluator(theXalanHandle);
+                theResult = XalanDestroyXPathEvaluator(theXalanHandle);
 
-				if (theResult != XALAN_XPATH_API_SUCCESS)
-				{
-					fprintf(stderr, "Error destroying evaluator.  Error code was %d.\n", theResult);
-				}
-			}
+                if (theResult != XALAN_XPATH_API_SUCCESS)
+                {
+                    fprintf(stderr, "Error destroying evaluator.  Error code was %d.\n", theResult);
+                }
+            }
 
-			theResult = XalanXPathAPITerminate();
+            theResult = XalanXPathAPITerminate();
 
-			if (theResult != XALAN_XPATH_API_SUCCESS)
-			{
-				fprintf(stderr, "Error terminating the API.  Error code was %d.\n", theResult);
-			}
-		}
-	}
+            if (theResult != XALAN_XPATH_API_SUCCESS)
+            {
+                fprintf(stderr, "Error terminating the API.  Error code was %d.\n", theResult);
+            }
+        }
+    }
 
-	return theResult;
+    return theResult;
 }

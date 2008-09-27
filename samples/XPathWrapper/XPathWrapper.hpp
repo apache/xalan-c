@@ -45,40 +45,40 @@ class XPathWrapper
 
 public:
 
-	typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType	ChVectorType;
+    typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType    ChVectorType;
 
 
-	typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanVector<ChVectorType>		CharVectorTypeVectorType;	
+    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanVector<ChVectorType>     CharVectorTypeVectorType;   
 
 
-	XPathWrapper();
+    XPathWrapper();
 
-	virtual
-	~XPathWrapper();
+    virtual
+    ~XPathWrapper();
 
-	// Given an xml document and an xpath context and expression in the form of (ascii) string objects,
-	// this function parses the XML document, evaluates the xpath and returns the result, as a list of 
-	// string objects
-	void
-	evaluate(
-		const char*		xml, 
-		const char*		context, 
-		const char*		path,
+    // Given an xml document and an xpath context and expression in the form of (ascii) string objects,
+    // this function parses the XML document, evaluates the xpath and returns the result, as a list of 
+    // string objects
+    void
+    evaluate(
+        const char*     xml, 
+        const char*     context, 
+        const char*     path,
                 CharVectorTypeVectorType& theResult);
 
 private:
 
-	// not implemented
-	XPathWrapper(const XPathWrapper&);
+    // not implemented
+    XPathWrapper(const XPathWrapper&);
 
-	XPathWrapper&
-	operator=(const XPathWrapper&);
+    XPathWrapper&
+    operator=(const XPathWrapper&);
 
-	bool
-	operator==(const XPathWrapper&) const;
+    bool
+    operator==(const XPathWrapper&) const;
 
-	XPathWrapperImpl* const		pImpl;
+    XPathWrapperImpl* const     pImpl;
 };
 
 
-#endif	// XPATH_WRAPPER_HEADER_GUARD_1357924680
+#endif  // XPATH_WRAPPER_HEADER_GUARD_1357924680

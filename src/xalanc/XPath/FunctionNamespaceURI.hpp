@@ -48,51 +48,51 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XALAN_XPATH_EXPORT FunctionNamespaceURI : public Function
 {
 public:
-	
-	typedef Function	ParentType;
+    
+    typedef Function    ParentType;
 
-	FunctionNamespaceURI();
+    FunctionNamespaceURI();
 
-	virtual
-	~FunctionNamespaceURI();
+    virtual
+    ~FunctionNamespaceURI();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	using ParentType::execute;
+    using ParentType::execute;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionNamespaceURI*
+    virtual FunctionNamespaceURI*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionNamespaceURI&
-	operator=(const FunctionNamespaceURI&);
+    // Not implemented...
+    FunctionNamespaceURI&
+    operator=(const FunctionNamespaceURI&);
 
-	bool
-	operator==(const FunctionNamespaceURI&) const;
+    bool
+    operator==(const FunctionNamespaceURI&) const;
 };
 
 
@@ -101,4 +101,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONNAMESPACEURI_HEADER_GUARD_1357924680
+#endif  // FUNCTIONNAMESPACEURI_HEADER_GUARD_1357924680

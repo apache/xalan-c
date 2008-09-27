@@ -41,59 +41,59 @@ class XALAN_XPATH_EXPORT FunctionLang : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize(MemoryManager&   theManager);
+    /**
+     * Perform static initialization.  See class XPathInit.
+     */
+    static void
+    initialize(MemoryManager&   theManager);
 
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
+    /**
+     * Perform static shut down.  See class XPathInit.
+     */
+    static void
+    terminate();
 
 
     FunctionLang();
 
-	virtual
-	~FunctionLang();
+    virtual
+    ~FunctionLang();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionLang*
+    virtual FunctionLang*
 #endif
-	clone(MemoryManager&    theManager) const;
+    clone(MemoryManager&    theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionLang&
-	operator=(const FunctionLang&);
+    // Not implemented...
+    FunctionLang&
+    operator=(const FunctionLang&);
 
-	bool
-	operator==(const FunctionLang&) const;
+    bool
+    operator==(const FunctionLang&) const;
 
-	static const XalanDOMString&    s_attributeName;
+    static const XalanDOMString&    s_attributeName;
 };
 
 
@@ -102,4 +102,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONLANG_HEADER_GUARD_1357924680
+#endif  // FUNCTIONLANG_HEADER_GUARD_1357924680

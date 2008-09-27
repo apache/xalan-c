@@ -85,8 +85,8 @@ fileToStream(
  */
 void
 copyFile(
-		    const XalanDOMString&	destFile,
-		    const XalanDOMString&	sourceFile);
+            const XalanDOMString&   destFile,
+            const XalanDOMString&   sourceFile);
 
         
 

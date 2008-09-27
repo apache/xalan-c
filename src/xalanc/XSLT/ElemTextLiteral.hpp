@@ -41,84 +41,84 @@ class ElemTextLiteral : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to literal text element
-	 * 
-	 * @param constructionContext   context for construction of object
-	 * @param stylesheetTree        stylesheet containing element
-	 * @param lineNumber            line number in document
-	 * @param columnNumber          column number in document
-	 * @param ch                    pointer to character string for element
-	 * @param start                 starting offset of element
-	 * @param length                number of characters in element
-	 * @param fPreserveSpace         true is space should be preserved
-	 * @param fDisableOutputEscaping true if output escaping should be disabled
-	 */
-	ElemTextLiteral(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-            const XalanDOMChar*				ch,
-			XalanDOMString::size_type		start,
-			XalanDOMString::size_type		length,
-			bool							fPreserveSpace,
-            bool							fDisableOutputEscaping);
+    /**
+     * Construct an object corresponding to literal text element
+     * 
+     * @param constructionContext   context for construction of object
+     * @param stylesheetTree        stylesheet containing element
+     * @param lineNumber            line number in document
+     * @param columnNumber          column number in document
+     * @param ch                    pointer to character string for element
+     * @param start                 starting offset of element
+     * @param length                number of characters in element
+     * @param fPreserveSpace         true is space should be preserved
+     * @param fDisableOutputEscaping true if output escaping should be disabled
+     */
+    ElemTextLiteral(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            const XalanDOMChar*             ch,
+            XalanDOMString::size_type       start,
+            XalanDOMString::size_type       length,
+            bool                            fPreserveSpace,
+            bool                            fDisableOutputEscaping);
 
-	virtual
-	~ElemTextLiteral();
+    virtual
+    ~ElemTextLiteral();
 
-	/**
-	 * Determine if whitespace should be preserved within the element
-	 * 
-	 * @return true if whitespace should be preserved
-	 */
-	bool
-	isPreserveSpace() const
-	{
-		return preserveSpace();
-	}
+    /**
+     * Determine if whitespace should be preserved within the element
+     * 
+     * @return true if whitespace should be preserved
+     */
+    bool
+    isPreserveSpace() const
+    {
+        return preserveSpace();
+    }
 
-	const XalanDOMChar*
-	getText() const
-	{
-		return m_ch;
-	}
+    const XalanDOMChar*
+    getText() const
+    {
+        return m_ch;
+    }
 
-	XalanDOMString::size_type
-	getLength() const
-	{
-		return m_length;
-	}
+    XalanDOMString::size_type
+    getLength() const
+    {
+        return m_length;
+    }
 
-	virtual bool
-	isWhitespace() const;
+    virtual bool
+    isWhitespace() const;
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual const XalanDOMString&
-	getElementName() const;
+    // These methods are inherited from ElemTemplateElement ...
+    
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 private:
 
-	// not implemented
-	ElemTextLiteral(const ElemTextLiteral&);
+    // not implemented
+    ElemTextLiteral(const ElemTextLiteral&);
 
-	ElemTextLiteral&
-	operator=(const ElemTextLiteral&);
+    ElemTextLiteral&
+    operator=(const ElemTextLiteral&);
 
-	const bool	m_isWhitespace;
+    const bool  m_isWhitespace;
 
-	const XalanDOMChar* const			m_ch;
-	const XalanDOMString::size_type		m_length;
+    const XalanDOMChar* const           m_ch;
+    const XalanDOMString::size_type     m_length;
 };
 
 
@@ -127,4 +127,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMTEXTLITERAL_HEADER_GUARD
+#endif  // XALAN_ELEMTEXTLITERAL_HEADER_GUARD

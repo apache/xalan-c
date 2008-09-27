@@ -41,31 +41,31 @@ class XALAN_PLATFORMSUPPORT_EXPORT PrefixResolver
 public:
 
 
-	PrefixResolver();
+    PrefixResolver();
 
-	PrefixResolver(const PrefixResolver&);
+    PrefixResolver(const PrefixResolver&);
 
-	virtual
-	~PrefixResolver();
+    virtual
+    ~PrefixResolver();
 
-	/**
-	 * Retrieve a namespace corresponding to a prefix.  This assumes that 
-	 * the PrevixResolver holds its own namespace context, or is a namespace
-	 * context itself.
-	 *
-	 * @param prefix Prefix to resolve
-	 * @return namespace that prefix resolves to, or null if prefix is not found
-	 */
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
+    /**
+     * Retrieve a namespace corresponding to a prefix.  This assumes that 
+     * the PrevixResolver holds its own namespace context, or is a namespace
+     * context itself.
+     *
+     * @param prefix Prefix to resolve
+     * @return namespace that prefix resolves to, or null if prefix is not found
+     */
+    virtual const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     prefix) const = 0;
 
-	/**
-	 * Retrieve the base URI for the resolver.
-	 * 
-	 * @return URI string
-	 */
-	virtual const XalanDOMString&
-	getURI() const = 0;
+    /**
+     * Retrieve the base URI for the resolver.
+     * 
+     * @return URI string
+     */
+    virtual const XalanDOMString&
+    getURI() const = 0;
 };
 
 
@@ -74,4 +74,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// PREFIXRESOLVER_HEADER_GUARD_1357924680
+#endif  // PREFIXRESOLVER_HEADER_GUARD_1357924680

@@ -41,51 +41,51 @@ class XALAN_XSLT_EXPORT FunctionGenerateID : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionGenerateID();
+    FunctionGenerateID();
 
-	virtual
-	~FunctionGenerateID();
+    virtual
+    ~FunctionGenerateID();
 
-	// These methods are inherited from Function ...
-	
-	using ParentType::execute;
+    // These methods are inherited from Function ...
+    
+    using ParentType::execute;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionGenerateID*
+    virtual FunctionGenerateID*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionGenerateID&	operator=(const FunctionGenerateID&);
+    // Not implemented...
+    FunctionGenerateID& operator=(const FunctionGenerateID&);
 
-	bool
-	operator==(const FunctionGenerateID&) const;
+    bool
+    operator==(const FunctionGenerateID&) const;
 
-	static const XalanDOMString			s_emptyString;
+    static const XalanDOMString         s_emptyString;
 };
 
 
@@ -94,4 +94,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONGENERATEID_HEADER_GUARD_1357924680
+#endif  // FUNCTIONGENERATEID_HEADER_GUARD_1357924680

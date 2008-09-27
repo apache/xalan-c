@@ -42,83 +42,83 @@ class XALAN_XPATH_EXPORT XPathAllocator
 {
 public:
 
-	typedef XPath							object_type;
+    typedef XPath                           object_type;
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-	typedef ArenaBlock<object_type>			ArenaBlockType;
+    typedef ArenaBlock<object_type>         ArenaBlockType;
 
-	typedef ArenaAllocator<object_type,
-						   ArenaBlockType>	ArenaAllocatorType;
+    typedef ArenaAllocator<object_type,
+                           ArenaBlockType>  ArenaAllocatorType;
 #else
-	typedef ArenaAllocator<object_type>		ArenaAllocatorType;
+    typedef ArenaAllocator<object_type>     ArenaAllocatorType;
 #endif
 
-	typedef ArenaAllocatorType::size_type	size_type;
+    typedef ArenaAllocatorType::size_type   size_type;
 
-	/**
-	 * Construct an instance that will allocate blocks of the specified size.
-	 *
-	 * @param theBlockSize The block size.
-	 */
-	XPathAllocator(MemoryManager&      theManager, size_type	theBlockCount);
+    /**
+     * Construct an instance that will allocate blocks of the specified size.
+     *
+     * @param theBlockSize The block size.
+     */
+    XPathAllocator(MemoryManager&      theManager, size_type    theBlockCount);
 
-	~XPathAllocator();
+    ~XPathAllocator();
 
-	/**
-	 * Create an XPath object using the allocator.
-	 * 
-	 * @return a pointer to an XPath
-	 */
-	object_type*
-	create();
+    /**
+     * Create an XPath object using the allocator.
+     * 
+     * @return a pointer to an XPath
+     */
+    object_type*
+    create();
 
-	/**
-	 * Determine if an object is owned by the allocator...
-	 */
-	bool
-	ownsObject(const object_type*	theObject)
-	{
-		return m_allocator.ownsObject(theObject);
-	}
+    /**
+     * Determine if an object is owned by the allocator...
+     */
+    bool
+    ownsObject(const object_type*   theObject)
+    {
+        return m_allocator.ownsObject(theObject);
+    }
 
-	/**
-	 * Delete all XPath objects allocated.	 
-	 */	
-	void
-	reset();
+    /**
+     * Delete all XPath objects allocated.   
+     */ 
+    void
+    reset();
 
-	/**
-	 * Get the number of objects in each block.
-	 *
-	 * @return The size of the block
-	 */
-	size_type
-	getBlockCount() const
-	{
-		return m_allocator.getBlockCount();
-	}
+    /**
+     * Get the number of objects in each block.
+     *
+     * @return The size of the block
+     */
+    size_type
+    getBlockCount() const
+    {
+        return m_allocator.getBlockCount();
+    }
 
-	/**
-	 * Get the number of blocks currently allocated.
-	 *
-	 * @return The number of blocks.
-	 */
-	size_type
-	getBlockSize() const
-	{
-		return m_allocator.getBlockSize();
-	}
+    /**
+     * Get the number of blocks currently allocated.
+     *
+     * @return The number of blocks.
+     */
+    size_type
+    getBlockSize() const
+    {
+        return m_allocator.getBlockSize();
+    }
 
 private:
 
-	// Not implemented...
-	XPathAllocator(const XPathAllocator&);
+    // Not implemented...
+    XPathAllocator(const XPathAllocator&);
 
-	XPathAllocator&
-	operator=(const XPathAllocator&);
+    XPathAllocator&
+    operator=(const XPathAllocator&);
 
-	// Data members...
-	ArenaAllocatorType	m_allocator;
+    // Data members...
+    ArenaAllocatorType  m_allocator;
 };
 
 
@@ -127,4 +127,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNUMBERALLOCATOR_INCLUDE_GUARD_135792455
+#endif  // XNUMBERALLOCATOR_INCLUDE_GUARD_135792455

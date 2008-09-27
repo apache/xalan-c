@@ -62,7 +62,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions(XalanMemMgrs::getDummyMemMgr());
+XPathEnvSupportDefault::NamespaceFunctionTablesType     XPathEnvSupportDefault::s_externalFunctions(XalanMemMgrs::getDummyMemMgr());
 
 const XalanDOMString                                    XPathEnvSupportDefault::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
@@ -79,23 +79,23 @@ XPathEnvSupportDefault::initialize(MemoryManager&   theManager)
 void
 XPathEnvSupportDefault::terminate()
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	// Clean up the extension namespaces vector
-	for_each(s_externalFunctions.begin(),
-			 s_externalFunctions.end(),
-			 NamespaceFunctionTableDeleteFunctor(s_externalFunctions.getMemoryManager()));
+    // Clean up the extension namespaces vector
+    for_each(s_externalFunctions.begin(),
+             s_externalFunctions.end(),
+             NamespaceFunctionTableDeleteFunctor(s_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
-	temp.swap(s_externalFunctions);
+    NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
+    temp.swap(s_externalFunctions);
 }
 
 
 
 XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManager&   theManager) :
-	XPathEnvSupport(),
-	m_sourceDocs(theManager),
-	m_externalFunctions(theManager),
+    XPathEnvSupport(),
+    m_sourceDocs(theManager),
+    m_externalFunctions(theManager),
     m_memoryManager(theManager),
     m_pw(0)
 {
@@ -105,121 +105,121 @@ XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManager&   theManager) :
 
 XPathEnvSupportDefault::~XPathEnvSupportDefault()
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	// Clean up the extension namespaces vector
-	for_each(m_externalFunctions.begin(),
-			 m_externalFunctions.end(),
-			 NamespaceFunctionTableDeleteFunctor(m_externalFunctions.getMemoryManager()));
+    // Clean up the extension namespaces vector
+    for_each(m_externalFunctions.begin(),
+             m_externalFunctions.end(),
+             NamespaceFunctionTableDeleteFunctor(m_externalFunctions.getMemoryManager()));
 
-	NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
-	temp.swap(m_externalFunctions);
+    NamespaceFunctionTablesType temp(XalanMemMgrs::getDummyMemMgr());
+    temp.swap(m_externalFunctions);
 }
 
 
 
 void
 XPathEnvSupportDefault::updateFunctionTable(
-			NamespaceFunctionTablesType&	theTable,
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			functionName,
-			const Function*					function)
+            NamespaceFunctionTablesType&    theTable,
+            const XalanDOMString&           theNamespace,
+            const XalanDOMString&           functionName,
+            const Function*                 function)
 {
-	// See if there's a table for that namespace...
-	const NamespaceFunctionTablesType::iterator		i =
-		theTable.find(theNamespace);
+    // See if there's a table for that namespace...
+    const NamespaceFunctionTablesType::iterator     i =
+        theTable.find(theNamespace);
 
-	if (i == theTable.end())
-	{
-		// The namespace was not found.  If function is not
-		// 0, then add a clone of the function.
-		if (function != 0)
-		{
-			theTable[theNamespace][functionName] =
+    if (i == theTable.end())
+    {
+        // The namespace was not found.  If function is not
+        // 0, then add a clone of the function.
+        if (function != 0)
+        {
+            theTable[theNamespace][functionName] =
                 function->clone(theTable.getMemoryManager());
-		}
-	}
-	else
-	{
-		// There is already a table for the namespace,
-		// so look for the function...
-		const FunctionTableType::iterator	j =
-			(*i).second.find(functionName);
+        }
+    }
+    else
+    {
+        // There is already a table for the namespace,
+        // so look for the function...
+        const FunctionTableType::iterator   j =
+            (*i).second.find(functionName);
 
-		if (j == (*i).second.end())
-		{
-			// The function was not found.  If function is not
-			// 0, then add a clone of the function.
-			if (function != 0)
-			{
-				(*i).second[functionName] = function->clone(theTable.getMemoryManager());
-			}
-		}
-		else
-		{
-			// Found it, so delete the function...
+        if (j == (*i).second.end())
+        {
+            // The function was not found.  If function is not
+            // 0, then add a clone of the function.
+            if (function != 0)
+            {
+                (*i).second[functionName] = function->clone(theTable.getMemoryManager());
+            }
+        }
+        else
+        {
+            // Found it, so delete the function...
             const_cast<Function*>((*j).second)->~Function();
 
             MemoryManager&  theManager = theTable.getMemoryManager();
 
             theManager.deallocate((void*)(*j).second);
 
-			// If function is not 0, then we update
-			// the entry.  Otherwise, we erase it...
-			if (function != 0)
-			{
-				// Update it...
-				(*j).second = function->clone(theTable.getMemoryManager());
-			}
-			else
-			{
-				// Erase it...
-				(*i).second.erase(j);
-			}
-		}
-	}
+            // If function is not 0, then we update
+            // the entry.  Otherwise, we erase it...
+            if (function != 0)
+            {
+                // Update it...
+                (*j).second = function->clone(theTable.getMemoryManager());
+            }
+            else
+            {
+                // Erase it...
+                (*i).second.erase(j);
+            }
+        }
+    }
 }
 
 
 
 void
 XPathEnvSupportDefault::installExternalFunctionGlobal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName,
-			const Function&			function)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName,
+            const Function&         function)
 {
-	updateFunctionTable(s_externalFunctions, theNamespace, functionName, &function);
+    updateFunctionTable(s_externalFunctions, theNamespace, functionName, &function);
 }
 
 
 
 void
 XPathEnvSupportDefault::uninstallExternalFunctionGlobal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName)
 {
-	updateFunctionTable(s_externalFunctions, theNamespace, functionName, 0);
+    updateFunctionTable(s_externalFunctions, theNamespace, functionName, 0);
 }
 
 
 
 void
 XPathEnvSupportDefault::installExternalFunctionLocal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName,
-			const Function&			function)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName,
+            const Function&         function)
 {
-	updateFunctionTable(m_externalFunctions, theNamespace, functionName, &function);
+    updateFunctionTable(m_externalFunctions, theNamespace, functionName, &function);
 }
 
 
 
 void
 XPathEnvSupportDefault::uninstallExternalFunctionLocal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName)
 {
-	updateFunctionTable(m_externalFunctions, theNamespace, functionName, 0);
+    updateFunctionTable(m_externalFunctions, theNamespace, functionName, 0);
 }
 
 
@@ -227,7 +227,7 @@ XPathEnvSupportDefault::uninstallExternalFunctionLocal(
 void
 XPathEnvSupportDefault::reset()
 {
-	m_sourceDocs.clear();
+    m_sourceDocs.clear();
 }
 
 
@@ -235,62 +235,62 @@ XPathEnvSupportDefault::reset()
 XalanDocument*
 XPathEnvSupportDefault::parseXML(
             MemoryManager&      /* theManager */,
-			const XalanDOMString&	/* urlString */,
-			const XalanDOMString&	/* base */,
+            const XalanDOMString&   /* urlString */,
+            const XalanDOMString&   /* base */,
             ErrorHandler*           /* theErrorHandler */)
 {
-	return 0;
+    return 0;
 }
 
 
 
 XalanDocument*
-XPathEnvSupportDefault::getSourceDocument(const XalanDOMString&		theURI) const
+XPathEnvSupportDefault::getSourceDocument(const XalanDOMString&     theURI) const
 {
-	const SourceDocsTableType::const_iterator	i =
-			m_sourceDocs.find(theURI);
+    const SourceDocsTableType::const_iterator   i =
+            m_sourceDocs.find(theURI);
 
-	if (i == m_sourceDocs.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return (*i).second;
-	}
+    if (i == m_sourceDocs.end())
+    {
+        return 0;
+    }
+    else
+    {
+        return (*i).second;
+    }
 }
 
 
 
 void
 XPathEnvSupportDefault::setSourceDocument(
-			const XalanDOMString&	theURI,
-			XalanDocument*			theDocument)
+            const XalanDOMString&   theURI,
+            XalanDocument*          theDocument)
 {
-	m_sourceDocs[theURI] = theDocument;
+    m_sourceDocs[theURI] = theDocument;
 }
 
 
 
 const XalanDOMString&
-XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
+XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*     owner) const
 {
-	SourceDocsTableType::const_iterator	i =
-			m_sourceDocs.begin();
+    SourceDocsTableType::const_iterator i =
+            m_sourceDocs.begin();
 
-	bool	fFound = false;
+    bool    fFound = false;
 
-	while(i != m_sourceDocs.end() && fFound == false)
-	{
-		if ((*i).second == owner)
-		{
-			fFound = true;
-		}
-		else
-		{
-			++i;
-		}
-	}
+    while(i != m_sourceDocs.end() && fFound == false)
+    {
+        if ((*i).second == owner)
+        {
+            fFound = true;
+        }
+        else
+        {
+            ++i;
+        }
+    }
 
     return fFound == false ? s_emptyString : (*i).first;
 }
@@ -299,133 +299,133 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 
 bool
 XPathEnvSupportDefault::elementAvailable(
-			const XalanDOMString&	/* theNamespace */,
-			const XalanDOMString&	/* elementName */) const
+            const XalanDOMString&   /* theNamespace */,
+            const XalanDOMString&   /* elementName */) const
 {
-	return false;
+    return false;
 }
 
 
 
 bool
 XPathEnvSupportDefault::functionAvailable(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName) const
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName) const
 {
-	bool	theResult = false;
+    bool    theResult = false;
 
-	// Any function without a namespace prefix is considered
-	// to be an intrinsic function.
+    // Any function without a namespace prefix is considered
+    // to be an intrinsic function.
     if (theNamespace.empty() == true)
-	{
-		theResult = XPath::isInstalledFunction(functionName);
-	}
-	else
-	{
-		const Function* const	theFunction =
-			findFunction(
-				theNamespace,
-				functionName);
+    {
+        theResult = XPath::isInstalledFunction(functionName);
+    }
+    else
+    {
+        const Function* const   theFunction =
+            findFunction(
+                theNamespace,
+                functionName);
 
-		if (theFunction != 0)
-		{
-			theResult = true;
-		}
-	}
+        if (theFunction != 0)
+        {
+            theResult = true;
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 const Function*
 XPathEnvSupportDefault::findFunction(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName) const
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName) const
 {
-	// First, look locally...
-	const Function*		theFunction = findFunction(
-			m_externalFunctions,
-			theNamespace,
-			functionName);
+    // First, look locally...
+    const Function*     theFunction = findFunction(
+            m_externalFunctions,
+            theNamespace,
+            functionName);
 
-	if (theFunction == 0)
-	{
-		// Not found, so look in the global space...
-		theFunction = findFunction(
-			s_externalFunctions,
-			theNamespace,
-			functionName);
-	}
+    if (theFunction == 0)
+    {
+        // Not found, so look in the global space...
+        theFunction = findFunction(
+            s_externalFunctions,
+            theNamespace,
+            functionName);
+    }
 
-	return theFunction;
+    return theFunction;
 }
 
 
 
 const Function*
 XPathEnvSupportDefault::findFunction(
-			const NamespaceFunctionTablesType&	theTable,
-			const XalanDOMString&				theNamespace,
-			const XalanDOMString&				functionName) const
+            const NamespaceFunctionTablesType&  theTable,
+            const XalanDOMString&               theNamespace,
+            const XalanDOMString&               functionName) const
 {
-	const Function*	theFunction = 0;
+    const Function* theFunction = 0;
 
-	// See if there's a table for that namespace...
-	const NamespaceFunctionTablesType::const_iterator	i =
-		theTable.find(theNamespace);
+    // See if there's a table for that namespace...
+    const NamespaceFunctionTablesType::const_iterator   i =
+        theTable.find(theNamespace);
 
-	if (i != theTable.end())
-	{
-		// There is a table for the namespace,
-		// so look for the function...
-		const FunctionTableType::const_iterator		j =
-			(*i).second.find(functionName);
+    if (i != theTable.end())
+    {
+        // There is a table for the namespace,
+        // so look for the function...
+        const FunctionTableType::const_iterator     j =
+            (*i).second.find(functionName);
 
-		if (j != (*i).second.end())
-		{
-			// Found the function...
-			assert((*j).second != 0);
+        if (j != (*i).second.end())
+        {
+            // Found the function...
+            assert((*j).second != 0);
 
-			theFunction = (*j).second;
-		}
-	}
+            theFunction = (*j).second;
+        }
+    }
 
-	return theFunction;
+    return theFunction;
 }
 
 
 
 XObjectPtr
 XPathEnvSupportDefault::extFunction(
-			XPathExecutionContext&			executionContext,
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			functionName,
-			XalanNode*						context,
-			const XObjectArgVectorType&		argVec,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            const XalanDOMString&           theNamespace,
+            const XalanDOMString&           functionName,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     argVec,
+            const LocatorType*              locator) const
 {
-	const Function* const	theFunction = findFunction(theNamespace, functionName);
+    const Function* const   theFunction = findFunction(theNamespace, functionName);
 
-	if (theFunction != 0)
-	{
-		return theFunction->execute(
-					executionContext,
-					context,
-					argVec,
-					locator);
-	}
-	else
-	{
-        XalanDOMString	theFunctionName(executionContext.getMemoryManager());
+    if (theFunction != 0)
+    {
+        return theFunction->execute(
+                    executionContext,
+                    context,
+                    argVec,
+                    locator);
+    }
+    else
+    {
+        XalanDOMString  theFunctionName(executionContext.getMemoryManager());
 
         if(theNamespace.empty() == false)
-		{
-			theFunctionName += theNamespace;
-			theFunctionName += DOMServices::s_XMLNamespaceSeparatorString;
-		}
+        {
+            theFunctionName += theNamespace;
+            theFunctionName += DOMServices::s_XMLNamespaceSeparatorString;
+        }
 
-		theFunctionName += functionName;
+        theFunctionName += functionName;
 
         const XPathExecutionContext::GetCachedString    theGuard(executionContext);
 
@@ -434,9 +434,9 @@ XPathEnvSupportDefault::extFunction(
                 theGuard.get(),
                 locator);
 
-		// dummy return value...
-		return XObjectPtr();
-	}
+        // dummy return value...
+        return XObjectPtr();
+    }
 }
 
 
@@ -451,11 +451,11 @@ XPathEnvSupportDefault::setPrintWriter(PrintWriter*     pw)
 
 void
 XPathEnvSupportDefault::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     if (m_pw != 0)
     {
@@ -473,10 +473,10 @@ XPathEnvSupportDefault::problem(
 
 void
 XPathEnvSupportDefault::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     if (m_pw != 0)
     {
@@ -492,25 +492,25 @@ XPathEnvSupportDefault::problem(
 
 
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManager&     theManager) :
-	m_memoryManager(theManager)
+    m_memoryManager(theManager)
 {
 }
 
 
 
 void
-XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const
+XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type& thePair) const
 {
-	FunctionTableInnerType::const_iterator	i = thePair.second.begin();
+    FunctionTableInnerType::const_iterator  i = thePair.second.begin();
 
-	while (i != thePair.second.end())
-	{
+    while (i != thePair.second.end())
+    {
         XalanDestroy(
             m_memoryManager,
             const_cast<Function*>((*i).second));
 
         ++i;
-	}
+    }
 }
 
 

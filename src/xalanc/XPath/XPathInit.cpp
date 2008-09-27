@@ -33,20 +33,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	XPathInit::s_initCounter = 0;
+unsigned long   XPathInit::s_initCounter = 0;
 
 
 
 XPathInit::XPathInit(MemoryManager& theManager) :
-	m_platformSupportInit(theManager),
-	m_domSupportInit(theManager)
+    m_platformSupportInit(theManager),
+    m_domSupportInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 
@@ -63,12 +63,12 @@ XPathInit::create(MemoryManager&    theManager)
 
 XPathInit::~XPathInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 
@@ -80,11 +80,11 @@ XPathInit::initialize(MemoryManager& theManager)
 
     XObject::initialize(theManager);
 
-	XUnknown::initialize(theManager);
+    XUnknown::initialize(theManager);
 
-	XPath::initialize(theManager);
+    XPath::initialize(theManager);
 
-	XPathEnvSupportDefault::initialize(theManager);
+    XPathEnvSupportDefault::initialize(theManager);
 }
 
 
@@ -92,13 +92,13 @@ XPathInit::initialize(MemoryManager& theManager)
 void
 XPathInit::terminate()
 {
-	XPathEnvSupportDefault::terminate();
+    XPathEnvSupportDefault::terminate();
 
-	XPath::terminate();
+    XPath::terminate();
 
-	XUnknown::terminate();
+    XUnknown::terminate();
 
-	XObject::terminate();
+    XObject::terminate();
 
     FunctionLang::terminate();
 }

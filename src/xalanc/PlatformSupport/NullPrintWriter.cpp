@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 NullPrintWriter::NullPrintWriter(MemoryManager& theManager) :
-	PrintWriter(false, theManager)
+    PrintWriter(false, theManager)
 {
 }
 
@@ -40,7 +40,7 @@ NullPrintWriter::~NullPrintWriter()
 bool
 NullPrintWriter::checkError() const
 {
-	return false;
+    return false;
 }
 
 
@@ -61,9 +61,9 @@ NullPrintWriter::flush()
 
 void
 NullPrintWriter::write(
-			const char*		/* s */,
-			size_t			/* theOffset */,
-			size_t			/* theLength */)
+            const char*     /* s */,
+            size_t          /* theOffset */,
+            size_t          /* theLength */)
 {
 }
 
@@ -71,16 +71,16 @@ NullPrintWriter::write(
 
 void
 NullPrintWriter::write(
-			const XalanDOMChar*			/* s */,
-			XalanDOMString::size_type	/* theOffset */,
-			XalanDOMString::size_type	/* theLength */)
+            const XalanDOMChar*         /* s */,
+            XalanDOMString::size_type   /* theOffset */,
+            XalanDOMString::size_type   /* theLength */)
 {
 }
 
 
 
 void
-NullPrintWriter::write(XalanDOMChar	/* c */)
+NullPrintWriter::write(XalanDOMChar /* c */)
 {
 }
 
@@ -88,9 +88,9 @@ NullPrintWriter::write(XalanDOMChar	/* c */)
 
 void
 NullPrintWriter::write(
-			const XalanDOMString&		/* s */,
-			XalanDOMString::size_type	/* theOffset */,
-			XalanDOMString::size_type	/* theLength */)
+            const XalanDOMString&       /* s */,
+            XalanDOMString::size_type   /* theOffset */,
+            XalanDOMString::size_type   /* theLength */)
 {
 }
 
@@ -98,7 +98,7 @@ NullPrintWriter::write(
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-NullPrintWriter::print(bool	/* b */)
+NullPrintWriter::print(bool /* b */)
 {
 }
 #endif
@@ -106,7 +106,7 @@ NullPrintWriter::print(bool	/* b */)
 
 
 void
-NullPrintWriter::print(char	/* c */)
+NullPrintWriter::print(char /* c */)
 {
 }
 
@@ -114,8 +114,8 @@ NullPrintWriter::print(char	/* c */)
 
 void
 NullPrintWriter::print(
-			const char*		/* s */,
-			size_t			/* theLength */)
+            const char*     /* s */,
+            size_t          /* theLength */)
 {
 }
 
@@ -123,36 +123,36 @@ NullPrintWriter::print(
 
 void
 NullPrintWriter::print(
-			const XalanDOMChar*			/* s */,
-			XalanDOMString::size_type	/* theLength */)
+            const XalanDOMChar*         /* s */,
+            XalanDOMString::size_type   /* theLength */)
 {
 }
 
 
 
 void
-NullPrintWriter::print(double	/* d */)
+NullPrintWriter::print(double   /* d */)
 {
 }
 
 
 
 void
-NullPrintWriter::print(int	/* i */)
+NullPrintWriter::print(int  /* i */)
 {
 }
 
 
 
 void
-NullPrintWriter::print(long	/* l */)
+NullPrintWriter::print(long /* l */)
 {
 }
 
 
 
 void
-NullPrintWriter::print(const XalanDOMString&	/* s */)
+NullPrintWriter::print(const XalanDOMString&    /* s */)
 {
 }
 
@@ -167,7 +167,7 @@ NullPrintWriter::println()
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-NullPrintWriter::println(bool	/* x */)
+NullPrintWriter::println(bool   /* x */)
 {
 }
 #endif
@@ -175,7 +175,7 @@ NullPrintWriter::println(bool	/* x */)
 
 
 void
-NullPrintWriter::println(char	/* x */)
+NullPrintWriter::println(char   /* x */)
 {
 }
 
@@ -183,8 +183,8 @@ NullPrintWriter::println(char	/* x */)
 
 void
 NullPrintWriter::println(
-			const char*		/* s */,
-			size_t			/* theLength */)
+            const char*     /* s */,
+            size_t          /* theLength */)
 {
 }
 
@@ -192,36 +192,36 @@ NullPrintWriter::println(
 
 void
 NullPrintWriter::println(
-			const XalanDOMChar*			/* s */,
-			XalanDOMString::size_type	/* theLength */)
+            const XalanDOMChar*         /* s */,
+            XalanDOMString::size_type   /* theLength */)
 {
 }
 
 
 
 void
-NullPrintWriter::println(double	/* x */)
+NullPrintWriter::println(double /* x */)
 {
 }
 
 
 
 void
-NullPrintWriter::println(int	/* x */)
+NullPrintWriter::println(int    /* x */)
 {
 }
 
 
 
 void
-NullPrintWriter::println(long	/* x */)
+NullPrintWriter::println(long   /* x */)
 {
 }
 
 
 
 void
-NullPrintWriter::println(const XalanDOMString&	/* s */)
+NullPrintWriter::println(const XalanDOMString&  /* s */)
 {
 }
 

@@ -43,21 +43,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport() :
-	DOMSupport(),
-	m_parserLiaison(0)
+    DOMSupport(),
+    m_parserLiaison(0)
 {
 }
 
 
 
-XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport(const XalanSourceTreeParserLiaison&	theParserLiaison) :
-	DOMSupport(),
-	m_parserLiaison(&theParserLiaison)
+XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport(const XalanSourceTreeParserLiaison&    theParserLiaison) :
+    DOMSupport(),
+    m_parserLiaison(&theParserLiaison)
 {
 }
 
@@ -78,20 +78,20 @@ XalanSourceTreeDOMSupport::reset()
 
 const XalanDOMString&
 XalanSourceTreeDOMSupport::getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const
 {
-	if (m_parserLiaison != 0)
-	{
-		const XalanSourceTreeDocument* const	theXSTDocument =
-			m_parserLiaison->mapDocument(&theDocument);
+    if (m_parserLiaison != 0)
+    {
+        const XalanSourceTreeDocument* const    theXSTDocument =
+            m_parserLiaison->mapDocument(&theDocument);
 
-		if (theXSTDocument != 0)
-		{
-			return theXSTDocument->getUnparsedEntityURI(theName);
+        if (theXSTDocument != 0)
+        {
+            return theXSTDocument->getUnparsedEntityURI(theName);
             
-		}
-	}
+        }
+    }
 
     return s_emptyString;
 }
@@ -100,12 +100,12 @@ XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 
 bool
 XalanSourceTreeDOMSupport::isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
 {
-	assert(node1.isIndexed() == true && node2.isIndexed() == true);
+    assert(node1.isIndexed() == true && node2.isIndexed() == true);
 
-	return node1.getIndex() > node2.getIndex() ? true : false;
+    return node1.getIndex() > node2.getIndex() ? true : false;
 }
 
 

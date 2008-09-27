@@ -25,9 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
-const NodeRefListBase::size_type	NodeRefListBase::npos = ~0u;
+const NodeRefListBase::size_type    NodeRefListBase::npos = ~0u;
 #elif !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const NodeRefListBase::size_type	NodeRefListBase::npos;
+const NodeRefListBase::size_type    NodeRefListBase::npos;
 #endif
 
 

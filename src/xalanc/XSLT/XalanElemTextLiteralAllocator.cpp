@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemTextLiteralAllocator::XalanElemTextLiteralAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanElemTextLiteralAllocator::XalanElemTextLiteralAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,34 +40,34 @@ XalanElemTextLiteralAllocator::~XalanElemTextLiteralAllocator()
 
 XalanElemTextLiteralAllocator::data_type*
 XalanElemTextLiteralAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber,
-            const XalanDOMChar*				ch,
-			XalanDOMString::size_type		start,
-			XalanDOMString::size_type		length,
-			bool							preserveSpace,
-            bool							disableOutputEscaping)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
+            const XalanDOMChar*             ch,
+            XalanDOMString::size_type       start,
+            XalanDOMString::size_type       length,
+            bool                            preserveSpace,
+            bool                            disableOutputEscaping)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
-				constructionContext,
-				stylesheetTree,
-				lineNumber,
-				columnNumber,
-				ch,
-				start,
-				length,
-				preserveSpace,
-				disableOutputEscaping);
+    data_type* const    theResult =
+        new(theBlock) data_type(
+                constructionContext,
+                stylesheetTree,
+                lineNumber,
+                columnNumber,
+                ch,
+                start,
+                length,
+                preserveSpace,
+                disableOutputEscaping);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

@@ -24,12 +24,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
-			const XalanDOMString&	theData,
-			XalanNode*				theParentNode,
-			XalanNode*				thePreviousSibling,
-			XalanNode*				theNextSibling,
-			IndexType				theIndex) :
-	XalanSourceTreeText(
+            const XalanDOMString&   theData,
+            XalanNode*              theParentNode,
+            XalanNode*              thePreviousSibling,
+            XalanNode*              theNextSibling,
+            IndexType               theIndex) :
+    XalanSourceTreeText(
         theData,
         theParentNode,
         thePreviousSibling,
@@ -49,7 +49,7 @@ XalanSourceTreeTextIWS::~XalanSourceTreeTextIWS()
 bool
 XalanSourceTreeTextIWS::isWhitespace() const
 {
-	return true;
+    return true;
 }
 
 

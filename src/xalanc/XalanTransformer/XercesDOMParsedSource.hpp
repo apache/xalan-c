@@ -42,27 +42,27 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedS
 {
 public:
 
-	XercesDOMParsedSourceHelper(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    XercesDOMParsedSourceHelper(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	~XercesDOMParsedSourceHelper();
+    ~XercesDOMParsedSourceHelper();
 
     static XercesDOMParsedSourceHelper*
     create(MemoryManager& theManager);
 
-	virtual DOMSupport&
-	getDOMSupport();
+    virtual DOMSupport&
+    getDOMSupport();
 
-	virtual XMLParserLiaison&
-	getParserLiaison();
+    virtual XMLParserLiaison&
+    getParserLiaison();
 
 private:
 
     // There is an order dependency, because
     // XercesDOMSupport requires a XercesParserLiaison
     // instance.
-	XercesParserLiaison		m_parserLiaison;
+    XercesParserLiaison     m_parserLiaison;
 
-	XercesDOMSupport		m_domSupport;
+    XercesDOMSupport        m_domSupport;
 };
 
 
@@ -74,47 +74,47 @@ private:
 class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 {
 public:
-	
-	XercesDOMParsedSource(
-			const InputSource&	    theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0,
-			XMLEntityResolver*		theXMLEntityResolver = 0,
-			const XalanDOMChar*		theExternalSchemaLocation = 0,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0,
+    
+    XercesDOMParsedSource(
+            const InputSource&      theInputSource,
+            bool                    fValidate = false,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0,
+            XMLEntityResolver*      theXMLEntityResolver = 0,
+            const XalanDOMChar*     theExternalSchemaLocation = 0,
+            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation = 0,
             MemoryManager&          theManager XALAN_DEFAULT_MEMMGR);
 
-	static XercesDOMParsedSource*
+    static XercesDOMParsedSource*
     create(
             MemoryManager&          theManager,
-			const InputSource&	    theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0,
-			XMLEntityResolver*		theXMLEntityResolver = 0,
-			const XalanDOMChar*		theExternalSchemaLocation = 0,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
+            const InputSource&      theInputSource,
+            bool                    fValidate = false,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0,
+            XMLEntityResolver*      theXMLEntityResolver = 0,
+            const XalanDOMChar*     theExternalSchemaLocation = 0,
+            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation = 0);
 
-	virtual
-	~XercesDOMParsedSource();
+    virtual
+    ~XercesDOMParsedSource();
 
-	virtual XalanDocument*
-	getDocument() const;
+    virtual XalanDocument*
+    getDocument() const;
 
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager&     theManager) const;
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager&     theManager) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
 private:
 
-	XercesParserLiaison		m_parserLiaison;
+    XercesParserLiaison     m_parserLiaison;
 
-	XalanDocument*			m_parsedSource;
+    XalanDocument*          m_parsedSource;
 
-	XalanDOMString			m_uri;
+    XalanDOMString          m_uri;
 };
 
 
@@ -123,4 +123,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESDOMPARSEDSOURCE_HEADER_GUARD
+#endif  // XERCESDOMPARSEDSOURCE_HEADER_GUARD

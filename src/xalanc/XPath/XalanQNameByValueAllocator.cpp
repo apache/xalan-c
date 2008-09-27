@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanQNameByValueAllocator::XalanQNameByValueAllocator(
             MemoryManager&  theManager,
             size_type       theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -41,94 +41,94 @@ XalanQNameByValueAllocator::~XalanQNameByValueAllocator()
 
 
 XalanQNameByValueAllocator::data_type*
-XalanQNameByValueAllocator::create(const XalanQNameByValue&	theSource)
+XalanQNameByValueAllocator::create(const XalanQNameByValue& theSource)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
+    data_type* const    theResult =
         new(theBlock) data_type(theSource, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
-			const XalanDOMString&	theNamespaceURI,
-			const XalanDOMString&	theLocalPart)
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalPart)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
+    data_type* const    theResult =
         new(theBlock) data_type(theNamespaceURI, theLocalPart,m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
-			const XalanDOMString&		qname,
-			const NamespacesStackType&	namespaces,
-			const Locator*			    locator,
-			bool						fUseDefault)
+            const XalanDOMString&       qname,
+            const NamespacesStackType&  namespaces,
+            const Locator*              locator,
+            bool                        fUseDefault)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
+    data_type* const    theResult =
         new(theBlock) data_type(qname, namespaces, m_allocator.getMemoryManager(),locator, fUseDefault);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
-			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces,
-			const Locator*			    locator,
-			bool						fUseDefault)
+            const XalanDOMChar*         qname,
+            const NamespacesStackType&  namespaces,
+            const Locator*              locator,
+            bool                        fUseDefault)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(qname, namespaces, m_allocator.getMemoryManager(),locator, fUseDefault);
+    data_type* const    theResult =
+        new(theBlock) data_type(qname, namespaces, m_allocator.getMemoryManager(),locator, fUseDefault);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanQNameByValueAllocator::data_type*
 XalanQNameByValueAllocator::create(
-			const XalanDOMString&	qname,
-			const PrefixResolver*	theResolver,
-			const Locator*		    locator)
+            const XalanDOMString&   qname,
+            const PrefixResolver*   theResolver,
+            const Locator*          locator)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(qname,m_allocator.getMemoryManager(), theResolver, locator);
+    data_type* const    theResult =
+        new(theBlock) data_type(qname,m_allocator.getMemoryManager(), theResolver, locator);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

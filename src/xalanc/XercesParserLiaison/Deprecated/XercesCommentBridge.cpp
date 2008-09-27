@@ -39,11 +39,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesCommentBridge::XercesCommentBridge(
-			const DOM_CommentType&			theXercesComment,
-			const XercesBridgeNavigator&	theNavigator) :
-	XalanComment(),
-	m_xercesNode(theXercesComment),
-	m_navigator(theNavigator)
+            const DOM_CommentType&          theXercesComment,
+            const XercesBridgeNavigator&    theNavigator) :
+    XalanComment(),
+    m_xercesNode(theXercesComment),
+    m_navigator(theNavigator)
 {
 }
 
@@ -58,7 +58,7 @@ XercesCommentBridge::~XercesCommentBridge()
 const XalanDOMString&
 XercesCommentBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName());
+    return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -66,7 +66,7 @@ XercesCommentBridge::getNodeName() const
 const XalanDOMString&
 XercesCommentBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -74,7 +74,7 @@ XercesCommentBridge::getNodeValue() const
 XercesCommentBridge::NodeType
 XercesCommentBridge::getNodeType() const
 {
-	return COMMENT_NODE;
+    return COMMENT_NODE;
 }
 
 
@@ -82,7 +82,7 @@ XercesCommentBridge::getNodeType() const
 XalanNode*
 XercesCommentBridge::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -90,7 +90,7 @@ XercesCommentBridge::getParentNode() const
 const XalanNodeList*
 XercesCommentBridge::getChildNodes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -98,7 +98,7 @@ XercesCommentBridge::getChildNodes() const
 XalanNode*
 XercesCommentBridge::getFirstChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -106,7 +106,7 @@ XercesCommentBridge::getFirstChild() const
 XalanNode*
 XercesCommentBridge::getLastChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -114,7 +114,7 @@ XercesCommentBridge::getLastChild() const
 XalanNode*
 XercesCommentBridge::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -122,7 +122,7 @@ XercesCommentBridge::getPreviousSibling() const
 XalanNode*
 XercesCommentBridge::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -130,7 +130,7 @@ XercesCommentBridge::getNextSibling() const
 const XalanNamedNodeMap*
 XercesCommentBridge::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -138,7 +138,7 @@ XercesCommentBridge::getAttributes() const
 XalanDocument*
 XercesCommentBridge::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -148,15 +148,15 @@ XalanNode*
 #else
 XercesCommentBridge*
 #endif
-XercesCommentBridge::cloneNode(bool	deep) const
+XercesCommentBridge::cloneNode(bool deep) const
 {
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return m_navigator.cloneNode(this, m_xercesNode, deep);
+    return m_navigator.cloneNode(this, m_xercesNode, deep);
 #else
-	XercesCommentBridge* const	theBridge =
-		static_cast<XercesCommentBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
+    XercesCommentBridge* const  theBridge =
+        static_cast<XercesCommentBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
-	return theBridge;
+    return theBridge;
 #endif
 }
 
@@ -164,44 +164,44 @@ XercesCommentBridge::cloneNode(bool	deep) const
 
 XalanNode*
 XercesCommentBridge::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
+            XalanNode*  /* newChild */,
+            XalanNode*  /* refChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
 XercesCommentBridge::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
+            XalanNode*  /* newChild */,
+            XalanNode*  /* oldChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
-XercesCommentBridge::removeChild(XalanNode*	/* oldChild */)
+XercesCommentBridge::removeChild(XalanNode* /* oldChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
-XercesCommentBridge::appendChild(XalanNode*	 /* newChild */)
+XercesCommentBridge::appendChild(XalanNode*  /* newChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
@@ -209,15 +209,15 @@ XercesCommentBridge::appendChild(XalanNode*	 /* newChild */)
 bool
 XercesCommentBridge::hasChildNodes() const
 {
-	return false;
+    return false;
 }
 
 
 
 void
-XercesCommentBridge::setNodeValue(const XalanDOMString&	nodeValue)
+XercesCommentBridge::setNodeValue(const XalanDOMString& nodeValue)
 {
-	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
+    XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -225,18 +225,18 @@ XercesCommentBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesCommentBridge::normalize()
 {
-	XercesBridgeHelper::normalize(m_xercesNode);
+    XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
 bool
 XercesCommentBridge::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) const
 {
-	return m_xercesNode.isSupported(
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
+    return m_xercesNode.isSupported(
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
@@ -244,7 +244,7 @@ XercesCommentBridge::isSupported(
 const XalanDOMString&
 XercesCommentBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -252,7 +252,7 @@ XercesCommentBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesCommentBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix());
+    return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -260,15 +260,15 @@ XercesCommentBridge::getPrefix() const
 const XalanDOMString&
 XercesCommentBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName());
+    return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
 
 void
-XercesCommentBridge::setPrefix(const XalanDOMString&	prefix)
+XercesCommentBridge::setPrefix(const XalanDOMString&    prefix)
 {
-	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
+    XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -276,7 +276,7 @@ XercesCommentBridge::setPrefix(const XalanDOMString&	prefix)
 bool
 XercesCommentBridge::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -284,7 +284,7 @@ XercesCommentBridge::isIndexed() const
 XercesCommentBridge::IndexType
 XercesCommentBridge::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 
@@ -292,7 +292,7 @@ XercesCommentBridge::getIndex() const
 const XalanDOMString&
 XercesCommentBridge::getData() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getData());
+    return m_navigator.getPooledString(m_xercesNode.getData());
 }
 
 
@@ -300,56 +300,56 @@ XercesCommentBridge::getData() const
 unsigned int
 XercesCommentBridge::getLength() const
 {
-	return m_xercesNode.getLength();
+    return m_xercesNode.getLength();
 }
 
 
 
 XalanDOMString
 XercesCommentBridge::substringData(
-			unsigned int	offset, 
-			unsigned int	count) const
+            unsigned int    offset, 
+            unsigned int    count) const
 {
-	return XercesBridgeHelper::substringData(m_xercesNode, offset, count);
+    return XercesBridgeHelper::substringData(m_xercesNode, offset, count);
 }
 
 
 
 void
-XercesCommentBridge::appendData(const XalanDOMString&	arg)
+XercesCommentBridge::appendData(const XalanDOMString&   arg)
 {
-	XercesBridgeHelper::appendData(m_xercesNode, arg);
+    XercesBridgeHelper::appendData(m_xercesNode, arg);
 }
 
 
 
 void
 XercesCommentBridge::insertData(
-			unsigned int			offset,
-			const  XalanDOMString& 	arg)
+            unsigned int            offset,
+            const  XalanDOMString&  arg)
 {
-	XercesBridgeHelper::insertData(m_xercesNode, offset, arg);
+    XercesBridgeHelper::insertData(m_xercesNode, offset, arg);
 }
 
 
 
 void
 XercesCommentBridge::deleteData(
-			unsigned int	offset, 
-			unsigned int	count)
+            unsigned int    offset, 
+            unsigned int    count)
 {
-	XercesBridgeHelper::deleteData(m_xercesNode, offset, count);
+    XercesBridgeHelper::deleteData(m_xercesNode, offset, count);
 }
 
 
 
 void
 XercesCommentBridge::replaceData(
-			unsigned int			offset, 
-			unsigned int			count, 
-			const XalanDOMString&	arg)
+            unsigned int            offset, 
+            unsigned int            count, 
+            const XalanDOMString&   arg)
 {
-	XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
+    XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
 }
 
 

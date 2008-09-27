@@ -43,84 +43,84 @@ class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatProxy : public XalanNumberForma
 {
 public:
 
-	explicit
-	ICUXalanNumberFormatProxy(MemoryManager& theManager);
+    explicit
+    ICUXalanNumberFormatProxy(MemoryManager& theManager);
 
-	virtual
-	~ICUXalanNumberFormatProxy();
+    virtual
+    ~ICUXalanNumberFormatProxy();
 
-	virtual XalanDOMString&
-	format(
-            double	            theValue,
+    virtual XalanDOMString&
+    format(
+            double              theValue,
             XalanDOMString&     theResult);
 
 
-	virtual XalanDOMString&
-	format(
-            int	                theValue,
+    virtual XalanDOMString&
+    format(
+            int                 theValue,
             XalanDOMString&     theResult);
 
 
-	virtual XalanDOMString&
-	format(
-            unsigned int		theValue,
+    virtual XalanDOMString&
+    format(
+            unsigned int        theValue,
             XalanDOMString&     theResult);
 
 
-	virtual XalanDOMString&
-	format(
-            long		        theValue,
+    virtual XalanDOMString&
+    format(
+            long                theValue,
             XalanDOMString&     theResult);
 
 
-	virtual XalanDOMString&
-	format(
-            unsigned long	    theValue,
+    virtual XalanDOMString&
+    format(
+            unsigned long       theValue,
             XalanDOMString&     theResult);
 
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
-	virtual XalanDOMString&
-	format(
-			XALAN_INT64	        theValue,
-			XalanDOMString&		theResult);
+    /**
+     * Format a number into a string.
+     *
+     * @param theValue number to format
+     * @param theResult the string result
+     */
+    virtual XalanDOMString&
+    format(
+            XALAN_INT64         theValue,
+            XalanDOMString&     theResult);
 
-	/**
-	 * Format a number into a string.
-	 *
-	 * @param theValue number to format
-	 * @param theResult the string result
-	 */
-	virtual XalanDOMString&
-	format(
-			XALAN_UINT64	    theValue,
-			XalanDOMString&		theResult);
+    /**
+     * Format a number into a string.
+     *
+     * @param theValue number to format
+     * @param theResult the string result
+     */
+    virtual XalanDOMString&
+    format(
+            XALAN_UINT64        theValue,
+            XalanDOMString&     theResult);
 
-	virtual bool
-	isGroupingUsed() const;
+    virtual bool
+    isGroupingUsed() const;
 
-	virtual void
-	setGroupingUsed(bool bUsed);
+    virtual void
+    setGroupingUsed(bool bUsed);
 
-	virtual void
-	setGroupingSize(unsigned long	size);
+    virtual void
+    setGroupingSize(unsigned long   size);
 
-	virtual void
-	setGroupingSeparator(const XalanDOMString&	s);
+    virtual void
+    setGroupingSeparator(const XalanDOMString&  s);
 
 private:
 
 #if defined(XALAN_HAS_CPP_NAMESPACE)
-	typedef U_ICU_NAMESPACE::DecimalFormat		DecimalFormatType;
+    typedef U_ICU_NAMESPACE::DecimalFormat      DecimalFormatType;
 #else
-	typedef DecimalFormat*						DecimalFormatType;
+    typedef DecimalFormat*                      DecimalFormatType;
 #endif
 
-	DecimalFormatType*		m_decimalFormat;
+    DecimalFormatType*      m_decimalFormat;
 
 };
 
@@ -130,4 +130,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ICUXALANNUMBERFORMATPROXY_HEADER_GUARD_1357924680
+#endif  // ICUXALANNUMBERFORMATPROXY_HEADER_GUARD_1357924680

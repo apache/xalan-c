@@ -42,85 +42,85 @@ class XALAN_XPATH_EXPORT XNumberAllocator
 {
 public:
 
-	typedef XNumber			number_type;
+    typedef XNumber         number_type;
 
-	typedef ReusableArenaAllocator<number_type>		ArenaAllocatorType;
-	typedef ArenaAllocatorType::size_type			size_type;
+    typedef ReusableArenaAllocator<number_type>     ArenaAllocatorType;
+    typedef ArenaAllocatorType::size_type           size_type;
 
-	/**
-	 * Construct an instance that will allocate blocks of the specified size.
-	 *
-	 * @param theBlockSize The block size.
-	 */
-	XNumberAllocator(MemoryManager&      theManager, size_type	theBlockCount);
+    /**
+     * Construct an instance that will allocate blocks of the specified size.
+     *
+     * @param theBlockSize The block size.
+     */
+    XNumberAllocator(MemoryManager&      theManager, size_type  theBlockCount);
 
-	~XNumberAllocator();
+    ~XNumberAllocator();
 
-	/**
-	 * Create an XNumber object using allocator from a string.
-	 * 
-	 * @param theString     source number
-	 *
-	 * @return a pointer to a number
-	 */
-	number_type*
-	createNumber(double		theNumber);
+    /**
+     * Create an XNumber object using allocator from a string.
+     * 
+     * @param theString     source number
+     *
+     * @return a pointer to a number
+     */
+    number_type*
+    createNumber(double     theNumber);
 
 
-	/**
-	 * Delete an XNumber object from allocator.	 
-	 */
-	bool
-	destroy(number_type*	theNumber);
+    /**
+     * Delete an XNumber object from allocator.  
+     */
+    bool
+    destroy(number_type*    theNumber);
 
-	/**
-	 * Determine if an object is owned by the allocator...
-	 */
-	bool
-	ownsObject(const number_type*	theObject)
-	{
-		return m_allocator.ownsObject(theObject);
-	}
+    /**
+     * Determine if an object is owned by the allocator...
+     */
+    bool
+    ownsObject(const number_type*   theObject)
+    {
+        return m_allocator.ownsObject(theObject);
+    }
 
-	/**
-	 * Delete all XNumber objects from allocator.	 
-	 */	
-	void
-	reset();
+    /**
+     * Delete all XNumber objects from allocator.    
+     */ 
+    void
+    reset();
 
-	/**
-	 * Get size of an ArenaBlock, that is, the number
-	 * of objects in each block.
-	 *
-	 * @return The size of the block
-	 */
-	size_type
-	getBlockCount() const
-	{
-		return m_allocator.getBlockCount();
-	}
+    /**
+     * Get size of an ArenaBlock, that is, the number
+     * of objects in each block.
+     *
+     * @return The size of the block
+     */
+    size_type
+    getBlockCount() const
+    {
+        return m_allocator.getBlockCount();
+    }
 
-	/**
-	 * Get the number of ArenaBlocks currently allocated.
-	 *
-	 * @return The number of blocks.
-	 */
-	size_type
-	getBlockSize() const
-	{
-		return m_allocator.getBlockSize();
-	}
+    /**
+     * Get the number of ArenaBlocks currently allocated.
+     *
+     * @return The number of blocks.
+     */
+    size_type
+    getBlockSize() const
+    {
+        return m_allocator.getBlockSize();
+    }
 
 private:
 
-	// Not implemented...
-	XNumberAllocator(const XNumberAllocator&);
+    // Not implemented...
+    XNumberAllocator(const XNumberAllocator&);
 
-	XNumberAllocator&
-	operator=(const XNumberAllocator&);
+    XNumberAllocator&
+    operator=(const XNumberAllocator&);
 
-	// Data members...
-	ArenaAllocatorType	m_allocator;
+    // Data members...
+    ArenaAllocatorType  m_allocator;
 };
 
 
@@ -129,4 +129,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNUMBERALLOCATOR_INCLUDE_GUARD_135792455
+#endif  // XNUMBERALLOCATOR_INCLUDE_GUARD_135792455

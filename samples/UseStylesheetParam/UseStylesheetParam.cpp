@@ -38,83 +38,83 @@
 
 int
 main(
-		  int		argc,
-		  char*		argv[])
+          int       argc,
+          char*     argv[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int	theResult = 0;
+    int theResult = 0;
 
-	if (argc != 3)
-	{
-		cerr << "Usage: UseStylesheetParam key expression" << endl;
+    if (argc != 3)
+    {
+        cerr << "Usage: UseStylesheetParam key expression" << endl;
 
-		theResult = -1;
-	}
-	else
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
-		XALAN_USING_XERCES(XMLException)
+        theResult = -1;
+    }
+    else
+    {
+        XALAN_USING_XERCES(XMLPlatformUtils)
+        XALAN_USING_XERCES(XMLException)
 
 
-		XALAN_USING_XALAN(XalanTransformer)
+        XALAN_USING_XALAN(XalanTransformer)
 
-		// Call the static initializer for Xerces.
-		try
-		{
-			 XMLPlatformUtils::Initialize();
-		}
-		catch (const XMLException& toCatch)
-		{
-			 cerr << "Error during Xerces initialization.  Error code was "
+        // Call the static initializer for Xerces.
+        try
+        {
+             XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException& toCatch)
+        {
+             cerr << "Error during Xerces initialization.  Error code was "
                   << toCatch.getCode()
                   << "."
                   << endl;
 
              theResult = -1;
-		}
+        }
 
-		if ( theResult == 0)
-		{
+        if ( theResult == 0)
+        {
 
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			{
-				XALAN_USING_XALAN(XalanDOMString)
+            {
+                XALAN_USING_XALAN(XalanDOMString)
 
-				// Create a XalanTransformer.
-				XalanTransformer	theXalanTransformer;
+                // Create a XalanTransformer.
+                XalanTransformer    theXalanTransformer;
 
-				// Set the stylesheet parameter name and
-				// expression (a string expression).
-				theXalanTransformer.setStylesheetParam(
-						XalanDOMString(argv[1]),
-						XalanDOMString(argv[2]));
+                // Set the stylesheet parameter name and
+                // expression (a string expression).
+                theXalanTransformer.setStylesheetParam(
+                        XalanDOMString(argv[1]),
+                        XalanDOMString(argv[2]));
 
-				// Our input files...The assumption is that the executable will be run
-				// from same directory as the input files.
-				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+                // Our input files...The assumption is that the executable will be run
+                // from same directory as the input files.
+                theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
 
-				if(theResult != 0)
-				{
-					cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-			}
+                if(theResult != 0)
+                {
+                    cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+            }
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
-		}
+            // Terminate Xalan...
+            XalanTransformer::terminate();
+        }
 
-		// Terminate Xerces...
-		XMLPlatformUtils::Terminate();
+        // Terminate Xerces...
+        XMLPlatformUtils::Terminate();
 
-		// Clean up the ICU, if it's integrated...
-		XalanTransformer::ICUCleanUp();
-	}
+        // Clean up the ICU, if it's integrated...
+        XalanTransformer::ICUCleanUp();
+    }
 
-	return theResult;
+    return theResult;
 }

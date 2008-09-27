@@ -23,98 +23,98 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-GenerateEvent::GenerateEvent(EventType	eventType, MemoryManager& theManager) :
-	m_eventType(eventType),
-	m_characters(theManager),
-	m_start(0),
-	m_length(0),
-	m_name(theManager),
-	m_data(theManager),
-	m_pAtts(0)
+GenerateEvent::GenerateEvent(EventType  eventType, MemoryManager& theManager) :
+    m_eventType(eventType),
+    m_characters(theManager),
+    m_start(0),
+    m_length(0),
+    m_name(theManager),
+    m_data(theManager),
+    m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			EventType				eventType,
+            EventType               eventType,
             MemoryManager&      theManager,
-			const XalanDOMChar*		name,
-			AttributeListType*		atts) :
-	m_eventType(eventType),
-	m_characters(theManager),
-	m_start(0),
-	m_length(0),
-	m_name(name, theManager),
-	m_data(theManager),
-	m_pAtts(atts)
+            const XalanDOMChar*     name,
+            AttributeListType*      atts) :
+    m_eventType(eventType),
+    m_characters(theManager),
+    m_start(0),
+    m_length(0),
+    m_name(name, theManager),
+    m_data(theManager),
+    m_pAtts(atts)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			EventType					eventType,
+            EventType                   eventType,
             MemoryManager&          theManager,
-			const XalanDOMString&		name,
-			const AttributeListType*	atts) :
-	m_eventType(eventType),
-	m_characters(theManager),
-	m_start(0),
-	m_length(0),
-	m_name(name, theManager),
-	m_data(theManager),
-	m_pAtts(atts)
+            const XalanDOMString&       name,
+            const AttributeListType*    atts) :
+    m_eventType(eventType),
+    m_characters(theManager),
+    m_start(0),
+    m_length(0),
+    m_name(name, theManager),
+    m_data(theManager),
+    m_pAtts(atts)
 {
 }
 
 
 GenerateEvent::GenerateEvent(
-			EventType					eventType,
+            EventType                   eventType,
             MemoryManager&          theManager,
-			const XalanDOMChar*			ch,
-			XalanDOMString::size_type	start,
-			XalanDOMString::size_type	length) :
-	m_eventType(eventType),
-	m_characters(ch + start, theManager, length),
-	m_start(start),
-	m_length(length),
-	m_name(theManager),
-	m_data(theManager),
-	m_pAtts(0)
+            const XalanDOMChar*         ch,
+            XalanDOMString::size_type   start,
+            XalanDOMString::size_type   length) :
+    m_eventType(eventType),
+    m_characters(ch + start, theManager, length),
+    m_start(start),
+    m_length(length),
+    m_name(theManager),
+    m_data(theManager),
+    m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			EventType				eventType,
+            EventType               eventType,
             MemoryManager&      theManager,
-			const XalanDOMChar*		name,
-			const XalanDOMChar*		data) :
-	m_eventType(eventType),
-	m_characters(theManager),
-	m_start(0),
-	m_length(0),
-	m_name(name, theManager),
-	m_data(data, theManager),
-	m_pAtts(0)
+            const XalanDOMChar*     name,
+            const XalanDOMChar*     data) :
+    m_eventType(eventType),
+    m_characters(theManager),
+    m_start(0),
+    m_length(0),
+    m_name(name, theManager),
+    m_data(data, theManager),
+    m_pAtts(0)
 {
 }
 
 
 
 GenerateEvent::GenerateEvent(
-			EventType				eventType,
+            EventType               eventType,
             MemoryManager&      theManager,
-			const XalanDOMChar*		data) :
-	m_eventType(eventType),
-	m_characters(theManager),
-	m_start(0),
-	m_length(0),
-	m_name(theManager),
-	m_data(data, theManager),
-	m_pAtts(0)
+            const XalanDOMChar*     data) :
+    m_eventType(eventType),
+    m_characters(theManager),
+    m_start(0),
+    m_length(0),
+    m_name(theManager),
+    m_data(data, theManager),
+    m_pAtts(0)
 {
 }
 

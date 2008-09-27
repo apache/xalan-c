@@ -31,23 +31,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMChar	s_dummy = 0;
+static const XalanDOMChar   s_dummy = 0;
 
 
 
 XSLException::XSLException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
-            const Locator*		    theLocator) :
+            const Locator*          theLocator) :
     m_memoryManager(theManager),
-	m_message(theMessage, theManager),
+    m_message(theMessage, theManager),
     m_uri(
         XalanLocator::getSystemId(
             theLocator,
             &s_dummy),
         theManager),
-	m_lineNumber(XalanLocator::getLineNumber(theLocator)),
-	m_columnNumber(XalanLocator::getColumnNumber(theLocator)),
+    m_lineNumber(XalanLocator::getLineNumber(theLocator)),
+    m_columnNumber(XalanLocator::getColumnNumber(theLocator)),
     m_formatted(false)
 {
 }
@@ -55,25 +55,25 @@ XSLException::XSLException(
 
 
 XSLException::XSLException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager) :
     m_memoryManager(theManager),
-	m_message(theMessage, theManager),
+    m_message(theMessage, theManager),
     m_uri(),
     m_lineNumber(XalanLocator::getUnknownValue()),
-	m_columnNumber(XalanLocator::getUnknownValue()),
+    m_columnNumber(XalanLocator::getUnknownValue()),
     m_formatted(true)
 {
 }
 
 
 
-XSLException::XSLException(const XSLException&	other) :
+XSLException::XSLException(const XSLException&  other) :
     m_memoryManager(other.m_memoryManager),
-	m_message(other.m_message, m_memoryManager),
-	m_uri(other.m_uri, m_memoryManager),
-	m_lineNumber(other.m_lineNumber),
-	m_columnNumber(other.m_columnNumber),
+    m_message(other.m_message, m_memoryManager),
+    m_uri(other.m_uri, m_memoryManager),
+    m_lineNumber(other.m_lineNumber),
+    m_columnNumber(other.m_columnNumber),
     m_formatted(other.m_formatted)
 {
 }
@@ -87,7 +87,7 @@ XSLException::~XSLException()
 
 
 void
-XSLException::defaultFormat(XalanDOMString&		theBuffer) const
+XSLException::defaultFormat(XalanDOMString&     theBuffer) const
 {
     if (m_formatted == true)
     {
@@ -95,7 +95,7 @@ XSLException::defaultFormat(XalanDOMString&		theBuffer) const
     }
     else
     {
-	    defaultFormat(
+        defaultFormat(
             m_message,
             m_uri,
             m_lineNumber,
@@ -108,15 +108,15 @@ XSLException::defaultFormat(XalanDOMString&		theBuffer) const
 
 void
 XSLException::defaultFormat(
-			const XalanDOMChar*					theMessage,
-			const XalanDOMString::size_type		theMessageLength,
-			const XalanDOMChar*					theURI,
-			const XalanDOMString::size_type		theURILength,
-			XalanFileLoc			            theLineNumber,
-			XalanFileLoc			            theColumnNumber,
-			const XalanDOMChar*					theType,
-			const XalanDOMString::size_type		theTypeLength,
-			XalanDOMString&						theBuffer)
+            const XalanDOMChar*                 theMessage,
+            const XalanDOMString::size_type     theMessageLength,
+            const XalanDOMChar*                 theURI,
+            const XalanDOMString::size_type     theURILength,
+            XalanFileLoc                        theLineNumber,
+            XalanFileLoc                        theColumnNumber,
+            const XalanDOMChar*                 theType,
+            const XalanDOMString::size_type     theTypeLength,
+            XalanDOMString&                     theBuffer)
 {
     assert(
         (theMessageLength == 0 || theMessage != 0) &&

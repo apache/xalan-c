@@ -71,8 +71,8 @@ ElemNumber::ElemNumber(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             unsigned long                   id) :
     ElemTemplateElement(constructionContext,
                         stylesheetTree,
@@ -183,8 +183,8 @@ ElemNumber::create(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             unsigned long                   id)
 {
     typedef ElemNumber ThisType;

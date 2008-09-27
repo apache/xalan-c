@@ -39,57 +39,57 @@ class XALAN_XSLT_EXPORT FunctionSystemProperty : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionSystemProperty(MemoryManager& theManager);
+    FunctionSystemProperty(MemoryManager& theManager);
 
     FunctionSystemProperty( const FunctionSystemProperty& other, MemoryManager& theManager);
 
-	virtual
-	~FunctionSystemProperty();
+    virtual
+    ~FunctionSystemProperty();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionSystemProperty*
+    virtual FunctionSystemProperty*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	FunctionSystemProperty(const FunctionSystemProperty&);
+    FunctionSystemProperty(const FunctionSystemProperty&);
 
-	// Not implemented...
-	FunctionSystemProperty&
-	operator=(const FunctionSystemProperty&);
+    // Not implemented...
+    FunctionSystemProperty&
+    operator=(const FunctionSystemProperty&);
 
-	bool
-	operator==(const FunctionSystemProperty&) const;
+    bool
+    operator==(const FunctionSystemProperty&) const;
 
 
-	// Data members...
-	const XalanDOMString	m_xsltNamespaceURI;
-	const XalanDOMString	m_versionPropertyString;
-	const XalanDOMString	m_vendorPropertyString;
-	const XalanDOMString	m_vendorURLPropertyString;
-	const XalanDOMString	m_vendorString;
-	const XalanDOMString	m_vendorURLString;
+    // Data members...
+    const XalanDOMString    m_xsltNamespaceURI;
+    const XalanDOMString    m_versionPropertyString;
+    const XalanDOMString    m_vendorPropertyString;
+    const XalanDOMString    m_vendorURLPropertyString;
+    const XalanDOMString    m_vendorString;
+    const XalanDOMString    m_vendorURLString;
 };
 
 
@@ -98,4 +98,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONSYSTEMPROPERTY_HEADER_GUARD_1357924680
+#endif  // FUNCTIONSYSTEMPROPERTY_HEADER_GUARD_1357924680

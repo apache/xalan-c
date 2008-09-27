@@ -42,33 +42,33 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 inline XalanSourceTreeComment*
-castToComment(XalanNode*	theNode)
+castToComment(XalanNode*    theNode)
 {
-	return static_cast<XalanSourceTreeComment*>(theNode);
+    return static_cast<XalanSourceTreeComment*>(theNode);
 }
 
 
 
 inline XalanSourceTreeElement*
-castToElement(XalanNode*	theNode)
+castToElement(XalanNode*    theNode)
 {
-	return static_cast<XalanSourceTreeElement*>(theNode);
+    return static_cast<XalanSourceTreeElement*>(theNode);
 }
 
 
 
 inline XalanSourceTreeProcessingInstruction*
-castToProcessingInstruction(XalanNode*	theNode)
+castToProcessingInstruction(XalanNode*  theNode)
 {
-	return static_cast<XalanSourceTreeProcessingInstruction*>(theNode);
+    return static_cast<XalanSourceTreeProcessingInstruction*>(theNode);
 }
 
 
 
 inline XalanSourceTreeText*
-castToText(XalanNode*	theNode)
+castToText(XalanNode*   theNode)
 {
-	return static_cast<XalanSourceTreeText*>(theNode);
+    return static_cast<XalanSourceTreeText*>(theNode);
 }
 
 
@@ -76,36 +76,36 @@ castToText(XalanNode*	theNode)
 template<class NodeType>
 inline void
 doAppendSibling(
-			XalanNode*	theSibling,
-			NodeType*	theNewSibling)
+            XalanNode*  theSibling,
+            NodeType*   theNewSibling)
 {
-	assert(theSibling != 0);
-	assert(theNewSibling != 0);
+    assert(theSibling != 0);
+    assert(theNewSibling != 0);
 
-	XalanNode* const	theLastSibling = XalanSourceTreeHelper::getLastSibling(theSibling);
+    XalanNode* const    theLastSibling = XalanSourceTreeHelper::getLastSibling(theSibling);
 
-	switch(theLastSibling->getNodeType())
-	{
-	case XalanNode::COMMENT_NODE:
-		castToComment(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    switch(theLastSibling->getNodeType())
+    {
+    case XalanNode::COMMENT_NODE:
+        castToComment(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::ELEMENT_NODE:
-		castToElement(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::ELEMENT_NODE:
+        castToElement(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		castToProcessingInstruction(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::PROCESSING_INSTRUCTION_NODE:
+        castToProcessingInstruction(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::TEXT_NODE:
-		castToText(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::TEXT_NODE:
+        castToText(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	default:
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-		break;
-	}
+    default:
+        throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+        break;
+    }
 }
 
 
@@ -113,35 +113,35 @@ doAppendSibling(
 template<class NodeType>
 inline void
 doAppendToLastSibling(
-			XalanNode*	theLastSibling,
-			NodeType*	theNewSibling)
+            XalanNode*  theLastSibling,
+            NodeType*   theNewSibling)
 {
-	assert(theLastSibling != 0);
-	assert(theNewSibling != 0);
-	assert(theLastSibling->getNextSibling() == 0);
+    assert(theLastSibling != 0);
+    assert(theNewSibling != 0);
+    assert(theLastSibling->getNextSibling() == 0);
 
-	switch(theLastSibling->getNodeType())
-	{
-	case XalanNode::COMMENT_NODE:
-		castToComment(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    switch(theLastSibling->getNodeType())
+    {
+    case XalanNode::COMMENT_NODE:
+        castToComment(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::ELEMENT_NODE:
-		castToElement(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::ELEMENT_NODE:
+        castToElement(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		castToProcessingInstruction(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::PROCESSING_INSTRUCTION_NODE:
+        castToProcessingInstruction(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	case XalanNode::TEXT_NODE:
-		castToText(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
+    case XalanNode::TEXT_NODE:
+        castToText(theLastSibling)->appendSiblingNode(theNewSibling);
+        break;
 
-	default:
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-		break;
-	}
+    default:
+        throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+        break;
+    }
 }
 
 
@@ -149,23 +149,23 @@ doAppendToLastSibling(
 template <class NodeType1, class NodeType2>
 inline void
 append(
-			NodeType1*		thePreviousSibling,
-			XalanNode*&		theNextSiblingSlot,
-			NodeType2*		theNewSibling)
+            NodeType1*      thePreviousSibling,
+            XalanNode*&     theNextSiblingSlot,
+            NodeType2*      theNewSibling)
 {
-	if (theNextSiblingSlot == 0)
-	{
-		theNextSiblingSlot = theNewSibling;
+    if (theNextSiblingSlot == 0)
+    {
+        theNextSiblingSlot = theNewSibling;
 
-		if (thePreviousSibling != 0)
-		{
-			theNewSibling->setPreviousSibling(thePreviousSibling);
-		}
-	}
-	else
-	{
-		doAppendSibling(theNextSiblingSlot, theNewSibling);
-	}
+        if (thePreviousSibling != 0)
+        {
+            theNewSibling->setPreviousSibling(thePreviousSibling);
+        }
+    }
+    else
+    {
+        doAppendSibling(theNextSiblingSlot, theNewSibling);
+    }
 }
 
 
@@ -173,17 +173,17 @@ append(
 template <class NodeType>
 inline void
 append(
-			XalanNode*&		theNextSiblingSlot,
-			NodeType*		theNewSibling)
+            XalanNode*&     theNextSiblingSlot,
+            NodeType*       theNewSibling)
 {
-	if (theNextSiblingSlot == 0)
-	{
-		theNextSiblingSlot = theNewSibling;
-	}
-	else
-	{
-		doAppendSibling(theNextSiblingSlot, theNewSibling);
-	}
+    if (theNextSiblingSlot == 0)
+    {
+        theNextSiblingSlot = theNewSibling;
+    }
+    else
+    {
+        doAppendSibling(theNextSiblingSlot, theNewSibling);
+    }
 }
 
 
@@ -191,178 +191,178 @@ append(
 template <class NodeType>
 inline void
 doAppendSibling(
-			NodeType*		thePreviousSibling,
-			XalanNode*&		theNextSiblingSlot,
-			XalanNode*		theNewSibling)
+            NodeType*       thePreviousSibling,
+            XalanNode*&     theNextSiblingSlot,
+            XalanNode*      theNewSibling)
 {
-	assert(theNewSibling != 0);
-	assert(theNextSiblingSlot == 0 || theNextSiblingSlot->getParentNode() == theNewSibling->getParentNode());
+    assert(theNewSibling != 0);
+    assert(theNextSiblingSlot == 0 || theNextSiblingSlot->getParentNode() == theNewSibling->getParentNode());
 
-	switch(theNewSibling->getNodeType())
-	{
-	case XalanNode::COMMENT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castToComment(theNewSibling));
-		break;
+    switch(theNewSibling->getNodeType())
+    {
+    case XalanNode::COMMENT_NODE:
+        append(thePreviousSibling, theNextSiblingSlot, castToComment(theNewSibling));
+        break;
 
-	case XalanNode::ELEMENT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castToElement(theNewSibling));
-		break;
+    case XalanNode::ELEMENT_NODE:
+        append(thePreviousSibling, theNextSiblingSlot, castToElement(theNewSibling));
+        break;
 
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
-		break;
+    case XalanNode::PROCESSING_INSTRUCTION_NODE:
+        append(thePreviousSibling, theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
+        break;
 
-	case XalanNode::TEXT_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castToText(theNewSibling));
-		break;
+    case XalanNode::TEXT_NODE:
+        append(thePreviousSibling, theNextSiblingSlot, castToText(theNewSibling));
+        break;
 
-	default:
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-		break;
-	}
+    default:
+        throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+        break;
+    }
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeDocument*	theDocument,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling)
+            XalanSourceTreeDocument*    theDocument,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling)
 {
-	if (theNewSibling->getOwnerDocument() != theDocument)
-	{
-		throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
-	}
-	else
-	{
-		switch(theNewSibling->getNodeType())
-		{
-		case XalanNode::COMMENT_NODE:
-			append(theNextSiblingSlot, castToComment(theNewSibling));
-			break;
+    if (theNewSibling->getOwnerDocument() != theDocument)
+    {
+        throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
+    }
+    else
+    {
+        switch(theNewSibling->getNodeType())
+        {
+        case XalanNode::COMMENT_NODE:
+            append(theNextSiblingSlot, castToComment(theNewSibling));
+            break;
 
-		case XalanNode::ELEMENT_NODE:
-			append(theNextSiblingSlot, castToElement(theNewSibling));
-			break;
+        case XalanNode::ELEMENT_NODE:
+            append(theNextSiblingSlot, castToElement(theNewSibling));
+            break;
 
-		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			append(theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
-			break;
+        case XalanNode::PROCESSING_INSTRUCTION_NODE:
+            append(theNextSiblingSlot, castToProcessingInstruction(theNewSibling));
+            break;
 
-		default:
-			throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-			break;
-		}
-	}
+        default:
+            throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+            break;
+        }
+    }
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeComment*		theNode,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling)
+            XalanSourceTreeComment*     theNode,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling)
 {
-	doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
+    doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeElement*		theNode,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling)
+            XalanSourceTreeElement*     theNode,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling)
 {
-	doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
+    doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeProcessingInstruction*	theNode,
-			XalanNode*&								theNextSiblingSlot,
-			XalanNode*								theNewSibling)
+            XalanSourceTreeProcessingInstruction*   theNode,
+            XalanNode*&                             theNextSiblingSlot,
+            XalanNode*                              theNewSibling)
 {
-	doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
+    doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeText*	theNode,
-			XalanNode*&				theNextSiblingSlot,
-			XalanNode*				theNewSibling)
+            XalanSourceTreeText*    theNode,
+            XalanNode*&             theNextSiblingSlot,
+            XalanNode*              theNewSibling)
 {
-	doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
+    doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanNode*					theLastSibling,
-			XalanSourceTreeComment*		theNewLastSibling)
+            XalanNode*                  theLastSibling,
+            XalanSourceTreeComment*     theNewLastSibling)
 {
-	doAppendToLastSibling(theLastSibling, theNewLastSibling);
+    doAppendToLastSibling(theLastSibling, theNewLastSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanNode*					theLastSibling,
-			XalanSourceTreeElement*		theNewLastSibling)
+            XalanNode*                  theLastSibling,
+            XalanSourceTreeElement*     theNewLastSibling)
 {
-	doAppendToLastSibling(theLastSibling, theNewLastSibling);
+    doAppendToLastSibling(theLastSibling, theNewLastSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanNode*								theLastSibling,
-			XalanSourceTreeProcessingInstruction*	theNewLastSibling)
+            XalanNode*                              theLastSibling,
+            XalanSourceTreeProcessingInstruction*   theNewLastSibling)
 {
-	doAppendToLastSibling(theLastSibling, theNewLastSibling);
+    doAppendToLastSibling(theLastSibling, theNewLastSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSibling(
-			XalanNode*				theLastSibling,
-			XalanSourceTreeText*	theNewLastSibling)
+            XalanNode*              theLastSibling,
+            XalanSourceTreeText*    theNewLastSibling)
 {
-	doAppendToLastSibling(theLastSibling, theNewLastSibling);
+    doAppendToLastSibling(theLastSibling, theNewLastSibling);
 }
 
 
 
 XalanNode*
-doGetLastSibling(XalanNode*		theNode)
+doGetLastSibling(XalanNode*     theNode)
 {
-	if (theNode == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		XalanNode*	theNextSibling = theNode->getNextSibling();
+    if (theNode == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        XalanNode*  theNextSibling = theNode->getNextSibling();
 
-		while(theNextSibling != 0)
-		{
-			theNode = theNextSibling;
+        while(theNextSibling != 0)
+        {
+            theNode = theNextSibling;
 
-			theNextSibling = theNode->getNextSibling();
-		}
+            theNextSibling = theNode->getNextSibling();
+        }
 
-		return theNode;
-	}
+        return theNode;
+    }
 }
 
 
@@ -370,28 +370,28 @@ doGetLastSibling(XalanNode*		theNode)
 template <class NodeType>
 void
 doAppendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			NodeType*					theNewSibling)
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            NodeType*                   theNewSibling)
 {
-	assert(theOwnerElement != 0);
-	assert(theNewSibling != 0);
+    assert(theOwnerElement != 0);
+    assert(theNewSibling != 0);
 
-	if (theNewSibling->getParentNode() != theOwnerElement)
-	{
-		theNewSibling->setParent(theOwnerElement);
-	}
+    if (theNewSibling->getParentNode() != theOwnerElement)
+    {
+        theNewSibling->setParent(theOwnerElement);
+    }
 
-	if (theFirstChildSlot == 0)
-	{
-		append(theFirstChildSlot, theNewSibling);
-	}
-	else
-	{
-		XalanNode* const	theLastSibling = doGetLastSibling(theFirstChildSlot);
+    if (theFirstChildSlot == 0)
+    {
+        append(theFirstChildSlot, theNewSibling);
+    }
+    else
+    {
+        XalanNode* const    theLastSibling = doGetLastSibling(theFirstChildSlot);
 
-		doAppendSibling(theLastSibling, theNewSibling);	
-	}
+        doAppendSibling(theLastSibling, theNewSibling); 
+    }
 }
 
 
@@ -399,124 +399,124 @@ doAppendSiblingToChild(
 template <class NodeType>
 void
 doAppendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			NodeType*							theNewSibling)
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            NodeType*                           theNewSibling)
 {
-	assert(theOwnerDocumentFragment != 0);
-	assert(theNewSibling != 0);
+    assert(theOwnerDocumentFragment != 0);
+    assert(theNewSibling != 0);
 
-	if (theNewSibling->getParentNode() != theOwnerDocumentFragment)
-	{
-		theNewSibling->setParent(theOwnerDocumentFragment);
-	}
+    if (theNewSibling->getParentNode() != theOwnerDocumentFragment)
+    {
+        theNewSibling->setParent(theOwnerDocumentFragment);
+    }
 
-	if (theFirstChildSlot == 0)
-	{
-		append(theFirstChildSlot, theNewSibling);
-	}
-	else
-	{
-		XalanNode* const	theLastSibling = doGetLastSibling(theFirstChildSlot);
+    if (theFirstChildSlot == 0)
+    {
+        append(theFirstChildSlot, theNewSibling);
+    }
+    else
+    {
+        XalanNode* const    theLastSibling = doGetLastSibling(theFirstChildSlot);
 
-		doAppendSibling(theLastSibling, theNewSibling);	
-	}
+        doAppendSibling(theLastSibling, theNewSibling); 
+    }
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeComment*		theNewSibling)
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeComment*     theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeElement*		theNewSibling)
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeElement*     theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeElement*					theOwnerElement,
-			XalanNode*&								theFirstChildSlot,
-			XalanSourceTreeProcessingInstruction*	theNewSibling)
+            XalanSourceTreeElement*                 theOwnerElement,
+            XalanNode*&                             theFirstChildSlot,
+            XalanSourceTreeProcessingInstruction*   theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeText*		theNewSibling)
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeText*        theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeComment*				theNewSibling)
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeComment*             theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeElement*				theNewSibling)
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeElement*             theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*		theOwnerDocumentFragment,
-			XalanNode*&								theFirstChildSlot,
-			XalanSourceTreeProcessingInstruction*	theNewSibling)
+            XalanSourceTreeDocumentFragment*        theOwnerDocumentFragment,
+            XalanNode*&                             theFirstChildSlot,
+            XalanSourceTreeProcessingInstruction*   theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
 }
 
 
 
 void
 XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeText*				theNewSibling)
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeText*                theNewSibling)
 {
-	doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
+    doAppendSiblingToChild(theOwnerDocumentFragment, theFirstChildSlot, theNewSibling);
 }
 
 
 
 XalanNode*
-XalanSourceTreeHelper::getLastSibling(XalanNode*	theNode)
+XalanSourceTreeHelper::getLastSibling(XalanNode*    theNode)
 {
-	return doGetLastSibling(theNode);
+    return doGetLastSibling(theNode);
 }
 
 

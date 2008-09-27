@@ -36,13 +36,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesNodeListWrapper::XercesNodeListWrapper(
-			const DOMNodeListType*			theXercesNodeList,
-			const XercesWrapperNavigator&	theNavigator) :
-	XalanNodeList(),
-	m_xercesNodeList(theXercesNodeList),
-	m_navigator(theNavigator)
+            const DOMNodeListType*          theXercesNodeList,
+            const XercesWrapperNavigator&   theNavigator) :
+    XalanNodeList(),
+    m_xercesNodeList(theXercesNodeList),
+    m_navigator(theNavigator)
 {
-	assert(theXercesNodeList != 0);
+    assert(theXercesNodeList != 0);
 }
 
 
@@ -53,10 +53,10 @@ XercesNodeListWrapper::~XercesNodeListWrapper()
 
 
 
-XercesNodeListWrapper::XercesNodeListWrapper(const XercesNodeListWrapper&	theSource) :
-	XalanNodeList(theSource),
-	m_xercesNodeList(theSource.m_xercesNodeList),
-	m_navigator(theSource.m_navigator)
+XercesNodeListWrapper::XercesNodeListWrapper(const XercesNodeListWrapper&   theSource) :
+    XalanNodeList(theSource),
+    m_xercesNodeList(theSource.m_xercesNodeList),
+    m_navigator(theSource.m_navigator)
 {
 }
 
@@ -65,9 +65,9 @@ XercesNodeListWrapper::XercesNodeListWrapper(const XercesNodeListWrapper&	theSou
 XalanNode*
 XercesNodeListWrapper::item(XalanSize_t     index) const
 {
-	assert(m_xercesNodeList != 0);
+    assert(m_xercesNodeList != 0);
 
-	return m_navigator.mapNode(m_xercesNodeList->item(index));
+    return m_navigator.mapNode(m_xercesNodeList->item(index));
 }
 
 
@@ -75,9 +75,9 @@ XercesNodeListWrapper::item(XalanSize_t     index) const
 XalanSize_t
 XercesNodeListWrapper::getLength() const
 {
-	assert(m_xercesNodeList != 0);
+    assert(m_xercesNodeList != 0);
 
-	return m_xercesNodeList->getLength();
+    return m_xercesNodeList->getLength();
 }
 
 

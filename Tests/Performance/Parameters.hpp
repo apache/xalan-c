@@ -52,83 +52,83 @@ class Parameters
 {
 public:
     Parameters(
-	    const XalanDOMString&	runFileName,
-        const XalanDOMString&	testDirectory,
-        const XalanDOMString&	resultDirectory,
-		const XalanDOMString&   baselineDirectory,
-		const XalanDOMString&	reportDirectory,
-		XalanFileUtility&		fileUtility,
-		Logger&                 log);
+        const XalanDOMString&   runFileName,
+        const XalanDOMString&   testDirectory,
+        const XalanDOMString&   resultDirectory,
+        const XalanDOMString&   baselineDirectory,
+        const XalanDOMString&   reportDirectory,
+        XalanFileUtility&       fileUtility,
+        Logger&                 log);
 /*
     const XalanDOMString& 
     getRunName() { return m_name;}
 */
-	bool
-	initialized() {return m_initialized;}
+    bool
+    initialized() {return m_initialized;}
 
-	XalanDOMString&
-	getName() {return m_name;}
+    XalanDOMString&
+    getName() {return m_name;}
 
-	XalanDOMString&
-	getUniqId() {return m_uniqId;}
+    XalanDOMString&
+    getUniqId() {return m_uniqId;}
 
-	XalanDOMString&
-	getDescription() {return m_description;}
+    XalanDOMString&
+    getDescription() {return m_description;}
 
-	XalanDOMString&
-	getResultDirectory() {return m_resultDirectory;}
+    XalanDOMString&
+    getResultDirectory() {return m_resultDirectory;}
 
-	XalanDOMString&
-	getResultFile() {return m_resultFile;}
+    XalanDOMString&
+    getResultFile() {return m_resultFile;}
 
-	XalanDOMString&
-	getThreshold() { return m_threshold;}
+    XalanDOMString&
+    getThreshold() { return m_threshold;}
 
-	XalanDOMString&
-	getBaselineDirectory() {return m_baselineDirectory;}
+    XalanDOMString&
+    getBaselineDirectory() {return m_baselineDirectory;}
 
-	XalanDOMString&
-	getBaselineFile() {return m_baselineFile;}
+    XalanDOMString&
+    getBaselineFile() {return m_baselineFile;}
 
-	XalanDOMString&
-	getReportDirectory() {return m_reportDirectory;}
-	
-	const TestCasesType& 
+    XalanDOMString&
+    getReportDirectory() {return m_reportDirectory;}
+    
+    const TestCasesType& 
     getTestCases();
 
 protected:
 
     bool parseConfigurationFile(
-			const XalanDOMString& runFileName, 
-			Logger& logger);
+            const XalanDOMString& runFileName, 
+            Logger& logger);
 
     bool readTestCases(
-			XalanFileUtility&	fileUtility,
-			Logger &			logger);
+            XalanFileUtility&   fileUtility,
+            Logger &            logger);
 
-	XalanDOMString  m_name;
-	XalanDOMString  m_description;
+    XalanDOMString  m_name;
+    XalanDOMString  m_description;
 
-    XalanDOMString	m_resultDirectory;
-    XalanDOMString	m_resultFile;
+    XalanDOMString  m_resultDirectory;
+    XalanDOMString  m_resultFile;
 
-	XalanDOMString	m_threshold;
-	XalanDOMString	m_baselineDirectory;
-	XalanDOMString	m_baselineFile;
-	
-    TestCase		m_defaultTestCase;
+    XalanDOMString  m_threshold;
+    XalanDOMString  m_baselineDirectory;
+    XalanDOMString  m_baselineFile;
+    
+    TestCase        m_defaultTestCase;
 
-	XalanDOMString	m_testDirectory;
-	XalanDOMString	m_goldDirectory;
-	XalanDOMString	m_reportDirectory;
+    XalanDOMString  m_testDirectory;
+    XalanDOMString  m_goldDirectory;
+    XalanDOMString  m_reportDirectory;
 
     TestCasesType   m_testCases;
 
-	XalanTransformer m_transformer;
+    XalanTransformer m_transformer;
 
-	XalanDOMString	m_uniqId;
+    XalanDOMString  m_uniqId;
 
-	bool m_initialized;
+    bool m_initialized;
 };
 
 

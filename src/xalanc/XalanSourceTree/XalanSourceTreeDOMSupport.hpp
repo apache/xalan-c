@@ -41,43 +41,43 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDOMSupport : public DOMSupport
 {
 public:
 
-	XalanSourceTreeDOMSupport();
+    XalanSourceTreeDOMSupport();
 
-	XalanSourceTreeDOMSupport(const XalanSourceTreeParserLiaison&	theParserLiaison);
+    XalanSourceTreeDOMSupport(const XalanSourceTreeParserLiaison&   theParserLiaison);
 
-	virtual
-	~XalanSourceTreeDOMSupport();
+    virtual
+    ~XalanSourceTreeDOMSupport();
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
-	// These interfaces are inherited from DOMSupport...
+    // These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const;
 
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const;
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const;
 
-	const XalanSourceTreeParserLiaison*
-	getParserLiaison() const
-	{
-		return m_parserLiaison;
-	}
+    const XalanSourceTreeParserLiaison*
+    getParserLiaison() const
+    {
+        return m_parserLiaison;
+    }
 
-	void
-	setParserLiaison(const XalanSourceTreeParserLiaison*	theParserLiaison)
-	{
-		m_parserLiaison = theParserLiaison;
-	}
+    void
+    setParserLiaison(const XalanSourceTreeParserLiaison*    theParserLiaison)
+    {
+        m_parserLiaison = theParserLiaison;
+    }
 
 private:
 
-	const XalanSourceTreeParserLiaison*		m_parserLiaison;
+    const XalanSourceTreeParserLiaison*     m_parserLiaison;
 };
 
 
@@ -86,4 +86,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANSOURCETREEDOMSUPPORT_HEADER_GUARD_1357924680
+#endif  // XALANSOURCETREEDOMSUPPORT_HEADER_GUARD_1357924680

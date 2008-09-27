@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetNodeProxyAllocator::XNodeSetNodeProxyAllocator(MemoryManager&      theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XNodeSetNodeProxyAllocator::XNodeSetNodeProxyAllocator(MemoryManager&      theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,25 +40,25 @@ XNodeSetNodeProxyAllocator::~XNodeSetNodeProxyAllocator()
 
 
 XNodeSetNodeProxyAllocator::nodeset_type*
-XNodeSetNodeProxyAllocator::create(XalanNode*	value)
+XNodeSetNodeProxyAllocator::create(XalanNode*   value)
 {
-	nodeset_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    nodeset_type* const theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    nodeset_type* const	theResult = new(theBlock) nodeset_type( m_allocator.getMemoryManager(), value);
+    nodeset_type* const theResult = new(theBlock) nodeset_type( m_allocator.getMemoryManager(), value);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 
 bool
-XNodeSetNodeProxyAllocator::destroy(nodeset_type*	theNodeSet)
+XNodeSetNodeProxyAllocator::destroy(nodeset_type*   theNodeSet)
 {
-	return m_allocator.destroyObject(theNodeSet);
+    return m_allocator.destroyObject(theNodeSet);
 }
 
 
@@ -66,7 +66,7 @@ XNodeSetNodeProxyAllocator::destroy(nodeset_type*	theNodeSet)
 void 
 XNodeSetNodeProxyAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

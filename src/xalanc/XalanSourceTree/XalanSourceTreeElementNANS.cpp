@@ -27,26 +27,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
             MemoryManager&              theManager,
-			const XalanDOMString&		theTagName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex) :
-	XalanSourceTreeElementNA(
+            const XalanDOMString&       theTagName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex) :
+    XalanSourceTreeElementNA(
         theManager,
-		theTagName,
-		theOwnerDocument,
-		theParentNode,
-		thePreviousSibling,
-		theNextSibling,
-		theIndex),
-	m_localName(theLocalName),
-	m_prefix(thePrefix),
-	m_namespaceURI(theNamespaceURI)
+        theTagName,
+        theOwnerDocument,
+        theParentNode,
+        thePreviousSibling,
+        theNextSibling,
+        theIndex),
+    m_localName(theLocalName),
+    m_prefix(thePrefix),
+    m_namespaceURI(theNamespaceURI)
 {
 }
 
@@ -61,7 +61,7 @@ XalanSourceTreeElementNANS::~XalanSourceTreeElementNANS()
 const XalanDOMString&
 XalanSourceTreeElementNANS::getNamespaceURI() const
 {
-	return m_namespaceURI;
+    return m_namespaceURI;
 }
 
 
@@ -69,7 +69,7 @@ XalanSourceTreeElementNANS::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeElementNANS::getPrefix() const
 {
-	return m_prefix;
+    return m_prefix;
 }
 
 
@@ -77,7 +77,7 @@ XalanSourceTreeElementNANS::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementNANS::getLocalName() const
 {
-	return m_localName;
+    return m_localName;
 }
 
 

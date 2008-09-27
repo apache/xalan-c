@@ -41,51 +41,51 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapAttributeList : public 
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    ParentType;
 
-	explicit
-	XercesNamedNodeMapAttributeList(const DOMNamedNodeMapType*	theMap);
+    explicit
+    XercesNamedNodeMapAttributeList(const DOMNamedNodeMapType*  theMap);
 
-	virtual
-	~XercesNamedNodeMapAttributeList();
+    virtual
+    ~XercesNamedNodeMapAttributeList();
 
-	// These are inherited from AttributeList
+    // These are inherited from AttributeList
     virtual XalanSize_t
-	getLength() const;
+    getLength() const;
 
     virtual const XMLCh*
-	getName(const XalanSize_t   index) const;
+    getName(const XalanSize_t   index) const;
 
     virtual const XMLCh*
-	getType(const XalanSize_t   index) const;
+    getType(const XalanSize_t   index) const;
 
     virtual const XMLCh*
-	getValue(const XalanSize_t  index) const;
+    getValue(const XalanSize_t  index) const;
 
     virtual const XMLCh*
-	getType(const XMLCh* const name) const;
+    getType(const XMLCh* const name) const;
 
     virtual const XMLCh*
-	getValue(const XMLCh* const name) const;
+    getValue(const XMLCh* const name) const;
 
 private:
     virtual const XMLCh* 
     getValue(const char* const name) const;
 
-	// Not implemented...
-	XercesNamedNodeMapAttributeList&
-	operator=(const XercesNamedNodeMapAttributeList&);
+    // Not implemented...
+    XercesNamedNodeMapAttributeList&
+    operator=(const XercesNamedNodeMapAttributeList&);
 
-	bool
-	operator==(const XercesNamedNodeMapAttributeList&);
+    bool
+    operator==(const XercesNamedNodeMapAttributeList&);
 
 
-	// Data members...
-	const DOMNamedNodeMapType* const	m_nodeMap;
+    // Data members...
+    const DOMNamedNodeMapType* const    m_nodeMap;
 
-	const XalanSize_t					m_lastIndex;
+    const XalanSize_t                   m_lastIndex;
 
-	static const XMLCh	s_typeString[];
+    static const XMLCh  s_typeString[];
 };
 
 
@@ -94,4 +94,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESNAMEDNODEMAPATTRIBUTELIST_HEADER_GUARD_1357924680
+#endif  // XERCESNAMEDNODEMAPATTRIBUTELIST_HEADER_GUARD_1357924680

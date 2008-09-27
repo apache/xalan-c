@@ -61,36 +61,36 @@ XALAN_USING_XALAN(c_str)
 
 bool checkFileExists(const XalanDOMString& fileName)
 {
-	CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+    CharVectorType     theResult(XalanMemMgrs::getDefaultXercesMemMgr());
     TranscodeToLocalCodePage(fileName, theResult, true);
 
-	FILE* fileHandle  = fopen(c_str(theResult), "r");
+    FILE* fileHandle  = fopen(c_str(theResult), "r");
 
-	if (fileHandle != 0)
-	{
-		fclose(fileHandle);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if (fileHandle != 0)
+    {
+        fclose(fileHandle);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 
 XalanDOMString getWorkingDirectory()
 {
-	char path[4096];
-	getcwd(path, 4096);
-	return XalanDOMString(path);
+    char path[4096];
+    getcwd(path, 4096);
+    return XalanDOMString(path);
 }
 
 
 
 const XalanDOMChar* getPathSep()
 {
-	return XalanFileUtility::s_pathSep;
+    return XalanFileUtility::s_pathSep;
 }
 
 
@@ -138,8 +138,8 @@ void fileToStream(
 
 
 void copyFile(
-		const XalanDOMString&	destFile,
-		const XalanDOMString&	sourceFile)
+        const XalanDOMString&   destFile,
+        const XalanDOMString&   sourceFile)
 {
     CharVectorType sourceFileName;
     sourceFile.transcode(sourceFileName);
@@ -151,19 +151,19 @@ void copyFile(
 
     ifstream sourceFileStream(c_str(sourceFileName));
 
-	CharVectorType destFileName;
+    CharVectorType destFileName;
     destFile.transcode(destFileName);
     ofstream destFileStream(c_str(destFileName));
 
-	char ch;
+    char ch;
 
-	while (sourceFileStream.get(ch))
-	{
-		destFileStream.put(ch);
-	}
+    while (sourceFileStream.get(ch))
+    {
+        destFileStream.put(ch);
+    }
 
-	sourceFileStream.close();
-	destFileStream.close();
+    sourceFileStream.close();
+    destFileStream.close();
 }
 
 

@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanAVTAllocator::XalanAVTAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanAVTAllocator::XalanAVTAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,26 +40,26 @@ XalanAVTAllocator::~XalanAVTAllocator()
 
 XalanAVTAllocator::data_type*
 XalanAVTAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			const LocatorType*				locator,
-			const XalanDOMChar*				name,
-			const XalanDOMChar*				stringedValue,
-			const PrefixResolver&			resolver)
+            StylesheetConstructionContext&  constructionContext,
+            const LocatorType*              locator,
+            const XalanDOMChar*             name,
+            const XalanDOMChar*             stringedValue,
+            const PrefixResolver&           resolver)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
-				constructionContext,
-				locator,
-				name,
-				stringedValue,
-				resolver);
+    data_type* const    theResult =
+        new(theBlock) data_type(
+                constructionContext,
+                locator,
+                name,
+                stringedValue,
+                resolver);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

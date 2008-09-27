@@ -35,24 +35,24 @@ XalanNamedNodeMap::~XalanNamedNodeMap()
 
 
 
-XalanNamedNodeMap::XalanNamedNodeMap(const XalanNamedNodeMap&	/* theSource */)
+XalanNamedNodeMap::XalanNamedNodeMap(const XalanNamedNodeMap&   /* theSource */)
 {
 }
 
 
 
 XalanNamedNodeMap&
-XalanNamedNodeMap::operator=(const XalanNamedNodeMap&	/* theSource */)
+XalanNamedNodeMap::operator=(const XalanNamedNodeMap&   /* theSource */)
 {
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanNamedNodeMap::operator==(const XalanNamedNodeMap&	/* theRHS */) const
+XalanNamedNodeMap::operator==(const XalanNamedNodeMap&  /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

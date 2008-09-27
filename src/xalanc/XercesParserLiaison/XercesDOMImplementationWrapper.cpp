@@ -35,11 +35,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation) :
-	XalanDOMImplementation(),
-	m_xercesNode(theXercesDOMImplementation)
+XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(DOMImplementationType*   theXercesDOMImplementation) :
+    XalanDOMImplementation(),
+    m_xercesNode(theXercesDOMImplementation)
 {
-	assert(theXercesDOMImplementation != 0);
+    assert(theXercesDOMImplementation != 0);
 }
 
 
@@ -50,14 +50,14 @@ XercesDOMImplementationWrapper::~XercesDOMImplementationWrapper()
 
 
 
-XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(const XercesDOMImplementationWrapper&	theSource) :
-	XalanDOMImplementation(theSource),
-	m_xercesNode(theSource.m_xercesNode)
+XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(const XercesDOMImplementationWrapper&    theSource) :
+    XalanDOMImplementation(theSource),
+    m_xercesNode(theSource.m_xercesNode)
 {
 }
 
 XercesDOMImplementationWrapper*
-XercesDOMImplementationWrapper::create(MemoryManager& theManager, DOMImplementationType*	theXercesDOMImplementation)
+XercesDOMImplementationWrapper::create(MemoryManager& theManager, DOMImplementationType*    theXercesDOMImplementation)
 {
         typedef XercesDOMImplementationWrapper ThisType;
         
@@ -75,8 +75,8 @@ XercesDOMImplementationWrapper::create(MemoryManager& theManager, DOMImplementat
 
 bool
 XercesDOMImplementationWrapper::hasFeature(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version)
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version)
 {
     return m_xercesNode->hasFeature(feature.c_str(), version.c_str());
 }
@@ -85,26 +85,26 @@ XercesDOMImplementationWrapper::hasFeature(
 
 XalanDocumentType*
 XercesDOMImplementationWrapper::createDocumentType(
-			const XalanDOMString&	/* qualifiedName */,
-			const XalanDOMString&	/* publicId */,
-			const XalanDOMString&	/* systemId */)
+            const XalanDOMString&   /* qualifiedName */,
+            const XalanDOMString&   /* publicId */,
+            const XalanDOMString&   /* systemId */)
 {
-	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+    throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanDocument*
 XercesDOMImplementationWrapper::createDocument(
-			const XalanDOMString&		/* namespaceURI */,
-			const XalanDOMString&		/* qualifiedName */,
-			const XalanDocumentType&	/* doctype */)
+            const XalanDOMString&       /* namespaceURI */,
+            const XalanDOMString&       /* qualifiedName */,
+            const XalanDocumentType&    /* doctype */)
 {
-	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+    throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
 
-	return 0;
+    return 0;
 }
 
 

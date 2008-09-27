@@ -34,10 +34,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 TracerEvent::TracerEvent(
-			const StylesheetExecutionContext&	executionContext,
-			const ElemTemplateElement&			styleNode) :
-	m_executionContext(executionContext),
-	m_styleNode(styleNode)
+            const StylesheetExecutionContext&   executionContext,
+            const ElemTemplateElement&          styleNode) :
+    m_executionContext(executionContext),
+    m_styleNode(styleNode)
 {
 }
 
@@ -50,51 +50,51 @@ TracerEvent::~TracerEvent()
 
 
 XalanDOMString&
-TracerEvent::printNode(const XalanNode&		n,
+TracerEvent::printNode(const XalanNode&     n,
                        XalanDOMString& r)
 {
 
-	PointerToDOMString(&n, r);
+    PointerToDOMString(&n, r);
 
-	r.append(" ");
+    r.append(" ");
 
-	if (n.getNodeType() == XalanNode::ELEMENT_NODE)
-	{
+    if (n.getNodeType() == XalanNode::ELEMENT_NODE)
+    {
         r += XalanDOMString("<", r.getMemoryManager());
         r += n.getNodeName();
 
-		const XalanNode*	c = n.getFirstChild();
+        const XalanNode*    c = n.getFirstChild();
 
         XalanDOMString theBuffer(r.getMemoryManager());
 
-		while (c != 0)
-		{
-			if (c->getNodeType() == XalanNode::ATTRIBUTE_NODE)
-			{
-				r += printNode(*c,theBuffer);
+        while (c != 0)
+        {
+            if (c->getNodeType() == XalanNode::ATTRIBUTE_NODE)
+            {
+                r += printNode(*c,theBuffer);
                 r += XalanDOMString(" ", r.getMemoryManager());
-			}
+            }
 
-			c = c->getNextSibling();
-		}
+            c = c->getNextSibling();
+        }
 
-		r += XalanDOMString(">", r.getMemoryManager());
-	}
-	else
-	{
-		if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
-		{
-			r += n.getNodeName();
+        r += XalanDOMString(">", r.getMemoryManager());
+    }
+    else
+    {
+        if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
+        {
+            r += n.getNodeName();
             r += XalanDOMString("=", r.getMemoryManager());
             r += n.getNodeValue();
-		}
-		else
-		{
-			r += n.getNodeName();
-		}
-	}
-	
-	return r;
+        }
+        else
+        {
+            r += n.getNodeName();
+        }
+    }
+    
+    return r;
 }
 
   /**
@@ -109,36 +109,36 @@ TracerEvent::printNode(const XalanNode&		n,
    @return a string representation of the given node list.
    */
 XalanDOMString&
-TracerEvent::printNodeList(const XalanNodeList&	l, XalanDOMString& r)
+TracerEvent::printNodeList(const XalanNodeList& l, XalanDOMString& r)
 {
 
-	PointerToDOMString(&l, r);
+    PointerToDOMString(&l, r);
 
     
-	r.append(XalanDOMString("[", r.getMemoryManager()));
+    r.append(XalanDOMString("[", r.getMemoryManager()));
 
-	const XalanSize_t	len = l.getLength();
-	XalanSize_t	        i = 0;
+    const XalanSize_t   len = l.getLength();
+    XalanSize_t         i = 0;
 
     XalanDOMString theBuffer(r.getMemoryManager());
 
 
-	while (i < len)
-	{
-		XalanNode* const	n = l.item(i);
+    while (i < len)
+    {
+        XalanNode* const    n = l.item(i);
 
-		if (n != 0)
-		{
-			r += printNode(*n, theBuffer);
+        if (n != 0)
+        {
+            r += printNode(*n, theBuffer);
 
-			if (i != len - 1)
-			{
-				r += XalanDOMString(", ", r.getMemoryManager());
-			}
-		}
+            if (i != len - 1)
+            {
+                r += XalanDOMString(", ", r.getMemoryManager());
+            }
+        }
 
-		++i;
-	}
+        ++i;
+    }
 
     r +=  XalanDOMString("]", r.getMemoryManager());
 

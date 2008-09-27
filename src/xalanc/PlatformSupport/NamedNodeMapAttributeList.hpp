@@ -42,55 +42,55 @@ class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public XERCES_CPP
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    ParentType;
 
-	explicit
-	NamedNodeMapAttributeList(
-                const XalanNamedNodeMap&	theMap,
+    explicit
+    NamedNodeMapAttributeList(
+                const XalanNamedNodeMap&    theMap,
                 MemoryManager&          theManager);
 
-	virtual
-	~NamedNodeMapAttributeList();
+    virtual
+    ~NamedNodeMapAttributeList();
 
-	// These are inherited from AttributeList
+    // These are inherited from AttributeList
     virtual XalanSize_t
-	getLength() const;
+    getLength() const;
 
     virtual const XalanDOMChar*
-	getName(const XalanSize_t   index) const;
+    getName(const XalanSize_t   index) const;
 
     virtual const XalanDOMChar*
-	getType(const XalanSize_t   index) const;
+    getType(const XalanSize_t   index) const;
 
     virtual const XalanDOMChar*
-	getValue(const XalanSize_t  index) const;
+    getValue(const XalanSize_t  index) const;
 
     virtual const XalanDOMChar*
-	getType(const XalanDOMChar* const name) const;
+    getType(const XalanDOMChar* const name) const;
 
     virtual const XalanDOMChar*
-	getValue(const XalanDOMChar*     const name) const;
+    getValue(const XalanDOMChar*     const name) const;
 
-	virtual const XalanDOMChar* 
-	getValue(const char* const name) const;
+    virtual const XalanDOMChar* 
+    getValue(const char* const name) const;
 
 private:
 
-	// Not implemented...
-	NamedNodeMapAttributeList&
-	operator=(const NamedNodeMapAttributeList&);
+    // Not implemented...
+    NamedNodeMapAttributeList&
+    operator=(const NamedNodeMapAttributeList&);
 
-	bool
-	operator==(const NamedNodeMapAttributeList&);
+    bool
+    operator==(const NamedNodeMapAttributeList&);
 
-	// Data members...
-	const XalanNamedNodeMap&	m_nodeMap;
+    // Data members...
+    const XalanNamedNodeMap&    m_nodeMap;
 
-	const XalanSize_t			m_length;
+    const XalanSize_t           m_length;
 
     MemoryManager&          m_memoryManager;
 
-	static const XalanDOMChar	s_typeString[];
+    static const XalanDOMChar   s_typeString[];
 };
 
 
@@ -99,4 +99,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NAMEDNODEMAPATTRIBUTELIST_HEADER_GUARD_1357924680
+#endif  // NAMEDNODEMAPATTRIBUTELIST_HEADER_GUARD_1357924680

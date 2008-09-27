@@ -43,32 +43,32 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxyText : public XalanText
 {
 public:
 
-	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize(MemoryManager&   theManager);
+    /**
+     * Perform static initialization.  See class XPathInit.
+     */
+    static void
+    initialize(MemoryManager&   theManager);
 
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
+    /**
+     * Perform static shut down.  See class XPathInit.
+     */
+    static void
+    terminate();
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theXObject The XObject instance for which this is a proxy.
+    /**
+     * Constructor.
+     *
+     * @param theXObject The XObject instance for which this is a proxy.
      * @param theManager The MemoryManager for this instance.
      * @param theExecutionContext An optional XPathExecutionContext instance.
-	 */
-	XObjectResultTreeFragProxyText(
+     */
+    XObjectResultTreeFragProxyText(
                 const XObject&          theXObject,
                 MemoryManager&          theManager,
                 XPathExecutionContext*  theExecutionContext);
 
-	virtual
-	~XObjectResultTreeFragProxyText();
+    virtual
+    ~XObjectResultTreeFragProxyText();
 
     MemoryManager&
     getMemoryManager()
@@ -83,78 +83,78 @@ public:
     }
 
     // These interfaces are inherited from XalanText...
-	virtual const XalanDOMString&
-	getNodeName() const;
+    virtual const XalanDOMString&
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual XalanDocument*
-	getOwnerDocument() const;
+    virtual XalanDocument*
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
-	virtual const XalanDOMString&
-	getData() const;
+    virtual const XalanDOMString&
+    getData() const;
 
-	virtual bool
-	isWhitespace() const;
+    virtual bool
+    isWhitespace() const;
 
 private:
 
-	// Not implemented...
-	XObjectResultTreeFragProxyText&
-	operator=(const XObjectResultTreeFragProxyText&	theSource);
+    // Not implemented...
+    XObjectResultTreeFragProxyText&
+    operator=(const XObjectResultTreeFragProxyText& theSource);
 
-	bool
-	operator==(const XObjectResultTreeFragProxyText&	theRHS) const;
+    bool
+    operator==(const XObjectResultTreeFragProxyText&    theRHS) const;
 
 
-	// Data members...
-	const XObject&          m_value;
+    // Data members...
+    const XObject&          m_value;
 
     MemoryManager&          m_memoryManager;
 
     XPathExecutionContext*  m_executionContext;
 
-    static const XalanDOMString&	s_nameString;
+    static const XalanDOMString&    s_nameString;
 };
 
 
@@ -163,4 +163,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECTRESULTTREEFRAGPROXYTEXT_HEADER_GUARD_1357924680
+#endif  // XOBJECTRESULTTREEFRAGPROXYTEXT_HEADER_GUARD_1357924680

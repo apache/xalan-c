@@ -40,55 +40,55 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementNA : public XalanSource
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theTagName The tag name of the element
-	 * @param theOwnerDocument The document that owns the instance
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The previous sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeElementNA(
+    /**
+     * Constructor.
+     *
+     * @param theTagName The tag name of the element
+     * @param theOwnerDocument The document that owns the instance
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The previous sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeElementNA(
             MemoryManager&          theManager,
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			IndexType					theIndex = 0);
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode = 0,
+            XalanNode*                  thePreviousSibling = 0,
+            XalanNode*                  theNextSibling = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeElementNA();
+    virtual
+    ~XalanSourceTreeElementNA();
 
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
 protected:
 
-	static const XalanEmptyNamedNodeMap		s_emptyAttributes;
+    static const XalanEmptyNamedNodeMap     s_emptyAttributes;
 
 private:
 
-	// Not implemented...
+    // Not implemented...
     XalanSourceTreeElementNA(const XalanSourceTreeElementNA&);
 
-	XalanSourceTreeElementNA&
-	operator=(const XalanSourceTreeElementNA&	theSource);
+    XalanSourceTreeElementNA&
+    operator=(const XalanSourceTreeElementNA&   theSource);
 
-	bool
-	operator==(const XalanSourceTreeElementNA&	theRHS) const;
+    bool
+    operator==(const XalanSourceTreeElementNA&  theRHS) const;
 };
 
 
@@ -97,4 +97,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEELEMENTNA_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEELEMENTNA_HEADER_GUARD_1357924680)

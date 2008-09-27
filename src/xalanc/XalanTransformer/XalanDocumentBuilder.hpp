@@ -42,9 +42,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler		ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler			DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler		LexicalHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler       ContentHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler           DTDHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler       LexicalHandlerType;
 
 
 
@@ -61,30 +61,30 @@ class XALAN_TRANSFORMER_EXPORT XalanDocumentBuilder : public XalanParsedSource
 {
 public:
 
-	virtual
-	~XalanDocumentBuilder()
-	{
-	}
+    virtual
+    ~XalanDocumentBuilder()
+    {
+    }
 
-	// These are inherited from XalanParsedSource...
-	virtual XalanDocument*
-	getDocument() const = 0;	
+    // These are inherited from XalanParsedSource...
+    virtual XalanDocument*
+    getDocument() const = 0;    
 
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR) const = 0;
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR) const = 0;
 
-	virtual const XalanDOMString&
-	getURI() const = 0;
+    virtual const XalanDOMString&
+    getURI() const = 0;
 
-	// These are new to XalanDocumentBuilder...
-	virtual ContentHandlerType*
-	getContentHandler() = 0;
+    // These are new to XalanDocumentBuilder...
+    virtual ContentHandlerType*
+    getContentHandler() = 0;
 
-	virtual DTDHandlerType*
-	getDTDHandler() = 0;
+    virtual DTDHandlerType*
+    getDTDHandler() = 0;
 
-	virtual LexicalHandlerType*
-	getLexicalHandler() = 0;
+    virtual LexicalHandlerType*
+    getLexicalHandler() = 0;
 
 private:
 };
@@ -95,4 +95,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANDOCUMENTBUILDER_HEADER_GUARD
+#endif  // XALANDOCUMENTBUILDER_HEADER_GUARD

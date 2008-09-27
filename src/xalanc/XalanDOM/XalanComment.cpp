@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanComment::XalanComment() :
-	XalanCharacterData()
+    XalanCharacterData()
 {
 }
 
@@ -36,27 +36,27 @@ XalanComment::~XalanComment()
 
 
 
-XalanComment::XalanComment(const XalanComment&	theSource) :
-	XalanCharacterData(theSource)
+XalanComment::XalanComment(const XalanComment&  theSource) :
+    XalanCharacterData(theSource)
 {
 }
 
 
 
 XalanComment&
-XalanComment::operator=(const XalanComment&		theSource)
+XalanComment::operator=(const XalanComment&     theSource)
 {
-	XalanCharacterData::operator=(theSource);
+    XalanCharacterData::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanComment::operator==(const XalanComment&	/* theRHS */) const
+XalanComment::operator==(const XalanComment&    /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

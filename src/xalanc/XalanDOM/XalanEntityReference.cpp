@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanEntityReference::XalanEntityReference() :
-	XalanNode()
+    XalanNode()
 {
 }
 
@@ -36,27 +36,27 @@ XalanEntityReference::~XalanEntityReference()
 
 
 
-XalanEntityReference::XalanEntityReference(const XalanEntityReference&		theSource) :
-	XalanNode(theSource)
+XalanEntityReference::XalanEntityReference(const XalanEntityReference&      theSource) :
+    XalanNode(theSource)
 {
 }
 
 
 
 XalanEntityReference&
-XalanEntityReference::operator=(const XalanEntityReference&	theSource)
+XalanEntityReference::operator=(const XalanEntityReference& theSource)
 {
-	XalanNode::operator=(theSource);
+    XalanNode::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanEntityReference::operator==(const XalanEntityReference&	/* theRHS */) const
+XalanEntityReference::operator==(const XalanEntityReference&    /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

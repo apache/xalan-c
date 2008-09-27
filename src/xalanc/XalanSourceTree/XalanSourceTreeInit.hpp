@@ -52,33 +52,33 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeInit
 {
 public:
 
-	explicit
-	XalanSourceTreeInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
+    explicit
+    XalanSourceTreeInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
-	~XalanSourceTreeInit();
+    ~XalanSourceTreeInit();
 
 private:
 
-	// Not implemented...
-	XalanSourceTreeInit(const XalanSourceTreeInit&);
+    // Not implemented...
+    XalanSourceTreeInit(const XalanSourceTreeInit&);
 
-	XalanSourceTreeInit&
-	operator=(const XalanSourceTreeInit&);
+    XalanSourceTreeInit&
+    operator=(const XalanSourceTreeInit&);
 
-	
-	static void
-	initialize(MemoryManager& theManager);
+    
+    static void
+    initialize(MemoryManager& theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const PlatformSupportInit	m_platformSupportInit;
+    const PlatformSupportInit   m_platformSupportInit;
 
-	const DOMSupportInit		m_domSupportInit;
+    const DOMSupportInit        m_domSupportInit;
 
-	const XMLSupportInit		m_xmlSupportInit;
+    const XMLSupportInit        m_xmlSupportInit;
 
-	static unsigned long	s_initCounter;
+    static unsigned long    s_initCounter;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEINIT_INCLUDE_GUARD_1357924680)

@@ -42,10 +42,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManager& theManager) :
-	XalanNumberFormat(theManager),
-	m_decimalFormat(0)
+    XalanNumberFormat(theManager),
+    m_decimalFormat(0)
 {
-	UErrorCode	theResult = U_ZERO_ERROR;
+    UErrorCode  theResult = U_ZERO_ERROR;
 
     new  DecimalFormatType(theResult);
 }
@@ -54,59 +54,59 @@ ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManager& theManager) 
 
 ICUXalanNumberFormatProxy::~ICUXalanNumberFormatProxy()
 {
-	delete  m_decimalFormat;
+    delete  m_decimalFormat;
 
 }
 
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(double	theValue,
+ICUXalanNumberFormatProxy::format(double    theValue,
                                   XalanDOMString& theResult)
 {
-	UnicodeString	theUnicodeResult;
+    UnicodeString   theUnicodeResult;
 
-	m_decimalFormat->format(theValue, theUnicodeResult);
+    m_decimalFormat->format(theValue, theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+    return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(int	            theValue,
+ICUXalanNumberFormatProxy::format(int               theValue,
                                   XalanDOMString&   theResult)
 {
-	UnicodeString	theUnicodeResult;
+    UnicodeString   theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+    m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+    return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(unsigned int	theValue, XalanDOMString& theResult)
+ICUXalanNumberFormatProxy::format(unsigned int  theValue, XalanDOMString& theResult)
 {
-	UnicodeString	theUnicodeResult;
+    UnicodeString   theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+    m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+    return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(long	          theValue,
+ICUXalanNumberFormatProxy::format(long            theValue,
                                   XalanDOMString& theResult)
 {
-	UnicodeString	theUnicodeResult;
+    UnicodeString   theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+    m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+    return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
@@ -114,38 +114,38 @@ ICUXalanNumberFormatProxy::format(long	          theValue,
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(unsigned long	  theValue,
+ICUXalanNumberFormatProxy::format(unsigned long   theValue,
                                   XalanDOMString& theResult)
 {
-	UnicodeString	theUnicodeResult;
+    UnicodeString   theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+    m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
+    return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
 
 XalanDOMString&
 ICUXalanNumberFormatProxy::format(
-			XALAN_UINT64		theValue,
-			XalanDOMString&		theResult)
+            XALAN_UINT64        theValue,
+            XalanDOMString&     theResult)
 
 {
-	// $$$ ToDo: Fix this!
-	return format(static_cast<unsigned long>(theValue), theResult);
+    // $$$ ToDo: Fix this!
+    return format(static_cast<unsigned long>(theValue), theResult);
 }
 
 
 
 XalanDOMString&
 ICUXalanNumberFormatProxy::format(
-			XALAN_INT64		    theValue,
-			XalanDOMString&		theResult)
+            XALAN_INT64         theValue,
+            XalanDOMString&     theResult)
 
 {
-	// $$$ ToDo: Fix this!
-	return format(static_cast<long>(theValue), theResult);
+    // $$$ ToDo: Fix this!
+    return format(static_cast<long>(theValue), theResult);
 }
 
 
@@ -153,7 +153,7 @@ ICUXalanNumberFormatProxy::format(
 bool
 ICUXalanNumberFormatProxy::isGroupingUsed() const
 {
-	return m_decimalFormat->isGroupingUsed() ? true : false;
+    return m_decimalFormat->isGroupingUsed() ? true : false;
 }
 
 
@@ -161,34 +161,34 @@ ICUXalanNumberFormatProxy::isGroupingUsed() const
 void
 ICUXalanNumberFormatProxy::setGroupingUsed(bool bUsed)
 {
-	m_decimalFormat->setGroupingUsed(bUsed);
+    m_decimalFormat->setGroupingUsed(bUsed);
 }
 
 
 
 void
-ICUXalanNumberFormatProxy::setGroupingSize(unsigned long	size)
+ICUXalanNumberFormatProxy::setGroupingSize(unsigned long    size)
 {
-	m_decimalFormat->setGroupingSize(size);
+    m_decimalFormat->setGroupingSize(size);
 }
 
 
 
 void
-ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&	s)
+ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&   s)
 {
-	const DecimalFormatSymbols* const	theCurrentSymbols =
-				m_decimalFormat->getDecimalFormatSymbols();
-	assert(theCurrentSymbols != 0);
+    const DecimalFormatSymbols* const   theCurrentSymbols =
+                m_decimalFormat->getDecimalFormatSymbols();
+    assert(theCurrentSymbols != 0);
 
-	DecimalFormatSymbols* const		theNewSymbols =
-		new DecimalFormatSymbols(*theCurrentSymbols);
+    DecimalFormatSymbols* const     theNewSymbols =
+        new DecimalFormatSymbols(*theCurrentSymbols);
 
-	theNewSymbols->setSymbol(
-		DecimalFormatSymbols::kGroupingSeparatorSymbol,
-		ICUBridge::XalanDOMStringToUnicodeString(getMemoryManager(), s));
+    theNewSymbols->setSymbol(
+        DecimalFormatSymbols::kGroupingSeparatorSymbol,
+        ICUBridge::XalanDOMStringToUnicodeString(getMemoryManager(), s));
 
-	m_decimalFormat->adoptDecimalFormatSymbols(theNewSymbols);
+    m_decimalFormat->adoptDecimalFormatSymbols(theNewSymbols);
 }
 
 

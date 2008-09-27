@@ -32,8 +32,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 void
 ICUBridgeCleanup::cleanup()
 {
-	// release all lasily allocated data
-	u_cleanup();
+    // release all lasily allocated data
+    u_cleanup();
 }
 
 void

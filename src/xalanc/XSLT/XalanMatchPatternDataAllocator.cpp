@@ -26,7 +26,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanMatchPatternDataAllocator::XalanMatchPatternDataAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -47,22 +47,22 @@ XalanMatchPatternDataAllocator::create(
             const XalanDOMString&   thePatternString,
             data_type::eMatchScore  thePriority)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
+    data_type* const    theResult =
+        new(theBlock) data_type(
                 m_allocator.getMemoryManager(),
-				theTemplate,
-				thePosition,
-				theTargetString,
-				theMatchPattern,
+                theTemplate,
+                thePosition,
+                theTargetString,
+                theMatchPattern,
                 thePatternString,
-				thePriority);
+                thePriority);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

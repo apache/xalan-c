@@ -46,56 +46,56 @@ class ElemDecimalFormat : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to a decimal-format element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemDecimalFormat(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to a decimal-format element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemDecimalFormat(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
 
-	~ElemDecimalFormat();
+    ~ElemDecimalFormat();
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	const XalanDecimalFormatSymbols&
-	getDecimalFormatSymbols() const
-	{
-		return m_decimalFormatSymbols;
-	}
+    const XalanDecimalFormatSymbols&
+    getDecimalFormatSymbols() const
+    {
+        return m_decimalFormatSymbols;
+    }
 
-	const XalanQName&
-	getQName() const
-	{
-		assert(m_qname != 0);
+    const XalanQName&
+    getQName() const
+    {
+        assert(m_qname != 0);
 
-		return *m_qname;
-	}
+        return *m_qname;
+    }
 
-	virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 private:
 
-	const XPath*				m_countMatchPattern;
-	const XPath*				m_fromMatchPattern;
-	const XPath*				m_valueExpr;
+    const XPath*                m_countMatchPattern;
+    const XPath*                m_fromMatchPattern;
+    const XPath*                m_valueExpr;
 
-	const XalanQName*			m_qname;
+    const XalanQName*           m_qname;
 
-	XalanDecimalFormatSymbols	m_decimalFormatSymbols;
+    XalanDecimalFormatSymbols   m_decimalFormatSymbols;
 };
 
 
@@ -104,4 +104,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMEMPTY_HEADER_GUARD
+#endif  // XALAN_ELEMEMPTY_HEADER_GUARD

@@ -45,61 +45,61 @@ class XALAN_XPATH_EXPORT NodeRefListBase
 {
 public:
 
-	NodeRefListBase();
+    NodeRefListBase();
 
-	virtual
-	~NodeRefListBase();
+    virtual
+    ~NodeRefListBase();
 
     typedef XalanSize_t     size_type;
 
-	/**
-	 * Returns the <code>index</code>th item in the collection. If
-	 * <code>index</code> is greater than or equal to the number of nodes in
-	 * the list, this returns <code>null</code>.
-	 *
-	 * @param index index into the collection
-	 * @return node at the <code>index</code>th position in the
-	 *         <code>NodeList</code>, or <code>null</code> if that is not a
-	 *         valid index
-	 */
-	virtual XalanNode*
-	item(size_type	index) const = 0;
+    /**
+     * Returns the <code>index</code>th item in the collection. If
+     * <code>index</code> is greater than or equal to the number of nodes in
+     * the list, this returns <code>null</code>.
+     *
+     * @param index index into the collection
+     * @return node at the <code>index</code>th position in the
+     *         <code>NodeList</code>, or <code>null</code> if that is not a
+     *         valid index
+     */
+    virtual XalanNode*
+    item(size_type  index) const = 0;
 
-	/**
-	 * Determine the number of nodes in the list. The range of valid child node
-	 * indices is 0 to <code>length-1</code> inclusive. 
-	 *
-	 * @return number of nodes
-	 */
-	virtual size_type
-	getLength() const = 0;
+    /**
+     * Determine the number of nodes in the list. The range of valid child node
+     * indices is 0 to <code>length-1</code> inclusive. 
+     *
+     * @return number of nodes
+     */
+    virtual size_type
+    getLength() const = 0;
 
-	/**
-	 * Retrieve the zero based index of the node in the list
-	 * 
-	 * @param theNode node whose index to find
-	 * @return index of node
-	 */
-	virtual size_type
-	indexOf(const XalanNode*	theNode) const = 0;
+    /**
+     * Retrieve the zero based index of the node in the list
+     * 
+     * @param theNode node whose index to find
+     * @return index of node
+     */
+    virtual size_type
+    indexOf(const XalanNode*    theNode) const = 0;
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const size_type	npos = ~0u;
+    static const size_type  npos = ~0u;
 #else
-	static const size_type	npos;
+    static const size_type  npos;
 #endif
 
 protected:
 
-	NodeRefListBase(const NodeRefListBase&)
-	{
-	}
+    NodeRefListBase(const NodeRefListBase&)
+    {
+    }
 
-	NodeRefListBase&
-	operator=(const NodeRefListBase&)
-	{
-		return *this;
-	}
+    NodeRefListBase&
+    operator=(const NodeRefListBase&)
+    {
+        return *this;
+    }
 };
 
 
@@ -108,4 +108,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NODEREFLISTBASE_HEADER_GUARD_1357924680
+#endif  // NODEREFLISTBASE_HEADER_GUARD_1357924680

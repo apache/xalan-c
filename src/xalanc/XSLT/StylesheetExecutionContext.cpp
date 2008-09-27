@@ -32,8 +32,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-StylesheetExecutionContext::StylesheetExecutionContext(MemoryManager& m_memoryManager, XObjectFactory*	theXObjectFactory) :
-	XPathExecutionContext(m_memoryManager, theXObjectFactory)
+StylesheetExecutionContext::StylesheetExecutionContext(MemoryManager& m_memoryManager, XObjectFactory*  theXObjectFactory) :
+    XPathExecutionContext(m_memoryManager, theXObjectFactory)
 {
 }
 
@@ -47,44 +47,44 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContext::ParamsPushPop::doPush(
-			const ElemTemplateElement&		xslCallTemplateElement,
-			int								savedStackFrameIndex)
+            const ElemTemplateElement&      xslCallTemplateElement,
+            int                             savedStackFrameIndex)
 {
-	if (xslCallTemplateElement.hasParams() == true)
-	{
-		getExecutionContext().pushCurrentStackFrameIndex(savedStackFrameIndex);
+    if (xslCallTemplateElement.hasParams() == true)
+    {
+        getExecutionContext().pushCurrentStackFrameIndex(savedStackFrameIndex);
 
-		getExecutionContext().pushParams(xslCallTemplateElement);
-	}
+        getExecutionContext().pushParams(xslCallTemplateElement);
+    }
 }
 
 
 
 void
-StylesheetExecutionContext::ParamsPushPop::doPush(const ElemTemplateElement&	xslCallTemplateElement)
+StylesheetExecutionContext::ParamsPushPop::doPush(const ElemTemplateElement&    xslCallTemplateElement)
 {
-	if (xslCallTemplateElement.hasParams() == true)
-	{
-		getExecutionContext().pushParams(xslCallTemplateElement);
-	}
+    if (xslCallTemplateElement.hasParams() == true)
+    {
+        getExecutionContext().pushParams(xslCallTemplateElement);
+    }
 }
 
 
 
 StylesheetExecutionContext::BorrowReturnFormatterToText::BorrowReturnFormatterToText(
-			StylesheetExecutionContext&		executionContext,
-			Writer&							writer,
-			bool							normalizeLinefeed,
-			bool							handleIgnorableWhitespace)  :
-	m_executionContext(executionContext),
-	m_formatter(executionContext.borrowFormatterToText())
+            StylesheetExecutionContext&     executionContext,
+            Writer&                         writer,
+            bool                            normalizeLinefeed,
+            bool                            handleIgnorableWhitespace)  :
+    m_executionContext(executionContext),
+    m_formatter(executionContext.borrowFormatterToText())
 {
-	assert(m_formatter != 0);
+    assert(m_formatter != 0);
 
-	m_formatter->setNormalizeLinefeed(normalizeLinefeed);
-	m_formatter->setHandleIgnorableWhitespace(handleIgnorableWhitespace);
-	m_formatter->clearEncoding();
-	m_formatter->setWriter(&writer);
+    m_formatter->setNormalizeLinefeed(normalizeLinefeed);
+    m_formatter->setHandleIgnorableWhitespace(handleIgnorableWhitespace);
+    m_formatter->clearEncoding();
+    m_formatter->setWriter(&writer);
 }
 #endif
 

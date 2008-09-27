@@ -35,7 +35,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
 
 
 
@@ -56,135 +56,135 @@ class AVT
 public:
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::size_t		size_type;
+    typedef std::size_t     size_type;
 #else
-	typedef size_t			size_type;
+    typedef size_t          size_type;
 #endif
 
-	/**
-	 * Construct an Attribute Value Template(AVT) by parsing the string, and
-	 * either constructing a vector of AVTParts, or simply hold on to the
-	 * string if the AVT is simple.
-	 *
-	 * @param constructionContext context for construction of AVT
-	 * @param locator		  the Locator for the AVT.  May be null.
-	 * @param name                name of AVT
-	 * @param stringedValue       string value to parse
-	 * @param resolver            resolver for namespace resolution
-	 */
-	AVT(
-			StylesheetConstructionContext&	constructionContext,
-			const LocatorType*				locator,
-			const XalanDOMChar*				name,
-			const XalanDOMChar*				stringedValue,
-			const PrefixResolver&			resolver);
+    /**
+     * Construct an Attribute Value Template(AVT) by parsing the string, and
+     * either constructing a vector of AVTParts, or simply hold on to the
+     * string if the AVT is simple.
+     *
+     * @param constructionContext context for construction of AVT
+     * @param locator         the Locator for the AVT.  May be null.
+     * @param name                name of AVT
+     * @param stringedValue       string value to parse
+     * @param resolver            resolver for namespace resolution
+     */
+    AVT(
+            StylesheetConstructionContext&  constructionContext,
+            const LocatorType*              locator,
+            const XalanDOMChar*             name,
+            const XalanDOMChar*             stringedValue,
+            const PrefixResolver&           resolver);
 
-	virtual
-	~AVT();
+    virtual
+    ~AVT();
 
-	/**
-	 * Retrieve the name of the Attribute Value Template
-	 * 
-	 * @return name of AVT
-	 */
+    /**
+     * Retrieve the name of the Attribute Value Template
+     * 
+     * @return name of AVT
+     */
     const XalanDOMString&
-	getName() const
-	{
-		return m_name;
-	}
+    getName() const
+    {
+        return m_name;
+    }
 
-	/**
-	 * Append the value to the buffer.
-	 *
-	 * @param buf              buffer to write into
-	 * @param contextNode      current context node
-	 * @param prefixResolver   prefix resolver to use
-	 * @param executionContext execution context
-	 */
-	void
-	evaluate(
-			XalanDOMString&			buf,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const
-	{
-		if(m_simpleString != 0)
-		{
-			buf.assign(m_simpleString, m_simpleStringLength);
-		}
-		else
-		{
-			doEvaluate(buf, contextNode, prefixResolver, executionContext);
-		}
-	}
+    /**
+     * Append the value to the buffer.
+     *
+     * @param buf              buffer to write into
+     * @param contextNode      current context node
+     * @param prefixResolver   prefix resolver to use
+     * @param executionContext execution context
+     */
+    void
+    evaluate(
+            XalanDOMString&         buf,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const
+    {
+        if(m_simpleString != 0)
+        {
+            buf.assign(m_simpleString, m_simpleStringLength);
+        }
+        else
+        {
+            doEvaluate(buf, contextNode, prefixResolver, executionContext);
+        }
+    }
 
-	/**
-	 * Append the value to the buffer.
-	 *
-	 * @param buf              buffer to write into
-	 * @param prefixResolver   prefix resolver to use
-	 * @param executionContext execution context
-	 */
-	void
-	evaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const
-	{
-		if(m_simpleString != 0)
-		{
-			buf.assign(m_simpleString, m_simpleStringLength);
-		}
-		else
-		{
-			doEvaluate(buf, prefixResolver, executionContext);
-		}
-	}
+    /**
+     * Append the value to the buffer.
+     *
+     * @param buf              buffer to write into
+     * @param prefixResolver   prefix resolver to use
+     * @param executionContext execution context
+     */
+    void
+    evaluate(
+            XalanDOMString&         buf,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const
+    {
+        if(m_simpleString != 0)
+        {
+            buf.assign(m_simpleString, m_simpleStringLength);
+        }
+        else
+        {
+            doEvaluate(buf, prefixResolver, executionContext);
+        }
+    }
 
 private:
 
-	void
-	doEvaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    void
+    doEvaluate(
+            XalanDOMString&         buf,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
-	void
-	doEvaluate(
-			XalanDOMString&			buf,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    void
+    doEvaluate(
+            XalanDOMString&         buf,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
-	void
-	nextToken(
-			StylesheetConstructionContext&	constructionContext,
-			const LocatorType*				locator,
-			StringTokenizer&				tokenizer,
-			XalanDOMString&					token);
+    void
+    nextToken(
+            StylesheetConstructionContext&  constructionContext,
+            const LocatorType*              locator,
+            StringTokenizer&                tokenizer,
+            XalanDOMString&                 token);
 
-	// not implemented
-	AVT(const AVT&);
+    // not implemented
+    AVT(const AVT&);
 
-	AVT&
-	operator=(const AVT&);
+    AVT&
+    operator=(const AVT&);
 
-	bool
-	operator==(const AVT&) const;
+    bool
+    operator==(const AVT&) const;
 
 
-	// Data members...
-	const AVTPart**					m_parts;
+    // Data members...
+    const AVTPart**                 m_parts;
 
-	size_type						m_partsSize;
+    size_type                       m_partsSize;
 
-	const XalanDOMChar*				m_simpleString;
+    const XalanDOMChar*             m_simpleString;
 
-	XalanDOMString::size_type		m_simpleStringLength;
+    XalanDOMString::size_type       m_simpleStringLength;
 
-	const XalanDOMString&			m_name;
+    const XalanDOMString&           m_name;
 
-	static const XalanDOMString		s_emptyString;
+    static const XalanDOMString     s_emptyString;
 };
 
 
@@ -193,4 +193,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_AVT_HEADER_GUARD
+#endif  // XALAN_AVT_HEADER_GUARD

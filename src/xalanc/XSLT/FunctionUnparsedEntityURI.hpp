@@ -40,44 +40,44 @@ class XALAN_XSLT_EXPORT FunctionUnparsedEntityURI : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionUnparsedEntityURI();
+    FunctionUnparsedEntityURI();
 
-	virtual
-	~FunctionUnparsedEntityURI();
+    virtual
+    ~FunctionUnparsedEntityURI();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionUnparsedEntityURI*
+    virtual FunctionUnparsedEntityURI*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionUnparsedEntityURI&
-	operator=(const FunctionUnparsedEntityURI&);
+    // Not implemented...
+    FunctionUnparsedEntityURI&
+    operator=(const FunctionUnparsedEntityURI&);
 
-	bool
-	operator==(const FunctionUnparsedEntityURI&) const;
+    bool
+    operator==(const FunctionUnparsedEntityURI&) const;
 };
 
 
@@ -86,4 +86,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONUNPARSEDENTITYURI_HEADER_GUARD_1357924680
+#endif  // FUNCTIONUNPARSEDENTITYURI_HEADER_GUARD_1357924680

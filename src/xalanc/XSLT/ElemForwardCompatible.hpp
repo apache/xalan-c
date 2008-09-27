@@ -37,66 +37,66 @@ class ElemForwardCompatible : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an unknown XSLT element
-	 * for forward-compatible processing.
-	 * 
-	 * @param constructionContext   context for construction of object
-	 * @param stylesheetTree        stylesheet containing element
-	 * @param name                  name of element
-	 * @param atts					the attribute list
-	 * @param lineNumber            line number in document
-	 * @param columnNumber          column number in document
-	 */
-	ElemForwardCompatible(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an unknown XSLT element
+     * for forward-compatible processing.
+     * 
+     * @param constructionContext   context for construction of object
+     * @param stylesheetTree        stylesheet containing element
+     * @param name                  name of element
+     * @param atts                  the attribute list
+     * @param lineNumber            line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemForwardCompatible(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
     static ElemForwardCompatible*
     create(
             MemoryManager&              theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
     virtual
-	~ElemForwardCompatible();
+    ~ElemForwardCompatible();
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext& executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext& executionContext) const;
 
-	virtual bool 
-	executeChildElement(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement*	element) const;
+    virtual bool 
+    executeChildElement(
+            StylesheetExecutionContext& executionContext,
+            const ElemTemplateElement*  element) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 private:
 
-	// not implemented
-	ElemForwardCompatible(const ElemForwardCompatible&);
+    // not implemented
+    ElemForwardCompatible(const ElemForwardCompatible&);
 
-	ElemForwardCompatible&
-	operator=(const ElemForwardCompatible&);
+    ElemForwardCompatible&
+    operator=(const ElemForwardCompatible&);
 
 
-	const XalanDOMString&	m_elementName;
+    const XalanDOMString&   m_elementName;
 };
 
 
@@ -105,4 +105,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMFORWARDCOMPATIBLE_HEADER_GUARD
+#endif  // XALAN_ELEMFORWARDCOMPATIBLE_HEADER_GUARD

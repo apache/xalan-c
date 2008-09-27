@@ -43,88 +43,88 @@ class XALAN_XPATH_EXPORT FormatterStringLengthCounter : public FormatterListener
 {
 public:
 
-	/**
-	 * FormatterStringLengthCounter instance constructor.
-	 */
-	explicit
-	FormatterStringLengthCounter();
+    /**
+     * FormatterStringLengthCounter instance constructor.
+     */
+    explicit
+    FormatterStringLengthCounter();
 
-	virtual
-	~FormatterStringLengthCounter();
+    virtual
+    ~FormatterStringLengthCounter();
 
 
-	size_type
-	getCount() const
-	{
-		return m_count;
-	}
+    size_type
+    getCount() const
+    {
+        return m_count;
+    }
 
-	// These methods are inherited from FormatterListener ...
-
-	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
-
-	virtual void
-	startDocument();
-
-	virtual void
-	endDocument();
-
-	virtual void
-	startElement(
-			const XMLCh* const	name,
-			AttributeListType&	attrs);
+    // These methods are inherited from FormatterListener ...
 
     virtual void
-	endElement(const XMLCh* const	name);
+    setDocumentLocator(const LocatorType* const     locator);
 
     virtual void
-	characters(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    startDocument();
 
     virtual void
-	charactersRaw(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    endDocument();
 
-	virtual void
-	entityReference(const XMLCh* const	name);
+    virtual void
+    startElement(
+            const XMLCh* const  name,
+            AttributeListType&  attrs);
 
-	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    virtual void
+    endElement(const XMLCh* const   name);
 
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
+    virtual void
+    characters(
+            const XMLCh* const  chars,
+            const size_type     length);
 
-	virtual void
-	resetDocument();
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const size_type     length);
 
-	virtual void
-	comment(const XMLCh* const	data);
+    virtual void
+    entityReference(const XMLCh* const  name);
 
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const size_type     length);
+    virtual void
+    ignorableWhitespace(
+            const XMLCh* const  chars,
+            const size_type     length);
+
+    virtual void
+    processingInstruction(
+            const XMLCh* const  target,
+            const XMLCh* const  data);
+
+    virtual void
+    resetDocument();
+
+    virtual void
+    comment(const XMLCh* const  data);
+
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const size_type     length);
 
 private:
 
-	// These are not implemented.
-	FormatterStringLengthCounter(const FormatterStringLengthCounter&);
+    // These are not implemented.
+    FormatterStringLengthCounter(const FormatterStringLengthCounter&);
 
-	FormatterStringLengthCounter&
-	operator=(const FormatterStringLengthCounter&);
+    FormatterStringLengthCounter&
+    operator=(const FormatterStringLengthCounter&);
 
-	bool
-	operator==(const FormatterStringLengthCounter&) const;
+    bool
+    operator==(const FormatterStringLengthCounter&) const;
 
-	// Data members...
-	size_type	m_count;
+    // Data members...
+    size_type   m_count;
 };
 
 
@@ -133,4 +133,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FORMATTERSTRINGLENGTHCOUNTER_HEADER_GUARD_1357924680
+#endif  // FORMATTERSTRINGLENGTHCOUNTER_HEADER_GUARD_1357924680

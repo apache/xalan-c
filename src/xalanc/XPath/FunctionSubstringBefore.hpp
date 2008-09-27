@@ -41,44 +41,44 @@ class XALAN_XPATH_EXPORT FunctionSubstringBefore : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionSubstringBefore();
+    FunctionSubstringBefore();
 
-	virtual
-	~FunctionSubstringBefore();
+    virtual
+    ~FunctionSubstringBefore();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionSubstringBefore*
+    virtual FunctionSubstringBefore*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionSubstringBefore&
-	operator=(const FunctionSubstringBefore&);
+    // Not implemented...
+    FunctionSubstringBefore&
+    operator=(const FunctionSubstringBefore&);
 
-	bool
-	operator==(const FunctionSubstringBefore&) const;
+    bool
+    operator==(const FunctionSubstringBefore&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONSUBSTRINGBEFORE_HEADER_GUARD_1357924680
+#endif  // FUNCTIONSUBSTRINGBEFORE_HEADER_GUARD_1357924680

@@ -206,11 +206,11 @@ XSLTEngineImpl::~XSLTEngineImpl()
 
 void
 XSLTEngineImpl::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     if (m_problemListener != 0)
     {
@@ -235,10 +235,10 @@ XSLTEngineImpl::problem(
 
 void
 XSLTEngineImpl::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     if (m_problemListener != 0)
     {

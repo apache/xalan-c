@@ -33,11 +33,11 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridgeCleanup
 {
 public:
 
-	static void
-	cleanup();
+    static void
+    cleanup();
 
-	static void
-	startup(MemoryManager&  theManager);
+    static void
+    startup(MemoryManager&  theManager);
 };
 
 
@@ -46,4 +46,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ICUBRIDGECLEANUP_HEADER_GUARD_1357924680
+#endif  // ICUBRIDGECLEANUP_HEADER_GUARD_1357924680

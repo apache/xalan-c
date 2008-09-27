@@ -44,80 +44,80 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToNull : public FormatterListener
 {
 public:
 
-	/**
-	 * FormatterToNull instance constructor.
-	 */
-	explicit
-	FormatterToNull();
+    /**
+     * FormatterToNull instance constructor.
+     */
+    explicit
+    FormatterToNull();
 
-	virtual
-	~FormatterToNull();
+    virtual
+    ~FormatterToNull();
 
 
-	// These methods are inherited from FormatterListener ...
-
-	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
-
-	virtual void
-	startDocument();
-
-	virtual void
-	endDocument();
-
-	virtual void
-	startElement(
-			const XMLCh* const	name,
-			AttributeListType&	attrs);
+    // These methods are inherited from FormatterListener ...
 
     virtual void
-	endElement(const XMLCh* const	name);
+    setDocumentLocator(const LocatorType* const     locator);
 
     virtual void
-	characters(
-			const XMLCh* const	chars,
-			const size_type     length);
+    startDocument();
 
     virtual void
-	charactersRaw(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    endDocument();
 
-	virtual void
-	entityReference(const XMLCh* const	name);
+    virtual void
+    startElement(
+            const XMLCh* const  name,
+            AttributeListType&  attrs);
 
-	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    virtual void
+    endElement(const XMLCh* const   name);
 
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
+    virtual void
+    characters(
+            const XMLCh* const  chars,
+            const size_type     length);
+
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const size_type     length);
+
+    virtual void
+    entityReference(const XMLCh* const  name);
+
+    virtual void
+    ignorableWhitespace(
+            const XMLCh* const  chars,
+            const size_type     length);
+
+    virtual void
+    processingInstruction(
+            const XMLCh* const  target,
+            const XMLCh* const  data);
 
 
-	virtual void
-	resetDocument();
+    virtual void
+    resetDocument();
 
-	virtual void
-	comment(const XMLCh* const	data);
+    virtual void
+    comment(const XMLCh* const  data);
 
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const size_type 	length);
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const size_type     length);
 
 private:
 
-	// These are not implemented.
-	FormatterToNull(const FormatterToNull&);
+    // These are not implemented.
+    FormatterToNull(const FormatterToNull&);
 
-	FormatterToNull&
-	operator=(const FormatterToNull&);
+    FormatterToNull&
+    operator=(const FormatterToNull&);
 
-	bool
-	operator==(const FormatterToNull&) const;
+    bool
+    operator==(const FormatterToNull&) const;
 };
 
 
@@ -126,4 +126,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FORMATTERTONULL_HEADER_GUARD_1357924680
+#endif  // FORMATTERTONULL_HEADER_GUARD_1357924680

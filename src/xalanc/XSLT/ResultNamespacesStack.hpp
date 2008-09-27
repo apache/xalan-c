@@ -47,111 +47,111 @@ public:
 
 
 #if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<bool>			BoolVectorType;
-	#else
-	typedef std::deque<bool>	BoolVectorType;
-	#endif
+    #if defined(XALAN_NO_STD_NAMESPACE)
+    typedef deque<bool>         BoolVectorType;
+    #else
+    typedef std::deque<bool>    BoolVectorType;
+    #endif
 #else
-	typedef XalanVector<bool>		BoolVectorType;
+    typedef XalanVector<bool>       BoolVectorType;
 #endif
 
-	typedef XalanQName::NamespaceVectorType		NamespaceVectorType;
-	typedef XalanQName::NamespacesStackType		NamespacesStackType;
+    typedef XalanQName::NamespaceVectorType     NamespaceVectorType;
+    typedef XalanQName::NamespacesStackType     NamespacesStackType;
 
-	typedef NamespacesStackType::size_type		size_type;
+    typedef NamespacesStackType::size_type      size_type;
 
 
-	explicit
-	ResultNamespacesStack(MemoryManager& theManager);
+    explicit
+    ResultNamespacesStack(MemoryManager& theManager);
 
-	~ResultNamespacesStack();
+    ~ResultNamespacesStack();
 
-	void
-	addDeclaration(
-			const XalanDOMString&	thePrefix,
-	        const XalanDOMString&	theNamespaceURI)
-	{
-		addDeclaration(
-			thePrefix,
-			theNamespaceURI.c_str(),
-			theNamespaceURI.length());
-	}
+    void
+    addDeclaration(
+            const XalanDOMString&   thePrefix,
+            const XalanDOMString&   theNamespaceURI)
+    {
+        addDeclaration(
+            thePrefix,
+            theNamespaceURI.c_str(),
+            theNamespaceURI.length());
+    }
 
-	void
-	addDeclaration(
-			const XalanDOMString&	thePrefix,
-	        const XalanDOMChar*		theNamespaceURI)
-	{
-		addDeclaration(
-			thePrefix,
-			theNamespaceURI,
-			length(theNamespaceURI));
-	}
+    void
+    addDeclaration(
+            const XalanDOMString&   thePrefix,
+            const XalanDOMChar*     theNamespaceURI)
+    {
+        addDeclaration(
+            thePrefix,
+            theNamespaceURI,
+            length(theNamespaceURI));
+    }
 
-	void
-	addDeclaration(
-			const XalanDOMString&		thePrefix,
-	        const XalanDOMChar*			theNamespaceURI,
-			XalanDOMString::size_type	theLength);
+    void
+    addDeclaration(
+            const XalanDOMString&       thePrefix,
+            const XalanDOMChar*         theNamespaceURI,
+            XalanDOMString::size_type   theLength);
 
-	void
-	pushContext();
+    void
+    pushContext();
 
-	void
-	popContext();
+    void
+    popContext();
 
-	const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
+    const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     thePrefix) const;
 
-	const XalanDOMString*
-	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const;
+    const XalanDOMString*
+    getPrefixForNamespace(const XalanDOMString&     theNamespaceURI) const;
 
-	/**
-	 * See if the prefix has been mapped to a namespace in the current
-	 * context, without looking down the stack of namespaces.
-	 */
-	bool
-	prefixIsPresentLocal(const XalanDOMString&	thePrefix);
+    /**
+     * See if the prefix has been mapped to a namespace in the current
+     * context, without looking down the stack of namespaces.
+     */
+    bool
+    prefixIsPresentLocal(const XalanDOMString&  thePrefix);
 
-	void
-	clear();
+    void
+    clear();
 
-	size_type
-	size() const
-	{
-		return m_resultNamespaces.size() - 1;
-	}
+    size_type
+    size() const
+    {
+        return m_resultNamespaces.size() - 1;
+    }
 
-	bool
-	empty() const
-	{
-		return NamespacesStackType::const_iterator(m_stackPosition) == m_resultNamespaces.begin() ? true : false;
-	}
+    bool
+    empty() const
+    {
+        return NamespacesStackType::const_iterator(m_stackPosition) == m_resultNamespaces.begin() ? true : false;
+    }
 
 private:
 
-	// not implemented
-	ResultNamespacesStack(const ResultNamespacesStack&);
+    // not implemented
+    ResultNamespacesStack(const ResultNamespacesStack&);
 
-	bool
-	operator==(const ResultNamespacesStack&) const;
+    bool
+    operator==(const ResultNamespacesStack&) const;
 
-	ResultNamespacesStack&
-	operator=(const ResultNamespacesStack&);
+    ResultNamespacesStack&
+    operator=(const ResultNamespacesStack&);
 
-	enum { eDefaultCreateNewContextStackSize = 25 };
+    enum { eDefaultCreateNewContextStackSize = 25 };
 
-	/**
-	 * A stack to keep track of the result tree namespaces.
-	 */
-	NamespacesStackType				m_resultNamespaces;
+    /**
+     * A stack to keep track of the result tree namespaces.
+     */
+    NamespacesStackType             m_resultNamespaces;
 
-	NamespacesStackType::iterator	m_stackBegin;
+    NamespacesStackType::iterator   m_stackBegin;
 
-	NamespacesStackType::iterator	m_stackPosition;
+    NamespacesStackType::iterator   m_stackPosition;
 
-	BoolVectorType					m_createNewContextStack;
+    BoolVectorType                  m_createNewContextStack;
 };
 
 
@@ -160,4 +160,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD
+#endif  // XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD

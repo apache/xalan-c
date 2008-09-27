@@ -51,10 +51,10 @@ class NullFunctor
 {
 public:
 
-	void
-	operator()(const Type*	/* theType */) const
-	{
-	}
+    void
+    operator()(const Type*  /* theType */) const
+    {
+    }
 };
 
 
@@ -64,11 +64,11 @@ class DeleteFunctor
 {
 public:
 
-	void
-	operator()(const Type*	theType) const
-	{
-		delete theType;
-	}
+    void
+    operator()(const Type*  theType) const
+    {
+        delete theType;
+    }
 };
 
 
@@ -85,203 +85,203 @@ using std::vector;
 void
 Usage()
 {
-	cout << endl
-		 << "Usage: ArenaBlock <count> <block size>"
-		 << endl;
+    cout << endl
+         << "Usage: ArenaBlock <count> <block size>"
+         << endl;
 }
 
 
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
-	if (argc != 3)
-	{
-		Usage();
-	}
-	else
-	{
-		const size_t	theCount = atol(argv[1]);
-		const size_t	theBlockCount = atol(argv[2]);
+    if (argc != 3)
+    {
+        Usage();
+    }
+    else
+    {
+        const size_t    theCount = atol(argv[1]);
+        const size_t    theBlockCount = atol(argv[2]);
 
-		if (theCount <= 0 || theBlockCount <= 0)
-		{
-			Usage();
-		}
-		else
-		{
-			vector<string*>		theStringVector;
+        if (theCount <= 0 || theBlockCount <= 0)
+        {
+            Usage();
+        }
+        else
+        {
+            vector<string*>     theStringVector;
 
-			theStringVector.reserve(theCount);
+            theStringVector.reserve(theCount);
 
-			clock_t	theStartClock = 0;
+            clock_t theStartClock = 0;
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-			// Send all reports to STDOUT
-			_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-			_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
-			_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
-			_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
-			_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
-			_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
+            // Send all reports to STDOUT
+            _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+            _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+            _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+            _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
+            _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+            _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 
 #endif
 
-			{
-				theStartClock = clock();
+            {
+                theStartClock = clock();
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theStartState;
+                _CrtMemState    theStartState;
 
-				_CrtMemCheckpoint(&theStartState);
+                _CrtMemCheckpoint(&theStartState);
 #endif
 
-				StringArenaAllocator	m_allocator(theBlockCount);
+                StringArenaAllocator    m_allocator(theBlockCount);
 
-				for (size_t i = 0; i < theCount; ++i)
-				{
-					theStringVector.push_back(m_allocator.create("Test string"));
-				}
+                for (size_t i = 0; i < theCount; ++i)
+                {
+                    theStringVector.push_back(m_allocator.create("Test string"));
+                }
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theEndState;
+                _CrtMemState    theEndState;
 
-				_CrtMemCheckpoint(&theEndState);
+                _CrtMemCheckpoint(&theEndState);
 
-				_CrtMemState	theDiffs;
+                _CrtMemState    theDiffs;
 
-				_CrtMemDifference(&theDiffs, &theStartState, &theEndState);
+                _CrtMemDifference(&theDiffs, &theStartState, &theEndState);
 
-				_CrtMemDumpStatistics(&theDiffs);
+                _CrtMemDumpStatistics(&theDiffs);
 #endif
 
-				cout << "Create complete, hit <Enter> to continue..."
-					 << endl;
+                cout << "Create complete, hit <Enter> to continue..."
+                     << endl;
 
-//				cin.get();
+//              cin.get();
 
-				for_each(theStringVector.begin(),
-						 theStringVector.end(),
-						 NullFunctor<string>());
-			}
+                for_each(theStringVector.begin(),
+                         theStringVector.end(),
+                         NullFunctor<string>());
+            }
 
-			clock_t		theEndClock = clock();
+            clock_t     theEndClock = clock();
 
-			cout << "Time to create and delete "
-				 << theCount
-				 << " strings using the arena allocator was "
-				 << theEndClock - theStartClock
-				 << " clock ticks."
-				 << endl
-				 << endl;
+            cout << "Time to create and delete "
+                 << theCount
+                 << " strings using the arena allocator was "
+                 << theEndClock - theStartClock
+                 << " clock ticks."
+                 << endl
+                 << endl;
 
-			theStringVector.clear();
+            theStringVector.clear();
 
-			{
+            {
 #if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theStartState;
+                _CrtMemState    theStartState;
 
-				_CrtMemCheckpoint(&theStartState);
+                _CrtMemCheckpoint(&theStartState);
 #endif
 
-				theStartClock = clock();
+                theStartClock = clock();
 
-				ReusableStringArenaAllocator	m_allocator(theBlockCount);
+                ReusableStringArenaAllocator    m_allocator(theBlockCount);
 
-				for (size_t i = 0; i < theCount; ++i)
-				{
-					theStringVector.push_back(m_allocator.create("Test string"));
-				}
-
-#if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theEndState;
-
-				_CrtMemCheckpoint(&theEndState);
-
-				_CrtMemState	theDiffs;
-
-				_CrtMemDifference(&theDiffs, &theStartState, &theEndState);
-
-				_CrtMemDumpStatistics(&theDiffs);
-#endif
-
-				cout << "Create complete, hit <Enter> to continue..."
-					 << endl;
-
-//				cin.get();
-
-				for_each(theStringVector.begin(),
-						 theStringVector.end(),
-						 NullFunctor<string>());
-
-				for (size_t j = 0; j < theCount; ++j)
-				{
-					m_allocator.destroy(theStringVector[j]);
-				}
-			}
-
-			theEndClock = clock();
-
-			cout << "Time to create and delete "
-				 << theCount
-				 << " strings using the reusable arena allocator was "
-				 << theEndClock - theStartClock
-				 << " clock ticks."
-				 << endl
-				 << endl;
-
-			theStringVector.clear();
-
-			{
-				theStartClock = clock();
+                for (size_t i = 0; i < theCount; ++i)
+                {
+                    theStringVector.push_back(m_allocator.create("Test string"));
+                }
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theStartState;
+                _CrtMemState    theEndState;
 
-				_CrtMemCheckpoint(&theStartState);
+                _CrtMemCheckpoint(&theEndState);
+
+                _CrtMemState    theDiffs;
+
+                _CrtMemDifference(&theDiffs, &theStartState, &theEndState);
+
+                _CrtMemDumpStatistics(&theDiffs);
 #endif
 
-				for (size_t i = 0; i < theCount; ++i)
-				{
-					theStringVector.push_back(new string("Test string"));
-				}
+                cout << "Create complete, hit <Enter> to continue..."
+                     << endl;
+
+//              cin.get();
+
+                for_each(theStringVector.begin(),
+                         theStringVector.end(),
+                         NullFunctor<string>());
+
+                for (size_t j = 0; j < theCount; ++j)
+                {
+                    m_allocator.destroy(theStringVector[j]);
+                }
+            }
+
+            theEndClock = clock();
+
+            cout << "Time to create and delete "
+                 << theCount
+                 << " strings using the reusable arena allocator was "
+                 << theEndClock - theStartClock
+                 << " clock ticks."
+                 << endl
+                 << endl;
+
+            theStringVector.clear();
+
+            {
+                theStartClock = clock();
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-				_CrtMemState	theEndState;
+                _CrtMemState    theStartState;
 
-				_CrtMemCheckpoint(&theEndState);
-
-				_CrtMemState	theDiffs;
-
-				_CrtMemDifference(&theDiffs, &theStartState, &theEndState);
-
-				_CrtMemDumpStatistics(&theDiffs);
+                _CrtMemCheckpoint(&theStartState);
 #endif
 
-				cout << "Create complete, hit <Enter> to continue..."
-					 << endl;
+                for (size_t i = 0; i < theCount; ++i)
+                {
+                    theStringVector.push_back(new string("Test string"));
+                }
 
-//				cin.get();
+#if defined(_MSC_VER) && defined(_DEBUG)
+                _CrtMemState    theEndState;
 
-				for_each(theStringVector.begin(),
-						 theStringVector.end(),
-						 DeleteFunctor<string>());
+                _CrtMemCheckpoint(&theEndState);
 
-			}
+                _CrtMemState    theDiffs;
 
-			theEndClock = clock();
+                _CrtMemDifference(&theDiffs, &theStartState, &theEndState);
 
-			cout << "Time to create and delete "
-				 << theCount
-				 << " strings using standard new and delete was "
-				 << theEndClock - theStartClock
-				 << " clock ticks."
-				 << endl
-				 << endl;
-		}
-	}
+                _CrtMemDumpStatistics(&theDiffs);
+#endif
 
-	return 0;
+                cout << "Create complete, hit <Enter> to continue..."
+                     << endl;
+
+//              cin.get();
+
+                for_each(theStringVector.begin(),
+                         theStringVector.end(),
+                         DeleteFunctor<string>());
+
+            }
+
+            theEndClock = clock();
+
+            cout << "Time to create and delete "
+                 << theCount
+                 << " strings using standard new and delete was "
+                 << theEndClock - theStartClock
+                 << " clock ticks."
+                 << endl
+                 << endl;
+        }
+    }
+
+    return 0;
 }

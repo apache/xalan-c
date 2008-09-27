@@ -44,52 +44,52 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XALAN_XPATH_EXPORT FunctionNormalizeSpace : public Function
 {
 public:
-	
-	typedef Function	ParentType;
+    
+    typedef Function    ParentType;
 
-	FunctionNormalizeSpace();
+    FunctionNormalizeSpace();
 
-	virtual
-	~FunctionNormalizeSpace();
+    virtual
+    ~FunctionNormalizeSpace();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionNormalizeSpace*
+    virtual FunctionNormalizeSpace*
 #endif
-	clone(MemoryManager&    theManager) const;
+    clone(MemoryManager&    theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString&    theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString&    theResult) const;
 
 private:
 
-	bool
-	needsNormalization(const XalanDOMString&	theString) const;
+    bool
+    needsNormalization(const XalanDOMString&    theString) const;
 
-	XObjectPtr
-	normalize(
-		XPathExecutionContext&	executionContext,
-		const XalanDOMString&	theString) const
+    XObjectPtr
+    normalize(
+        XPathExecutionContext&  executionContext,
+        const XalanDOMString&   theString) const
     {
         // A string contain the result...
         GetCachedString     theResult(executionContext);
@@ -97,10 +97,10 @@ private:
         return normalize(executionContext, theString, theResult);
     }
 
-	XObjectPtr
-	normalize(
-		XPathExecutionContext&	executionContext,
-		const XObjectPtr&		theArg) const;
+    XObjectPtr
+    normalize(
+        XPathExecutionContext&  executionContext,
+        const XObjectPtr&       theArg) const;
 
     XObjectPtr
     normalize(
@@ -108,12 +108,12 @@ private:
             const XalanDOMString&   theString,
             GetCachedString&        theResult) const;
 
-	// Not implemented...
-	FunctionNormalizeSpace&
-	operator=(const FunctionNormalizeSpace&);
+    // Not implemented...
+    FunctionNormalizeSpace&
+    operator=(const FunctionNormalizeSpace&);
 
-	bool
-	operator==(const FunctionNormalizeSpace&) const;
+    bool
+    operator==(const FunctionNormalizeSpace&) const;
 };
 
 
@@ -122,4 +122,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONNORMALIZE_HEADER_GUARD_1357924680
+#endif  // FUNCTIONNORMALIZE_HEADER_GUARD_1357924680

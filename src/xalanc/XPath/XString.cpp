@@ -111,7 +111,7 @@ XString::str(
 void
 XString::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     theBuffer.append(m_value);
 }

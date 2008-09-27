@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetAllocator::XNodeSetAllocator(MemoryManager&      theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XNodeSetAllocator::XNodeSetAllocator(MemoryManager&      theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,16 +40,16 @@ XNodeSetAllocator::~XNodeSetAllocator()
 
 
 XNodeSetAllocator::nodeset_type*
-XNodeSetAllocator::createNodeSet(BorrowReturnMutableNodeRefList&	value)
+XNodeSetAllocator::createNodeSet(BorrowReturnMutableNodeRefList&    value)
 {
-	nodeset_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    nodeset_type* const theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    nodeset_type* const	theResult = new(theBlock) nodeset_type(value, m_allocator.getMemoryManager());
+    nodeset_type* const theResult = new(theBlock) nodeset_type(value, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -58,9 +58,9 @@ XNodeSetAllocator::createNodeSet(BorrowReturnMutableNodeRefList&	value)
 
 
 bool
-XNodeSetAllocator::destroy(nodeset_type*	theNodeSet)
+XNodeSetAllocator::destroy(nodeset_type*    theNodeSet)
 {
-	return m_allocator.destroyObject(theNodeSet);
+    return m_allocator.destroyObject(theNodeSet);
 }
 
 
@@ -68,7 +68,7 @@ XNodeSetAllocator::destroy(nodeset_type*	theNodeSet)
 void 
 XNodeSetAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

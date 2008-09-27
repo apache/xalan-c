@@ -42,65 +42,65 @@ class ElemWithParam : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:with-param" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemWithParam(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:with-param" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemWithParam(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemWithParam();
+    virtual
+    ~ElemWithParam();
 
-	/**
-	 * Retrieves qualified name of object
-	 *
-	 * @return qualified name
-	 */
-	const XalanQName&
-	getQName() const
-	{
-		assert(m_qname != 0);
+    /**
+     * Retrieves qualified name of object
+     *
+     * @return qualified name
+     */
+    const XalanQName&
+    getQName() const
+    {
+        assert(m_qname != 0);
 
-		return *m_qname;
-	}
+        return *m_qname;
+    }
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement* 
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement* 
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 #endif
 
 
 private:
 
-	// not implemented
-	ElemWithParam(const ElemWithParam&);
+    // not implemented
+    ElemWithParam(const ElemWithParam&);
 
-	ElemWithParam&
-	operator=(const ElemWithParam&);
+    ElemWithParam&
+    operator=(const ElemWithParam&);
 
-	// Data members...
-	const XPath*		m_selectPattern;
+    // Data members...
+    const XPath*        m_selectPattern;
 
-	const XalanQName*	m_qname;
+    const XalanQName*   m_qname;
 };
 
 
@@ -109,4 +109,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMWITHPARAM_HEADER_GUARD
+#endif  // XALAN_ELEMWITHPARAM_HEADER_GUARD

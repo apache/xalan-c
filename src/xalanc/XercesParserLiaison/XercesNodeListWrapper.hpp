@@ -44,40 +44,40 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNodeListWrapper : public XalanNodeL
 {
 public:
 
-	XercesNodeListWrapper(
-			const DOMNodeListType*			theXercesNodeList,
-			const XercesWrapperNavigator&	theNavigator);
+    XercesNodeListWrapper(
+            const DOMNodeListType*          theXercesNodeList,
+            const XercesWrapperNavigator&   theNavigator);
 
-	XercesNodeListWrapper(const XercesNodeListWrapper&	theSource);
+    XercesNodeListWrapper(const XercesNodeListWrapper&  theSource);
 
-	virtual
-	~XercesNodeListWrapper();
+    virtual
+    ~XercesNodeListWrapper();
 
-	bool
-	operator==(const XercesNodeListWrapper& 	theRHS) const
-	{
-		return m_xercesNodeList == theRHS.m_xercesNodeList ? true : false;
-	}
+    bool
+    operator==(const XercesNodeListWrapper&     theRHS) const
+    {
+        return m_xercesNodeList == theRHS.m_xercesNodeList ? true : false;
+    }
 
     // These interfaces are inherited from XalanNodeList...
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
 private:
 
-	// Not implemented...
-	XercesNodeListWrapper&
-	operator=(const XercesNodeListWrapper&	theRHS);
+    // Not implemented...
+    XercesNodeListWrapper&
+    operator=(const XercesNodeListWrapper&  theRHS);
 
 
-	// Data members...
-	const DOMNodeListType*			m_xercesNodeList;
+    // Data members...
+    const DOMNodeListType*          m_xercesNodeList;
 
-	const XercesWrapperNavigator&	m_navigator;
+    const XercesWrapperNavigator&   m_navigator;
 };
 
 
@@ -86,4 +86,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESNODELISTWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESNODELISTWRAPPER_HEADER_GUARD_1357924680)

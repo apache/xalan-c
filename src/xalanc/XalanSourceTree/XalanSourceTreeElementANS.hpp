@@ -36,66 +36,66 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementANS : public XalanSourc
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theTagName The tag name of the element
-	 * @param theLocalName The local name of the attribute
-	 * @param theNamespaceURI The namespace URI of the attribute
-	 * @param thePrefix The namespace prefix of the attribute
-	 * @param theOwnerDocument The document that owns the instance
-	 * @param theAttributes An array of pointers to the attribute instances for the element
-	 * @param theAttributeCount The number of attributes.
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The previous sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeElementANS(
+    /**
+     * Constructor.
+     *
+     * @param theTagName The tag name of the element
+     * @param theLocalName The local name of the attribute
+     * @param theNamespaceURI The namespace URI of the attribute
+     * @param thePrefix The namespace prefix of the attribute
+     * @param theOwnerDocument The document that owns the instance
+     * @param theAttributes An array of pointers to the attribute instances for the element
+     * @param theAttributeCount The number of attributes.
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The previous sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeElementANS(
             MemoryManager&              theManager,
-			const XalanDOMString&		theTagName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			XalanSize_t			        theAttributeCount,
-			XalanNode*					theParentNode = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			IndexType					theIndex = 0);
+            const XalanDOMString&       theTagName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanSourceTreeAttr**       theAttributes,
+            XalanSize_t                 theAttributeCount,
+            XalanNode*                  theParentNode = 0,
+            XalanNode*                  thePreviousSibling = 0,
+            XalanNode*                  theNextSibling = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeElementANS();
+    virtual
+    ~XalanSourceTreeElementANS();
 
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
 private:
 
-	// Not implemented...
+    // Not implemented...
     XalanSourceTreeElementANS(const XalanSourceTreeElementANS&);
 
-	XalanSourceTreeElementANS&
-	operator=(const XalanSourceTreeElementANS&	theSource);
+    XalanSourceTreeElementANS&
+    operator=(const XalanSourceTreeElementANS&  theSource);
 
-	bool
-	operator==(const XalanSourceTreeElementANS&	theRHS) const;
+    bool
+    operator==(const XalanSourceTreeElementANS& theRHS) const;
 
 
-	// Data members...
-	const XalanDOMString&	m_localName;
+    // Data members...
+    const XalanDOMString&   m_localName;
 
-	const XalanDOMString&	m_prefix;
+    const XalanDOMString&   m_prefix;
 
-	const XalanDOMString&	m_namespaceURI;
+    const XalanDOMString&   m_namespaceURI;
 };
 
 
@@ -104,4 +104,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEELEMENTANS_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEELEMENTANS_HEADER_GUARD_1357924680)

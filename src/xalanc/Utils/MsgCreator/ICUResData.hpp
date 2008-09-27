@@ -54,19 +54,19 @@ static const char* szApacheLicense[]=
 
 static const char* szStartDataFile[]=
 {
- "	{\n",
+ "  {\n",
  INVK_MAKE_STRING(XALAN_PRODUCT),
- " 		{\n",
- "			\"Dummy data\",\n",
+ "      {\n",
+ "          \"Dummy data\",\n",
 0};
 static const char* szEndDataFile[]=
 {
- " \n		}"
+ " \n       }"
  " \n}",
 0};
 static const char* szBeginOfLineInDataFile[]=
 {
- "				\"",
+ "              \"",
 0};
 
 static const char* szEndOfLineInDataFile[]=

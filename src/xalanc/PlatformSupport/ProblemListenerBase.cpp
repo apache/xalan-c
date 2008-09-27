@@ -53,11 +53,11 @@ ProblemListenerBase::~ProblemListenerBase()
 void
 ProblemListenerBase::defaultFormat(
             PrintWriter&            pw,
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     MemoryManager&  theManager = pw.getMemoryManager();
 
@@ -101,10 +101,10 @@ ProblemListenerBase::defaultFormat(
 void
 ProblemListenerBase::defaultFormat(
             PrintWriter&            pw,
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     MemoryManager&  theManager = pw.getMemoryManager();
 

@@ -41,44 +41,44 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionHasSameNodes : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionHasSameNodes();
+    FunctionHasSameNodes();
 
-	virtual
-	~FunctionHasSameNodes();
+    virtual
+    ~FunctionHasSameNodes();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionHasSameNodes*
+    virtual FunctionHasSameNodes*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionHasSameNodes&
-	operator=(const FunctionHasSameNodes&);
+    // Not implemented...
+    FunctionHasSameNodes&
+    operator=(const FunctionHasSameNodes&);
 
-	bool
-	operator==(const FunctionHasSameNodes&) const;
+    bool
+    operator==(const FunctionHasSameNodes&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONHASSAMENODES_HEADER_GUARD_1357924680
+#endif  // FUNCTIONHASSAMENODES_HEADER_GUARD_1357924680

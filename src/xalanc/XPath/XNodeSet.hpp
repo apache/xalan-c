@@ -45,63 +45,63 @@ class XALAN_XPATH_EXPORT XNodeSet : public XNodeSetBase
 {
 public:
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
 
-	/**
-	 * Create an XNodeSet from a node list.
-	 *
-	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
-	 * @param theMemoryManager The MemoryManager for the instance.
-	 */
-	XNodeSet(
-            BorrowReturnMutableNodeRefList&	    value,
+    /**
+     * Create an XNodeSet from a node list.
+     *
+     * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
+     * @param theMemoryManager The MemoryManager for the instance.
+     */
+    XNodeSet(
+            BorrowReturnMutableNodeRefList&     value,
             MemoryManager&                      theMemoryManager);
-	/**
-	 * Create an XNodeSet from another.
-	 *
-	 * @param source    object to copy
-	 * @param theMemoryManager The MemoryManager for the instance.
-	 */
-	XNodeSet(
-			const XNodeSet&		source,
+    /**
+     * Create an XNodeSet from another.
+     *
+     * @param source    object to copy
+     * @param theMemoryManager The MemoryManager for the instance.
+     */
+    XNodeSet(
+            const XNodeSet&     source,
             MemoryManager&      theMemoryManager);
 
-	virtual
-	~XNodeSet();
+    virtual
+    ~XNodeSet();
 
-	// These methods are inherited from XNodeSetBase...
+    // These methods are inherited from XNodeSetBase...
 
-	virtual const NodeRefListBase&
-	nodeset() const;
+    virtual const NodeRefListBase&
+    nodeset() const;
 
-	virtual XalanNode*
-	item(size_type	index) const;
+    virtual XalanNode*
+    item(size_type  index) const;
 
-	virtual size_type
-	getLength() const;
+    virtual size_type
+    getLength() const;
 
-	/**
-	 * Release the node set held by the instance.
-	 */
-	void
-	release();
+    /**
+     * Release the node set held by the instance.
+     */
+    void
+    release();
 
-	/**
-	 * Change the value of an XNodeSet
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(BorrowReturnMutableNodeRefList&		value);
+    /**
+     * Change the value of an XNodeSet
+     *
+     * @param theValue The new value.
+     */
+    void
+    set(BorrowReturnMutableNodeRefList&     value);
 
 private:
 
-	// Not implemented...
-	XNodeSet&
-	operator=(const XNodeSet&);
+    // Not implemented...
+    XNodeSet&
+    operator=(const XNodeSet&);
 
-	// Data members...
-	BorrowReturnMutableNodeRefList				m_value;
+    // Data members...
+    BorrowReturnMutableNodeRefList              m_value;
 };
 
 
@@ -110,4 +110,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNODESET_HEADER_GUARD_1357924680
+#endif  // XNODESET_HEADER_GUARD_1357924680

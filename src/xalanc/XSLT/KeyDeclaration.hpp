@@ -44,130 +44,130 @@ class KeyDeclaration
 {
 public:
 
-	/**
-	 * Construct an object containing attributes of an "xsl:key" element
-	 * 
-	 * @param qname name of element
-	 * @param matchPattern XPath for "match" attribute
-	 * @param use XPath for "use" attribute
-	 */
-	KeyDeclaration(
-			const XalanQName&			qname,
-			const XPath&				matchPattern,
-			const XPath&				use,
-			const XalanDOMString&		uri,
-			XalanFileLoc	            lineNumber,
-			XalanFileLoc	            columnNumber) :
-		m_qname(&qname),
-		m_match(&matchPattern),
-		m_use(&use),
-		m_uri(&uri),
-		m_lineNumber(lineNumber),
-		m_columnNumber(columnNumber)
-	{
-	}
+    /**
+     * Construct an object containing attributes of an "xsl:key" element
+     * 
+     * @param qname name of element
+     * @param matchPattern XPath for "match" attribute
+     * @param use XPath for "use" attribute
+     */
+    KeyDeclaration(
+            const XalanQName&           qname,
+            const XPath&                matchPattern,
+            const XPath&                use,
+            const XalanDOMString&       uri,
+            XalanFileLoc                lineNumber,
+            XalanFileLoc                columnNumber) :
+        m_qname(&qname),
+        m_match(&matchPattern),
+        m_use(&use),
+        m_uri(&uri),
+        m_lineNumber(lineNumber),
+        m_columnNumber(columnNumber)
+    {
+    }
 
-	explicit
-	KeyDeclaration() :
-		m_qname(0),
-		m_match(0),
-		m_use(0),
-		m_uri(0),
-		m_lineNumber(0),
-		m_columnNumber(0)
-	{
-	}
+    explicit
+    KeyDeclaration() :
+        m_qname(0),
+        m_match(0),
+        m_use(0),
+        m_uri(0),
+        m_lineNumber(0),
+        m_columnNumber(0)
+    {
+    }
 
-	KeyDeclaration(const KeyDeclaration&	theSource) :
-		m_qname(theSource.m_qname),
-		m_match(theSource.m_match),
-		m_use(theSource.m_use)
-	{
-	}
+    KeyDeclaration(const KeyDeclaration&    theSource) :
+        m_qname(theSource.m_qname),
+        m_match(theSource.m_match),
+        m_use(theSource.m_use)
+    {
+    }
 
-	~KeyDeclaration()
-	{
-	}
+    ~KeyDeclaration()
+    {
+    }
 
-	/**
-	 * Retrieves name of element
-	 * 
-	 * @return name string
-	 */
-	const XalanQName*
-	getQName() const
-	{
-		return m_qname;
-	}
+    /**
+     * Retrieves name of element
+     * 
+     * @return name string
+     */
+    const XalanQName*
+    getQName() const
+    {
+        return m_qname;
+    }
 
-	/**
-	 * Retrieves "use" XPath
-	 * 
-	 * @return XPath for "use" attribute
-	 */
-	const XPath*
-	getUse() const
-	{
-		return m_use;
-	}
+    /**
+     * Retrieves "use" XPath
+     * 
+     * @return XPath for "use" attribute
+     */
+    const XPath*
+    getUse() const
+    {
+        return m_use;
+    }
 
-	/**
-	 * Retrieves "match" XPath
-	 * 
-	 * @return XPath for "match" attribute
-	 */
-	const XPath*
-	getMatchPattern() const
-	{
-		return m_match;
-	}
+    /**
+     * Retrieves "match" XPath
+     * 
+     * @return XPath for "match" attribute
+     */
+    const XPath*
+    getMatchPattern() const
+    {
+        return m_match;
+    }
 
-	/**
-	 * Retrieves the URI.
-	 * 
-	 * @return A pointer to a URI string.
-	 */
-	const XalanDOMString*
-	getURI() const
-	{
-		return m_uri;
-	}
+    /**
+     * Retrieves the URI.
+     * 
+     * @return A pointer to a URI string.
+     */
+    const XalanDOMString*
+    getURI() const
+    {
+        return m_uri;
+    }
 
-	/**
-	 * Retrieves the line number where the xsl:key element occurred.
-	 *
-	 * @return The line number
-	 */
-	XalanFileLoc
-	getLineNumber() const
-	{
-		return m_lineNumber;
-	}
+    /**
+     * Retrieves the line number where the xsl:key element occurred.
+     *
+     * @return The line number
+     */
+    XalanFileLoc
+    getLineNumber() const
+    {
+        return m_lineNumber;
+    }
 
-	/**
-	 * Retrieves the column number where the xsl:key element occurred.
-	 *
-	 * @return The column number
-	 */
-	XalanFileLoc
-	getColumnNumber() const
-	{
-		return m_columnNumber;
-	}
+    /**
+     * Retrieves the column number where the xsl:key element occurred.
+     *
+     * @return The column number
+     */
+    XalanFileLoc
+    getColumnNumber() const
+    {
+        return m_columnNumber;
+    }
 
 private:
 
-	const XalanQName*			m_qname;
+    const XalanQName*           m_qname;
 
-	const XPath*				m_match;
+    const XPath*                m_match;
 
-	const XPath*				m_use;
+    const XPath*                m_use;
 
-	const XalanDOMString*		m_uri;
+    const XalanDOMString*       m_uri;
 
-	XalanFileLoc	            m_lineNumber;
+    XalanFileLoc                m_lineNumber;
 
-	XalanFileLoc                m_columnNumber;
+    XalanFileLoc                m_columnNumber;
 };
 
 
@@ -176,4 +176,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_KEYDECLARATION_HEADER_GUARD
+#endif  // XALAN_KEYDECLARATION_HEADER_GUARD

@@ -41,45 +41,45 @@ class XALAN_XPATH_EXPORT FunctionContains : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionContains();
+    FunctionContains();
 
-	virtual
-	~FunctionContains();
+    virtual
+    ~FunctionContains();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			const XObjectPtr			arg1,
-			const XObjectPtr			arg2,
-			const LocatorType*			locator) const;
+    XObjectPtr
+    execute(
+            XPathExecutionContext&      executionContext,
+            XalanNode*                  context,
+            const XObjectPtr            arg1,
+            const XObjectPtr            arg2,
+            const LocatorType*          locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionContains*
+    virtual FunctionContains*
 #endif
     clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionContains&
-	operator=(const FunctionContains&);
+    // Not implemented...
+    FunctionContains&
+    operator=(const FunctionContains&);
 
-	bool
-	operator==(const FunctionContains&) const;
+    bool
+    operator==(const FunctionContains&) const;
 };
 
 
@@ -88,4 +88,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONCONTAINS_HEADER_GUARD_1357924680
+#endif  // FUNCTIONCONTAINS_HEADER_GUARD_1357924680

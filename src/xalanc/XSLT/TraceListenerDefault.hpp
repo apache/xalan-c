@@ -49,104 +49,104 @@ class XALAN_XSLT_EXPORT TraceListenerDefault : public TraceListener
 {
 public:
 
-	TraceListenerDefault(
-			PrintWriter&	        thePrintWriter,
+    TraceListenerDefault(
+            PrintWriter&            thePrintWriter,
             MemoryManager&          theManager,
-			bool			        traceTemplates = false,
-			bool			        traceElements = false,
-			bool			        traceGeneration = false,
-			bool			        traceSelection = false);
+            bool                    traceTemplates = false,
+            bool                    traceElements = false,
+            bool                    traceGeneration = false,
+            bool                    traceSelection = false);
 
-	TraceListenerDefault(
+    TraceListenerDefault(
             XPathExecutionContext&  theExecutionContext,
-			PrintWriter&	        thePrintWriter,
+            PrintWriter&            thePrintWriter,
             MemoryManager&          theManager,
-			bool			        traceTemplates = false,
-			bool			        traceElements = false,
-			bool			        traceGeneration = false,
-			bool			        traceSelection = false);
+            bool                    traceTemplates = false,
+            bool                    traceElements = false,
+            bool                    traceGeneration = false,
+            bool                    traceSelection = false);
 
-	virtual
-	~TraceListenerDefault();
+    virtual
+    ~TraceListenerDefault();
 
-	virtual void
-	trace(const TracerEvent&	ev);
+    virtual void
+    trace(const TracerEvent&    ev);
 
-	virtual void
-	selected(const SelectionEvent&	ev);
+    virtual void
+    selected(const SelectionEvent&  ev);
 
-	virtual void
-	generated(const GenerateEvent&	ev);
+    virtual void
+    generated(const GenerateEvent&  ev);
 
-	bool
-	getTraceTemplates() const
-	{
-		return m_traceTemplates;
-	}
+    bool
+    getTraceTemplates() const
+    {
+        return m_traceTemplates;
+    }
 
-	void
-	setTraceTemplates(bool	b)
-	{
-		m_traceTemplates = b;
-	}
+    void
+    setTraceTemplates(bool  b)
+    {
+        m_traceTemplates = b;
+    }
 
-	bool
-	getTraceElement() const
-	{
-		return m_traceElements;
-	}
+    bool
+    getTraceElement() const
+    {
+        return m_traceElements;
+    }
 
-	void
-	setTraceElements(bool	b)
-	{
-		m_traceElements = b;
-	}
+    void
+    setTraceElements(bool   b)
+    {
+        m_traceElements = b;
+    }
 
-	bool
-	getTraceGeneration() const
-	{
-		return m_traceGeneration;
-	}
+    bool
+    getTraceGeneration() const
+    {
+        return m_traceGeneration;
+    }
 
-	void
-	setTraceGeneration(bool		b)
-	{
-		m_traceGeneration = b;
-	}
+    void
+    setTraceGeneration(bool     b)
+    {
+        m_traceGeneration = b;
+    }
 
-	bool
-	getTraceSelection() const
-	{
-		return m_traceSelection;
-	}
+    bool
+    getTraceSelection() const
+    {
+        return m_traceSelection;
+    }
 
-	void
-	setTraceSelection(bool	b)
-	{
-		m_traceSelection = b;
-	}
+    void
+    setTraceSelection(bool  b)
+    {
+        m_traceSelection = b;
+    }
 
 private:
 
-	void
-	processNodeList(const NodeRefListBase&	nl);
+    void
+    processNodeList(const NodeRefListBase&  nl);
 
-	void
-	printNodeInfo(const ElemTemplateElement&	node);
+    void
+    printNodeInfo(const ElemTemplateElement&    node);
 
 
-	// Data members...
+    // Data members...
     XPathExecutionContext*  m_executionContext;
 
-	PrintWriter&	        m_printWriter;
+    PrintWriter&            m_printWriter;
 
-	bool			        m_traceTemplates;
+    bool                    m_traceTemplates;
 
-	bool			        m_traceElements;
+    bool                    m_traceElements;
 
-	bool			        m_traceGeneration;
+    bool                    m_traceGeneration;
 
-	bool			        m_traceSelection;
+    bool                    m_traceSelection;
 
     MemoryManager&          m_memoryManager;
 };

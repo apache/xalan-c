@@ -38,68 +38,68 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanUTF16Transcoder : public XalanOutputTran
 {
 public:
 
-	explicit
-	XalanUTF16Transcoder(MemoryManager& theManager);
+    explicit
+    XalanUTF16Transcoder(MemoryManager& theManager);
 
     static XalanUTF16Transcoder*
     create(MemoryManager& theManager);
 
-	virtual
-	~XalanUTF16Transcoder();
+    virtual
+    ~XalanUTF16Transcoder();
 
-	/**
-	 * Transcode data from UTF-16 to UTF-16.
-	 *
-	 * @param theSourceData The source data to transcode
-	 * @param theSourceCount The length of the source data.
-	 * @param theResult The error code, if any.
-	 * @param theTarget The target array for storing the transcoded data.
-	 * @param theTargetSize The number of characters that can be stored in the target.
-	 * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
-	 * @param theTargetBytesUsed The number of characters stored in the target array
-	 * @return The result code.
-	 */
-	virtual eCode
-	transcode(
-			const XalanDOMChar*		theSourceData,
-			size_type					theSourceCount,
-			XalanXMLByte*			theTarget,
-			size_type					theTargetSize,
-			size_type&					theSourceCharsTranscoded,
-			size_type&					theTargetBytesUsed);
+    /**
+     * Transcode data from UTF-16 to UTF-16.
+     *
+     * @param theSourceData The source data to transcode
+     * @param theSourceCount The length of the source data.
+     * @param theResult The error code, if any.
+     * @param theTarget The target array for storing the transcoded data.
+     * @param theTargetSize The number of characters that can be stored in the target.
+     * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
+     * @param theTargetBytesUsed The number of characters stored in the target array
+     * @return The result code.
+     */
+    virtual eCode
+    transcode(
+            const XalanDOMChar*     theSourceData,
+            size_type                   theSourceCount,
+            XalanXMLByte*           theTarget,
+            size_type                   theTargetSize,
+            size_type&                  theSourceCharsTranscoded,
+            size_type&                  theTargetBytesUsed);
 
-	/**
-	 * Transcode data from UTF-16 to UTF-16.
-	 *
-	 * @param theSourceData The source data to transcode
-	 * @param theSourceCount The length of the source data.
-	 * @param theResult The error code, if any.
-	 * @param theTarget The target array for storing the transcoded data.
-	 * @param theTargetSize The number of characters that can be stored in the target.
-	 * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
-	 * @param theTargetBytesUsed The number of characters stored in the target array
-	 * @return The result code.
-	 */
-	virtual eCode
-	transcode(
-			const XalanXMLByte*		theSourceData,
-			size_type					theSourceCount,
-			XalanDOMChar*			theTarget,
-			size_type					theTargetSize,
-			size_type&					theSourceCharsTranscoded,
-			size_type&					theTargetBytesUsed,
-			unsigned char*			theCharSizes);
+    /**
+     * Transcode data from UTF-16 to UTF-16.
+     *
+     * @param theSourceData The source data to transcode
+     * @param theSourceCount The length of the source data.
+     * @param theResult The error code, if any.
+     * @param theTarget The target array for storing the transcoded data.
+     * @param theTargetSize The number of characters that can be stored in the target.
+     * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
+     * @param theTargetBytesUsed The number of characters stored in the target array
+     * @return The result code.
+     */
+    virtual eCode
+    transcode(
+            const XalanXMLByte*     theSourceData,
+            size_type                   theSourceCount,
+            XalanDOMChar*           theTarget,
+            size_type                   theTargetSize,
+            size_type&                  theSourceCharsTranscoded,
+            size_type&                  theTargetBytesUsed,
+            unsigned char*          theCharSizes);
 
-	virtual bool
-	canTranscodeTo(XalanUnicodeChar     theChar) const;
+    virtual bool
+    canTranscodeTo(XalanUnicodeChar     theChar) const;
 
 private:
 
-	// Not implemented...
-	XalanUTF16Transcoder(const XalanUTF16Transcoder&);
+    // Not implemented...
+    XalanUTF16Transcoder(const XalanUTF16Transcoder&);
 
-	XalanUTF16Transcoder&
-	operator=(const XalanUTF16Transcoder&);
+    XalanUTF16Transcoder&
+    operator=(const XalanUTF16Transcoder&);
 };
 
 
@@ -108,4 +108,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANUTF16TRANSCODER_HEADER_GUARD_1357924680
+#endif  // XALANUTF16TRANSCODER_HEADER_GUARD_1357924680

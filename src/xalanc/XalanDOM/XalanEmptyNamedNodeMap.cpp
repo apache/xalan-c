@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanEmptyNamedNodeMap::XalanEmptyNamedNodeMap() :
-	XalanNamedNodeMap()
+    XalanNamedNodeMap()
 {
 }
 
@@ -40,60 +40,60 @@ XalanEmptyNamedNodeMap::~XalanEmptyNamedNodeMap()
 
 
 
-XalanEmptyNamedNodeMap::XalanEmptyNamedNodeMap(const XalanEmptyNamedNodeMap&	theSource) :
-	XalanNamedNodeMap(theSource)
+XalanEmptyNamedNodeMap::XalanEmptyNamedNodeMap(const XalanEmptyNamedNodeMap&    theSource) :
+    XalanNamedNodeMap(theSource)
 {
 }
 
 
 
 XalanEmptyNamedNodeMap&
-XalanEmptyNamedNodeMap::operator=(const XalanEmptyNamedNodeMap&		theSource)
+XalanEmptyNamedNodeMap::operator=(const XalanEmptyNamedNodeMap&     theSource)
 {
-	XalanNamedNodeMap::operator=(theSource);
+    XalanNamedNodeMap::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanEmptyNamedNodeMap::operator==(const XalanEmptyNamedNodeMap&	/* theRHS */) const
+XalanEmptyNamedNodeMap::operator==(const XalanEmptyNamedNodeMap&    /* theRHS */) const
 {
-	return true;
+    return true;
 }
 
 
 
 XalanNode*
-XalanEmptyNamedNodeMap::item(XalanSize_t	/* index */) const
+XalanEmptyNamedNodeMap::item(XalanSize_t    /* index */) const
 {
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
-XalanEmptyNamedNodeMap::getNamedItem(const XalanDOMString& 	/* name */) const
+XalanEmptyNamedNodeMap::getNamedItem(const XalanDOMString&  /* name */) const
 {
-	return 0;
+    return 0;
 }
 
 
 XalanSize_t
 XalanEmptyNamedNodeMap::getLength() const
 {
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
 XalanEmptyNamedNodeMap::getNamedItemNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
+            const XalanDOMString&   /* namespaceURI */,
+            const XalanDOMString&   /* localName */) const
 {
-	return 0;
+    return 0;
 }
 
 

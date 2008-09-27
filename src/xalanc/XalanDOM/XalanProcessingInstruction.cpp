@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanProcessingInstruction::XalanProcessingInstruction() :
-	XalanNode()
+    XalanNode()
 {
 }
 
@@ -36,27 +36,27 @@ XalanProcessingInstruction::~XalanProcessingInstruction()
 
 
 
-XalanProcessingInstruction::XalanProcessingInstruction(const XalanProcessingInstruction&	theSource) :
-	XalanNode(theSource)
+XalanProcessingInstruction::XalanProcessingInstruction(const XalanProcessingInstruction&    theSource) :
+    XalanNode(theSource)
 {
 }
 
 
 
 XalanProcessingInstruction&
-XalanProcessingInstruction::operator=(const XalanProcessingInstruction&	theSource)
+XalanProcessingInstruction::operator=(const XalanProcessingInstruction& theSource)
 {
-	XalanNode::operator=(theSource);
+    XalanNode::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanProcessingInstruction::operator==(const XalanProcessingInstruction&	/* theRHS */) const
+XalanProcessingInstruction::operator==(const XalanProcessingInstruction&    /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

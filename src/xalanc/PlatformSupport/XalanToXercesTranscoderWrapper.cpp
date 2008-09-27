@@ -29,7 +29,7 @@
 #include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLException		XMLExceptionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLException     XMLExceptionType;
 
 
 
@@ -37,14 +37,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&	theTranscoder) :
-	XalanOutputTranscoder(theManager),
-	m_transcoder(&theTranscoder)
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&    theTranscoder) :
+    XalanOutputTranscoder(theManager),
+    m_transcoder(&theTranscoder)
 {
 }
 
 XalanToXercesTranscoderWrapper*
-XalanToXercesTranscoderWrapper::create(MemoryManager& theManager, XMLTranscoderType&	theTranscoder)
+XalanToXercesTranscoderWrapper::create(MemoryManager& theManager, XMLTranscoderType&    theTranscoder)
 {
     typedef XalanToXercesTranscoderWrapper ThisType;
 
@@ -62,79 +62,79 @@ XalanToXercesTranscoderWrapper::create(MemoryManager& theManager, XMLTranscoderT
 
 XalanToXercesTranscoderWrapper::~XalanToXercesTranscoderWrapper()
 {
-	delete m_transcoder;
+    delete m_transcoder;
 }
 
 
 
 XalanToXercesTranscoderWrapper::eCode
 XalanToXercesTranscoderWrapper::transcode(
-			const XalanDOMChar*		theSourceData,
-			size_type				theSourceCount,
-			XalanXMLByte*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed)
+            const XalanDOMChar*     theSourceData,
+            size_type               theSourceCount,
+            XalanXMLByte*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed)
 {
-	eCode	theCode = XalanTranscodingServices::OK;
+    eCode   theCode = XalanTranscodingServices::OK;
 
-	try
-	{
-		theTargetBytesUsed = m_transcoder->transcodeTo(
-			theSourceData,
-			theSourceCount,
-			theTarget,
-			theTargetSize,
-			theSourceCharsTranscoded,
-			// $$$ ToDo: Eventually, we're going to want to
-			// replace this with UnRep_Throw, and let the
-			// caller try to recover.
-//			XMLTranscoderType::UnRep_Throw);
-			XMLTranscoderType::UnRep_RepChar);
-	}
-	catch(const XMLExceptionType&)
-	{
-		theSourceCharsTranscoded = 0;
-		theTargetBytesUsed = 0;
-		theCode = XalanTranscodingServices::InternalFailure;
-	}
+    try
+    {
+        theTargetBytesUsed = m_transcoder->transcodeTo(
+            theSourceData,
+            theSourceCount,
+            theTarget,
+            theTargetSize,
+            theSourceCharsTranscoded,
+            // $$$ ToDo: Eventually, we're going to want to
+            // replace this with UnRep_Throw, and let the
+            // caller try to recover.
+//          XMLTranscoderType::UnRep_Throw);
+            XMLTranscoderType::UnRep_RepChar);
+    }
+    catch(const XMLExceptionType&)
+    {
+        theSourceCharsTranscoded = 0;
+        theTargetBytesUsed = 0;
+        theCode = XalanTranscodingServices::InternalFailure;
+    }
 
-	return theCode;
+    return theCode;
 }
 
 
 
 XalanToXercesTranscoderWrapper::eCode
 XalanToXercesTranscoderWrapper::transcode(
-			const XalanXMLByte*		theSourceData,
-			size_type				theSourceCount,
-			XalanDOMChar*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed,
-			unsigned char*			theCharSizes)
+            const XalanXMLByte*     theSourceData,
+            size_type               theSourceCount,
+            XalanDOMChar*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed,
+            unsigned char*          theCharSizes)
 {
-	eCode	theCode = XalanTranscodingServices::OK;
+    eCode   theCode = XalanTranscodingServices::OK;
 
-	try
-	{
-		theTargetBytesUsed =
-				m_transcoder->transcodeFrom(
-			theSourceData,
-			theSourceCount,
-			theTarget,
-			theTargetSize,
-			theSourceCharsTranscoded,
-			theCharSizes);
-	}
-	catch(const XMLExceptionType&)
-	{
-		theSourceCharsTranscoded = 0;
-		theTargetBytesUsed = 0;
-		theCode = XalanTranscodingServices::InternalFailure;
-	}
+    try
+    {
+        theTargetBytesUsed =
+                m_transcoder->transcodeFrom(
+            theSourceData,
+            theSourceCount,
+            theTarget,
+            theTargetSize,
+            theSourceCharsTranscoded,
+            theCharSizes);
+    }
+    catch(const XMLExceptionType&)
+    {
+        theSourceCharsTranscoded = 0;
+        theTargetBytesUsed = 0;
+        theCode = XalanTranscodingServices::InternalFailure;
+    }
 
-	return theCode;
+    return theCode;
 }
 
 
@@ -142,7 +142,7 @@ XalanToXercesTranscoderWrapper::transcode(
 bool
 XalanToXercesTranscoderWrapper::canTranscodeTo(XalanUnicodeChar     theChar) const
 {
-	return m_transcoder->canTranscodeTo(theChar);
+    return m_transcoder->canTranscodeTo(theChar);
 }
 
 

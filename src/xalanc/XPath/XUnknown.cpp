@@ -166,7 +166,7 @@ XUnknown::str(
 void
 XUnknown::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     theBuffer.append(m_value);
 }

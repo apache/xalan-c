@@ -33,70 +33,70 @@ class XALAN_DOM_EXPORT XalanDocumentFragment : public XalanNode
 {
 public:
 
-	XalanDocumentFragment();
+    XalanDocumentFragment();
 
-	virtual
-	~XalanDocumentFragment();
+    virtual
+    ~XalanDocumentFragment();
 
-	// These interfaces are inherited from XalanNode...
+    // These interfaces are inherited from XalanNode...
 
-	virtual const XalanDOMString&
-	getNodeName() const = 0;
+    virtual const XalanDOMString&
+    getNodeName() const = 0;
 
-	virtual const XalanDOMString&
-	getNodeValue() const = 0;
+    virtual const XalanDOMString&
+    getNodeValue() const = 0;
 
-	virtual NodeType
-	getNodeType() const = 0;
+    virtual NodeType
+    getNodeType() const = 0;
 
-	virtual XalanNode*
-	getParentNode() const = 0;
+    virtual XalanNode*
+    getParentNode() const = 0;
 
-	virtual const XalanNodeList*
-	getChildNodes() const = 0;
+    virtual const XalanNodeList*
+    getChildNodes() const = 0;
 
-	virtual XalanNode*
-	getFirstChild() const = 0;
+    virtual XalanNode*
+    getFirstChild() const = 0;
 
-	virtual XalanNode*
-	getLastChild() const = 0;
+    virtual XalanNode*
+    getLastChild() const = 0;
 
-	virtual XalanNode*
-	getPreviousSibling() const = 0;
+    virtual XalanNode*
+    getPreviousSibling() const = 0;
 
-	virtual XalanNode*
-	getNextSibling() const = 0;
+    virtual XalanNode*
+    getNextSibling() const = 0;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const = 0;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const = 0;
 
-	virtual XalanDocument*
-	getOwnerDocument() const = 0;
+    virtual XalanDocument*
+    getOwnerDocument() const = 0;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const = 0;
+    virtual const XalanDOMString&
+    getNamespaceURI() const = 0;
 
-	virtual const XalanDOMString&
-	getPrefix() const = 0;
+    virtual const XalanDOMString&
+    getPrefix() const = 0;
 
-	virtual const XalanDOMString&
-	getLocalName() const = 0;
+    virtual const XalanDOMString&
+    getLocalName() const = 0;
 
-	virtual bool
-	isIndexed() const = 0;
+    virtual bool
+    isIndexed() const = 0;
 
-	virtual IndexType
-	getIndex() const = 0;
+    virtual IndexType
+    getIndex() const = 0;
 
 protected:
 
-	XalanDocumentFragment(const XalanDocumentFragment&	theSource);
+    XalanDocumentFragment(const XalanDocumentFragment&  theSource);
 
-	XalanDocumentFragment&
-	operator=(const XalanDocumentFragment&	theSource);
+    XalanDocumentFragment&
+    operator=(const XalanDocumentFragment&  theSource);
 
-	bool
-	operator==(const XalanDocumentFragment&		theRHS) const;
+    bool
+    operator==(const XalanDocumentFragment&     theRHS) const;
 
 private:
 };
@@ -107,4 +107,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANDOCUMENTFRAGMENT_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANDOCUMENTFRAGMENT_HEADER_GUARD_1357924680)

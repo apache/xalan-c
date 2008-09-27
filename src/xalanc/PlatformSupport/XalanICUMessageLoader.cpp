@@ -74,12 +74,12 @@
 #endif // _MSC_VER >= 1400
 
 #define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
-									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
-									PACKAGE_NAME_SUFFIX)
+                                    INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
+                                    PACKAGE_NAME_SUFFIX)
 
 #define ICUDLL_ENTRYPOINT_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
-									INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
-									ENTRY_POINT_SUFFIX)
+                                    INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\
+                                    ENTRY_POINT_SUFFIX)
 
 #else // NON-WINDOWS systems
 
@@ -89,7 +89,7 @@
 
 #endif // XALAN_WINDOWS
 
-static const char* const	sPackageName=INVK_MAKE_STRING(PACKAGE_NAME);
+static const char* const    sPackageName=INVK_MAKE_STRING(PACKAGE_NAME);
 
 extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
 
@@ -120,32 +120,32 @@ static const char* domainName = INVK_MAKE_STRING(XALAN_PRODUCT);
 
 
 XalanICUMessageLoader::XalanICUMessageLoader(MemoryManager &theManager):
-	m_localeBundle(0),
-	m_domainBundle(0),
-	m_unknownMessage("The message was not found in the ICU resource bundle.", theManager)
+    m_localeBundle(0),
+    m_domainBundle(0),
+    m_unknownMessage("The message was not found in the ICU resource bundle.", theManager)
 {
- 	UErrorCode err = U_ZERO_ERROR;
+    UErrorCode err = U_ZERO_ERROR;
 
-	udata_setAppData(sPackageName, &ICUDLL_ENTRYPOINT_NAME, &err);
+    udata_setAppData(sPackageName, &ICUDLL_ENTRYPOINT_NAME, &err);
 
-	if (! U_SUCCESS(err))
-	{
-		assert( 0 );
-	}
-	const char* szLocal = XMLMsgLoader::getLocale();
-	if ( szLocal == 0 )
-	{
-		// We failed to get local from Xerces, let's try our own default.
-		szLocal="en_US";
-	}
+    if (! U_SUCCESS(err))
+    {
+        assert( 0 );
+    }
+    const char* szLocal = XMLMsgLoader::getLocale();
+    if ( szLocal == 0 )
+    {
+        // We failed to get local from Xerces, let's try our own default.
+        szLocal="en_US";
+    }
 
-	m_localeBundle = ures_open(sPackageName, szLocal , &err);
-	if (!U_SUCCESS(err) || m_localeBundle == 0)
-	{
-		assert( 0 );
-	}
+    m_localeBundle = ures_open(sPackageName, szLocal , &err);
+    if (!U_SUCCESS(err) || m_localeBundle == 0)
+    {
+        assert( 0 );
+    }
 
-	err = U_ZERO_ERROR;
+    err = U_ZERO_ERROR;
     m_domainBundle = ures_getByKey(m_localeBundle, domainName, 0, &err);
     if (!U_SUCCESS(err) || m_domainBundle == 0)
     {
@@ -157,32 +157,32 @@ XalanICUMessageLoader::XalanICUMessageLoader(MemoryManager &theManager):
 
 XalanICUMessageLoader::~XalanICUMessageLoader()
 {
-	ures_close(m_domainBundle);	
-	ures_close(m_localeBundle);
+    ures_close(m_domainBundle); 
+    ures_close(m_localeBundle);
 }
 
 
 
 bool XalanICUMessageLoader::loadMsg(
             XalanMessages::Codes    msgToLoad,
-            XalanDOMChar*		    toFill,
-			XalanSize_t             maxChars)
+            XalanDOMChar*           toFill,
+            XalanSize_t             maxChars)
 {
    bool bResult = true;
    UErrorCode   err = U_ZERO_ERROR;
    int32_t      strLen = 0;
    
    // Assuming array format
-   const UChar * const	name = ures_getStringByIndex(m_domainBundle, (int32_t)msgToLoad+1, &strLen, &err);
+   const UChar * const  name = ures_getStringByIndex(m_domainBundle, (int32_t)msgToLoad+1, &strLen, &err);
    
    if (!U_SUCCESS(err) || (name == 0))
    {
-	   XalanCopy(m_unknownMessage.c_str(), m_unknownMessage.c_str() + m_unknownMessage.length() + 1, toFill);
+       XalanCopy(m_unknownMessage.c_str(), m_unknownMessage.c_str() + m_unknownMessage.length() + 1, toFill);
 
-	   return false;
+       return false;
    }
 
-   const XalanSize_t	retStrLen =
+   const XalanSize_t    retStrLen =
        static_cast<XalanSize_t>(strLen + 1 ) > maxChars ? maxChars : static_cast<XalanSize_t>(strLen + 1);
 
    XalanCopy(name, name + retStrLen, toFill);

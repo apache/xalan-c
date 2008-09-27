@@ -40,93 +40,93 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementA : public XalanSourceT
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theTagName The tag name of the element
-	 * @param theOwnerDocument The document that owns the instance
-	 * @param theAttributes An array of pointers to the attribute instances for the element
-	 * @param theAttributeCount The number of attributes.
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The previous sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeElementA(
+    /**
+     * Constructor.
+     *
+     * @param theTagName The tag name of the element
+     * @param theOwnerDocument The document that owns the instance
+     * @param theAttributes An array of pointers to the attribute instances for the element
+     * @param theAttributeCount The number of attributes.
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The previous sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeElementA(
             MemoryManager&          theManager,
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			XalanSize_t			        theAttributeCount,
-			XalanNode*					theParentNode = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			IndexType					theIndex = 0);
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanSourceTreeAttr**       theAttributes,
+            XalanSize_t                 theAttributeCount,
+            XalanNode*                  theParentNode = 0,
+            XalanNode*                  thePreviousSibling = 0,
+            XalanNode*                  theNextSibling = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeElementA();
+    virtual
+    ~XalanSourceTreeElementA();
 
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
 
     // public interfaces not inherited from XalanElement...
 
-	XalanSize_t
-	getAttributeCount() const
-	{
-		return m_attributeCount;
-	}
+    XalanSize_t
+    getAttributeCount() const
+    {
+        return m_attributeCount;
+    }
 
-	XalanSourceTreeAttr*
-	getAttributeByIndex(XalanSize_t     index) const
-	{
-		return index < m_attributeCount ? m_attributes[index] : 0;
-	}
+    XalanSourceTreeAttr*
+    getAttributeByIndex(XalanSize_t     index) const
+    {
+        return index < m_attributeCount ? m_attributes[index] : 0;
+    }
 
 private:
 
-	// These are from XalanNamedNodeMap...
+    // These are from XalanNamedNodeMap...
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanNode*
-	getNamedItem(const XalanDOMString& 	name) const;
+    virtual XalanNode*
+    getNamedItem(const XalanDOMString&  name) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
-	virtual XalanNode*
-	getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
+    virtual XalanNode*
+    getNamedItemNS(
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const;
 
 
-	// Not implemented...
+    // Not implemented...
     XalanSourceTreeElementA(const XalanSourceTreeElementA&);
 
-	XalanSourceTreeElementA&
-	operator=(const XalanSourceTreeElementA&);
+    XalanSourceTreeElementA&
+    operator=(const XalanSourceTreeElementA&);
 
-	bool
-	operator==(const XalanSourceTreeElementA&) const;
+    bool
+    operator==(const XalanSourceTreeElementA&) const;
 
 
-	// Data members...
-	XalanSourceTreeAttr* const *	m_attributes;
+    // Data members...
+    XalanSourceTreeAttr* const *    m_attributes;
 
-	const XalanSize_t		        m_attributeCount;
+    const XalanSize_t               m_attributeCount;
 };
 
 
@@ -135,4 +135,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEELEMENTA_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEELEMENTA_HEADER_GUARD_1357924680)

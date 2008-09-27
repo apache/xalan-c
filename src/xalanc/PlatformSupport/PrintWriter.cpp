@@ -29,38 +29,38 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	PrintWriter::s_trueString[] =
+const XalanDOMChar  PrintWriter::s_trueString[] =
 {
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
-const XalanDOMChar	PrintWriter::s_falseString[] =
+const XalanDOMChar  PrintWriter::s_falseString[] =
 {
-	XalanUnicode::charLetter_f,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
-const XalanDOMChar	PrintWriter::s_newlineString[] =
+const XalanDOMChar  PrintWriter::s_newlineString[] =
 {
-	XalanUnicode::charLF,
-	0
+    XalanUnicode::charLF,
+    0
 };
 
 
 
-PrintWriter::PrintWriter( bool	fAutoFlush, MemoryManager& theManager) :
-	Writer(),
-	m_fAutoFlush(fAutoFlush),
+PrintWriter::PrintWriter( bool  fAutoFlush, MemoryManager& theManager) :
+    Writer(),
+    m_fAutoFlush(fAutoFlush),
     m_memoryManager(theManager)
 {
 }

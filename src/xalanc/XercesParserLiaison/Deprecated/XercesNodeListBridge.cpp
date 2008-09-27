@@ -37,11 +37,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesNodeListBridge::XercesNodeListBridge(
-			const DOM_NodeListType&			theXercesNodeList,
-			const XercesBridgeNavigator&	theNavigator) :
-	XalanNodeList(),
-	m_xercesNodeList(theXercesNodeList),
-	m_navigator(theNavigator)
+            const DOM_NodeListType&         theXercesNodeList,
+            const XercesBridgeNavigator&    theNavigator) :
+    XalanNodeList(),
+    m_xercesNodeList(theXercesNodeList),
+    m_navigator(theNavigator)
 {
 }
 
@@ -53,19 +53,19 @@ XercesNodeListBridge::~XercesNodeListBridge()
 
 
 
-XercesNodeListBridge::XercesNodeListBridge(const XercesNodeListBridge&	theSource) :
-	XalanNodeList(theSource),
-	m_xercesNodeList(theSource.m_xercesNodeList),
-	m_navigator(theSource.m_navigator)
+XercesNodeListBridge::XercesNodeListBridge(const XercesNodeListBridge&  theSource) :
+    XalanNodeList(theSource),
+    m_xercesNodeList(theSource.m_xercesNodeList),
+    m_navigator(theSource.m_navigator)
 {
 }
 
 
 
 XalanNode*
-XercesNodeListBridge::item(unsigned int	index) const
+XercesNodeListBridge::item(unsigned int index) const
 {
-	return m_navigator.mapNode(m_xercesNodeList.item(index));
+    return m_navigator.mapNode(m_xercesNodeList.item(index));
 }
 
 
@@ -73,7 +73,7 @@ XercesNodeListBridge::item(unsigned int	index) const
 unsigned int
 XercesNodeListBridge::getLength() const
 {
-	return m_xercesNodeList.getLength();
+    return m_xercesNodeList.getLength();
 }
 
 

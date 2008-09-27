@@ -100,9 +100,9 @@ XALAN_USING_XALAN(XSLTResultTarget)
 
 
 // Used to hold compiled stylesheet and XML source document.
-const XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
-const XalanParsedSource*		glbParsedSource = 0;
-int								glbError = 0;	 
+const XalanCompiledStylesheet*  glbCompiledStylesheet = 0;
+const XalanParsedSource*        glbParsedSource = 0;
+int                             glbError = 0;    
 
 
 
@@ -111,25 +111,25 @@ int								glbError = 0;
 void
 outputMessage(
               theThreadIDType  id,
-			const char	msg[])
+            const char  msg[])
 {
-	ostrstream threadMsg;
-	
-	threadMsg << "\n" << msg << " Thread: " << id << '\0';
+    ostrstream threadMsg;
+    
+    threadMsg << "\n" << msg << " Thread: " << id << '\0';
 
-	cout << threadMsg.str();
+    cout << threadMsg.str();
 
     #if defined(HPUX)
-	threadMsg.rdbuf() -> freeze(false);
+    threadMsg.rdbuf() -> freeze(false);
     #else
-	threadMsg.freeze(false);
+    threadMsg.freeze(false);
     #endif
 }
 
 
 #if defined(_MSC_VER)
 THREADFUNCTIONRETURN
-theThread(LPVOID	param)
+theThread(LPVOID    param)
 #elif defined(XALAN_POSIX2_AVAILABLE)
   void  *theThread(void   *param)
 #endif
@@ -138,9 +138,9 @@ theThread(LPVOID	param)
 // and a binary source tree (glbParsedSource) to perform the 
 // transformation.
 
-	int	theResult = 0;
+    int theResult = 0;
   
-	const size_t	number = reinterpret_cast<size_t>(param);
+    const size_t    number = reinterpret_cast<size_t>(param);
 
 #if defined(_MSC_VER)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
@@ -150,43 +150,43 @@ theThread(LPVOID	param)
 
 #endif
 
-	outputMessage(theThreadID, "Starting ");
+    outputMessage(theThreadID, "Starting ");
 
-	// Create a XalanTransformer.
-	XalanTransformer	theXalanTransformer;
+    // Create a XalanTransformer.
+    XalanTransformer    theXalanTransformer;
 
-	// Generate the output file name for this thread.
-    ostrstream	theFormatterOut;
+    // Generate the output file name for this thread.
+    ostrstream  theFormatterOut;
     theFormatterOut << "birds" << number << ".out" << '\0';
 
-	// Generate the XML output object.
-	const XSLTResultTarget	theResultTarget(XalanDOMString(theFormatterOut.str()));
+    // Generate the XML output object.
+    const XSLTResultTarget  theResultTarget(XalanDOMString(theFormatterOut.str()));
 
-	// Unfreeze the ostrstream, so memory is returned...
+    // Unfreeze the ostrstream, so memory is returned...
      #if defined(HPUX)
         theFormatterOut.rdbuf() -> freeze(false);
      #else
-	theFormatterOut.freeze(false);
+    theFormatterOut.freeze(false);
      #endif
 
-	outputMessage(theThreadID, "Transforming");
+    outputMessage(theThreadID, "Transforming");
 
- 	// Do the transform.
-	theResult = theXalanTransformer.transform(*glbParsedSource, glbCompiledStylesheet, theResultTarget);
+    // Do the transform.
+    theResult = theXalanTransformer.transform(*glbParsedSource, glbCompiledStylesheet, theResultTarget);
 
-	if(theResult != 0)
-	{
-		cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
-			 << endl
-			 << endl;
+    if(theResult != 0)
+    {
+        cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
+             << endl
+             << endl;
 
-		glbError = theResult;
-	}
+        glbError = theResult;
+    }
 
-	outputMessage(theThreadID, "Finishing");
+    outputMessage(theThreadID, "Finishing");
   
   #if defined(_MSC_VER)
-	return (theResult);
+    return (theResult);
   #elif defined(XALAN_POSIX2_AVAILABLE)
         return 0;
   #endif
@@ -203,37 +203,37 @@ doThreads(size_t    nThreads)
     size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
-	XALAN_USING_STD(vector)
+    XALAN_USING_STD(vector)
 
     vector<theThreadType>   hThreads;
 
-	hThreads.reserve(nThreads);
+    hThreads.reserve(nThreads);
 
 #if defined(_MSC_VER)
 
-	for (; i < nThreads; ++i)
-	{
+    for (; i < nThreads; ++i)
+    {
                 theThreadIDType  threadID;
 
                 const theThreadType  hThread = CreateThread(
-				0, 
-				4096,							// Stack size for thread.
-				theThread,						// pointer to thread function
-				reinterpret_cast<LPVOID>(i),	// argument for new thread
-				0,								// creation flags
-				&threadID);
+                0, 
+                4096,                           // Stack size for thread.
+                theThread,                      // pointer to thread function
+                reinterpret_cast<LPVOID>(i),    // argument for new thread
+                0,                              // creation flags
+                &threadID);
 
-		assert(hThread != 0);
+        assert(hThread != 0);
 
-		hThreads.push_back(hThread);
-	}
+        hThreads.push_back(hThread);
+    }
 
-	WaitForMultipleObjects(hThreads.size(), &hThreads[0], TRUE, INFINITE);
+    WaitForMultipleObjects(hThreads.size(), &hThreads[0], TRUE, INFINITE);
 
-	for (i = 0; i < nThreads; ++i)
-	{
-		CloseHandle(hThreads[i]);
-	}
+    for (i = 0; i < nThreads; ++i)
+    {
+        CloseHandle(hThreads[i]);
+    }
 
 #elif defined(XALAN_POSIX2_AVAILABLE)
 
@@ -280,84 +280,84 @@ doThreads(size_t    nThreads)
 
 int
 main(
-			int		argc,
-			char*	/* argv */[])
+            int     argc,
+            char*   /* argv */[])
 {
-	if (argc != 1)
-	{
-		cerr << "Usage: ThreadTest"
-			 << endl
-			 << endl;
-	}
-	else
-	{
-		try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+    if (argc != 1)
+    {
+        cerr << "Usage: ThreadTest"
+             << endl
+             << endl;
+    }
+    else
+    {
+        try
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
 
-			// Call the static initializer for Xerces.
-			XMLPlatformUtils::Initialize();
+            // Call the static initializer for Xerces.
+            XMLPlatformUtils::Initialize();
 
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			{
-				// Create a XalanTransformer.  We won't actually use this to transform --
-				// it's just acting likely a factory for the compiled stylesheet and
-				// pre-parsed source.
-				XalanTransformer	theXalanTransformer;
+            {
+                // Create a XalanTransformer.  We won't actually use this to transform --
+                // it's just acting likely a factory for the compiled stylesheet and
+                // pre-parsed source.
+                XalanTransformer    theXalanTransformer;
 
-				glbError = theXalanTransformer.compileStylesheet("birds.xsl", glbCompiledStylesheet);
+                glbError = theXalanTransformer.compileStylesheet("birds.xsl", glbCompiledStylesheet);
 
-				if (glbError != 0)
-				{
-					cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-				else
-				{
-					assert(glbCompiledStylesheet != 0);
+                if (glbError != 0)
+                {
+                    cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+                else
+                {
+                    assert(glbCompiledStylesheet != 0);
 
-					// Compile the XML source document as well. All threads will use
-					// this binary representation of the source tree.
-					glbError = theXalanTransformer.parseSource("birds.xml", glbParsedSource);
+                    // Compile the XML source document as well. All threads will use
+                    // this binary representation of the source tree.
+                    glbError = theXalanTransformer.parseSource("birds.xml", glbParsedSource);
 
-					if (glbError != 0)
-					{
-						cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
-							 << endl
-							 << endl;
-					}
-					else
-					{
-						assert(glbParsedSource != 0);
+                    if (glbError != 0)
+                    {
+                        cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
+                             << endl
+                             << endl;
+                    }
+                    else
+                    {
+                        assert(glbParsedSource != 0);
 
-						// Create and run the threads...
-						// Each thread uses the same document and 
-						// stylesheet to perform a transformation.
+                        // Create and run the threads...
+                        // Each thread uses the same document and 
+                        // stylesheet to perform a transformation.
                                     doThreads(NUM_THREADS);
 
-					}
-				}
-			}
+                    }
+                }
+            }
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
+            // Terminate Xalan...
+            XalanTransformer::terminate();
 
-			// Terminate Xerces...
-			XMLPlatformUtils::Terminate();
+            // Terminate Xerces...
+            XMLPlatformUtils::Terminate();
 
-			// Clean up the ICU, if it's integrated...
-			XalanTransformer::ICUCleanUp();
-		}
-		catch(...)
-		{
-			cerr << "Initialization failed!" << endl;
+            // Clean up the ICU, if it's integrated...
+            XalanTransformer::ICUCleanUp();
+        }
+        catch(...)
+        {
+            cerr << "Initialization failed!" << endl;
 
-			glbError = -1;
-		}
-	}
+            glbError = -1;
+        }
+    }
 
-	return glbError;
+    return glbError;
 }

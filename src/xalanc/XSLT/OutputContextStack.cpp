@@ -29,14 +29,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 OutputContextStack::OutputContextStack(MemoryManager& theManager) :
-	m_stack(theManager, 1 ),
-	m_stackPosition(m_stack.begin()),
-	m_stackSize(0)
+    m_stack(theManager, 1 ),
+    m_stackPosition(m_stack.begin()),
+    m_stackSize(0)
 {
-	// m_stack is initialized to a size of 1, so that
-	// we always have a dummy entry at the beginning
-	// of the deque.  This makes the implementation
-	// much simpler.
+    // m_stack is initialized to a size of 1, so that
+    // we always have a dummy entry at the beginning
+    // of the deque.  This makes the implementation
+    // much simpler.
 }
 
 
@@ -48,22 +48,22 @@ OutputContextStack::~OutputContextStack()
 
 
 void
-OutputContextStack::pushContext(FormatterListener*	theListener)
+OutputContextStack::pushContext(FormatterListener*  theListener)
 {
-	++m_stackPosition;
-	++m_stackSize;
+    ++m_stackPosition;
+    ++m_stackSize;
 
-	if (m_stackPosition == m_stack.end())
-	{
-		m_stack.resize(m_stack.size() + 1);
+    if (m_stackPosition == m_stack.end())
+    {
+        m_stack.resize(m_stack.size() + 1);
 
-		m_stackPosition = m_stack.end() - 1;
-	}
+        m_stackPosition = m_stack.end() - 1;
+    }
 
-	if (theListener != 0)
-	{
-		(*m_stackPosition).m_flistener  = theListener;
-	}
+    if (theListener != 0)
+    {
+        (*m_stackPosition).m_flistener  = theListener;
+    }
 }
 
 
@@ -71,15 +71,15 @@ OutputContextStack::pushContext(FormatterListener*	theListener)
 void
 OutputContextStack::popContext()
 {
-	assert(m_stackPosition != m_stack.begin());
+    assert(m_stackPosition != m_stack.begin());
 
-	OutputContext&	theCurrentContext = *m_stackPosition;
+    OutputContext&  theCurrentContext = *m_stackPosition;
 
-	theCurrentContext.reset();
+    theCurrentContext.reset();
 
 
-	--m_stackPosition;
-	--m_stackSize;
+    --m_stackPosition;
+    --m_stackSize;
 }
 
 
@@ -87,14 +87,14 @@ OutputContextStack::popContext()
 void
 OutputContextStack::clear()
 {
-	// Since we always keep one dummy entry at the beginning,
-	// swap with an OutputContextStackType instance of size 1.
-	OutputContextStackType	temp( XalanMemMgrs::getDummyMemMgr(), 1);
-	temp.swap(m_stack);
+    // Since we always keep one dummy entry at the beginning,
+    // swap with an OutputContextStackType instance of size 1.
+    OutputContextStackType  temp( XalanMemMgrs::getDummyMemMgr(), 1);
+    temp.swap(m_stack);
 
-	m_stackPosition = m_stack.begin();
+    m_stackPosition = m_stack.begin();
 
-	m_stackSize = 0;
+    m_stackSize = 0;
 }
 
 
@@ -102,12 +102,12 @@ OutputContextStack::clear()
 void
 OutputContextStack::reset()
 {
-	while(m_stackPosition != m_stack.begin())
-	{
-		popContext();
-	}
+    while(m_stackPosition != m_stack.begin())
+    {
+        popContext();
+    }
 
-	assert(empty() == true);
+    assert(empty() == true);
 }
 
 

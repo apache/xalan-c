@@ -35,17 +35,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 double
 XalanMatchPatternData::getPriorityOrDefault() const
 {
-	const double	templatePriority =
-		m_template->getPriority();
+    const double    templatePriority =
+        m_template->getPriority();
 
-	if (DoubleSupport::isNegativeInfinity(templatePriority) == true)
-	{
-		return XPath::getMatchScoreValue(m_priority);
-	}
-	else
-	{
-		return templatePriority;
-	}
+    if (DoubleSupport::isNegativeInfinity(templatePriority) == true)
+    {
+        return XPath::getMatchScoreValue(m_priority);
+    }
+    else
+    {
+        return templatePriority;
+    }
 }
 
 

@@ -40,9 +40,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XStringBase::XStringBase(MemoryManager&  theMemoryManager) :
-	XObject(eTypeString, theMemoryManager),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(*this, theMemoryManager, 0)
+    XObject(eTypeString, theMemoryManager),
+    m_cachedNumberValue(0.0),
+    m_resultTreeFrag(*this, theMemoryManager, 0)
 {
 }
 
@@ -51,9 +51,9 @@ XStringBase::XStringBase(MemoryManager&  theMemoryManager) :
 XStringBase::XStringBase(
             MemoryManager&          theMemoryManager,
             XPathExecutionContext&  theExecutionContext) :
-	XObject(eTypeString, theMemoryManager),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(*this, theMemoryManager, &theExecutionContext)
+    XObject(eTypeString, theMemoryManager),
+    m_cachedNumberValue(0.0),
+    m_resultTreeFrag(*this, theMemoryManager, &theExecutionContext)
 {
 }
 
@@ -62,8 +62,8 @@ XStringBase::XStringBase(
 XStringBase::XStringBase(
             const XStringBase&  source,
             MemoryManager&      theMemoryManager) :
-	XObject(source, theMemoryManager),
-	m_cachedNumberValue(source.m_cachedNumberValue),
+    XObject(source, theMemoryManager),
+    m_cachedNumberValue(source.m_cachedNumberValue),
     m_resultTreeFrag(
         *this,
         theMemoryManager,
@@ -82,7 +82,7 @@ XStringBase::~XStringBase()
 const XalanDOMString&
 XStringBase::getTypeString() const
 {
-	return s_stringString;
+    return s_stringString;
 }
 
 
@@ -90,15 +90,15 @@ XStringBase::getTypeString() const
 double
 XStringBase::num(XPathExecutionContext&     executionContext) const
 {
-	if (m_cachedNumberValue == 0.0)
-	{
-		m_cachedNumberValue =
+    if (m_cachedNumberValue == 0.0)
+    {
+        m_cachedNumberValue =
             DoubleSupport::toDouble(
                 str(executionContext),
                 getMemoryManager());
-	}
+    }
 
-	return m_cachedNumberValue;
+    return m_cachedNumberValue;
 }
 
 
@@ -106,7 +106,7 @@ XStringBase::num(XPathExecutionContext&     executionContext) const
 bool
 XStringBase::boolean(XPathExecutionContext&     executionContext) const
 {
-	return !str(executionContext).empty();
+    return !str(executionContext).empty();
 }
 
 
@@ -114,15 +114,15 @@ XStringBase::boolean(XPathExecutionContext&     executionContext) const
 const XalanDocumentFragment&
 XStringBase::rtree() const
 {
-	return m_resultTreeFrag;
+    return m_resultTreeFrag;
 }
 
 
 
 void
-XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject)
 {
-	theCallbackObject.String(
+    theCallbackObject.String(
         *this,
         str(theCallbackObject.getExecutionContext()));
 }
@@ -130,9 +130,9 @@ XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 
 
 void
-XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject) const
 {
-	theCallbackObject.String(
+    theCallbackObject.String(
         *this,
         str(theCallbackObject.getExecutionContext()));
 }

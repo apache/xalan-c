@@ -42,13 +42,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentFragmentBridge::XercesDocumentFragmentBridge(
-			const DOM_DocumentFragmentType&		theXercesDOMDocumentFragment,
-			const XercesBridgeNavigator&		theNavigator) :
-	XalanDocumentFragment(),
-	m_xercesNode(theXercesDOMDocumentFragment),
-	m_children(theXercesDOMDocumentFragment.getChildNodes(),
-			   theNavigator),
-	m_navigator(theNavigator)
+            const DOM_DocumentFragmentType&     theXercesDOMDocumentFragment,
+            const XercesBridgeNavigator&        theNavigator) :
+    XalanDocumentFragment(),
+    m_xercesNode(theXercesDOMDocumentFragment),
+    m_children(theXercesDOMDocumentFragment.getChildNodes(),
+               theNavigator),
+    m_navigator(theNavigator)
 {
 }
 
@@ -63,7 +63,7 @@ XercesDocumentFragmentBridge::~XercesDocumentFragmentBridge()
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName());
+    return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -71,7 +71,7 @@ XercesDocumentFragmentBridge::getNodeName() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -79,7 +79,7 @@ XercesDocumentFragmentBridge::getNodeValue() const
 XercesDocumentFragmentBridge::NodeType
 XercesDocumentFragmentBridge::getNodeType() const
 {
-	return DOCUMENT_FRAGMENT_NODE;
+    return DOCUMENT_FRAGMENT_NODE;
 }
 
 
@@ -87,7 +87,7 @@ XercesDocumentFragmentBridge::getNodeType() const
 XalanNode*
 XercesDocumentFragmentBridge::getParentNode() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -95,7 +95,7 @@ XercesDocumentFragmentBridge::getParentNode() const
 const XalanNodeList*
 XercesDocumentFragmentBridge::getChildNodes() const
 {
-	return &m_children;
+    return &m_children;
 }
 
 
@@ -103,7 +103,7 @@ XercesDocumentFragmentBridge::getChildNodes() const
 XalanNode*
 XercesDocumentFragmentBridge::getFirstChild() const
 {
-	return m_navigator.getFirstChild(m_xercesNode);
+    return m_navigator.getFirstChild(m_xercesNode);
 }
 
 
@@ -111,7 +111,7 @@ XercesDocumentFragmentBridge::getFirstChild() const
 XalanNode*
 XercesDocumentFragmentBridge::getLastChild() const
 {
-	return m_navigator.getLastChild(m_xercesNode);
+    return m_navigator.getLastChild(m_xercesNode);
 }
 
 
@@ -119,7 +119,7 @@ XercesDocumentFragmentBridge::getLastChild() const
 XalanNode*
 XercesDocumentFragmentBridge::getPreviousSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -127,7 +127,7 @@ XercesDocumentFragmentBridge::getPreviousSibling() const
 XalanNode*
 XercesDocumentFragmentBridge::getNextSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -135,7 +135,7 @@ XercesDocumentFragmentBridge::getNextSibling() const
 const XalanNamedNodeMap*
 XercesDocumentFragmentBridge::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -143,7 +143,7 @@ XercesDocumentFragmentBridge::getAttributes() const
 XalanDocument*
 XercesDocumentFragmentBridge::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -153,15 +153,15 @@ XalanNode*
 #else
 XercesDocumentFragmentBridge*
 #endif
-XercesDocumentFragmentBridge::cloneNode(bool	deep) const
+XercesDocumentFragmentBridge::cloneNode(bool    deep) const
 {
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return m_navigator.cloneNode(this, m_xercesNode, deep);
+    return m_navigator.cloneNode(this, m_xercesNode, deep);
 #else
-	XercesDocumentFragmentBridge* const	theBridge =
-		static_cast<XercesDocumentFragmentBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
+    XercesDocumentFragmentBridge* const theBridge =
+        static_cast<XercesDocumentFragmentBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
-	return theBridge;
+    return theBridge;
 #endif
 }
 
@@ -169,36 +169,36 @@ XercesDocumentFragmentBridge::cloneNode(bool	deep) const
 
 XalanNode*
 XercesDocumentFragmentBridge::insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild)
+            XalanNode*  newChild,
+            XalanNode*  refChild)
 {
-	return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
+    return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
 }
 
 
 
 XalanNode*
 XercesDocumentFragmentBridge::replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild)
+            XalanNode*  newChild,
+            XalanNode*  oldChild)
 {
-	return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
+    return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
 }
 
 
 
 XalanNode*
-XercesDocumentFragmentBridge::removeChild(XalanNode*	oldChild)
+XercesDocumentFragmentBridge::removeChild(XalanNode*    oldChild)
 {
-	return m_navigator.removeChild(m_xercesNode, oldChild);
+    return m_navigator.removeChild(m_xercesNode, oldChild);
 }
 
 
 
 XalanNode*
-XercesDocumentFragmentBridge::appendChild(XalanNode*	newChild)
+XercesDocumentFragmentBridge::appendChild(XalanNode*    newChild)
 {
-	return m_navigator.appendChild(m_xercesNode, newChild);
+    return m_navigator.appendChild(m_xercesNode, newChild);
 }
 
 
@@ -206,15 +206,15 @@ XercesDocumentFragmentBridge::appendChild(XalanNode*	newChild)
 bool
 XercesDocumentFragmentBridge::hasChildNodes() const
 {
-	return m_xercesNode.hasChildNodes();
+    return m_xercesNode.hasChildNodes();
 }
 
 
 
 void
-XercesDocumentFragmentBridge::setNodeValue(const XalanDOMString&	nodeValue)
+XercesDocumentFragmentBridge::setNodeValue(const XalanDOMString&    nodeValue)
 {
-	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
+    XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -222,18 +222,18 @@ XercesDocumentFragmentBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesDocumentFragmentBridge::normalize()
 {
-	XercesBridgeHelper::normalize(m_xercesNode);
+    XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
 bool
 XercesDocumentFragmentBridge::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) const
 {
-	return m_xercesNode.isSupported(
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
+    return m_xercesNode.isSupported(
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
@@ -241,7 +241,7 @@ XercesDocumentFragmentBridge::isSupported(
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -249,7 +249,7 @@ XercesDocumentFragmentBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix());
+    return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -257,15 +257,15 @@ XercesDocumentFragmentBridge::getPrefix() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName());
+    return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
 
 void
-XercesDocumentFragmentBridge::setPrefix(const XalanDOMString&	prefix)
+XercesDocumentFragmentBridge::setPrefix(const XalanDOMString&   prefix)
 {
-	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
+    XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -273,9 +273,9 @@ XercesDocumentFragmentBridge::setPrefix(const XalanDOMString&	prefix)
 bool
 XercesDocumentFragmentBridge::isIndexed() const
 {
-	// $$$ ToDo: Are document fragments ever indexed?
-	// I don't think so...
-	return false;
+    // $$$ ToDo: Are document fragments ever indexed?
+    // I don't think so...
+    return false;
 }
 
 
@@ -283,7 +283,7 @@ XercesDocumentFragmentBridge::isIndexed() const
 XercesDocumentFragmentBridge::IndexType
 XercesDocumentFragmentBridge::getIndex() const
 {
-	return 0;
+    return 0;
 }
 
 

@@ -44,41 +44,41 @@ class XALAN_XSLT_EXPORT FunctionCurrent : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionCurrent();
+    FunctionCurrent();
 
-	virtual
-	~FunctionCurrent();
+    virtual
+    ~FunctionCurrent();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionCurrent*
+    virtual FunctionCurrent*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 private:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
-	// Not implemented...
-	FunctionCurrent&
-	operator=(const FunctionCurrent&);
+    // Not implemented...
+    FunctionCurrent&
+    operator=(const FunctionCurrent&);
 
-	bool
-	operator==(const FunctionCurrent&) const;
+    bool
+    operator==(const FunctionCurrent&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONCURRENT_HEADER_GUARD_1357924680
+#endif  // FUNCTIONCURRENT_HEADER_GUARD_1357924680

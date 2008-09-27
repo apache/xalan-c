@@ -65,350 +65,350 @@ class XALAN_XPATH_EXPORT XPathExecutionContextDefault : public XPathExecutionCon
 {
 public:
 
-	typedef XalanVector<XalanNode*>				CurrentNodeStackType;
-	typedef XalanVector<const NodeRefListBase*>	ContextNodeListStackType;
+    typedef XalanVector<XalanNode*>             CurrentNodeStackType;
+    typedef XalanVector<const NodeRefListBase*> ContextNodeListStackType;
 
-	/**
-	 * Construct an XPathExecutionContextDefault object
-	 *
-	 * @param theXPathEnvSupport XPathEnvSupport class instance
-	 * @param theDOMSupport		 DOMSupport class instance
-	 * @param theXobjectFactory  factory class instance for XObjects
-	 * @param theCurrentNode     current node in the source tree
-	 * @param theContextNodeList node list for current context
-	 * @param thePrefixResolver  pointer to prefix resolver to use
-	 */	
-	XPathExecutionContextDefault(
-			XPathEnvSupport&		theXPathEnvSupport,
-			DOMSupport&				theDOMSupport,
-			XObjectFactory&			theXObjectFactory,
-			XalanNode*				theCurrentNode = 0,
-			const NodeRefListBase*	theContextNodeList = 0,
-			const PrefixResolver*	thePrefixResolver = 0);
+    /**
+     * Construct an XPathExecutionContextDefault object
+     *
+     * @param theXPathEnvSupport XPathEnvSupport class instance
+     * @param theDOMSupport      DOMSupport class instance
+     * @param theXobjectFactory  factory class instance for XObjects
+     * @param theCurrentNode     current node in the source tree
+     * @param theContextNodeList node list for current context
+     * @param thePrefixResolver  pointer to prefix resolver to use
+     */ 
+    XPathExecutionContextDefault(
+            XPathEnvSupport&        theXPathEnvSupport,
+            DOMSupport&             theDOMSupport,
+            XObjectFactory&         theXObjectFactory,
+            XalanNode*              theCurrentNode = 0,
+            const NodeRefListBase*  theContextNodeList = 0,
+            const PrefixResolver*   thePrefixResolver = 0);
 
-	/**
-	 * Construct an XPathExecutionContextDefault object
-	 *
-	 * @param theXPathEnvSupport XPathEnvSupport class instance
-	 * @param theXObjectFactory  factory class instance for XObjects
-	 * @param theCurrentNode     current node in the source tree
-	 * @param theContextNodeList node list for current context
-	 * @param thePrefixResolver  pointer to prefix resolver to use
-	 */
-	explicit
-	XPathExecutionContextDefault(
+    /**
+     * Construct an XPathExecutionContextDefault object
+     *
+     * @param theXPathEnvSupport XPathEnvSupport class instance
+     * @param theXObjectFactory  factory class instance for XObjects
+     * @param theCurrentNode     current node in the source tree
+     * @param theContextNodeList node list for current context
+     * @param thePrefixResolver  pointer to prefix resolver to use
+     */
+    explicit
+    XPathExecutionContextDefault(
             MemoryManager&      theManager,
-			XalanNode*				theCurrentNode = 0,
-			const NodeRefListBase*	theContextNodeList = 0,
-			const PrefixResolver*	thePrefixResolver = 0);
+            XalanNode*              theCurrentNode = 0,
+            const NodeRefListBase*  theContextNodeList = 0,
+            const PrefixResolver*   thePrefixResolver = 0);
 
     static XPathExecutionContextDefault*
     create(
             MemoryManager&      theManager,
-			XalanNode*				theCurrentNode = 0,
-			const NodeRefListBase*	theContextNodeList = 0,
-			const PrefixResolver*	thePrefixResolver = 0);
+            XalanNode*              theCurrentNode = 0,
+            const NodeRefListBase*  theContextNodeList = 0,
+            const PrefixResolver*   thePrefixResolver = 0);
 
-	virtual
-	~XPathExecutionContextDefault();
-
-
-	/**
-	 * Get the XPathEnvSupport instance.
-	 *
-	 * @return a pointer to the instance.
-	 */
-	XPathEnvSupport*
-	getXPathEnvSupport() const
-	{
-		return m_xpathEnvSupport;
-	}
-
-	/**
-	 * Set the XPathEnvSupport instance.
-	 *
-	 * @param theSupport a reference to the instance to use.
-	 */
-	void
-	setXPathEnvSupport(XPathEnvSupport*		theSupport)
-	{
-		m_xpathEnvSupport = theSupport;
-	}
-
-	/**
-	 * Set the DOMSupport instance.
-	 *
-	 * @param theDOMSupport a reference to the instance to use.
-	 */
-	void
-	setDOMSupport(DOMSupport*	theDOMSupport)
-	{
-		m_domSupport = theDOMSupport;
-	}
-
-	/**
-	 * Set the XObjectFactory instance.
-	 *
-	 * @param theFactory a reference to the instance to use.
-	 */
-	void
-	setXObjectFactory(XObjectFactory*	theXObjectFactory)
-	{
-		m_xobjectFactory = theXObjectFactory;
-	}
-
-	/**
-	 * Get a reference to the scratch QNameByValue instance.
-	 *
-	 * @return A reference to a QNameByValue instance.
-	 */
-	XalanQNameByValue&
-	getScratchQName() const
-	{
-		return m_scratchQName;
-	}
-
-	virtual void doFormatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult,
-			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0);
-
-	// These interfaces are inherited from XPathExecutionContext...
-
-	virtual void
-	reset();
-
-	virtual XalanNode*
-	getCurrentNode() const;
-
-	virtual void
-	pushCurrentNode(XalanNode*		theCurrentNode);
-
-	virtual void
-	popCurrentNode();
-
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const;
-
-	virtual void
-	pushContextNodeList(const NodeRefListBase&	theList);
-
-	virtual void	
-	popContextNodeList();
-
-	virtual const NodeRefListBase&
-	getContextNodeList() const;
-
-	virtual size_type
-	getContextNodeListLength() const;
-
-	virtual size_type
-	getContextNodeListPosition(const XalanNode&		contextNode) const;
-
-	virtual bool
-	elementAvailable(const XalanQName&	theQName) const;
-
-	virtual bool
-	elementAvailable(
-			const XalanDOMString&	theName,
-			const LocatorType*		locator) const;
-
-	virtual bool
-	functionAvailable(const XalanQName&		theQName) const;
-
-	virtual bool
-	functionAvailable(
-			const XalanDOMString&	theName,
-			const LocatorType*		locator) const;
-
-	virtual const XObjectPtr
-	extFunction(
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			functionName,
-			XalanNode*						context,
-			const XObjectArgVectorType&		argVec,
-			const LocatorType*				locator);
-
-	virtual XalanDocument*
-	parseXML(
-            MemoryManager&      theManager,
-			const XalanDOMString&	urlString,
-			const XalanDOMString&	base,
-            ErrorHandler*           theErrorHandler = 0) const;
-
-	virtual MutableNodeRefList*
-	borrowMutableNodeRefList();
-
-	virtual bool
-	returnMutableNodeRefList(MutableNodeRefList*	theList);
-
-	virtual MutableNodeRefList*
-	createMutableNodeRefList(MemoryManager& theManager) const;
-
-	virtual XalanDOMString&
-	getCachedString();
-
-	virtual bool
-	releaseCachedString(XalanDOMString&		theString);
-
-	virtual void
-	getNodeSetByKey(
-            XalanNode*              context,
-			const XalanQName&		qname,
-			const XalanDOMString&	ref,
-            const LocatorType*      locator,
-		    MutableNodeRefList&		nodelist);
-
-	virtual void
-	getNodeSetByKey(
-            XalanNode*              context,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const LocatorType*		locator,
-			MutableNodeRefList&		nodelist);
-
-	virtual const XObjectPtr
-	getVariable(
-			const XalanQName&	name,
-			const LocatorType*	locator = 0);
-
-	virtual const PrefixResolver*
-	getPrefixResolver() const;
-
-	virtual void
-	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
-
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
-
-	virtual const XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner) const;
-
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&   theName,
-			const XalanDocument&    theDocument) const;
-
-	virtual XalanDocument*
-	getSourceDocument(const XalanDOMString&		theURI) const;
-
-	virtual void
-	setSourceDocument(
-			const XalanDOMString&	theURI,
-			XalanDocument*			theDocument);
-
-	virtual void formatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			XalanDOMString&						theResult,
-			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0);
-
-	virtual void formatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			const XalanDOMString&				dfsName,
-			XalanDOMString&						theResult,
-			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0);
+    virtual
+    ~XPathExecutionContextDefault();
 
 
-	// These interfaces are inherited from ExecutionContext...
+    /**
+     * Get the XPathEnvSupport instance.
+     *
+     * @return a pointer to the instance.
+     */
+    XPathEnvSupport*
+    getXPathEnvSupport() const
+    {
+        return m_xpathEnvSupport;
+    }
 
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode);
+    /**
+     * Set the XPathEnvSupport instance.
+     *
+     * @param theSupport a reference to the instance to use.
+     */
+    void
+    setXPathEnvSupport(XPathEnvSupport*     theSupport)
+    {
+        m_xpathEnvSupport = theSupport;
+    }
 
-	virtual void
-	problem(
-            eSource                 source,
-            eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode);
+    /**
+     * Set the DOMSupport instance.
+     *
+     * @param theDOMSupport a reference to the instance to use.
+     */
+    void
+    setDOMSupport(DOMSupport*   theDOMSupport)
+    {
+        m_domSupport = theDOMSupport;
+    }
+
+    /**
+     * Set the XObjectFactory instance.
+     *
+     * @param theFactory a reference to the instance to use.
+     */
+    void
+    setXObjectFactory(XObjectFactory*   theXObjectFactory)
+    {
+        m_xobjectFactory = theXObjectFactory;
+    }
+
+    /**
+     * Get a reference to the scratch QNameByValue instance.
+     *
+     * @return A reference to a QNameByValue instance.
+     */
+    XalanQNameByValue&
+    getScratchQName() const
+    {
+        return m_scratchQName;
+    }
+
+    virtual void doFormatNumber(
+            double                              number,
+            const XalanDOMString&               pattern,
+            const XalanDecimalFormatSymbols*    theDFS,
+            XalanDOMString&                     theResult,
+            const XalanNode*                    context = 0,
+            const LocatorType*                  locator = 0);
+
+    // These interfaces are inherited from XPathExecutionContext...
 
     virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const;
+    reset();
 
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const;
+    virtual XalanNode*
+    getCurrentNode() const;
 
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const LocatorType* 		locator = 0) const;
+    virtual void
+    pushCurrentNode(XalanNode*      theCurrentNode);
+
+    virtual void
+    popCurrentNode();
+
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const;
+
+    virtual void
+    pushContextNodeList(const NodeRefListBase&  theList);
+
+    virtual void    
+    popContextNodeList();
+
+    virtual const NodeRefListBase&
+    getContextNodeList() const;
+
+    virtual size_type
+    getContextNodeListLength() const;
+
+    virtual size_type
+    getContextNodeListPosition(const XalanNode&     contextNode) const;
+
+    virtual bool
+    elementAvailable(const XalanQName&  theQName) const;
+
+    virtual bool
+    elementAvailable(
+            const XalanDOMString&   theName,
+            const LocatorType*      locator) const;
+
+    virtual bool
+    functionAvailable(const XalanQName&     theQName) const;
+
+    virtual bool
+    functionAvailable(
+            const XalanDOMString&   theName,
+            const LocatorType*      locator) const;
+
+    virtual const XObjectPtr
+    extFunction(
+            const XalanDOMString&           theNamespace,
+            const XalanDOMString&           functionName,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     argVec,
+            const LocatorType*              locator);
+
+    virtual XalanDocument*
+    parseXML(
+            MemoryManager&      theManager,
+            const XalanDOMString&   urlString,
+            const XalanDOMString&   base,
+            ErrorHandler*           theErrorHandler = 0) const;
+
+    virtual MutableNodeRefList*
+    borrowMutableNodeRefList();
+
+    virtual bool
+    returnMutableNodeRefList(MutableNodeRefList*    theList);
+
+    virtual MutableNodeRefList*
+    createMutableNodeRefList(MemoryManager& theManager) const;
+
+    virtual XalanDOMString&
+    getCachedString();
+
+    virtual bool
+    releaseCachedString(XalanDOMString&     theString);
+
+    virtual void
+    getNodeSetByKey(
+            XalanNode*              context,
+            const XalanQName&       qname,
+            const XalanDOMString&   ref,
+            const LocatorType*      locator,
+            MutableNodeRefList&     nodelist);
+
+    virtual void
+    getNodeSetByKey(
+            XalanNode*              context,
+            const XalanDOMString&   name,
+            const XalanDOMString&   ref,
+            const LocatorType*      locator,
+            MutableNodeRefList&     nodelist);
+
+    virtual const XObjectPtr
+    getVariable(
+            const XalanQName&   name,
+            const LocatorType*  locator = 0);
+
+    virtual const PrefixResolver*
+    getPrefixResolver() const;
+
+    virtual void
+    setPrefixResolver(const PrefixResolver*     thePrefixResolver);
+
+    virtual const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     prefix) const;
+
+    virtual const XalanDOMString&
+    findURIFromDoc(const XalanDocument*     owner) const;
+
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const;
+
+    virtual XalanDocument*
+    getSourceDocument(const XalanDOMString&     theURI) const;
+
+    virtual void
+    setSourceDocument(
+            const XalanDOMString&   theURI,
+            XalanDocument*          theDocument);
+
+    virtual void formatNumber(
+            double                              number,
+            const XalanDOMString&               pattern,
+            XalanDOMString&                     theResult,
+            const XalanNode*                    context = 0,
+            const LocatorType*                  locator = 0);
+
+    virtual void formatNumber(
+            double                              number,
+            const XalanDOMString&               pattern,
+            const XalanDOMString&               dfsName,
+            XalanDOMString&                     theResult,
+            const XalanNode*                    context = 0,
+            const LocatorType*                  locator = 0);
+
+
+    // These interfaces are inherited from ExecutionContext...
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode);
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
+
+    virtual void
+    error(
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode = 0,
+            const LocatorType*      locator = 0) const;
+
+    virtual void
+    warn(
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode = 0,
+            const LocatorType*      locator = 0) const;
+
+    virtual void
+    message(
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode = 0,
+            const LocatorType*      locator = 0) const;
 
     virtual bool
     shouldStripSourceNode(const XalanText&  node);
 
 protected:
 
-	typedef XalanObjectCache<
+    typedef XalanObjectCache<
                 MutableNodeRefList,
                 DefaultCacheCreateFunctorMemMgr<MutableNodeRefList>,
                 DeleteFunctor<MutableNodeRefList>,
-                ClearCacheResetFunctor<MutableNodeRefList> >	NodeListCacheType;
+                ClearCacheResetFunctor<MutableNodeRefList> >    NodeListCacheType;
 
-	enum { eNodeListCacheListSize = 50 };
+    enum { eNodeListCacheListSize = 50 };
 
-	struct ContextNodeListPositionCache
-	{
-		ContextNodeListPositionCache() :
-			m_node(0),
-			m_index(0)
-		{
-		}
+    struct ContextNodeListPositionCache
+    {
+        ContextNodeListPositionCache() :
+            m_node(0),
+            m_index(0)
+        {
+        }
 
-		void
-		clear()
-		{
-			if (m_node != 0)
-			{
-				m_node = 0;
-			}
-		}
+        void
+        clear()
+        {
+            if (m_node != 0)
+            {
+                m_node = 0;
+            }
+        }
 
-		const XalanNode*	m_node;
+        const XalanNode*    m_node;
 
-		size_type			m_index;
-	};
+        size_type           m_index;
+    };
 
-	XPathEnvSupport*						m_xpathEnvSupport;
+    XPathEnvSupport*                        m_xpathEnvSupport;
 
-	DOMSupport*								m_domSupport;
+    DOMSupport*                             m_domSupport;
 
-	CurrentNodeStackType					m_currentNodeStack;
+    CurrentNodeStackType                    m_currentNodeStack;
 
-	ContextNodeListStackType				m_contextNodeListStack;
+    ContextNodeListStackType                m_contextNodeListStack;
 
-	const PrefixResolver*					m_prefixResolver;
+    const PrefixResolver*                   m_prefixResolver;
 
-	XalanDOMString							m_currentPattern;
+    XalanDOMString                          m_currentPattern;
 
-	NodeListCacheType						m_nodeListCache;
+    NodeListCacheType                       m_nodeListCache;
 
-	XalanDOMStringCache						m_stringCache;
+    XalanDOMStringCache                     m_stringCache;
 
-	mutable ContextNodeListPositionCache	m_cachedPosition;
+    mutable ContextNodeListPositionCache    m_cachedPosition;
 
-	mutable XalanQNameByValue				m_scratchQName;
+    mutable XalanQNameByValue               m_scratchQName;
 
-	static const NodeRefList	            s_dummyList;
+    static const NodeRefList                s_dummyList;
 };
 
 
@@ -417,4 +417,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
+#endif  // XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680

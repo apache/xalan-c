@@ -79,8 +79,8 @@ ProblemListenerDefault::problem(
             const ElemTemplateElement*  styleNode,
             const XalanDOMString&       msg,
             const XalanDOMChar*         uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset)
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset)
 {
     if (m_pw != 0)
     {
@@ -150,8 +150,8 @@ ProblemListenerDefault::defaultFormat(
             const ElemTemplateElement*  styleNode,
             const XalanDOMString&       msg,
             const XalanDOMChar*         uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset)
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset)
 {
     MemoryManager&  theManager = pw.getMemoryManager();
 

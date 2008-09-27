@@ -36,23 +36,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XALAN_USING_XERCES(XMLMsgLoader)
 
-static const char* const	MSG_FILE_NAME = "XalanMsg_";
+static const char* const    MSG_FILE_NAME = "XalanMsg_";
 
 #define MAX_LOCALTION_NAME 1024
 
-static const char* const	s_errorMessage = "Message can't be located in the NLS catalog.";
+static const char* const    s_errorMessage = "Message can't be located in the NLS catalog.";
 
 XalanNLSMessageLoader::~XalanNLSMessageLoader()
 {
-	if ((int)m_catalogHandle != -1)
-	{
-		catclose(m_catalogHandle);
-	}
+    if ((int)m_catalogHandle != -1)
+    {
+        catclose(m_catalogHandle);
+    }
 }
 
 XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
-	m_catalogHandle(nl_catd(-1)),
-	m_memoryManager(theManager)
+    m_catalogHandle(nl_catd(-1)),
+    m_memoryManager(theManager)
 {
 
     char fileName[50];
@@ -60,14 +60,14 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
     
     sprintf(fileName,"%s", MSG_FILE_NAME);
 
-	const char* Locale = XMLMsgLoader::getLocale();
+    const char* Locale = XMLMsgLoader::getLocale();
 
     if(Locale == 0)
     {
-   		Locale = "en_US";
+        Locale = "en_US";
     }
 
-	strcat(fileName, Locale);
+    strcat(fileName, Locale);
 
     strcat(fileName, ".cat");
 
@@ -81,7 +81,7 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
     {
         // Probably have to call panic here
         // the user will get an error with retrieving messages
- 		assert(0);
+        assert(0);
     }
 }
 
@@ -89,47 +89,47 @@ bool
 XalanNLSMessageLoader::loadMsg(
             XalanMessages::Codes    msgToLoad
             XalanDOMChar*           toFill
-			XalanSize_t             maxChars)
+            XalanSize_t             maxChars)
 {
     
     bool bRetValue = false;
 
     if (toFill == 0 || maxChars == 0)
     {
-    	return bRetValue;
+        return bRetValue;
     }
 
     if (static_cast<int>(m_catalogHandle) == -1)
     {
-    	// for transcoding to Unicode
-    	const XalanDOMString	errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
-    	
-    	if(errorMsg.length() < maxChars)
-    	{
-    		XalanCopy(errorMsg.c_str(), errorMsg.c_str()+ errorMsg.length() + 1 , toFill);
-    	}
+        // for transcoding to Unicode
+        const XalanDOMString    errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
+        
+        if(errorMsg.length() < maxChars)
+        {
+            XalanCopy(errorMsg.c_str(), errorMsg.c_str()+ errorMsg.length() + 1 , toFill);
+        }
     }
     else
     {
-    	const char* const	catMessage =
+        const char* const   catMessage =
             catgets(
                 m_catalogHandle,
                 1,
                 static_cast<int>(msgToLoad) + 2,
                 s_errorMessage);
-	
-		// catgets returns a pointer to msgString if it fails to locate the message
-		// from the message catalog
-    	if (catMessage != 0)
-    	{
-        	const XalanDOMString	errorMsg(catMessage, m_memoryManager);
-        	
-        	if (errorMsg.length() < maxChars)
-    		{
-    			XalanCopy(errorMsg.c_str(), errorMsg.c_str() + errorMsg.length() +1  , toFill);
-    			
-    			bRetValue = true;
-    		}
+    
+        // catgets returns a pointer to msgString if it fails to locate the message
+        // from the message catalog
+        if (catMessage != 0)
+        {
+            const XalanDOMString    errorMsg(catMessage, m_memoryManager);
+            
+            if (errorMsg.length() < maxChars)
+            {
+                XalanCopy(errorMsg.c_str(), errorMsg.c_str() + errorMsg.length() +1  , toFill);
+                
+                bRetValue = true;
+            }
         }
     }
 

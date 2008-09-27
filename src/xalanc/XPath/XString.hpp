@@ -38,95 +38,95 @@ class XALAN_XPATH_EXPORT XString : public XStringBase
 {
 public:
 
-	typedef XStringBase		ParentType;
+    typedef XStringBase     ParentType;
 
-	/**
-	 * Construct an XString object from a string.
-	 * 
-	 * @param val The string value to use.
+    /**
+     * Construct an XString object from a string.
+     * 
+     * @param val The string value to use.
      * @param theMemoryManager The MemoryManager instance.
-	 */
-	XString(
-            const XalanDOMString&	val,
+     */
+    XString(
+            const XalanDOMString&   val,
             MemoryManager&          theManager);
 
-	/**
-	 * Construct an XString object from a string.
-	 * 
-	 * @param val The string value to use.
+    /**
+     * Construct an XString object from a string.
+     * 
+     * @param val The string value to use.
      * @param theMemoryManager The MemoryManager instance.
-	 */
-	XString(
-            const XalanDOMChar*		val,
+     */
+    XString(
+            const XalanDOMChar*     val,
             MemoryManager&          theManager);
 
-	/**
-	 * Construct an XString object from a string.
-	 * 
-	 * @param val The string value to use.
-	 * @param len The length of the string value.
+    /**
+     * Construct an XString object from a string.
+     * 
+     * @param val The string value to use.
+     * @param len The length of the string value.
      * @param theMemoryManager The MemoryManager instance.
-	 */
-	XString(
-			const XalanDOMChar*		val,
-			XalanSize_t			    len,
+     */
+    XString(
+            const XalanDOMChar*     val,
+            XalanSize_t             len,
             MemoryManager&          theManager);
 
-	/**
-	 * Construct an XString object from another string.
-	 * 
-	 * @param source The source XString.
+    /**
+     * Construct an XString object from another string.
+     * 
+     * @param source The source XString.
      * @param theMemoryManager The MemoryManager instance.
-	 */
-	XString(
-            const XString&	    source,
+     */
+    XString(
+            const XString&      source,
             MemoryManager&      theManager);
 
-	virtual
-	~XString();
+    virtual
+    ~XString();
 
-	void
-	set(const XalanDOMString&	theString)
-	{
-		m_value = theString;
-	}
+    void
+    set(const XalanDOMString&   theString)
+    {
+        m_value = theString;
+    }
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str() const;
+    virtual const XalanDOMString&
+    str() const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const;
+            XalanDOMString&         theBuffer) const;
 
-	virtual void
-	str(XalanDOMString&     theBuffer) const;
+    virtual void
+    str(XalanDOMString&     theBuffer) const;
 
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const;
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const;
 
 private:
 
     //not implemented
-    XString(const XString&	source);
+    XString(const XString&  source);
 
-	XalanDOMString	m_value;
+    XalanDOMString  m_value;
 };
 
 
@@ -135,4 +135,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XSTRING_HEADER_GUARD_1357924680
+#endif  // XSTRING_HEADER_GUARD_1357924680

@@ -34,18 +34,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XObjectResultTreeFragProxyBase::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XObjectResultTreeFragProxyBase::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XObjectResultTreeFragProxyBase::XObjectResultTreeFragProxyBase() :
-	XalanDocumentFragment()
+    XalanDocumentFragment()
 {
 }
 
 
 
-XObjectResultTreeFragProxyBase::XObjectResultTreeFragProxyBase(const XObjectResultTreeFragProxyBase&	/* theRHS */)
+XObjectResultTreeFragProxyBase::XObjectResultTreeFragProxyBase(const XObjectResultTreeFragProxyBase&    /* theRHS */)
 {
 }
 
@@ -60,7 +60,7 @@ XObjectResultTreeFragProxyBase::~XObjectResultTreeFragProxyBase()
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getNodeName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -68,7 +68,7 @@ XObjectResultTreeFragProxyBase::getNodeName() const
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getNodeValue() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -76,7 +76,7 @@ XObjectResultTreeFragProxyBase::getNodeValue() const
 XObjectResultTreeFragProxyBase::NodeType
 XObjectResultTreeFragProxyBase::getNodeType() const
 {
-	return DOCUMENT_FRAGMENT_NODE;
+    return DOCUMENT_FRAGMENT_NODE;
 }
 
 
@@ -84,7 +84,7 @@ XObjectResultTreeFragProxyBase::getNodeType() const
 XalanNode*
 XObjectResultTreeFragProxyBase::getParentNode() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -92,16 +92,16 @@ XObjectResultTreeFragProxyBase::getParentNode() const
 const XalanNodeList*
 XObjectResultTreeFragProxyBase::getChildNodes() const
 {
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+    throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 XalanNode*
 XObjectResultTreeFragProxyBase::getPreviousSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -109,7 +109,7 @@ XObjectResultTreeFragProxyBase::getPreviousSibling() const
 XalanNode*
 XObjectResultTreeFragProxyBase::getNextSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -117,7 +117,7 @@ XObjectResultTreeFragProxyBase::getNextSibling() const
 const XalanNamedNodeMap*
 XObjectResultTreeFragProxyBase::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -125,7 +125,7 @@ XObjectResultTreeFragProxyBase::getAttributes() const
 XalanDocument*
 XObjectResultTreeFragProxyBase::getOwnerDocument() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -133,7 +133,7 @@ XObjectResultTreeFragProxyBase::getOwnerDocument() const
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getNamespaceURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -141,7 +141,7 @@ XObjectResultTreeFragProxyBase::getNamespaceURI() const
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getPrefix() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -149,7 +149,7 @@ XObjectResultTreeFragProxyBase::getPrefix() const
 const XalanDOMString&
 XObjectResultTreeFragProxyBase::getLocalName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -157,7 +157,7 @@ XObjectResultTreeFragProxyBase::getLocalName() const
 bool
 XObjectResultTreeFragProxyBase::isIndexed() const
 {
-	return false;
+    return false;
 }
 
 
@@ -165,7 +165,7 @@ XObjectResultTreeFragProxyBase::isIndexed() const
 XObjectResultTreeFragProxyBase::IndexType
 XObjectResultTreeFragProxyBase::getIndex() const
 {
-	return 0;
+    return 0;
 }
 
 

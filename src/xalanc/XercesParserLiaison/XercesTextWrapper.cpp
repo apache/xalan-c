@@ -43,13 +43,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesTextWrapper::XercesTextWrapper(
-			const DOMTextType*				theXercesText,
-			const XercesWrapperNavigator&	theNavigator) :
-	XalanText(),
-	m_xercesNode(theXercesText),
-	m_navigator(theNavigator)
+            const DOMTextType*              theXercesText,
+            const XercesWrapperNavigator&   theNavigator) :
+    XalanText(),
+    m_xercesNode(theXercesText),
+    m_navigator(theNavigator)
 {
-	assert(m_xercesNode != 0);
+    assert(m_xercesNode != 0);
 }
 
 
@@ -63,7 +63,7 @@ XercesTextWrapper::~XercesTextWrapper()
 const XalanDOMString&
 XercesTextWrapper::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeName());
+    return m_navigator.getPooledString(m_xercesNode->getNodeName());
 }
 
 
@@ -71,7 +71,7 @@ XercesTextWrapper::getNodeName() const
 const XalanDOMString&
 XercesTextWrapper::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode->getNodeValue());
 }
 
 
@@ -79,7 +79,7 @@ XercesTextWrapper::getNodeValue() const
 XercesTextWrapper::NodeType
 XercesTextWrapper::getNodeType() const
 {
-	return TEXT_NODE;
+    return TEXT_NODE;
 }
 
 
@@ -87,7 +87,7 @@ XercesTextWrapper::getNodeType() const
 XalanNode*
 XercesTextWrapper::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -95,7 +95,7 @@ XercesTextWrapper::getParentNode() const
 const XalanNodeList*
 XercesTextWrapper::getChildNodes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -103,7 +103,7 @@ XercesTextWrapper::getChildNodes() const
 XalanNode*
 XercesTextWrapper::getFirstChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -111,7 +111,7 @@ XercesTextWrapper::getFirstChild() const
 XalanNode*
 XercesTextWrapper::getLastChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -119,7 +119,7 @@ XercesTextWrapper::getLastChild() const
 XalanNode*
 XercesTextWrapper::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -127,7 +127,7 @@ XercesTextWrapper::getPreviousSibling() const
 XalanNode*
 XercesTextWrapper::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -135,7 +135,7 @@ XercesTextWrapper::getNextSibling() const
 const XalanNamedNodeMap*
 XercesTextWrapper::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -143,7 +143,7 @@ XercesTextWrapper::getAttributes() const
 XalanDocument*
 XercesTextWrapper::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -151,7 +151,7 @@ XercesTextWrapper::getOwnerDocument() const
 const XalanDOMString&
 XercesTextWrapper::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
 }
 
 
@@ -159,7 +159,7 @@ XercesTextWrapper::getNamespaceURI() const
 const XalanDOMString&
 XercesTextWrapper::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getPrefix());
+    return m_navigator.getPooledString(m_xercesNode->getPrefix());
 }
 
 
@@ -167,7 +167,7 @@ XercesTextWrapper::getPrefix() const
 const XalanDOMString&
 XercesTextWrapper::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getLocalName());
+    return m_navigator.getPooledString(m_xercesNode->getLocalName());
 }
 
 
@@ -175,7 +175,7 @@ XercesTextWrapper::getLocalName() const
 bool
 XercesTextWrapper::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -183,7 +183,7 @@ XercesTextWrapper::isIndexed() const
 XercesTextWrapper::IndexType
 XercesTextWrapper::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 
@@ -191,7 +191,7 @@ XercesTextWrapper::getIndex() const
 const XalanDOMString&
 XercesTextWrapper::getData() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getData());
+    return m_navigator.getPooledString(m_xercesNode->getData());
 }
 
 
@@ -199,7 +199,7 @@ XercesTextWrapper::getData() const
 bool
 XercesTextWrapper::isWhitespace() const
 {
-	return isXMLWhitespace(getData());
+    return isXMLWhitespace(getData());
 }
 
 

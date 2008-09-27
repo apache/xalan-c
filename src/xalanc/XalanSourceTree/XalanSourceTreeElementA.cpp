@@ -33,30 +33,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeElementA::XalanSourceTreeElementA(
             MemoryManager&          theManager,
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			XalanSize_t			        theAttributeCount,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex) :
-	XalanSourceTreeElement(
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanSourceTreeAttr**       theAttributes,
+            XalanSize_t                 theAttributeCount,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex) :
+    XalanSourceTreeElement(
         theManager,
-		theTagName,
-		theOwnerDocument,
-		theParentNode,
-		thePreviousSibling,
-		theNextSibling,
-		theIndex),
-	m_attributes(theAttributes),
-	m_attributeCount(theAttributeCount)
+        theTagName,
+        theOwnerDocument,
+        theParentNode,
+        thePreviousSibling,
+        theNextSibling,
+        theIndex),
+    m_attributes(theAttributes),
+    m_attributeCount(theAttributeCount)
 {
 }
 
@@ -70,7 +70,7 @@ XalanSourceTreeElementA::~XalanSourceTreeElementA()
 const XalanNamedNodeMap*
 XalanSourceTreeElementA::getAttributes() const
 {
-	return this;
+    return this;
 }
 
 
@@ -78,7 +78,7 @@ XalanSourceTreeElementA::getAttributes() const
 const XalanDOMString&
 XalanSourceTreeElementA::getNamespaceURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -86,7 +86,7 @@ XalanSourceTreeElementA::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeElementA::getPrefix() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -94,33 +94,33 @@ XalanSourceTreeElementA::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementA::getLocalName() const
 {
-	return m_tagName;
+    return m_tagName;
 }
 
 
 
 XalanNode*
-XalanSourceTreeElementA::item(XalanSize_t	index) const
+XalanSourceTreeElementA::item(XalanSize_t   index) const
 {
-	return index < m_attributeCount ? m_attributes[index] : 0;
+    return index < m_attributeCount ? m_attributes[index] : 0;
 }
 
 
 
 XalanNode*
-XalanSourceTreeElementA::getNamedItem(const XalanDOMString& 	name) const
+XalanSourceTreeElementA::getNamedItem(const XalanDOMString&     name) const
 {
-	for (XalanSize_t i = 0; i < m_attributeCount; ++i)
-	{
-		assert(m_attributes[i] != 0);
+    for (XalanSize_t i = 0; i < m_attributeCount; ++i)
+    {
+        assert(m_attributes[i] != 0);
 
-		if (m_attributes[i]->getNodeName() == name)
-		{
-			return m_attributes[i];
-		}
-	}
+        if (m_attributes[i]->getNodeName() == name)
+        {
+            return m_attributes[i];
+        }
+    }
 
-	return 0;
+    return 0;
 }
 
 
@@ -128,28 +128,28 @@ XalanSourceTreeElementA::getNamedItem(const XalanDOMString& 	name) const
 XalanSize_t
 XalanSourceTreeElementA::getLength() const
 {
-	return m_attributeCount;
+    return m_attributeCount;
 }
 
 
 
 XalanNode*
 XalanSourceTreeElementA::getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const
 {
-	for (XalanSize_t i = 0; i < m_attributeCount; ++i)
-	{
-		assert(m_attributes[i] != 0);
+    for (XalanSize_t i = 0; i < m_attributeCount; ++i)
+    {
+        assert(m_attributes[i] != 0);
 
-		if (m_attributes[i]->getLocalName() == localName &&
-			m_attributes[i]->getNamespaceURI() ==  namespaceURI)
-		{
-			return m_attributes[i];
-		}
-	}
+        if (m_attributes[i]->getLocalName() == localName &&
+            m_attributes[i]->getNamespaceURI() ==  namespaceURI)
+        {
+            return m_attributes[i];
+        }
+    }
 
-	return 0;
+    return 0;
 }
 
 

@@ -41,10 +41,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanICUMessageLoader : public XalanMessageLo
 {
 public:
 
-	XalanICUMessageLoader(MemoryManager& theManager);
+    XalanICUMessageLoader(MemoryManager& theManager);
 
-	virtual
-	~XalanICUMessageLoader();
+    virtual
+    ~XalanICUMessageLoader();
 
 protected:
 
@@ -54,30 +54,30 @@ protected:
     virtual bool
     loadMsg(
         XalanMessages::Codes    msgToLoad,
-        XalanDOMChar*	        toFill,
+        XalanDOMChar*           toFill,
         XalanSize_t             maxChars
     );
 
 private:
 
-	XalanICUMessageLoader(const XalanICUMessageLoader&);
+    XalanICUMessageLoader(const XalanICUMessageLoader&);
 
-	XalanICUMessageLoader&
-	operator=(const XalanICUMessageLoader&);
+    XalanICUMessageLoader&
+    operator=(const XalanICUMessageLoader&);
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fLocaleBundle
     //      pointer to the required locale specific resource bundle,
-	//           or to the default locale resrouce bundle in case the required
-	//              locale specific resource bundle unavailable.
+    //           or to the default locale resrouce bundle in case the required
+    //              locale specific resource bundle unavailable.
     //
      // -----------------------------------------------------------------------
-    UResourceBundle*		m_localeBundle;
-    UResourceBundle*		m_domainBundle;
+    UResourceBundle*        m_localeBundle;
+    UResourceBundle*        m_domainBundle;
 
-	const XalanDOMString	m_unknownMessage;
+    const XalanDOMString    m_unknownMessage;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 #endif //  defined (XALAN_ICU_MSG_LOADER)
 
-#endif	// XALANICUMESSAGELOADER_HEADER_GUARD_1357924680
+#endif  // XALANICUMESSAGELOADER_HEADER_GUARD_1357924680

@@ -55,89 +55,89 @@ class XALAN_XPATH_EXPORT XObjectTypeCallback
 {
 public:
 
-	XObjectTypeCallback(XPathExecutionContext&  theExecutionContext);
+    XObjectTypeCallback(XPathExecutionContext&  theExecutionContext);
 
-	virtual
-	~XObjectTypeCallback();
+    virtual
+    ~XObjectTypeCallback();
 
-	/**
-	 * Call back the XObject with a numeric value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	Number(const XObject&	theXObject,
-		   double			theValue) = 0;
+    /**
+     * Call back the XObject with a numeric value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    Number(const XObject&   theXObject,
+           double           theValue) = 0;
 
-	/**
-	 * Call back the XObject with a boolean value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	Boolean(const XObject&	theXObject,
-		    bool			theValue) = 0;
+    /**
+     * Call back the XObject with a boolean value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    Boolean(const XObject&  theXObject,
+            bool            theValue) = 0;
 
-	/**
-	 * Call back the XObject with a string value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	String(const XObject&			theXObject,
-		   const XalanDOMString&	theValue) = 0;
+    /**
+     * Call back the XObject with a string value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    String(const XObject&           theXObject,
+           const XalanDOMString&    theValue) = 0;
 
-	/**
-	 * Call back the XObject with a result tree fragment value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	ResultTreeFragment(const XObject&				theXObject,
-					   const XalanDocumentFragment&	theValue) = 0;
+    /**
+     * Call back the XObject with a result tree fragment value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    ResultTreeFragment(const XObject&               theXObject,
+                       const XalanDocumentFragment& theValue) = 0;
 
-	/**
-	 * Call back the XObject with a result tree fragment value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	ResultTreeFragment(const XObject&			theXObject,
-					   XalanDocumentFragment&	theValue) = 0;
+    /**
+     * Call back the XObject with a result tree fragment value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    ResultTreeFragment(const XObject&           theXObject,
+                       XalanDocumentFragment&   theValue) = 0;
 
-	/**
-	 * Call back the XObject with a node set value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	NodeSet(const XObject&			theXObject,
-			const NodeRefListBase&	theValue) = 0;
+    /**
+     * Call back the XObject with a node set value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    NodeSet(const XObject&          theXObject,
+            const NodeRefListBase&  theValue) = 0;
 
-	/**
-	 * Call back the XObject with an unknown value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	Unknown(const XObject&			theObject,
-			const XalanDOMString&	theName) = 0;
+    /**
+     * Call back the XObject with an unknown value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    Unknown(const XObject&          theObject,
+            const XalanDOMString&   theName) = 0;
 
-	/**
-	 * Call back the XObject with a null value.
-	 *
-	 * @param theXObject
-	 * @param theValue
-	 */
-	virtual void
-	Null(const XObject&		theObject) = 0;
+    /**
+     * Call back the XObject with a null value.
+     *
+     * @param theXObject
+     * @param theValue
+     */
+    virtual void
+    Null(const XObject&     theObject) = 0;
 
     XPathExecutionContext&
     getExecutionContext()
@@ -164,4 +164,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECT_TYPE_CALLBACK_HEADER_GUARD_1357924680
+#endif  // XOBJECT_TYPE_CALLBACK_HEADER_GUARD_1357924680

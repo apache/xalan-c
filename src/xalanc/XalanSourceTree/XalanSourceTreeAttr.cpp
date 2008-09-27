@@ -35,20 +35,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeAttr::XalanSourceTreeAttr(
-			const XalanDOMString&		theName,
-			const XalanDOMString&		theValue,
-			XalanSourceTreeElement*		theOwnerElement,
-			IndexType					theIndex) :
-	XalanAttr(),
-	m_name(theName),
-	m_value(theValue),
-	m_ownerElement(theOwnerElement),
-	m_index(theIndex)
+            const XalanDOMString&       theName,
+            const XalanDOMString&       theValue,
+            XalanSourceTreeElement*     theOwnerElement,
+            IndexType                   theIndex) :
+    XalanAttr(),
+    m_name(theName),
+    m_value(theValue),
+    m_ownerElement(theOwnerElement),
+    m_index(theIndex)
 {
 }
 
@@ -62,7 +62,7 @@ XalanSourceTreeAttr::~XalanSourceTreeAttr()
 const XalanDOMString&
 XalanSourceTreeAttr::getNodeName() const
 {
-	return m_name;
+    return m_name;
 }
 
 
@@ -70,7 +70,7 @@ XalanSourceTreeAttr::getNodeName() const
 const XalanDOMString&
 XalanSourceTreeAttr::getNodeValue() const
 {
-	return m_value;
+    return m_value;
 }
 
 
@@ -78,7 +78,7 @@ XalanSourceTreeAttr::getNodeValue() const
 XalanSourceTreeAttr::NodeType
 XalanSourceTreeAttr::getNodeType() const
 {
-	return ATTRIBUTE_NODE;
+    return ATTRIBUTE_NODE;
 }
 
 
@@ -86,7 +86,7 @@ XalanSourceTreeAttr::getNodeType() const
 XalanNode*
 XalanSourceTreeAttr::getParentNode() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -94,7 +94,7 @@ XalanSourceTreeAttr::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeAttr::getChildNodes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -102,7 +102,7 @@ XalanSourceTreeAttr::getChildNodes() const
 XalanNode*
 XalanSourceTreeAttr::getFirstChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -110,7 +110,7 @@ XalanSourceTreeAttr::getFirstChild() const
 XalanNode*
 XalanSourceTreeAttr::getLastChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -118,7 +118,7 @@ XalanSourceTreeAttr::getLastChild() const
 XalanNode*
 XalanSourceTreeAttr::getPreviousSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -126,7 +126,7 @@ XalanSourceTreeAttr::getPreviousSibling() const
 XalanNode*
 XalanSourceTreeAttr::getNextSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -134,7 +134,7 @@ XalanSourceTreeAttr::getNextSibling() const
 const XalanNamedNodeMap*
 XalanSourceTreeAttr::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -142,9 +142,9 @@ XalanSourceTreeAttr::getAttributes() const
 XalanDocument*
 XalanSourceTreeAttr::getOwnerDocument() const
 {
-	assert(m_ownerElement != 0);
+    assert(m_ownerElement != 0);
 
-	return m_ownerElement->getOwnerDocument();
+    return m_ownerElement->getOwnerDocument();
 }
 
 
@@ -152,7 +152,7 @@ XalanSourceTreeAttr::getOwnerDocument() const
 const XalanDOMString&
 XalanSourceTreeAttr::getNamespaceURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -160,7 +160,7 @@ XalanSourceTreeAttr::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeAttr::getPrefix() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -168,7 +168,7 @@ XalanSourceTreeAttr::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeAttr::getLocalName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -176,7 +176,7 @@ XalanSourceTreeAttr::getLocalName() const
 bool
 XalanSourceTreeAttr::isIndexed() const
 {
-	return true;
+    return true;
 }
 
 
@@ -184,7 +184,7 @@ XalanSourceTreeAttr::isIndexed() const
 XalanSourceTreeAttr::IndexType
 XalanSourceTreeAttr::getIndex() const
 {
-	return m_index;
+    return m_index;
 }
 
 
@@ -192,7 +192,7 @@ XalanSourceTreeAttr::getIndex() const
 const XalanDOMString&
 XalanSourceTreeAttr::getName() const
 {
-	return m_name;
+    return m_name;
 }
 
 
@@ -200,7 +200,7 @@ XalanSourceTreeAttr::getName() const
 bool
 XalanSourceTreeAttr::getSpecified() const
 {
-	return false;
+    return false;
 }
 
 
@@ -208,7 +208,7 @@ XalanSourceTreeAttr::getSpecified() const
 const XalanDOMString&
 XalanSourceTreeAttr::getValue() const
 {
-	return m_value;
+    return m_value;
 }
 
 
@@ -216,7 +216,7 @@ XalanSourceTreeAttr::getValue() const
 XalanElement*
 XalanSourceTreeAttr::getOwnerElement() const
 {
-	return m_ownerElement;
+    return m_ownerElement;
 }
 
 

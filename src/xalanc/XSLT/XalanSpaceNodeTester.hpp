@@ -42,20 +42,20 @@ class XalanSpaceNodeTester : public XPath::NodeTester
 {
 public:
 
-	typedef XPath::NodeTester	ParentType;
+    typedef XPath::NodeTester   ParentType;
 
-	enum eType
-	{
-		eStrip,
-		ePreserve
-	};
+    enum eType
+    {
+        eStrip,
+        ePreserve
+    };
 
     XalanSpaceNodeTester();
 
-    XalanSpaceNodeTester(const XalanSpaceNodeTester&	theSource);
+    XalanSpaceNodeTester(const XalanSpaceNodeTester&    theSource);
 
     XalanSpaceNodeTester(
-			eType							theType,
+            eType                           theType,
             StylesheetConstructionContext&  theContext,
             const XalanDOMString&           theNameTest,
             const PrefixResolver&           thePrefixResolver,
@@ -69,28 +69,28 @@ public:
         return m_matchScore;
     }
 
-	eType
-	getType() const
-	{
-		return m_type;
-	}
+    eType
+    getType() const
+    {
+        return m_type;
+    }
 
-	XalanSpaceNodeTester&
-	operator=(const XalanSpaceNodeTester&	theRHS)
-	{
-		m_matchScore = theRHS.m_matchScore;
-		m_type = theRHS.m_type;
+    XalanSpaceNodeTester&
+    operator=(const XalanSpaceNodeTester&   theRHS)
+    {
+        m_matchScore = theRHS.m_matchScore;
+        m_type = theRHS.m_type;
 
-		ParentType::operator=(theRHS);
+        ParentType::operator=(theRHS);
 
-		return *this;
-	}
+        return *this;
+    }
 
 private:
 
     XPath::eMatchScore  m_matchScore;
 
-	eType				m_type;
+    eType               m_type;
 };
 
 
@@ -99,4 +99,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALAN_SPACENODETESTER_HEADER_GUARD_1357924680)
+#endif  // !defined(XALAN_SPACENODETESTER_HEADER_GUARD_1357924680)

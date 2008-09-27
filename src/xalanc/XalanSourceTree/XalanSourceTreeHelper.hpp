@@ -46,116 +46,116 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeHelper
 {
 public:
 
-	static XalanNode*
-	getLastSibling(XalanNode*	theNode);
+    static XalanNode*
+    getLastSibling(XalanNode*   theNode);
 
-	static void
-	appendSibling(
-			XalanSourceTreeDocument*	theDocument,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling);
+    static void
+    appendSibling(
+            XalanSourceTreeDocument*    theDocument,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling);
 
-	static void
-	appendSibling(
-			XalanSourceTreeComment*		theNode,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling);
+    static void
+    appendSibling(
+            XalanSourceTreeComment*     theNode,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling);
 
-	static void
-	appendSibling(
-			XalanSourceTreeElement*		theNode,
-			XalanNode*&					theNextSiblingSlot,
-			XalanNode*					theNewSibling);
+    static void
+    appendSibling(
+            XalanSourceTreeElement*     theNode,
+            XalanNode*&                 theNextSiblingSlot,
+            XalanNode*                  theNewSibling);
 
-	static void
-	appendSibling(
-			XalanSourceTreeProcessingInstruction*	theNode,
-			XalanNode*&								theNextSiblingSlot,
-			XalanNode*								theNewSibling);
+    static void
+    appendSibling(
+            XalanSourceTreeProcessingInstruction*   theNode,
+            XalanNode*&                             theNextSiblingSlot,
+            XalanNode*                              theNewSibling);
 
-	static void
-	appendSibling(
-			XalanSourceTreeText*	theNode,
-			XalanNode*&				theNextSiblingSlot,
-			XalanNode*				theNewSibling);
+    static void
+    appendSibling(
+            XalanSourceTreeText*    theNode,
+            XalanNode*&             theNextSiblingSlot,
+            XalanNode*              theNewSibling);
 
-	// New appendSibling interfaces...
-	static void
-	appendSibling(
-			XalanNode*					theLastSibling,
-			XalanSourceTreeComment*		theNewLastSibling);
+    // New appendSibling interfaces...
+    static void
+    appendSibling(
+            XalanNode*                  theLastSibling,
+            XalanSourceTreeComment*     theNewLastSibling);
 
-	static void
-	appendSibling(
-			XalanNode*					theLastSibling,
-			XalanSourceTreeElement*		theNewLastSibling);
+    static void
+    appendSibling(
+            XalanNode*                  theLastSibling,
+            XalanSourceTreeElement*     theNewLastSibling);
 
-	static void
-	appendSibling(
-			XalanNode*								theLastSibling,
-			XalanSourceTreeProcessingInstruction*	theNewLastSibling);
+    static void
+    appendSibling(
+            XalanNode*                              theLastSibling,
+            XalanSourceTreeProcessingInstruction*   theNewLastSibling);
 
-	static void
-	appendSibling(
-			XalanNode*				theLastSibling,
-			XalanSourceTreeText*	theNewLastSibling);
-
-
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeComment*		theNewSibling);
+    static void
+    appendSibling(
+            XalanNode*              theLastSibling,
+            XalanSourceTreeText*    theNewLastSibling);
 
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeElement*		theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeComment*     theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeElement*					theOwnerElement,
-			XalanNode*&								theFirstChildSlot,
-			XalanSourceTreeProcessingInstruction*	theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeElement*		theOwnerElement,
-			XalanNode*&					theFirstChildSlot,
-			XalanSourceTreeText*		theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeElement*     theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeComment*				theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeElement*                 theOwnerElement,
+            XalanNode*&                             theFirstChildSlot,
+            XalanSourceTreeProcessingInstruction*   theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeElement*				theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeElement*     theOwnerElement,
+            XalanNode*&                 theFirstChildSlot,
+            XalanSourceTreeText*        theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*		theOwnerDocumentFragment,
-			XalanNode*&								theFirstChildSlot,
-			XalanSourceTreeProcessingInstruction*	theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeComment*             theNewSibling);
 
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeDocumentFragment*	theOwnerDocumentFragment,
-			XalanNode*&							theFirstChildSlot,
-			XalanSourceTreeText*				theNewSibling);
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeElement*             theNewSibling);
+
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeDocumentFragment*        theOwnerDocumentFragment,
+            XalanNode*&                             theFirstChildSlot,
+            XalanSourceTreeProcessingInstruction*   theNewSibling);
+
+    static void
+    appendSiblingToChild(
+            XalanSourceTreeDocumentFragment*    theOwnerDocumentFragment,
+            XalanNode*&                         theFirstChildSlot,
+            XalanSourceTreeText*                theNewSibling);
 
 private:
 
-	// Not implemented...
-	XalanSourceTreeHelper();
+    // Not implemented...
+    XalanSourceTreeHelper();
 
-	XalanSourceTreeHelper(const XalanSourceTreeHelper&);
+    XalanSourceTreeHelper(const XalanSourceTreeHelper&);
 };
 
 
@@ -164,4 +164,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEHELPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEHELPER_HEADER_GUARD_1357924680)

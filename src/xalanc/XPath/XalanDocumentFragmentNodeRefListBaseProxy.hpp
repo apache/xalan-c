@@ -43,38 +43,38 @@ class XALAN_XPATH_EXPORT XalanDocumentFragmentNodeRefListBaseProxy : public Node
 public:
 
 
-	/**
-	 * Construct an instance from a document fragment
-	 * 
-	 * @param value source document fragment.
-	 */
-	XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&	value);
+    /**
+     * Construct an instance from a document fragment
+     * 
+     * @param value source document fragment.
+     */
+    XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&  value);
 
-	/**
-	 * Copy constructor
-	 * 
-	 * @param source source instance
-	 */
-	XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&	source);
+    /**
+     * Copy constructor
+     * 
+     * @param source source instance
+     */
+    XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&  source);
 
-	virtual
-	~XalanDocumentFragmentNodeRefListBaseProxy();
+    virtual
+    ~XalanDocumentFragmentNodeRefListBaseProxy();
 
 
-	// These methods are inherited from NodeRefListBase...
-	XalanNode*
-	item(size_type	index) const;
+    // These methods are inherited from NodeRefListBase...
+    XalanNode*
+    item(size_type  index) const;
 
-	size_type
-	getLength() const;
+    size_type
+    getLength() const;
 
-	size_type
-	indexOf(const XalanNode*	theNode) const;
+    size_type
+    indexOf(const XalanNode*    theNode) const;
 
 private:
 
-	// Data members...
-	const XalanDocumentFragment&	m_value;	
+    // Data members...
+    const XalanDocumentFragment&    m_value;    
 };
 
 
@@ -83,4 +83,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANDOCUMENTFRAGMENTNODEREFLISTBASEPROXY_HEADER_GUARD_1357924680
+#endif  // XALANDOCUMENTFRAGMENTNODEREFLISTBASEPROXY_HEADER_GUARD_1357924680

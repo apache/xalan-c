@@ -35,88 +35,88 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XObjectPtr
 XalanEXSLTFunctionEvaluate::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
 {
-	try
-	{
-		return ParentType::execute(executionContext, context, args, locator);
-	}
-	catch(const XSLException&)
-	{
-	}
+    try
+    {
+        return ParentType::execute(executionContext, context, args, locator);
+    }
+    catch(const XSLException&)
+    {
+    }
 
-	XPathExecutionContext::BorrowReturnMutableNodeRefList	theGuard(executionContext);
+    XPathExecutionContext::BorrowReturnMutableNodeRefList   theGuard(executionContext);
 
-	return executionContext.getXObjectFactory().createNodeSet(theGuard);
+    return executionContext.getXObjectFactory().createNodeSet(theGuard);
 }
 
 
 
-static const XalanDOMChar	s_dynamicNamespace[] =
+static const XalanDOMChar   s_dynamicNamespace[] =
 {
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charColon,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charFullStop,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charSolidus,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_y,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_m,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_c,
-	0
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charColon,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charFullStop,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charSolidus,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_y,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_c,
+    0
 };
 
 
 
-static const XalanDOMChar	s_evaluateFunctionName[] =
+static const XalanDOMChar   s_evaluateFunctionName[] =
 {
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_v,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_e,
-	0
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_v,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_e,
+    0
 };
 
 
 
-static const XalanEXSLTFunctionEvaluate		s_evaluateFunction;
+static const XalanEXSLTFunctionEvaluate     s_evaluateFunction;
 
 
 
-static const XalanEXSLTDynamicFunctionsInstaller::FunctionTableEntry	theFunctionTable[] =
+static const XalanEXSLTDynamicFunctionsInstaller::FunctionTableEntry    theFunctionTable[] =
 {
-	{ s_evaluateFunctionName, &s_evaluateFunction},
-	{ 0, 0 }
+    { s_evaluateFunctionName, &s_evaluateFunction},
+    { 0, 0 }
 };
 
 
 
 void
-XalanEXSLTDynamicFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSupport)
+XalanEXSLTDynamicFunctionsInstaller::installLocal(XPathEnvSupportDefault&   theSupport)
 {
-	doInstallLocal(s_dynamicNamespace, theFunctionTable, theSupport);
+    doInstallLocal(s_dynamicNamespace, theFunctionTable, theSupport);
 }
 
 
@@ -124,16 +124,16 @@ XalanEXSLTDynamicFunctionsInstaller::installLocal(XPathEnvSupportDefault&	theSup
 void
 XalanEXSLTDynamicFunctionsInstaller::installGlobal(MemoryManager& theManager)
 {
-	doInstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
+    doInstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
 
 }
 
 
 
 void
-XalanEXSLTDynamicFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSupport)
+XalanEXSLTDynamicFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault& theSupport)
 {
-	doUninstallLocal(s_dynamicNamespace, theFunctionTable, theSupport);
+    doUninstallLocal(s_dynamicNamespace, theFunctionTable, theSupport);
 }
 
 
@@ -141,7 +141,7 @@ XalanEXSLTDynamicFunctionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theS
 void
 XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 {
-	doUninstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
+    doUninstallGlobal(theManager, s_dynamicNamespace, theFunctionTable);
 
 }
 

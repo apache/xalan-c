@@ -37,16 +37,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanSpaceNodeTester::XalanSpaceNodeTester() :
     NodeTester(),
     m_matchScore(XPath::eMatchScoreNone),
-	m_type(ePreserve)
+    m_type(ePreserve)
 {
 }
 
 
 
-XalanSpaceNodeTester::XalanSpaceNodeTester(const XalanSpaceNodeTester&	theSource) :
+XalanSpaceNodeTester::XalanSpaceNodeTester(const XalanSpaceNodeTester&  theSource) :
     NodeTester(theSource),
     m_matchScore(theSource.m_matchScore),
-	m_type(theSource.m_type)
+    m_type(theSource.m_type)
 {
 }
     
@@ -54,20 +54,20 @@ XalanSpaceNodeTester::XalanSpaceNodeTester(const XalanSpaceNodeTester&	theSource
 
 
 XalanSpaceNodeTester::XalanSpaceNodeTester(
-			eType							theType,
+            eType                           theType,
             StylesheetConstructionContext&  theConstructionContext,
             const XalanDOMString&           theNameTest,
             const PrefixResolver&           thePrefixResolver,
             const LocatorType*              theLocator) :
     NodeTester(),
     m_matchScore(XPath::eMatchScoreNone),
-	m_type(theType)
+    m_type(theType)
 {
-	m_matchScore = initialize(
-		theConstructionContext,
-		theNameTest,
-		thePrefixResolver,
-		theLocator);
+    m_matchScore = initialize(
+        theConstructionContext,
+        theNameTest,
+        thePrefixResolver,
+        theLocator);
 
     assert(m_matchScore != XPath::eMatchScoreNone);
 }

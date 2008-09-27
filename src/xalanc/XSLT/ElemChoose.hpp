@@ -38,46 +38,46 @@ class ElemChoose: public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:choose" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemChoose(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:choose" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemChoose(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual const ElemTemplateElement*
-	getNextChildElemToExecute(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement* currentElem) const;
+    virtual const ElemTemplateElement*
+    getNextChildElemToExecute(
+            StylesheetExecutionContext& executionContext,
+            const ElemTemplateElement* currentElem) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 
 protected:
 
-	virtual bool
-	childTypeAllowed(int	xslToken) const;
+    virtual bool
+    childTypeAllowed(int    xslToken) const;
 };
 
 
@@ -86,4 +86,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMCHOOSE_HEADER_GUARD
+#endif  // XALAN_ELEMCHOOSE_HEADER_GUARD

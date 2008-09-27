@@ -35,88 +35,88 @@
 void
 Usage()
 {
-	fprintf(stderr, "Usage: c-api <xml file> [<xsl file>]\n");
+    fprintf(stderr, "Usage: c-api <xml file> [<xsl file>]\n");
 }
 
 
 
 CallbackSizeType
 OutputHandler(
-			const char*			data,
-			CallbackSizeType	length,
-			void*				handle)
+            const char*         data,
+            CallbackSizeType    length,
+            void*               handle)
 {
-	FILE*	theHandle = (FILE*)handle;
+    FILE*   theHandle = (FILE*)handle;
 
-	return fwrite(data, sizeof(char), length, theHandle);
+    return fwrite(data, sizeof(char), length, theHandle);
 }
 
 
 
 void
-FlushHandler(void*	handle)
+FlushHandler(void*  handle)
 {
-	FILE*	theHandle = (FILE*)handle;
+    FILE*   theHandle = (FILE*)handle;
 
-	fflush(theHandle);
+    fflush(theHandle);
 }
 
 
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	if (argc < 2 || argc > 3)
-	{
-		Usage();
-	}
-	else
-	{
-		int			error = 0;
-		XalanHandle	xalan = NULL;
+    if (argc < 2 || argc > 3)
+    {
+        Usage();
+    }
+    else
+    {
+        int         error = 0;
+        XalanHandle xalan = NULL;
 
-		XalanInitialize();
+        XalanInitialize();
 
-		xalan = CreateXalanTransformer();
+        xalan = CreateXalanTransformer();
 
-		if (xalan == 0)
-		{
-			fprintf(stderr, "Unable to create transformer...\n");
-		}
-		else
-		{
-			if (argc == 2)
-			{
-				error = XalanTransformToHandler(argv[1], NULL, xalan, stdout, OutputHandler, FlushHandler);
-			}
-			else
-			{
-				error = XalanTransformToHandler(argv[1], argv[2], xalan, stdout, OutputHandler, FlushHandler);
-			}
+        if (xalan == 0)
+        {
+            fprintf(stderr, "Unable to create transformer...\n");
+        }
+        else
+        {
+            if (argc == 2)
+            {
+                error = XalanTransformToHandler(argv[1], NULL, xalan, stdout, OutputHandler, FlushHandler);
+            }
+            else
+            {
+                error = XalanTransformToHandler(argv[1], argv[2], xalan, stdout, OutputHandler, FlushHandler);
+            }
 
-			if (error != 0)
-			{
-				fprintf(
-					stderr,
-					"Error transforming.  The error code is %d.  The message is %s.\n",
-					error,
-					XalanGetLastError(xalan));
-			}
+            if (error != 0)
+            {
+                fprintf(
+                    stderr,
+                    "Error transforming.  The error code is %d.  The message is %s.\n",
+                    error,
+                    XalanGetLastError(xalan));
+            }
 
-			DeleteXalanTransformer(xalan);
-		}
+            DeleteXalanTransformer(xalan);
+        }
 
-		XalanTerminate(1);
-	}
+        XalanTerminate(1);
+    }
 
-	return 0;
+    return 0;
 }

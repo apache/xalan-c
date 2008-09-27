@@ -66,406 +66,406 @@ class XercesDocumentBridge;
 class XercesDocumentWrapper;
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException	SAXParseExceptionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException    SAXParseExceptionType;
 
 
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
-	public XMLParserLiaison,
-	public ErrorHandler
+    public XMLParserLiaison,
+    public ErrorHandler
 {
     
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParser			SAXParserType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParser            SAXParserType;
 
-	/**
-	 * Construct a XercesParserLiaison instance.
-	 *
-	 * @param theSupport instance of DOMSupport object
-	 *
-	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
-	 */
-	XercesParserLiaison(
-        XercesDOMSupport&	theSupport,
+    /**
+     * Construct a XercesParserLiaison instance.
+     *
+     * @param theSupport instance of DOMSupport object
+     *
+     * @deprecated This constructor is deprecated.  Use the next constructor instead.
+     */
+    XercesParserLiaison(
+        XercesDOMSupport&   theSupport,
         MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
-	/**
-	 * Construct a XercesParserLiaison instance.
-	 */
-	XercesParserLiaison(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
+    /**
+     * Construct a XercesParserLiaison instance.
+     */
+    XercesParserLiaison(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
-	virtual
-	~XercesParserLiaison();
+    virtual
+    ~XercesParserLiaison();
 
 
 
-	// These interfaces are inherited from XMLParserLiaison...
+    // These interfaces are inherited from XMLParserLiaison...
     MemoryManager&
     getMemoryManager()
     {
         return m_externalSchemaLocation.getMemoryManager();
     }
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
-	virtual ExecutionContext*
-	getExecutionContext() const;
+    virtual ExecutionContext*
+    getExecutionContext() const;
 
-	virtual void
-	setExecutionContext(ExecutionContext&	theContext);
+    virtual void
+    setExecutionContext(ExecutionContext&   theContext);
 
-	virtual XalanDocument*
-	parseXMLStream(
-			const InputSource&	    reader,
-			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+    virtual XalanDocument*
+    parseXMLStream(
+            const InputSource&      reader,
+            const XalanDOMString&   identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
-	virtual void
-	parseXMLStream(
-			const InputSource&	    urlInputSource,
-			DocumentHandler&	    handler,
-			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+    virtual void
+    parseXMLStream(
+            const InputSource&      urlInputSource,
+            DocumentHandler&        handler,
+            const XalanDOMString&   identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
-	virtual void
-	destroyDocument(XalanDocument*	theDocument);
+    virtual void
+    destroyDocument(XalanDocument*  theDocument);
 
-	virtual int
-	getIndent() const;
+    virtual int
+    getIndent() const;
 
-	virtual void
-	setIndent(int	i);
+    virtual void
+    setIndent(int   i);
 
-	virtual bool
-	getUseValidation() const;
+    virtual bool
+    getUseValidation() const;
 
-	virtual void
-	setUseValidation(bool	b);
+    virtual void
+    setUseValidation(bool   b);
 
-	virtual const XalanDOMString&
-	getParserDescription(XalanDOMString&    theResult) const;
+    virtual const XalanDOMString&
+    getParserDescription(XalanDOMString&    theResult) const;
 
-	virtual EntityResolver*
-	getEntityResolver() const;
+    virtual EntityResolver*
+    getEntityResolver() const;
 
-	virtual void
-	setEntityResolver(EntityResolver*	resolver);
+    virtual void
+    setEntityResolver(EntityResolver*   resolver);
 
-	virtual XMLEntityResolver*
-	getXMLEntityResolver() const;
+    virtual XMLEntityResolver*
+    getXMLEntityResolver() const;
 
-	virtual void
-	setXMLEntityResolver(XMLEntityResolver*     resolver);
+    virtual void
+    setXMLEntityResolver(XMLEntityResolver*     resolver);
 
-	virtual ErrorHandler*
-	getErrorHandler() const;
+    virtual ErrorHandler*
+    getErrorHandler() const;
 
-	virtual void
-	setErrorHandler(ErrorHandler*	handler);
+    virtual void
+    setErrorHandler(ErrorHandler*   handler);
 
-	// These interfaces are new to XercesParserLiaison...
+    // These interfaces are new to XercesParserLiaison...
 
-	/**
-	  * Create an instance of the Xerces default document that
-	  * is suitable as a raw document.  The new document instance
+    /**
+      * Create an instance of the Xerces default document that
+      * is suitable as a raw document.  The new document instance
       * is owned by this instance and will be destroyed when this
       * instance goes out of scope, or by an explicit call to
       * destroyDocument()
-	  *
-	  * @return a pointer to the new instance
-	  */
-	virtual DOMDocument_Type*
-	createDOMFactory();
+      *
+      * @return a pointer to the new instance
+      */
+    virtual DOMDocument_Type*
+    createDOMFactory();
 
-	/**
-	  * Destroy an instance created by a call to createDOMFactory().
-	  *
-	  * @theDocument a pointer to the instance to be destroyed
-	  */
-	virtual void
-	destroyDocument(DOMDocument_Type*   theDocument);
+    /**
+      * Destroy an instance created by a call to createDOMFactory().
+      *
+      * @theDocument a pointer to the instance to be destroyed
+      */
+    virtual void
+    destroyDocument(DOMDocument_Type*   theDocument);
 
-	/** Get the 'include ignorable whitespace' flag.
-	  *
-	  * This method returns the state of the parser's include ignorable
-	  * whitespace flag.
-	  *
-	  * @return 'true' if the include ignorable whitespace flag is set on
-	  * 		the parser, 'false' otherwise.
-	  *
-	  * @see #setIncludeIgnorableWhitespace
-	  */
-	virtual bool
-	getIncludeIgnorableWhitespace() const;
+    /** Get the 'include ignorable whitespace' flag.
+      *
+      * This method returns the state of the parser's include ignorable
+      * whitespace flag.
+      *
+      * @return 'true' if the include ignorable whitespace flag is set on
+      *         the parser, 'false' otherwise.
+      *
+      * @see #setIncludeIgnorableWhitespace
+      */
+    virtual bool
+    getIncludeIgnorableWhitespace() const;
 
-	/** Set the 'include ignorable whitespace' flag
-	  *
-	  * This method allows the user to specify whether a validating parser
-	  * should include ignorable whitespaces as text nodes.  It has no effect
-	  * on non-validating parsers which always include non-markup text.
-	  * <p>When set to true (also the default), ignorable whitespaces will be
-	  * added to the DOM tree as text nodes.  The method
-	  * <code>DOMText::isWhitespace</code> will return true for those text
-	  * nodes only.
-	  * <p>When set to false, all ignorable whitespace will be discarded and
-	  * no text node is added to the DOM tree.	Note: applications intended
-	  * to process the "xml:space" attribute should not set this flag to false.
-	  *
-	  * @param include The new state of the include ignorable whitespace
-	  * 			   flag.
-	  *
-	  * @see #getIncludeIgnorableWhitespace
-	  */
-	virtual void
-	setIncludeIgnorableWhitespace(bool	include);
+    /** Set the 'include ignorable whitespace' flag
+      *
+      * This method allows the user to specify whether a validating parser
+      * should include ignorable whitespaces as text nodes.  It has no effect
+      * on non-validating parsers which always include non-markup text.
+      * <p>When set to true (also the default), ignorable whitespaces will be
+      * added to the DOM tree as text nodes.  The method
+      * <code>DOMText::isWhitespace</code> will return true for those text
+      * nodes only.
+      * <p>When set to false, all ignorable whitespace will be discarded and
+      * no text node is added to the DOM tree.  Note: applications intended
+      * to process the "xml:space" attribute should not set this flag to false.
+      *
+      * @param include The new state of the include ignorable whitespace
+      *                flag.
+      *
+      * @see #getIncludeIgnorableWhitespace
+      */
+    virtual void
+    setIncludeIgnorableWhitespace(bool  include);
 
-	/**
-	  * This method returns the state of the parser's namespace
-	  * handling capability.
-	  *
-	  * @return true, if the parser is currently configured to
-	  * 		understand namespaces, false otherwise.
-	  *
-	  * @see #setDoNamespaces
-	  */
-	virtual bool
-	getDoNamespaces() const;
+    /**
+      * This method returns the state of the parser's namespace
+      * handling capability.
+      *
+      * @return true, if the parser is currently configured to
+      *         understand namespaces, false otherwise.
+      *
+      * @see #setDoNamespaces
+      */
+    virtual bool
+    getDoNamespaces() const;
 
-	/**
-	  * This method allows users to enable or disable the parser's
-	  * namespace processing. When set to true, parser starts enforcing
-	  * all the constraints / rules specified by the NameSpace
-	  * specification.
-	  *
-	  * <p>The parser's default state is: false.</p>
-	  *
-	  * <p>This flag is ignored by the underlying scanner if the installed
-	  * validator indicates that namespace constraints should be
-	  * enforced.</p>
-	  *
-	  * @param newState The value specifying whether NameSpace rules should
-	  * 				be enforced or not.
-	  *
-	  * @see #getDoNamespaces
-	  */
-	virtual void
-	setDoNamespaces(bool	newState);
+    /**
+      * This method allows users to enable or disable the parser's
+      * namespace processing. When set to true, parser starts enforcing
+      * all the constraints / rules specified by the NameSpace
+      * specification.
+      *
+      * <p>The parser's default state is: false.</p>
+      *
+      * <p>This flag is ignored by the underlying scanner if the installed
+      * validator indicates that namespace constraints should be
+      * enforced.</p>
+      *
+      * @param newState The value specifying whether NameSpace rules should
+      *                 be enforced or not.
+      *
+      * @see #getDoNamespaces
+      */
+    virtual void
+    setDoNamespaces(bool    newState);
 
-	/**
-	  * This method returns the state of the parser's
-	  * exit-on-First-Fatal-Error flag.
-	  *
-	  * @return true, if the parser is currently configured to
-	  * 		exit on the first fatal error, false otherwise.
-	  *
-	  * @see #setExitOnFirstFatalError
-	  */
-	virtual bool
-	getExitOnFirstFatalError() const;
+    /**
+      * This method returns the state of the parser's
+      * exit-on-First-Fatal-Error flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         exit on the first fatal error, false otherwise.
+      *
+      * @see #setExitOnFirstFatalError
+      */
+    virtual bool
+    getExitOnFirstFatalError() const;
 
-	/**
-	  * This method allows users to set the parser's behaviour when it
-	  * encounters the first fatal error. If set to true, the parser
-	  * will exit at the first fatal error. If false, then it will
-	  * report the error and continue processing.
-	  *
-	  * <p>The default value is 'true' and the parser exits on the
-	  * first fatal error.</p>
-	  *
-	  * @param newState The value specifying whether the parser should
-	  * 				continue or exit when it encounters the first
-	  * 				fatal error.
-	  *
-	  * @see #getExitOnFirstFatalError
-	  */
-	virtual void
-	setExitOnFirstFatalError(bool	newState);
+    /**
+      * This method allows users to set the parser's behaviour when it
+      * encounters the first fatal error. If set to true, the parser
+      * will exit at the first fatal error. If false, then it will
+      * report the error and continue processing.
+      *
+      * <p>The default value is 'true' and the parser exits on the
+      * first fatal error.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 continue or exit when it encounters the first
+      *                 fatal error.
+      *
+      * @see #getExitOnFirstFatalError
+      */
+    virtual void
+    setExitOnFirstFatalError(bool   newState);
 
-	/**
-	  * This method returns the location for an external schema document
-	  * for parsing.
-	  *
-	  * @return A string representing the location of the external schema document
-	  */
-	virtual const XalanDOMChar*
-	getExternalSchemaLocation() const;
+    /**
+      * This method returns the location for an external schema document
+      * for parsing.
+      *
+      * @return A string representing the location of the external schema document
+      */
+    virtual const XalanDOMChar*
+    getExternalSchemaLocation() const;
 
-	/**
-	  * This method sets the location for an external schema document
-	  * for parsing.
-	  *
-	  * @param location A string representing the location of the external schema document
-	  */
-	virtual void
-	setExternalSchemaLocation(const XalanDOMChar*	location);
+    /**
+      * This method sets the location for an external schema document
+      * for parsing.
+      *
+      * @param location A string representing the location of the external schema document
+      */
+    virtual void
+    setExternalSchemaLocation(const XalanDOMChar*   location);
 
-	/**
-	  * This method returns the location for an external schema document
-	  * for parsing.
-	  *
-	  * @return A string representing the location of the external schema document
-	  */
-	virtual const XalanDOMChar*
-	getExternalNoNamespaceSchemaLocation() const;
+    /**
+      * This method returns the location for an external schema document
+      * for parsing.
+      *
+      * @return A string representing the location of the external schema document
+      */
+    virtual const XalanDOMChar*
+    getExternalNoNamespaceSchemaLocation() const;
 
-	/**
-	  * This method sets the location for an external schema document
-	  * for parsing.
-	  *
-	  * @param location A string representing the location of the external schema document
-	  */
-	virtual void
-	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location);
-
-#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-	/**
-	 * This API is deprecated.
-	 *
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 * The parser liaison owns the instance, and you must not delete
-	 * it.	The liaison will delete it when reset() is called, or the
-	 * liaison is destroyed.
-	 *
-	 * @deprecated The Xerces DOM bridge is deprecated.
-	 * @param theXercesDocument The Xerces document.
-	 * @return a pointer to a new XalanDocument-derived instance.
-	 */
-	XalanDocument*
-	createDocument(const DOM_Document_Type&		theXercesDocument)
-	{
-		return createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
-	}
-
-	/**
-	 * This API is deprecated.
-	 *
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 * The parser liaison owns the instance, and you must not delete
-	 * it.	The liaison will delete it when reset() is called, or the
-	 * liaison is destroyed.
-	 *
-	 * @deprecated The Xerces DOM bridge is deprecated.
-	 * @param theXercesDocument The Xerces document.
-	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
-	 * @param buildBridge If true, the entire bridge structure is built.
-	 * @return a pointer to a new XalanDocument-derived instance.
-	 */
-	XalanDocument*
-	createDocument(
-			const DOM_Document_Type& 	theXercesDocument,
-			bool						threadSafe,
-			bool						buildBridge);
-#endif
-
-	/**
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 * The parser liaison owns the instance, and you must not delete
-	 * it.	The liaison will delete it when reset() is called, or the
-	 * liaison is destroyed.
-	 *
-	 * @param theXercesDocument The Xerces document.
-	 * @return a pointer to a new XalanDocument-derived instance.
-	 */
-	XalanDocument*
-	createDocument(const DOMDocument_Type*	theXercesDocument)
-	{
-		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper, m_buildMaps);
-	}
-
-	/**
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 * The parser liaison owns the instance, and you must not delete
-	 * it.	The liaison will delete it when reset() is called, or the
-	 * liaison is destroyed.
-	 *
-	 * @param theXercesDocument The Xerces document.
-	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildWrapper == true).
-	 * @param buildWrapper If true, the entire wrapper structure is built.
-	 * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
-	 * @return a pointer to a new XalanDocument-derived instance.
-	 */
-	XalanDocument*
-	createDocument(
-			const DOMDocument_Type*		theXercesDocument,
-			bool						threadSafe,
-			bool						buildWrapper,
-			bool						buildMaps = false);
+    /**
+      * This method sets the location for an external schema document
+      * for parsing.
+      *
+      * @param location A string representing the location of the external schema document
+      */
+    virtual void
+    setExternalNoNamespaceSchemaLocation(const XalanDOMChar*    location);
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-	/**
-	 * This API is deprecated.
-	 *
-	 * Map a pointer to a XalanDocument instance to its implementation
-	 * class pointer.  Normally, you should have no reason for doing
-	 * this.  The liaison will return a null pointer if it did not
-	 * create the instance passed.
-	 *
-	 * @deprecated The Xerces DOM bridge has been deprecated.
-	 * @param theDocument A pointer to a XalanDocument instance.
-	 * @return A pointer to the XercesDocumentBridge instance.
-	 */
-	XercesDocumentBridge*
-	mapDocument(const XalanDocument*	theDocument) const;
+    /**
+     * This API is deprecated.
+     *
+     * Create a XalanDocument proxy for an existing Xerces document.
+     * The parser liaison owns the instance, and you must not delete
+     * it.  The liaison will delete it when reset() is called, or the
+     * liaison is destroyed.
+     *
+     * @deprecated The Xerces DOM bridge is deprecated.
+     * @param theXercesDocument The Xerces document.
+     * @return a pointer to a new XalanDocument-derived instance.
+     */
+    XalanDocument*
+    createDocument(const DOM_Document_Type&     theXercesDocument)
+    {
+        return createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
+    }
+
+    /**
+     * This API is deprecated.
+     *
+     * Create a XalanDocument proxy for an existing Xerces document.
+     * The parser liaison owns the instance, and you must not delete
+     * it.  The liaison will delete it when reset() is called, or the
+     * liaison is destroyed.
+     *
+     * @deprecated The Xerces DOM bridge is deprecated.
+     * @param theXercesDocument The Xerces document.
+     * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+     * @param buildBridge If true, the entire bridge structure is built.
+     * @return a pointer to a new XalanDocument-derived instance.
+     */
+    XalanDocument*
+    createDocument(
+            const DOM_Document_Type&    theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildBridge);
 #endif
 
-	/**
-	 * Map a pointer to a XalanDocument instance to its implementation
-	 * class pointer.  Normally, you should have no reason for doing
-	 * this.  The liaison will return a null pointer if it did not
-	 * create the instance passed.
-	 *
-	 * @param theDocument A pointer to a XalanDocument instance.
-	 * @return A pointer to the XercesDocumentWrapper instance.
-	 */
-	XercesDocumentWrapper*
-	mapDocumentToWrapper(const XalanDocument*	theDocument) const;
+    /**
+     * Create a XalanDocument proxy for an existing Xerces document.
+     * The parser liaison owns the instance, and you must not delete
+     * it.  The liaison will delete it when reset() is called, or the
+     * liaison is destroyed.
+     *
+     * @param theXercesDocument The Xerces document.
+     * @return a pointer to a new XalanDocument-derived instance.
+     */
+    XalanDocument*
+    createDocument(const DOMDocument_Type*  theXercesDocument)
+    {
+        return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper, m_buildMaps);
+    }
+
+    /**
+     * Create a XalanDocument proxy for an existing Xerces document.
+     * The parser liaison owns the instance, and you must not delete
+     * it.  The liaison will delete it when reset() is called, or the
+     * liaison is destroyed.
+     *
+     * @param theXercesDocument The Xerces document.
+     * @param threadSafe If true, read access to the tree will be thread-safe (implies buildWrapper == true).
+     * @param buildWrapper If true, the entire wrapper structure is built.
+     * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
+     * @return a pointer to a new XalanDocument-derived instance.
+     */
+    XalanDocument*
+    createDocument(
+            const DOMDocument_Type*     theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildWrapper,
+            bool                        buildMaps = false);
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-	/** 
-	 * This API is deprecated.
-	 *
-	 * Map a pointer to a XalanDocument instance to its corresponding
-	 * class pointer.  Normally, you should have no reason for doing
-	 * this.  The liaison will return a null pointer if it did not
-	 * create the instance passed.
-	 *
-	 * @deprecated The Xerces DOM bridge has been deprecated.
-	 * @param theDocument A pointer to a XalanDocument instance.
-	 * @return A pointer to the XercesDocumentBridge instance.
-	 */
-	DOM_Document_Type
-	mapXercesDocument(const XalanDocument*	theDocument) const;
+    /**
+     * This API is deprecated.
+     *
+     * Map a pointer to a XalanDocument instance to its implementation
+     * class pointer.  Normally, you should have no reason for doing
+     * this.  The liaison will return a null pointer if it did not
+     * create the instance passed.
+     *
+     * @deprecated The Xerces DOM bridge has been deprecated.
+     * @param theDocument A pointer to a XalanDocument instance.
+     * @return A pointer to the XercesDocumentBridge instance.
+     */
+    XercesDocumentBridge*
+    mapDocument(const XalanDocument*    theDocument) const;
 #endif
 
-	/** 
-	 * Map a pointer to a XalanDocument instance to its corresponding
-	 * class pointer.  Normally, you should have no reason for doing
-	 * this.  The liaison will return a null pointer if it did not
-	 * create the instance passed.
-	 *
-	 * @param theDocument A pointer to a XalanDocument instance.
-	 * @return A pointer to the XercesDocumentBridge instance.
-	 */
-	const DOMDocument_Type*
-	mapToXercesDocument(const XalanDocument*	theDocument) const;
+    /**
+     * Map a pointer to a XalanDocument instance to its implementation
+     * class pointer.  Normally, you should have no reason for doing
+     * this.  The liaison will return a null pointer if it did not
+     * create the instance passed.
+     *
+     * @param theDocument A pointer to a XalanDocument instance.
+     * @return A pointer to the XercesDocumentWrapper instance.
+     */
+    XercesDocumentWrapper*
+    mapDocumentToWrapper(const XalanDocument*   theDocument) const;
 
-	// Implementations for SAX ErrorHandler
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
+    /** 
+     * This API is deprecated.
+     *
+     * Map a pointer to a XalanDocument instance to its corresponding
+     * class pointer.  Normally, you should have no reason for doing
+     * this.  The liaison will return a null pointer if it did not
+     * create the instance passed.
+     *
+     * @deprecated The Xerces DOM bridge has been deprecated.
+     * @param theDocument A pointer to a XalanDocument instance.
+     * @return A pointer to the XercesDocumentBridge instance.
+     */
+    DOM_Document_Type
+    mapXercesDocument(const XalanDocument*  theDocument) const;
+#endif
 
-	virtual void
-	warning(const SAXParseExceptionType&	exception);
+    /** 
+     * Map a pointer to a XalanDocument instance to its corresponding
+     * class pointer.  Normally, you should have no reason for doing
+     * this.  The liaison will return a null pointer if it did not
+     * create the instance passed.
+     *
+     * @param theDocument A pointer to a XalanDocument instance.
+     * @return A pointer to the XercesDocumentBridge instance.
+     */
+    const DOMDocument_Type*
+    mapToXercesDocument(const XalanDocument*    theDocument) const;
 
-	virtual void
-	error(const SAXParseExceptionType&	exception);
+    // Implementations for SAX ErrorHandler
+
+    virtual void
+    warning(const SAXParseExceptionType&    exception);
+
+    virtual void
+    error(const SAXParseExceptionType&  exception);
    
-	virtual void
-	fatalError(const SAXParseExceptionType&		exception);
+    virtual void
+    fatalError(const SAXParseExceptionType&     exception);
 
-	virtual void
-	resetErrors();
+    virtual void
+    resetErrors();
 
-	struct DocumentEntry
-	{
+    struct DocumentEntry
+    {
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-		bool	m_isDeprecated;
+        bool    m_isDeprecated;
 
         bool
         isDeprecated() const
@@ -480,7 +480,7 @@ public:
         }
 #endif
 
-        bool	m_isOwned;
+        bool    m_isOwned;
 
         bool
         isOwned() const
@@ -489,281 +489,281 @@ public:
         }
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-		union
-		{
-			XercesDocumentBridge*	m_bridge;
-			XercesDocumentWrapper*	m_wrapper;
-		};
-
-		DocumentEntry&
-		operator=(XercesDocumentBridge* 	theBridge)
-		{
-			m_isDeprecated = true;
-
-			m_bridge = theBridge;
-
-			m_isOwned = true;
-
-			return *this;
-		}
+        union
+        {
+            XercesDocumentBridge*   m_bridge;
+            XercesDocumentWrapper*  m_wrapper;
+        };
 
         DocumentEntry&
-		operator=(XercesDocumentWrapper*	theWrapper)
-		{
-			m_isDeprecated = false;
+        operator=(XercesDocumentBridge*     theBridge)
+        {
+            m_isDeprecated = true;
 
-			m_wrapper = theWrapper;
+            m_bridge = theBridge;
 
-			m_isOwned = true;
+            m_isOwned = true;
 
-			return *this;
-		}
+            return *this;
+        }
+
+        DocumentEntry&
+        operator=(XercesDocumentWrapper*    theWrapper)
+        {
+            m_isDeprecated = false;
+
+            m_wrapper = theWrapper;
+
+            m_isOwned = true;
+
+            return *this;
+        }
 #else
         XercesDocumentWrapper*  m_wrapper;
 
         DocumentEntry&
-		operator=(XercesDocumentWrapper*	theWrapper)
-		{
-			m_wrapper = theWrapper;
+        operator=(XercesDocumentWrapper*    theWrapper)
+        {
+            m_wrapper = theWrapper;
 
-			m_isOwned = true;
+            m_isOwned = true;
 
-			return *this;
-		}
+            return *this;
+        }
 #endif
-	};
+    };
 
-	typedef XalanMap<const XalanDocument*, DocumentEntry>	DocumentMapType;
+    typedef XalanMap<const XalanDocument*, DocumentEntry>   DocumentMapType;
 
-	/**
-	 * This API is deprecated.
-	 * 
-	 * This functions returns the state of the liaison's build-bridge-nodes flag.
-	 *
-	 * @deprecated The Xerces DOM bridge is deprecated.
-	 * @return true, if the bridge nodes are automatically built, false otherwise.
-	 */
-	bool
-	getBuildBridgeNodes() const
-	
-	{
-		return m_buildBridge;
-	}
+    /**
+     * This API is deprecated.
+     * 
+     * This functions returns the state of the liaison's build-bridge-nodes flag.
+     *
+     * @deprecated The Xerces DOM bridge is deprecated.
+     * @return true, if the bridge nodes are automatically built, false otherwise.
+     */
+    bool
+    getBuildBridgeNodes() const
+    
+    {
+        return m_buildBridge;
+    }
 
-	/**
-	 * This API is deprecated.
-	 *
-	 * This functions sets the state of the liaison's build-bridge-nodes flag.
-	 * This flag must be set for the document to be thread safe.  It can also be
-	 * set to true to increase performance.  If this flag is set to false, then
-	 * the thread-safe flag will also be set to false.
-	 *
-	 * @deprecated The Xerces DOM bridge is deprecated.
-	 * @param newState The new state for the flag.
-	 *
-	 */
-	void
-	setBuildBridgeNodes(bool	newState)
-	{
-		m_buildBridge = newState;
+    /**
+     * This API is deprecated.
+     *
+     * This functions sets the state of the liaison's build-bridge-nodes flag.
+     * This flag must be set for the document to be thread safe.  It can also be
+     * set to true to increase performance.  If this flag is set to false, then
+     * the thread-safe flag will also be set to false.
+     *
+     * @deprecated The Xerces DOM bridge is deprecated.
+     * @param newState The new state for the flag.
+     *
+     */
+    void
+    setBuildBridgeNodes(bool    newState)
+    {
+        m_buildBridge = newState;
 
-		if (newState == false)
-		{
-			m_threadSafe = false;
-		}
-	}
+        if (newState == false)
+        {
+            m_threadSafe = false;
+        }
+    }
 
-	/**
-	 * This functions returns the state of the liaison's build-wrapper-nodes flag.
-	 *
-	 * @return true, if the wrapper nodes are automatically built, false otherwise.
-	 */
-	bool
-	getBuildWrapperNodes() const
-	
-	{
-		return m_buildWrapper;
-	}
+    /**
+     * This functions returns the state of the liaison's build-wrapper-nodes flag.
+     *
+     * @return true, if the wrapper nodes are automatically built, false otherwise.
+     */
+    bool
+    getBuildWrapperNodes() const
+    
+    {
+        return m_buildWrapper;
+    }
 
-	/**
-	 * This functions sets the state of the liaison's build-wrapper-nodes flag.
-	 * This flag must be set for the document to be thread safe.  It can also be
-	 * set to true to increase performance.  If this flag is set to false, then
-	 * the thread-safe flag will also be set to false.
-	 *
-	 * @param newState The new state for the flag.
-	 *
-	 */
-	void
-	setBuildWrapperNodes(bool	newState)
-	{
-		m_buildWrapper = newState;
+    /**
+     * This functions sets the state of the liaison's build-wrapper-nodes flag.
+     * This flag must be set for the document to be thread safe.  It can also be
+     * set to true to increase performance.  If this flag is set to false, then
+     * the thread-safe flag will also be set to false.
+     *
+     * @param newState The new state for the flag.
+     *
+     */
+    void
+    setBuildWrapperNodes(bool   newState)
+    {
+        m_buildWrapper = newState;
 
-		if (newState == false)
-		{
-			m_threadSafe = false;
-		}
-	}
+        if (newState == false)
+        {
+            m_threadSafe = false;
+        }
+    }
 
-	/**
-	 * This functions returns the state of the liaison's thread-safe flag.
-	 * If true, documents created will be safe when data is read.  By default,
-	 * documents are _not_ thread-safe.
-	 *
-	 * Note -- modifications are _never_ synchronized.
-	 *
-	 * @return true, if the new documents will be thread safe, false otherwise.
-	 */
-	bool
-	getThreadSafe() const
-	
-	{
-		return m_threadSafe;
-	}
+    /**
+     * This functions returns the state of the liaison's thread-safe flag.
+     * If true, documents created will be safe when data is read.  By default,
+     * documents are _not_ thread-safe.
+     *
+     * Note -- modifications are _never_ synchronized.
+     *
+     * @return true, if the new documents will be thread safe, false otherwise.
+     */
+    bool
+    getThreadSafe() const
+    
+    {
+        return m_threadSafe;
+    }
 
-	/**
-	 * This functions sets the state of the liaison's thread-safe flag.
-	 * This flag must be set for the document to be thread safe.  If this
-	 * flag is set to true, then the build-bridge-nodes flag will also be
-	 * set to true.
-	 *
-	 * @param newState The new state for the flag.
-	 *
-	 */
-	void
-	setThreadSafe(bool	newState)
-	{
-		m_threadSafe = newState;
+    /**
+     * This functions sets the state of the liaison's thread-safe flag.
+     * This flag must be set for the document to be thread safe.  If this
+     * flag is set to true, then the build-bridge-nodes flag will also be
+     * set to true.
+     *
+     * @param newState The new state for the flag.
+     *
+     */
+    void
+    setThreadSafe(bool  newState)
+    {
+        m_threadSafe = newState;
 
-		if (m_threadSafe == true)
-		{
-			m_buildWrapper = true;
-			m_buildBridge = true;
-		}
-	}
+        if (m_threadSafe == true)
+        {
+            m_buildWrapper = true;
+            m_buildBridge = true;
+        }
+    }
 
-	/**
-	 * This functions returns the state of the liaison's buildMaps flag.
-	 * If true, maps will be created to allow mapping of Xalan<->Xerces mapping
-	 * in both directions for XercesWrapper classes.
-	 *
-	 * @return true, if the new documents will be built with Maps
-	 */
-	bool
-	getBuildMaps() const
-	
-	{
-		return m_buildMaps;
-	}
+    /**
+     * This functions returns the state of the liaison's buildMaps flag.
+     * If true, maps will be created to allow mapping of Xalan<->Xerces mapping
+     * in both directions for XercesWrapper classes.
+     *
+     * @return true, if the new documents will be built with Maps
+     */
+    bool
+    getBuildMaps() const
+    
+    {
+        return m_buildMaps;
+    }
  
-	/**
-	 * This functions sets the state of the liaison's buildMaps flag.
-	 * When this flag is true, maps will be built providing Xerces<->Xalan
-	 * mapping in Wrapper classes.
-	 *
-	 * @note The maps created use a large amount of memory.  If only
-	 * Xalan->Xerces node mapping is required, do not set this to true.
-	 *
-	 * @param newState The new state for the flag.
-	 *
-	 */
-	void
-	setBuildMaps(bool	newState)
-	{
-		m_buildMaps = newState;
-	}
+    /**
+     * This functions sets the state of the liaison's buildMaps flag.
+     * When this flag is true, maps will be built providing Xerces<->Xalan
+     * mapping in Wrapper classes.
+     *
+     * @note The maps created use a large amount of memory.  If only
+     * Xalan->Xerces node mapping is required, do not set this to true.
+     *
+     * @param newState The new state for the flag.
+     *
+     */
+    void
+    setBuildMaps(bool   newState)
+    {
+        m_buildMaps = newState;
+    }
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser 	DOMParserType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser  DOMParserType;
 
 protected:
 
-	static void
-	formatErrorMessage(
-			const SAXParseExceptionType&	e,
-			XalanDOMString& 				theMessage);
+    static void
+    formatErrorMessage(
+            const SAXParseExceptionType&    e,
+            XalanDOMString&                 theMessage);
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-	/**
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 *
-	 * This API is deprecated.
-	 *
-	 * @param theXercesDocument The Xerces document.
-	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
-	 * @param buildBridge If true, the entire bridge structure is built.
-	 * @return a pointer to a new XercesDocumentBridge instance.
-	 */
-	XercesDocumentBridge*
-	doCreateDocument(
-			const DOM_Document_Type& 	theXercesDocument,
-			bool						threadSafe,
-			bool						buildBridge);
+    /**
+     * Create a XalanDocument proxy for an existing Xerces document.
+     *
+     * This API is deprecated.
+     *
+     * @param theXercesDocument The Xerces document.
+     * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+     * @param buildBridge If true, the entire bridge structure is built.
+     * @return a pointer to a new XercesDocumentBridge instance.
+     */
+    XercesDocumentBridge*
+    doCreateDocument(
+            const DOM_Document_Type&    theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildBridge);
 #endif
 
-	/**
-	 * Create a XalanDocument proxy for an existing Xerces document.
-	 *
-	 * @param theXercesDocument The Xerces document.
-	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
-	 * @param buildWrapper If true, the entire bridge structure is built.
-	 * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
-	 * @return a pointer to a new XercesDocumentWrapper instance.
-	 */
-	XercesDocumentWrapper*
-	doCreateDocument(
-			const DOMDocument_Type*		theXercesDocument,
-			bool						threadSafe,
-			bool						buildWrapper,
-			bool						buildMaps,
-			bool						isOwned);
+    /**
+     * Create a XalanDocument proxy for an existing Xerces document.
+     *
+     * @param theXercesDocument The Xerces document.
+     * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+     * @param buildWrapper If true, the entire bridge structure is built.
+     * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
+     * @return a pointer to a new XercesDocumentWrapper instance.
+     */
+    XercesDocumentWrapper*
+    doCreateDocument(
+            const DOMDocument_Type*     theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildWrapper,
+            bool                        buildMaps,
+            bool                        isOwned);
 
 private:
 
-	void
-	ensureDOMParser();
+    void
+    ensureDOMParser();
 
-	DOMParserType*
-	createDOMParser();
+    DOMParserType*
+    createDOMParser();
 
-	SAXParserType*
-	createSAXParser();
+    SAXParserType*
+    createSAXParser();
 
 
 
-	// Data members...
-	int 				m_indent;
+    // Data members...
+    int                 m_indent;
 
-	bool				m_useValidation;
+    bool                m_useValidation;
 
-	bool				m_includeIgnorableWhitespace;
+    bool                m_includeIgnorableWhitespace;
 
-	bool				m_doNamespaces;
+    bool                m_doNamespaces;
 
-	bool				m_exitOnFirstFatalError;
+    bool                m_exitOnFirstFatalError;
 
-	EntityResolver*     m_entityResolver;
+    EntityResolver*     m_entityResolver;
 
     XMLEntityResolver*  m_xmlEntityResolver;
 
-    ErrorHandler*	    m_errorHandler;
+    ErrorHandler*       m_errorHandler;
 
-	XalanDOMString		m_externalSchemaLocation;
+    XalanDOMString      m_externalSchemaLocation;
 
-	XalanDOMString		m_externalNoNamespaceSchemaLocation;
+    XalanDOMString      m_externalNoNamespaceSchemaLocation;
 
-	DocumentMapType 	m_documentMap;
+    DocumentMapType     m_documentMap;
 
-	bool				m_buildWrapper;
+    bool                m_buildWrapper;
 
-	bool				m_buildBridge;
+    bool                m_buildBridge;
 
-	bool				m_threadSafe;
+    bool                m_threadSafe;
 
-	bool				m_buildMaps;
+    bool                m_buildMaps;
 
-	ExecutionContext*	m_executionContext;
+    ExecutionContext*   m_executionContext;
 
-	DOMParserType*		m_domParser;
+    DOMParserType*      m_domParser;
 };
 
 
@@ -772,4 +772,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XercesPARSERLIAISON_HEADER_GUARD_1357924680
+#endif  // XercesPARSERLIAISON_HEADER_GUARD_1357924680

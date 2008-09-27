@@ -59,30 +59,30 @@ class XalanDummyMemoryManager : public XalanMemoryManager
 {
 public:
 
-	XalanDummyMemoryManager()
-	{
-	}
+    XalanDummyMemoryManager()
+    {
+    }
 
     virtual
-	~XalanDummyMemoryManager()
-	{
-	}
+    ~XalanDummyMemoryManager()
+    {
+    }
 
-	virtual void*
-	allocate(size_type /*	size */ )
-	{
+    virtual void*
+    allocate(size_type /*   size */ )
+    {
         XALAN_USING_XERCES(OutOfMemoryException)
 
-		throw OutOfMemoryException();
-	}	
+        throw OutOfMemoryException();
+    }   
 
     virtual void
-	deallocate(void* 	/* pDataPointer */ )
-	{
+    deallocate(void*    /* pDataPointer */ )
+    {
         XALAN_USING_XERCES(OutOfMemoryException)
 
-		throw OutOfMemoryException();
-	}
+        throw OutOfMemoryException();
+    }
 
     MemoryManager*
     getExceptionMemoryManager()
@@ -100,7 +100,7 @@ static XalanDummyMemoryManager  s_dummyMemMgr;
 MemoryManager&
 XalanMemMgrs::getDummyMemMgr()
 {
-	return s_dummyMemMgr;
+    return s_dummyMemMgr;
 }
 
 
@@ -108,11 +108,11 @@ XalanMemMgrs::getDummyMemMgr()
 MemoryManager&
 XalanMemMgrs::getDefaultXercesMemMgr()
 {
-	XALAN_USING_XERCES(XMLPlatformUtils)
+    XALAN_USING_XERCES(XMLPlatformUtils)
 
-	assert(XMLPlatformUtils::fgMemoryManager != 0);
+    assert(XMLPlatformUtils::fgMemoryManager != 0);
 
-	return *XMLPlatformUtils::fgMemoryManager;
+    return *XMLPlatformUtils::fgMemoryManager;
 }
 
 

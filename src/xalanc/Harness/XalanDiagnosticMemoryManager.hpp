@@ -51,9 +51,9 @@ class XALAN_HARNESS_EXPORT XalanDiagnosticMemoryManager : public XalanMemoryMana
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream				StreamType;
+    typedef ostream             StreamType;
 #else
-	typedef std::ostream		StreamType;
+    typedef std::ostream        StreamType;
 #endif
 
     class LockException

@@ -45,7 +45,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XNodeSet::XNodeSet(
-            BorrowReturnMutableNodeRefList&	    value,
+            BorrowReturnMutableNodeRefList&     value,
             MemoryManager&                      theMemoryManager) :
     XNodeSetBase(theMemoryManager),
     m_value(value)
@@ -54,10 +54,10 @@ XNodeSet::XNodeSet(
 
 
 
-XNodeSet::XNodeSet(const XNodeSet&	source,
+XNodeSet::XNodeSet(const XNodeSet&  source,
                    MemoryManager&   theMemoryManager) :
-	XNodeSetBase(source, theMemoryManager),
-	m_value(source.m_value.clone())
+    XNodeSetBase(source, theMemoryManager),
+    m_value(source.m_value.clone())
 {
 }
 
@@ -73,7 +73,7 @@ XNodeSet::~XNodeSet()
 const NodeRefListBase&
 XNodeSet::nodeset() const
 {
-	return *m_value.get();
+    return *m_value.get();
 }
 
 
@@ -81,27 +81,27 @@ XNodeSet::nodeset() const
 void
 XNodeSet::release()
 {
-	m_value.release();
+    m_value.release();
 
-	clearCachedValues();
+    clearCachedValues();
 }
 
 
 
 void
-XNodeSet::set(BorrowReturnMutableNodeRefList&	value)
+XNodeSet::set(BorrowReturnMutableNodeRefList&   value)
 {
-	release();
+    release();
 
-	m_value = value;
+    m_value = value;
 }
 
 
 
 XalanNode*
-XNodeSet::item(size_type	index) const
+XNodeSet::item(size_type    index) const
 {
-	return m_value->item(index);
+    return m_value->item(index);
 }
 
 
@@ -109,7 +109,7 @@ XNodeSet::item(size_type	index) const
 XNodeSet::size_type
 XNodeSet::getLength() const
 {
-	return m_value->getLength();
+    return m_value->getLength();
 }
 
 

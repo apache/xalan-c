@@ -39,71 +39,71 @@ class ElemMessage: public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:message" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemMessage(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:message" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param name                name of element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemMessage(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
-	
+    virtual const XalanDOMString&
+    getElementName() const;
+    
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual	const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&		executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&        executionContext) const;
 
-	virtual	void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 #else
-	virtual	void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
-	class ElemMessageTerminateException : public XSLTProcessorException
-	{
-	public:
+    class ElemMessageTerminateException : public XSLTProcessorException
+    {
+    public:
 
-		/**
-		 * Construct an ElemMessageTerminateException object
-		 * 
-		 * @param theLocator The Locator to use for line number information, etc.
-		 * @param theMessage message to print when exception thrown
-		 */
-		ElemMessageTerminateException(
+        /**
+         * Construct an ElemMessageTerminateException object
+         * 
+         * @param theLocator The Locator to use for line number information, etc.
+         * @param theMessage message to print when exception thrown
+         */
+        ElemMessageTerminateException(
                 MemoryManager&          theManager,
-				const XalanDOMString&	theMessage,
-				const Locator*		    theLocator);
+                const XalanDOMString&   theMessage,
+                const Locator*          theLocator);
 
-		virtual
-		~ElemMessageTerminateException();
+        virtual
+        ~ElemMessageTerminateException();
 
-		virtual const XalanDOMChar*
-	    getType() const
-		{
-			return m_type;
-		}
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
 
-	private:
+    private:
 
-		static const XalanDOMChar	m_type[];
-	};
+        static const XalanDOMChar   m_type[];
+    };
 
 private:
 
-	bool	m_terminate;
+    bool    m_terminate;
 };
 
 
@@ -112,4 +112,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMMESSAGE_HEADER_GUARD
+#endif  // XALAN_ELEMMESSAGE_HEADER_GUARD

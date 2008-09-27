@@ -38,12 +38,12 @@ class XALAN_PLATFORMSUPPORT_EXPORT PrintWriter : public Writer
 {
 public:
 
-	/**
-	 * Constructor
-	 * 
-	 * @param fAutoFlush if true, the output will not be buffered
-	 */
-	PrintWriter( bool	fAutoFlush = false, MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
+    /**
+     * Constructor
+     * 
+     * @param fAutoFlush if true, the output will not be buffered
+     */
+    PrintWriter( bool   fAutoFlush = false, MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
     MemoryManager& 
     getMemoryManager()
@@ -51,137 +51,137 @@ public:
         return m_memoryManager;
     }
 
-	virtual
-	~PrintWriter();
+    virtual
+    ~PrintWriter();
 
-	/**
-	 * Flush the stream, then check the error status.
-	 * 
-	 * @return true if no errors
-	 */
-	virtual bool
+    /**
+     * Flush the stream, then check the error status.
+     * 
+     * @return true if no errors
+     */
+    virtual bool
     checkError() const = 0;
 
-	// Functions inherited from Writer...
+    // Functions inherited from Writer...
 
-	virtual void
-	close() = 0;
+    virtual void
+    close() = 0;
 
-	virtual void
-	flush() = 0;
+    virtual void
+    flush() = 0;
 
 
-	// Output functions inherited from Writer...
+    // Output functions inherited from Writer...
 
-	virtual void
-	write(
-			const char*		s,
-			size_t			theOffset = 0,
-			size_t			theLength = npos) = 0;
+    virtual void
+    write(
+            const char*     s,
+            size_t          theOffset = 0,
+            size_t          theLength = npos) = 0;
 
-	virtual void
-	write(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+    virtual void
+    write(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
 
-	virtual void
-	write(XalanDOMChar	c) = 0;
+    virtual void
+    write(XalanDOMChar  c) = 0;
 
-	virtual void
-	write(
-			const XalanDOMString&		s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+    virtual void
+    write(
+            const XalanDOMString&       s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
 
-	// Output functions which are new...
-
-#if !defined(XALAN_BOOL_AS_INT)
-	virtual void
-	print(bool	b) = 0;
-#endif
-
-	virtual void
-	print(char	c) = 0;
-
-	virtual void
-	print(
-			const char*		s,
-			size_t			theLength = npos) = 0;
-
-	virtual void
-	print(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
-
-	virtual void
-	print(double	d) = 0;
-
-	virtual void
-	print(int	i) = 0;
-
-	virtual void
-	print(long	l) = 0;
-
-	virtual void
-	print(const XalanDOMString&		s) = 0;
-
-	virtual void
-	println() = 0;
+    // Output functions which are new...
 
 #if !defined(XALAN_BOOL_AS_INT)
-	virtual void
-	println(bool	b) = 0;
+    virtual void
+    print(bool  b) = 0;
 #endif
 
-	virtual void
-	println(char	x) = 0;
+    virtual void
+    print(char  c) = 0;
 
-	virtual void
-	println(
-			const char*		s,
-		    size_t			theLength = npos) = 0;
+    virtual void
+    print(
+            const char*     s,
+            size_t          theLength = npos) = 0;
 
-	virtual void
-	println(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+    virtual void
+    print(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
 
-	virtual void
-	println(double	x) = 0;
+    virtual void
+    print(double    d) = 0;
 
-	virtual void
-	println(int		x) = 0;
+    virtual void
+    print(int   i) = 0;
 
-	virtual void
-	println(long	x) = 0;
+    virtual void
+    print(long  l) = 0;
 
-	virtual void
-	println(const XalanDOMString&	s) = 0;
+    virtual void
+    print(const XalanDOMString&     s) = 0;
+
+    virtual void
+    println() = 0;
+
+#if !defined(XALAN_BOOL_AS_INT)
+    virtual void
+    println(bool    b) = 0;
+#endif
+
+    virtual void
+    println(char    x) = 0;
+
+    virtual void
+    println(
+            const char*     s,
+            size_t          theLength = npos) = 0;
+
+    virtual void
+    println(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
+
+    virtual void
+    println(double  x) = 0;
+
+    virtual void
+    println(int     x) = 0;
+
+    virtual void
+    println(long    x) = 0;
+
+    virtual void
+    println(const XalanDOMString&   s) = 0;
 
 protected:
 
-	const bool		m_fAutoFlush;
+    const bool      m_fAutoFlush;
 
     MemoryManager&  m_memoryManager;
 
-	// Some static strings to help derived classes...
-	static const XalanDOMChar	s_trueString[];
+    // Some static strings to help derived classes...
+    static const XalanDOMChar   s_trueString[];
 
-	static const XalanDOMChar	s_falseString[];
+    static const XalanDOMChar   s_falseString[];
 
-	static const XalanDOMChar	s_newlineString[];
+    static const XalanDOMChar   s_newlineString[];
 
 private:
 
-	// Not implemented
-	PrintWriter(const PrintWriter&);
+    // Not implemented
+    PrintWriter(const PrintWriter&);
 
-	PrintWriter&
-	operator=(const PrintWriter&);
+    PrintWriter&
+    operator=(const PrintWriter&);
 
-	bool
-	operator==(const PrintWriter&);
+    bool
+    operator==(const PrintWriter&);
 };
 
 
@@ -190,4 +190,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// PRINTWRITER_HEADER_GUARD_1357924680
+#endif  // PRINTWRITER_HEADER_GUARD_1357924680

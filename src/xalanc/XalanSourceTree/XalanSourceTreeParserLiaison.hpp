@@ -162,11 +162,11 @@ public:
     virtual void
     setEntityResolver(EntityResolver*   resolver);
 
-	virtual XMLEntityResolver*
-	getXMLEntityResolver() const;
+    virtual XMLEntityResolver*
+    getXMLEntityResolver() const;
 
-	virtual void
-	setXMLEntityResolver(XMLEntityResolver*     resolver);
+    virtual void
+    setXMLEntityResolver(XMLEntityResolver*     resolver);
 
     virtual ErrorHandler*
     getErrorHandler() const;

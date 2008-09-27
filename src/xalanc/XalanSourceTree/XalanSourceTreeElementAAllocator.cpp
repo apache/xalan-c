@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanSourceTreeElementAAllocator::XalanSourceTreeElementAAllocator(
             MemoryManager&  theManager,
             size_type       theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,32 +42,32 @@ XalanSourceTreeElementAAllocator::~XalanSourceTreeElementAAllocator()
 
 XalanSourceTreeElementAAllocator::ObjectType*
 XalanSourceTreeElementAAllocator::create(
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			XalanSize_t			        theAttributeCount,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex)
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanSourceTreeAttr**       theAttributes,
+            XalanSize_t                 theAttributeCount,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(
+    new(theBlock) ObjectType(
                         m_allocator.getMemoryManager(),
-						theTagName,
-						theOwnerDocument,
-						theAttributes,
-						theAttributeCount,
-						theParentNode,
-						thePreviousSibling,
-						theNextSibling,
-						theIndex);
+                        theTagName,
+                        theOwnerDocument,
+                        theAttributes,
+                        theAttributeCount,
+                        theParentNode,
+                        thePreviousSibling,
+                        theNextSibling,
+                        theIndex);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -75,7 +75,7 @@ XalanSourceTreeElementAAllocator::create(
 void 
 XalanSourceTreeElementAAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

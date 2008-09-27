@@ -47,99 +47,99 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityReferenceWrapper : public Xal
 {
 public:
 
-	XercesEntityReferenceWrapper(
-			const DOMEntityReferenceType*	theXercesDOMEntityReference,
-			const XercesWrapperNavigator&	theNavigator);
+    XercesEntityReferenceWrapper(
+            const DOMEntityReferenceType*   theXercesDOMEntityReference,
+            const XercesWrapperNavigator&   theNavigator);
 
     static XercesEntityReferenceWrapper*
     create( MemoryManager& theManager,
-			const DOMEntityReferenceType*	theXercesDOMEntityReference,
-			const XercesWrapperNavigator&	theNavigator);
+            const DOMEntityReferenceType*   theXercesDOMEntityReference,
+            const XercesWrapperNavigator&   theNavigator);
 
-	virtual
-	~XercesEntityReferenceWrapper();
+    virtual
+    ~XercesEntityReferenceWrapper();
 
 
-	// These interfaces are inherited from XalanEntityReference...
+    // These interfaces are inherited from XalanEntityReference...
 
-	virtual const XalanDOMString&
-	getNodeName() const;
+    virtual const XalanDOMString&
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual XalanDocument*
-	getOwnerDocument() const;
+    virtual XalanDocument*
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
-	/**
-	 * Get the Xerces node this instance represent.
-	 *
-	 * @return The Xerces node
-	 */
-	const DOMEntityReferenceType*
-	getXercesNode() const
-	{
-		return m_xercesNode;
-	}
+    /**
+     * Get the Xerces node this instance represent.
+     *
+     * @return The Xerces node
+     */
+    const DOMEntityReferenceType*
+    getXercesNode() const
+    {
+        return m_xercesNode;
+    }
 
-	//@}
+    //@}
 
 private:
 
-	// Not implemented...
-	XercesEntityReferenceWrapper(const XercesEntityReferenceWrapper&	theSource);
+    // Not implemented...
+    XercesEntityReferenceWrapper(const XercesEntityReferenceWrapper&    theSource);
 
-	XercesEntityReferenceWrapper&
-	operator=(const XercesEntityReferenceWrapper&	theSource);
+    XercesEntityReferenceWrapper&
+    operator=(const XercesEntityReferenceWrapper&   theSource);
 
-	bool
-	operator==(const XercesEntityReferenceWrapper&		theRHS) const;
+    bool
+    operator==(const XercesEntityReferenceWrapper&      theRHS) const;
 
-	// Data members...
-	const DOMEntityReferenceType* const		m_xercesNode;
+    // Data members...
+    const DOMEntityReferenceType* const     m_xercesNode;
 
-	const XercesWrapperNavigator&			m_navigator;
+    const XercesWrapperNavigator&           m_navigator;
 
-	XercesNodeListWrapper					m_children;
+    XercesNodeListWrapper                   m_children;
 };
 
 
@@ -148,4 +148,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESENTITYREFERENCEWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESENTITYREFERENCEWRAPPER_HEADER_GUARD_1357924680)

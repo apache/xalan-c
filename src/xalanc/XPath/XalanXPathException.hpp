@@ -47,44 +47,44 @@ class XALAN_XPATH_EXPORT XalanXPathException : public XSLException
 {
 public:
 
-	/**
-	 * Construct an XPath exeption object.
-	 * 
-	 * @param theMessage The message explaining the problem.
-	 * @param theManager The MemoryManager instance to use.
-	 */
-	XalanXPathException(
-            const XalanDOMString&	theMessage,
+    /**
+     * Construct an XPath exeption object.
+     * 
+     * @param theMessage The message explaining the problem.
+     * @param theManager The MemoryManager instance to use.
+     */
+    XalanXPathException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager);
 
-	/**
-	 * Construct an XPath exeption object.
-	 * 
-	 * @param theMessage The message explaining the problem.
-	 * @param theManager The MemoryManager instance to use.
-	 * @param theLocator The locator instance for error reporting, if any.
-	 */
-	XalanXPathException(
-            const XalanDOMString&	theMessage,
+    /**
+     * Construct an XPath exeption object.
+     * 
+     * @param theMessage The message explaining the problem.
+     * @param theManager The MemoryManager instance to use.
+     * @param theLocator The locator instance for error reporting, if any.
+     */
+    XalanXPathException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
-            const Locator*		    theLocator);
+            const Locator*          theLocator);
 
     XalanXPathException(const XalanXPathException&  other);
 
-	virtual
-	~XalanXPathException();
+    virtual
+    ~XalanXPathException();
 
-	virtual const XalanDOMChar*
-	getType() const;
+    virtual const XalanDOMChar*
+    getType() const;
 
 private:
 
-	/**
-	 * Construct an XPath exeption object.
-	 * 
-	 */
-	explicit
-	XalanXPathException(MemoryManager&  theManager);
+    /**
+     * Construct an XPath exeption object.
+     * 
+     */
+    explicit
+    XalanXPathException(MemoryManager&  theManager);
 
 private:
 };
@@ -95,4 +95,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANXPATHEXCEPTION_HEADER_GUARD_1357924680
+#endif  // XALANXPATHEXCEPTION_HEADER_GUARD_1357924680

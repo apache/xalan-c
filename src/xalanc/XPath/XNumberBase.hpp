@@ -42,74 +42,74 @@ class XALAN_XPATH_EXPORT XNumberBase : public XObject
 {
 public:
 
-	typedef XObject	ParentType;
+    typedef XObject ParentType;
 
-	/**
-	 * Construct an XNumberBase object from another.
-	 * 
-	 * @param source The source XNumberBase instance.
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XNumberBase(
-            const XNumberBase&	source,
+    /**
+     * Construct an XNumberBase object from another.
+     * 
+     * @param source The source XNumberBase instance.
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XNumberBase(
+            const XNumberBase&  source,
             MemoryManager&      theMemoryManager);
 
-	virtual
-	~XNumberBase();
+    virtual
+    ~XNumberBase();
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual const XalanDOMString&
-	getTypeString() const;
+    virtual const XalanDOMString&
+    getTypeString() const;
 
-	virtual double
-	num(XPathExecutionContext&  executionContext) const = 0;
+    virtual double
+    num(XPathExecutionContext&  executionContext) const = 0;
 
-	virtual bool
-	boolean(XPathExecutionContext&  executionContext) const;
+    virtual bool
+    boolean(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const = 0;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const = 0;
 
-	virtual const XalanDOMString&
-	str() const = 0;
-
-	virtual void
-	str(
-            XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const = 0;
-
-	virtual void
-	str(
-  			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const = 0;
-
-	virtual void
-	str(
-            XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const = 0;
-
-	virtual void
-	str(XalanDOMString&     theBuffer) const = 0;
-
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const = 0;
+    virtual const XalanDOMString&
+    str() const = 0;
 
     virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+    str(
+            XPathExecutionContext&  executionContext,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const = 0;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const = 0;
+
+    virtual void
+    str(
+            XPathExecutionContext&  executionContext,
+            XalanDOMString&         theBuffer) const = 0;
+
+    virtual void
+    str(XalanDOMString&     theBuffer) const = 0;
+
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const = 0;
+
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject);
+
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const;
 
 protected:
 
-	/**
-	 * Constructor for derived classes
-	 * 
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XNumberBase(MemoryManager&  theMemoryManager);
+    /**
+     * Constructor for derived classes
+     * 
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XNumberBase(MemoryManager&  theMemoryManager);
 
 private:
 };
@@ -120,4 +120,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNUMBERBASE_HEADER_GUARD_1357924680
+#endif  // XNUMBERBASE_HEADER_GUARD_1357924680

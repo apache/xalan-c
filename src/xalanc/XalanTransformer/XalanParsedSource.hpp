@@ -46,26 +46,26 @@ class XALAN_TRANSFORMER_EXPORT XalanParsedSourceHelper
 {
 public:
 
-	virtual
-	~XalanParsedSourceHelper()
-	{
-	}
+    virtual
+    ~XalanParsedSourceHelper()
+    {
+    }
 
-	/**
-	 * Get the DOMSupport instance.
-	 *
-	 * @return A reference to a DOMSupport instance.
-	 */
-	virtual DOMSupport&
-	getDOMSupport() = 0;
+    /**
+     * Get the DOMSupport instance.
+     *
+     * @return A reference to a DOMSupport instance.
+     */
+    virtual DOMSupport&
+    getDOMSupport() = 0;
 
-	/**
-	 * Get the XMLParserLiaison instance.
-	 *
-	 * @return A rerefernce to an XMLParserLiaison instance.
-	 */
-	virtual XMLParserLiaison&
-	getParserLiaison() = 0;
+    /**
+     * Get the XMLParserLiaison instance.
+     *
+     * @return A rerefernce to an XMLParserLiaison instance.
+     */
+    virtual XMLParserLiaison&
+    getParserLiaison() = 0;
 };
 
 
@@ -78,39 +78,39 @@ class XALAN_TRANSFORMER_EXPORT XalanParsedSource
 {
 public:
 
-	XalanParsedSource();
+    XalanParsedSource();
 
-	virtual
-	~XalanParsedSource();
+    virtual
+    ~XalanParsedSource();
 
-	/**
-	 * Get a pointer to the XalanDocument instance for the source
-	 * document
-	 *
-	 * @return A pointer to a XalanDocument instance.
-	 */
-	virtual XalanDocument*
-	getDocument() const = 0;
+    /**
+     * Get a pointer to the XalanDocument instance for the source
+     * document
+     *
+     * @return A pointer to a XalanDocument instance.
+     */
+    virtual XalanDocument*
+    getDocument() const = 0;
 
-	/**
-	 * Create the appropriate XalanParsedSourceHelper instance to
-	 * use for transforming with the instance.
-	 *
-	 * The caller is responsible for deleting the object when finished.
-	 *
-	 * @return A pointer to a XalanParsedSourceHelper instance.
-	 */
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager&     theManager) const = 0;
+    /**
+     * Create the appropriate XalanParsedSourceHelper instance to
+     * use for transforming with the instance.
+     *
+     * The caller is responsible for deleting the object when finished.
+     *
+     * @return A pointer to a XalanParsedSourceHelper instance.
+     */
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager&     theManager) const = 0;
 
-	/**
-	 * Get the URI for the parsed source, if any.
-	 * use for transforming with the instance.
-	 *
-	 * @return A const reference to a string containing the URI
-	 */
-	virtual const XalanDOMString&
-	getURI() const = 0;
+    /**
+     * Get the URI for the parsed source, if any.
+     * use for transforming with the instance.
+     *
+     * @return A const reference to a string containing the URI
+     */
+    virtual const XalanDOMString&
+    getURI() const = 0;
 };
 
 
@@ -119,7 +119,7 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANPARSEDSOURCE_HEADER_GUARD
+#endif  // XALANPARSEDSOURCE_HEADER_GUARD
 
 
 

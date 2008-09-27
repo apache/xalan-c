@@ -24,8 +24,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetNodeProxy::Proxy::Proxy(XalanNode*	theNode) :
-	m_node(theNode)
+XNodeSetNodeProxy::Proxy::Proxy(XalanNode*  theNode) :
+    m_node(theNode)
 {
 }
 
@@ -38,16 +38,16 @@ XNodeSetNodeProxy::Proxy::~Proxy()
 
 
 XalanNode*
-XNodeSetNodeProxy::Proxy::item(size_type	index) const
+XNodeSetNodeProxy::Proxy::item(size_type    index) const
 {
-	if (m_node == 0 || index > 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return m_node;
-	}
+    if (m_node == 0 || index > 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return m_node;
+    }
 }
 
 
@@ -55,41 +55,41 @@ XNodeSetNodeProxy::Proxy::item(size_type	index) const
 XNodeSetNodeProxy::Proxy::size_type
 XNodeSetNodeProxy::Proxy::getLength() const
 {
-	return m_node == 0 ? 0 : 1;
+    return m_node == 0 ? 0 : 1;
 }
 
 
 
 XNodeSetNodeProxy::Proxy::size_type
-XNodeSetNodeProxy::Proxy::indexOf(const XalanNode*	theNode) const
+XNodeSetNodeProxy::Proxy::indexOf(const XalanNode*  theNode) const
 {
-	if (m_node == 0 || theNode != m_node)
-	{
-		return npos;
-	}
-	else
-	{
-		return 0;
-	}
+    if (m_node == 0 || theNode != m_node)
+    {
+        return npos;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
 
 XNodeSetNodeProxy::XNodeSetNodeProxy(
             MemoryManager&  theMemoryManager,
-            XalanNode*		theNode) :
-	XNodeSetBase(theMemoryManager),
-	m_proxy(theNode)
+            XalanNode*      theNode) :
+    XNodeSetBase(theMemoryManager),
+    m_proxy(theNode)
 {
 }
 
 
 
 XNodeSetNodeProxy::XNodeSetNodeProxy(
-            const XNodeSetNodeProxy&	source,
+            const XNodeSetNodeProxy&    source,
             MemoryManager&              theMemoryManager) :
-	XNodeSetBase(source, theMemoryManager),
-	m_proxy(source.m_proxy)
+    XNodeSetBase(source, theMemoryManager),
+    m_proxy(source.m_proxy)
 {
 }
 
@@ -105,7 +105,7 @@ XNodeSetNodeProxy::~XNodeSetNodeProxy()
 XNodeSetNodeProxy::eObjectType
 XNodeSetNodeProxy::getRealType() const
 {
-	return eTypeNodeSetNodeProxy;
+    return eTypeNodeSetNodeProxy;
 }
 
 
@@ -113,15 +113,15 @@ XNodeSetNodeProxy::getRealType() const
 const NodeRefListBase&
 XNodeSetNodeProxy::nodeset() const
 {
-	return m_proxy;
+    return m_proxy;
 }
 
 
 
 XalanNode*
-XNodeSetNodeProxy::item(size_type	index) const
+XNodeSetNodeProxy::item(size_type   index) const
 {
-	return m_proxy.item(index);
+    return m_proxy.item(index);
 }
 
 
@@ -129,7 +129,7 @@ XNodeSetNodeProxy::item(size_type	index) const
 XNodeSetNodeProxy::size_type
 XNodeSetNodeProxy::getLength() const
 {
-	return m_proxy.getLength();
+    return m_proxy.getLength();
 }
 
 

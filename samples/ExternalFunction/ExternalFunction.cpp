@@ -57,83 +57,83 @@ class FunctionSquareRoot : public Function
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return a valid
-	 * object.  Extension functions should override this version of execute(),
-	 * rather than one of the other calls designed for a specific number of
-	 * arguments.
-	 *
-	 * @param executionContext executing context
-	 * @param context          current context node
-	 * @param args             vector of pointers to XObject arguments
-	 * @param locator		   Locator for the XPath expression that contains the function call
-	 * @return                 pointer to the result XObject
-	 */
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
-	{
-		if (args.size() != 1)
-		{
-            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    /**
+     * Execute an XPath function object.  The function must return a valid
+     * object.  Extension functions should override this version of execute(),
+     * rather than one of the other calls designed for a specific number of
+     * arguments.
+     *
+     * @param executionContext executing context
+     * @param context          current context node
+     * @param args             vector of pointers to XObject arguments
+     * @param locator          Locator for the XPath expression that contains the function call
+     * @return                 pointer to the result XObject
+     */
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
+    {
+        if (args.size() != 1)
+        {
+            XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-			generalError(executionContext, context, locator);
-		}
+            generalError(executionContext, context, locator);
+        }
 
-		assert(args[0].null() == false);	
+        assert(args[0].null() == false);    
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using std::sqrt;
+        using std::sqrt;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
-	}
+        return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
+    }
 
-	using Function::execute;
+    using Function::execute;
 
-	/**
-	 * Create a copy of the function object.
-	 *
-	 * @return pointer to the new object
-	 */
+    /**
+     * Create a copy of the function object.
+     *
+     * @return pointer to the new object
+     */
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionSquareRoot*
+    virtual FunctionSquareRoot*
 #endif
-	clone(MemoryManager&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManager&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	/**
-	 * Get the error message to report when
-	 * the function is called with the wrong
-	 * number of arguments.
-	 *
-	 * @return function error message
-	 */
-	const XalanDOMString&
-	getError(XalanDOMString&    theResult) const
-	{
+    /**
+     * Get the error message to report when
+     * the function is called with the wrong
+     * number of arguments.
+     *
+     * @return function error message
+     */
+    const XalanDOMString&
+    getError(XalanDOMString&    theResult) const
+    {
         theResult.assign("The square-root() function accepts one argument!");
 
-		return theResult;
-	}
+        return theResult;
+    }
 
 private:
 
-	// Not implemented...
-	FunctionSquareRoot&
-	operator=(const FunctionSquareRoot&);
+    // Not implemented...
+    FunctionSquareRoot&
+    operator=(const FunctionSquareRoot&);
 
-	bool
-	operator==(const FunctionSquareRoot&) const;
+    bool
+    operator==(const FunctionSquareRoot&) const;
 };
 
 
@@ -144,83 +144,83 @@ class FunctionCube : public Function
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return a valid
-	 * object.  Extension functions should override this version of execute(),
-	 * rather than one of the other calls designed for a specific number of
-	 * arguments.
-	 *
-	 * @param executionContext executing context
-	 * @param context          current context node
-	 * @param args             vector of pointers to XObject arguments
-	 * @param locator		   Locator for the XPath expression that contains the function call
-	 * @return                 pointer to the result XObject
-	 */
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
-	{
-		if (args.size() != 1)
-		{
-            XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    /**
+     * Execute an XPath function object.  The function must return a valid
+     * object.  Extension functions should override this version of execute(),
+     * rather than one of the other calls designed for a specific number of
+     * arguments.
+     *
+     * @param executionContext executing context
+     * @param context          current context node
+     * @param args             vector of pointers to XObject arguments
+     * @param locator          Locator for the XPath expression that contains the function call
+     * @return                 pointer to the result XObject
+     */
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
+    {
+        if (args.size() != 1)
+        {
+            XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-			generalError(executionContext, context, locator);
-		}
+            generalError(executionContext, context, locator);
+        }
 
-		assert(args[0].null() == false);	
+        assert(args[0].null() == false);    
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using std::pow;
+        using std::pow;
 #endif
 
-		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
-	}
+        return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
+    }
 
-	using Function::execute;
+    using Function::execute;
 
-	/**
-	 * Create a copy of the function object.
-	 *
-	 * @return pointer to the new object
-	 */
+    /**
+     * Create a copy of the function object.
+     *
+     * @return pointer to the new object
+     */
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionCube*
+    virtual FunctionCube*
 #endif
-	clone(MemoryManager&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManager&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	/**
-	 * Get the error message to report when
-	 * the function is called with the wrong
-	 * number of arguments.
-	 *
-	 * @return function error message
-	 */
-	const XalanDOMString&
-	getError(XalanDOMString&    theResult) const
-	{
+    /**
+     * Get the error message to report when
+     * the function is called with the wrong
+     * number of arguments.
+     *
+     * @return function error message
+     */
+    const XalanDOMString&
+    getError(XalanDOMString&    theResult) const
+    {
         theResult.assign("The cube() function accepts one argument!");
 
-		return theResult;
-	}
+        return theResult;
+    }
 
 private:
 
-	// Not implemented...
-	FunctionCube&
-	operator=(const FunctionCube&);
+    // Not implemented...
+    FunctionCube&
+    operator=(const FunctionCube&);
 
-	bool
-	operator==(const FunctionCube&) const;
+    bool
+    operator==(const FunctionCube&) const;
 };
 
 
@@ -231,187 +231,187 @@ class FunctionAsctime : public Function
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return a valid
-	 * object.  Extension functions should override this version of execute(),
-	 * rather than one of the other calls designed for a specific number of
-	 * arguments.
-	 *
-	 * @param executionContext executing context
-	 * @param context          current context node
-	 * @param args             vector of pointers to XObject arguments
-	 * @param locator		   Locator for the XPath expression that contains the function call
-	 * @return                 pointer to the result XObject
-	 */
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const
-	{
-		if (args.empty() == false)
-		{
-			generalError(executionContext, context, locator);
-		}
+    /**
+     * Execute an XPath function object.  The function must return a valid
+     * object.  Extension functions should override this version of execute(),
+     * rather than one of the other calls designed for a specific number of
+     * arguments.
+     *
+     * @param executionContext executing context
+     * @param context          current context node
+     * @param args             vector of pointers to XObject arguments
+     * @param locator          Locator for the XPath expression that contains the function call
+     * @return                 pointer to the result XObject
+     */
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const
+    {
+        if (args.empty() == false)
+        {
+            generalError(executionContext, context, locator);
+        }
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using std::time;
-		using std::time_t;
-		using std::localtime;
-		using std::asctime;
-		using std::strlen;
+        using std::time;
+        using std::time_t;
+        using std::localtime;
+        using std::asctime;
+        using std::strlen;
 #endif
 
-		time_t	theTime;
+        time_t  theTime;
 
-		time(&theTime);
+        time(&theTime);
 
-		char* const	theTimeString = asctime(localtime(&theTime));
-		assert(theTimeString != 0);
+        char* const theTimeString = asctime(localtime(&theTime));
+        assert(theTimeString != 0);
 
-		// The resulting string has a newline character at the end,
-		// so get rid of it.
-		theTimeString[strlen(theTimeString) - 1] = '\0';
+        // The resulting string has a newline character at the end,
+        // so get rid of it.
+        theTimeString[strlen(theTimeString) - 1] = '\0';
 
-		return executionContext.getXObjectFactory().createString(XalanDOMString(theTimeString));
-	}
+        return executionContext.getXObjectFactory().createString(XalanDOMString(theTimeString));
+    }
 
-	using Function::execute;
+    using Function::execute;
 
-	/**
-	 * Create a copy of the function object.
-	 *
-	 * @return pointer to the new object
-	 */
+    /**
+     * Create a copy of the function object.
+     *
+     * @return pointer to the new object
+     */
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionAsctime*
+    virtual FunctionAsctime*
 #endif
-	clone(MemoryManager&    theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManager&    theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	/**
-	 * Get the error message to report when
-	 * the function is called with the wrong
-	 * number of arguments.
-	 *
-	 * @return function error message
-	 */
-	const XalanDOMString&
-	getError(XalanDOMString& theResult) const
-	{
+    /**
+     * Get the error message to report when
+     * the function is called with the wrong
+     * number of arguments.
+     *
+     * @return function error message
+     */
+    const XalanDOMString&
+    getError(XalanDOMString& theResult) const
+    {
         theResult.assign("The asctime() function accepts one argument!");
 
-		return theResult;
-	}
+        return theResult;
+    }
 
 private:
 
-	// Not implemented...
-	FunctionAsctime&
-	operator=(const FunctionAsctime&);
+    // Not implemented...
+    FunctionAsctime&
+    operator=(const FunctionAsctime&);
 
-	bool
-	operator==(const FunctionAsctime&) const;
+    bool
+    operator==(const FunctionAsctime&) const;
 };
 
 
 
 int
 main(
-			int		argc,
-			char*	/* argv */[])
+            int     argc,
+            char*   /* argv */[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int	theResult = 0;
+    int theResult = 0;
 
-	if (argc != 1)
-	{
-		cerr << "Usage: ExternalFunction"
-			 << endl
-			 << endl;
-	}
-	else
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
-		XALAN_USING_XERCES(XMLException)
+    if (argc != 1)
+    {
+        cerr << "Usage: ExternalFunction"
+             << endl
+             << endl;
+    }
+    else
+    {
+        XALAN_USING_XERCES(XMLPlatformUtils)
+        XALAN_USING_XERCES(XMLException)
 
-		XALAN_USING_XALAN(XalanTransformer)
+        XALAN_USING_XALAN(XalanTransformer)
 
-		// Call the static initializer for Xerces.
-		try
-		{
-			 XMLPlatformUtils::Initialize();
-		}
-		catch (const XMLException& toCatch)
-		{
-			 cerr << "Error during Xerces initialization.  Error code was "
+        // Call the static initializer for Xerces.
+        try
+        {
+             XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException& toCatch)
+        {
+             cerr << "Error during Xerces initialization.  Error code was "
                   << toCatch.getCode()
                   << "."
                   << endl;
 
-			 theResult = -1;
-		}
+             theResult = -1;
+        }
 
-		if (theResult == 0)
-		{
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+        if (theResult == 0)
+        {
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			{
-				// Create a XalanTransformer.
-				XalanTransformer	theXalanTransformer;
+            {
+                // Create a XalanTransformer.
+                XalanTransformer    theXalanTransformer;
 
-				// The namespace for our functions...
-				const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+                // The namespace for our functions...
+                const XalanDOMString    theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
 
-				// Install the functions in the local space.  They will only
-				// be installed in this instance, so no other instances
-				// will know about them...
-				theXalanTransformer.installExternalFunction(
-					theNamespace,
-					XalanDOMString("asctime"),
-					FunctionAsctime());
+                // Install the functions in the local space.  They will only
+                // be installed in this instance, so no other instances
+                // will know about them...
+                theXalanTransformer.installExternalFunction(
+                    theNamespace,
+                    XalanDOMString("asctime"),
+                    FunctionAsctime());
 
-				theXalanTransformer.installExternalFunction(
-					theNamespace,
-					XalanDOMString("square-root"),
-					FunctionSquareRoot());
+                theXalanTransformer.installExternalFunction(
+                    theNamespace,
+                    XalanDOMString("square-root"),
+                    FunctionSquareRoot());
 
-				theXalanTransformer.installExternalFunction(
-					theNamespace,
-					XalanDOMString("cube"),
-					FunctionCube());
+                theXalanTransformer.installExternalFunction(
+                    theNamespace,
+                    XalanDOMString("cube"),
+                    FunctionCube());
 
-				// Do the transform.
-				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+                // Do the transform.
+                theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
     
-				if(theResult != 0)
-				{
-					cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-			}
+                if(theResult != 0)
+                {
+                    cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+            }
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
-		}
+            // Terminate Xalan...
+            XalanTransformer::terminate();
+        }
 
-		// Terminate Xerces...
-		XMLPlatformUtils::Terminate();
+        // Terminate Xerces...
+        XMLPlatformUtils::Terminate();
 
-		// Clean up the ICU, if it's integrated...
-		XalanTransformer::ICUCleanUp();
-	}
+        // Clean up the ICU, if it's integrated...
+        XalanTransformer::ICUCleanUp();
+    }
 
-	return theResult;
+    return theResult;
 }

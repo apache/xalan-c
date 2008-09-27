@@ -38,29 +38,29 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportInit
 {
 public:
 
-	explicit
-	DOMSupportInit(MemoryManager& theManager);
+    explicit
+    DOMSupportInit(MemoryManager& theManager);
 
-	~DOMSupportInit();
+    ~DOMSupportInit();
 
 private:
 
-	// Not implemented...
-	DOMSupportInit(const DOMSupportInit&);
+    // Not implemented...
+    DOMSupportInit(const DOMSupportInit&);
 
-	DOMSupportInit&
-	operator=(const DOMSupportInit&);
+    DOMSupportInit&
+    operator=(const DOMSupportInit&);
 
-	
-	static void
-	initialize(MemoryManager& theManager);
+    
+    static void
+    initialize(MemoryManager& theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const PlatformSupportInit	m_platformSupportInit;
+    const PlatformSupportInit   m_platformSupportInit;
 
-	static unsigned long		s_initCounter;
+    static unsigned long        s_initCounter;
 };
 
 
@@ -69,4 +69,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(DOMSUPPORTINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(DOMSUPPORTINIT_INCLUDE_GUARD_1357924680)

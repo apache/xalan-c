@@ -58,102 +58,102 @@ class XALAN_XPATH_EXPORT FunctionID : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionID();
+    FunctionID();
 
-	virtual
-	~FunctionID();
+    virtual
+    ~FunctionID();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionID*
+    virtual FunctionID*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	class FunctionIDXObjectTypeCallback : public XObjectTypeCallback
-	{
-	public:
+    class FunctionIDXObjectTypeCallback : public XObjectTypeCallback
+    {
+    public:
 
-		FunctionIDXObjectTypeCallback(
-				XPathExecutionContext&	theExecutionContext,
-				XalanDOMString&			theString);
+        FunctionIDXObjectTypeCallback(
+                XPathExecutionContext&  theExecutionContext,
+                XalanDOMString&         theString);
 
-		void
-		processCallback(const XObject&	theXObject);
+        void
+        processCallback(const XObject&  theXObject);
 
-		// These methods are inherited from XObjectTypeCallback ...
+        // These methods are inherited from XObjectTypeCallback ...
 
-		virtual void
-		Number(
-			const XObject&	theXObject,
-			double			/* theValue */);
+        virtual void
+        Number(
+            const XObject&  theXObject,
+            double          /* theValue */);
 
-		virtual void
-		Boolean(
-			const XObject&	theXObject,
-			bool			/* theValue */);
+        virtual void
+        Boolean(
+            const XObject&  theXObject,
+            bool            /* theValue */);
 
-		virtual void
-		String(
-			const XObject&			theXObject,
-			const XalanDOMString&	/* theValue */);
+        virtual void
+        String(
+            const XObject&          theXObject,
+            const XalanDOMString&   /* theValue */);
 
-		virtual void
-		ResultTreeFragment(
-			const XObject&					theXObject,
-			const XalanDocumentFragment&	/* theValue */);
+        virtual void
+        ResultTreeFragment(
+            const XObject&                  theXObject,
+            const XalanDocumentFragment&    /* theValue */);
 
-		virtual void
-		ResultTreeFragment(
-			const XObject&			theXObject,
-			XalanDocumentFragment&	/* theValue */);
+        virtual void
+        ResultTreeFragment(
+            const XObject&          theXObject,
+            XalanDocumentFragment&  /* theValue */);
 
-		virtual void
-		NodeSet(
-			const XObject&			/* theXObject */,
-			const NodeRefListBase&	theValue);
+        virtual void
+        NodeSet(
+            const XObject&          /* theXObject */,
+            const NodeRefListBase&  theValue);
 
-		virtual void
-		Unknown(
-			const XObject&			/* theObject */,
-			const XalanDOMString&	/* theName */);
+        virtual void
+        Unknown(
+            const XObject&          /* theObject */,
+            const XalanDOMString&   /* theName */);
 
-		virtual void
-		Null(const XObject&		/* theObject */);
+        virtual void
+        Null(const XObject&     /* theObject */);
 
-	private:
+    private:
 
-		XalanDOMString&			m_resultString;
+        XalanDOMString&         m_resultString;
 
-		XPathExecutionContext&	m_executionContext;
-	};
+        XPathExecutionContext&  m_executionContext;
+    };
 
-	// Not implemented...
-	FunctionID&
-	operator=(const FunctionID&);
+    // Not implemented...
+    FunctionID&
+    operator=(const FunctionID&);
 
-	bool
-	operator==(const FunctionID&) const;
+    bool
+    operator==(const FunctionID&) const;
 };
 
 
@@ -162,4 +162,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONID_HEADER_GUARD_1357924680
+#endif  // FUNCTIONID_HEADER_GUARD_1357924680

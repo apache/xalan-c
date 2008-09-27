@@ -26,8 +26,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(MemoryManager&      theManager,
-                                                                                   size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+                                                                                   size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -41,39 +41,39 @@ XalanSourceTreeDocumentFragmentAllocator::~XalanSourceTreeDocumentFragmentAlloca
 
 
 XalanSourceTreeDocumentFragmentAllocator::data_type*
-XalanSourceTreeDocumentFragmentAllocator::create(XalanSourceTreeDocument&	theValue)
+XalanSourceTreeDocumentFragmentAllocator::create(XalanSourceTreeDocument&   theValue)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    data_type* const	theResult = new(theBlock) data_type(m_allocator.getMemoryManager(), theValue);
+    data_type* const    theResult = new(theBlock) data_type(m_allocator.getMemoryManager(), theValue);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanSourceTreeDocumentFragmentAllocator::data_type*
-XalanSourceTreeDocumentFragmentAllocator::create(const data_type&	theSource)
+XalanSourceTreeDocumentFragmentAllocator::create(const data_type&   theSource)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) data_type(theSource);
+    new(theBlock) data_type(theSource);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
 
 bool
-XalanSourceTreeDocumentFragmentAllocator::destroy(data_type*	theObject)
+XalanSourceTreeDocumentFragmentAllocator::destroy(data_type*    theObject)
 {
-	return m_allocator.destroyObject(theObject);
+    return m_allocator.destroyObject(theObject);
 }
 
 
@@ -81,7 +81,7 @@ XalanSourceTreeDocumentFragmentAllocator::destroy(data_type*	theObject)
 void 
 XalanSourceTreeDocumentFragmentAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

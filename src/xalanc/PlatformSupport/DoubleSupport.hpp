@@ -78,11 +78,11 @@ public:
     isNaN(double    theNumber)
     {
 #if defined(_MSC_VER)
-		return _isnan(theNumber) != 0;
+        return _isnan(theNumber) != 0;
 #elif defined(XALAN_POSIX2_AVAILABLE)
-		return isnan(theNumber) != 0;
+        return isnan(theNumber) != 0;
 #else
-		return s_NaN == theNumber;
+        return s_NaN == theNumber;
 #endif
     }
 

@@ -48,209 +48,209 @@ XALAN_USING_XALAN(XalanTransformer)
 
 
 void
-BuildDocument(XalanDocumentBuilder*		theBuilder)
+BuildDocument(XalanDocumentBuilder*     theBuilder)
 {
-	XALAN_USING_XERCES(ContentHandler)
-	XALAN_USING_XALAN(AttributesImpl)
-	XALAN_USING_XALAN(XalanDOMChar)
-	XALAN_USING_XALAN(XalanDOMString)
+    XALAN_USING_XERCES(ContentHandler)
+    XALAN_USING_XALAN(AttributesImpl)
+    XALAN_USING_XALAN(XalanDOMChar)
+    XALAN_USING_XALAN(XalanDOMString)
 
-	// Get the SAX2 ContentHandler from the builder...
-	ContentHandler* const	theContentHandler = theBuilder->getContentHandler();
-	assert(theContentHandler != 0);
+    // Get the SAX2 ContentHandler from the builder...
+    ContentHandler* const   theContentHandler = theBuilder->getContentHandler();
+    assert(theContentHandler != 0);
 
-	// This will hold the attributes for the elements we create...
-	AttributesImpl	theAttributes;
+    // This will hold the attributes for the elements we create...
+    AttributesImpl  theAttributes;
 
-	// Some handy scratch strings for adding elements, attributes, and text nodes...
-	XalanDOMString			theElementName;
-	XalanDOMString			theAttributeName;
-	XalanDOMString			theAttributeValue;
-	const XalanDOMString	theAttributeType("CDATA");
-	XalanDOMString			theTextValue;
-	const XalanDOMChar		theEmptyString = 0;
+    // Some handy scratch strings for adding elements, attributes, and text nodes...
+    XalanDOMString          theElementName;
+    XalanDOMString          theAttributeName;
+    XalanDOMString          theAttributeValue;
+    const XalanDOMString    theAttributeType("CDATA");
+    XalanDOMString          theTextValue;
+    const XalanDOMChar      theEmptyString = 0;
 
-	// start the document...
-	theContentHandler->startDocument();
+    // start the document...
+    theContentHandler->startDocument();
 
-	// start the document element...
-	theElementName = "foo";
+    // start the document element...
+    theElementName = "foo";
 
-	theContentHandler->startElement(
+    theContentHandler->startElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str(),
         theAttributes);
 
-	// Create an element child...
+    // Create an element child...
 
-	// Set the name of the element...
-	theElementName = "foobar";
+    // Set the name of the element...
+    theElementName = "foobar";
 
-	// Add an attribute...
-	theAttributeName = "attribute1";
-	theAttributeValue = "value1";
+    // Add an attribute...
+    theAttributeName = "attribute1";
+    theAttributeValue = "value1";
 
-	theAttributes.addAttribute(
+    theAttributes.addAttribute(
         theAttributeName.c_str(),
         theAttributeType.c_str(),
         theAttributeValue.c_str());
 
-	theContentHandler->startElement(
+    theContentHandler->startElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str(),
         theAttributes);
 
-	// Add a text node...
-	theTextValue = "The first foobar";
+    // Add a text node...
+    theTextValue = "The first foobar";
 
-	theContentHandler->characters(
+    theContentHandler->characters(
         theTextValue.c_str(),
         theTextValue.length());
 
-	// End the element...
-	theContentHandler->endElement(
+    // End the element...
+    theContentHandler->endElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str());
 
-	theAttributes.clear();
-	theAttributeName = "attribute2";
-	theAttributeValue = "value2";
-	theAttributes.addAttribute(
+    theAttributes.clear();
+    theAttributeName = "attribute2";
+    theAttributeValue = "value2";
+    theAttributes.addAttribute(
         theAttributeName.c_str(),
         theAttributeType.c_str(),
         theAttributeValue.c_str());
 
-	theContentHandler->startElement(
+    theContentHandler->startElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str(),
         theAttributes);
 
-	theTextValue = "The second foobar";
-	theContentHandler->characters(
+    theTextValue = "The second foobar";
+    theContentHandler->characters(
         theTextValue.c_str(),
         theTextValue.length());
 
-	theContentHandler->endElement(
+    theContentHandler->endElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str());
 
-	theAttributes.clear();
-	theAttributeName = "attribute3";
-	theAttributeValue = "value3";
-	theAttributes.addAttribute(
+    theAttributes.clear();
+    theAttributeName = "attribute3";
+    theAttributeValue = "value3";
+    theAttributes.addAttribute(
         theAttributeName.c_str(),
         theAttributeType.c_str(),
         theAttributeValue.c_str());
 
-	theContentHandler->startElement(
+    theContentHandler->startElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str(),
         theAttributes);
 
-	theTextValue = "The third foobar";
-	theContentHandler->characters(
+    theTextValue = "The third foobar";
+    theContentHandler->characters(
         theTextValue.c_str(),
         theTextValue.length());
 
-	theContentHandler->endElement(
+    theContentHandler->endElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str());
 
-	// end the document element...
-	theElementName = "foo";
+    // end the document element...
+    theElementName = "foo";
 
-	theContentHandler->endElement(
+    theContentHandler->endElement(
         &theEmptyString,
         &theEmptyString,
         theElementName.c_str());
 
-	// end the document...
-	theContentHandler->endDocument();
+    // end the document...
+    theContentHandler->endDocument();
 }
 
 
 
 int
 main(
-		  int		argc,
-		  char*		/* argv */ [])
+          int       argc,
+          char*     /* argv */ [])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int	theResult = 0;
+    int theResult = 0;
 
-	if (argc != 1)
-	{
-		cerr << "Usage: DocumentBuilder" << endl;
+    if (argc != 1)
+    {
+        cerr << "Usage: DocumentBuilder" << endl;
 
-		theResult = -1;
-	}
-	else
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
-		XALAN_USING_XERCES(XMLException)
+        theResult = -1;
+    }
+    else
+    {
+        XALAN_USING_XERCES(XMLPlatformUtils)
+        XALAN_USING_XERCES(XMLException)
 
-		// Call the static initializer for Xerces.
-		try
-		{
-			 XMLPlatformUtils::Initialize();
-		}
-		catch (const XMLException& toCatch)
-		{
-			 cerr << "Error during Xerces initialization.  Error code was "
+        // Call the static initializer for Xerces.
+        try
+        {
+             XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException& toCatch)
+        {
+             cerr << "Error during Xerces initialization.  Error code was "
                   << toCatch.getCode()
                   << "."
                   << endl;
 
-			 theResult = -1;
-		}
+             theResult = -1;
+        }
 
-		if (theResult == 0)
-		{
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+        if (theResult == 0)
+        {
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			{
-				// Create a XalanTransformer.
-				XalanTransformer	theXalanTransformer;
+            {
+                // Create a XalanTransformer.
+                XalanTransformer    theXalanTransformer;
 
-				// Get a document builder from the transformer...
-				XalanDocumentBuilder* const		theBuilder = theXalanTransformer.createDocumentBuilder();
+                // Get a document builder from the transformer...
+                XalanDocumentBuilder* const     theBuilder = theXalanTransformer.createDocumentBuilder();
 
-				BuildDocument(theBuilder);
+                BuildDocument(theBuilder);
 
-				// The assumption is that the executable will be run
-				// from same directory as the stylesheet file.
+                // The assumption is that the executable will be run
+                // from same directory as the stylesheet file.
 
-				// Do the transform.
-				theResult = theXalanTransformer.transform(*theBuilder, "foo.xsl", "foo.out");
+                // Do the transform.
+                theResult = theXalanTransformer.transform(*theBuilder, "foo.xsl", "foo.out");
     
-				if(theResult != 0)
-				{
-					cerr << "DocumentBuilder error: \n" << theXalanTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-			}
+                if(theResult != 0)
+                {
+                    cerr << "DocumentBuilder error: \n" << theXalanTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+            }
 
-			// Terminate Xalan.
-			XalanTransformer::terminate();
-		}
+            // Terminate Xalan.
+            XalanTransformer::terminate();
+        }
 
-		// Call the static terminator for Xerces.
-		XMLPlatformUtils::Terminate();
+        // Call the static terminator for Xerces.
+        XMLPlatformUtils::Terminate();
 
-		// Clean up the ICU, if it's integrated.
-		XalanTransformer::ICUCleanUp();
-	}
+        // Clean up the ICU, if it's integrated.
+        XalanTransformer::ICUCleanUp();
+    }
 
-	return theResult;
+    return theResult;
 }

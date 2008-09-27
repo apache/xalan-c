@@ -34,7 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanReferenceCountedObject::XalanReferenceCountedObject() :
-	m_referenceCount(0)
+    m_referenceCount(0)
 {
 }
 
@@ -42,39 +42,39 @@ XalanReferenceCountedObject::XalanReferenceCountedObject() :
 
 XalanReferenceCountedObject::~XalanReferenceCountedObject()
 {
-	assert(m_referenceCount == 0);
-}	
+    assert(m_referenceCount == 0);
+}   
 
 
 
 void
-XalanReferenceCountedObject::addReference(XalanReferenceCountedObject*		theInstance)
+XalanReferenceCountedObject::addReference(XalanReferenceCountedObject*      theInstance)
 {
-	if (theInstance != 0)
-	{
-		assert(theInstance->m_referenceCount < UINT_MAX);
+    if (theInstance != 0)
+    {
+        assert(theInstance->m_referenceCount < UINT_MAX);
 
-		if (++theInstance->m_referenceCount == 1)
-		{
-			theInstance->referenced();
-		}
-	}
+        if (++theInstance->m_referenceCount == 1)
+        {
+            theInstance->referenced();
+        }
+    }
 }
 
 
 
 void
-XalanReferenceCountedObject::removeReference(XalanReferenceCountedObject*	theInstance)
+XalanReferenceCountedObject::removeReference(XalanReferenceCountedObject*   theInstance)
 {
-	if (theInstance != 0)
-	{
-		assert(theInstance->m_referenceCount > 0);
+    if (theInstance != 0)
+    {
+        assert(theInstance->m_referenceCount > 0);
 
-		if (--theInstance->m_referenceCount == 0)
-		{
-			theInstance->dereferenced();
-		}
-	}
+        if (--theInstance->m_referenceCount == 0)
+        {
+            theInstance->dereferenced();
+        }
+    }
 }
 
 

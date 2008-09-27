@@ -571,12 +571,12 @@ protected:
             MemoryManager& theManager);
 
 
-	/**
-	 * Throw an exception when an invalid
-	 * XML character is encountered.
-	 * @param ch The first character in the surrogate
-	 * @param next The next character in the surrogate
-	 */
+    /**
+     * Throw an exception when an invalid
+     * XML character is encountered.
+     * @param ch The first character in the surrogate
+     * @param next The next character in the surrogate
+     */
     static void
     throwInvalidCharacterException( 
             XalanUnicodeChar    ch,

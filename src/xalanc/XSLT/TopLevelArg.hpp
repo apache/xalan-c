@@ -51,111 +51,111 @@ class XALAN_XSLT_EXPORT TopLevelArg
 {
 public:
 
-	/**
-	 * Construct an argument object from a string expression
-	 * 
-	 * @param name	name of argument
-	 * @param expr	expression argument represents
-	 */
-	TopLevelArg(
+    /**
+     * Construct an argument object from a string expression
+     * 
+     * @param name  name of argument
+     * @param expr  expression argument represents
+     */
+    TopLevelArg(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XalanDOMString&	expr);
+        const XalanQName&       name,
+        const XalanDOMString&   expr);
 
-	static TopLevelArg*
+    static TopLevelArg*
     create(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XalanDOMString&	expr);
-	/**
-	 * Construct an argument object from an XObject instance.
-	 * 
-	 * @param name	name of argument
-	 * @param variable	the XObject instance.
-	 */
-	TopLevelArg(
+        const XalanQName&       name,
+        const XalanDOMString&   expr);
+    /**
+     * Construct an argument object from an XObject instance.
+     * 
+     * @param name  name of argument
+     * @param variable  the XObject instance.
+     */
+    TopLevelArg(
         MemoryManager&  theManager,
-		const XalanQName&	name,
-		const XObjectPtr	variable = XObjectPtr());
+        const XalanQName&   name,
+        const XObjectPtr    variable = XObjectPtr());
 
-	static TopLevelArg*
+    static TopLevelArg*
     create(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XObjectPtr	variable = XObjectPtr());
-	/**
-	 * Copy constructor
-	 * 
-	 * @param theSource	the TopLevelArg to copy.
-	 */
-	TopLevelArg(
-                const TopLevelArg&	theSource,
+        const XalanQName&       name,
+        const XObjectPtr    variable = XObjectPtr());
+    /**
+     * Copy constructor
+     * 
+     * @param theSource the TopLevelArg to copy.
+     */
+    TopLevelArg(
+                const TopLevelArg&  theSource,
                 MemoryManager&  theManager);
 
 
-	/**
-	 * Destructor
-	 */
-	~TopLevelArg();
+    /**
+     * Destructor
+     */
+    ~TopLevelArg();
 
-	/**
-	 * Retrieve object name
-	 * 
-	 * @return qualified name of object
-	 */
-	const XalanQName&
-	getName() const
-	{
-		return m_qname;
-	}
+    /**
+     * Retrieve object name
+     * 
+     * @return qualified name of object
+     */
+    const XalanQName&
+    getName() const
+    {
+        return m_qname;
+    }
 
-	/**
-	 * Retrieve object's expression
-	 * 
-	 * @return string representation of expression
-	 */
-	const XalanDOMString&
-	getExpression() const
-	{
-		return m_expression;
-	};
+    /**
+     * Retrieve object's expression
+     * 
+     * @return string representation of expression
+     */
+    const XalanDOMString&
+    getExpression() const
+    {
+        return m_expression;
+    };
 
-	/**
-	 * Retrieve object's XObject variable.
-	 * 
-	 * @return pointer to the XObject instance
-	 */
-	const XObjectPtr
-	getXObject() const
-	{
-		return m_xobject;
-	}
+    /**
+     * Retrieve object's XObject variable.
+     * 
+     * @return pointer to the XObject instance
+     */
+    const XObjectPtr
+    getXObject() const
+    {
+        return m_xobject;
+    }
 
-	/**
-	 * Assignment operator
-	 */
-	TopLevelArg&
-	operator=(const TopLevelArg&	theRHS)
-	{
-		if (&theRHS != this)
-		{
-			m_qname = theRHS.m_qname;
+    /**
+     * Assignment operator
+     */
+    TopLevelArg&
+    operator=(const TopLevelArg&    theRHS)
+    {
+        if (&theRHS != this)
+        {
+            m_qname = theRHS.m_qname;
 
-			m_expression = theRHS.m_expression;
-		}
+            m_expression = theRHS.m_expression;
+        }
 
-		return *this;
-	}
+        return *this;
+    }
 
 private:
     // not implemented
-    TopLevelArg(const TopLevelArg&	theSource);
+    TopLevelArg(const TopLevelArg&  theSource);
 
-	XalanQNameByValue	m_qname;
+    XalanQNameByValue   m_qname;
 
-	XalanDOMString		m_expression;
+    XalanDOMString      m_expression;
 
-	const XObjectPtr	m_xobject;
+    const XObjectPtr    m_xobject;
 };
 
 XALAN_USES_MEMORY_MANAGER(TopLevelArg)
@@ -164,4 +164,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_TOPLEVELARG_HEADER_GUARD
+#endif  // XALAN_TOPLEVELARG_HEADER_GUARD

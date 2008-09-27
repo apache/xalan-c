@@ -49,8 +49,8 @@
 
 
 
-static bool	fInitialized = false;
-static bool	fTerminated = false;
+static bool fInitialized = false;
+static bool fTerminated = false;
 
 
 
@@ -65,64 +65,64 @@ XALAN_USING_XALAN(XalanTranscodingServices)
 XALAN_USING_XALAN(XalanMemMgrs)
 
 
-static XalanSourceTreeInit*		theSourceTreeInit = 0;
+static XalanSourceTreeInit*     theSourceTreeInit = 0;
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanXPathAPIInitialize()
 {
-	if (fInitialized == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_CANNOT_REINITIALIZE;
-	}
-	else
-	{
-		int	theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_CANNOT_REINITIALIZE;
+    }
+    else
+    {
+        int theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+        try
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
 
-			XMLPlatformUtils::Initialize();
+            XMLPlatformUtils::Initialize();
 
-			try
-			{
-				XPathEvaluator::initialize(XalanMemMgrs::getDefaultXercesMemMgr());
+            try
+            {
+                XPathEvaluator::initialize(XalanMemMgrs::getDefaultXercesMemMgr());
 
-				try
-				{
-					theSourceTreeInit = new XalanSourceTreeInit(XalanMemMgrs::getDefaultXercesMemMgr());
-				}
-				catch(...)
-				{
-					XPathEvaluator::terminate();
+                try
+                {
+                    theSourceTreeInit = new XalanSourceTreeInit(XalanMemMgrs::getDefaultXercesMemMgr());
+                }
+                catch(...)
+                {
+                    XPathEvaluator::terminate();
 
-					throw;
-				}
-			}
-			catch(...)
-			{
-				XMLPlatformUtils::Terminate();
+                    throw;
+                }
+            }
+            catch(...)
+            {
+                XMLPlatformUtils::Terminate();
 
-				throw;
-			}
+                throw;
+            }
 
-			fInitialized = true;
-		}
-		catch(...)
-		{
-			fTerminated = true;
+            fInitialized = true;
+        }
+        catch(...)
+        {
+            fTerminated = true;
 
-			theResult = XALAN_XPATH_API_ERROR_INITIALIZATION_FAILED;
-		}
+            theResult = XALAN_XPATH_API_ERROR_INITIALIZATION_FAILED;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
@@ -130,127 +130,127 @@ XalanXPathAPIInitialize()
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanXPathAPITerminate()
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else
-	{
-		int	theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else
+    {
+        int theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+        try
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
 
-			delete theSourceTreeInit;
+            delete theSourceTreeInit;
 
-			theSourceTreeInit = 0;
+            theSourceTreeInit = 0;
 
-			XPathEvaluator::terminate();
+            XPathEvaluator::terminate();
 
-			XMLPlatformUtils::Terminate();
+            XMLPlatformUtils::Terminate();
 
-			fTerminated = true;
-		}
-		catch(...)
-		{
-			theResult = XALAN_XPATH_API_ERROR_TERMINATION_FAILED;
-		}
+            fTerminated = true;
+        }
+        catch(...)
+        {
+            theResult = XALAN_XPATH_API_ERROR_TERMINATION_FAILED;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
-XalanCreateXPathEvaluator(XalanXPathEvaluatorHandle*	theHandle)
+XalanCreateXPathEvaluator(XalanXPathEvaluatorHandle*    theHandle)
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else if (theHandle == 0)
-	{
-		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
-	}
-	else
-	{
-		int	theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else if (theHandle == 0)
+    {
+        return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
+    }
+    else
+    {
+        int theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
+        try
+        {
             *theHandle = new XPathEvaluator(XalanMemMgrs::getDefaultXercesMemMgr());
-		}
-		catch(...)
-		{
-			theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
-		}
+        }
+        catch(...)
+        {
+            theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
 
 inline XPathEvaluator*
-getEvaluator(XalanXPathEvaluatorHandle	theHandle)
+getEvaluator(XalanXPathEvaluatorHandle  theHandle)
 {
-	assert(theHandle != 0);
+    assert(theHandle != 0);
 
-	return static_cast<XPathEvaluator*>(theHandle);
+    return static_cast<XPathEvaluator*>(theHandle);
 }
 
 
 
 inline XPath*
-getXPath(XalanXPathHandle	theHandle)
+getXPath(XalanXPathHandle   theHandle)
 {
-	assert(theHandle != 0);
+    assert(theHandle != 0);
 
-	return static_cast<XPath*>(theHandle);
+    return static_cast<XPath*>(theHandle);
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
-XalanDestroyXPathEvaluator(XalanXPathEvaluatorHandle	theXalanHandle)
+XalanDestroyXPathEvaluator(XalanXPathEvaluatorHandle    theXalanHandle)
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else if (theXalanHandle == 0)
-	{
-		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
-	}
-	else
-	{
-		int	theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else if (theXalanHandle == 0)
+    {
+        return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
+    }
+    else
+    {
+        int theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
-			delete getEvaluator(theXalanHandle);
-		}
-		catch(...)
-		{
-			theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
-		}
+        try
+        {
+            delete getEvaluator(theXalanHandle);
+        }
+        catch(...)
+        {
+            theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
@@ -258,352 +258,352 @@ typedef XalanTranscodingServices::size_type     size_type;
 
 inline int
 transcodeString(
-			XalanOutputTranscoder*	theTranscoder,
-			const char*				theString,
-			XalanDOMChar*			theChars,
-			unsigned char*			theCharsCount,
-			size_type				theLength,
-			XalanDOMString&			theResultString)
+            XalanOutputTranscoder*  theTranscoder,
+            const char*             theString,
+            XalanDOMChar*           theChars,
+            unsigned char*          theCharsCount,
+            size_type               theLength,
+            XalanDOMString&         theResultString)
 {
-	assert(theTranscoder != 0);
-	assert(theString != 0);
-	assert(theChars != 0);
-	assert(theCharsCount != 0);
+    assert(theTranscoder != 0);
+    assert(theString != 0);
+    assert(theChars != 0);
+    assert(theCharsCount != 0);
 
-	size_type	theSourceCharsTranscoded = 0;
-	size_type	theTargetBytesUsed = 0;
+    size_type   theSourceCharsTranscoded = 0;
+    size_type   theTargetBytesUsed = 0;
 
-	const XalanTranscodingServices::eCode	theCode = theTranscoder->transcode(
-					reinterpret_cast<const XalanOutputTranscoder::XalanXMLByte*>(theString),
-					theLength,
-					theChars,
-					theLength,
-					theSourceCharsTranscoded,
-					theTargetBytesUsed,
-					theCharsCount);
+    const XalanTranscodingServices::eCode   theCode = theTranscoder->transcode(
+                    reinterpret_cast<const XalanOutputTranscoder::XalanXMLByte*>(theString),
+                    theLength,
+                    theChars,
+                    theLength,
+                    theSourceCharsTranscoded,
+                    theTargetBytesUsed,
+                    theCharsCount);
 
-	if (theCode != XalanTranscodingServices::OK)
-	{
-		return XALAN_XPATH_API_ERROR_TRANSCODING;
-	}
-	else
-	{
+    if (theCode != XalanTranscodingServices::OK)
+    {
+        return XALAN_XPATH_API_ERROR_TRANSCODING;
+    }
+    else
+    {
         assert(XalanDOMString::size_type(theTargetBytesUsed) == theTargetBytesUsed);
 
         theResultString.assign(theChars, XalanDOMString::size_type(theTargetBytesUsed));
 
-		return XALAN_XPATH_API_SUCCESS;
-	}
+        return XALAN_XPATH_API_SUCCESS;
+    }
 }
 
 
 
 inline int
 transcodeString(
-			const char*			theString,
-			const char*			theStringEncoding,
-			XalanDOMString&		theResultString)
+            const char*         theString,
+            const char*         theStringEncoding,
+            XalanDOMString&     theResultString)
 {
-	assert(theString != 0);
+    assert(theString != 0);
 
-	int		theResult = XALAN_XPATH_API_SUCCESS;
+    int     theResult = XALAN_XPATH_API_SUCCESS;
 
-	if (theStringEncoding == 0 || XalanDOMString::length(theStringEncoding) == 0)
-	{
-		theResultString = theString;
-	}
-	else
-	{
-		XalanTranscodingServices::eCode		theCode = XalanTranscodingServices::OK;
+    if (theStringEncoding == 0 || XalanDOMString::length(theStringEncoding) == 0)
+    {
+        theResultString = theString;
+    }
+    else
+    {
+        XalanTranscodingServices::eCode     theCode = XalanTranscodingServices::OK;
 
-		XalanOutputTranscoder* const	theTranscoder = 
-			XalanTranscodingServices::makeNewTranscoder(
+        XalanOutputTranscoder* const    theTranscoder = 
+            XalanTranscodingServices::makeNewTranscoder(
                         XalanMemMgrs::getDefaultXercesMemMgr(),
-						XalanDOMString(theStringEncoding, XalanMemMgrs::getDefaultXercesMemMgr()),
-						theCode,
-						1024);
+                        XalanDOMString(theStringEncoding, XalanMemMgrs::getDefaultXercesMemMgr()),
+                        theCode,
+                        1024);
 
-		if (theCode == XalanTranscodingServices::UnsupportedEncoding)
-		{
-			theResult = XALAN_XPATH_API_ERROR_UNSUPPORTED_ENCODING;
-		}
-		else if (theCode != XalanTranscodingServices::OK)
-		{
-			theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
-		}
-		else
-		{
-			assert(theTranscoder != 0);
+        if (theCode == XalanTranscodingServices::UnsupportedEncoding)
+        {
+            theResult = XALAN_XPATH_API_ERROR_UNSUPPORTED_ENCODING;
+        }
+        else if (theCode != XalanTranscodingServices::OK)
+        {
+            theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
+        }
+        else
+        {
+            assert(theTranscoder != 0);
 
-			// Since UTF-16 can represent any Unicode value in
-			// one 16-bit value, we'll use the length of the
-			// string as the maximum length of the resulting
-			// transcoded string.  This doesn't account for
-			// surrogate pairs, but those are for private use
-			// only right now, so we don't really need to
-			// worry about them.
-			const XalanDOMString::size_type		theLength = XalanDOMString::length(theString);
+            // Since UTF-16 can represent any Unicode value in
+            // one 16-bit value, we'll use the length of the
+            // string as the maximum length of the resulting
+            // transcoded string.  This doesn't account for
+            // surrogate pairs, but those are for private use
+            // only right now, so we don't really need to
+            // worry about them.
+            const XalanDOMString::size_type     theLength = XalanDOMString::length(theString);
 
-			// Only use a dynamically-allocated array for very long
-			// XPath expressions.
-			const XalanDOMString::size_type		maxStackArraySize = 100;
+            // Only use a dynamically-allocated array for very long
+            // XPath expressions.
+            const XalanDOMString::size_type     maxStackArraySize = 100;
 
-			if (theLength >= maxStackArraySize)
-			{
-				XALAN_USING_XALAN(XalanArrayAutoPtr)
+            if (theLength >= maxStackArraySize)
+            {
+                XALAN_USING_XALAN(XalanArrayAutoPtr)
 
-				XalanArrayAutoPtr<unsigned char>	theCharsCount(new unsigned char[theLength + 1]);
-				XalanArrayAutoPtr<XalanDOMChar>		theChars(new XalanDOMChar[theLength + 1]);
+                XalanArrayAutoPtr<unsigned char>    theCharsCount(new unsigned char[theLength + 1]);
+                XalanArrayAutoPtr<XalanDOMChar>     theChars(new XalanDOMChar[theLength + 1]);
 
-				theResult = transcodeString(
-								theTranscoder,
-								theString,
-								theChars.get(),
-								theCharsCount.get(),
-								theLength,
-								theResultString);
-			}
-			else
-			{
-				unsigned char	theCharsCount[maxStackArraySize];
-				XalanDOMChar	theChars[maxStackArraySize];
+                theResult = transcodeString(
+                                theTranscoder,
+                                theString,
+                                theChars.get(),
+                                theCharsCount.get(),
+                                theLength,
+                                theResultString);
+            }
+            else
+            {
+                unsigned char   theCharsCount[maxStackArraySize];
+                XalanDOMChar    theChars[maxStackArraySize];
 
-				theResult = transcodeString(
-								theTranscoder,
-								theString,
-								theChars,
-								theCharsCount,
-								theLength,
-								theResultString);
-			}
+                theResult = transcodeString(
+                                theTranscoder,
+                                theString,
+                                theChars,
+                                theCharsCount,
+                                theLength,
+                                theResultString);
+            }
 
-			XalanTranscodingServices::destroyTranscoder(theTranscoder);
-		}
-	}
+            XalanTranscodingServices::destroyTranscoder(theTranscoder);
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanCreateXPath(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			const char*					theXPathExpression,
-			const char*					theXPathExpressionEncoding,
-			XalanXPathHandle*			theXPathHandle)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            const char*                 theXPathExpression,
+            const char*                 theXPathExpressionEncoding,
+            XalanXPathHandle*           theXPathHandle)
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else if (theXalanHandle == 0 || theXPathHandle == 0 || theXPathExpression == 0 || XalanDOMString::length(theXPathExpression) == 0)
-	{
-		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
-	}
-	else
-	{
-		int		theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else if (theXalanHandle == 0 || theXPathHandle == 0 || theXPathExpression == 0 || XalanDOMString::length(theXPathExpression) == 0)
+    {
+        return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
+    }
+    else
+    {
+        int     theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
-			XPathEvaluator* const	theEvaluator = getEvaluator(theXalanHandle);
-			assert(theEvaluator != 0);
+        try
+        {
+            XPathEvaluator* const   theEvaluator = getEvaluator(theXalanHandle);
+            assert(theEvaluator != 0);
 
-			XalanDOMString	theExpressionString(XalanMemMgrs::getDefaultXercesMemMgr());
+            XalanDOMString  theExpressionString(XalanMemMgrs::getDefaultXercesMemMgr());
 
-			theResult = transcodeString(
-				theXPathExpression,
-				theXPathExpressionEncoding,
-				theExpressionString);
+            theResult = transcodeString(
+                theXPathExpression,
+                theXPathExpressionEncoding,
+                theExpressionString);
 
-			if (theResult == XALAN_XPATH_API_SUCCESS)
-			{
-				const XalanDOMChar* const	thePointer = theExpressionString.c_str();
+            if (theResult == XALAN_XPATH_API_SUCCESS)
+            {
+                const XalanDOMChar* const   thePointer = theExpressionString.c_str();
 
-				XALAN_USING_XALAN(length)
+                XALAN_USING_XALAN(length)
 
-				if (length(thePointer) == 0)
-				{
-					theResult = XALAN_XPATH_API_ERROR_TRANSCODING;
-				}
-				else
-				{
-					*theXPathHandle = theEvaluator->createXPath(thePointer);
-				}
-			}
-		}
-		catch(...)
-		{
-			theResult = XALAN_XPATH_API_ERROR_INVALID_XPATH;
-		}
+                if (length(thePointer) == 0)
+                {
+                    theResult = XALAN_XPATH_API_ERROR_TRANSCODING;
+                }
+                else
+                {
+                    *theXPathHandle = theEvaluator->createXPath(thePointer);
+                }
+            }
+        }
+        catch(...)
+        {
+            theResult = XALAN_XPATH_API_ERROR_INVALID_XPATH;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanDestroyXPath(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			XalanXPathHandle			theXPathHandle)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            XalanXPathHandle            theXPathHandle)
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else if (theXalanHandle == 0 || theXPathHandle == 0)
-	{
-		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
-	}
-	else
-	{
-		int	theResult = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else if (theXalanHandle == 0 || theXPathHandle == 0)
+    {
+        return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
+    }
+    else
+    {
+        int theResult = XALAN_XPATH_API_SUCCESS;
 
-		try
-		{
-			XPathEvaluator* const	theEvaluator = getEvaluator(theXalanHandle);
-			assert(theEvaluator != 0);
+        try
+        {
+            XPathEvaluator* const   theEvaluator = getEvaluator(theXalanHandle);
+            assert(theEvaluator != 0);
 
-			if (theEvaluator->destroyXPath(getXPath(theXPathHandle)) == false)
-			{
-				theResult = XALAN_XPATH_API_ERROR_INVALID_XPATH;
-			}
-		}
-		catch(...)
-		{
-			theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
-		}
+            if (theEvaluator->destroyXPath(getXPath(theXPathHandle)) == false)
+            {
+                theResult = XALAN_XPATH_API_ERROR_INVALID_XPATH;
+            }
+        }
+        catch(...)
+        {
+            theResult = XALAN_XPATH_API_ERROR_UNKNOWN;
+        }
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanEvaluateXPathAsBoolean(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			XalanXPathHandle			theXPathHandle,
-			const char*					theXML,
-			int*						theResult)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            XalanXPathHandle            theXPathHandle,
+            const char*                 theXML,
+            int*                        theResult)
 {
-	if (fInitialized == false)
-	{
-		return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
-	}
-	else if (fTerminated == true)
-	{
-		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
-	}
-	else if (theXalanHandle == 0 || theXPathHandle == 0 || theXML == 0)
-	{
-		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
-	}
-	else
-	{
-		int	theError = XALAN_XPATH_API_SUCCESS;
+    if (fInitialized == false)
+    {
+        return XALAN_XPATH_API_ERROR_NOT_INITIALIZED;
+    }
+    else if (fTerminated == true)
+    {
+        return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
+    }
+    else if (theXalanHandle == 0 || theXPathHandle == 0 || theXML == 0)
+    {
+        return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
+    }
+    else
+    {
+        int theError = XALAN_XPATH_API_SUCCESS;
 
-		XALAN_USING_XERCES(SAXException)
+        XALAN_USING_XERCES(SAXException)
 
-		try
-		{
-			XPathEvaluator* const	theEvaluator = getEvaluator(theXalanHandle);
-			assert(theEvaluator != 0);
+        try
+        {
+            XPathEvaluator* const   theEvaluator = getEvaluator(theXalanHandle);
+            assert(theEvaluator != 0);
 
-			XPath* const	theXPath = getXPath(theXPathHandle);
-			assert(theXPath != 0);
+            XPath* const    theXPath = getXPath(theXPathHandle);
+            assert(theXPath != 0);
 
-			XALAN_USING_XALAN(XalanDocument)
-			XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-			XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+            XALAN_USING_XALAN(XalanDocument)
+            XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+            XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
 
-			XalanSourceTreeDOMSupport		theDOMSupport;
-			XalanSourceTreeParserLiaison	theLiaison(theDOMSupport, XalanMemMgrs::getDefaultXercesMemMgr());
+            XalanSourceTreeDOMSupport       theDOMSupport;
+            XalanSourceTreeParserLiaison    theLiaison(theDOMSupport, XalanMemMgrs::getDefaultXercesMemMgr());
 
-			// Hook the two together...
-			theDOMSupport.setParserLiaison(&theLiaison);
+            // Hook the two together...
+            theDOMSupport.setParserLiaison(&theLiaison);
 
-			XALAN_USING_XERCES(MemBufInputSource)
+            XALAN_USING_XERCES(MemBufInputSource)
 
-			// Create an input source...
-			const MemBufInputSource		theInputSource(
-											reinterpret_cast<const XMLByte*>(theXML),
-											XalanDOMString::length(theXML),
-											"SourceXML",
-											false);
+            // Create an input source...
+            const MemBufInputSource     theInputSource(
+                                            reinterpret_cast<const XMLByte*>(theXML),
+                                            XalanDOMString::length(theXML),
+                                            "SourceXML",
+                                            false);
 
-			// Parse the document...
-			XalanDocument* const	theDocument =
-							theLiaison.parseXMLStream(theInputSource);
-			assert(theDocument != 0);
+            // Parse the document...
+            XalanDocument* const    theDocument =
+                            theLiaison.parseXMLStream(theInputSource);
+            assert(theDocument != 0);
 
-			if (theEvaluator->evaluate(
+            if (theEvaluator->evaluate(
                     theDOMSupport,
                     theDocument,
                     *theXPath)->boolean(theEvaluator->getExecutionContext()) == true)
-			{
-				*theResult = 1;
-			}
-			else
-			{
-				*theResult = 0;
-			}
-		}
-		catch(const SAXException&)
-		{
-			theError = XALAN_XPATH_API_ERROR_BAD_XML;
-		}
-		catch(...)
-		{
-			theError = XALAN_XPATH_API_ERROR_UNKNOWN;
-		}
+            {
+                *theResult = 1;
+            }
+            else
+            {
+                *theResult = 0;
+            }
+        }
+        catch(const SAXException&)
+        {
+            theError = XALAN_XPATH_API_ERROR_BAD_XML;
+        }
+        catch(...)
+        {
+            theError = XALAN_XPATH_API_ERROR_UNKNOWN;
+        }
 
-		return theError;
-	}
+        return theError;
+    }
 }
 
 
 
 XALAN_XPATHCAPI_EXPORT_FUNCTION(int)
 XalanEvaluateXPathExpressionAsBoolean(
-			XalanXPathEvaluatorHandle	theXalanHandle,
-			const char*					theXPathExpression,
-			const char*					theXPathExpressionEncoding,
-			const char*					theXML,
-			int*						theResult)
+            XalanXPathEvaluatorHandle   theXalanHandle,
+            const char*                 theXPathExpression,
+            const char*                 theXPathExpressionEncoding,
+            const char*                 theXML,
+            int*                        theResult)
 {
-	XalanXPathHandle	theXPathHandle = 0;
+    XalanXPathHandle    theXPathHandle = 0;
 
-	int		theError = XalanCreateXPath(
-					theXalanHandle,
-					theXPathExpression,
-					theXPathExpressionEncoding,
-					&theXPathHandle);
+    int     theError = XalanCreateXPath(
+                    theXalanHandle,
+                    theXPathExpression,
+                    theXPathExpressionEncoding,
+                    &theXPathHandle);
 
-	if (theError == XALAN_XPATH_API_SUCCESS)
-	{
-		assert(theXPathHandle != 0);
+    if (theError == XALAN_XPATH_API_SUCCESS)
+    {
+        assert(theXPathHandle != 0);
 
-		theError = XalanEvaluateXPathAsBoolean(theXalanHandle, theXPathHandle, theXML, theResult);
+        theError = XalanEvaluateXPathAsBoolean(theXalanHandle, theXPathHandle, theXML, theResult);
 
-		const int	theDestroyResult =
-			XalanDestroyXPath(theXalanHandle, theXPathHandle);
+        const int   theDestroyResult =
+            XalanDestroyXPath(theXalanHandle, theXPathHandle);
 
-		if (theDestroyResult != XALAN_XPATH_API_SUCCESS)
-		{
-			theError = theDestroyResult;
-		}
-	}
+        if (theDestroyResult != XALAN_XPATH_API_SUCCESS)
+        {
+            theError = theDestroyResult;
+        }
+    }
 
-	return theError;
+    return theError;
 }

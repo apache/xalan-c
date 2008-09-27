@@ -146,12 +146,12 @@ public:
 
 private:
 
-	// Not implemented...
-	MyEntityResolver&
-	operator=(const MyEntityResolver&);
+    // Not implemented...
+    MyEntityResolver&
+    operator=(const MyEntityResolver&);
 
-	bool
-	operator==(const MyEntityResolver&) const;
+    bool
+    operator==(const MyEntityResolver&) const;
 
 
     const XalanDOMString&   m_documentEntityFile;
@@ -222,7 +222,7 @@ transform(
 
     const XalanCompiledStylesheet*  theCompiledStylesheet;
 
-	int     theResult =
+    int     theResult =
         theTransformer.compileStylesheet(theXSLFile, theCompiledStylesheet);
 
     if (theResult != 0)
@@ -234,7 +234,7 @@ transform(
 
     const XalanParsedSource*    theParsedSource;
 
-	theResult =
+    theResult =
         theTransformer.parseSource(theXMLFile, theParsedSource, fUseDOM);
 
     if (theResult != 0)
@@ -258,8 +258,8 @@ transformWithSourceTree(
 {
     theTransformer.setEntityResolver(&theEntityResolver);
 
-	// Do the transform.
-	int     theResult = transform(theTransformer, theXMLFile, theXSLFile, "foo1.out", false);
+    // Do the transform.
+    int     theResult = transform(theTransformer, theXMLFile, theXSLFile, "foo1.out", false);
     
     if (theResult == 0)
     {
@@ -282,8 +282,8 @@ transformWithXercesDOM(
 {
     theTransformer.setEntityResolver(&theEntityResolver);
 
-	// Do the transform.
-	int     theResult = transform(theTransformer, theXMLFile, theXSLFile, "foo3.out", true);
+    // Do the transform.
+    int     theResult = transform(theTransformer, theXMLFile, theXSLFile, "foo3.out", true);
     
     if (theResult == 0)
     {
@@ -299,48 +299,48 @@ transformWithXercesDOM(
 
 int
 main(
-			int		argc,
-			char*	/* argv */[])
+            int     argc,
+            char*   /* argv */[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int	theResult = 0;
+    int theResult = 0;
 
-	if (argc != 1)
-	{
-		cerr << "Usage: EntityResolver"
-			 << endl
-			 << endl;
-	}
-	else
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
-		XALAN_USING_XERCES(XMLException)
+    if (argc != 1)
+    {
+        cerr << "Usage: EntityResolver"
+             << endl
+             << endl;
+    }
+    else
+    {
+        XALAN_USING_XERCES(XMLPlatformUtils)
+        XALAN_USING_XERCES(XMLException)
 
-		// Call the static initializer for Xerces.
-		try
-		{
-			 XMLPlatformUtils::Initialize();
-		}
-		catch (const XMLException& toCatch)
-		{
-			 cerr << "Error during Xerces initialization.  Error code was "
+        // Call the static initializer for Xerces.
+        try
+        {
+             XMLPlatformUtils::Initialize();
+        }
+        catch (const XMLException& toCatch)
+        {
+             cerr << "Error during Xerces initialization.  Error code was "
                   << toCatch.getCode()
                   << "."
                   << endl;
 
-			 theResult = -1;
-		}
+             theResult = -1;
+        }
 
-		if (theResult == 0)
-		{
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+        if (theResult == 0)
+        {
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			{
-				// Create a XalanTransformer.
-				XalanTransformer	theTransformer;
+            {
+                // Create a XalanTransformer.
+                XalanTransformer    theTransformer;
 
                 const XalanDOMString    theXMLFile("foo.xml");
                 const XalanDOMString    theXSLFile("foo.xsl");
@@ -371,24 +371,24 @@ main(
                             theXSLFile);
                 }
 
-				if(theResult != 0)
-				{
-					cerr << "EntityResolver Error: \n" << theTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-			}
+                if(theResult != 0)
+                {
+                    cerr << "EntityResolver Error: \n" << theTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+            }
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
-		}
+            // Terminate Xalan...
+            XalanTransformer::terminate();
+        }
 
-		// Terminate Xerces...
-		XMLPlatformUtils::Terminate();
+        // Terminate Xerces...
+        XMLPlatformUtils::Terminate();
 
-		// Clean up the ICU, if it's integrated...
-		XalanTransformer::ICUCleanUp();
-	}
+        // Clean up the ICU, if it's integrated...
+        XalanTransformer::ICUCleanUp();
+    }
 
-	return theResult;
+    return theResult;
 }

@@ -57,129 +57,129 @@
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(cout)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(cout)
+    XALAN_USING_STD(endl)
 
-	int		theResult = 0;
+    int     theResult = 0;
 
-	if (argc != 4)
-	{
-		cerr << "Usage: SimpleXPathAPI XMLFilePath Context XPathExpression" << endl;
+    if (argc != 4)
+    {
+        cerr << "Usage: SimpleXPathAPI XMLFilePath Context XPathExpression" << endl;
 
-		theResult = -1;
-	}
-	else
-	{
+        theResult = -1;
+    }
+    else
+    {
         XALAN_USING_XALAN(XSLException)
 
         try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
 
-			XALAN_USING_XALAN(XPathEvaluator)
+            XALAN_USING_XALAN(XPathEvaluator)
 
 
-			XMLPlatformUtils::Initialize();
+            XMLPlatformUtils::Initialize();
 
-			XPathEvaluator::initialize();
+            XPathEvaluator::initialize();
 
-			{
-				XALAN_USING_XERCES(LocalFileInputSource)
+            {
+                XALAN_USING_XERCES(LocalFileInputSource)
 
-				XALAN_USING_XALAN(XalanDocument)
-				XALAN_USING_XALAN(XalanDocumentPrefixResolver)
-				XALAN_USING_XALAN(XalanDOMString)
-				XALAN_USING_XALAN(XalanNode)
-				XALAN_USING_XALAN(XalanSourceTreeInit)
-				XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-				XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-				XALAN_USING_XALAN(XObjectPtr)
+                XALAN_USING_XALAN(XalanDocument)
+                XALAN_USING_XALAN(XalanDocumentPrefixResolver)
+                XALAN_USING_XALAN(XalanDOMString)
+                XALAN_USING_XALAN(XalanNode)
+                XALAN_USING_XALAN(XalanSourceTreeInit)
+                XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+                XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+                XALAN_USING_XALAN(XObjectPtr)
 
-				// Initialize the XalanSourceTree subsystem...
-				XalanSourceTreeInit		theSourceTreeInit;
+                // Initialize the XalanSourceTree subsystem...
+                XalanSourceTreeInit     theSourceTreeInit;
 
-				// We'll use these to parse the XML file.
-				XalanSourceTreeDOMSupport		theDOMSupport;
-				XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
+                // We'll use these to parse the XML file.
+                XalanSourceTreeDOMSupport       theDOMSupport;
+                XalanSourceTreeParserLiaison    theLiaison(theDOMSupport);
 
-				// Hook the two together...
-				theDOMSupport.setParserLiaison(&theLiaison);
+                // Hook the two together...
+                theDOMSupport.setParserLiaison(&theLiaison);
 
-				const XalanDOMString	theFileName(argv[1]);
+                const XalanDOMString    theFileName(argv[1]);
 
-				// Create an input source that represents a local file...
-				const LocalFileInputSource	theInputSource(theFileName.c_str());
+                // Create an input source that represents a local file...
+                const LocalFileInputSource  theInputSource(theFileName.c_str());
 
-				// Parse the document...
-				XalanDocument* const	theDocument =
-						theLiaison.parseXMLStream(theInputSource);
-				assert(theDocument != 0);
+                // Parse the document...
+                XalanDocument* const    theDocument =
+                        theLiaison.parseXMLStream(theInputSource);
+                assert(theDocument != 0);
 
-				XalanDocumentPrefixResolver		thePrefixResolver(theDocument);
+                XalanDocumentPrefixResolver     thePrefixResolver(theDocument);
 
-				XPathEvaluator	theEvaluator;
+                XPathEvaluator  theEvaluator;
 
-				// OK, let's find the context node...
-				XalanNode* const	theContextNode =
-						theEvaluator.selectSingleNode(
-							theDOMSupport,
-							theDocument,
-							XalanDOMString(argv[2]).c_str(),
-							thePrefixResolver);
+                // OK, let's find the context node...
+                XalanNode* const    theContextNode =
+                        theEvaluator.selectSingleNode(
+                            theDOMSupport,
+                            theDocument,
+                            XalanDOMString(argv[2]).c_str(),
+                            thePrefixResolver);
 
-				if (theContextNode == 0)
-				{
-					cerr << "Warning -- No nodes matched the location path \""
-						 << argv[2]
-						 << "\"."
-						 << endl
-						 << "Execution cannot continue..."
-						 << endl
-						 << endl;
-				}
-				else
-				{
-					// OK, let's evaluate the expression...
-					const XObjectPtr	theResult(
-						theEvaluator.evaluate(
-								theDOMSupport,
-								theContextNode,
-								XalanDOMString(argv[3]).c_str(),
-								thePrefixResolver));
+                if (theContextNode == 0)
+                {
+                    cerr << "Warning -- No nodes matched the location path \""
+                         << argv[2]
+                         << "\"."
+                         << endl
+                         << "Execution cannot continue..."
+                         << endl
+                         << endl;
+                }
+                else
+                {
+                    // OK, let's evaluate the expression...
+                    const XObjectPtr    theResult(
+                        theEvaluator.evaluate(
+                                theDOMSupport,
+                                theContextNode,
+                                XalanDOMString(argv[3]).c_str(),
+                                thePrefixResolver));
 
-					assert(theResult.null() == false);
+                    assert(theResult.null() == false);
 
-					cout << "The string value of the result is:"
-						 << endl
+                    cout << "The string value of the result is:"
+                         << endl
                          << theResult->str(theEvaluator.getExecutionContext())
-						 << endl
-						 << endl;
-				}
-			}
+                         << endl
+                         << endl;
+                }
+            }
 
-			XPathEvaluator::terminate();
+            XPathEvaluator::terminate();
 
-			XMLPlatformUtils::Terminate();
-		}
+            XMLPlatformUtils::Terminate();
+        }
         catch(const XSLException&   theException)
         {
-			cerr << "XSL exception: "
+            cerr << "XSL exception: "
                  << theException.getMessage()
                  << endl;
 
-			theResult = -1;
+            theResult = -1;
         }
-		catch(...)
-		{
-			cerr << "Generic exception caught!" << endl;
+        catch(...)
+        {
+            cerr << "Generic exception caught!" << endl;
 
-			theResult = -1;
-		}
-	}
+            theResult = -1;
+        }
+    }
 
-	return theResult;
+    return theResult;
 }

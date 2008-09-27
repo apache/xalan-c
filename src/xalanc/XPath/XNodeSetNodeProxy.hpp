@@ -45,69 +45,69 @@ class XALAN_XPATH_EXPORT XNodeSetNodeProxy : public XNodeSetBase
 {
 public:
 
-	/**
-	 * Create an XNodeSetNodeProxy
-	 */
-	XNodeSetNodeProxy(MemoryManager& theManager, XalanNode*	theNode);
+    /**
+     * Create an XNodeSetNodeProxy
+     */
+    XNodeSetNodeProxy(MemoryManager& theManager, XalanNode* theNode);
 
-	/**
-	 * Create an XNodeSetNodeProxy from another.
-	 *
-	 * @param source    object to copy
-	 */
-	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source, MemoryManager& theManager);
+    /**
+     * Create an XNodeSetNodeProxy from another.
+     *
+     * @param source    object to copy
+     */
+    XNodeSetNodeProxy(const XNodeSetNodeProxy&  source, MemoryManager& theManager);
 
-	virtual
-	~XNodeSetNodeProxy();
+    virtual
+    ~XNodeSetNodeProxy();
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual const NodeRefListBase&
-	nodeset() const;
+    virtual const NodeRefListBase&
+    nodeset() const;
 
-	virtual XalanNode*
-	item(size_type	index) const;
+    virtual XalanNode*
+    item(size_type  index) const;
 
-	virtual size_type
-	getLength() const;
+    virtual size_type
+    getLength() const;
 
-	// A proxy class to implement NodeRefListBase...
-	class Proxy : public NodeRefListBase
-	{
-	public:
+    // A proxy class to implement NodeRefListBase...
+    class Proxy : public NodeRefListBase
+    {
+    public:
 
-		Proxy(XalanNode*	theNode);
+        Proxy(XalanNode*    theNode);
 
-		virtual
-		~Proxy();
+        virtual
+        ~Proxy();
 
-		virtual XalanNode*
-		item(size_type	index) const;
+        virtual XalanNode*
+        item(size_type  index) const;
 
-		virtual size_type
-		getLength() const;
+        virtual size_type
+        getLength() const;
 
-		virtual size_type
-		indexOf(const XalanNode*	theNode) const;
+        virtual size_type
+        indexOf(const XalanNode*    theNode) const;
 
-		XalanNode*	m_node;
-	};
+        XalanNode*  m_node;
+    };
 
 protected:
 
-	virtual eObjectType
-	getRealType() const;
+    virtual eObjectType
+    getRealType() const;
 
 private:
 
-	// Not implemented...
-	XNodeSetNodeProxy&
-	operator=(const XNodeSetNodeProxy&);
-    XNodeSetNodeProxy(const XNodeSetNodeProxy&	source);
+    // Not implemented...
+    XNodeSetNodeProxy&
+    operator=(const XNodeSetNodeProxy&);
+    XNodeSetNodeProxy(const XNodeSetNodeProxy&  source);
 
 
-	// Data members...
-	const Proxy		m_proxy;
+    // Data members...
+    const Proxy     m_proxy;
 };
 
 
@@ -116,4 +116,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNODESETNODEPROXY_HEADER_GUARD_1357924680
+#endif  // XNODESETNODEPROXY_HEADER_GUARD_1357924680

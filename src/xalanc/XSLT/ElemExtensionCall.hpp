@@ -43,64 +43,64 @@ class ElemExtensionCall: public ElemLiteralResult
 {
 public:
 
-	/**
-	 * Construct an object corresponding to calling an XSL extension
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 * @param ns                  handler for the extension
-	 */
-	ElemExtensionCall(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			ExtensionNSHandler&				ns);
+    /**
+     * Construct an object corresponding to calling an XSL extension
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param name                name of element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     * @param ns                  handler for the extension
+     */
+    ElemExtensionCall(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            ExtensionNSHandler&             ns);
 
-	static ElemExtensionCall*
+    static ElemExtensionCall*
     create(
             MemoryManager&              theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			ExtensionNSHandler&				ns);
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            ExtensionNSHandler&             ns);
 
-	// These methods are inherited from ElemLiteralResult ...
+    // These methods are inherited from ElemLiteralResult ...
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void 
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void 
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual bool 
-	executeChildElement(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement*	element) const;
-	
+    virtual bool 
+    executeChildElement(
+            StylesheetExecutionContext& executionContext,
+            const ElemTemplateElement*  element) const;
+    
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
-	bool
-	elementAvailable(StylesheetExecutionContext&	executionContext) const;
+    bool
+    elementAvailable(StylesheetExecutionContext&    executionContext) const;
 
 private:
 
-	const XalanQName* const		m_qname;
+    const XalanQName* const     m_qname;
 
-	ExtensionNSHandler&			m_nsh;
+    ExtensionNSHandler&         m_nsh;
 };
 
 
@@ -109,4 +109,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMEXTENSIONCALL_HEADER_GUARD
+#endif  // XALAN_ELEMEXTENSIONCALL_HEADER_GUARD

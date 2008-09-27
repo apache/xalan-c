@@ -41,60 +41,60 @@ class ElemEmpty : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an empty element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 * @param elementName The element name for which this instance is representing
-	 */
-	ElemEmpty(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			const XalanDOMString*			elementName = 0);
+    /**
+     * Construct an object corresponding to an empty element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     * @param elementName The element name for which this instance is representing
+     */
+    ElemEmpty(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            const XalanDOMString*           elementName = 0);
 
-	/**
-	 * Construct an object corresponding to an empty element.  This
-	 * constructor is used for surrogate empty elements that do not
-	 * need namespace contexts and Locator information, etc.
-	 *
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param elementName The element name for which this instance is representing
-	 */
-	ElemEmpty(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMString*			elementName = 0);
+    /**
+     * Construct an object corresponding to an empty element.  This
+     * constructor is used for surrogate empty elements that do not
+     * need namespace contexts and Locator information, etc.
+     *
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param elementName The element name for which this instance is representing
+     */
+    ElemEmpty(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMString*           elementName = 0);
 
-	virtual
-	~ElemEmpty();
+    virtual
+    ~ElemEmpty();
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual const XalanDOMString&
-	getElementName() const;
+    // These methods are inherited from ElemTemplateElement ...
+    
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 protected:
 
-	virtual bool
-	childTypeAllowed(int	xslToken) const;
+    virtual bool
+    childTypeAllowed(int    xslToken) const;
 
 private:
 
-	const XalanDOMString* const		m_elementName;
+    const XalanDOMString* const     m_elementName;
 };
 
 
@@ -103,4 +103,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMEMPTY_HEADER_GUARD
+#endif  // XALAN_ELEMEMPTY_HEADER_GUARD

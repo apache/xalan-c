@@ -36,8 +36,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOM_NodeHack::XercesDOM_NodeHack(NodeImplType*	theImpl) :
-	DOM_Node(theImpl)
+XercesDOM_NodeHack::XercesDOM_NodeHack(NodeImplType*    theImpl) :
+    DOM_Node(theImpl)
 {
 }
 
@@ -49,15 +49,15 @@ XercesDOM_NodeHack::~XercesDOM_NodeHack()
 
 
 
-XercesDOM_AttrHack::XercesDOM_AttrHack(AttrImplType*	theImpl) :
-	ParentType(theImpl)
+XercesDOM_AttrHack::XercesDOM_AttrHack(AttrImplType*    theImpl) :
+    ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_AttrHack::XercesDOM_AttrHack(const ParentType&	theSource) :
-	ParentType(theSource)
+XercesDOM_AttrHack::XercesDOM_AttrHack(const ParentType&    theSource) :
+    ParentType(theSource)
 {
 }
 
@@ -69,15 +69,15 @@ XercesDOM_AttrHack::~XercesDOM_AttrHack()
 
 
 
-XercesDOM_ElementHack::XercesDOM_ElementHack(ElementImplType*	theImpl) :
-	ParentType(theImpl)
+XercesDOM_ElementHack::XercesDOM_ElementHack(ElementImplType*   theImpl) :
+    ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_ElementHack::XercesDOM_ElementHack(const ParentType&	theSource) :
-	ParentType(theSource)
+XercesDOM_ElementHack::XercesDOM_ElementHack(const ParentType&  theSource) :
+    ParentType(theSource)
 {
 }
 
@@ -93,9 +93,9 @@ const DOMStringType
 XercesDOM_ElementHack::getNodeNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNodeName();
+    return getImpl()->getNodeName();
 #else
-	return getNodeName();
+    return getNodeName();
 #endif
 }
 
@@ -105,21 +105,21 @@ const DOMStringType
 XercesDOM_ElementHack::getNodeValueImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNodeValue();
+    return getImpl()->getNodeValue();
 #else
-	return getNodeValue();
+    return getNodeValue();
 #endif
 }
 
 
 
 const DOMStringType
-XercesDOM_ElementHack::	getNamespaceURIImpl() const
+XercesDOM_ElementHack:: getNamespaceURIImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNamespaceURI();
+    return getImpl()->getNamespaceURI();
 #else
-	return getNamespaceURI();
+    return getNamespaceURI();
 #endif
 }
 
@@ -129,9 +129,9 @@ const DOMStringType
 XercesDOM_ElementHack::getPrefixImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getPrefix();
+    return getImpl()->getPrefix();
 #else
-	return getPrefix();
+    return getPrefix();
 #endif
 }
 
@@ -141,9 +141,9 @@ const DOMStringType
 XercesDOM_ElementHack::getLocalNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getLocalName();
+    return getImpl()->getLocalName();
 #else
-	return getLocalName();
+    return getLocalName();
 #endif
 }
 
@@ -153,21 +153,21 @@ const DOMStringType
 XercesDOM_ElementHack::getTagNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getTagName();
+    return getImpl()->getTagName();
 #else
-	return getTagName();
+    return getTagName();
 #endif
 }
 
 
 
 const DOMStringType
-XercesDOM_ElementHack::getAttributeImpl(const DOMStringType&	name) const
+XercesDOM_ElementHack::getAttributeImpl(const DOMStringType&    name) const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getAttribute(name);
+    return getImpl()->getAttribute(name);
 #else
-	return getAttribute(name);
+    return getAttribute(name);
 #endif
 }
 
@@ -175,27 +175,27 @@ XercesDOM_ElementHack::getAttributeImpl(const DOMStringType&	name) const
 
 const DOMStringType
 XercesDOM_ElementHack::getAttributeNSImpl(
-			const DOMStringType&	namespaceURI,
-			const DOMStringType&	localName) const
+            const DOMStringType&    namespaceURI,
+            const DOMStringType&    localName) const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getAttributeNS(namespaceURI, localName);
+    return getImpl()->getAttributeNS(namespaceURI, localName);
 #else
-	return getAttributeNS(namespaceURI, localName);
+    return getAttributeNS(namespaceURI, localName);
 #endif
 }
 
 
 
-XercesDOM_TextHack::XercesDOM_TextHack(TextImplType*	theImpl) :
-	ParentType(theImpl)
+XercesDOM_TextHack::XercesDOM_TextHack(TextImplType*    theImpl) :
+    ParentType(theImpl)
 {
 }
 
 
 
-XercesDOM_TextHack::XercesDOM_TextHack(const ParentType&	theSource) :
-	ParentType(theSource)
+XercesDOM_TextHack::XercesDOM_TextHack(const ParentType&    theSource) :
+    ParentType(theSource)
 {
 }
 
@@ -211,9 +211,9 @@ const DOMStringType
 XercesDOM_TextHack::getNodeNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNodeName();
+    return getImpl()->getNodeName();
 #else
-	return getNodeName();
+    return getNodeName();
 #endif
 }
 
@@ -223,9 +223,9 @@ const DOMStringType
 XercesDOM_TextHack::getNodeValueImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNodeValue();
+    return getImpl()->getNodeValue();
 #else
-	return getNodeValue();
+    return getNodeValue();
 #endif
 }
 
@@ -235,9 +235,9 @@ const DOMStringType
 XercesDOM_TextHack::getNamespaceURIImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getNamespaceURI();
+    return getImpl()->getNamespaceURI();
 #else
-	return getNamespaceURI();
+    return getNamespaceURI();
 #endif
 }
 
@@ -247,9 +247,9 @@ const DOMStringType
 XercesDOM_TextHack::getPrefixImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getPrefix();
+    return getImpl()->getPrefix();
 #else
-	return getPrefix();
+    return getPrefix();
 #endif
 }
 
@@ -259,9 +259,9 @@ const DOMStringType
 XercesDOM_TextHack::getLocalNameImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getLocalName();
+    return getImpl()->getLocalName();
 #else
-	return getLocalName();
+    return getLocalName();
 #endif
 }
 
@@ -271,9 +271,9 @@ const DOMStringType
 XercesDOM_TextHack::getDataImpl() const
 {
 #if defined(XALAN_USE_XERCES_INTERNAL_CLASSES)
-	return getImpl()->getData();
+    return getImpl()->getData();
 #else
-	return getData();
+    return getData();
 #endif
 }
 

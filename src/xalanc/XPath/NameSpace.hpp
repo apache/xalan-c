@@ -41,163 +41,163 @@ class XALAN_XPATH_EXPORT NameSpace
 {
 public:
 
-	explicit
-	NameSpace(MemoryManager&  theManager) :
-		m_prefix(theManager),
-		m_uri(theManager)
-	{
-	}
-
-	/**
-	 * Construct a namespace for placement on the 
-	 * result tree namespace stack.
-	 *
-	 * @param prefix namespace prefix
-	 * @param uri    URI of namespace
-	 */
-	NameSpace(
-			const XalanDOMString&	prefix,
-			const XalanDOMString&	uri,
-            MemoryManager&      theManager) :
-		m_prefix(prefix, theManager),
-		m_uri(uri, theManager)
-	{
-	}
-
-	static NameSpace*
-	create(
-			const XalanDOMString&	prefix,
-			const XalanDOMString&	uri,
-            MemoryManager&      theManager)
-	{
-		typedef NameSpace ThisType;
-		
-		XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-		
-		ThisType* theResult = theGuard.get();
-		
-		new (theResult) ThisType(prefix, uri, theManager);
-		
-		theGuard.release();
-		
-		return theResult;
-	}
-    NameSpace( const NameSpace&     other,
-        MemoryManager&      theManager) :
-		m_prefix(other.m_prefix, theManager),
-		m_uri(other.m_uri, theManager)        
+    explicit
+    NameSpace(MemoryManager&  theManager) :
+        m_prefix(theManager),
+        m_uri(theManager)
     {
     }
 
-	~NameSpace()
-	{
-	}
+    /**
+     * Construct a namespace for placement on the 
+     * result tree namespace stack.
+     *
+     * @param prefix namespace prefix
+     * @param uri    URI of namespace
+     */
+    NameSpace(
+            const XalanDOMString&   prefix,
+            const XalanDOMString&   uri,
+            MemoryManager&      theManager) :
+        m_prefix(prefix, theManager),
+        m_uri(uri, theManager)
+    {
+    }
 
-	/**
-	 * Retrieve the prefix for namespace
-	 * 
-	 * @return prefix string
-	 */
-	const XalanDOMString&
-	getPrefix() const
-	{
-		return m_prefix;
-	}
+    static NameSpace*
+    create(
+            const XalanDOMString&   prefix,
+            const XalanDOMString&   uri,
+            MemoryManager&      theManager)
+    {
+        typedef NameSpace ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        
+        ThisType* theResult = theGuard.get();
+        
+        new (theResult) ThisType(prefix, uri, theManager);
+        
+        theGuard.release();
+        
+        return theResult;
+    }
+    NameSpace( const NameSpace&     other,
+        MemoryManager&      theManager) :
+        m_prefix(other.m_prefix, theManager),
+        m_uri(other.m_uri, theManager)        
+    {
+    }
 
-	/**
-	 * Set the prefix for namespace
-	 * 
-	 * @param prefix The new prefix value
-	 */
-	void
-	setPrefix(const XalanDOMString&		prefix)
-	{
-		m_prefix = prefix;
-	}
+    ~NameSpace()
+    {
+    }
 
-	/**
-	 * Retrieve the URI for namespace
-	 * 
-	 * @return URI string
-	 */
-	const XalanDOMString&
-	getURI() const
-	{
-		return m_uri;
-	}
+    /**
+     * Retrieve the prefix for namespace
+     * 
+     * @return prefix string
+     */
+    const XalanDOMString&
+    getPrefix() const
+    {
+        return m_prefix;
+    }
 
-	/**
-	 * Set the URI for namespace
-	 * 
-	 * @param uri The new uri value
-	 */
-	void
-	setURI(const XalanDOMString&	uri)
-	{
-		m_uri = uri;
-	}
+    /**
+     * Set the prefix for namespace
+     * 
+     * @param prefix The new prefix value
+     */
+    void
+    setPrefix(const XalanDOMString&     prefix)
+    {
+        m_prefix = prefix;
+    }
 
-	/**
-	 * Set the URI for namespace
-	 * 
-	 * @param uri The new uri value
-	 */
-	void
-	setURI(const XalanDOMChar*	uri)
-	{
-		assert(uri != 0);
+    /**
+     * Retrieve the URI for namespace
+     * 
+     * @return URI string
+     */
+    const XalanDOMString&
+    getURI() const
+    {
+        return m_uri;
+    }
 
-		m_uri = uri;
-	}
+    /**
+     * Set the URI for namespace
+     * 
+     * @param uri The new uri value
+     */
+    void
+    setURI(const XalanDOMString&    uri)
+    {
+        m_uri = uri;
+    }
 
-	/**
-	 * Set the URI for namespace
-	 * 
-	 * @param uri The new uri value
-	 * @param len The length of the uri
-	 */
-	void
-	setURI(
-			const XalanDOMChar*			uri,
-			XalanDOMString::size_type	len)
-	{
-		assert(uri != 0);
+    /**
+     * Set the URI for namespace
+     * 
+     * @param uri The new uri value
+     */
+    void
+    setURI(const XalanDOMChar*  uri)
+    {
+        assert(uri != 0);
 
-		m_uri.assign(uri, len);
-	}
+        m_uri = uri;
+    }
 
-	bool
-	empty() const
-	{
-		return m_prefix.empty() && m_uri.empty();
-	}
+    /**
+     * Set the URI for namespace
+     * 
+     * @param uri The new uri value
+     * @param len The length of the uri
+     */
+    void
+    setURI(
+            const XalanDOMChar*         uri,
+            XalanDOMString::size_type   len)
+    {
+        assert(uri != 0);
 
-	void
-	clear()
-	{
-		m_prefix.clear();
+        m_uri.assign(uri, len);
+    }
 
-		m_uri.clear();
-	}
+    bool
+    empty() const
+    {
+        return m_prefix.empty() && m_uri.empty();
+    }
 
-	/**
-	 * Equality operator
-	 *
-	 * @param theRHS namespace to compare
-	 */
-	bool
-	operator==(const NameSpace&		theRHS) const
-	{
-		return equals(m_prefix, theRHS.m_prefix) &&
-			   equals(m_uri, theRHS.m_uri);
-	}	
+    void
+    clear()
+    {
+        m_prefix.clear();
+
+        m_uri.clear();
+    }
+
+    /**
+     * Equality operator
+     *
+     * @param theRHS namespace to compare
+     */
+    bool
+    operator==(const NameSpace&     theRHS) const
+    {
+        return equals(m_prefix, theRHS.m_prefix) &&
+               equals(m_uri, theRHS.m_uri);
+    }   
 
 private:
-	NameSpace(const NameSpace&);
+    NameSpace(const NameSpace&);
 
-	XalanDOMString	m_prefix;
+    XalanDOMString  m_prefix;
 
-	XalanDOMString	m_uri;
+    XalanDOMString  m_uri;
 };
 
 XALAN_USES_MEMORY_MANAGER(NameSpace)
@@ -206,4 +206,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NAMESPACE_HEADER_GUARD_1357924680
+#endif  // NAMESPACE_HEADER_GUARD_1357924680

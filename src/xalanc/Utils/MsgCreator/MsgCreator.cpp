@@ -259,7 +259,7 @@ appendDirectory(
     {
         strcpy(FileName, p.outDir);
 
-		if (FileName[dirLength - 1] != *s_pathSeparator)
+        if (FileName[dirLength - 1] != *s_pathSeparator)
         {
             strcat(FileName, s_pathSeparator);
         }

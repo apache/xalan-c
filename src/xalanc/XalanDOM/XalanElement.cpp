@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanElement::XalanElement() :
-	XalanNode()
+    XalanNode()
 {
 }
 
@@ -36,27 +36,27 @@ XalanElement::~XalanElement()
 
 
 
-XalanElement::XalanElement(const XalanElement&	theSource) :
-	XalanNode(theSource)
+XalanElement::XalanElement(const XalanElement&  theSource) :
+    XalanNode(theSource)
 {
 }
 
 
 
 XalanElement&
-XalanElement::operator=(const XalanElement&		theSource)
+XalanElement::operator=(const XalanElement&     theSource)
 {
-	XalanNode::operator=(theSource);
+    XalanNode::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanElement::operator==(const XalanElement&	/* theRHS */) const
+XalanElement::operator==(const XalanElement&    /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

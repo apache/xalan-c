@@ -25,11 +25,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XStringAdapter::XStringAdapter(
-            const XObjectPtr&	    val,
+            const XObjectPtr&       val,
             MemoryManager&          theManager,
             XPathExecutionContext&  theExecutionContext) :
-	XStringBase(theManager, theExecutionContext),
-	m_value(val)
+    XStringBase(theManager, theExecutionContext),
+    m_value(val)
 {
 }
 
@@ -38,8 +38,8 @@ XStringAdapter::XStringAdapter(
 XStringAdapter::XStringAdapter(
             const XStringAdapter&   source,
             MemoryManager&          theManager) :
-	XStringBase(source, theManager),
-	m_value(source.m_value)
+    XStringBase(source, theManager),
+    m_value(source.m_value)
 {
 }
 
@@ -54,7 +54,7 @@ XStringAdapter::~XStringAdapter()
 const XalanDOMString&
 XStringAdapter::str(XPathExecutionContext&  executionContext) const
 {
-	return m_value->str(executionContext);
+    return m_value->str(executionContext);
 }
 
 
@@ -62,7 +62,7 @@ XStringAdapter::str(XPathExecutionContext&  executionContext) const
 const XalanDOMString&
 XStringAdapter::str() const
 {
-	return m_value->str();
+    return m_value->str();
 }
 
 
@@ -70,10 +70,10 @@ XStringAdapter::str() const
 void
 XStringAdapter::str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	m_value->str(
+    m_value->str(
         executionContext,
         formatterListener,
         function);
@@ -83,10 +83,10 @@ XStringAdapter::str(
 
 void
 XStringAdapter::str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	m_value->str(
+    m_value->str(
         formatterListener,
         function);
 }
@@ -96,9 +96,9 @@ XStringAdapter::str(
 void
 XStringAdapter::str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
-	m_value->str(
+    m_value->str(
         executionContext,
         theBuffer);
 }
@@ -108,7 +108,7 @@ XStringAdapter::str(
 void
 XStringAdapter::str(XalanDOMString&     theBuffer) const
 {
-	m_value->str(theBuffer);
+    m_value->str(theBuffer);
 }
 
 
@@ -116,7 +116,7 @@ XStringAdapter::str(XalanDOMString&     theBuffer) const
 XStringAdapter::eObjectType
 XStringAdapter::getRealType() const
 {
-	return eTypeStringAdapter;
+    return eTypeStringAdapter;
 }
 
 
@@ -124,7 +124,7 @@ XStringAdapter::getRealType() const
 double
 XStringAdapter::stringLength(XPathExecutionContext&     executionContext) const
 {
-	return m_value->stringLength(executionContext);
+    return m_value->stringLength(executionContext);
 }
 
 

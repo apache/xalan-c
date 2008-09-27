@@ -38,17 +38,17 @@ XALAN_CPP_NAMESPACE_BEGIN
  */
 struct XALAN_XSLT_EXPORT DecimalToRoman 
 {
-	enum { eMaxLetter = 2 };
+    enum { eMaxLetter = 2 };
 
-	typedef XalanSize_t     ValueType;
+    typedef XalanSize_t     ValueType;
 
-	ValueType		m_postValue;
+    ValueType       m_postValue;
 
-	XalanDOMChar	m_postLetter[eMaxLetter + 1];
+    XalanDOMChar    m_postLetter[eMaxLetter + 1];
 
-	ValueType		m_preValue;
+    ValueType       m_preValue;
 
-	XalanDOMChar	m_preLetter[eMaxLetter + 1];
+    XalanDOMChar    m_preLetter[eMaxLetter + 1];
 };
 
 
@@ -57,4 +57,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_DECIMALTOROMAN_HEADER_GUARD
+#endif  // XALAN_DECIMALTOROMAN_HEADER_GUARD

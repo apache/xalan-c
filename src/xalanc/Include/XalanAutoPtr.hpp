@@ -41,88 +41,88 @@ class XalanAutoPtr
 {
 public:
 
-	XalanAutoPtr(Type*	thePointer = 0) :
-		m_pointer(thePointer)
-	{
-	}
+    XalanAutoPtr(Type*  thePointer = 0) :
+        m_pointer(thePointer)
+    {
+    }
 
-	XalanAutoPtr(const XalanAutoPtr<Type>&	theSource) :
-		m_pointer(((XalanAutoPtr<Type>&)theSource).release())
-	{
-	}
+    XalanAutoPtr(const XalanAutoPtr<Type>&  theSource) :
+        m_pointer(((XalanAutoPtr<Type>&)theSource).release())
+    {
+    }
 
-	XalanAutoPtr<Type>&
-	operator=(XalanAutoPtr<Type>&	theRHS)
-	{
-		if (this != &theRHS)
-		{
-			// This test ought not to be necessary, but
-			// MSVC 6.0 calls delete, which checks for 0.
-			// The problem with that is the locking is
-			// extremely expensive.
-			if (m_pointer != 0)
-			{
-				delete m_pointer;
-			}
+    XalanAutoPtr<Type>&
+    operator=(XalanAutoPtr<Type>&   theRHS)
+    {
+        if (this != &theRHS)
+        {
+            // This test ought not to be necessary, but
+            // MSVC 6.0 calls delete, which checks for 0.
+            // The problem with that is the locking is
+            // extremely expensive.
+            if (m_pointer != 0)
+            {
+                delete m_pointer;
+            }
 
-			m_pointer = theRHS.release();
-		}
+            m_pointer = theRHS.release();
+        }
 
-		return *this;
-	}
+        return *this;
+    }
 
-	~XalanAutoPtr()
-	{
-		// See note in operator=() about this...
-		if (m_pointer != 0)
-		{
-			delete m_pointer;
-		}
-	}
+    ~XalanAutoPtr()
+    {
+        // See note in operator=() about this...
+        if (m_pointer != 0)
+        {
+            delete m_pointer;
+        }
+    }
 
-	Type&
-	operator*() const
-	{
-		return *m_pointer;
-	}
+    Type&
+    operator*() const
+    {
+        return *m_pointer;
+    }
 
-	Type*
-	operator->() const
-	{
-		return m_pointer;
-	}
+    Type*
+    operator->() const
+    {
+        return m_pointer;
+    }
 
-	Type*
-	get() const
-	{
-		return m_pointer;
-	}
+    Type*
+    get() const
+    {
+        return m_pointer;
+    }
 
-	Type*
-	release()
-	{
-		Type* const	temp = m_pointer;
+    Type*
+    release()
+    {
+        Type* const temp = m_pointer;
 
-		m_pointer = 0;
+        m_pointer = 0;
 
-		return temp;
-	}
+        return temp;
+    }
 
-	void
-	reset(Type*		thePointer = 0)
-	{
-		// See note in operator=() about this...
-		if (m_pointer != 0)
-		{
-			delete m_pointer;
-		}
+    void
+    reset(Type*     thePointer = 0)
+    {
+        // See note in operator=() about this...
+        if (m_pointer != 0)
+        {
+            delete m_pointer;
+        }
 
-		m_pointer = thePointer;
-	}
+        m_pointer = thePointer;
+    }
 
 private:
 
-	Type*	m_pointer;
+    Type*   m_pointer;
 };
 
 
@@ -133,92 +133,92 @@ class XalanArrayAutoPtr
 {
 public:
 
-	XalanArrayAutoPtr(Type*		thePointer = 0) :
-		m_pointer(thePointer)
-	{
-	}
+    XalanArrayAutoPtr(Type*     thePointer = 0) :
+        m_pointer(thePointer)
+    {
+    }
 
-	XalanArrayAutoPtr(const XalanArrayAutoPtr<Type>&	theSource) :
-		m_pointer(((XalanArrayAutoPtr<Type>&)theSource).release())
-	{
-	}
+    XalanArrayAutoPtr(const XalanArrayAutoPtr<Type>&    theSource) :
+        m_pointer(((XalanArrayAutoPtr<Type>&)theSource).release())
+    {
+    }
 
-	XalanArrayAutoPtr<Type>&
-	operator=(XalanArrayAutoPtr<Type>&	theRHS)
-	{
-		if (this != &theRHS)
-		{
-			// This test ought not to be necessary, but
-			// MSVC 6.0 calls delete, which checks for 0.
-			// The problem with that is the locking is
-			// extremely expensive.
-			if (m_pointer != 0)
-			{
-				delete [] m_pointer;
-			}
+    XalanArrayAutoPtr<Type>&
+    operator=(XalanArrayAutoPtr<Type>&  theRHS)
+    {
+        if (this != &theRHS)
+        {
+            // This test ought not to be necessary, but
+            // MSVC 6.0 calls delete, which checks for 0.
+            // The problem with that is the locking is
+            // extremely expensive.
+            if (m_pointer != 0)
+            {
+                delete [] m_pointer;
+            }
 
-			m_pointer = theRHS.release();
-		}
+            m_pointer = theRHS.release();
+        }
 
-		return *this;
-	}
+        return *this;
+    }
 
-	~XalanArrayAutoPtr()
-	{
-		// See note in operator=() about this...
-		if (m_pointer != 0)
-		{
-			delete [] m_pointer;
-		}
-	}
+    ~XalanArrayAutoPtr()
+    {
+        // See note in operator=() about this...
+        if (m_pointer != 0)
+        {
+            delete [] m_pointer;
+        }
+    }
 
-	Type&
-	operator*() const
-	{
-		return *m_pointer;
-	}
+    Type&
+    operator*() const
+    {
+        return *m_pointer;
+    }
 
-	Type&
+    Type&
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	operator[](std::size_t	index) const
+    operator[](std::size_t  index) const
 #else
-	operator[](size_t	index) const
+    operator[](size_t   index) const
 #endif
-	{
-		return m_pointer[index];
-	}
+    {
+        return m_pointer[index];
+    }
 
-	Type*
-	get() const
-	{
-		return m_pointer;
-	}
+    Type*
+    get() const
+    {
+        return m_pointer;
+    }
 
-	Type*
-	release()
-	{
-		Type* const	temp = m_pointer;
+    Type*
+    release()
+    {
+        Type* const temp = m_pointer;
 
-		m_pointer = 0;
+        m_pointer = 0;
 
-		return temp;
-	}
+        return temp;
+    }
 
-	void
-	reset(Type*		thePointer = 0)
-	{
-		// See note in operator=() about this...
-		if (m_pointer != 0)
-		{
-			delete [] m_pointer;
-		}
+    void
+    reset(Type*     thePointer = 0)
+    {
+        // See note in operator=() about this...
+        if (m_pointer != 0)
+        {
+            delete [] m_pointer;
+        }
 
-		m_pointer = thePointer;
-	}
+        m_pointer = thePointer;
+    }
 
 private:
 
-	Type*	m_pointer;
+    Type*   m_pointer;
 };
 
 
@@ -227,4 +227,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// if !defined(XALANAUTOPTR_HEADER_GUARD_1357924680)
+#endif  // if !defined(XALANAUTOPTR_HEADER_GUARD_1357924680)

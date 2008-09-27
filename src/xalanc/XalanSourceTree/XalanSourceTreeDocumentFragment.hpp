@@ -52,103 +52,103 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocumentFragment : public Xala
 {
 public:
 
-	XalanSourceTreeDocumentFragment(MemoryManager&  theManager,
-                            XalanSourceTreeDocument&	theOwnerDocument);
+    XalanSourceTreeDocumentFragment(MemoryManager&  theManager,
+                            XalanSourceTreeDocument&    theOwnerDocument);
 
     /*
-	XalanSourceTreeDocumentFragment(
+    XalanSourceTreeDocumentFragment(
             MemoryManager&                      theManager,
-			const XalanSourceTreeDocumentFragment&	theSource,
-			bool									deep = false);
+            const XalanSourceTreeDocumentFragment&  theSource,
+            bool                                    deep = false);
     */
-	virtual
-	~XalanSourceTreeDocumentFragment();
+    virtual
+    ~XalanSourceTreeDocumentFragment();
 
-	// These interfaces are inherited from XalanNode...
+    // These interfaces are inherited from XalanNode...
 
-	virtual const XalanDOMString&
-	getNodeName() const;
+    virtual const XalanDOMString&
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanDocument*
+    virtual XalanDocument*
 #else
-	virtual XalanSourceTreeDocument*
+    virtual XalanSourceTreeDocument*
 #endif
-	getOwnerDocument() const;
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
-	// These interfaces are new...
+    // These interfaces are new...
 
-	void
-	appendChildNode(XalanSourceTreeComment*		theChild);
+    void
+    appendChildNode(XalanSourceTreeComment*     theChild);
 
-	void
-	appendChildNode(XalanSourceTreeElement*		theChild);
+    void
+    appendChildNode(XalanSourceTreeElement*     theChild);
 
-	void
-	appendChildNode(XalanSourceTreeProcessingInstruction*	theChild);
+    void
+    appendChildNode(XalanSourceTreeProcessingInstruction*   theChild);
 
-	void
-	appendChildNode(XalanSourceTreeText*	theChild);
+    void
+    appendChildNode(XalanSourceTreeText*    theChild);
 
-	void
-	clearChildren();
+    void
+    clearChildren();
 
 protected:
 
-	XalanSourceTreeDocumentFragment&
-	operator=(const XalanSourceTreeDocumentFragment&	theSource);
+    XalanSourceTreeDocumentFragment&
+    operator=(const XalanSourceTreeDocumentFragment&    theSource);
 
-	bool
-	operator==(const XalanSourceTreeDocumentFragment&		theRHS) const;
+    bool
+    operator==(const XalanSourceTreeDocumentFragment&       theRHS) const;
 
 private:
-    	MemoryManager&      m_manager;
+        MemoryManager&      m_manager;
 
-	XalanSourceTreeDocument* const	m_ownerDocument;
+    XalanSourceTreeDocument* const  m_ownerDocument;
 
-	XalanNode*						m_firstChild;
+    XalanNode*                      m_firstChild;
 };
 
 
@@ -157,4 +157,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEDOCUMENTFRAGMENT_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEDOCUMENTFRAGMENT_HEADER_GUARD_1357924680)

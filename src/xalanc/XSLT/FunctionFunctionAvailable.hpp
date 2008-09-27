@@ -44,44 +44,44 @@ class XALAN_XSLT_EXPORT FunctionFunctionAvailable : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionFunctionAvailable();
+    FunctionFunctionAvailable();
 
-	virtual
-	~FunctionFunctionAvailable();
+    virtual
+    ~FunctionFunctionAvailable();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionFunctionAvailable*
+    virtual FunctionFunctionAvailable*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionFunctionAvailable&
-	operator=(const FunctionFunctionAvailable&);
+    // Not implemented...
+    FunctionFunctionAvailable&
+    operator=(const FunctionFunctionAvailable&);
 
-	bool
-	operator==(const FunctionFunctionAvailable&) const;
+    bool
+    operator==(const FunctionFunctionAvailable&) const;
 };
 
 
@@ -90,4 +90,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONFUNCTIONAVAILABLE_HEADER_GUARD_1357924680
+#endif  // FUNCTIONFUNCTIONAVAILABLE_HEADER_GUARD_1357924680

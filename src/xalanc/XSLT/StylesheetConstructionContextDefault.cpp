@@ -168,11 +168,11 @@ StylesheetConstructionContextDefault::~StylesheetConstructionContextDefault()
 
 void
 StylesheetConstructionContextDefault::problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     m_processor.problem(
         source,
@@ -188,8 +188,8 @@ void
 StylesheetConstructionContextDefault::problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     m_processor.problem(
         source,

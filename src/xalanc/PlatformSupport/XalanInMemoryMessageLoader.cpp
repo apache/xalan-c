@@ -37,30 +37,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 bool
 XalanInMemoryMessageLoader::loadMsg(
-            XalanMessages::Codes	msgToLoad,
-			XalanDOMChar*		    toFill,
-			XalanSize_t             maxChars)
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMChar*           toFill,
+            XalanSize_t             maxChars)
 {
-	if (toFill == 0)
-	{
-		return false;
-	}
-	else if (XalanMsgContainer::getMessageCount() < static_cast<XalanSize_t>(msgToLoad))
-	{
-		const XalanDOMString::size_type		msgLength =
+    if (toFill == 0)
+    {
+        return false;
+    }
+    else if (XalanMsgContainer::getMessageCount() < static_cast<XalanSize_t>(msgToLoad))
+    {
+        const XalanDOMString::size_type     msgLength =
                m_unknownMessage.length() + 1;
 
-		XalanCopy(
+        XalanCopy(
             m_unknownMessage.c_str(),
             m_unknownMessage.c_str() + (msgLength < maxChars ? msgLength : maxChars),
             toFill);
-	}
-	else
+    }
+    else
     {
-        const XalanDOMChar* const	pErrMsg = XalanMsgContainer::getMessage(msgToLoad);
-		assert(pErrMsg != 0);
+        const XalanDOMChar* const   pErrMsg = XalanMsgContainer::getMessage(msgToLoad);
+        assert(pErrMsg != 0);
 
-		const XalanDOMString::size_type		msgLength =
+        const XalanDOMString::size_type     msgLength =
                XalanDOMString::length(pErrMsg) + 1;
 
         XalanCopy(
@@ -81,7 +81,7 @@ XalanInMemoryMessageLoader::~XalanInMemoryMessageLoader()
 
 
 XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManager& theManager) :
-	m_unknownMessage("The message was not found in the message library.", theManager)
+    m_unknownMessage("The message was not found in the message library.", theManager)
 {
 }
 

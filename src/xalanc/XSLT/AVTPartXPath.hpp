@@ -52,35 +52,35 @@ class AVTPartXPath: public AVTPart
 {
 public:
 
-	/**
-	 * Construct an XPath Attribute Value Template (AVT) part from an XPath.
-	 *
-	 * @param xpath XPath to evaluate
-	 */
-	AVTPartXPath(const XPath*	xpath);
+    /**
+     * Construct an XPath Attribute Value Template (AVT) part from an XPath.
+     *
+     * @param xpath XPath to evaluate
+     */
+    AVTPartXPath(const XPath*   xpath);
 
 
-	// These methods are inherited from AVTPart ...
-	
-	virtual void
-	evaluate(
-			XalanDOMString&			buf,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    // These methods are inherited from AVTPart ...
+    
+    virtual void
+    evaluate(
+            XalanDOMString&         buf,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
-	virtual void
-	evaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    virtual void
+    evaluate(
+            XalanDOMString&         buf,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
 private:
 
-	/**
-	 * XPath for evaluation;
-	 */
-	const XPath* const	m_pXPath;
+    /**
+     * XPath for evaluation;
+     */
+    const XPath* const  m_pXPath;
 };
 
 
@@ -89,4 +89,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	//XALAN_AVTPARTXPATH_HEADER_GUARD 
+#endif  //XALAN_AVTPARTXPATH_HEADER_GUARD 

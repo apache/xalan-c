@@ -26,40 +26,40 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-const XalanDOMChar	XSLTProcessorException::m_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_L,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+const XalanDOMChar  XSLTProcessorException::m_type[] = 
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_L,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_P,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 
 
 XSLTProcessorException::XSLTProcessorException(
         MemoryManager&          theManager,
-		const XalanDOMString&	theMessage,
+        const XalanDOMString&   theMessage,
         const Locator*          theLocator) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager,
         theLocator)
@@ -70,8 +70,8 @@ XSLTProcessorException::XSLTProcessorException(
 
 XSLTProcessorException::XSLTProcessorException(
             MemoryManager&          theManager,
-            const XalanDOMString&	theMessage) :
-	XSLException(
+            const XalanDOMString&   theMessage) :
+    XSLException(
         theMessage,
         theManager)
 {

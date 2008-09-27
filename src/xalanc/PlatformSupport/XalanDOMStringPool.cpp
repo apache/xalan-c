@@ -25,18 +25,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XalanDOMStringPool::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XalanDOMStringPool::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanDOMStringPool::XalanDOMStringPool(
             MemoryManager&      theManager,
-			block_size_type     theBlockSize,
-			bucket_count_type   theBucketCount,
-			bucket_size_type    theBucketSize) :
-	m_stringAllocator(theManager, theBlockSize),
-	m_stringCount(0),
-	m_hashTable(theManager, theBucketCount, theBucketSize)
+            block_size_type     theBlockSize,
+            bucket_count_type   theBucketCount,
+            bucket_size_type    theBucketSize) :
+    m_stringAllocator(theManager, theBlockSize),
+    m_stringCount(0),
+    m_hashTable(theManager, theBucketCount, theBucketSize)
 {
 }
 
@@ -72,11 +72,11 @@ XalanDOMStringPool::~XalanDOMStringPool()
 void
 XalanDOMStringPool::clear()
 {
-	m_stringAllocator.reset();
+    m_stringAllocator.reset();
 
-	m_hashTable.clear();
+    m_hashTable.clear();
 
-	m_stringCount = 0;
+    m_stringCount = 0;
 }
 
 
@@ -84,63 +84,63 @@ XalanDOMStringPool::clear()
 size_t
 XalanDOMStringPool::size() const
 {
-	assert(m_stringCount == m_hashTable.size());
+    assert(m_stringCount == m_hashTable.size());
 
-	return m_stringCount;
+    return m_stringCount;
 }
 
 
 
 const XalanDOMString&
-XalanDOMStringPool::get(const XalanDOMString&	theString)
+XalanDOMStringPool::get(const XalanDOMString&   theString)
 {
-	return get(theString.c_str(), theString.length());
+    return get(theString.c_str(), theString.length());
 }
 
 
 
 const XalanDOMString&
 XalanDOMStringPool::get(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength)
 {
-	assert(m_stringCount == m_hashTable.size());
+    assert(m_stringCount == m_hashTable.size());
 
-	if (theString == 0 || *theString == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		const XalanDOMString::size_type		theActualLength = theLength == XalanDOMString::npos ? length(theString) : theLength;
+    if (theString == 0 || *theString == 0)
+    {
+        return s_emptyString;
+    }
+    else
+    {
+        const XalanDOMString::size_type     theActualLength = theLength == XalanDOMString::npos ? length(theString) : theLength;
 
-		size_t	theBucketIndex;
+        size_t  theBucketIndex;
 
-		const XalanDOMString*	theTableString = m_hashTable.find(theString, theActualLength, &theBucketIndex);
+        const XalanDOMString*   theTableString = m_hashTable.find(theString, theActualLength, &theBucketIndex);
 
-		if (theTableString != 0)
-		{
-			return *theTableString;
-		}
-		else
-		{
-			// Not found, so insert the string...
-			XalanDOMString* const	theNewString =
-				m_stringAllocator.create(theString, theActualLength);
-			assert(theNewString != 0);
+        if (theTableString != 0)
+        {
+            return *theTableString;
+        }
+        else
+        {
+            // Not found, so insert the string...
+            XalanDOMString* const   theNewString =
+                m_stringAllocator.create(theString, theActualLength);
+            assert(theNewString != 0);
 
-			assert(theActualLength == theNewString->length());
+            assert(theActualLength == theNewString->length());
 
-			++m_stringCount;
+            ++m_stringCount;
 
-			// Insert the string into the hash table...
-			m_hashTable.insert(*theNewString, theBucketIndex);
+            // Insert the string into the hash table...
+            m_hashTable.insert(*theNewString, theBucketIndex);
 
-			assert(m_stringCount == m_hashTable.size());
+            assert(m_stringCount == m_hashTable.size());
 
-			return *theNewString;
-		}
-	}
+            return *theNewString;
+        }
+    }
 }
 
 

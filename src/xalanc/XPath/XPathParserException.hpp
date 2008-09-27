@@ -41,34 +41,34 @@ class XALAN_XPATH_EXPORT XPathParserException : public XalanXPathException
 public:
 
     /**
-	 * Constructor
-	 * 
-	 * @param theMessage message to write when exception thrown
-	 * @param theManager The MemoryManager instance to use.
-	 * @param theLocator The locator instance for error reporting, if any.
-	 */
-	XPathParserException(
-			const XalanDOMString&	theMessage,
+     * Constructor
+     * 
+     * @param theMessage message to write when exception thrown
+     * @param theManager The MemoryManager instance to use.
+     * @param theLocator The locator instance for error reporting, if any.
+     */
+    XPathParserException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
-            const Locator*		    theLocator);
+            const Locator*          theLocator);
 
     /**
-	 * Constructor. Use this constructor when the error message has
+     * Constructor. Use this constructor when the error message has
      * already been formatted.
-	 * 
-	 * @param theMessage message to write when exception thrown
-	 * @param theManager The MemoryManager instance to use.
-	 */
-	XPathParserException(
-			const XalanDOMString&	theMessage,
+     * 
+     * @param theMessage message to write when exception thrown
+     * @param theManager The MemoryManager instance to use.
+     */
+    XPathParserException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager);
 
     XPathParserException(const XPathParserException&    other);
 
     virtual
-	~XPathParserException();
-	
-	virtual const XalanDOMChar*
+    ~XPathParserException();
+    
+    virtual const XalanDOMChar*
     getType() const;
 
 private:
@@ -80,4 +80,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHPARSEREXCEPTION_HEADER_GUARD_1357924680
+#endif  // XPATHPARSEREXCEPTION_HEADER_GUARD_1357924680

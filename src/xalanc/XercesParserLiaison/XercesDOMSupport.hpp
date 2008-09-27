@@ -41,27 +41,27 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMSupport : public DOMSupport
 {
 public:
 
-	XercesDOMSupport(XercesParserLiaison&   theLiaison);
+    XercesDOMSupport(XercesParserLiaison&   theLiaison);
 
-	virtual
-	~XercesDOMSupport();
+    virtual
+    ~XercesDOMSupport();
 
-	// These interfaces are inherited from Resettable...
+    // These interfaces are inherited from Resettable...
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
-	// These interfaces are inherited from DOMSupport...
+    // These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const;
 
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const;
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const;
 
 private:
 
@@ -74,4 +74,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// DOMSUPPORT_HEADER_GUARD_1357924680
+#endif  // DOMSUPPORT_HEADER_GUARD_1357924680

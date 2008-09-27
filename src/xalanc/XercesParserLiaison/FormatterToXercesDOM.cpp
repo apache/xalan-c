@@ -60,41 +60,41 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FormatterToXercesDOM::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    FormatterToXercesDOM::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 FormatterToXercesDOM::FormatterToXercesDOM( 
-			DOMDocument_Type*			doc,
-			DOMDocumentFragmentType*	docFrag,
-			DOMElementType*				currentElement,
+            DOMDocument_Type*           doc,
+            DOMDocumentFragmentType*    docFrag,
+            DOMElementType*             currentElement,
             MemoryManager&          theManager) :
-	FormatterListener(OUTPUT_METHOD_DOM),
-	m_doc(doc),
-	m_docFrag(docFrag),
-	m_currentElem(currentElement),
-	m_elemStack(theManager),
-	m_buffer(theManager),
-	m_textBuffer(theManager)
+    FormatterListener(OUTPUT_METHOD_DOM),
+    m_doc(doc),
+    m_docFrag(docFrag),
+    m_currentElem(currentElement),
+    m_elemStack(theManager),
+    m_buffer(theManager),
+    m_textBuffer(theManager)
 {
-	assert(m_doc != 0 && m_docFrag != 0);
+    assert(m_doc != 0 && m_docFrag != 0);
 }
 
 
 
 FormatterToXercesDOM::FormatterToXercesDOM(
-			DOMDocument_Type*	doc,
-			DOMElementType*		elem,
+            DOMDocument_Type*   doc,
+            DOMElementType*     elem,
             MemoryManager& theManager) :
-	FormatterListener(OUTPUT_METHOD_DOM),
-	m_doc(doc),
-	m_docFrag(0),
-	m_currentElem(elem),
-	m_elemStack(theManager),
-	m_buffer(theManager),
-	m_textBuffer(theManager)
+    FormatterListener(OUTPUT_METHOD_DOM),
+    m_doc(doc),
+    m_docFrag(0),
+    m_currentElem(elem),
+    m_elemStack(theManager),
+    m_buffer(theManager),
+    m_textBuffer(theManager)
 {
-	assert(m_doc != 0);
+    assert(m_doc != 0);
 }
 
 
@@ -106,9 +106,9 @@ FormatterToXercesDOM::~FormatterToXercesDOM()
 
 
 void
-FormatterToXercesDOM::setDocumentLocator(const LocatorType* const	/* locator */)
+FormatterToXercesDOM::setDocumentLocator(const LocatorType* const   /* locator */)
 {
-	// No action for the moment.
+    // No action for the moment.
 }
 
 
@@ -116,7 +116,7 @@ FormatterToXercesDOM::setDocumentLocator(const LocatorType* const	/* locator */)
 void
 FormatterToXercesDOM::startDocument()
 {
-	// No action for the moment.
+    // No action for the moment.
 }
 
 
@@ -124,154 +124,154 @@ FormatterToXercesDOM::startDocument()
 void
 FormatterToXercesDOM::endDocument()
 {
-	try
-	{
+    try
+    {
         // Process any remaining text, in case we're
         // appending to a DOMDocumentFragment.
         processAccumulatedText();
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 FormatterToXercesDOM::startElement(
-			const	XMLCh* const	name,
-			AttributeListType&		attrs)
+            const   XMLCh* const    name,
+            AttributeListType&      attrs)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		DOMElementType* const	elem = createElement(name, attrs);
-		assert(elem != 0);
+        DOMElementType* const   elem = createElement(name, attrs);
+        assert(elem != 0);
 
-		append(elem);
+        append(elem);
 
-		m_elemStack.push_back(m_currentElem);
+        m_elemStack.push_back(m_currentElem);
 
-		m_currentElem = elem;
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        m_currentElem = elem;
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
-FormatterToXercesDOM::endElement(const	XMLCh* const	/* name */)
+FormatterToXercesDOM::endElement(const  XMLCh* const    /* name */)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		if(m_elemStack.empty() == false)
-		{
-			m_currentElem = m_elemStack.back();
+        if(m_elemStack.empty() == false)
+        {
+            m_currentElem = m_elemStack.back();
 
-			m_elemStack.pop_back();
-		}
-		else
-		{
-			m_currentElem = 0;
-		}
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+            m_elemStack.pop_back();
+        }
+        else
+        {
+            m_currentElem = 0;
+        }
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 FormatterToXercesDOM::characters(
-			const XMLCh* const	chars,
-			const size_type	    length)
+            const XMLCh* const  chars,
+            const size_type     length)
 {
-	m_textBuffer.append(chars, length);
+    m_textBuffer.append(chars, length);
 }
 
 
 
 void
 FormatterToXercesDOM::charactersRaw(
-		const XMLCh* const	chars,
-		const size_type	    length)
+        const XMLCh* const  chars,
+        const size_type     length)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		cdata(chars, length);
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
-}		
+        cdata(chars, length);
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
+}       
 
 
 
 void
-FormatterToXercesDOM::entityReference(const XMLCh* const	name)
+FormatterToXercesDOM::entityReference(const XMLCh* const    name)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		append(m_doc->createEntityReference(name));
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        append(m_doc->createEntityReference(name));
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 FormatterToXercesDOM::ignorableWhitespace(
-			const XMLCh* const	chars,
-			const size_type	    length)
+            const XMLCh* const  chars,
+            const size_type     length)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		m_buffer.assign(chars, length);
+        m_buffer.assign(chars, length);
 
-		append(m_doc->createTextNode(m_buffer.c_str()));
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        append(m_doc->createTextNode(m_buffer.c_str()));
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 FormatterToXercesDOM::processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data)
+            const XMLCh* const  target,
+            const XMLCh* const  data)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		append(m_doc->createProcessingInstruction(target, data));
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        append(m_doc->createProcessingInstruction(target, data));
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
@@ -284,135 +284,135 @@ FormatterToXercesDOM::resetDocument()
 
 
 void
-FormatterToXercesDOM::comment(const XMLCh* const	data)
+FormatterToXercesDOM::comment(const XMLCh* const    data)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		append(m_doc->createComment(data));
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        append(m_doc->createComment(data));
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 FormatterToXercesDOM::cdata(
-			const XMLCh* const	ch,
-			const size_type	    length)
+            const XMLCh* const  ch,
+            const size_type     length)
 {
-	try
-	{
-		processAccumulatedText();
+    try
+    {
+        processAccumulatedText();
 
-		m_buffer.assign(ch, length);
+        m_buffer.assign(ch, length);
 
-		append(m_doc->createCDATASection(m_buffer.c_str()));
-	}
-	catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        append(m_doc->createCDATASection(m_buffer.c_str()));
+    }
+    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
-FormatterToXercesDOM::append(DOMNodeType*	newNode)
+FormatterToXercesDOM::append(DOMNodeType*   newNode)
 {
-	assert(newNode != 0);
+    assert(newNode != 0);
 
-	if(0 != m_currentElem)
-	{
-		m_currentElem->appendChild(newNode);
-	}
-	else if(0 != m_docFrag)
-	{
-		m_docFrag->appendChild(newNode);
-	}
-	else
-	{
-		m_doc->appendChild(newNode);
-	}
+    if(0 != m_currentElem)
+    {
+        m_currentElem->appendChild(newNode);
+    }
+    else if(0 != m_docFrag)
+    {
+        m_docFrag->appendChild(newNode);
+    }
+    else
+    {
+        m_doc->appendChild(newNode);
+    }
 }
 
 
 
 DOMElementType*
 FormatterToXercesDOM::createElement(
-			const XalanDOMChar*		theElementName,
-			AttributeListType&		attrs)
+            const XalanDOMChar*     theElementName,
+            AttributeListType&      attrs)
 {
-	DOMElementType*	theElement = 0;
+    DOMElementType* theElement = 0;
 
-	if (m_prefixResolver == 0)
-	{
-		theElement = m_doc->createElement(theElementName);
+    if (m_prefixResolver == 0)
+    {
+        theElement = m_doc->createElement(theElementName);
 
-		addAttributes(theElement, attrs);
-	}
-	else
-	{
-		// Check for the namespace...
-		const XalanDOMString* const		theNamespace =
-				DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false, m_buffer);
+        addAttributes(theElement, attrs);
+    }
+    else
+    {
+        // Check for the namespace...
+        const XalanDOMString* const     theNamespace =
+                DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false, m_buffer);
 
         if (theNamespace == 0 || theNamespace->empty() == true)
-		{
-			theElement = m_doc->createElement(theElementName);
-		}
-		else
-		{
-			theElement = m_doc->createElementNS(theNamespace->c_str(), theElementName);
-		}
+        {
+            theElement = m_doc->createElement(theElementName);
+        }
+        else
+        {
+            theElement = m_doc->createElementNS(theNamespace->c_str(), theElementName);
+        }
 
-		addAttributes(theElement, attrs);
-	}
+        addAttributes(theElement, attrs);
+    }
 
-	return theElement;
+    return theElement;
 }
 
 
 
 void
 FormatterToXercesDOM::addAttributes(
-			DOMElementType*		theElement,
-			AttributeListType&	attrs)
+            DOMElementType*     theElement,
+            AttributeListType&  attrs)
 {
-	const XalanSize_t	nAtts = attrs.getLength();
+    const XalanSize_t   nAtts = attrs.getLength();
 
-	if (m_prefixResolver == 0)
-	{
-		for (XalanSize_t i = 0; i < nAtts; i++)
-		{
-			theElement->setAttribute(attrs.getName(i), attrs.getValue(i));
-		}
-	}
-	else
-	{
-		for (XalanSize_t i = 0; i < nAtts; i++)
-		{
-			const XalanDOMChar* const	theName = attrs.getName(i);
-			assert(theName != 0);
+    if (m_prefixResolver == 0)
+    {
+        for (XalanSize_t i = 0; i < nAtts; i++)
+        {
+            theElement->setAttribute(attrs.getName(i), attrs.getValue(i));
+        }
+    }
+    else
+    {
+        for (XalanSize_t i = 0; i < nAtts; i++)
+        {
+            const XalanDOMChar* const   theName = attrs.getName(i);
+            assert(theName != 0);
 
-			// Check for the namespace...
-			const XalanDOMString* const		theNamespace =
-					DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer);
+            // Check for the namespace...
+            const XalanDOMString* const     theNamespace =
+                    DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer);
 
             if (theNamespace == 0 || theNamespace->empty() == true)
-			{
-				theElement->setAttribute(theName, attrs.getValue(i));
-			}
-			else
-			{
-				theElement->setAttributeNS(theNamespace->c_str(), theName, attrs.getValue(i));
-			}
-		}
-	}
+            {
+                theElement->setAttribute(theName, attrs.getValue(i));
+            }
+            else
+            {
+                theElement->setAttributeNS(theNamespace->c_str(), theName, attrs.getValue(i));
+            }
+        }
+    }
 }
 
 
@@ -421,11 +421,11 @@ void
 FormatterToXercesDOM::processAccumulatedText()
 {
     if (m_textBuffer.empty() == false)
-	{
-		append(m_doc->createTextNode(m_textBuffer.c_str()));
+    {
+        append(m_doc->createTextNode(m_textBuffer.c_str()));
 
-		m_textBuffer.clear();
-	}
+        m_textBuffer.clear();
+    }
 }
 
 

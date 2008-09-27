@@ -37,34 +37,34 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanCollationServices
 {
 public:
 
-	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
+    enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
 
-	class XALAN_PLATFORMSUPPORT_EXPORT CollationCompareFunctor
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT CollationCompareFunctor
+    {
+    public:
 
-		CollationCompareFunctor()
-		{
-		}
+        CollationCompareFunctor()
+        {
+        }
 
-		virtual
-		~CollationCompareFunctor()
-		{
-		}
+        virtual
+        ~CollationCompareFunctor()
+        {
+        }
 
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = eDefault) const = 0;
+        virtual int
+        operator()(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMChar*     theRHS,
+            eCaseOrder              theCaseOrder = eDefault) const = 0;
 
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = eDefault) const = 0;
-	};
+        virtual int
+        operator()(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMChar*     theRHS,
+            const XalanDOMChar*     theLocale,
+            eCaseOrder              theCaseOrder = eDefault) const = 0;
+    };
 
 };
 
@@ -74,4 +74,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANCOLLATIONSERVICES_HEADER_GUARD_1357924680
+#endif  // XALANCOLLATIONSERVICES_HEADER_GUARD_1357924680

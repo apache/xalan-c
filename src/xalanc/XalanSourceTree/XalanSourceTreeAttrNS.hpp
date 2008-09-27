@@ -44,56 +44,56 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeAttrNS : public XalanSourceTre
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theName The name of the attribute
-	 * @param theLocalName The local name of the attribute
-	 * @param theNamespaceURI The namespace URI of the attribute
-	 * @param thePrefix The namespace prefix of the attribute
-	 * @param theValue The value of the attribute
-	 * @param theOwnerElement The element that owns the instance
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeAttrNS(
-			const XalanDOMString&		theName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			const XalanDOMString&		theValue,
-			XalanSourceTreeElement*		theOwnerElement = 0,
-			IndexType					theIndex = 0);
+    /**
+     * Constructor.
+     *
+     * @param theName The name of the attribute
+     * @param theLocalName The local name of the attribute
+     * @param theNamespaceURI The namespace URI of the attribute
+     * @param thePrefix The namespace prefix of the attribute
+     * @param theValue The value of the attribute
+     * @param theOwnerElement The element that owns the instance
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeAttrNS(
+            const XalanDOMString&       theName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            const XalanDOMString&       theValue,
+            XalanSourceTreeElement*     theOwnerElement = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeAttrNS();
+    virtual
+    ~XalanSourceTreeAttrNS();
 
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
 private:
 
-	// Not defined...
-	XalanSourceTreeAttrNS(const XalanSourceTreeAttrNS&		theSource);
+    // Not defined...
+    XalanSourceTreeAttrNS(const XalanSourceTreeAttrNS&      theSource);
 
-	XalanSourceTreeAttrNS&
-	operator=(const XalanSourceTreeAttrNS&	theSource);
+    XalanSourceTreeAttrNS&
+    operator=(const XalanSourceTreeAttrNS&  theSource);
 
-	bool
-	operator==(const XalanSourceTreeAttrNS&		theRHS) const;
+    bool
+    operator==(const XalanSourceTreeAttrNS&     theRHS) const;
 
-	// Data members...
-	const XalanDOMString&	m_localName;
+    // Data members...
+    const XalanDOMString&   m_localName;
 
-	const XalanDOMString&	m_prefix;
+    const XalanDOMString&   m_prefix;
 
-	const XalanDOMString&	m_namespaceURI;
+    const XalanDOMString&   m_namespaceURI;
 };
 
 
@@ -102,4 +102,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEATTRNS_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEATTRNS_HEADER_GUARD_1357924680)

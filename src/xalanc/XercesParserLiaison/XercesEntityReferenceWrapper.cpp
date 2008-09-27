@@ -39,21 +39,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesEntityReferenceWrapper::XercesEntityReferenceWrapper(
-			const DOMEntityReferenceType*	theXercesDOMEntityReference,
-			const XercesWrapperNavigator&	theNavigator) :
-	XalanEntityReference(),
-	m_xercesNode(theXercesDOMEntityReference),
-	m_navigator(theNavigator),
-	m_children(theXercesDOMEntityReference->getChildNodes(),
-			   theNavigator)
+            const DOMEntityReferenceType*   theXercesDOMEntityReference,
+            const XercesWrapperNavigator&   theNavigator) :
+    XalanEntityReference(),
+    m_xercesNode(theXercesDOMEntityReference),
+    m_navigator(theNavigator),
+    m_children(theXercesDOMEntityReference->getChildNodes(),
+               theNavigator)
 {
-	assert(theXercesDOMEntityReference != 0);
+    assert(theXercesDOMEntityReference != 0);
 }
 
 XercesEntityReferenceWrapper*
 XercesEntityReferenceWrapper::create( MemoryManager& theManager,
-			const DOMEntityReferenceType*	theXercesDOMEntityReference,
-			const XercesWrapperNavigator&	theNavigator)
+            const DOMEntityReferenceType*   theXercesDOMEntityReference,
+            const XercesWrapperNavigator&   theNavigator)
 
 {
     typedef XercesEntityReferenceWrapper ThisType;
@@ -79,7 +79,7 @@ XercesEntityReferenceWrapper::~XercesEntityReferenceWrapper()
 const XalanDOMString&
 XercesEntityReferenceWrapper::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeName());
+    return m_navigator.getPooledString(m_xercesNode->getNodeName());
 }
 
 
@@ -87,7 +87,7 @@ XercesEntityReferenceWrapper::getNodeName() const
 const XalanDOMString&
 XercesEntityReferenceWrapper::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode->getNodeValue());
 }
 
 
@@ -95,7 +95,7 @@ XercesEntityReferenceWrapper::getNodeValue() const
 XercesEntityReferenceWrapper::NodeType
 XercesEntityReferenceWrapper::getNodeType() const
 {
-	return ENTITY_REFERENCE_NODE;
+    return ENTITY_REFERENCE_NODE;
 }
 
 
@@ -103,7 +103,7 @@ XercesEntityReferenceWrapper::getNodeType() const
 XalanNode*
 XercesEntityReferenceWrapper::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -111,7 +111,7 @@ XercesEntityReferenceWrapper::getParentNode() const
 const XalanNodeList*
 XercesEntityReferenceWrapper::getChildNodes() const
 {
-	return &m_children;
+    return &m_children;
 }
 
 
@@ -119,7 +119,7 @@ XercesEntityReferenceWrapper::getChildNodes() const
 XalanNode*
 XercesEntityReferenceWrapper::getFirstChild() const
 {
-	return m_navigator.getFirstChild(m_xercesNode);
+    return m_navigator.getFirstChild(m_xercesNode);
 }
 
 
@@ -127,7 +127,7 @@ XercesEntityReferenceWrapper::getFirstChild() const
 XalanNode*
 XercesEntityReferenceWrapper::getLastChild() const
 {
-	return m_navigator.getLastChild(m_xercesNode);
+    return m_navigator.getLastChild(m_xercesNode);
 }
 
 
@@ -135,7 +135,7 @@ XercesEntityReferenceWrapper::getLastChild() const
 XalanNode*
 XercesEntityReferenceWrapper::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -143,7 +143,7 @@ XercesEntityReferenceWrapper::getPreviousSibling() const
 XalanNode*
 XercesEntityReferenceWrapper::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -151,7 +151,7 @@ XercesEntityReferenceWrapper::getNextSibling() const
 const XalanNamedNodeMap*
 XercesEntityReferenceWrapper::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -159,7 +159,7 @@ XercesEntityReferenceWrapper::getAttributes() const
 XalanDocument*
 XercesEntityReferenceWrapper::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -167,7 +167,7 @@ XercesEntityReferenceWrapper::getOwnerDocument() const
 const XalanDOMString&
 XercesEntityReferenceWrapper::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
 }
 
 
@@ -175,7 +175,7 @@ XercesEntityReferenceWrapper::getNamespaceURI() const
 const XalanDOMString&
 XercesEntityReferenceWrapper::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getPrefix());
+    return m_navigator.getPooledString(m_xercesNode->getPrefix());
 }
 
 
@@ -183,7 +183,7 @@ XercesEntityReferenceWrapper::getPrefix() const
 const XalanDOMString&
 XercesEntityReferenceWrapper::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getLocalName());
+    return m_navigator.getPooledString(m_xercesNode->getLocalName());
 }
 
 
@@ -191,7 +191,7 @@ XercesEntityReferenceWrapper::getLocalName() const
 bool
 XercesEntityReferenceWrapper::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -199,7 +199,7 @@ XercesEntityReferenceWrapper::isIndexed() const
 XercesEntityReferenceWrapper::IndexType
 XercesEntityReferenceWrapper::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 

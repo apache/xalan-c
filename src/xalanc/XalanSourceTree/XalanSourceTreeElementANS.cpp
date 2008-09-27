@@ -25,30 +25,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanSourceTreeElementANS::XalanSourceTreeElementANS(
             MemoryManager&              theManager,
-			const XalanDOMString&		theTagName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			XalanSize_t			        theAttributeCount,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex) :
-	XalanSourceTreeElementA(
+            const XalanDOMString&       theTagName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanSourceTreeAttr**       theAttributes,
+            XalanSize_t                 theAttributeCount,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex) :
+    XalanSourceTreeElementA(
         theManager,
-		theTagName,
-		theOwnerDocument,
-		theAttributes,
-		theAttributeCount,
-		theParentNode,
-		thePreviousSibling,
-		theNextSibling,
-		theIndex),
-	m_localName(theLocalName),
-	m_prefix(thePrefix),
-	m_namespaceURI(theNamespaceURI)
+        theTagName,
+        theOwnerDocument,
+        theAttributes,
+        theAttributeCount,
+        theParentNode,
+        thePreviousSibling,
+        theNextSibling,
+        theIndex),
+    m_localName(theLocalName),
+    m_prefix(thePrefix),
+    m_namespaceURI(theNamespaceURI)
 {
 }
 
@@ -62,7 +62,7 @@ XalanSourceTreeElementANS::~XalanSourceTreeElementANS()
 const XalanDOMString&
 XalanSourceTreeElementANS::getNamespaceURI() const
 {
-	return m_namespaceURI;
+    return m_namespaceURI;
 }
 
 
@@ -70,7 +70,7 @@ XalanSourceTreeElementANS::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeElementANS::getPrefix() const
 {
-	return m_prefix;
+    return m_prefix;
 }
 
 
@@ -78,7 +78,7 @@ XalanSourceTreeElementANS::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementANS::getLocalName() const
 {
-	return m_localName;
+    return m_localName;
 }
 
 

@@ -39,8 +39,8 @@ ElemExtensionCall::ElemExtensionCall(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             ExtensionNSHandler&             ns) :
     ElemLiteralResult(constructionContext,
         stylesheetTree,
@@ -68,8 +68,8 @@ ElemExtensionCall::create(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             ExtensionNSHandler&             ns)
 {
     typedef ElemExtensionCall ThisType;

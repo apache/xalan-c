@@ -27,11 +27,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanEncodingPropertyCache::XalanEncodingPropertyCache(
             MemoryManager&              theManager,
-			size_t							theCacheSize,
-			const XalanOutputTranscoder*	theTranscoder) :
-	m_transcoder(theTranscoder),
-	m_presentBitmap(theManager, theCacheSize),
-	m_valueBitmap(theManager, theCacheSize)
+            size_t                          theCacheSize,
+            const XalanOutputTranscoder*    theTranscoder) :
+    m_transcoder(theTranscoder),
+    m_presentBitmap(theManager, theCacheSize),
+    m_valueBitmap(theManager, theCacheSize)
 {
 }
 
@@ -46,34 +46,34 @@ XalanEncodingPropertyCache::~XalanEncodingPropertyCache()
 bool
 XalanEncodingPropertyCache::canEncodeCharacter(XalanUnicodeChar     theChar) const
 {
-	if (theChar > m_presentBitmap.getSize())
-	{
-		return m_transcoder == 0 ? true : m_transcoder->canTranscodeTo(theChar);
-	}
-	else if (m_presentBitmap.isSet(theChar) == true)
-	{
-		return m_valueBitmap.isSet(theChar);
-	}
-	else
-	{
-		if (m_transcoder == 0)
-		{
-			return true;
-		}
-		else
-		{
-			m_presentBitmap.set(theChar);
+    if (theChar > m_presentBitmap.getSize())
+    {
+        return m_transcoder == 0 ? true : m_transcoder->canTranscodeTo(theChar);
+    }
+    else if (m_presentBitmap.isSet(theChar) == true)
+    {
+        return m_valueBitmap.isSet(theChar);
+    }
+    else
+    {
+        if (m_transcoder == 0)
+        {
+            return true;
+        }
+        else
+        {
+            m_presentBitmap.set(theChar);
 
-            const bool	fResult = m_transcoder->canTranscodeTo(theChar);
+            const bool  fResult = m_transcoder->canTranscodeTo(theChar);
 
-			if (fResult == true)
-			{
-				m_valueBitmap.set(theChar);
-			}
+            if (fResult == true)
+            {
+                m_valueBitmap.set(theChar);
+            }
 
-			return fResult;
-		}
-	}
+            return fResult;
+        }
+    }
 }
 
 

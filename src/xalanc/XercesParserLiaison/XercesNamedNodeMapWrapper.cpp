@@ -38,12 +38,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesNamedNodeMapWrapper::XercesNamedNodeMapWrapper(
-			const DOMNamedNodeMapType*		theXercesNamedNodeMap,
-			const XercesWrapperNavigator&	theNavigator) :
-	m_xercesNamedNodeMap(theXercesNamedNodeMap),
-	m_navigator(theNavigator)
+            const DOMNamedNodeMapType*      theXercesNamedNodeMap,
+            const XercesWrapperNavigator&   theNavigator) :
+    m_xercesNamedNodeMap(theXercesNamedNodeMap),
+    m_navigator(theNavigator)
 {
-	assert(m_xercesNamedNodeMap != 0);
+    assert(m_xercesNamedNodeMap != 0);
 }
 
 
@@ -57,15 +57,15 @@ XercesNamedNodeMapWrapper::~XercesNamedNodeMapWrapper()
 XalanNode*
 XercesNamedNodeMapWrapper::item(XalanSize_t     index) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap->item(index));
+    return m_navigator.mapNode(m_xercesNamedNodeMap->item(index));
 }
 
 
 
 XalanNode*
-XercesNamedNodeMapWrapper::getNamedItem(const XalanDOMString& 	name) const
+XercesNamedNodeMapWrapper::getNamedItem(const XalanDOMString&   name) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap->getNamedItem(name.c_str()));
+    return m_navigator.mapNode(m_xercesNamedNodeMap->getNamedItem(name.c_str()));
 }
 
 
@@ -73,20 +73,20 @@ XercesNamedNodeMapWrapper::getNamedItem(const XalanDOMString& 	name) const
 XalanSize_t
 XercesNamedNodeMapWrapper::getLength() const
 {
-	return m_xercesNamedNodeMap->getLength();
+    return m_xercesNamedNodeMap->getLength();
 }
 
 
 
 XalanNode*
 XercesNamedNodeMapWrapper::getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const
 {
-	return m_navigator.mapNode(
-			m_xercesNamedNodeMap->getNamedItemNS(
-				namespaceURI.c_str(),
-				localName.c_str()));
+    return m_navigator.mapNode(
+            m_xercesNamedNodeMap->getNamedItemNS(
+                namespaceURI.c_str(),
+                localName.c_str()));
 }
 
 

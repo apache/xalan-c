@@ -48,102 +48,102 @@ class ElemSort: public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:sort" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemSort(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:sort" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemSort(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
     static ElemSort*
-	create(
+    create(
             MemoryManager& theManager,
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber);
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
-	~ElemSort();
+    ~ElemSort();
 
-	/**
-	 * Retrieve the language attribute value template(AVT) 
-	 * 
-	 * @return the language AVT
-	 */
-	const AVT*
-	getLangAVT() const
-	{
-		return m_langAVT;
-	}
+    /**
+     * Retrieve the language attribute value template(AVT) 
+     * 
+     * @return the language AVT
+     */
+    const AVT*
+    getLangAVT() const
+    {
+        return m_langAVT;
+    }
 
-	/**
-	 * Retrieve the order attribute value template(AVT) 
-	 * 
-	 * @return the order AVT
-	 */
-	const AVT*
-	getOrderAVT() const
-	{
-		return m_orderAVT;
-	}
+    /**
+     * Retrieve the order attribute value template(AVT) 
+     * 
+     * @return the order AVT
+     */
+    const AVT*
+    getOrderAVT() const
+    {
+        return m_orderAVT;
+    }
 
-	/**
-	 * Retrieve the case-order attribute value template(AVT) 
-	 * 
-	 * @return the case-order AVT
-	 */
-	const AVT*
-	getCaseOrderAVT() const
-	{
-		return m_caseOrderAVT;
-	}
+    /**
+     * Retrieve the case-order attribute value template(AVT) 
+     * 
+     * @return the case-order AVT
+     */
+    const AVT*
+    getCaseOrderAVT() const
+    {
+        return m_caseOrderAVT;
+    }
 
-	/**
-	 * Retrieve the data type attribute value template(AVT) 
-	 * 
-	 * @return the data type AVT
-	 */
-	const AVT*
-	getDataTypeAVT() const
-	{
-		return m_dataTypeAVT;
-	}
+    /**
+     * Retrieve the data type attribute value template(AVT) 
+     * 
+     * @return the data type AVT
+     */
+    const AVT*
+    getDataTypeAVT() const
+    {
+        return m_dataTypeAVT;
+    }
 
-	/**
-	 * Retrieve the select pattern
-	 * 
-	 * @return XPath corresponding to the select pattern
-	 */
-	const XPath*
-	getSelectPattern() const
-	{
-		return m_selectPattern;
-	}
+    /**
+     * Retrieve the select pattern
+     * 
+     * @return XPath corresponding to the select pattern
+     */
+    const XPath*
+    getSelectPattern() const
+    {
+        return m_selectPattern;
+    }
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	virtual	const XPath*
-	getXPath(XalanSize_t	index = 0) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index = 0) const;
 
 private:
 
-	const XPath*	m_selectPattern;
+    const XPath*    m_selectPattern;
 
-    const AVT*		m_langAVT;
-    const AVT*		m_dataTypeAVT;
-	const AVT*		m_orderAVT;
-    const AVT*		m_caseOrderAVT;
+    const AVT*      m_langAVT;
+    const AVT*      m_dataTypeAVT;
+    const AVT*      m_orderAVT;
+    const AVT*      m_caseOrderAVT;
 };
 
 
@@ -152,4 +152,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMSORT_HEADER_GUARD
+#endif  // XALAN_ELEMSORT_HEADER_GUARD

@@ -42,106 +42,106 @@ class XALAN_XPATH_EXPORT XUnknown : public XObject
 {
 public:
 
-	typedef XObject		ParentType;
+    typedef XObject     ParentType;
 
-	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize(MemoryManager& theManager);
+    /**
+     * Perform static initialization.  See class XPathInit.
+     */
+    static void
+    initialize(MemoryManager& theManager);
 
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
+    /**
+     * Perform static shut down.  See class XPathInit.
+     */
+    static void
+    terminate();
 
-	/**
-	 * Construct an XUnknown object from a string.
-	 * 
-	 * @param name The source string.
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XUnknown(
-                const XalanDOMString&	name,
+    /**
+     * Construct an XUnknown object from a string.
+     * 
+     * @param name The source string.
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XUnknown(
+                const XalanDOMString&   name,
                 MemoryManager&          theMemoryManager);
 
-	/**
-	 * Construct an XUnknown from another one.
-	 *
-	 * @param source The XUnknown instance to copy.
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XUnknown(
-                const XUnknown&	    source,
+    /**
+     * Construct an XUnknown from another one.
+     *
+     * @param source The XUnknown instance to copy.
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XUnknown(
+                const XUnknown&     source,
                 MemoryManager&      theMemoryManager);
 
-	/**
-	 * Create an XUnknown object from a string.
-	 * 
-	 * @param name the source string.
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
+    /**
+     * Create an XUnknown object from a string.
+     * 
+     * @param name the source string.
+     * @param theMemoryManager The MemoryManager instance.
+     */
     static XUnknown*
     create(
-            const XalanDOMString&	name,
+            const XalanDOMString&   name,
             MemoryManager&          theMemoryManager);
 
-	virtual
-	~XUnknown();
+    virtual
+    ~XUnknown();
 
-	// These methods are inherited from XObject ...
-	virtual const XalanDOMString&
-	getTypeString() const;
+    // These methods are inherited from XObject ...
+    virtual const XalanDOMString&
+    getTypeString() const;
   
-	virtual double
-	num(XPathExecutionContext&  executionContext) const;
+    virtual double
+    num(XPathExecutionContext&  executionContext) const;
 
-	virtual bool
-	boolean(XPathExecutionContext&  executionContext) const;
+    virtual bool
+    boolean(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str() const;
+    virtual const XalanDOMString&
+    str() const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const;
+            XalanDOMString&         theBuffer) const;
 
-	virtual void
-	str(XalanDOMString&     theBuffer) const;
+    virtual void
+    str(XalanDOMString&     theBuffer) const;
 
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const;
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject);
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const;
 
 private:
     // undefined
-    XUnknown(const XUnknown&	source);
+    XUnknown(const XUnknown&    source);
     XUnknown();
 
-	XalanDOMString  m_value;
+    XalanDOMString  m_value;
 
-	static XalanDOMString	s_unknownString;
+    static XalanDOMString   s_unknownString;
 };
 
 
@@ -150,4 +150,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XUKNOWN_HEADER_GUARD_1357924680
+#endif  // XUKNOWN_HEADER_GUARD_1357924680

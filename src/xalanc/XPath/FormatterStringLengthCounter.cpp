@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterStringLengthCounter::FormatterStringLengthCounter() :
-	FormatterListener(OUTPUT_METHOD_NONE),
-	m_count(0)
+    FormatterListener(OUTPUT_METHOD_NONE),
+    m_count(0)
 {
 }
 
@@ -39,7 +39,7 @@ FormatterStringLengthCounter::~FormatterStringLengthCounter()
 
 
 void
-FormatterStringLengthCounter::setDocumentLocator(const LocatorType* const	/* locator */)
+FormatterStringLengthCounter::setDocumentLocator(const LocatorType* const   /* locator */)
 {
 }
 
@@ -61,8 +61,8 @@ FormatterStringLengthCounter::endDocument()
 
 void
 FormatterStringLengthCounter::startElement(
-			const XMLCh* const	/* name */,
-			AttributeListType&	/* attrs */)
+            const XMLCh* const  /* name */,
+            AttributeListType&  /* attrs */)
 {
 }
 
@@ -70,7 +70,7 @@ FormatterStringLengthCounter::startElement(
 
 void
 FormatterStringLengthCounter::endElement(
-			const	XMLCh* const	/* name */)
+            const   XMLCh* const    /* name */)
 {
 }
 
@@ -78,24 +78,24 @@ FormatterStringLengthCounter::endElement(
 
 void
 FormatterStringLengthCounter::characters(
-			const XMLCh* const  /* chars */,
-			const size_type     length)
+            const XMLCh* const  /* chars */,
+            const size_type     length)
 {
-	m_count += length;
+    m_count += length;
 }
 
 
 
 void
 FormatterStringLengthCounter::charactersRaw(
-		const XMLCh* const  /* chars */,
-		const size_type	    /*length */)
+        const XMLCh* const  /* chars */,
+        const size_type     /*length */)
 {
 }
 
 
 void
-FormatterStringLengthCounter::entityReference(const XMLCh* const	/* name */)
+FormatterStringLengthCounter::entityReference(const XMLCh* const    /* name */)
 {
 }
 
@@ -103,8 +103,8 @@ FormatterStringLengthCounter::entityReference(const XMLCh* const	/* name */)
 
 void
 FormatterStringLengthCounter::ignorableWhitespace(
-			const XMLCh* const  /* chars */,
-			const size_type	    /* length */)
+            const XMLCh* const  /* chars */,
+            const size_type     /* length */)
 {
 }
 
@@ -112,8 +112,8 @@ FormatterStringLengthCounter::ignorableWhitespace(
 
 void
 FormatterStringLengthCounter::processingInstruction(
-			const XMLCh* const	/* target */,
-			const XMLCh* const	/* data */)
+            const XMLCh* const  /* target */,
+            const XMLCh* const  /* data */)
 {
 }
 
@@ -127,7 +127,7 @@ FormatterStringLengthCounter::resetDocument()
 
 
 void
-FormatterStringLengthCounter::comment(const XMLCh* const	/* data */)
+FormatterStringLengthCounter::comment(const XMLCh* const    /* data */)
 {
 }
 
@@ -135,8 +135,8 @@ FormatterStringLengthCounter::comment(const XMLCh* const	/* data */)
 
 void
 FormatterStringLengthCounter::cdata(
-			const XMLCh* const  /* ch */,
-			const size_type     /* length */)
+            const XMLCh* const  /* ch */,
+            const size_type     /* length */)
 {
 }
 

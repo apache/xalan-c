@@ -28,31 +28,31 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	DOMSupportInit::s_initCounter = 0;
+unsigned long   DOMSupportInit::s_initCounter = 0;
 
 
 
 DOMSupportInit::DOMSupportInit(MemoryManager& theManager) :
-	m_platformSupportInit(theManager)
+    m_platformSupportInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 
 
 DOMSupportInit::~DOMSupportInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 
@@ -60,7 +60,7 @@ DOMSupportInit::~DOMSupportInit()
 void
 DOMSupportInit::initialize(MemoryManager& theManager)
 {
-	DOMServices::initialize(theManager);
+    DOMServices::initialize(theManager);
 }
 
 
@@ -68,7 +68,7 @@ DOMSupportInit::initialize(MemoryManager& theManager)
 void
 DOMSupportInit::terminate()
 {
-	DOMServices::terminate();
+    DOMServices::terminate();
 }
 
 

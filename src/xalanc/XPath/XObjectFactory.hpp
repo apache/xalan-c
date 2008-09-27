@@ -54,15 +54,15 @@ class XALAN_XPATH_EXPORT XObjectFactory
 {
 public:
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
-	typedef XPathExecutionContext::GetCachedString		            GetCachedString;
-	typedef XPathExecutionContext::GetCachedString		            GetAndReleaseCachedString;
+    typedef XPathExecutionContext::BorrowReturnMutableNodeRefList   BorrowReturnMutableNodeRefList;
+    typedef XPathExecutionContext::GetCachedString                  GetCachedString;
+    typedef XPathExecutionContext::GetCachedString                  GetAndReleaseCachedString;
 
 
-	XObjectFactory(MemoryManager&   theManager);
+    XObjectFactory(MemoryManager&   theManager);
 
-	virtual
-	~XObjectFactory();
+    virtual
+    ~XObjectFactory();
 
 
     MemoryManager&
@@ -71,223 +71,223 @@ public:
         return m_memoryManager;
     }
 
-	/**
-	 * Return an XObject to the factory.
-	 * 
-	 * @param theXObject The XObject to be returned
-	 * @return true if the object belongs to the factory, false if not.
-	 */
-	bool
-	returnObject(XObject* 	theXObject)
-	{
-		return doReturnObject(theXObject);
-	}
+    /**
+     * Return an XObject to the factory.
+     * 
+     * @param theXObject The XObject to be returned
+     * @return true if the object belongs to the factory, false if not.
+     */
+    bool
+    returnObject(XObject*   theXObject)
+    {
+        return doReturnObject(theXObject);
+    }
 
-	/**
-	 * Reset the instance.	This invalidates all existing instances created
-	 * with this XObjectFactory.
-	 */
-	virtual void
-	reset() = 0;
+    /**
+     * Reset the instance.  This invalidates all existing instances created
+     * with this XObjectFactory.
+     */
+    virtual void
+    reset() = 0;
 
-	/**
-	 * Create a boolean XObject from a boolean value.
-	 * 
-	 * @param theValue	value used to create object  
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createBoolean(bool	theValue) = 0;
+    /**
+     * Create a boolean XObject from a boolean value.
+     * 
+     * @param theValue  value used to create object  
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createBoolean(bool  theValue) = 0;
 
-	/**
-	 * Create a node set XObject from a node list.
-	 * 
-	 * @param theValue	value used to create object.  theValue will be owned by the new XObject.
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createNodeSet(BorrowReturnMutableNodeRefList& 	theValue) = 0;
+    /**
+     * Create a node set XObject from a node list.
+     * 
+     * @param theValue  value used to create object.  theValue will be owned by the new XObject.
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createNodeSet(BorrowReturnMutableNodeRefList&   theValue) = 0;
 
-	/**
-	 * Create a node set XObject from a node.
-	 * 
-	 * @param theNOde value used to create object.
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createNodeSet(XalanNode* 	theValue) = 0;
+    /**
+     * Create a node set XObject from a node.
+     * 
+     * @param theNOde value used to create object.
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createNodeSet(XalanNode*    theValue) = 0;
 
-	/**
-	 * Create a numeric XObject from a number.
-	 * 
-	 * @param theValue	value used to create object 
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createNumber(double 	theValue) = 0;
+    /**
+     * Create a numeric XObject from a number.
+     * 
+     * @param theValue  value used to create object 
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createNumber(double     theValue) = 0;
 
-	/**
-	 * Create a numeric XObject from an XToken.  The XToken
-	 * instance must be inexistence for the lifetime of the
-	 * object.
-	 *
-	 * @param theValue	value used to create object 
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createNumber(const XToken&	theValue) = 0;
+    /**
+     * Create a numeric XObject from an XToken.  The XToken
+     * instance must be inexistence for the lifetime of the
+     * object.
+     *
+     * @param theValue  value used to create object 
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createNumber(const XToken&  theValue) = 0;
 
-	/**
-	 * Create a string XObject from a string.
-	 * 
-	 * @param theValue	value used to create object  
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createString(const XalanDOMString&	theValue) = 0;
+    /**
+     * Create a string XObject from a string.
+     * 
+     * @param theValue  value used to create object  
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createString(const XalanDOMString&  theValue) = 0;
 
-	/**
-	 * Create a string XObject from a null-terminated array of characters.
-	 * 
-	 * @param theValue	a pointer to the array
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createString(const XalanDOMChar*	theValue) = 0;
+    /**
+     * Create a string XObject from a null-terminated array of characters.
+     * 
+     * @param theValue  a pointer to the array
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createString(const XalanDOMChar*    theValue) = 0;
 
-	/**
-	 * Create a string XObject from an array of characters.
-	 * 
-	 * @param theValue	a pointer to the array
-	 * @paran theLength the length of the array
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createString(
-			const XalanDOMChar* 	theValue,
-			XalanSize_t			    theLength) = 0;
+    /**
+     * Create a string XObject from an array of characters.
+     * 
+     * @param theValue  a pointer to the array
+     * @paran theLength the length of the array
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createString(
+            const XalanDOMChar*     theValue,
+            XalanSize_t             theLength) = 0;
 
-	/**
-	 * Create a string XObject from an XToken.  The XToken
-	 * instance must be inexistence for the lifetime of the
-	 * object.
-	 *
-	 * @param theValue	value used to create object 
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createString(const XToken&	theValue) = 0;
+    /**
+     * Create a string XObject from an XToken.  The XToken
+     * instance must be inexistence for the lifetime of the
+     * object.
+     *
+     * @param theValue  value used to create object 
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createString(const XToken&  theValue) = 0;
 
-	/**
-	 * Create a string XObject from a string.  The XObject
-	 * will hold a reference to the supplied string, so
-	 * the string must be in scope for the lifetime of
-	 * the instance
-	 *
-	 * @param theValue	value used to create object  
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createStringReference(const XalanDOMString&		theValue) = 0;
+    /**
+     * Create a string XObject from a string.  The XObject
+     * will hold a reference to the supplied string, so
+     * the string must be in scope for the lifetime of
+     * the instance
+     *
+     * @param theValue  value used to create object  
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createStringReference(const XalanDOMString&     theValue) = 0;
 
-	/**
-	 * Create a string XObject that will adapt another XObject to
-	 * behave like a string.  The XObject holds a reference to the
-	 * other XObject.
-	 *
-	 * @param theValue	value used to create object
+    /**
+     * Create a string XObject that will adapt another XObject to
+     * behave like a string.  The XObject holds a reference to the
+     * other XObject.
+     *
+     * @param theValue  value used to create object
      * @paran theExecutionContext The current execution context
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createStringAdapter(
-            const XObjectPtr&	    theValue,
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createStringAdapter(
+            const XObjectPtr&       theValue,
             XPathExecutionContext&  theExecutionContext) = 0;
 
-	/**
-	 * Create a string XObject from a cached XalanDOMString,
-	 *
-	 * @param theValue	value used to create object  
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createString(GetCachedString&   theValue) = 0;
+    /**
+     * Create a string XObject from a cached XalanDOMString,
+     *
+     * @param theValue  value used to create object  
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createString(GetCachedString&   theValue) = 0;
 
-	/**
-	 * Create an "unknown" XObject from a string.
-	 * 
-	 * @param theValue	value used to create object  
-	 * @return pointer to new object
-	 */
-	virtual const XObjectPtr
-	createUnknown(const XalanDOMString& 	theValue) = 0;
+    /**
+     * Create an "unknown" XObject from a string.
+     * 
+     * @param theValue  value used to create object  
+     * @return pointer to new object
+     */
+    virtual const XObjectPtr
+    createUnknown(const XalanDOMString&     theValue) = 0;
 
-	/**
-	 *
-	 * A public functor for use with stl algorithms.
-	 *
-	 */
+    /**
+     *
+     * A public functor for use with stl algorithms.
+     *
+     */
 #if defined(XALAN_NO_STD_NAMESPACE)
-	struct DeleteXObjectFunctor : public unary_function<XObject*, void>
+    struct DeleteXObjectFunctor : public unary_function<XObject*, void>
 #else
-	struct DeleteXObjectFunctor : public std::unary_function<XObject*, void>
+    struct DeleteXObjectFunctor : public std::unary_function<XObject*, void>
 #endif
-	{
-	public:
+    {
+    public:
 
-		DeleteXObjectFunctor(
-			XObjectFactory& 	theFactoryInstance,
-			bool				fInReset = false) :
-			m_factoryInstance(theFactoryInstance),
-			m_fInReset(fInReset)
-		{
-		}
+        DeleteXObjectFunctor(
+            XObjectFactory&     theFactoryInstance,
+            bool                fInReset = false) :
+            m_factoryInstance(theFactoryInstance),
+            m_fInReset(fInReset)
+        {
+        }
 
-		result_type
-		operator()(argument_type	theXObject) const
-		{
-			if (m_fInReset == true)
-			{
-				m_factoryInstance.doReturnObject(
-					theXObject,
-					true);
-			}
-			else
-			{
-				m_factoryInstance.returnObject(theXObject);
-			}
-		}
+        result_type
+        operator()(argument_type    theXObject) const
+        {
+            if (m_fInReset == true)
+            {
+                m_factoryInstance.doReturnObject(
+                    theXObject,
+                    true);
+            }
+            else
+            {
+                m_factoryInstance.returnObject(theXObject);
+            }
+        }
 
-	private:
+    private:
 
-		XObjectFactory& 	m_factoryInstance;
+        XObjectFactory&     m_factoryInstance;
 
-		const bool			m_fInReset;
-	};
+        const bool          m_fInReset;
+    };
 
-	friend struct DeleteXObjectFunctor;
+    friend struct DeleteXObjectFunctor;
 
 protected:
 
-	/**
-	 * Return the actual implementation type of an XObject.
-	 *
-	 * @param theXObject the XObject
-	 */
-	XObject::eObjectType
-	getRealType(const XObject&	theXObject) const
-	{
-		return theXObject.getRealType();
-	}
+    /**
+     * Return the actual implementation type of an XObject.
+     *
+     * @param theXObject the XObject
+     */
+    XObject::eObjectType
+    getRealType(const XObject&  theXObject) const
+    {
+        return theXObject.getRealType();
+    }
 
-	/**
-	 * Delete a FactoryObject instance.
-	 *
-	 * @param theXObject the XObject instance to delete.
-	 */
-	void
-	deleteObject(const XObject* 	theXObject) const
-	{
+    /**
+     * Delete a FactoryObject instance.
+     *
+     * @param theXObject the XObject instance to delete.
+     */
+    void
+    deleteObject(const XObject*     theXObject) const
+    {
         if( theXObject!= 0)
         {
             XObject* const  nonConst =
@@ -297,30 +297,30 @@ protected:
 
             m_memoryManager.deallocate(nonConst);
         }
-	}
+    }
 
-	/**
-	 * Return an XObject to the factory.
-	 * 
-	 * @param theXObject XObject to be returned
-	 * @param fInReset true when called during reset().
-	 */
+    /**
+     * Return an XObject to the factory.
+     * 
+     * @param theXObject XObject to be returned
+     * @param fInReset true when called during reset().
+     */
 
-	virtual bool
-	doReturnObject(
-			XObject*	theXObject,
-			bool		fInReset = false) = 0;
+    virtual bool
+    doReturnObject(
+            XObject*    theXObject,
+            bool        fInReset = false) = 0;
 
 private:
 
-	// Not implemented...
-	XObjectFactory(const XObjectFactory&);
+    // Not implemented...
+    XObjectFactory(const XObjectFactory&);
 
-	XObjectFactory&
-	operator=(const XObjectFactory&);
+    XObjectFactory&
+    operator=(const XObjectFactory&);
 
-	bool
-	operator==(const XObjectFactory&) const;
+    bool
+    operator==(const XObjectFactory&) const;
 
     mutable MemoryManager&  m_memoryManager;
 };
@@ -331,4 +331,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECTFACTORY_HEADER_GUARD_1357924680
+#endif  // XOBJECTFACTORY_HEADER_GUARD_1357924680

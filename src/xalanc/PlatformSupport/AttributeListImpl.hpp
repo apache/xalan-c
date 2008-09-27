@@ -42,7 +42,7 @@ class AttributeVectorEntry;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
 
 
 
@@ -50,23 +50,23 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeListImpl : public AttributeListType
 {
 public:
 
-	explicit
-	AttributeListImpl(MemoryManager&      theManager);
+    explicit
+    AttributeListImpl(MemoryManager&      theManager);
 
-	virtual
-	~AttributeListImpl();
+    virtual
+    ~AttributeListImpl();
 
-    AttributeListImpl(const AttributeListImpl&	theSource,
+    AttributeListImpl(const AttributeListImpl&  theSource,
                         MemoryManager&      theManager);
 
-    AttributeListImpl(const AttributeListType&	theSource,
+    AttributeListImpl(const AttributeListType&  theSource,
                         MemoryManager&      theManager);
 
     AttributeListImpl&
-	operator=(const AttributeListImpl&	theRHS);
+    operator=(const AttributeListImpl&  theRHS);
 
-	AttributeListImpl&
-	operator=(const AttributeListType&	theRHS);
+    AttributeListImpl&
+    operator=(const AttributeListType&  theRHS);
 
     MemoryManager&
     getMemoryManager()
@@ -74,108 +74,108 @@ public:
         return m_AttributeVector.getMemoryManager();
     }
 
-	// These are inherited from AttributeList
+    // These are inherited from AttributeList
     virtual XalanSize_t
-	getLength() const;
+    getLength() const;
 
     virtual const XMLCh*
-	getName(const XalanSize_t index) const;
+    getName(const XalanSize_t index) const;
 
     virtual const XMLCh*
-	getType(const XalanSize_t index) const;
+    getType(const XalanSize_t index) const;
 
     virtual const XMLCh*
-	getValue(const XalanSize_t index) const;
+    getValue(const XalanSize_t index) const;
 
     virtual const XMLCh*
-	getType(const XMLCh* const name) const;
+    getType(const XMLCh* const name) const;
 
     virtual const XMLCh*
-	getValue(const XMLCh* const name) const;
+    getValue(const XMLCh* const name) const;
 
-	virtual const XMLCh*
-	getValue(const char* const name) const;
-	// The mutators are new to this class.
+    virtual const XMLCh*
+    getValue(const char* const name) const;
+    // The mutators are new to this class.
 
-	/**
-	 * Remove all attributes from the list
-	 */
-	virtual void
-	clear();
+    /**
+     * Remove all attributes from the list
+     */
+    virtual void
+    clear();
 
-	/**
-	 * Adds an attribute to the attribute list
-	 *
-	 * @param  name   attribute name
-	 * @param type   attribute type, "CDATA," for example
-	 * @param value  attribute value
-	 */
-	virtual bool
-	addAttribute(
-			const XMLCh*	name,
-			const XMLCh*	type,
-			const XMLCh*	value);
+    /**
+     * Adds an attribute to the attribute list
+     *
+     * @param  name   attribute name
+     * @param type   attribute type, "CDATA," for example
+     * @param value  attribute value
+     */
+    virtual bool
+    addAttribute(
+            const XMLCh*    name,
+            const XMLCh*    type,
+            const XMLCh*    value);
 
-	/**
-	 * Removes an attribute from the attribute list
-	 *
-	 * @param  name   attribute name
-	 */
-	virtual bool
-	removeAttribute(const XMLCh*	name);
+    /**
+     * Removes an attribute from the attribute list
+     *
+     * @param  name   attribute name
+     */
+    virtual bool
+    removeAttribute(const XMLCh*    name);
 
-	/**
-	 * Swap the contents of two instances.  This must _never_
-	 * throw an exception.
-	 *
-	 * @param thOther The instance with which to swap.
-	 */
-	void
-	swap(AttributeListImpl&		theOther)
-	{
-		m_AttributeVector.swap(theOther.m_AttributeVector);
-	}
+    /**
+     * Swap the contents of two instances.  This must _never_
+     * throw an exception.
+     *
+     * @param thOther The instance with which to swap.
+     */
+    void
+    swap(AttributeListImpl&     theOther)
+    {
+        m_AttributeVector.swap(theOther.m_AttributeVector);
+    }
 
-	/**
-	 * Reserve room for the given number of
-	 * attributes.
-	 *
-	 * @param theCount The number to reserve
-	 */
-	void
-	reserve(XalanSize_t     theCount)
-	{
-		m_AttributeVector.reserve(theCount);
-	}
+    /**
+     * Reserve room for the given number of
+     * attributes.
+     *
+     * @param theCount The number to reserve
+     */
+    void
+    reserve(XalanSize_t     theCount)
+    {
+        m_AttributeVector.reserve(theCount);
+    }
 
-	// This vector will hold the entries.
-	typedef XalanVector<AttributeVectorEntry*>			AttributeVectorType;
+    // This vector will hold the entries.
+    typedef XalanVector<AttributeVectorEntry*>          AttributeVectorType;
 
 private:
 
-	// This is not implemented.
+    // This is not implemented.
     bool
-	operator==(const AttributeListImpl&) const;
+    operator==(const AttributeListImpl&) const;
 
-	// Default vector allocation size.
-	enum
-	{
-		eDefaultVectorSize = 5
-	};
+    // Default vector allocation size.
+    enum
+    {
+        eDefaultVectorSize = 5
+    };
 
-	AttributeVectorEntry*
-	getNewEntry(
-			const XMLCh*	name,
-			const XMLCh*	type,
-			const XMLCh*	value);
+    AttributeVectorEntry*
+    getNewEntry(
+            const XMLCh*    name,
+            const XMLCh*    type,
+            const XMLCh*    value);
 
-	// Helper function to delete entries...
-	static void
-	deleteEntries(AttributeVectorType&	theVector);
+    // Helper function to delete entries...
+    static void
+    deleteEntries(AttributeVectorType&  theVector);
 
-	AttributeVectorType		m_AttributeVector;
+    AttributeVectorType     m_AttributeVector;
 
-	AttributeVectorType		m_cacheVector;
+    AttributeVectorType     m_cacheVector;
 };
 
 
@@ -184,4 +184,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ATTRIBUTELISTIMPL_HEADER_GUARD_1357924680
+#endif  // ATTRIBUTELISTIMPL_HEADER_GUARD_1357924680

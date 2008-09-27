@@ -41,11 +41,11 @@ class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheet
 {
 public:
 
-	virtual
-	~XalanCompiledStylesheet() {}
+    virtual
+    ~XalanCompiledStylesheet() {}
 
-	virtual const StylesheetRoot*
-	getStylesheetRoot() const = 0;
+    virtual const StylesheetRoot*
+    getStylesheetRoot() const = 0;
 };
 
 
@@ -54,4 +54,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANCOMPILEDSTYLESHEET_HEADER_GUARD
+#endif  // XALANCOMPILEDSTYLESHEET_HEADER_GUARD

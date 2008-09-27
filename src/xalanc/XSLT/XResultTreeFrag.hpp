@@ -51,31 +51,31 @@ class XALAN_XSLT_EXPORT XResultTreeFrag : public XObject
 {
 public:
 
-	typedef XObject		ParentType;
+    typedef XObject     ParentType;
 
 
-	/**
-	 * Construct an XResultTreeFrag object from a result tree fragment
-	 * 
-	 * @param value The source result tree fragment.
+    /**
+     * Construct an XResultTreeFrag object from a result tree fragment
+     * 
+     * @param value The source result tree fragment.
      * @param theManager The MemoryManager for this instance.
-	 */
-	XResultTreeFrag(
-            XalanDocumentFragment&	value,
+     */
+    XResultTreeFrag(
+            XalanDocumentFragment&  value,
             MemoryManager&          theManager);
 
-	/**
-	 * Construct an XResultTreeFrag object from another
-	 * 
-	 * @param source     source XResultTreeFrag
+    /**
+     * Construct an XResultTreeFrag object from another
+     * 
+     * @param source     source XResultTreeFrag
      * @param theManager The MemoryManager for this instance.
-	 */
-	XResultTreeFrag(
-			const XResultTreeFrag&	source,
+     */
+    XResultTreeFrag(
+            const XResultTreeFrag&  source,
             MemoryManager&          theManager);
 
-	virtual
-	~XResultTreeFrag();
+    virtual
+    ~XResultTreeFrag();
 
     MemoryManager&
     getMemoryManager()const
@@ -83,97 +83,97 @@ public:
         return m_cachedStringValue.getMemoryManager();
     }
 
-	void
-	setExecutionContext(StylesheetExecutionContext*		theExecutionContext)
-	{
-		m_executionContext = theExecutionContext;
-	}
+    void
+    setExecutionContext(StylesheetExecutionContext*     theExecutionContext)
+    {
+        m_executionContext = theExecutionContext;
+    }
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual const XalanDOMString&
-	getTypeString() const;
+    virtual const XalanDOMString&
+    getTypeString() const;
   
-	virtual double
-	num(XPathExecutionContext&  executionContext) const;
+    virtual double
+    num(XPathExecutionContext&  executionContext) const;
 
-	virtual double
-	num() const;
+    virtual double
+    num() const;
 
-	virtual bool
-	boolean(XPathExecutionContext&  executionContext) const;
+    virtual bool
+    boolean(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str() const;
+    virtual const XalanDOMString&
+    str() const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
- 			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
- 			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const;
+            XalanDOMString&         theBuffer) const;
 
-	virtual void
-	str(XalanDOMString&     theBuffer) const;
+    virtual void
+    str(XalanDOMString&     theBuffer) const;
 
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const;
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const;
 
-	virtual const XalanDocumentFragment&
-	rtree() const;
+    virtual const XalanDocumentFragment&
+    rtree() const;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject);
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const;
 
-	/**
-	 * Release the ResultTreeFrag held by the instance.
-	 */
-	XalanDocumentFragment*
-	release();
+    /**
+     * Release the ResultTreeFrag held by the instance.
+     */
+    XalanDocumentFragment*
+    release();
 
-	/**
-	 * Change the value of an XResultTreeFrag
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(XalanDocumentFragment&	theValue);
+    /**
+     * Change the value of an XResultTreeFrag
+     *
+     * @param theValue The new value.
+     */
+    void
+    set(XalanDocumentFragment&  theValue);
 
 protected:
 
-	virtual void 
-	dereferenced();
+    virtual void 
+    dereferenced();
 
 private:
     //not implemented
     XResultTreeFrag();
     XResultTreeFrag(const XResultTreeFrag&);
 
-	// Data members...
-	XalanDocumentFragment*			m_value;	
+    // Data members...
+    XalanDocumentFragment*          m_value;    
 
-	const XalanDOMString*			m_singleTextChildValue;
+    const XalanDOMString*           m_singleTextChildValue;
 
-	StylesheetExecutionContext*		m_executionContext;
+    StylesheetExecutionContext*     m_executionContext;
 
-	mutable XalanDOMString			m_cachedStringValue;
+    mutable XalanDOMString          m_cachedStringValue;
 
-	mutable double					m_cachedNumberValue;
+    mutable double                  m_cachedNumberValue;
 };
 
 
@@ -182,4 +182,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XRESULTTREEFRAG_HEADER_GUARD_1357924680
+#endif  // XRESULTTREEFRAG_HEADER_GUARD_1357924680

@@ -157,7 +157,7 @@ public:
 public:
 
     XalanFormatterWriter(
-                Writer&	        theWriter, 
+                Writer&         theWriter, 
                 MemoryManager&  theMemoryManager) :
         m_writer(theWriter),
         m_memoryManager(theMemoryManager),
@@ -194,7 +194,7 @@ public:
     }
  
     Writer*
-	getWriter() const
+    getWriter() const
     {
         return &m_writer;
     }
@@ -202,48 +202,48 @@ public:
     XalanOutputStream*
     getStream()
     {
-	    return m_writer.getStream();
+        return m_writer.getStream();
     }
 
     const XalanOutputStream*
     getStream() const
     {
-	    return m_writer.getStream();
+        return m_writer.getStream();
     }
 
     void
     flushWriter()
     {
-    	m_writer.flush();
+        m_writer.flush();
     }    
 
 
-	static bool
-	isUTF16HighSurrogate(XalanDOMChar	theChar)
-	{
-		return 0xD800u <= theChar && theChar <= 0xDBFFu ? true : false;
-	}
+    static bool
+    isUTF16HighSurrogate(XalanDOMChar   theChar)
+    {
+        return 0xD800u <= theChar && theChar <= 0xDBFFu ? true : false;
+    }
 
-	static bool
-	isUTF16LowSurrogate(XalanDOMChar	theChar)
-	{
-		return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
-	}
+    static bool
+    isUTF16LowSurrogate(XalanDOMChar    theChar)
+    {
+        return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
+    }
 
     static XalanUnicodeChar
     decodeUTF16SurrogatePair(
-			    XalanDOMChar	theHighSurrogate,
-			    XalanDOMChar	theLowSurrogate,
+                XalanDOMChar    theHighSurrogate,
+                XalanDOMChar    theLowSurrogate,
                 MemoryManager&  theManager)
     {
-	    assert(isUTF16HighSurrogate(theHighSurrogate) == true);
+        assert(isUTF16HighSurrogate(theHighSurrogate) == true);
 
-	    if (isUTF16LowSurrogate(theLowSurrogate) == false)
-	    {
+        if (isUTF16LowSurrogate(theLowSurrogate) == false)
+        {
             throwInvalidUTF16SurrogateException(theHighSurrogate, theLowSurrogate, theManager);
-	    }
+        }
 
-	    return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
+        return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
     }
 
     static void
@@ -251,8 +251,8 @@ public:
                 XalanUnicodeChar    ch,
                 MemoryManager&      theManager)
     {
-        XalanDOMString	theMessage(theManager);
-        XalanDOMString	theBuffer(theManager);  
+        XalanDOMString  theMessage(theManager);
+        XalanDOMString  theBuffer(theManager);  
 
         XalanMessageLoader::getMessage(
                     theMessage,
@@ -269,7 +269,7 @@ public:
                 XalanUnicodeChar    ch,
                 MemoryManager&      theManager)
     {
-        XalanDOMString	theBuffer(theManager);  
+        XalanDOMString  theBuffer(theManager);  
 
         const XalanOutputStream* const  theStream =
             m_writer.getStream();
@@ -282,12 +282,12 @@ public:
 
     static void
     throwInvalidUTF16SurrogateException(
-			    XalanDOMChar	    ch,
-			    XalanDOMChar	    next,
+                XalanDOMChar        ch,
+                XalanDOMChar        next,
                 MemoryManager&  theManager)
     {
 
-	    XalanDOMString  chStr(theManager); 
+        XalanDOMString  chStr(theManager); 
 
         XalanDOMString  nextStr(theManager); 
 
@@ -295,7 +295,7 @@ public:
 
         NumberToHexDOMString(next, nextStr);
 
-	    XalanDOMString	theMessage(theManager);
+        XalanDOMString  theMessage(theManager);
 
         XalanMessageLoader::getMessage(
                     theMessage,
@@ -311,10 +311,10 @@ public:
 
 protected:
 
-	/** 
-	 * The writer.
-	 */
-	Writer&					    m_writer;
+    /** 
+     * The writer.
+     */
+    Writer&                     m_writer;
 
     /**
      * The MemoryManager instance to use for any dynamically-
@@ -369,4 +369,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANFORMATTERWRITER_HEADER_GUARD_1357924680
+#endif  // XALANFORMATTERWRITER_HEADER_GUARD_1357924680

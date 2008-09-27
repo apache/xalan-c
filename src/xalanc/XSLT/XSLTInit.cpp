@@ -31,23 +31,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	XSLTInit::s_initCounter = 0;
+unsigned long   XSLTInit::s_initCounter = 0;
 
 static MemoryManager* s_staticMemoryManager = 0;
 
 XSLTInit::XSLTInit(MemoryManager&      theManager) :
-	m_platformSupportInit(theManager),
-	m_domSupportInit(theManager),
-	m_xmlSupportInit(theManager),
-	m_xalanSourceTreeInit(theManager),
-	m_xpathInit(theManager)
+    m_platformSupportInit(theManager),
+    m_domSupportInit(theManager),
+    m_xmlSupportInit(theManager),
+    m_xalanSourceTreeInit(theManager),
+    m_xpathInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 XSLTInit*
@@ -69,12 +69,12 @@ XSLTInit::create(MemoryManager&      theManager)
 
 XSLTInit::~XSLTInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 MemoryManager&
@@ -88,13 +88,13 @@ XSLTInit::getMemoryManager()
 void
 XSLTInit::initialize(MemoryManager&  theManager)
 {
-	Constants::initialize(theManager);
+    Constants::initialize(theManager);
 
-	ElemNumber::initialize(theManager);
+    ElemNumber::initialize(theManager);
 
-	XSLTEngineImpl::initialize(theManager);
+    XSLTEngineImpl::initialize(theManager);
 
-	StylesheetHandler::initialize(theManager);
+    StylesheetHandler::initialize(theManager);
 
     s_staticMemoryManager = & theManager;
 
@@ -105,13 +105,13 @@ XSLTInit::initialize(MemoryManager&  theManager)
 void
 XSLTInit::terminate()
 {
-	StylesheetHandler::terminate();
+    StylesheetHandler::terminate();
 
-	XSLTEngineImpl::terminate();
+    XSLTEngineImpl::terminate();
 
-	ElemNumber::terminate();
+    ElemNumber::terminate();
 
-	Constants::terminate();
+    Constants::terminate();
 
     s_staticMemoryManager = 0;
 

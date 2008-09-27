@@ -411,9 +411,9 @@ indexOf(
             const XalanDOMChar*     theString,
             const XalanDOMChar*     theSubstring)
 {
-	assert(theString != 0 && theSubstring != 0);
+    assert(theString != 0 && theSubstring != 0);
 
-	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
+    return indexOf(theString, length(theString), theSubstring, length(theSubstring));
 }
 
 

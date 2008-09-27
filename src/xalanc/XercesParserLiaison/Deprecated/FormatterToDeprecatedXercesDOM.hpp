@@ -69,183 +69,183 @@ class XALAN_XERCESPARSERLIAISON_EXPORT FormatterToDeprecatedXercesDOM : public F
 {
 public:
 
-	/**
-	 * Construct a FormatterToDeprecatedXercesDOM instance.  it will add the DOM nodes 
-	 * to the document fragment.
-	 *
-	 * @deprecated This API is deprecated and is only provided as a transition tool
-	 * @param doc            document for nodes
-	 * @param docFrag        document fragment for nodes
-	 * @param currentElement current element for nodes
-	 */
-	FormatterToDeprecatedXercesDOM(
-			DOM_Document_Type			&doc,
-			DOM_DocumentFragmentType	&docFrag,
-			DOM_ElementType			    &currentElement);
+    /**
+     * Construct a FormatterToDeprecatedXercesDOM instance.  it will add the DOM nodes 
+     * to the document fragment.
+     *
+     * @deprecated This API is deprecated and is only provided as a transition tool
+     * @param doc            document for nodes
+     * @param docFrag        document fragment for nodes
+     * @param currentElement current element for nodes
+     */
+    FormatterToDeprecatedXercesDOM(
+            DOM_Document_Type           &doc,
+            DOM_DocumentFragmentType    &docFrag,
+            DOM_ElementType             &currentElement);
 
-	/**
-	 * Construct a FormatterToDeprecatedXerces DOM instance.  it will add the DOM nodes 
-	 * to the document.
-	 *
-	 * @deprecated This API is deprecated and is only provided as a transition tool
-	 * @param doc  document for nodes
-	 * @param elem current element for nodes
-	 */
-	FormatterToDeprecatedXercesDOM(
-			DOM_Document_Type			&doc,
-			DOM_ElementType 			&currentElement);
+    /**
+     * Construct a FormatterToDeprecatedXerces DOM instance.  it will add the DOM nodes 
+     * to the document.
+     *
+     * @deprecated This API is deprecated and is only provided as a transition tool
+     * @param doc  document for nodes
+     * @param elem current element for nodes
+     */
+    FormatterToDeprecatedXercesDOM(
+            DOM_Document_Type           &doc,
+            DOM_ElementType             &currentElement);
 
-	/**
-	 * Construct a FormatterToDeprecatedXercesDOM instance.  it will add the DOM nodes 
-	 * to the document.
-	 *
-	 * @deprecated This API is deprecated and is only provided as a transition tool
-	 * @param doc  document for nodes
-	 */
-	FormatterToDeprecatedXercesDOM(
- 		    DOM_Document_Type			&doc);
+    /**
+     * Construct a FormatterToDeprecatedXercesDOM instance.  it will add the DOM nodes 
+     * to the document.
+     *
+     * @deprecated This API is deprecated and is only provided as a transition tool
+     * @param doc  document for nodes
+     */
+    FormatterToDeprecatedXercesDOM(
+            DOM_Document_Type           &doc);
 
-	virtual
-	~FormatterToDeprecatedXercesDOM();
+    virtual
+    ~FormatterToDeprecatedXercesDOM();
 
 
-	// These methods are inherited from DocumentHandler ...
+    // These methods are inherited from DocumentHandler ...
 
-	virtual void
-	charactersRaw(
-			const XMLCh* const	chars,
-			const unsigned int	length);
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const unsigned int  length);
 
-	virtual void
-	comment(const XMLCh* const	data);
+    virtual void
+    comment(const XMLCh* const  data);
 
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const unsigned int 	length);
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const unsigned int  length);
 
-	virtual void
-	entityReference(const XMLCh* const	name);
+    virtual void
+    entityReference(const XMLCh* const  name);
 
-	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
+    virtual void
+    setDocumentLocator(const LocatorType* const     locator);
 
-	virtual void
-	startDocument();
+    virtual void
+    startDocument();
 
-	virtual void
-	endDocument();
+    virtual void
+    endDocument();
 
-	virtual void
-	startElement(
-				const	XMLCh* const	name,
-				AttributeListType&		attrs);
+    virtual void
+    startElement(
+                const   XMLCh* const    name,
+                AttributeListType&      attrs);
 
-	virtual void
-	endElement(const XMLCh* const	name);
+    virtual void
+    endElement(const XMLCh* const   name);
 
-	virtual void
-	characters(
-				const XMLCh* const	chars,
-				const unsigned int	length);
+    virtual void
+    characters(
+                const XMLCh* const  chars,
+                const unsigned int  length);
 
-	virtual void
-	ignorableWhitespace(
-				const XMLCh* const	chars,
-				const unsigned int	length);
+    virtual void
+    ignorableWhitespace(
+                const XMLCh* const  chars,
+                const unsigned int  length);
 
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
+    virtual void
+    processingInstruction(
+            const XMLCh* const  target,
+            const XMLCh* const  data);
 
-	virtual void
-	resetDocument();
+    virtual void
+    resetDocument();
 
-	DOM_Document_Type
-	getDocument() const
-	{
-		return m_doc;
-	}
+    DOM_Document_Type
+    getDocument() const
+    {
+        return m_doc;
+    }
 
-	void
-	setDocument(DOM_Document_Type	&theDocument)
-	{
-		m_doc = theDocument;
-	}
+    void
+    setDocument(DOM_Document_Type   &theDocument)
+    {
+        m_doc = theDocument;
+    }
 
-	DOM_DocumentFragmentType
-	getDocumentFragment() const
-	{
-		return m_docFrag;
-	}
+    DOM_DocumentFragmentType
+    getDocumentFragment() const
+    {
+        return m_docFrag;
+    }
 
-	void
-	setDocumentFragment(DOM_DocumentFragmentType	&theDocumentFragment)
-	{
-		m_docFrag = theDocumentFragment;
-	}
+    void
+    setDocumentFragment(DOM_DocumentFragmentType    &theDocumentFragment)
+    {
+        m_docFrag = theDocumentFragment;
+    }
 
-	DOM_ElementType
-	getCurrentElement() const
-	{
-		return m_currentElem;
-	}
+    DOM_ElementType
+    getCurrentElement() const
+    {
+        return m_currentElem;
+    }
 
-	void
-	setCurrentElement(DOM_ElementType		&theElement)
-	{
-		m_currentElem = theElement;
-	}
+    void
+    setCurrentElement(DOM_ElementType       &theElement)
+    {
+        m_currentElem = theElement;
+    }
 
 private:
 
-	/**
-	 * Process any accumulated text and create a node for it.
-	 */
-	void
-	processAccumulatedText();
+    /**
+     * Process any accumulated text and create a node for it.
+     */
+    void
+    processAccumulatedText();
 
-	/**
-	 * Append a node to the current container.
-	 */
-	void
-	append(DOM_NodeType 	&newNode);
+    /**
+     * Append a node to the current container.
+     */
+    void
+    append(DOM_NodeType     &newNode);
 
-	/**
-	 * Create the appropriate element, complete with attributes set.
-	 *
-	 * @param theElementName The name for the new element
-	 * @param attrs The SAX AttributeList for the new attributes.
-	 * @return A pointer to the new instance.
-	 */
-	DOM_ElementType
-	createElement(
-			const XalanDOMChar*		theElementName,
-			AttributeListType&		attrs);
+    /**
+     * Create the appropriate element, complete with attributes set.
+     *
+     * @param theElementName The name for the new element
+     * @param attrs The SAX AttributeList for the new attributes.
+     * @return A pointer to the new instance.
+     */
+    DOM_ElementType
+    createElement(
+            const XalanDOMChar*     theElementName,
+            AttributeListType&      attrs);
 
-	void
-	addAttributes(
-			DOM_ElementType 		&theElement,
-			AttributeListType&	attrs);
+    void
+    addAttributes(
+            DOM_ElementType         &theElement,
+            AttributeListType&  attrs);
 
 
-	// Data members...
-	DOM_Document_Type				m_doc;
+    // Data members...
+    DOM_Document_Type               m_doc;
 
-	DOM_DocumentFragmentType		m_docFrag;
+    DOM_DocumentFragmentType        m_docFrag;
 
-	DOM_ElementType					m_currentElem;
+    DOM_ElementType                 m_currentElem;
 
-	typedef XalanVector<DOM_ElementType>			ElementStackType;
+    typedef XalanVector<DOM_ElementType>            ElementStackType;
 
-	ElementStackType				m_elemStack;
+    ElementStackType                m_elemStack;
 
-	XalanDOMString					m_buffer;
+    XalanDOMString                  m_buffer;
 
-	XalanDOMString					m_textBuffer;
+    XalanDOMString                  m_textBuffer;
 
-	static const XalanDOMString		s_emptyString;
+    static const XalanDOMString     s_emptyString;
 };
 
 
@@ -254,4 +254,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FORMATTERTODEPRECATEDXERCESDOM_HEADER_GUARD_1357924680
+#endif  // FORMATTERTODEPRECATEDXERCESDOM_HEADER_GUARD_1357924680

@@ -198,7 +198,7 @@ XObject::terminate()
 
 
 XObject::XObject(
-            eObjectType		theObjectType,
+            eObjectType     theObjectType,
             MemoryManager&  theMemoryManager) :
     m_objectType(theObjectType),
     m_factory(0),
@@ -209,7 +209,7 @@ XObject::XObject(
 
 
 XObject::XObject(
-            const XObject&	source,
+            const XObject&  source,
             MemoryManager&  theMemoryManager) :
     m_objectType(source.m_objectType),
     m_factory(0),
@@ -1427,7 +1427,7 @@ const XalanDOMChar  XObject::XObjectInvalidConversionException::s_type[] =
 
 XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
             MemoryManager&          memoryManager,
-		    const XalanDOMString&   fromType,
+            const XalanDOMString&   fromType,
             const XalanDOMString&   toType,
             XalanDOMString&         buffer) :
     XObjectException(

@@ -128,8 +128,8 @@
 /**
  * MAGIC THAT AUTOMATICALLY GENERATES THE FOLLOWING:
  *
- *	Xalan_DLLVersionStr, gXalanVersionStr, gXalanFullVersionStr,
- *	gXalanMajVersion, gXalanMinVersion, gXalanRevision
+ *  Xalan_DLLVersionStr, gXalanVersionStr, gXalanFullVersionStr,
+ *  gXalanMajVersion, gXalanMinVersion, gXalanRevision
  */
 
 // ---------------------------------------------------------------------------

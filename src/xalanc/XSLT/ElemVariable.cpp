@@ -48,8 +48,8 @@ ElemVariable::ElemVariable(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-            XalanFileLoc					columnNumber) :
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber) :
     ParentType(
         constructionContext,
         stylesheetTree,
@@ -71,8 +71,8 @@ ElemVariable::ElemVariable(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-            XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             int                             xslToken) :
     ParentType(
         constructionContext,

@@ -33,17 +33,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManager&     theManager,
-                                                         const XalanDOMString&	theURI) :
-	m_domSupport(),
-	m_parserLiaison(theManager),
-	m_contentHandler(theManager, m_parserLiaison.createXalanSourceTreeDocument()),
-	m_uri(theURI,theManager)
+                                                         const XalanDOMString&  theURI) :
+    m_domSupport(),
+    m_parserLiaison(theManager),
+    m_contentHandler(theManager, m_parserLiaison.createXalanSourceTreeDocument()),
+    m_uri(theURI,theManager)
 {
-	m_domSupport.setParserLiaison(&m_parserLiaison);
+    m_domSupport.setParserLiaison(&m_parserLiaison);
 }
 
 XalanDefaultDocumentBuilder*
-XalanDefaultDocumentBuilder::create(MemoryManager& theManager, const XalanDOMString&	theURI)
+XalanDefaultDocumentBuilder::create(MemoryManager& theManager, const XalanDOMString&    theURI)
 {
         typedef XalanDefaultDocumentBuilder ThisType;
         
@@ -67,7 +67,7 @@ XalanDefaultDocumentBuilder::~XalanDefaultDocumentBuilder()
 XalanDocument*
 XalanDefaultDocumentBuilder::getDocument() const
 {
-	return m_contentHandler.getDocument();
+    return m_contentHandler.getDocument();
 }
 
 
@@ -75,7 +75,7 @@ XalanDefaultDocumentBuilder::getDocument() const
 XalanParsedSourceHelper*
 XalanDefaultDocumentBuilder::createHelper(MemoryManager& theManager) const
 {
-	return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
+    return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }
 
 
@@ -83,7 +83,7 @@ XalanDefaultDocumentBuilder::createHelper(MemoryManager& theManager) const
 ContentHandlerType*
 XalanDefaultDocumentBuilder::getContentHandler()
 {
-	return &m_contentHandler;
+    return &m_contentHandler;
 }
 
 
@@ -91,7 +91,7 @@ XalanDefaultDocumentBuilder::getContentHandler()
 DTDHandlerType*
 XalanDefaultDocumentBuilder::getDTDHandler()
 {
-	return &m_contentHandler;
+    return &m_contentHandler;
 }
 
 
@@ -99,7 +99,7 @@ XalanDefaultDocumentBuilder::getDTDHandler()
 LexicalHandlerType*
 XalanDefaultDocumentBuilder::getLexicalHandler()
 {
-	return &m_contentHandler;
+    return &m_contentHandler;
 }
 
 
@@ -107,7 +107,7 @@ XalanDefaultDocumentBuilder::getLexicalHandler()
 const XalanDOMString&
 XalanDefaultDocumentBuilder::getURI() const
 {
-	return m_uri;
+    return m_uri;
 }
 
 

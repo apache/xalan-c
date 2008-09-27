@@ -257,11 +257,11 @@ StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 
 void
 StylesheetExecutionContextDefault::problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     m_xsltProcessor->problem(
         source,
@@ -277,8 +277,8 @@ void
 StylesheetExecutionContextDefault::problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     m_xsltProcessor->problem(
         source,

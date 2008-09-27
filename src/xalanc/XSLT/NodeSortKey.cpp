@@ -28,51 +28,51 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 NodeSortKey::NodeSortKey(
-			ExecutionContext&					executionContext,
-			const XPath*						selectPat,
-			bool								treatAsNumbers,
-			bool								descending,
-			XalanCollationServices::eCaseOrder	caseOrder,
-			const XalanDOMString&				langValue,
-			const PrefixResolver&				resolver) :
-	m_executionContext(&executionContext),
-	m_selectPat(selectPat),
-	m_treatAsNumbers(treatAsNumbers),
-	m_descending(descending),
-	m_caseOrder(caseOrder),
-	m_prefixResolver(&resolver),
-	m_languageString(&langValue)
+            ExecutionContext&                   executionContext,
+            const XPath*                        selectPat,
+            bool                                treatAsNumbers,
+            bool                                descending,
+            XalanCollationServices::eCaseOrder  caseOrder,
+            const XalanDOMString&               langValue,
+            const PrefixResolver&               resolver) :
+    m_executionContext(&executionContext),
+    m_selectPat(selectPat),
+    m_treatAsNumbers(treatAsNumbers),
+    m_descending(descending),
+    m_caseOrder(caseOrder),
+    m_prefixResolver(&resolver),
+    m_languageString(&langValue)
 {
 }
 
 
 
 NodeSortKey::NodeSortKey() :
-	m_executionContext(0),
-	m_selectPat(0),
-	m_treatAsNumbers(false),
-	m_descending(false),
-	m_caseOrder(XalanCollationServices::eDefault),
-	m_prefixResolver(0),
-	m_languageString(&s_emptyString)
+    m_executionContext(0),
+    m_selectPat(0),
+    m_treatAsNumbers(false),
+    m_descending(false),
+    m_caseOrder(XalanCollationServices::eDefault),
+    m_prefixResolver(0),
+    m_languageString(&s_emptyString)
 {
 }
 
 
 
-NodeSortKey::NodeSortKey(const NodeSortKey&		theSource) :
-	m_executionContext(theSource.m_executionContext),
-	m_selectPat(theSource.m_selectPat),
-	m_treatAsNumbers(theSource.m_treatAsNumbers),
-	m_descending(theSource.m_descending),
-	m_caseOrder(theSource.m_caseOrder),
-	m_prefixResolver(theSource.m_prefixResolver),
-	m_languageString(theSource.m_languageString)
+NodeSortKey::NodeSortKey(const NodeSortKey&     theSource) :
+    m_executionContext(theSource.m_executionContext),
+    m_selectPat(theSource.m_selectPat),
+    m_treatAsNumbers(theSource.m_treatAsNumbers),
+    m_descending(theSource.m_descending),
+    m_caseOrder(theSource.m_caseOrder),
+    m_prefixResolver(theSource.m_prefixResolver),
+    m_languageString(theSource.m_languageString)
 {
 }
 
@@ -85,22 +85,22 @@ NodeSortKey::~NodeSortKey()
 
 
 NodeSortKey&
-NodeSortKey::operator=(const NodeSortKey&	theRHS)
+NodeSortKey::operator=(const NodeSortKey&   theRHS)
 {
-	if (this != &theRHS)
-	{
-		m_executionContext = theRHS.m_executionContext;
-		m_selectPat = theRHS.m_selectPat;
-		m_treatAsNumbers = theRHS.m_treatAsNumbers;
-		m_descending = theRHS.m_descending;
-		m_caseOrder = theRHS.m_caseOrder;
-		m_prefixResolver = theRHS.m_prefixResolver;
-		m_languageString = theRHS.m_languageString;
+    if (this != &theRHS)
+    {
+        m_executionContext = theRHS.m_executionContext;
+        m_selectPat = theRHS.m_selectPat;
+        m_treatAsNumbers = theRHS.m_treatAsNumbers;
+        m_descending = theRHS.m_descending;
+        m_caseOrder = theRHS.m_caseOrder;
+        m_prefixResolver = theRHS.m_prefixResolver;
+        m_languageString = theRHS.m_languageString;
 
-		assert(m_languageString != 0);
-	}
+        assert(m_languageString != 0);
+    }
 
-	return *this;
+    return *this;
 }
 
 

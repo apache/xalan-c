@@ -389,8 +389,8 @@ XalanFileUtility::getParams(
     //
     if (fsetOut)
     { 
-		const XalanDOMString::size_type		ii =
-			lastIndexOf(args.base, s_pathSep[0]);
+        const XalanDOMString::size_type     ii =
+            lastIndexOf(args.base, s_pathSep[0]);
 
         if (ii < args.base.length())
         {
@@ -1078,28 +1078,28 @@ XalanFileUtility::fileCompare(
                 data.msg = "Text based comparison failure";
 
                 try
-		        {
-		            data.expected += XalanDOMString(gline, getMemoryManager());
-		        }
-		        catch(const XalanDOMString::TranscodingError&)
-		        {
-		            data.expected +=
-		                XalanDOMString(
-			                "Unable to transcode expected data.",
-			                getMemoryManager());
-		        }
+                {
+                    data.expected += XalanDOMString(gline, getMemoryManager());
+                }
+                catch(const XalanDOMString::TranscodingError&)
+                {
+                    data.expected +=
+                        XalanDOMString(
+                            "Unable to transcode expected data.",
+                            getMemoryManager());
+                }
 
-		        try
-		        {
-		            data.actual += XalanDOMString(rline, getMemoryManager());
-		        }
-		        catch(const XalanDOMString::TranscodingError&)
-		        {
-		            data.actual +=
-		                XalanDOMString(
-			                "Unable to transcode actual data.",
-			                getMemoryManager());
-		        }
+                try
+                {
+                    data.actual += XalanDOMString(rline, getMemoryManager());
+                }
+                catch(const XalanDOMString::TranscodingError&)
+                {
+                    data.actual +=
+                        XalanDOMString(
+                            "Unable to transcode actual data.",
+                            getMemoryManager());
+                }
 
                 data.currentNode = XalanDOMString("Line: ", getMemoryManager());
                 data.currentNode += XalanDOMString(temp, getMemoryManager());
@@ -1918,7 +1918,7 @@ XalanFileUtility::debugNodeData(
 void
 XalanFileUtility::debugAttributeData(const XalanDOMString&   value)
 {
-    CharVectorType		theTargetVector(getMemoryManager());
+    CharVectorType      theTargetVector(getMemoryManager());
 
     TranscodeToLocalCodePage(value, theTargetVector, true);
 
@@ -2129,23 +2129,23 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
 
 
 
-const XalanDOMChar	XalanFileUtility::s_xmlSuffix[] =
+const XalanDOMChar  XalanFileUtility::s_xmlSuffix[] =
 {
     XalanUnicode::charFullStop,
     XalanUnicode::charLetter_x,
     XalanUnicode::charLetter_m,
     XalanUnicode::charLetter_l,
-	0
+    0
 };
 
-const XalanDOMChar	XalanFileUtility::s_pathSep[] =
+const XalanDOMChar  XalanFileUtility::s_pathSep[] =
 {
 #if defined(XALAN_WINDOWS)
     XalanUnicode::charReverseSolidus,
 #else
     XalanUnicode::charSolidus,
 #endif
-	0
+    0
 };
 
 

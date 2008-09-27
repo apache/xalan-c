@@ -33,74 +33,74 @@ class XALAN_DOM_EXPORT XalanComment : public XalanCharacterData
 {
 public:
 
-	XalanComment();
+    XalanComment();
 
-	virtual
-	~XalanComment();
+    virtual
+    ~XalanComment();
 
-	// These interfaces are inherited from XalanNode...
-	virtual const XalanDOMString&
-	getNodeName() const = 0;
+    // These interfaces are inherited from XalanNode...
+    virtual const XalanDOMString&
+    getNodeName() const = 0;
 
-	virtual const XalanDOMString&
-	getNodeValue() const = 0;
+    virtual const XalanDOMString&
+    getNodeValue() const = 0;
 
-	virtual NodeType
-	getNodeType() const = 0;
+    virtual NodeType
+    getNodeType() const = 0;
 
-	virtual XalanNode*
-	getParentNode() const = 0;
+    virtual XalanNode*
+    getParentNode() const = 0;
 
-	virtual const XalanNodeList*
-	getChildNodes() const = 0;
+    virtual const XalanNodeList*
+    getChildNodes() const = 0;
 
-	virtual XalanNode*
-	getFirstChild() const = 0;
+    virtual XalanNode*
+    getFirstChild() const = 0;
 
-	virtual XalanNode*
-	getLastChild() const = 0;
+    virtual XalanNode*
+    getLastChild() const = 0;
 
-	virtual XalanNode*
-	getPreviousSibling() const = 0;
+    virtual XalanNode*
+    getPreviousSibling() const = 0;
 
-	virtual XalanNode*
-	getNextSibling() const = 0;
+    virtual XalanNode*
+    getNextSibling() const = 0;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const = 0;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const = 0;
 
-	virtual XalanDocument*
-	getOwnerDocument() const = 0;
+    virtual XalanDocument*
+    getOwnerDocument() const = 0;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const = 0;
+    virtual const XalanDOMString&
+    getNamespaceURI() const = 0;
 
-	virtual const XalanDOMString&
-	getPrefix() const = 0;
+    virtual const XalanDOMString&
+    getPrefix() const = 0;
 
-	virtual const XalanDOMString&
-	getLocalName() const = 0;
+    virtual const XalanDOMString&
+    getLocalName() const = 0;
 
-	virtual bool
-	isIndexed() const = 0;
+    virtual bool
+    isIndexed() const = 0;
 
-	virtual IndexType
-	getIndex() const = 0;
+    virtual IndexType
+    getIndex() const = 0;
 
-	// These interfaces are inherited from XalanCharacterData...
+    // These interfaces are inherited from XalanCharacterData...
 
-	virtual const XalanDOMString&
-	getData() const = 0;
+    virtual const XalanDOMString&
+    getData() const = 0;
 
 protected:
 
-	XalanComment(const XalanComment&	theSource);
+    XalanComment(const XalanComment&    theSource);
 
-	XalanComment&
-	operator=(const XalanComment& 	theSource);
+    XalanComment&
+    operator=(const XalanComment&   theSource);
 
-	bool
-	operator==(const XalanComment&	theRHS) const;
+    bool
+    operator==(const XalanComment&  theRHS) const;
 
 private:
 };
@@ -111,4 +111,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANCOMMENT_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANCOMMENT_HEADER_GUARD_1357924680)

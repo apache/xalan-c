@@ -42,25 +42,25 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		/* domSupport */,
+            const XalanElement*     namespaceContext,
+            const XPathEnvSupport&  envSupport,
+            const DOMSupport&       /* domSupport */,
             MemoryManager&      theManager) :
-	m_namespaceContext(namespaceContext),
-	m_envSupport(&envSupport),
-	m_uri(theManager)
+    m_namespaceContext(namespaceContext),
+    m_envSupport(&envSupport),
+    m_uri(theManager)
 {
 }
 
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
-			const XalanElement*		namespaceContext,
+            const XalanElement*     namespaceContext,
             MemoryManager&      theManager,
-			const XPathEnvSupport*	envSupport) :
-	m_namespaceContext(namespaceContext),
-	m_envSupport(envSupport),
-	m_uri(theManager)
+            const XPathEnvSupport*  envSupport) :
+    m_namespaceContext(namespaceContext),
+    m_envSupport(envSupport),
+    m_uri(theManager)
 {
 }
 
@@ -73,16 +73,16 @@ ElementPrefixResolverProxy::~ElementPrefixResolverProxy()
 
 
 const XalanDOMString*
-ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix) const
+ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&     prefix) const
 {
-	if (m_namespaceContext == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return DOMServices::getNamespaceForPrefix(prefix, *m_namespaceContext);
-	}
+    if (m_namespaceContext == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return DOMServices::getNamespaceForPrefix(prefix, *m_namespaceContext);
+    }
 }
 
 
@@ -90,12 +90,12 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 const XalanDOMString&
 ElementPrefixResolverProxy::getURI() const
 {
-	if (m_envSupport != 0 && m_namespaceContext != 0 && m_uri.empty() == true)
-	{
-		m_uri = m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
-	}
+    if (m_envSupport != 0 && m_namespaceContext != 0 && m_uri.empty() == true)
+    {
+        m_uri = m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
+    }
 
-	return m_uri;
+    return m_uri;
 }
 
 

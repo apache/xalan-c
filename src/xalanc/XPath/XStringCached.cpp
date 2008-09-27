@@ -95,7 +95,7 @@ XStringCached::str(
 void
 XStringCached::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     theBuffer.append(m_value.get());
 }

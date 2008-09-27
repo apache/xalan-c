@@ -45,101 +45,101 @@ class XALAN_PLATFORMSUPPORT_EXPORT Writer
 {
 public:
 
-	Writer();
+    Writer();
 
-	virtual
-	~Writer();
+    virtual
+    ~Writer();
 
-	/**
-	 * Close the stream
-	 */
-	virtual void
-	close() = 0;
+    /**
+     * Close the stream
+     */
+    virtual void
+    close() = 0;
 
-	/**
-	 * Flush the stream
-	 */
-	virtual void
-	flush() = 0;
+    /**
+     * Flush the stream
+     */
+    virtual void
+    flush() = 0;
 
-	/**
-	 * Get the stream associated with the writer...
-	 */
-	virtual XalanOutputStream*
-	getStream();
+    /**
+     * Get the stream associated with the writer...
+     */
+    virtual XalanOutputStream*
+    getStream();
 
-	/**
-	 * Get the stream associated with the writer...
-	 */
-	virtual const XalanOutputStream*
-	getStream() const;
+    /**
+     * Get the stream associated with the writer...
+     */
+    virtual const XalanOutputStream*
+    getStream() const;
 
 
-	// Output functions
+    // Output functions
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const size_t		npos = ~0u;
+    static const size_t     npos = ~0u;
 #else
-	static const size_t		npos;
+    static const size_t     npos;
 #endif
 
-	/**
-	 * Writes a string
-	 * 
-	 * @param 	s         string to write
-	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is npos, then the array is assumed to be null-terminated.
-	 */
-	virtual void
-	write(
-			const char*		s,
-			size_t			theOffset = 0,
-			size_t			theLength = npos) = 0;
+    /**
+     * Writes a string
+     * 
+     * @param   s         string to write
+     * @param   theOffset starting offset in string to begin writing, default 0
+     * @param   theLength number of characters to write. If the length is npos, then the array is assumed to be null-terminated.
+     */
+    virtual void
+    write(
+            const char*     s,
+            size_t          theOffset = 0,
+            size_t          theLength = npos) = 0;
 
-	/**
-	 * Writes a string
-	 * 
-	 * @param 	s         string to write
-	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is XalanDOMString::npos, then the array is assumed to be null-terminated.
-	 */
-	virtual void
-	write(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+    /**
+     * Writes a string
+     * 
+     * @param   s         string to write
+     * @param   theOffset starting offset in string to begin writing, default 0
+     * @param   theLength number of characters to write. If the length is XalanDOMString::npos, then the array is assumed to be null-terminated.
+     */
+    virtual void
+    write(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
 
-	/**
-	 * Writes a character
-	 * 
-	 * @param 	c         character to write
-	 */
-	virtual void
-	write(XalanDOMChar	c) = 0;
+    /**
+     * Writes a character
+     * 
+     * @param   c         character to write
+     */
+    virtual void
+    write(XalanDOMChar  c) = 0;
 
-	/**
-	 * Writes a string
-	 * 
-	 * @param 	s         string to write
-	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is XalanDOMString::npos,  then the entire string is printed.
-	 */
-	virtual void
-	write(
-			const XalanDOMString&		s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+    /**
+     * Writes a string
+     * 
+     * @param   s         string to write
+     * @param   theOffset starting offset in string to begin writing, default 0
+     * @param   theLength number of characters to write. If the length is XalanDOMString::npos,  then the entire string is printed.
+     */
+    virtual void
+    write(
+            const XalanDOMString&       s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos) = 0;
 
 private:
 
-	// Not implemented
-	Writer(const Writer&);
+    // Not implemented
+    Writer(const Writer&);
 
-	Writer&
-	operator=(const Writer&);
+    Writer&
+    operator=(const Writer&);
 
-	bool
-	operator==(const Writer&);
+    bool
+    operator==(const Writer&);
 };
 
 
@@ -148,4 +148,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// WRITER_HEADER_GUARD_1357924680
+#endif  // WRITER_HEADER_GUARD_1357924680

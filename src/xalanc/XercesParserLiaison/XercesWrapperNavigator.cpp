@@ -35,33 +35,33 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	XercesWrapperNavigator::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString    XercesWrapperNavigator::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XercesWrapperNavigator::XercesWrapperNavigator(
-			XercesDocumentWrapper*	theOwnerDocument) :
-	m_ownerDocument(theOwnerDocument),
-	m_parentNode(0),
-	m_previousSibling(0),
-	m_nextSibling(0),
-	m_firstChild(0),
-	m_lastChild(0),
-	m_index(0)
+            XercesDocumentWrapper*  theOwnerDocument) :
+    m_ownerDocument(theOwnerDocument),
+    m_parentNode(0),
+    m_previousSibling(0),
+    m_nextSibling(0),
+    m_firstChild(0),
+    m_lastChild(0),
+    m_index(0)
 {
-	assert(theOwnerDocument != 0);
+    assert(theOwnerDocument != 0);
 }
 
 
 
-XercesWrapperNavigator::XercesWrapperNavigator(const XercesWrapperNavigator&	theSource) :
-	m_ownerDocument(theSource.m_ownerDocument),
-	m_parentNode(theSource.m_parentNode),
-	m_previousSibling(theSource.m_previousSibling),
-	m_nextSibling(theSource.m_nextSibling),
-	m_firstChild(theSource.m_firstChild),
-	m_lastChild(theSource.m_lastChild),
-	m_index(theSource.m_index)
+XercesWrapperNavigator::XercesWrapperNavigator(const XercesWrapperNavigator&    theSource) :
+    m_ownerDocument(theSource.m_ownerDocument),
+    m_parentNode(theSource.m_parentNode),
+    m_previousSibling(theSource.m_previousSibling),
+    m_nextSibling(theSource.m_nextSibling),
+    m_firstChild(theSource.m_firstChild),
+    m_lastChild(theSource.m_lastChild),
+    m_index(theSource.m_index)
 {
 }
 
@@ -74,134 +74,134 @@ XercesWrapperNavigator::~XercesWrapperNavigator()
 
 
 XalanNode*
-XercesWrapperNavigator::mapNode(const DOMNodeType*	theXercesNode) const
+XercesWrapperNavigator::mapNode(const DOMNodeType*  theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode);
+    return m_ownerDocument->mapNode(theXercesNode);
 }
 
 
 
 XalanAttr*
-XercesWrapperNavigator::mapNode(const DOMAttrType*	theXercesNode) const
+XercesWrapperNavigator::mapNode(const DOMAttrType*  theXercesNode) const
 {
-	return m_ownerDocument->mapNode(theXercesNode);
+    return m_ownerDocument->mapNode(theXercesNode);
 }
 
 
 
 const DOMNodeType*
-XercesWrapperNavigator::mapNode(XalanNode*	theXalanNode) const
+XercesWrapperNavigator::mapNode(XalanNode*  theXalanNode) const
 {
-	return m_ownerDocument->mapNode(theXalanNode);
+    return m_ownerDocument->mapNode(theXalanNode);
 }
 
 
 
 XalanNode*
-XercesWrapperNavigator::getParentNode(const DOMNodeType*	theXercesNode) const
+XercesWrapperNavigator::getParentNode(const DOMNodeType*    theXercesNode) const
 {
-	if (m_parentNode == 0)
-	{
-		return m_ownerDocument->mapNode(theXercesNode->getParentNode());
-	}
-	else
-	{
-		return m_parentNode;
-	}
+    if (m_parentNode == 0)
+    {
+        return m_ownerDocument->mapNode(theXercesNode->getParentNode());
+    }
+    else
+    {
+        return m_parentNode;
+    }
 }
 
 
 
 XalanNode*
-XercesWrapperNavigator::getPreviousSibling(const DOMNodeType*	theXercesNode) const
+XercesWrapperNavigator::getPreviousSibling(const DOMNodeType*   theXercesNode) const
 {
-	if (m_previousSibling == 0)
-	{
-		return m_ownerDocument->mapNode(theXercesNode->getPreviousSibling());
-	}
-	else
-	{
-		return m_previousSibling;
-	}
+    if (m_previousSibling == 0)
+    {
+        return m_ownerDocument->mapNode(theXercesNode->getPreviousSibling());
+    }
+    else
+    {
+        return m_previousSibling;
+    }
 }
 
 
 
 XalanNode*
-XercesWrapperNavigator::getNextSibling(const DOMNodeType*	theXercesNode) const
+XercesWrapperNavigator::getNextSibling(const DOMNodeType*   theXercesNode) const
 {
-	if (m_nextSibling == 0)
-	{
-		return m_ownerDocument->mapNode(theXercesNode->getNextSibling());
-	}
-	else
-	{
-		return m_nextSibling;
-	}
+    if (m_nextSibling == 0)
+    {
+        return m_ownerDocument->mapNode(theXercesNode->getNextSibling());
+    }
+    else
+    {
+        return m_nextSibling;
+    }
 }
 
 
 
 XalanNode*
-XercesWrapperNavigator::getFirstChild(const DOMNodeType*	theXercesNode) const
+XercesWrapperNavigator::getFirstChild(const DOMNodeType*    theXercesNode) const
 {
-	if (m_firstChild == 0)
-	{
-		return m_ownerDocument->mapNode(theXercesNode->getFirstChild());
-	}
-	else
-	{
-		return m_firstChild;
-	}
+    if (m_firstChild == 0)
+    {
+        return m_ownerDocument->mapNode(theXercesNode->getFirstChild());
+    }
+    else
+    {
+        return m_firstChild;
+    }
 }
 
 
 
 XalanNode*
-XercesWrapperNavigator::getLastChild(const DOMNodeType*		theXercesNode) const
+XercesWrapperNavigator::getLastChild(const DOMNodeType*     theXercesNode) const
 {
-	if (m_lastChild == 0)
-	{
-		return m_ownerDocument->mapNode(theXercesNode->getLastChild());
-	}
-	else
-	{
-		return m_lastChild;
-	}
+    if (m_lastChild == 0)
+    {
+        return m_ownerDocument->mapNode(theXercesNode->getLastChild());
+    }
+    else
+    {
+        return m_lastChild;
+    }
 }
 
 
 
 XalanElement*
-XercesWrapperNavigator::getOwnerElement(const DOMAttrType*	theXercesAttr) const
+XercesWrapperNavigator::getOwnerElement(const DOMAttrType*  theXercesAttr) const
 {
-	assert(theXercesAttr != 0);
+    assert(theXercesAttr != 0);
 
-	if (m_parentNode != 0)
-	{
-		assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
+    if (m_parentNode != 0)
+    {
+        assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
 
-		return static_cast<XalanElement*>(m_parentNode);
-	}
-	else
-	{
-		return m_ownerDocument->mapNode(theXercesAttr->getOwnerElement());
-	}
+        return static_cast<XalanElement*>(m_parentNode);
+    }
+    else
+    {
+        return m_ownerDocument->mapNode(theXercesAttr->getOwnerElement());
+    }
 }
 
 
 
 const XalanDOMString&
-XercesWrapperNavigator::getPooledString(const XMLCh*	theString) const
+XercesWrapperNavigator::getPooledString(const XMLCh*    theString) const
 {
-	if (theString == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		return m_ownerDocument->getPooledString(theString, XalanDOMString::length(theString));
-	}
+    if (theString == 0)
+    {
+        return s_emptyString;
+    }
+    else
+    {
+        return m_ownerDocument->getPooledString(theString, XalanDOMString::length(theString));
+    }
 }
 
 

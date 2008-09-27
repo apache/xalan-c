@@ -48,30 +48,30 @@
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
     XALAN_USING_STD(cerr)
-	XALAN_USING_STD(cout)
-	XALAN_USING_STD(endl)
-	XALAN_USING_STD(ifstream)
+    XALAN_USING_STD(cout)
+    XALAN_USING_STD(endl)
+    XALAN_USING_STD(ifstream)
 
-	if (argc < 4)
-	{
-		cerr << "Usage: TestDriver XMLFilePath Context XPathExpression" << endl;
-		return -1;
-	}
+    if (argc < 4)
+    {
+        cerr << "Usage: TestDriver XMLFilePath Context XPathExpression" << endl;
+        return -1;
+    }
 
     
     XALAN_USING_XERCES(XMLPlatformUtils)
     XALAN_USING_XERCES(XMLException)
-	XALAN_USING_XALAN(XalanTransformer)
+    XALAN_USING_XALAN(XalanTransformer)
 
         //initialize Xerces...
     try
@@ -86,12 +86,12 @@ main(
     }
     
     // Initialize Xalan.
-	XalanTransformer::initialize();
+    XalanTransformer::initialize();
 
     {
-        XPathWrapper::ChVectorType	theXML;
+        XPathWrapper::ChVectorType  theXML;
         
-        ifstream	in(argv[1]);
+        ifstream    in(argv[1]);
         
         // slow and dirty dump of the xml file into a buffer
         char c;
@@ -107,11 +107,11 @@ main(
         try
         {
             // call evaluate, passing in the XML string, the context string and the xpath string
-            XPathWrapper::CharVectorTypeVectorType	result;
+            XPathWrapper::CharVectorTypeVectorType  result;
 
             helper.evaluate(&*theXML.begin(), argv[2], argv[3], result);
             
-            // take the resulting string vector	and do whatever you want with it:
+            // take the resulting string vector and do whatever you want with it:
             size_t len = result.size();
             
             cout << "the result set has " << len << " strings\n";
@@ -124,14 +124,14 @@ main(
             cerr << "Exception caught!  Exiting..." << endl;
         }
     }
-	// Terminate Xalan...
-	XalanTransformer::terminate();
+    // Terminate Xalan...
+    XalanTransformer::terminate();
 
     // Shut down Xerces...
-	XMLPlatformUtils::Terminate();
+    XMLPlatformUtils::Terminate();
 
-	// Clean up the ICU, if it's integrated...
-	XalanTransformer::ICUCleanUp();
+    // Clean up the ICU, if it's integrated...
+    XalanTransformer::ICUCleanUp();
 
-	return 0;
+    return 0;
 }

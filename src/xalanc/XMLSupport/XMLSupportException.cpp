@@ -26,10 +26,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XMLSupportException::XMLSupportException(
-            const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager,
         theLocator)

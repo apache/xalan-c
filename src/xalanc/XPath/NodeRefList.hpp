@@ -44,16 +44,16 @@ class XALAN_XPATH_EXPORT NodeRefList : public NodeRefListBase
 {
 public:
 
-	explicit
-	NodeRefList(MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    explicit
+    NodeRefList(MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Construct a node list from another
-	 *
-	 * @param theSource source node list
-	 */
-	NodeRefList(
-        const NodeRefList&	theSource,
+    /**
+     * Construct a node list from another
+     *
+     * @param theSource source node list
+     */
+    NodeRefList(
+        const NodeRefList&  theSource,
         MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
     MemoryManager&
@@ -62,84 +62,84 @@ public:
         return m_nodeList.getMemoryManager();
     }
 
-	/**
-	 * Construct a node list from another
-	 *
-	 * @param theSource source node list
-	 */
-	explicit
-	NodeRefList(
-            const NodeRefListBase&	theSource,
+    /**
+     * Construct a node list from another
+     *
+     * @param theSource source node list
+     */
+    explicit
+    NodeRefList(
+            const NodeRefListBase&  theSource,
             MemoryManager&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	virtual
-	~NodeRefList();
+    virtual
+    ~NodeRefList();
 
-	NodeRefList&
-	operator=(const NodeRefListBase&	theRHS);
+    NodeRefList&
+    operator=(const NodeRefListBase&    theRHS);
 
-	NodeRefList&
-	operator=(const NodeRefList&	theRHS);
+    NodeRefList&
+    operator=(const NodeRefList&    theRHS);
 
-	bool
-	empty() const
-	{
-		return m_nodeList.empty();
-	}
+    bool
+    empty() const
+    {
+        return m_nodeList.empty();
+    }
 
 
-	// These methods are inherited from NodeRefListBase ...
+    // These methods are inherited from NodeRefListBase ...
 
-	virtual XalanNode*
-	item(size_type	index) const;
+    virtual XalanNode*
+    item(size_type  index) const;
 
-	virtual size_type
-	getLength() const;
+    virtual size_type
+    getLength() const;
 
-	virtual size_type
-	indexOf(const XalanNode*	theNode) const;
+    virtual size_type
+    indexOf(const XalanNode*    theNode) const;
 
 #if !defined(NDEBUG)
-	bool
-	checkForDuplicates(MemoryManager& theManager) const;
+    bool
+    checkForDuplicates(MemoryManager& theManager) const;
 #endif
 
-	typedef XalanVector<XalanNode*>			NodeListVectorType;
+    typedef XalanVector<XalanNode*>         NodeListVectorType;
 
-	void
-	swap(NodeRefList&	theOther)
-	{
-		m_nodeList.swap(theOther.m_nodeList);
-	}
+    void
+    swap(NodeRefList&   theOther)
+    {
+        m_nodeList.swap(theOther.m_nodeList);
+    }
 
 protected:
 
-	// Default vector allocation size.  It seems high, but
-	// it's really worth it...
-	enum
-	{
-		eDefaultVectorSize = 100
-	};
+    // Default vector allocation size.  It seems high, but
+    // it's really worth it...
+    enum
+    {
+        eDefaultVectorSize = 100
+    };
 
-	/**
-	 * Ensure that an allocation is either the default allocation
-	 * amount, or the amount specified in the parameter, whichever
-	 * is larger.
-	 *
-	 * @param theSize The requested size.
-	 */
-	void
-	ensureAllocation(NodeListVectorType::size_type	theSize = 0)
-	{
-		m_nodeList.reserve(eDefaultVectorSize > theSize ? eDefaultVectorSize : theSize);
-	}
+    /**
+     * Ensure that an allocation is either the default allocation
+     * amount, or the amount specified in the parameter, whichever
+     * is larger.
+     *
+     * @param theSize The requested size.
+     */
+    void
+    ensureAllocation(NodeListVectorType::size_type  theSize = 0)
+    {
+        m_nodeList.reserve(eDefaultVectorSize > theSize ? eDefaultVectorSize : theSize);
+    }
 
-	NodeListVectorType	m_nodeList;
+    NodeListVectorType  m_nodeList;
 private:
 #if defined (XALAN_DEVELOPMENT)
     // not defined
     NodeRefList();
-    NodeRefList(const NodeRefList&	theSource);
+    NodeRefList(const NodeRefList&  theSource);
 #endif
 };
 
@@ -149,4 +149,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NODEREFLIST_HEADER_GUARD_1357924680
+#endif  // NODEREFLIST_HEADER_GUARD_1357924680

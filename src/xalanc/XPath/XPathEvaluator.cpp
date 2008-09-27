@@ -60,7 +60,7 @@ XPathEvaluator::terminate()
         *s_memoryManager,
         *s_xpathInit);
 
-	s_xpathInit = 0;
+    s_xpathInit = 0;
 
     s_memoryManager = 0;
 }
@@ -69,9 +69,9 @@ XPathEvaluator::terminate()
 
 XPathEvaluator::XPathEvaluator(MemoryManager& theManager) :
     m_xobjectFactory(theManager, XObjectFactoryDefault::create(theManager)),
-	m_xpathFactory(theManager, XPathFactoryDefault::createXPathFactoryDefault(theManager)),
-	m_constructionContext(theManager, XPathConstructionContextDefault::create(theManager)),
-	m_executionContext(theManager, XPathExecutionContextDefault::create(theManager)),
+    m_xpathFactory(theManager, XPathFactoryDefault::createXPathFactoryDefault(theManager)),
+    m_constructionContext(theManager, XPathConstructionContextDefault::create(theManager)),
+    m_executionContext(theManager, XPathExecutionContextDefault::create(theManager)),
     m_memoryManager(theManager)
 
 {
@@ -81,97 +81,97 @@ XPathEvaluator::XPathEvaluator(MemoryManager& theManager) :
 
 XPathEvaluator::~XPathEvaluator()
 {
-	// Just in case these are still set, reset them
-	// to 0.
-	m_executionContext->setXPathEnvSupport(0);
+    // Just in case these are still set, reset them
+    // to 0.
+    m_executionContext->setXPathEnvSupport(0);
 
-	m_executionContext->setXObjectFactory(0);
+    m_executionContext->setXObjectFactory(0);
 
-	m_executionContext->setDOMSupport(0);
+    m_executionContext->setDOMSupport(0);
 }
 
 
 
 XalanNode*
 XPathEvaluator::selectSingleNode(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const XalanElement*     namespaceNode)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			namespaceNode));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            namespaceNode));
 
-	const NodeRefListBase&	theNodeList = theResult->nodeset();
+    const NodeRefListBase&  theNodeList = theResult->nodeset();
 
-	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+    return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
 }
 
 
 
 XalanNode*
 XPathEvaluator::selectSingleNode(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const PrefixResolver&   prefixResolver)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			prefixResolver));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            prefixResolver));
 
-	const NodeRefListBase&	theNodeList = theResult->nodeset();
+    const NodeRefListBase&  theNodeList = theResult->nodeset();
 
-	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+    return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
 }
 
 
 
 XalanNode*
 XPathEvaluator::selectSingleNode(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const XalanElement*     namespaceNode)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpath,
-			namespaceNode));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpath,
+            namespaceNode));
 
-	const NodeRefListBase&	theNodeList = theResult->nodeset();
+    const NodeRefListBase&  theNodeList = theResult->nodeset();
 
-	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+    return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
 }
 
 
 
 XalanNode*
 XPathEvaluator::selectSingleNode(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const PrefixResolver&   prefixResolver)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpath,
-			prefixResolver));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpath,
+            prefixResolver));
 
-	const NodeRefListBase&	theNodeList = theResult->nodeset();
+    const NodeRefListBase&  theNodeList = theResult->nodeset();
 
-	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+    return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
 }
 
 
@@ -179,19 +179,19 @@ XPathEvaluator::selectSingleNode(
 NodeRefList&
 XPathEvaluator::selectNodeList(
             NodeRefList&            result,
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const XalanElement*     namespaceNode)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			namespaceNode));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            namespaceNode));
 
-	result = theResult->nodeset();
+    result = theResult->nodeset();
 
     return result;
 }
@@ -201,19 +201,19 @@ XPathEvaluator::selectNodeList(
 NodeRefList&
 XPathEvaluator::selectNodeList(
             NodeRefList&            result,
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const PrefixResolver&   prefixResolver)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			prefixResolver));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            prefixResolver));
 
-	result = theResult->nodeset();
+    result = theResult->nodeset();
 
     return result;
 }
@@ -223,21 +223,21 @@ XPathEvaluator::selectNodeList(
 NodeRefList&
 XPathEvaluator::selectNodeList(
             NodeRefList&            result,
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const XalanElement*     namespaceNode)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpath,
-			namespaceNode));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpath,
+            namespaceNode));
 
     result = theResult->nodeset();
 
-	return result;
+    return result;
 }
 
 
@@ -245,33 +245,33 @@ XPathEvaluator::selectNodeList(
 NodeRefList&
 XPathEvaluator::selectNodeList(
             NodeRefList&            result,
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const PrefixResolver&   prefixResolver)
 {
-	const XObjectPtr	theResult(
-		evaluate(
-			domSupport,
-			contextNode,
-			xpath,
-			prefixResolver));
+    const XObjectPtr    theResult(
+        evaluate(
+            domSupport,
+            contextNode,
+            xpath,
+            prefixResolver));
 
     result = theResult->nodeset();
 
-	return result;
+    return result;
 }
 
 
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const XalanElement*     namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
     const ElementPrefixResolverProxy    thePrefixResolver(
                     namespaceNode,
@@ -279,12 +279,12 @@ XPathEvaluator::evaluate(
                     domSupport,
                     m_memoryManager);
 
-	return evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			thePrefixResolver,
-			theEnvSupportDefault);
+    return evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            thePrefixResolver,
+            theEnvSupportDefault);
  
 }
 
@@ -292,12 +292,12 @@ XPathEvaluator::evaluate(
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const XalanElement*		namespaceNode)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const XalanElement*     namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
     const ElementPrefixResolverProxy    thePrefixResolver(
                     namespaceNode,
@@ -305,60 +305,60 @@ XPathEvaluator::evaluate(
                     domSupport,
                     m_memoryManager);
 
-	return evaluate(
-				domSupport,
-				contextNode,
-				xpath,
-				thePrefixResolver,
-				theEnvSupportDefault);
+    return evaluate(
+                domSupport,
+                contextNode,
+                xpath,
+                thePrefixResolver,
+                theEnvSupportDefault);
 }
 
 
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const PrefixResolver&   prefixResolver)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
-	return	evaluate(
-			domSupport,
-			contextNode,
-			xpathString,
-			prefixResolver,
-			theEnvSupportDefault);
+    return  evaluate(
+            domSupport,
+            contextNode,
+            xpathString,
+            prefixResolver,
+            theEnvSupportDefault);
 }
 
 
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const PrefixResolver&	prefixResolver)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const PrefixResolver&   prefixResolver)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
-	return evaluate(
-				domSupport,
-				contextNode,
-				xpath,
-				prefixResolver,
-				theEnvSupportDefault);
+    return evaluate(
+                domSupport,
+                contextNode,
+                xpath,
+                prefixResolver,
+                theEnvSupportDefault);
 }
 
 
 
 XPath*
-XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
+XPathEvaluator::createXPath(const XalanDOMChar*     xpathString)
 {
-	DOMSupportDefault		theDOMSupport(m_memoryManager);
+    DOMSupportDefault       theDOMSupport(m_memoryManager);
 
-    XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
     const ElementPrefixResolverProxy    thePrefixResolver(
                     0,
@@ -366,18 +366,18 @@ XPathEvaluator::createXPath(const XalanDOMChar*		xpathString)
                     theDOMSupport,
                     m_memoryManager);
 
-	return createXPath(xpathString, thePrefixResolver);
+    return createXPath(xpathString, thePrefixResolver);
 }
 
 
 
 XPath*
 XPathEvaluator::createXPath(
-			const XalanDOMChar*		xpathString,
-			DOMSupport&				domSupport,
-			const XalanElement*		namespaceNode)
+            const XalanDOMChar*     xpathString,
+            DOMSupport&             domSupport,
+            const XalanElement*     namespaceNode)
 {
-	XPathEnvSupportDefault	theEnvSupportDefault(m_memoryManager);
+    XPathEnvSupportDefault  theEnvSupportDefault(m_memoryManager);
 
     const ElementPrefixResolverProxy    thePrefixResolver(
                     namespaceNode,
@@ -385,7 +385,7 @@ XPathEvaluator::createXPath(
                     domSupport,
                     m_memoryManager);
 
-	return createXPath(xpathString, thePrefixResolver);
+    return createXPath(xpathString, thePrefixResolver);
 }
 
 
@@ -396,13 +396,13 @@ typedef XPathConstructionContext::GetCachedString   GetCachedString;
 
 XPath*
 XPathEvaluator::createXPath(
-			const XalanDOMChar*		xpathString,
-			const PrefixResolver&	prefixResolver)
+            const XalanDOMChar*     xpathString,
+            const PrefixResolver&   prefixResolver)
 {
-	XPath* const	theXPath = m_xpathFactory->create();
-	assert(theXPath != 0);
+    XPath* const    theXPath = m_xpathFactory->create();
+    assert(theXPath != 0);
 
-	XPathProcessorImpl		theProcessor(m_memoryManager);
+    XPathProcessorImpl      theProcessor(m_memoryManager);
 
     const GetCachedString   theGuard(*m_constructionContext.get());
 
@@ -411,49 +411,49 @@ XPathEvaluator::createXPath(
     theTempString = xpathString;
 
     theProcessor.initXPath(
-			*theXPath,
-			*m_constructionContext.get(),
-			theTempString,
-			prefixResolver);
+            *theXPath,
+            *m_constructionContext.get(),
+            theTempString,
+            prefixResolver);
 
-	return theXPath;
+    return theXPath;
 }
 
 
 
 bool
-XPathEvaluator::destroyXPath(XPath*		theXPath)
+XPathEvaluator::destroyXPath(XPath*     theXPath)
 {
-	assert(theXPath != 0);
+    assert(theXPath != 0);
 
-	const bool	theResult = m_xpathFactory->returnObject(theXPath);
+    const bool  theResult = m_xpathFactory->returnObject(theXPath);
 
-	if (m_xpathFactory->getInstanceCount() == 0)
-	{
-		m_constructionContext->reset();
-	}
+    if (m_xpathFactory->getInstanceCount() == 0)
+    {
+        m_constructionContext->reset();
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XalanDOMChar*		xpathString,
-			const PrefixResolver&	prefixResolver,
-			XPathEnvSupport&		envSupport)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XalanDOMChar*     xpathString,
+            const PrefixResolver&   prefixResolver,
+            XPathEnvSupport&        envSupport)
 {
-	assert(contextNode != 0);
-	assert(xpathString != 0);
+    assert(contextNode != 0);
+    assert(xpathString != 0);
 
-	// Create an XPath, and an XPathProcessorImpl to process
-	// the XPath.
-	XPath				theXPath(m_memoryManager);
+    // Create an XPath, and an XPathProcessorImpl to process
+    // the XPath.
+    XPath               theXPath(m_memoryManager);
 
-	XPathProcessorImpl  theProcessor(m_memoryManager);
+    XPathProcessorImpl  theProcessor(m_memoryManager);
 
     const GetCachedString   theGuard(*m_constructionContext.get());
 
@@ -462,12 +462,12 @@ XPathEvaluator::evaluate(
     theTempString = xpathString;
 
     theProcessor.initXPath(
-			theXPath,
-			*m_constructionContext.get(),
-			theTempString,
-			prefixResolver);
+            theXPath,
+            *m_constructionContext.get(),
+            theTempString,
+            prefixResolver);
 
-	return evaluate(
+    return evaluate(
                 domSupport,
                 contextNode,
                 theXPath,
@@ -479,39 +479,39 @@ XPathEvaluator::evaluate(
 
 XObjectPtr
 XPathEvaluator::evaluate(
-			DOMSupport&				domSupport,
-			XalanNode*				contextNode,
-			const XPath&			xpath,
-			const PrefixResolver&	prefixResolver,
-			XPathEnvSupport&		envSupport)
+            DOMSupport&             domSupport,
+            XalanNode*              contextNode,
+            const XPath&            xpath,
+            const PrefixResolver&   prefixResolver,
+            XPathEnvSupport&        envSupport)
 {
-	// Reset these, in case we've been here before...
-	m_executionContext->reset();
-	m_xobjectFactory->reset();
+    // Reset these, in case we've been here before...
+    m_executionContext->reset();
+    m_xobjectFactory->reset();
 
-	// Set up the connections between the execution context and
-	// the provided support objects...
-	m_executionContext->setXPathEnvSupport(&envSupport);
+    // Set up the connections between the execution context and
+    // the provided support objects...
+    m_executionContext->setXPathEnvSupport(&envSupport);
 
-	m_executionContext->setXObjectFactory(m_xobjectFactory.get());
+    m_executionContext->setXObjectFactory(m_xobjectFactory.get());
 
-	m_executionContext->setDOMSupport(&domSupport);
+    m_executionContext->setDOMSupport(&domSupport);
 
-	// OK, evaluate the expression...
-	const XObjectPtr	theResult(
-		xpath.execute(
-			contextNode,
-			prefixResolver,
-			*m_executionContext.get()));
+    // OK, evaluate the expression...
+    const XObjectPtr    theResult(
+        xpath.execute(
+            contextNode,
+            prefixResolver,
+            *m_executionContext.get()));
 
-	// Break the connectons we set...
-	m_executionContext->setXPathEnvSupport(0);
+    // Break the connectons we set...
+    m_executionContext->setXPathEnvSupport(0);
 
-	m_executionContext->setXObjectFactory(0);
+    m_executionContext->setXObjectFactory(0);
 
-	m_executionContext->setDOMSupport(0);
+    m_executionContext->setDOMSupport(0);
 
-	return theResult;
+    return theResult;
 }
 
 

@@ -37,28 +37,28 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanSimplePrefixResolver : public PrefixReso
 {
 public:
 
-	XalanSimplePrefixResolver(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theNamespaceURI,
-			const XalanDOMString&	theURI);
+    XalanSimplePrefixResolver(
+            const XalanDOMString&   thePrefix,
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theURI);
 
-	virtual
-	~XalanSimplePrefixResolver();
+    virtual
+    ~XalanSimplePrefixResolver();
 
 
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+    virtual const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     prefix) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
 public:
 
-	const XalanDOMString&	m_prefix;
+    const XalanDOMString&   m_prefix;
 
-	const XalanDOMString&	m_namespaceURI;
+    const XalanDOMString&   m_namespaceURI;
 
-	const XalanDOMString&	m_uri;
+    const XalanDOMString&   m_uri;
 };
 
 
@@ -67,4 +67,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANSIMPLEPREFIXRESOLVER_HEADER_GUARD_1357924680
+#endif  // XALANSIMPLEPREFIXRESOLVER_HEADER_GUARD_1357924680

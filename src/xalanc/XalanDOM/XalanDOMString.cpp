@@ -907,9 +907,9 @@ doXercesTranscode(
                 // XalanDOMString::length returns a size of 0.  In this case, the
                 // real size should be 1
                 if (theRealCharLength == 0)
-		        {
-	                theRealCharLength = 1;
-		        }
+                {
+                    theRealCharLength = 1;
+                }
 
                 // append the translated set of characters
                 theTargetVector.insert(

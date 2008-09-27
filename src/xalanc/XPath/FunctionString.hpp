@@ -49,50 +49,50 @@ class XALAN_XPATH_EXPORT FunctionString : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionString();
+    FunctionString();
 
-	virtual
-	~FunctionString();
+    virtual
+    ~FunctionString();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionString*
+    virtual FunctionString*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionString&
-	operator=(const FunctionString&);
+    // Not implemented...
+    FunctionString&
+    operator=(const FunctionString&);
 
-	bool
-	operator==(const FunctionString&) const;
+    bool
+    operator==(const FunctionString&) const;
 };
 
 
@@ -101,4 +101,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONSTRING_HEADER_GUARD_1357924680
+#endif  // FUNCTIONSTRING_HEADER_GUARD_1357924680

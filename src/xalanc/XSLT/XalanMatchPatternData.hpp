@@ -57,9 +57,9 @@ public:
     typedef XPath::eMatchScore  eMatchScore;
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::size_t		size_type;
+    typedef std::size_t     size_type;
 #else
-	typedef size_t			size_type;
+    typedef size_t          size_type;
 #endif
 
 

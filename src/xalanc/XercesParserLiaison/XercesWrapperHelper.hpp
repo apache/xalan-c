@@ -48,24 +48,24 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperHelper
 {
 public:
 
-	typedef XalanSize_t     XercesStringLengthType;
+    typedef XalanSize_t     XercesStringLengthType;
 
-	static const XMLCh*
-	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
-	{
-		assert(XercesStringLengthType(theString.length()) == theString.length());
+    static const XMLCh*
+    XalanDOMStringToXercesDOMString(const XalanDOMString&   theString)
+    {
+        assert(XercesStringLengthType(theString.length()) == theString.length());
 
-		return theString.c_str();
-	}
+        return theString.c_str();
+    }
 
 private:
 
-	// Not implemented...
-	XercesWrapperHelper();
+    // Not implemented...
+    XercesWrapperHelper();
 
-	XercesWrapperHelper(const XercesWrapperHelper&);
+    XercesWrapperHelper(const XercesWrapperHelper&);
 
-	XercesWrapperHelper&
+    XercesWrapperHelper&
     operator=(const XercesWrapperHelper&);
 };
 
@@ -75,4 +75,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESWRAPPERHELPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESWRAPPERHELPER_HEADER_GUARD_1357924680)

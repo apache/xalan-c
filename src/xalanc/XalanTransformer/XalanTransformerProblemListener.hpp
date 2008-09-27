@@ -52,49 +52,49 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformerProblemListener : public ProblemL
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream			StreamType;
+    typedef ostream         StreamType;
 #else
-	typedef std::ostream	StreamType;
+    typedef std::ostream    StreamType;
 #endif
 
-	XalanTransformerProblemListener(
+    XalanTransformerProblemListener(
             MemoryManager&  theManager,
-			StreamType*		theStream,
-			PrintWriter*	thePrintWriter);
+            StreamType*     theStream,
+            PrintWriter*    thePrintWriter);
 
-	virtual
-	~XalanTransformerProblemListener();
+    virtual
+    ~XalanTransformerProblemListener();
 
-	// These methods are inherited from ProblemListener ...
+    // These methods are inherited from ProblemListener ...
 
-	virtual void
-	setPrintWriter(PrintWriter*     pw);
+    virtual void
+    setPrintWriter(PrintWriter*     pw);
 
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                     source,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset);
+            eClassification             classification,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset);
 
-	virtual void
-	problem(
-            eSource                 source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode);
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&   msg,
-			const XalanNode*		sourceNode);
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode);
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
 
 private:
 
@@ -102,11 +102,11 @@ private:
     XalanTransformerProblemListener();
     XalanTransformerProblemListener(const XalanTransformerProblemListener&);
 
-	ProblemListenerDefault	m_problemListener;
+    ProblemListenerDefault  m_problemListener;
 
-	StreamType*		        m_warningStream;
+    StreamType*             m_warningStream;
 
-    XalanDOMString	        m_warningString;
+    XalanDOMString          m_warningString;
 };
 
 
@@ -115,4 +115,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_XALANTRANSFORMERPROBLEMLISTENER_HEADER_GUARD
+#endif  // XALAN_XALANTRANSFORMERPROBLEMLISTENER_HEADER_GUARD

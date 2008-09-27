@@ -38,10 +38,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterTreeWalker::FormatterTreeWalker(
-            FormatterListener& 	formatterListener,
+            FormatterListener&  formatterListener,
             MemoryManager&      theManager) :
-	TreeWalker(),
-	m_formatterListener(formatterListener),
+    TreeWalker(),
+    m_formatterListener(formatterListener),
     m_memoryManager(theManager)
 {
 }
@@ -55,127 +55,127 @@ FormatterTreeWalker::~FormatterTreeWalker()
 
 
 bool
-FormatterTreeWalker::startNode(const XalanNode*		node)
+FormatterTreeWalker::startNode(const XalanNode*     node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	switch(node->getNodeType())
-	{
-	case XalanNode::COMMENT_NODE:
-		{
+    switch(node->getNodeType())
+    {
+    case XalanNode::COMMENT_NODE:
+        {
             m_formatterListener.comment(node->getNodeValue().c_str());
-		}
-		break;
+        }
+        break;
 
-	case XalanNode::DOCUMENT_FRAGMENT_NODE:
-		// ??
-		break;
+    case XalanNode::DOCUMENT_FRAGMENT_NODE:
+        // ??
+        break;
 
-	case XalanNode::DOCUMENT_NODE:
-		m_formatterListener.startDocument();
-		break;
+    case XalanNode::DOCUMENT_NODE:
+        m_formatterListener.startDocument();
+        break;
 
-	case XalanNode::ELEMENT_NODE:
-		{
-			const XalanElement*	theElementNode =
-				static_cast<const XalanElement*>(node);
+    case XalanNode::ELEMENT_NODE:
+        {
+            const XalanElement* theElementNode =
+                static_cast<const XalanElement*>(node);
 
-			const XalanNamedNodeMap*	atts = theElementNode->getAttributes();
-			assert(atts != 0);
+            const XalanNamedNodeMap*    atts = theElementNode->getAttributes();
+            assert(atts != 0);
 
-            NamedNodeMapAttributeList	theAttributeList(*atts, m_memoryManager);
+            NamedNodeMapAttributeList   theAttributeList(*atts, m_memoryManager);
 
-			m_formatterListener.startElement(
+            m_formatterListener.startElement(
                 theElementNode->getNodeName().c_str(),
-				theAttributeList);
-		}
-		break;
+                theAttributeList);
+        }
+        break;
 
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		{
-			m_formatterListener.processingInstruction(
-				node->getNodeName().c_str(),
-				node->getNodeValue().c_str());
-		}
-		break;
+    case XalanNode::PROCESSING_INSTRUCTION_NODE:
+        {
+            m_formatterListener.processingInstruction(
+                node->getNodeName().c_str(),
+                node->getNodeValue().c_str());
+        }
+        break;
 
-	case XalanNode::CDATA_SECTION_NODE:
-		{
-			const XalanDOMString&	data = node->getNodeValue();
+    case XalanNode::CDATA_SECTION_NODE:
+        {
+            const XalanDOMString&   data = node->getNodeValue();
 
-			assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
+            assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
 
-			m_formatterListener.cdata(
+            m_formatterListener.cdata(
                 data.c_str(),
                 static_cast<FormatterListener::size_type>(data.length()));
-		}
-		break;
+        }
+        break;
 
-	case XalanNode::TEXT_NODE:
-		{
-			const XalanDOMString&	data = node->getNodeValue();
+    case XalanNode::TEXT_NODE:
+        {
+            const XalanDOMString&   data = node->getNodeValue();
 
-			assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
+            assert(data.length() == static_cast<FormatterListener::size_type>(data.length()));
 
-			m_formatterListener.characters(
+            m_formatterListener.characters(
                 data.c_str(),
                 static_cast<FormatterListener::size_type>(data.length()));
-		}
-		break;
+        }
+        break;
 
-	case XalanNode::ENTITY_REFERENCE_NODE:
-		m_formatterListener.entityReference(node->getNodeName().c_str());
-		break;
+    case XalanNode::ENTITY_REFERENCE_NODE:
+        m_formatterListener.entityReference(node->getNodeName().c_str());
+        break;
 
-	default:
-		// Do nothing...
-		break;
-	}
+    default:
+        // Do nothing...
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-FormatterTreeWalker::startNode(XalanNode*	node)
+FormatterTreeWalker::startNode(XalanNode*   node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	return startNode(const_cast<const XalanNode*>(node));
+    return startNode(const_cast<const XalanNode*>(node));
 }
 
 
 
 bool
-FormatterTreeWalker::endNode(const XalanNode*	node)
+FormatterTreeWalker::endNode(const XalanNode*   node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	switch(node->getNodeType())
-	{
-	case XalanNode::DOCUMENT_NODE:
-		m_formatterListener.endDocument();
-		break;
+    switch(node->getNodeType())
+    {
+    case XalanNode::DOCUMENT_NODE:
+        m_formatterListener.endDocument();
+        break;
 
-	case XalanNode::ELEMENT_NODE:
+    case XalanNode::ELEMENT_NODE:
         m_formatterListener.endElement(node->getNodeName().c_str());
-		break;
+        break;
 
-	default:
-		// Do nothing
-		break;
-	}
+    default:
+        // Do nothing
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-FormatterTreeWalker::endNode(XalanNode*		node)
+FormatterTreeWalker::endNode(XalanNode*     node)
 {
-	return endNode(const_cast<const XalanNode*>(node));
+    return endNode(const_cast<const XalanNode*>(node));
 }
 
 

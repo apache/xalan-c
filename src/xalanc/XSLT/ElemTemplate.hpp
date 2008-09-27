@@ -46,122 +46,122 @@ public:
 
     typedef ElemTemplateElement ParentType;
 
-	/**
-	 * Construct an object corresponding to an "xsl:template" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemTemplate(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:template" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemTemplate(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemTemplate();
+    virtual
+    ~ElemTemplate();
 
-	/**
-	 * Retrieve the mode of element
-	 * 
-	 * @return QName for mode
-	 */
-	const XalanQName&
-	getMode() const
-	{
-		assert(m_mode != 0);
+    /**
+     * Retrieve the mode of element
+     * 
+     * @return QName for mode
+     */
+    const XalanQName&
+    getMode() const
+    {
+        assert(m_mode != 0);
 
-		return *m_mode;
-	}
+        return *m_mode;
+    }
 
-	/**
-	 * Retrieve the match pattern
-	 * 
-	 * @return XPath corresponding to the match pattern
-	 */
-	const XPath*
-	getMatchPattern() const
-	{
-		return m_matchPattern;
-	}
+    /**
+     * Retrieve the match pattern
+     * 
+     * @return XPath corresponding to the match pattern
+     */
+    const XPath*
+    getMatchPattern() const
+    {
+        return m_matchPattern;
+    }
 
-	/**
-	 * Retrieve the priority of element
-	 * 
-	 * @return priority value
-	 */
-	double
-	getPriority() const
-	{
-		return m_priority;
-	}
+    /**
+     * Retrieve the priority of element
+     * 
+     * @return priority value
+     */
+    double
+    getPriority() const
+    {
+        return m_priority;
+    }
 
-	virtual const XalanQName&
-	getNameAttribute() const;
+    virtual const XalanQName&
+    getNameAttribute() const;
 
-	virtual void
-	addToStylesheet(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						theStylesheet);
+    virtual void
+    addToStylesheet(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     theStylesheet);
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual const ElemTemplateElement*
-	getInvoker(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    getInvoker(StylesheetExecutionContext&  executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 
-	virtual void
-	executeChildren(StylesheetExecutionContext& 	executionContext) const;
+    virtual void
+    executeChildren(StylesheetExecutionContext&     executionContext) const;
 
-	virtual void
-	executeChildren(
-			StylesheetExecutionContext& 	executionContext,
-			XalanNode*						sourceNode) const;
+    virtual void
+    executeChildren(
+            StylesheetExecutionContext&     executionContext,
+            XalanNode*                      sourceNode) const;
     void
     executeAsNamed(StylesheetExecutionContext&  executionContext) const
     {
-	    ParentType::executeChildren(executionContext);
+        ParentType::executeChildren(executionContext);
     }
 #endif
 
-    virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 protected:
 
-	virtual bool
-	childTypeAllowed(int	xslToken) const;
+    virtual bool
+    childTypeAllowed(int    xslToken) const;
 
 private:
 
-	// not implemented
-	ElemTemplate(const ElemTemplate&);
+    // not implemented
+    ElemTemplate(const ElemTemplate&);
 
-	ElemTemplate&
-	operator=(const ElemTemplate&);
+    ElemTemplate&
+    operator=(const ElemTemplate&);
 
-	// Data members...
-	const XPath*		m_matchPattern;
+    // Data members...
+    const XPath*        m_matchPattern;
 
-	const XalanQName*	m_name;
-	const XalanQName*	m_mode;
+    const XalanQName*   m_name;
+    const XalanQName*   m_mode;
 
-	double				m_priority;
+    double              m_priority;
 };
 
 
@@ -170,4 +170,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMTEMPLATE_HEADER_GUARD
+#endif  // XALAN_ELEMTEMPLATE_HEADER_GUARD

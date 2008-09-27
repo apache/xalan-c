@@ -35,24 +35,24 @@ XalanNodeList::~XalanNodeList()
 
 
 
-XalanNodeList::XalanNodeList(const XalanNodeList&	/* theSource */)
+XalanNodeList::XalanNodeList(const XalanNodeList&   /* theSource */)
 {
 }
 
 
 
 XalanNodeList&
-XalanNodeList::operator=(const XalanNodeList&	/* theSource */)
+XalanNodeList::operator=(const XalanNodeList&   /* theSource */)
 {
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanNodeList::operator==(const XalanNodeList&	/* theRHS */) const
+XalanNodeList::operator==(const XalanNodeList&  /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

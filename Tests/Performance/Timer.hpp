@@ -32,7 +32,7 @@
 class Timer
 {
 public:
-    typedef XALAN_STD_QUALIFIER clock_t	TimerType;
+    typedef XALAN_STD_QUALIFIER clock_t TimerType;
 
     Timer() :
         m_startTime(0),

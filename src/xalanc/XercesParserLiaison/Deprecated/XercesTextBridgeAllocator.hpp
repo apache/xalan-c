@@ -45,81 +45,81 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextBridgeAllocator
 {
 public:
 
-	typedef XercesTextBridge			ObjectType;
+    typedef XercesTextBridge            ObjectType;
 
 
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-	typedef ArenaBlock<ObjectType>					ArenaBlockType;
+    typedef ArenaBlock<ObjectType>                  ArenaBlockType;
 
-	typedef ArenaAllocator<ObjectType,
-						   ArenaBlockType>			ArenaAllocatorType;
+    typedef ArenaAllocator<ObjectType,
+                           ArenaBlockType>          ArenaAllocatorType;
 #else
-	typedef ArenaAllocator<ObjectType>				ArenaAllocatorType;
+    typedef ArenaAllocator<ObjectType>              ArenaAllocatorType;
 #endif
 
-	typedef ArenaAllocatorType::size_type			size_type;
+    typedef ArenaAllocatorType::size_type           size_type;
 
-	/**
-	 * Construct an instance that will allocate blocks of the specified size.
-	 *
-	 * @param theBlockSize The block size.
-	 */
-	XercesTextBridgeAllocator(size_type	theBlockCount);
+    /**
+     * Construct an instance that will allocate blocks of the specified size.
+     *
+     * @param theBlockSize The block size.
+     */
+    XercesTextBridgeAllocator(size_type theBlockCount);
 
-	~XercesTextBridgeAllocator();
-	
-	/**
-	 * Create a XercesTextBridge instance.
-	 * 
-	 * @param theXercesText The Xerces text node
-	 * @param theNavigator The navigator for this instance.
-	 *
-	 * @return pointer to the instance
-	 */
-	ObjectType*
-	create(
-			const DOM_TextType&				theXercesText,
-			const XercesBridgeNavigator&	theNavigator);
+    ~XercesTextBridgeAllocator();
+    
+    /**
+     * Create a XercesTextBridge instance.
+     * 
+     * @param theXercesText The Xerces text node
+     * @param theNavigator The navigator for this instance.
+     *
+     * @return pointer to the instance
+     */
+    ObjectType*
+    create(
+            const DOM_TextType&             theXercesText,
+            const XercesBridgeNavigator&    theNavigator);
 
-	/**
-	 * Delete all objects from allocator.	 
-	 */	
-	void
-	reset();
+    /**
+     * Delete all objects from allocator.    
+     */ 
+    void
+    reset();
 
-	/**
-	 * Get size of an ArenaBlock, that is, the number
-	 * of objects in each block.
-	 *
-	 * @return The size of the block
-	 */
-	size_type
-	getBlockCount() const
-	{
-		return m_allocator.getBlockCount();
-	}
+    /**
+     * Get size of an ArenaBlock, that is, the number
+     * of objects in each block.
+     *
+     * @return The size of the block
+     */
+    size_type
+    getBlockCount() const
+    {
+        return m_allocator.getBlockCount();
+    }
 
-	/**
-	 * Get the number of ArenaBlocks currently allocated.
-	 *
-	 * @return The number of blocks.
-	 */
-	size_type
-	getBlockSize() const
-	{
-		return m_allocator.getBlockSize();
-	}
+    /**
+     * Get the number of ArenaBlocks currently allocated.
+     *
+     * @return The number of blocks.
+     */
+    size_type
+    getBlockSize() const
+    {
+        return m_allocator.getBlockSize();
+    }
 
 private:
 
-	// Not implemented...
-	XercesTextBridgeAllocator(const XercesTextBridgeAllocator&);
+    // Not implemented...
+    XercesTextBridgeAllocator(const XercesTextBridgeAllocator&);
 
-	XercesTextBridgeAllocator&
-	operator=(const XercesTextBridgeAllocator&);
+    XercesTextBridgeAllocator&
+    operator=(const XercesTextBridgeAllocator&);
 
-	// Data members...
-	ArenaAllocatorType	m_allocator;
+    // Data members...
+    ArenaAllocatorType  m_allocator;
 };
 
 
@@ -128,4 +128,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESTEXTBRIDGEALLOCATOR_INCLUDE_GUARD_12455133
+#endif  // XERCESTEXTBRIDGEALLOCATOR_INCLUDE_GUARD_12455133

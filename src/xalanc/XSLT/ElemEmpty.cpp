@@ -31,33 +31,33 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemEmpty::ElemEmpty(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			const XalanDOMString*			elementName) :
-	ElemTemplateElement(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            const XalanDOMString*           elementName) :
+    ElemTemplateElement(
         constructionContext,
-		stylesheetTree,
-		StylesheetConstructionContext::ELEMNAME_UNDEFINED,
+        stylesheetTree,
+        StylesheetConstructionContext::ELEMNAME_UNDEFINED,
         XalanDOMString(constructionContext.getMemoryManager()),
-		lineNumber,
-		columnNumber),
-	m_elementName(elementName)
+        lineNumber,
+        columnNumber),
+    m_elementName(elementName)
 {
 }
 
 
 
 ElemEmpty::ElemEmpty(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMString*			elementName) :
-	ElemTemplateElement(
-		constructionContext,
-		stylesheetTree,
-		StylesheetConstructionContext::ELEMNAME_UNDEFINED),
-	m_elementName(elementName)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMString*           elementName) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        StylesheetConstructionContext::ELEMNAME_UNDEFINED),
+    m_elementName(elementName)
 {
 }
 
@@ -65,7 +65,7 @@ ElemEmpty::ElemEmpty(
 
 ElemEmpty::~ElemEmpty()
 {
-	assert(getNextSiblingElem() == 0 && getFirstChildElem() == 0);
+    assert(getNextSiblingElem() == 0 && getFirstChildElem() == 0);
 }
 
 
@@ -73,39 +73,39 @@ ElemEmpty::~ElemEmpty()
 const XalanDOMString&
 ElemEmpty::getElementName() const
 {
-	return m_elementName != 0 ? *m_elementName : s_emptyString;
+    return m_elementName != 0 ? *m_elementName : s_emptyString;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemEmpty::startElement(StylesheetExecutionContext&		executionContext) const
+ElemEmpty::startElement(StylesheetExecutionContext&     executionContext) const
 {
-	assert(false);	// really shouldn't be executing empty nodes
+    assert(false);  // really shouldn't be executing empty nodes
 
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
-	return 0;
+    return 0;
 }
 #endif
 
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemEmpty::execute(StylesheetExecutionContext&		executionContext) const
+ElemEmpty::execute(StylesheetExecutionContext&      executionContext) const
 {
-	assert(false);	// really shouldn't be executing empty nodes
+    assert(false);  // really shouldn't be executing empty nodes
 
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 }
 #endif
 
 
 
 bool
-ElemEmpty::childTypeAllowed(int		/* xslToken */) const
+ElemEmpty::childTypeAllowed(int     /* xslToken */) const
 {
-	return false;
+    return false;
 }
 
 

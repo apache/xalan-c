@@ -42,20 +42,20 @@ class XALAN_XMLSUPPORT_EXPORT XMLSupportException : public XSLException
 {
 public:
 
-	/**
-	 * Construct an XML Support exception object
-	 * 
-	 * @param theMessage message to print when exception thrown
-	 */
-	XMLSupportException(
-            const XalanDOMString&	theMessage,
+    /**
+     * Construct an XML Support exception object
+     * 
+     * @param theMessage message to print when exception thrown
+     */
+    XMLSupportException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator);
 
     XMLSupportException(const XMLSupportException& other);
 
-	virtual
-	~XMLSupportException();
+    virtual
+    ~XMLSupportException();
 
 private:
 };
@@ -66,4 +66,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XMLSUPPORTEXCEPTION_HEADER_GUARD_1357924680
+#endif  // XMLSUPPORTEXCEPTION_HEADER_GUARD_1357924680

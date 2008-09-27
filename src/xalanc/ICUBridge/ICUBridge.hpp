@@ -41,24 +41,24 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
 
-	static const UnicodeString
-	XalanDOMCharStringToUnicodeString(MemoryManager&    theManager, 
-                                        const XalanDOMChar*	theString);
+    static const UnicodeString
+    XalanDOMCharStringToUnicodeString(MemoryManager&    theManager, 
+                                        const XalanDOMChar* theString);
 
-	static const UnicodeString
-	XalanDOMCharStringToUnicodeString(
+    static const UnicodeString
+    XalanDOMCharStringToUnicodeString(
             MemoryManager&          theManager,
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLHSLength);
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLHSLength);
 
-	static const UnicodeString
-	XalanDOMStringToUnicodeString(MemoryManager&            theManager, 
-                                    const XalanDOMString&		theString);
+    static const UnicodeString
+    XalanDOMStringToUnicodeString(MemoryManager&            theManager, 
+                                    const XalanDOMString&       theString);
 
-	static XalanDOMString&
-	UnicodeStringToXalanDOMString(
-			const UnicodeString&	theString,
-			XalanDOMString&			theResult);
+    static XalanDOMString&
+    UnicodeStringToXalanDOMString(
+            const UnicodeString&    theString,
+            XalanDOMString&         theResult);
 };
 
 
@@ -67,4 +67,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ICUBRIDGE_HEADER_GUARD_1357924680
+#endif  // ICUBRIDGE_HEADER_GUARD_1357924680

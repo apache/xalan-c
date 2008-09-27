@@ -48,12 +48,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesNamedNodeMapBridge::XercesNamedNodeMapBridge(
-			const DOM_NamedNodeMapType&		theXercesNamedNodeMap,
-			const XercesBridgeNavigator&	theNavigator) :
-	m_xercesNamedNodeMap(theXercesNamedNodeMap),
-	m_navigator(theNavigator)
+            const DOM_NamedNodeMapType&     theXercesNamedNodeMap,
+            const XercesBridgeNavigator&    theNavigator) :
+    m_xercesNamedNodeMap(theXercesNamedNodeMap),
+    m_navigator(theNavigator)
 {
-	assert(m_xercesNamedNodeMap != (const XERCES_CPP_NAMESPACE_QUALIFIER DOM_NullPtr*)0);
+    assert(m_xercesNamedNodeMap != (const XERCES_CPP_NAMESPACE_QUALIFIER DOM_NullPtr*)0);
 }
 
 
@@ -65,55 +65,55 @@ XercesNamedNodeMapBridge::~XercesNamedNodeMapBridge()
 
 
 XalanNode*
-XercesNamedNodeMapBridge::setNamedItem(XalanNode* 	arg)
+XercesNamedNodeMapBridge::setNamedItem(XalanNode*   arg)
 {
-	assert(arg != 0);
+    assert(arg != 0);
 
-	XalanNode*	theXalanNode = 0;
+    XalanNode*  theXalanNode = 0;
 
-	// Find the DOM_Node that corresponds to the bridge node...
-	const DOM_NodeType	theNode = m_navigator.mapNode(arg);
+    // Find the DOM_Node that corresponds to the bridge node...
+    const DOM_NodeType  theNode = m_navigator.mapNode(arg);
 
-	if (theNode.isNull() == true)
-	{
-		// Doesn't belong to this doc, so throw...
-		throw XercesDOMException(XercesDOMException::WRONG_DOCUMENT_ERR);
-	}
+    if (theNode.isNull() == true)
+    {
+        // Doesn't belong to this doc, so throw...
+        throw XercesDOMException(XercesDOMException::WRONG_DOCUMENT_ERR);
+    }
 
-	try
-	{
-		const DOM_NodeType	theOldXercesNode =
-			m_xercesNamedNodeMap.setNamedItem(theNode);
+    try
+    {
+        const DOM_NodeType  theOldXercesNode =
+            m_xercesNamedNodeMap.setNamedItem(theNode);
 
-		if (theNode.isNull() == false)
-		{
-			// A node was replaced, so map the replacement...
-			theXalanNode = m_navigator.mapNode(theOldXercesNode);
-			assert(theXalanNode != 0);
-		}
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        if (theNode.isNull() == false)
+        {
+            // A node was replaced, so map the replacement...
+            theXalanNode = m_navigator.mapNode(theOldXercesNode);
+            assert(theXalanNode != 0);
+        }
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanNode;
+    return theXalanNode;
 }
 
 
 
 XalanNode*
-XercesNamedNodeMapBridge::item(unsigned int	index) const
+XercesNamedNodeMapBridge::item(unsigned int index) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap.item(index));
+    return m_navigator.mapNode(m_xercesNamedNodeMap.item(index));
 }
 
 
 
 XalanNode*
-XercesNamedNodeMapBridge::getNamedItem(const XalanDOMString& 	name) const
+XercesNamedNodeMapBridge::getNamedItem(const XalanDOMString&    name) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(name.c_str()));
+    return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItem(name.c_str()));
 }
 
 
@@ -121,105 +121,105 @@ XercesNamedNodeMapBridge::getNamedItem(const XalanDOMString& 	name) const
 unsigned int
 XercesNamedNodeMapBridge::getLength() const
 {
-	return m_xercesNamedNodeMap.getLength();
+    return m_xercesNamedNodeMap.getLength();
 }
 
 
 
 XalanNode*
-XercesNamedNodeMapBridge::removeNamedItem(const XalanDOMString&		name)
+XercesNamedNodeMapBridge::removeNamedItem(const XalanDOMString&     name)
 {
-	XalanNode*	theXalanNode = 0;
+    XalanNode*  theXalanNode = 0;
 
-	try
-	{
-		const DOM_NodeType	theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItem(name.c_str());
+    try
+    {
+        const DOM_NodeType  theXercesNode =
+            m_xercesNamedNodeMap.removeNamedItem(name.c_str());
 
-		// A node was removed, so get it corresponding XalanNode...
-		theXalanNode = m_navigator.mapNode(theXercesNode);
-		assert(theXalanNode != 0);
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        // A node was removed, so get it corresponding XalanNode...
+        theXalanNode = m_navigator.mapNode(theXercesNode);
+        assert(theXalanNode != 0);
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanNode;
+    return theXalanNode;
 }
 
 
 
 XalanNode*
 XercesNamedNodeMapBridge::getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const
 {
-	return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(namespaceURI.c_str(), localName.c_str()));
+    return m_navigator.mapNode(m_xercesNamedNodeMap.getNamedItemNS(namespaceURI.c_str(), localName.c_str()));
 }
 
 
 
 XalanNode*
-XercesNamedNodeMapBridge::setNamedItemNS(XalanNode*		arg)
+XercesNamedNodeMapBridge::setNamedItemNS(XalanNode*     arg)
 {
-	assert(arg != 0);
+    assert(arg != 0);
 
-	XalanNode*	theXalanNode = 0;
+    XalanNode*  theXalanNode = 0;
 
-	// Find the DOM_Node that corresponds to the bridge node...
-	const DOM_NodeType	theNode = m_navigator.mapNode(arg);
+    // Find the DOM_Node that corresponds to the bridge node...
+    const DOM_NodeType  theNode = m_navigator.mapNode(arg);
 
-	if (theNode.isNull() == true)
-	{
-		// Doesn't belong to this doc, so throw...
-		throw XercesDOMException(XercesDOMException::WRONG_DOCUMENT_ERR);
-	}
+    if (theNode.isNull() == true)
+    {
+        // Doesn't belong to this doc, so throw...
+        throw XercesDOMException(XercesDOMException::WRONG_DOCUMENT_ERR);
+    }
 
-	try
-	{
-		const DOM_NodeType	theOldXercesNode =
-			m_xercesNamedNodeMap.setNamedItemNS(theNode);
+    try
+    {
+        const DOM_NodeType  theOldXercesNode =
+            m_xercesNamedNodeMap.setNamedItemNS(theNode);
 
-		if (theNode.isNull() == false)
-		{
-			// A node was replaced, so map the replacement...
-			theXalanNode = m_navigator.mapNode(theOldXercesNode);
-			assert(theXalanNode != 0);
-		}
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        if (theNode.isNull() == false)
+        {
+            // A node was replaced, so map the replacement...
+            theXalanNode = m_navigator.mapNode(theOldXercesNode);
+            assert(theXalanNode != 0);
+        }
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanNode;
+    return theXalanNode;
 }
 
 
 
 XalanNode*
 XercesNamedNodeMapBridge::removeNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName)
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName)
 {
-	XalanNode*	theXalanNode = 0;
+    XalanNode*  theXalanNode = 0;
 
-	try
-	{
-		const DOM_NodeType	theXercesNode =
-			m_xercesNamedNodeMap.removeNamedItemNS(namespaceURI.c_str(), localName.c_str());
+    try
+    {
+        const DOM_NodeType  theXercesNode =
+            m_xercesNamedNodeMap.removeNamedItemNS(namespaceURI.c_str(), localName.c_str());
 
-		// A node was removed, so get it corresponding XalanNode...
-		theXalanNode = m_navigator.mapNode(theXercesNode);
-		assert(theXalanNode != 0);
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        // A node was removed, so get it corresponding XalanNode...
+        theXalanNode = m_navigator.mapNode(theXercesNode);
+        assert(theXalanNode != 0);
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanNode;
+    return theXalanNode;
 }
 
 

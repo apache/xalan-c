@@ -45,9 +45,9 @@ XALAN_USING_XALAN(XalanDOMString)
 Logger::Logger(StreamType&  stream) :
     m_stream(stream)
 {
-	logText[eMessage] = "Message";
-	logText[eWarning] = "Warning";
-	logText[eError] = "Error";
+    logText[eMessage] = "Message";
+    logText[eWarning] = "Warning";
+    logText[eError] = "Error";
 }
 
 
@@ -55,7 +55,7 @@ Logger::Logger(StreamType&  stream) :
 Logger::StreamType&
 Logger::message()
 {
-	return log(eMessage);
+    return log(eMessage);
 }
 
 
@@ -63,7 +63,7 @@ Logger::message()
 Logger::StreamType& 
 Logger::warning()
 {
-	return log(eWarning);
+    return log(eWarning);
 }
 
 
@@ -71,7 +71,7 @@ Logger::warning()
 Logger::StreamType& 
 Logger::error()
 {
-	return log(eError);
+    return log(eError);
 }
 
 
@@ -85,13 +85,13 @@ Logger::log(eLogType    logType)
 #endif
 
     time_t theTime;
-	time(&theTime);
+    time(&theTime);
 
-	// Not thread safe
-	char* const timeStr = ctime(&theTime);
-	timeStr[24] = '\0';
+    // Not thread safe
+    char* const timeStr = ctime(&theTime);
+    timeStr[24] = '\0';
 
-	m_stream << timeStr
+    m_stream << timeStr
              << XALAN_STD_QUALIFIER setw(10)
              << logText[logType]
              << ": ";

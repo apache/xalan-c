@@ -69,73 +69,73 @@ XALAN_USING_XALAN(XSLTResultTarget)
 
 int
 transformXercesDOM(
-			XalanTransformer&				theTransformer,
-			const XalanDOMString&			theURI,
-			const XalanCompiledStylesheet*	theStylesheet,
-			const XSLTResultTarget&			theResultTarget)
+            XalanTransformer&               theTransformer,
+            const XalanDOMString&           theURI,
+            const XalanCompiledStylesheet*  theStylesheet,
+            const XSLTResultTarget&         theResultTarget)
 {
-	XALAN_USING_XERCES(URLInputSource)
+    XALAN_USING_XERCES(URLInputSource)
 
-	XALAN_USING_XALAN(XercesParserLiaison)
-	XALAN_USING_XALAN(XercesDOMSupport)
-	XALAN_USING_XALAN(XercesDOMWrapperParsedSource)
+    XALAN_USING_XALAN(XercesParserLiaison)
+    XALAN_USING_XALAN(XercesDOMSupport)
+    XALAN_USING_XALAN(XercesDOMWrapperParsedSource)
 
 
-	const URLInputSource	theInputSource(theURI.c_str());
+    const URLInputSource    theInputSource(theURI.c_str());
 
-	XercesParserLiaison::DOMParserType	theParser;
+    XercesParserLiaison::DOMParserType  theParser;
 
-	theParser.parse(theInputSource);
+    theParser.parse(theInputSource);
 
-	XercesParserLiaison		theParserLiaison;
-	XercesDOMSupport		theDOMSupport(theParserLiaison);
+    XercesParserLiaison     theParserLiaison;
+    XercesDOMSupport        theDOMSupport(theParserLiaison);
 
-	const XercesDOMWrapperParsedSource	theWrapper(
-				theParser.getDocument(),
-				theParserLiaison,
-				theDOMSupport,
-				theURI);
+    const XercesDOMWrapperParsedSource  theWrapper(
+                theParser.getDocument(),
+                theParserLiaison,
+                theDOMSupport,
+                theURI);
 
-	return theTransformer.transform(
-						theWrapper,
-						theStylesheet,
-						theResultTarget);
+    return theTransformer.transform(
+                        theWrapper,
+                        theStylesheet,
+                        theResultTarget);
 }
 
 
 
 int
 transformXalanSourceTree(
-			XalanTransformer&				theTransformer,
-			const XalanDOMString&			theURI,
-			const XalanCompiledStylesheet*	theStylesheet,
-			const XSLTResultTarget&			theResultTarget)
+            XalanTransformer&               theTransformer,
+            const XalanDOMString&           theURI,
+            const XalanCompiledStylesheet*  theStylesheet,
+            const XSLTResultTarget&         theResultTarget)
 {
-	XALAN_USING_XERCES(URLInputSource)
+    XALAN_USING_XERCES(URLInputSource)
 
-	XALAN_USING_XALAN(XalanDocument)
-	XALAN_USING_XALAN(XalanSourceTreeDocument)
-	XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-	XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-	XALAN_USING_XALAN(XalanSourceTreeWrapperParsedSource)
+    XALAN_USING_XALAN(XalanDocument)
+    XALAN_USING_XALAN(XalanSourceTreeDocument)
+    XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+    XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+    XALAN_USING_XALAN(XalanSourceTreeWrapperParsedSource)
 
 
-	const URLInputSource			theInputSource(theURI.c_str());
+    const URLInputSource            theInputSource(theURI.c_str());
 
-	XalanSourceTreeParserLiaison	theParserLiaison;
-	XalanSourceTreeDOMSupport		theDOMSupport(theParserLiaison);
+    XalanSourceTreeParserLiaison    theParserLiaison;
+    XalanSourceTreeDOMSupport       theDOMSupport(theParserLiaison);
 
-	XalanDocument* const	theDocument = theParserLiaison.parseXMLStream(theInputSource, theURI);
+    XalanDocument* const    theDocument = theParserLiaison.parseXMLStream(theInputSource, theURI);
 
-	XalanSourceTreeDocument* const	theSourceTreeDocument = theParserLiaison.mapDocument(theDocument);
-	assert(theSourceTreeDocument != 0);
+    XalanSourceTreeDocument* const  theSourceTreeDocument = theParserLiaison.mapDocument(theDocument);
+    assert(theSourceTreeDocument != 0);
 
-	XalanSourceTreeWrapperParsedSource	theWrapper(theSourceTreeDocument, theParserLiaison, theDOMSupport, theURI);
+    XalanSourceTreeWrapperParsedSource  theWrapper(theSourceTreeDocument, theParserLiaison, theDOMSupport, theURI);
 
-	return theTransformer.transform(
-						theWrapper,
-						theStylesheet,
-						theResultTarget);
+    return theTransformer.transform(
+                        theWrapper,
+                        theStylesheet,
+                        theResultTarget);
 }
 
 
@@ -143,62 +143,62 @@ transformXalanSourceTree(
 int
 transform()
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(cout)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(cout)
+    XALAN_USING_STD(endl)
 
-	int		theResult = -1;
+    int     theResult = -1;
 
-	try
-	{
-		// Create a XalanTransformer.
-		XalanTransformer	theTransformer;
+    try
+    {
+        // Create a XalanTransformer.
+        XalanTransformer    theTransformer;
 
-		const XSLTInputSource	theStylesheetInputSource("foo.xsl");
+        const XSLTInputSource   theStylesheetInputSource("foo.xsl");
 
-		// Let's compile the stylesheet and re-use it...
-		const XalanCompiledStylesheet*		theStylesheet = 0;
+        // Let's compile the stylesheet and re-use it...
+        const XalanCompiledStylesheet*      theStylesheet = 0;
 
-		if (theTransformer.compileStylesheet(theStylesheetInputSource, theStylesheet) != 0)
-		{
-			cerr << "An error occurred compiling the stylesheet: "
-				 << theTransformer.getLastError()
-				 << endl;
-		}
-		else
-		{
-			XALAN_USING_XALAN(URISupport)
+        if (theTransformer.compileStylesheet(theStylesheetInputSource, theStylesheet) != 0)
+        {
+            cerr << "An error occurred compiling the stylesheet: "
+                 << theTransformer.getLastError()
+                 << endl;
+        }
+        else
+        {
+            XALAN_USING_XALAN(URISupport)
 
-			assert(theStylesheet != 0);
+            assert(theStylesheet != 0);
 
-			const XalanDOMString	theInputFile("foo.xml");
+            const XalanDOMString    theInputFile("foo.xml");
 
-			XalanDOMString	theURI;
+            XalanDOMString  theURI;
             URISupport::getURLStringFromString(theInputFile, theURI);
 
-			const XSLTResultTarget	theResultTarget(cout);
+            const XSLTResultTarget  theResultTarget(cout);
 
-			theResult = transformXercesDOM(theTransformer, theURI, theStylesheet, theResultTarget);
+            theResult = transformXercesDOM(theTransformer, theURI, theStylesheet, theResultTarget);
 
-			if (theResult == 0)
-			{
-				cout << endl;
+            if (theResult == 0)
+            {
+                cout << endl;
 
-				theResult = transformXalanSourceTree(theTransformer, theURI, theStylesheet, theResultTarget);
-			}
+                theResult = transformXalanSourceTree(theTransformer, theURI, theStylesheet, theResultTarget);
+            }
 
-			if (theResult != 0)
-			{
-				cerr << "Transformation failed: " << theTransformer.getLastError() << endl;
-			}
-		}
-	}
-	catch(...)
-	{
-		cerr << "An unknown error occurred!" << endl;
-	}
+            if (theResult != 0)
+            {
+                cerr << "Transformation failed: " << theTransformer.getLastError() << endl;
+            }
+        }
+    }
+    catch(...)
+    {
+        cerr << "An unknown error occurred!" << endl;
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -207,46 +207,46 @@ transform()
 // instances can be wrapped to use as input for to an instance of XalanTransformer.
 int
 main(
-			int		 argc,
-			char*	/* argv */[])
+            int      argc,
+            char*   /* argv */[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int		theResult = -1;
+    int     theResult = -1;
 
     if (argc != 1)
-	{
-		cerr << "Usage: ParsedSourceWrappers" << endl;
-	}
-	else
-	{
-		try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+    {
+        cerr << "Usage: ParsedSourceWrappers" << endl;
+    }
+    else
+    {
+        try
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
 
-			// Call the static initializer for Xerces.
-			XMLPlatformUtils::Initialize();
+            // Call the static initializer for Xerces.
+            XMLPlatformUtils::Initialize();
 
-			// Initialize Xalan.
-			XalanTransformer::initialize();
+            // Initialize Xalan.
+            XalanTransformer::initialize();
 
-			theResult = transform();
+            theResult = transform();
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
+            // Terminate Xalan...
+            XalanTransformer::terminate();
 
-			// Terminate Xerces...
-			XMLPlatformUtils::Terminate();
+            // Terminate Xerces...
+            XMLPlatformUtils::Terminate();
 
-			// Clean up the ICU, if it's integrated...
-			XalanTransformer::ICUCleanUp();
-		}
-		catch(...)
-		{
-			cerr << "Initialization failed!" << endl;
-		}
-	}
+            // Clean up the ICU, if it's integrated...
+            XalanTransformer::ICUCleanUp();
+        }
+        catch(...)
+        {
+            cerr << "Initialization failed!" << endl;
+        }
+    }
 
-	return theResult;
+    return theResult;
 }

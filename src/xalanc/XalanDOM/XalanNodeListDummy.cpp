@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanNodeListDummy::XalanNodeListDummy() :
-	XalanNodeList()
+    XalanNodeList()
 {
 }
 
@@ -37,9 +37,9 @@ XalanNodeListDummy::~XalanNodeListDummy()
 
 
 XalanNode*
-XalanNodeListDummy::item(XalanSize_t	/* index */) const
+XalanNodeListDummy::item(XalanSize_t    /* index */) const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -47,7 +47,7 @@ XalanNodeListDummy::item(XalanSize_t	/* index */) const
 XalanSize_t
 XalanNodeListDummy::getLength() const
 {
-	return 0;
+    return 0;
 }
 
 

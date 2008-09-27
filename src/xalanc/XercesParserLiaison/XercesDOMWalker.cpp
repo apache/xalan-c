@@ -46,259 +46,259 @@ XercesDOMWalker::~XercesDOMWalker()
 
 
 const DOMNodeType*
-XercesDOMWalker::traverse(const DOMNodeType*	pos)
+XercesDOMWalker::traverse(const DOMNodeType*    pos)
 {
-	assert(pos != 0);
+    assert(pos != 0);
 
-	const DOMNodeType*	thePos = pos;
+    const DOMNodeType*  thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(thePos != 0 && fStop == false)
-	{
-		fStop = startNode(thePos);
+    while(thePos != 0 && fStop == false)
+    {
+        fStop = startNode(thePos);
 
-		const DOMNodeType*	nextNode = thePos->getFirstChild();
+        const DOMNodeType*  nextNode = thePos->getFirstChild();
 
-		while(nextNode == 0)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(nextNode == 0)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos->getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos->getParentNode();
 
-				if(thePos == 0)
-				{
-					nextNode = thePos;
+                if(thePos == 0)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 DOMNodeType*
-XercesDOMWalker::traverse(DOMNodeType*	pos)
+XercesDOMWalker::traverse(DOMNodeType*  pos)
 {
-	assert(pos != 0);
+    assert(pos != 0);
 
-	DOMNodeType*	thePos = pos;
+    DOMNodeType*    thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(thePos != 0 && fStop == false)
-	{
-		fStop = startNode(thePos);
+    while(thePos != 0 && fStop == false)
+    {
+        fStop = startNode(thePos);
 
-		DOMNodeType*	nextNode = thePos->getFirstChild();
+        DOMNodeType*    nextNode = thePos->getFirstChild();
 
-		while(nextNode == 0)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(nextNode == 0)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos->getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos->getParentNode();
 
-				if(thePos == 0)
-				{
-					nextNode = thePos;
+                if(thePos == 0)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 const DOMNodeType*
 XercesDOMWalker::traverse(
-			const DOMNodeType*	pos,
-			const DOMNodeType*	parent)
+            const DOMNodeType*  pos,
+            const DOMNodeType*  parent)
 {
-	assert(pos != 0);
-	assert(parent != 0);
+    assert(pos != 0);
+    assert(parent != 0);
 
-	const DOMNodeType*	thePos = pos;
+    const DOMNodeType*  thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(parent != thePos && fStop == false)
-	{
-		fStop = startNode(thePos);
-	  
-		const DOMNodeType*	nextNode = thePos->getFirstChild();
+    while(parent != thePos && fStop == false)
+    {
+        fStop = startNode(thePos);
+      
+        const DOMNodeType*  nextNode = thePos->getFirstChild();
 
-		while(nextNode == 0)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(nextNode == 0)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos->getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos->getParentNode();
 
-				if(parent == thePos)
-				{
-					nextNode = thePos;
+                if(parent == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 DOMNodeType*
 XercesDOMWalker::traverse(
-			DOMNodeType*	pos,
-			DOMNodeType*	parent)
+            DOMNodeType*    pos,
+            DOMNodeType*    parent)
 {
-	assert(pos != 0);
-	assert(parent != 0);
+    assert(pos != 0);
+    assert(parent != 0);
 
-	DOMNodeType*	thePos = pos;
+    DOMNodeType*    thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(parent != thePos && fStop == false)
-	{
-		fStop = startNode(thePos);
-	  
-		DOMNodeType*	nextNode = thePos->getFirstChild();
+    while(parent != thePos && fStop == false)
+    {
+        fStop = startNode(thePos);
+      
+        DOMNodeType*    nextNode = thePos->getFirstChild();
 
-		while(nextNode == 0)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(nextNode == 0)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos->getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos->getParentNode();
 
-				if(parent == thePos)
-				{
-					nextNode = thePos;
+                if(parent == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 void
-XercesDOMWalker::traverseSubtree(const DOMNodeType*		pos)
+XercesDOMWalker::traverseSubtree(const DOMNodeType*     pos)
 {
-	if (pos != 0)
-	{
-		startNode(pos);
+    if (pos != 0)
+    {
+        startNode(pos);
 
-		const DOMNodeType* const	theFirstChild = pos->getFirstChild();
+        const DOMNodeType* const    theFirstChild = pos->getFirstChild();
 
-		if (theFirstChild != 0)
-		{
-			traverse(theFirstChild, pos);
-		}
+        if (theFirstChild != 0)
+        {
+            traverse(theFirstChild, pos);
+        }
 
-		endNode(pos);
-	}
+        endNode(pos);
+    }
 }
 
 
 
 void
-XercesDOMWalker::traverseSubtree(DOMNodeType*	pos)
+XercesDOMWalker::traverseSubtree(DOMNodeType*   pos)
 {
-	if (pos != 0)
-	{
-		startNode(pos);
+    if (pos != 0)
+    {
+        startNode(pos);
 
-		DOMNodeType* const	theFirstChild = pos->getFirstChild();
+        DOMNodeType* const  theFirstChild = pos->getFirstChild();
 
-		if (theFirstChild != 0)
-		{
-			traverse(theFirstChild, pos);
-		}
+        if (theFirstChild != 0)
+        {
+            traverse(theFirstChild, pos);
+        }
 
-		endNode(pos);
-	}
+        endNode(pos);
+    }
 }
 
 
 
 bool
-XercesDOMWalker::startNode(DOMNodeType*		node)
+XercesDOMWalker::startNode(DOMNodeType*     node)
 {
-	return startNode(const_cast<const DOMNodeType*>(node));
+    return startNode(const_cast<const DOMNodeType*>(node));
 }
 
 
 
 bool
-XercesDOMWalker::endNode(DOMNodeType*	node)
+XercesDOMWalker::endNode(DOMNodeType*   node)
 {
-	return endNode(const_cast<const DOMNodeType*>(node));
+    return endNode(const_cast<const DOMNodeType*>(node));
 }
 
 

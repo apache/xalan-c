@@ -40,83 +40,83 @@ class ElemApplyTemplates : public ElemForEach
 {
 public:
 
-	typedef ElemForEach		ParentType;
+    typedef ElemForEach     ParentType;
 
-	/**
-	 * Construct an object corresponding to an "xsl:apply-template" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemApplyTemplates(
-			StylesheetConstructionContext&  constructionContext,
-			Stylesheet&                     stylesheetTree,
-			const AttributeListType&        atts,
-			XalanFileLoc                    lineNumber, 
-			XalanFileLoc                    columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:apply-template" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemApplyTemplates(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
     virtual
     ~ElemApplyTemplates();
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual const XalanDOMString&
-	getElementName() const;
+    // These methods are inherited from ElemTemplateElement ...
+    
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual const ElemTemplateElement*
-	getNextChildElemToExecute(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		currentElem) const;
+    virtual const ElemTemplateElement*
+    getNextChildElemToExecute(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      currentElem) const;
 
-	virtual const ElemTemplateElement*
-	getFirstChildElemToExecute(
-			StylesheetExecutionContext&		executionContext) const;
+    virtual const ElemTemplateElement*
+    getFirstChildElemToExecute(
+            StylesheetExecutionContext&     executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 
 
 protected:
 
-	virtual bool
-	childTypeAllowed(int	xslToken) const;
+    virtual bool
+    childTypeAllowed(int    xslToken) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	const ElemTemplateElement*
-	findNextTemplateToExecute(StylesheetExecutionContext& executionContext) const;
+    const ElemTemplateElement*
+    findNextTemplateToExecute(StylesheetExecutionContext& executionContext) const;
 #else
-	virtual void
-	transformChild(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						child) const;
+    virtual void
+    transformChild(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement&      xslInstruction,
+            const ElemTemplateElement*      theTemplate,
+            XalanNode*                      child) const;
 
-	using ParentType::transformChild;
+    using ParentType::transformChild;
 
-	virtual void
-	selectAndSortChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		theTemplate,
-			NodeSorter*						sorter,
-			int								selectStackFrameIndex) const;
+    virtual void
+    selectAndSortChildren(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      theTemplate,
+            NodeSorter*                     sorter,
+            int                             selectStackFrameIndex) const;
 #endif
 
 private:
 
-	const XalanQName*	m_mode;
+    const XalanQName*   m_mode;
 };
 
 
@@ -125,4 +125,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMAPPLYTEMPLATES_HEADER_GUARD
+#endif  // XALAN_ELEMAPPLYTEMPLATES_HEADER_GUARD

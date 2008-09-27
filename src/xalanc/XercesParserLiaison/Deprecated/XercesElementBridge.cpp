@@ -44,15 +44,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesElementBridge::XercesElementBridge(
-			const DOM_ElementType&			theXercesElement,
-			const XercesBridgeNavigator&	theNavigator) :
-	XalanElement(),
-	m_xercesNode(theXercesElement),
-	m_navigator(theNavigator),
-	m_children(theXercesElement.getChildNodes(),
-			   theNavigator),
-	m_attributes(theXercesElement.getAttributes(),
-				 theNavigator)
+            const DOM_ElementType&          theXercesElement,
+            const XercesBridgeNavigator&    theNavigator) :
+    XalanElement(),
+    m_xercesNode(theXercesElement),
+    m_navigator(theNavigator),
+    m_children(theXercesElement.getChildNodes(),
+               theNavigator),
+    m_attributes(theXercesElement.getAttributes(),
+                 theNavigator)
 {
 }
 
@@ -67,7 +67,7 @@ XercesElementBridge::~XercesElementBridge()
 const XalanDOMString&
 XercesElementBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeNameImpl());
+    return m_navigator.getPooledString(m_xercesNode.getNodeNameImpl());
 }
 
 
@@ -75,7 +75,7 @@ XercesElementBridge::getNodeName() const
 const XalanDOMString&
 XercesElementBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValueImpl());
+    return m_navigator.getPooledString(m_xercesNode.getNodeValueImpl());
 }
 
 
@@ -83,7 +83,7 @@ XercesElementBridge::getNodeValue() const
 XercesElementBridge::NodeType
 XercesElementBridge::getNodeType() const
 {
-	return ELEMENT_NODE;
+    return ELEMENT_NODE;
 }
 
 
@@ -91,7 +91,7 @@ XercesElementBridge::getNodeType() const
 XalanNode*
 XercesElementBridge::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -99,7 +99,7 @@ XercesElementBridge::getParentNode() const
 const XalanNodeList*
 XercesElementBridge::getChildNodes() const
 {
-	return &m_children;
+    return &m_children;
 }
 
 
@@ -107,7 +107,7 @@ XercesElementBridge::getChildNodes() const
 XalanNode*
 XercesElementBridge::getFirstChild() const
 {
-	return m_navigator.getFirstChild(m_xercesNode);
+    return m_navigator.getFirstChild(m_xercesNode);
 }
 
 
@@ -115,7 +115,7 @@ XercesElementBridge::getFirstChild() const
 XalanNode*
 XercesElementBridge::getLastChild() const
 {
-	return m_navigator.getLastChild(m_xercesNode);
+    return m_navigator.getLastChild(m_xercesNode);
 }
 
 
@@ -123,7 +123,7 @@ XercesElementBridge::getLastChild() const
 XalanNode*
 XercesElementBridge::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -131,7 +131,7 @@ XercesElementBridge::getPreviousSibling() const
 XalanNode*
 XercesElementBridge::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -139,7 +139,7 @@ XercesElementBridge::getNextSibling() const
 const XalanNamedNodeMap*
 XercesElementBridge::getAttributes() const
 {
-	return &m_attributes;
+    return &m_attributes;
 }
 
 
@@ -147,7 +147,7 @@ XercesElementBridge::getAttributes() const
 XalanDocument*
 XercesElementBridge::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -160,12 +160,12 @@ XercesElementBridge*
 XercesElementBridge::cloneNode(bool deep) const
 {
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return m_navigator.cloneNode(this, m_xercesNode, deep);
+    return m_navigator.cloneNode(this, m_xercesNode, deep);
 #else
-	XercesElementBridge* const	theBridge =
-		static_cast<XercesElementBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
+    XercesElementBridge* const  theBridge =
+        static_cast<XercesElementBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
-	return theBridge;
+    return theBridge;
 #endif
 }
 
@@ -173,36 +173,36 @@ XercesElementBridge::cloneNode(bool deep) const
 
 XalanNode*
 XercesElementBridge::insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild)
+            XalanNode*  newChild,
+            XalanNode*  refChild)
 {
-	return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
+    return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
 }
 
 
 
 XalanNode*
 XercesElementBridge::replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild)
+            XalanNode*  newChild,
+            XalanNode*  oldChild)
 {
-	return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
+    return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
 }
 
 
 
 XalanNode*
-XercesElementBridge::removeChild(XalanNode*	oldChild)
+XercesElementBridge::removeChild(XalanNode* oldChild)
 {
-	return m_navigator.removeChild(m_xercesNode, oldChild);
+    return m_navigator.removeChild(m_xercesNode, oldChild);
 }
 
 
 
 XalanNode*
-XercesElementBridge::appendChild(XalanNode*	newChild)
+XercesElementBridge::appendChild(XalanNode* newChild)
 {
-	return m_navigator.appendChild(m_xercesNode, newChild);
+    return m_navigator.appendChild(m_xercesNode, newChild);
 }
 
 
@@ -210,15 +210,15 @@ XercesElementBridge::appendChild(XalanNode*	newChild)
 bool
 XercesElementBridge::hasChildNodes() const
 {
-	return m_xercesNode.hasChildNodes();
+    return m_xercesNode.hasChildNodes();
 }
 
 
 
 void
-XercesElementBridge::setNodeValue(const XalanDOMString&		nodeValue)
+XercesElementBridge::setNodeValue(const XalanDOMString&     nodeValue)
 {
-	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
+    XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -226,18 +226,18 @@ XercesElementBridge::setNodeValue(const XalanDOMString&		nodeValue)
 void
 XercesElementBridge::normalize()
 {
-	XercesBridgeHelper::normalize(m_xercesNode);
+    XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
 bool
 XercesElementBridge::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) const
 {
-	return m_xercesNode.isSupported(
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
+    return m_xercesNode.isSupported(
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
@@ -245,7 +245,7 @@ XercesElementBridge::isSupported(
 const XalanDOMString&
 XercesElementBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURIImpl());
+    return m_navigator.getPooledString(m_xercesNode.getNamespaceURIImpl());
 }
 
 
@@ -253,7 +253,7 @@ XercesElementBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesElementBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefixImpl());
+    return m_navigator.getPooledString(m_xercesNode.getPrefixImpl());
 }
 
 
@@ -261,15 +261,15 @@ XercesElementBridge::getPrefix() const
 const XalanDOMString&
 XercesElementBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalNameImpl());
+    return m_navigator.getPooledString(m_xercesNode.getLocalNameImpl());
 }
 
 
 
 void
-XercesElementBridge::setPrefix(const XalanDOMString&	prefix)
+XercesElementBridge::setPrefix(const XalanDOMString&    prefix)
 {
-	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
+    XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -277,7 +277,7 @@ XercesElementBridge::setPrefix(const XalanDOMString&	prefix)
 bool
 XercesElementBridge::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -285,7 +285,7 @@ XercesElementBridge::isIndexed() const
 XercesElementBridge::IndexType
 XercesElementBridge::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 
@@ -293,225 +293,225 @@ XercesElementBridge::getIndex() const
 const XalanDOMString&
 XercesElementBridge::getTagName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getTagNameImpl());
+    return m_navigator.getPooledString(m_xercesNode.getTagNameImpl());
 }
 
 
 
 const XalanDOMString&
-XercesElementBridge::getAttribute(const XalanDOMString&		name) const
+XercesElementBridge::getAttribute(const XalanDOMString&     name) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(name.c_str()));
+    return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(name.c_str()));
 }
 
 
 
 XalanAttr*
-XercesElementBridge::getAttributeNode(const XalanDOMString&		name) const
+XercesElementBridge::getAttributeNode(const XalanDOMString&     name) const
 {
-	return static_cast<XalanAttr*>(m_attributes.getNamedItem(name));
+    return static_cast<XalanAttr*>(m_attributes.getNamedItem(name));
 }
 
 
 
 XalanNodeList*
-XercesElementBridge::getElementsByTagName(const XalanDOMString&		/* name */) const
+XercesElementBridge::getElementsByTagName(const XalanDOMString&     /* name */) const
 {
-	// Not supported...
-	return 0;
+    // Not supported...
+    return 0;
 }
 
 
 
 void
 XercesElementBridge::setAttribute(
-			const XalanDOMString&	name, 
-			const XalanDOMString&	value)
+            const XalanDOMString&   name, 
+            const XalanDOMString&   value)
 {
-	try
-	{
-		m_xercesNode.setAttribute(name.c_str(), value.c_str());
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+    try
+    {
+        m_xercesNode.setAttribute(name.c_str(), value.c_str());
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 XalanAttr*
-XercesElementBridge::setAttributeNode(XalanAttr*	newAttr)
+XercesElementBridge::setAttributeNode(XalanAttr*    newAttr)
 {
-	assert(newAttr != 0);
+    assert(newAttr != 0);
 
-	const DOM_AttrType	theXercesAttrNode =
-			m_navigator.mapNode(newAttr);
-	assert(theXercesAttrNode.isNull() == false);
+    const DOM_AttrType  theXercesAttrNode =
+            m_navigator.mapNode(newAttr);
+    assert(theXercesAttrNode.isNull() == false);
 
-	XalanAttr*	theXalanAttrResult = 0;
+    XalanAttr*  theXalanAttrResult = 0;
 
-	try
-	{
-		const DOM_AttrType	theXercesAttrResult =
-			m_xercesNode.setAttributeNode(theXercesAttrNode);
+    try
+    {
+        const DOM_AttrType  theXercesAttrResult =
+            m_xercesNode.setAttributeNode(theXercesAttrNode);
 
-		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanAttrResult;
+    return theXalanAttrResult;
 }
 
 
 
 XalanAttr*
-XercesElementBridge::removeAttributeNode(XalanAttr*		oldAttr)
+XercesElementBridge::removeAttributeNode(XalanAttr*     oldAttr)
 {
-	assert(oldAttr != 0);
+    assert(oldAttr != 0);
 
-	const DOM_AttrType	theXercesAttrNode =
-			m_navigator.mapNode(oldAttr);
-	assert(theXercesAttrNode.isNull() == false);
+    const DOM_AttrType  theXercesAttrNode =
+            m_navigator.mapNode(oldAttr);
+    assert(theXercesAttrNode.isNull() == false);
 
-	XalanAttr*	theXalanAttrResult = 0;
+    XalanAttr*  theXalanAttrResult = 0;
 
-	try
-	{
-		const DOM_AttrType	theXercesAttrResult =
-			m_xercesNode.removeAttributeNode(theXercesAttrNode);
+    try
+    {
+        const DOM_AttrType  theXercesAttrResult =
+            m_xercesNode.removeAttributeNode(theXercesAttrNode);
 
-		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanAttrResult;
+    return theXalanAttrResult;
 }
 
 
 
 void
-XercesElementBridge::removeAttribute(const XalanDOMString&	name)
+XercesElementBridge::removeAttribute(const XalanDOMString&  name)
 {
-	try
-	{
-		m_xercesNode.removeAttribute(name.c_str());
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+    try
+    {
+        m_xercesNode.removeAttribute(name.c_str());
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 const XalanDOMString&
 XercesElementBridge::getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(namespaceURI.c_str(), localName.c_str()));
+    return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(namespaceURI.c_str(), localName.c_str()));
 }
 
 
 
 void
 XercesElementBridge::setAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	value)
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   qualifiedName,
+            const XalanDOMString&   value)
 {
-	try
-	{
-		m_xercesNode.setAttributeNS(namespaceURI.c_str(), qualifiedName.c_str(), value.c_str());
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+    try
+    {
+        m_xercesNode.setAttributeNS(namespaceURI.c_str(), qualifiedName.c_str(), value.c_str());
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 void
 XercesElementBridge::removeAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName)
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName)
 {
-	try
-	{
-		m_xercesNode.removeAttributeNS(namespaceURI.c_str(), localName.c_str());
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+    try
+    {
+        m_xercesNode.removeAttributeNS(namespaceURI.c_str(), localName.c_str());
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 }
 
 
 
 XalanAttr*
 XercesElementBridge::getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const
 {
-	const DOM_AttrType	theAttrNode =
-		m_xercesNode.getAttributeNodeNS(namespaceURI.c_str(), localName.c_str());
+    const DOM_AttrType  theAttrNode =
+        m_xercesNode.getAttributeNodeNS(namespaceURI.c_str(), localName.c_str());
 
-	if (theAttrNode.isNull() == true)
-	{
-		return 0;
-	}
-	else
-	{
-		return m_navigator.mapNode(theAttrNode);
-	}
+    if (theAttrNode.isNull() == true)
+    {
+        return 0;
+    }
+    else
+    {
+        return m_navigator.mapNode(theAttrNode);
+    }
 }
 
 
 
 XalanAttr*
-XercesElementBridge::setAttributeNodeNS(XalanAttr*	newAttr)
+XercesElementBridge::setAttributeNodeNS(XalanAttr*  newAttr)
 {
-	assert(newAttr != 0);
+    assert(newAttr != 0);
 
 
-	const DOM_AttrType	theXercesAttrNode =
-			m_navigator.mapNode(newAttr);
-	assert(theXercesAttrNode.isNull() == false);
+    const DOM_AttrType  theXercesAttrNode =
+            m_navigator.mapNode(newAttr);
+    assert(theXercesAttrNode.isNull() == false);
 
-	XalanAttr*	theXalanAttrResult = 0;
+    XalanAttr*  theXalanAttrResult = 0;
 
-	try
-	{
-		const DOM_AttrType	theXercesAttrResult =
-			m_xercesNode.setAttributeNodeNS(theXercesAttrNode);
+    try
+    {
+        const DOM_AttrType  theXercesAttrResult =
+            m_xercesNode.setAttributeNodeNS(theXercesAttrNode);
 
-		theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
-	}
-	catch(const DOM_DOMExceptionType&	theException)
-	{
-		throw XercesDOMException(theException);
-	}
+        theXalanAttrResult = m_navigator.mapNode(theXercesAttrResult);
+    }
+    catch(const DOM_DOMExceptionType&   theException)
+    {
+        throw XercesDOMException(theException);
+    }
 
-	return theXalanAttrResult;
+    return theXalanAttrResult;
 }
 
 
 
 XalanNodeList*
 XercesElementBridge::getElementsByTagNameNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
+            const XalanDOMString&   /* namespaceURI */,
+            const XalanDOMString&   /* localName */) const
 {
-	// Not supported...
-	return 0;
+    // Not supported...
+    return 0;
 }
 
 

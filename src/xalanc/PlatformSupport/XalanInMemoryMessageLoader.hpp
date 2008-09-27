@@ -34,36 +34,36 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-class XALAN_PLATFORMSUPPORT_EXPORT XalanInMemoryMessageLoader :	public XalanMessageLoader
+class XALAN_PLATFORMSUPPORT_EXPORT XalanInMemoryMessageLoader : public XalanMessageLoader
 {
 public:
 
-	XalanInMemoryMessageLoader(MemoryManager& theManager);
+    XalanInMemoryMessageLoader(MemoryManager& theManager);
 
-	virtual
-	~XalanInMemoryMessageLoader();
+    virtual
+    ~XalanInMemoryMessageLoader();
 
 
 protected:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Implementation of the virtual message loader API
     // -----------------------------------------------------------------------
     virtual bool
     loadMsg(
-            XalanMessages::Codes	msgToLoad,
-            XalanDOMChar*			toFill,
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMChar*           toFill,
             XalanSize_t             maxChars
     );
 
 
 private:
 
-	XalanInMemoryMessageLoader(const XalanInMemoryMessageLoader&);
+    XalanInMemoryMessageLoader(const XalanInMemoryMessageLoader&);
 
-	XalanInMemoryMessageLoader&
-	operator=(const XalanInMemoryMessageLoader&);
+    XalanInMemoryMessageLoader&
+    operator=(const XalanInMemoryMessageLoader&);
 
-	const XalanDOMString	m_unknownMessage;
+    const XalanDOMString    m_unknownMessage;
 };
 
 
@@ -73,4 +73,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// MSGLOADER_HEADER_GUARD_1357924680
+#endif  // MSGLOADER_HEADER_GUARD_1357924680

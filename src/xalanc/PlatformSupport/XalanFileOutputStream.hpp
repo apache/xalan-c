@@ -46,106 +46,106 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStream : public XalanOutputStr
 {
 public :
 
-	enum { eDefaultBufferSize = 8192u };
+    enum { eDefaultBufferSize = 8192u };
 
 #if defined(XALAN_WINDOWS)
-	typedef HANDLE	HandleType;
+    typedef HANDLE  HandleType;
 #else
-	typedef FILE*	HandleType;
+    typedef FILE*   HandleType;
 #endif
 
-	/**
-	 * Construct an XalanFileOutputStream object.
-	 * 
-	 * @param theFileName name of file
-	 * @param theBufferSize The size of the transcoding buffer
-	 */
+    /**
+     * Construct an XalanFileOutputStream object.
+     * 
+     * @param theFileName name of file
+     * @param theBufferSize The size of the transcoding buffer
+     */
     XalanFileOutputStream(
-			const XalanDOMString&	theFileName,
+            const XalanDOMString&   theFileName,
             MemoryManager&          theManager,
-			size_type			    theBufferSize = eDefaultBufferSize);
+            size_type               theBufferSize = eDefaultBufferSize);
 
     static XalanFileOutputStream*
     create(
-			const XalanDOMString&	theFileName,
+            const XalanDOMString&   theFileName,
             MemoryManager&          theManager,
-			size_type			    theBufferSize = eDefaultBufferSize);
+            size_type               theBufferSize = eDefaultBufferSize);
     virtual
-	~XalanFileOutputStream();
+    ~XalanFileOutputStream();
 
 
-	class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamOpenException : public XalanOutputStream::XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamOpenException : public XalanOutputStream::XalanOutputStreamException
+    {
+    public:
 
-		/**
-		 * Construct an XalanFileOutputStreamOpen exception object for an exception
-		 * that occurred on opening a text file stream.
-		 * 
-		 * @param theFileName  name of file causing the exception
-		 * @param theErrorCode number of error encountered
-		 */
-		XalanFileOutputStreamOpenException(
-			const XalanDOMString&	theFileName,
-			int						theErrorCode,
+        /**
+         * Construct an XalanFileOutputStreamOpen exception object for an exception
+         * that occurred on opening a text file stream.
+         * 
+         * @param theFileName  name of file causing the exception
+         * @param theErrorCode number of error encountered
+         */
+        XalanFileOutputStreamOpenException(
+            const XalanDOMString&   theFileName,
+            int                     theErrorCode,
             XalanDOMString&         theBuffer,
             const Locator*          theLocator = 0);
 
-		virtual
-		~XalanFileOutputStreamOpenException();
+        virtual
+        ~XalanFileOutputStreamOpenException();
 
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
 
-	private:
+    private:
 
-        static const XalanDOMChar	m_type[];
+        static const XalanDOMChar   m_type[];
 
-	};
+    };
 
-	class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
+    {
+    public:
 
-		/**
-		 * Construct an XalanFileOutputStreamOpen exception object for an exception
-		 * that occurred while writing to a text file stream.
-		 * 
-		 * @param theFileName  name of file causing the exception
-		 * @param theErrorCode number of error encountered
-		 */
-		XalanFileOutputStreamWriteException(
-			const XalanDOMString&	theFileName,
-			int						theErrorCode,
+        /**
+         * Construct an XalanFileOutputStreamOpen exception object for an exception
+         * that occurred while writing to a text file stream.
+         * 
+         * @param theFileName  name of file causing the exception
+         * @param theErrorCode number of error encountered
+         */
+        XalanFileOutputStreamWriteException(
+            const XalanDOMString&   theFileName,
+            int                     theErrorCode,
             XalanDOMString&         theBuffer,
             const Locator*          theLocator = 0);
 
-		virtual
-		~XalanFileOutputStreamWriteException();
+        virtual
+        ~XalanFileOutputStreamWriteException();
 
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
 
-	private:
-		static const XalanDOMChar	m_type[];
+    private:
+        static const XalanDOMChar   m_type[];
 
-	};
+    };
 
 protected:
 
-	virtual void
-	writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength);
+    virtual void
+    writeData(
+            const char*     theBuffer,
+            size_type       theBufferLength);
 
-	virtual void
-	doFlush();
+    virtual void
+    doFlush();
 
 private:
 
@@ -153,16 +153,16 @@ private:
     XalanFileOutputStream(const XalanFileOutputStream&);
 
     XalanFileOutputStream&
-	operator=(const XalanFileOutputStream&);
+    operator=(const XalanFileOutputStream&);
 
     bool
-	operator==(const XalanFileOutputStream&) const;
+    operator==(const XalanFileOutputStream&) const;
 
 
-	// Data members...
-	const XalanDOMString	m_fileName;
+    // Data members...
+    const XalanDOMString    m_fileName;
 
-	const HandleType		m_handle;
+    const HandleType        m_handle;
 };
 
 
@@ -171,4 +171,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANFILEOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // XALANFILEOUTPUTSTREAM_HEADER_GUARD_1357924680

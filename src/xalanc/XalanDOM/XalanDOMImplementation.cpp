@@ -35,24 +35,24 @@ XalanDOMImplementation::~XalanDOMImplementation()
 
 
 
-XalanDOMImplementation::XalanDOMImplementation(const XalanDOMImplementation&	/* theSource */)
+XalanDOMImplementation::XalanDOMImplementation(const XalanDOMImplementation&    /* theSource */)
 {
 }
 
 
 
 XalanDOMImplementation&
-XalanDOMImplementation::operator=(const XalanDOMImplementation&	/* theSource */)
+XalanDOMImplementation::operator=(const XalanDOMImplementation& /* theSource */)
 {
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanDOMImplementation::operator==(const XalanDOMImplementation&	/* theRHS */) const
+XalanDOMImplementation::operator==(const XalanDOMImplementation&    /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

@@ -33,9 +33,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XNodeSetResultTreeFragProxy::XNodeSetResultTreeFragProxy(const XNodeSetBase&	theValue) :
-	XObjectResultTreeFragProxyBase(),
-	m_value(theValue)
+XNodeSetResultTreeFragProxy::XNodeSetResultTreeFragProxy(const XNodeSetBase&    theValue) :
+    XObjectResultTreeFragProxyBase(),
+    m_value(theValue)
 {
 }
 
@@ -50,7 +50,7 @@ XNodeSetResultTreeFragProxy::~XNodeSetResultTreeFragProxy()
 XalanNode*
 XNodeSetResultTreeFragProxy::getFirstChild() const
 {
-	return m_value.getLength() == 0 ? 0 : m_value.item(0);
+    return m_value.getLength() == 0 ? 0 : m_value.item(0);
 }
 
 
@@ -58,9 +58,9 @@ XNodeSetResultTreeFragProxy::getFirstChild() const
 XalanNode*
 XNodeSetResultTreeFragProxy::getLastChild() const
 {
-	const XNodeSetBase::size_type	theLength = m_value.getLength();
-	
-	return theLength == 0 ? 0 : m_value.item(theLength - 1);
+    const XNodeSetBase::size_type   theLength = m_value.getLength();
+    
+    return theLength == 0 ? 0 : m_value.item(theLength - 1);
 }
 
 

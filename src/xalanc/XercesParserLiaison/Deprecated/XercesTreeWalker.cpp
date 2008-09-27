@@ -51,75 +51,75 @@ XercesTreeWalker::~XercesTreeWalker()
 
 
 void
-XercesTreeWalker::traverse(const DOM_NodeType&	pos)
+XercesTreeWalker::traverse(const DOM_NodeType&  pos)
 {
-	DOM_NodeType	thePos(pos);
+    DOM_NodeType    thePos(pos);
 
-	while(thePos != 0)
-	{
-		startNode(thePos);
+    while(thePos != 0)
+    {
+        startNode(thePos);
 
-		DOM_NodeType	nextNode = thePos.getFirstChild();
+        DOM_NodeType    nextNode = thePos.getFirstChild();
 
-		while(nextNode == 0)
-		{
-			endNode(thePos);
+        while(nextNode == 0)
+        {
+            endNode(thePos);
 
-			nextNode = thePos.getNextSibling();
+            nextNode = thePos.getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos.getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos.getParentNode();
 
-				if(thePos == 0)
-				{
-					nextNode = thePos;
+                if(thePos == 0)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 }
 
 
 
 void
 XercesTreeWalker::traverse(
-			const DOM_NodeType&		pos,
-			const DOM_NodeType&		parent)
+            const DOM_NodeType&     pos,
+            const DOM_NodeType&     parent)
 {
-	DOM_NodeType	thePos(pos);
+    DOM_NodeType    thePos(pos);
 
-	while(parent != thePos)
-	{	  
-		startNode(thePos);
-	  
-		DOM_NodeType	nextNode = thePos.getFirstChild();
+    while(parent != thePos)
+    {     
+        startNode(thePos);
+      
+        DOM_NodeType    nextNode = thePos.getFirstChild();
 
-		while(nextNode == 0)
-		{
-			endNode(thePos);
+        while(nextNode == 0)
+        {
+            endNode(thePos);
 
-			nextNode = thePos.getNextSibling();
+            nextNode = thePos.getNextSibling();
 
-			if(nextNode == 0)
-			{
-				thePos = thePos.getParentNode();
+            if(nextNode == 0)
+            {
+                thePos = thePos.getParentNode();
 
-				if(parent == thePos)
-				{
-					nextNode = thePos;
+                if(parent == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 }
 
 

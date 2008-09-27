@@ -45,56 +45,56 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionNodeSet : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param convertString If true, strings as well as result tree fragments will be converted to nodesets.
-	 */
-	FunctionNodeSet(bool	convertString = true);
+    /**
+     * Constructor.
+     * 
+     * @param convertString If true, strings as well as result tree fragments will be converted to nodesets.
+     */
+    FunctionNodeSet(bool    convertString = true);
 
-	virtual
-	~FunctionNodeSet();
+    virtual
+    ~FunctionNodeSet();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionNodeSet*
+    virtual FunctionNodeSet*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
-	virtual const XalanDOMString&
-	getInvalidArgumentTypeError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getInvalidArgumentTypeError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionNodeSet&
-	operator=(const FunctionNodeSet&);
+    // Not implemented...
+    FunctionNodeSet&
+    operator=(const FunctionNodeSet&);
 
-	bool
-	operator==(const FunctionNodeSet&) const;
+    bool
+    operator==(const FunctionNodeSet&) const;
 
 
-	// Data members...
-	const bool	m_convertString;
+    // Data members...
+    const bool  m_convertString;
 };
 
 
@@ -103,4 +103,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONNODESET_HEADER_GUARD_1357924680
+#endif  // FUNCTIONNODESET_HEADER_GUARD_1357924680

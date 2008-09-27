@@ -41,103 +41,103 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesCommentWrapper : public XalanCommen
 {
 public:
 
-	XercesCommentWrapper(
-			const DOMCommentType*			theXercesComment,
-			const XercesWrapperNavigator&	theNavigator);
+    XercesCommentWrapper(
+            const DOMCommentType*           theXercesComment,
+            const XercesWrapperNavigator&   theNavigator);
 
     static XercesCommentWrapper*
     create( MemoryManager& theManager,
-			const DOMCommentType*			theXercesComment,
-			const XercesWrapperNavigator&	theNavigator);
+            const DOMCommentType*           theXercesComment,
+            const XercesWrapperNavigator&   theNavigator);
 
-	virtual
-	~XercesCommentWrapper();
-
-
-	// These interfaces are inherited from XalanComment...
-
-	virtual const XalanDOMString&
-	getNodeName() const;
-
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
-	virtual NodeType
-	getNodeType() const;
-
-	virtual XalanNode*
-	getParentNode() const;
-
-	virtual const XalanNodeList*
-	getChildNodes() const;
-
-	virtual XalanNode*
-	getFirstChild() const;
-
-	virtual XalanNode*
-	getLastChild() const;
-
-	virtual XalanNode*
-	getPreviousSibling() const;
-
-	virtual XalanNode*
-	getNextSibling() const;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
-
-	virtual XalanDocument*
-	getOwnerDocument() const;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
-
-	virtual const XalanDOMString&
-	getPrefix() const;
-
-	virtual const XalanDOMString&
-	getLocalName() const;
-
-	virtual bool
-	isIndexed() const;
-
-	virtual IndexType
-	getIndex() const;
-
-	virtual const XalanDOMString&
-	getData() const;
+    virtual
+    ~XercesCommentWrapper();
 
 
-	// These interfaces are new to XercesCommentWrapper...
+    // These interfaces are inherited from XalanComment...
 
-	/**
-	 * Get the Xerces node this instance represent.
-	 *
-	 * @return The Xerces node
-	 */
-	const DOMCommentType*
-	getXercesNode() const
-	{
-		return m_xercesNode;
-	}
+    virtual const XalanDOMString&
+    getNodeName() const;
+
+    virtual const XalanDOMString&
+    getNodeValue() const;
+
+    virtual NodeType
+    getNodeType() const;
+
+    virtual XalanNode*
+    getParentNode() const;
+
+    virtual const XalanNodeList*
+    getChildNodes() const;
+
+    virtual XalanNode*
+    getFirstChild() const;
+
+    virtual XalanNode*
+    getLastChild() const;
+
+    virtual XalanNode*
+    getPreviousSibling() const;
+
+    virtual XalanNode*
+    getNextSibling() const;
+
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
+
+    virtual XalanDocument*
+    getOwnerDocument() const;
+
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
+
+    virtual const XalanDOMString&
+    getPrefix() const;
+
+    virtual const XalanDOMString&
+    getLocalName() const;
+
+    virtual bool
+    isIndexed() const;
+
+    virtual IndexType
+    getIndex() const;
+
+    virtual const XalanDOMString&
+    getData() const;
+
+
+    // These interfaces are new to XercesCommentWrapper...
+
+    /**
+     * Get the Xerces node this instance represent.
+     *
+     * @return The Xerces node
+     */
+    const DOMCommentType*
+    getXercesNode() const
+    {
+        return m_xercesNode;
+    }
 
   //@}
 
 private:
 
-	// Not implemented...
-	XercesCommentWrapper(const XercesCommentWrapper&	theSource);
+    // Not implemented...
+    XercesCommentWrapper(const XercesCommentWrapper&    theSource);
 
-	XercesCommentWrapper&
-	operator=(const XercesCommentWrapper&	theSource);
+    XercesCommentWrapper&
+    operator=(const XercesCommentWrapper&   theSource);
 
-	bool
-	operator==(const XercesCommentWrapper&	theRHS) const;
+    bool
+    operator==(const XercesCommentWrapper&  theRHS) const;
 
-	// Data members...
-	const DOMCommentType* const		m_xercesNode;
+    // Data members...
+    const DOMCommentType* const     m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+    const XercesWrapperNavigator&   m_navigator;
 };
 
 
@@ -145,4 +145,4 @@ private:
 XALAN_CPP_NAMESPACE_END
 
 
-#endif	// !defined(XERCESCOMMENTWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESCOMMENTWRAPPER_HEADER_GUARD_1357924680)

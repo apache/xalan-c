@@ -27,8 +27,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanDOMStringAllocator::XalanDOMStringAllocator(
             MemoryManager&  theManager,
-            size_type	        theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+            size_type           theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -43,82 +43,82 @@ XalanDOMStringAllocator::~XalanDOMStringAllocator()
 XalanDOMStringAllocator::data_type*
 XalanDOMStringAllocator::create()
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(getMemoryManager());
+    data_type* const    theResult = new(theBlock) data_type(getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 XalanDOMStringAllocator::data_type*
 XalanDOMStringAllocator::create(
-			const char*				theString,
-			data_type_size_type		theCount)
+            const char*             theString,
+            data_type_size_type     theCount)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theString, getMemoryManager(), theCount);
+    data_type* const    theResult = new(theBlock) data_type(theString, getMemoryManager(), theCount);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
-}
-
-
-
-XalanDOMStringAllocator::data_type*
-XalanDOMStringAllocator::create(
-			const data_type&		theSource,
-			data_type_size_type		theStartPosition,
-			data_type_size_type		theCount)
-{
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
-
-    data_type* const	theResult = new(theBlock) data_type(theSource, getMemoryManager(), theStartPosition, theCount);
-
-	m_allocator.commitAllocation(theBlock);
-
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanDOMStringAllocator::data_type*
 XalanDOMStringAllocator::create(
-			const XalanDOMChar*		theString,
-			data_type_size_type		theCount)
+            const data_type&        theSource,
+            data_type_size_type     theStartPosition,
+            data_type_size_type     theCount)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(theString, getMemoryManager(), theCount);
+    data_type* const    theResult = new(theBlock) data_type(theSource, getMemoryManager(), theStartPosition, theCount);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanDOMStringAllocator::data_type*
 XalanDOMStringAllocator::create(
-			data_type_size_type		theCount,
-			XalanDOMChar			theChar)
+            const XalanDOMChar*     theString,
+            data_type_size_type     theCount)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    data_type* const	theResult = new(theBlock) data_type(theCount, theChar, getMemoryManager());
+    data_type* const    theResult = new(theBlock) data_type(theString, getMemoryManager(), theCount);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
+}
+
+
+
+XalanDOMStringAllocator::data_type*
+XalanDOMStringAllocator::create(
+            data_type_size_type     theCount,
+            XalanDOMChar            theChar)
+{
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
+
+    data_type* const    theResult = new(theBlock) data_type(theCount, theChar, getMemoryManager());
+
+    m_allocator.commitAllocation(theBlock);
+
+    return theResult;
 }
 
 

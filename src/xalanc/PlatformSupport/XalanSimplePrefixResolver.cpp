@@ -29,12 +29,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSimplePrefixResolver::XalanSimplePrefixResolver(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theNamespaceURI,
-			const XalanDOMString&	theURI) :
-	m_prefix(thePrefix),
-	m_namespaceURI(theNamespaceURI),
-	m_uri(theURI)
+            const XalanDOMString&   thePrefix,
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theURI) :
+    m_prefix(thePrefix),
+    m_namespaceURI(theNamespaceURI),
+    m_uri(theURI)
 {
 }
 
@@ -47,16 +47,16 @@ XalanSimplePrefixResolver::~XalanSimplePrefixResolver()
 
 
 const XalanDOMString*
-XalanSimplePrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+XalanSimplePrefixResolver::getNamespaceForPrefix(const XalanDOMString&  prefix) const
 {
-	if (prefix == m_prefix)
-	{
-		return &m_namespaceURI;
-	}
-	else
-	{
-		return 0;
-	}
+    if (prefix == m_prefix)
+    {
+        return &m_namespaceURI;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
@@ -64,7 +64,7 @@ XalanSimplePrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix) c
 const XalanDOMString&
 XalanSimplePrefixResolver::getURI() const
 {
-	return m_uri;
+    return m_uri;
 }
 
 

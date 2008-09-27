@@ -33,10 +33,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XBoolean::XBoolean(
-            bool		    val,
+            bool            val,
             MemoryManager&  theMemoryManager) :
-	XObject(eTypeBoolean, theMemoryManager),
-	m_value(val)
+    XObject(eTypeBoolean, theMemoryManager),
+    m_value(val)
 {
 }
 
@@ -45,8 +45,8 @@ XBoolean::XBoolean(
 XBoolean::XBoolean(
             const XBoolean&     source,
             MemoryManager&      theMemoryManager) :
-	XObject(source, theMemoryManager),
-	m_value(source.m_value)
+    XObject(source, theMemoryManager),
+    m_value(source.m_value)
 {
 }
 
@@ -63,7 +63,7 @@ XBoolean::~XBoolean()
 const XalanDOMString&
 XBoolean::getTypeString() const
 {
-	return s_booleanString;
+    return s_booleanString;
 }
 
 
@@ -71,7 +71,7 @@ XBoolean::getTypeString() const
 double
 XBoolean::num(XPathExecutionContext&    /* executionContext */) const
 {
-	return number(m_value);
+    return number(m_value);
 }
 
 
@@ -79,7 +79,7 @@ XBoolean::num(XPathExecutionContext&    /* executionContext */) const
 bool
 XBoolean::boolean(XPathExecutionContext&    /* executionContext */) const
 {
-	return m_value;
+    return m_value;
 }
 
 
@@ -87,7 +87,7 @@ XBoolean::boolean(XPathExecutionContext&    /* executionContext */) const
 const XalanDOMString&
 XBoolean::str(XPathExecutionContext&    /* executionContext */) const
 {
-	return string(m_value);
+    return string(m_value);
 }
 
 
@@ -95,7 +95,7 @@ XBoolean::str(XPathExecutionContext&    /* executionContext */) const
 const XalanDOMString&
 XBoolean::str() const
 {
-	return string(m_value);
+    return string(m_value);
 }
 
 
@@ -103,20 +103,20 @@ XBoolean::str() const
 void
 XBoolean::str(
             XPathExecutionContext&  /* executionContext */,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	string(m_value, formatterListener, function);
+    string(m_value, formatterListener, function);
 }
 
 
 
 void
 XBoolean::str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	string(m_value, formatterListener, function);
+    string(m_value, formatterListener, function);
 }
 
 
@@ -124,7 +124,7 @@ XBoolean::str(
 void
 XBoolean::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     string(m_value, theBuffer);
 }
@@ -150,9 +150,9 @@ XBoolean::stringLength(XPathExecutionContext&   /* executionContext */) const
 }
 
 
-	
+    
 void
-XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject)
 {
     theCallbackObject.Boolean(
         *this,
@@ -162,9 +162,9 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 
 
 void
-XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject) const
 {
-	theCallbackObject.Boolean(
+    theCallbackObject.Boolean(
         *this,
         boolean(theCallbackObject.getExecutionContext()));
 }

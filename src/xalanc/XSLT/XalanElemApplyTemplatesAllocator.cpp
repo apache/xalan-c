@@ -27,8 +27,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanElemApplyTemplatesAllocator::XalanElemApplyTemplatesAllocator(
             MemoryManager&  theManager,
-            size_type	        theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+            size_type           theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,26 +42,26 @@ XalanElemApplyTemplatesAllocator::~XalanElemApplyTemplatesAllocator()
 
 XalanElemApplyTemplatesAllocator::data_type*
 XalanElemApplyTemplatesAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
-				constructionContext,
-				stylesheetTree,
-				atts,
-				lineNumber,
-				columnNumber);
+    data_type* const    theResult =
+        new(theBlock) data_type(
+                constructionContext,
+                stylesheetTree,
+                atts,
+                lineNumber,
+                columnNumber);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

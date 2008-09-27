@@ -25,10 +25,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XPathParserException::XPathParserException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
-            const Locator*		    theLocator) :
-	XalanXPathException(
+            const Locator*          theLocator) :
+    XalanXPathException(
         theMessage,
         theManager,
         theLocator)
@@ -38,9 +38,9 @@ XPathParserException::XPathParserException(
 
 
 XPathParserException::XPathParserException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager) :
-	XalanXPathException(
+    XalanXPathException(
         theMessage,
         theManager)
 {
@@ -62,28 +62,28 @@ XPathParserException::~XPathParserException()
 
 
 static const XalanDOMChar   s_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_P,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charLetter_P,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 

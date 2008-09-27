@@ -26,10 +26,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 DOMSupportException::DOMSupportException(
-            const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager,
         theLocator)
@@ -39,9 +39,9 @@ DOMSupportException::DOMSupportException(
 
 
 DOMSupportException::DOMSupportException(
-            const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager)
 {
@@ -56,27 +56,27 @@ DOMSupportException::~DOMSupportException()
 
 
 static const XalanDOMChar   s_type[] = 
-{	
-	XalanUnicode::charLetter_D,
-	XalanUnicode::charLetter_O,
-	XalanUnicode::charLetter_M,
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_u,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+{   
+    XalanUnicode::charLetter_D,
+    XalanUnicode::charLetter_O,
+    XalanUnicode::charLetter_M,
+    XalanUnicode::charLetter_S,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 

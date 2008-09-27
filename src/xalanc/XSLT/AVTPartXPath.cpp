@@ -35,9 +35,9 @@ XALAN_CPP_NAMESPACE_BEGIN
  * Construct a simple AVT part.
  * @param val A pure string section of an AVT.
  */
-AVTPartXPath::AVTPartXPath(const XPath*		xpath) :
-	AVTPart(),
-	m_pXPath(xpath)
+AVTPartXPath::AVTPartXPath(const XPath*     xpath) :
+    AVTPart(),
+    m_pXPath(xpath)
 {
 }
 
@@ -45,23 +45,23 @@ AVTPartXPath::AVTPartXPath(const XPath*		xpath) :
 
 void
 AVTPartXPath::evaluate(
-			XalanDOMString&			buf,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const
+            XalanDOMString&         buf,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const
 {
-	m_pXPath->execute(contextNode, prefixResolver, executionContext, buf);
+    m_pXPath->execute(contextNode, prefixResolver, executionContext, buf);
 }
 
 
 
 void
 AVTPartXPath::evaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const
+            XalanDOMString&         buf,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const
 {
-	m_pXPath->execute(prefixResolver, executionContext, buf);
+    m_pXPath->execute(prefixResolver, executionContext, buf);
 }
 
 

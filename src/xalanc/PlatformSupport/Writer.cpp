@@ -25,9 +25,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
-const size_t	Writer::npos = ~0u;
+const size_t    Writer::npos = ~0u;
 #elif !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const size_t	Writer::npos;
+const size_t    Writer::npos;
 #endif
 
 
@@ -47,7 +47,7 @@ Writer::~Writer()
 XalanOutputStream*
 Writer::getStream()
 {
-	return 0;
+    return 0;
 }
 
 
@@ -55,7 +55,7 @@ Writer::getStream()
 const XalanOutputStream*
 Writer::getStream() const
 {
-	return 0;
+    return 0;
 }
 
 

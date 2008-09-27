@@ -43,27 +43,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const double	theBogusNumberValue = 123456789;
+const double    theBogusNumberValue = 123456789;
 
 
 
 XNodeSetBase::XNodeSetBase(MemoryManager&   theMemoryManager) :
-	XObject(eTypeNodeSet, theMemoryManager),
-	m_proxy(*this),
-	m_cachedStringValue(theMemoryManager),
-	m_cachedNumberValue(theBogusNumberValue)
+    XObject(eTypeNodeSet, theMemoryManager),
+    m_proxy(*this),
+    m_cachedStringValue(theMemoryManager),
+    m_cachedNumberValue(theBogusNumberValue)
 {
 }
 
 
 
 XNodeSetBase::XNodeSetBase(
-            const XNodeSetBase&	    source,
+            const XNodeSetBase&     source,
             MemoryManager&          theMemoryManager) :
-	XObject(source, theMemoryManager),
-	m_proxy(*this),
-	m_cachedStringValue(source.m_cachedStringValue, theMemoryManager),
-	m_cachedNumberValue(source.m_cachedNumberValue)
+    XObject(source, theMemoryManager),
+    m_proxy(*this),
+    m_cachedStringValue(source.m_cachedStringValue, theMemoryManager),
+    m_cachedNumberValue(source.m_cachedNumberValue)
 {
 }
 
@@ -78,7 +78,7 @@ XNodeSetBase::~XNodeSetBase()
 const XalanDOMString&
 XNodeSetBase::getTypeString() const
 {
-	return s_nodesetString;
+    return s_nodesetString;
 }
 
 
@@ -86,15 +86,15 @@ XNodeSetBase::getTypeString() const
 double
 XNodeSetBase::num(XPathExecutionContext&    executionContext) const
 {
-	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
-	{
-		m_cachedNumberValue =
+    if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
+    {
+        m_cachedNumberValue =
             DoubleSupport::toDouble(
                 str(executionContext),
                 getMemoryManager());
-	}
+    }
 
-	return m_cachedNumberValue;
+    return m_cachedNumberValue;
 }
 
 
@@ -102,7 +102,7 @@ XNodeSetBase::num(XPathExecutionContext&    executionContext) const
 bool
 XNodeSetBase::boolean(XPathExecutionContext&    /* executionContext */) const
 {
-	return getLength() > 0 ? true : false;
+    return getLength() > 0 ? true : false;
 }
 
 
@@ -111,18 +111,18 @@ const XalanDOMString&
 XNodeSetBase::str(XPathExecutionContext&    executionContext) const
 {
     if (m_cachedStringValue.empty() == true &&
-		getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+        getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             executionContext,
             m_cachedStringValue);
-	}
+    }
 
-	return m_cachedStringValue;
+    return m_cachedStringValue;
 }
 
 
@@ -131,17 +131,17 @@ const XalanDOMString&
 XNodeSetBase::str() const
 {
     if (m_cachedStringValue.empty() == true &&
-		getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+        getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             m_cachedStringValue);
-	}
+    }
 
-	return m_cachedStringValue;
+    return m_cachedStringValue;
 }
 
 
@@ -149,47 +149,47 @@ XNodeSetBase::str() const
 void
 XNodeSetBase::str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
+    {
         XObject::string(m_cachedStringValue, formatterListener, function);
-	}
-	else if (getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+    }
+    else if (getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             executionContext,
             formatterListener,
             function);
-	}
+    }
 }
 
 
 
 void
 XNodeSetBase::str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
+    {
         XObject::string(m_cachedStringValue, formatterListener, function);
-	}
-	else if (getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+    }
+    else if (getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             formatterListener,
             function);
-	}
+    }
 }
 
 
@@ -200,19 +200,19 @@ XNodeSetBase::str(
             XalanDOMString&         theBuffer) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
-		theBuffer.append(m_cachedStringValue);
-	}
-	else if (getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+    {
+        theBuffer.append(m_cachedStringValue);
+    }
+    else if (getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             executionContext,
             theBuffer);
-	}
+    }
 }
 
 
@@ -221,18 +221,18 @@ void
 XNodeSetBase::str(XalanDOMString&   theBuffer) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
-		theBuffer.append(m_cachedStringValue);
-	}
-	else if (getLength() > 0)
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+    {
+        theBuffer.append(m_cachedStringValue);
+    }
+    else if (getLength() > 0)
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             theBuffer);
-	}
+    }
 }
 
 
@@ -241,28 +241,28 @@ double
 XNodeSetBase::stringLength(XPathExecutionContext&   executionContext) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
-		return static_cast<double>(m_cachedStringValue.length());
-	}
-	else if (getLength() == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		const XalanNode* const	theNode = item(0);
-		assert(theNode != 0);
+    {
+        return static_cast<double>(m_cachedStringValue.length());
+    }
+    else if (getLength() == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        const XalanNode* const  theNode = item(0);
+        assert(theNode != 0);
 
-		FormatterStringLengthCounter	theCounter;
+        FormatterStringLengthCounter    theCounter;
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *theNode,
             executionContext,
             theCounter,
             &FormatterListener::characters);
 
-		return static_cast<double>(theCounter.getCount());
-	}
+        return static_cast<double>(theCounter.getCount());
+    }
 }
 
 
@@ -270,27 +270,27 @@ XNodeSetBase::stringLength(XPathExecutionContext&   executionContext) const
 const XalanDocumentFragment&
 XNodeSetBase::rtree() const
 {
-	return m_proxy;
+    return m_proxy;
 }
 
 
 
 void
-XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject)
 {
-	theCallbackObject.NodeSet(
+    theCallbackObject.NodeSet(
         *this,
-		nodeset());
+        nodeset());
 }
 
 
 
 void
-XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject) const
 {
-	theCallbackObject.NodeSet(
+    theCallbackObject.NodeSet(
         *this,
-		nodeset());
+        nodeset());
 }
 
 
@@ -298,9 +298,9 @@ XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 void
 XNodeSetBase::clearCachedValues()
 {
-	m_cachedNumberValue = theBogusNumberValue;
+    m_cachedNumberValue = theBogusNumberValue;
 
-	m_cachedStringValue.clear();
+    m_cachedStringValue.clear();
 }
 
 

@@ -35,27 +35,27 @@ class XALAN_DOM_EXPORT XalanDOMInit
 {
 public:
 
-	explicit
-	XalanDOMInit(MemoryManager&      theManager);
+    explicit
+    XalanDOMInit(MemoryManager&      theManager);
 
-	~XalanDOMInit();
+    ~XalanDOMInit();
 
 private:
 
-	// Not implemented...
-	XalanDOMInit(const XalanDOMInit&);
+    // Not implemented...
+    XalanDOMInit(const XalanDOMInit&);
 
-	XalanDOMInit&
-	operator=(const XalanDOMInit&);
+    XalanDOMInit&
+    operator=(const XalanDOMInit&);
 
 
-	static void
-	initialize(MemoryManager&      theManager);
+    static void
+    initialize(MemoryManager&      theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	static unsigned long	s_initCounter;
+    static unsigned long    s_initCounter;
 };
 
 
@@ -64,4 +64,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANDOMINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(XALANDOMINIT_INCLUDE_GUARD_1357924680)

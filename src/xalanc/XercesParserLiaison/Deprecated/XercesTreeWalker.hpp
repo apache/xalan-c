@@ -39,35 +39,35 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTreeWalker
 {
 public:
 
-	/**
-	 * Constructor.
-	 */
-	XercesTreeWalker();
+    /**
+     * Constructor.
+     */
+    XercesTreeWalker();
 
-	virtual
-	~XercesTreeWalker();
+    virtual
+    ~XercesTreeWalker();
 
-	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 */
-	virtual void
-	traverse(const DOM_NodeType&	pos);
+    /**
+     * Perform a pre-order traversal non-recursive style.
+     */
+    virtual void
+    traverse(const DOM_NodeType&    pos);
 
-	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 */
-	virtual void
-	traverse(
-			const DOM_NodeType&		pos,
-			const DOM_NodeType&		parent);
+    /**
+     * Perform a pre-order traversal non-recursive style.
+     */
+    virtual void
+    traverse(
+            const DOM_NodeType&     pos,
+            const DOM_NodeType&     parent);
 
 protected:
 
-	virtual void
-	startNode(const DOM_NodeType&	node) = 0;
+    virtual void
+    startNode(const DOM_NodeType&   node) = 0;
 
-	virtual void
-	endNode(const DOM_NodeType&		node) = 0;
+    virtual void
+    endNode(const DOM_NodeType&     node) = 0;
 };
 
 
@@ -76,4 +76,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESTREEWALKER_HEADER_GUARD_1357924680
+#endif  // XERCESTREEWALKER_HEADER_GUARD_1357924680

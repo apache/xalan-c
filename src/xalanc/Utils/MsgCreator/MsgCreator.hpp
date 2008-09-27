@@ -47,7 +47,7 @@ public :
     // -----------------------------------------------------------------------
     StrX(const XMLCh* const toTranscode)
     {
-		XALAN_USING_XERCES(XMLString)
+        XALAN_USING_XERCES(XMLString)
 
         // Call the private transcoding method
         fLocalForm = XMLString::transcode(toTranscode);
@@ -55,7 +55,7 @@ public :
 
     ~StrX()
     {
-		XALAN_USING_XERCES(XMLString)
+        XALAN_USING_XERCES(XMLString)
 
         XMLString::release(&fLocalForm);
     }
@@ -89,7 +89,7 @@ inline XALAN_STD_QUALIFIER ostream& operator<<(XALAN_STD_QUALIFIER ostream& targ
 }
 
 
-#endif	//MSG_CREATOR_1357924680
+#endif  //MSG_CREATOR_1357924680
 
 
 

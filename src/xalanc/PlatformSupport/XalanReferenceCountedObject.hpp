@@ -36,50 +36,50 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanReferenceCountedObject
 {
 public:
 
-	/**
-	 * Increment reference count.	 
-	 */
-	static void
-	addReference(XalanReferenceCountedObject*	theInstance);
+    /**
+     * Increment reference count.    
+     */
+    static void
+    addReference(XalanReferenceCountedObject*   theInstance);
 
-	/**
-	 * Decrement reference count.	 
-	 */
-	static void
-	removeReference(XalanReferenceCountedObject*	theInstance);
+    /**
+     * Decrement reference count.    
+     */
+    static void
+    removeReference(XalanReferenceCountedObject*    theInstance);
 
 protected:
 
-	/**
-	 * Create a XalanReferenceCountedObject.
-	 */
-	explicit
-	XalanReferenceCountedObject();
+    /**
+     * Create a XalanReferenceCountedObject.
+     */
+    explicit
+    XalanReferenceCountedObject();
 
-	virtual
-	~XalanReferenceCountedObject();
+    virtual
+    ~XalanReferenceCountedObject();
 
-	virtual void 
-	referenced() = 0;
+    virtual void 
+    referenced() = 0;
 
-	virtual void 
-	dereferenced() = 0;
+    virtual void 
+    dereferenced() = 0;
 
-	virtual XalanSize_t
-	getReferenceCount() const
-	{
-		return m_referenceCount;
-	}
+    virtual XalanSize_t
+    getReferenceCount() const
+    {
+        return m_referenceCount;
+    }
 
 private:
 
-	XalanSize_t	    m_referenceCount;
+    XalanSize_t     m_referenceCount;
 
-	// Not implemented...
-	XalanReferenceCountedObject&
-	operator=(const XalanReferenceCountedObject&);
+    // Not implemented...
+    XalanReferenceCountedObject&
+    operator=(const XalanReferenceCountedObject&);
 
-	XalanReferenceCountedObject(const XalanReferenceCountedObject&);
+    XalanReferenceCountedObject(const XalanReferenceCountedObject&);
 };
 
 
@@ -88,4 +88,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANREFERENCECOUNTEDOBJECT_HEADER_GUARD_1357924680
+#endif  // XALANREFERENCECOUNTEDOBJECT_HEADER_GUARD_1357924680

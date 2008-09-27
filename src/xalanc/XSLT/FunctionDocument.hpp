@@ -39,62 +39,62 @@ class XALAN_XSLT_EXPORT FunctionDocument : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionDocument();
+    FunctionDocument();
 
-	virtual
-	~FunctionDocument();
+    virtual
+    ~FunctionDocument();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionDocument*
+    virtual FunctionDocument*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	XObjectPtr
-	doExecute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr&		arg,
-			XalanDOMString*			base,
-			int						argCount,
-			const LocatorType*		locator,
-			bool					fNoRelativeURI = false) const;
+    XObjectPtr
+    doExecute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,            
+            const XObjectPtr&       arg,
+            XalanDOMString*         base,
+            int                     argCount,
+            const LocatorType*      locator,
+            bool                    fNoRelativeURI = false) const;
 
-	// Not implemented...
-	FunctionDocument&
-	operator=(const FunctionDocument&);
+    // Not implemented...
+    FunctionDocument&
+    operator=(const FunctionDocument&);
 
-	bool
-	operator==(const FunctionDocument&) const;
+    bool
+    operator==(const FunctionDocument&) const;
 };
 
 
@@ -103,4 +103,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONDOCUMENT_HEADER_GUARD_1357924680
+#endif  // FUNCTIONDOCUMENT_HEADER_GUARD_1357924680

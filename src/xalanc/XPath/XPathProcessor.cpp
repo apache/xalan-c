@@ -42,11 +42,11 @@ XPathProcessor::~XPathProcessor()
 
 void
 XPathProcessor::installFunction(
-			const XalanDOMString&	theFunctionName,
-			const Function&			theFunction)
+            const XalanDOMString&   theFunctionName,
+            const Function&         theFunction)
 {
-	XPath::installFunction(theFunctionName,
-						   theFunction);
+    XPath::installFunction(theFunctionName,
+                           theFunction);
 }
 
 

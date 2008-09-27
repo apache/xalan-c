@@ -2006,20 +2006,20 @@ public:
 
     // These interfaces are inherited from ExecutionContext...
 
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode) = 0;
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode) = 0;
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode) = 0;
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode) = 0;
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:

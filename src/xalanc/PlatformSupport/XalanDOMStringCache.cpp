@@ -35,10 +35,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XalanDOMStringCache::XalanDOMStringCache(
             MemoryManager&     theManager,
-            XalanSize_t	            theMaximumSize) :
-	m_availableList(theManager),
+            XalanSize_t             theMaximumSize) :
+    m_availableList(theManager),
     m_busyList(theManager),
-	m_maximumSize(theMaximumSize),
+    m_maximumSize(theMaximumSize),
     m_allocator(theManager, XalanDOMStringReusableAllocator::eDefaultBlockSize)
 {
 }
@@ -47,7 +47,7 @@ XalanDOMStringCache::XalanDOMStringCache(
 
 XalanDOMStringCache::~XalanDOMStringCache()
 {
-	clear();
+    clear();
 }
 
 
@@ -55,60 +55,60 @@ XalanDOMStringCache::~XalanDOMStringCache()
 XalanDOMString&
 XalanDOMStringCache::get()
 {
-	if (m_availableList.empty() == true)
-	{
+    if (m_availableList.empty() == true)
+    {
         XalanDOMString&     theString = m_allocator.create();
 
         m_busyList.push_back(&theString);
 
         return theString;
-	}
-	else
-	{
+    }
+    else
+    {
         XalanDOMString* const   theString = m_availableList.back();
         assert(theString != 0);
 
-		m_availableList.pop_back();
+        m_availableList.pop_back();
 
         m_busyList.push_back(theString);
 
         return *theString;
-	}
+    }
 }
 
 
 
 bool
-XalanDOMStringCache::release(XalanDOMString&	theString)
+XalanDOMStringCache::release(XalanDOMString&    theString)
 {
-	XALAN_USING_STD(find)
+    XALAN_USING_STD(find)
 
-	StringListType::iterator	i =
-		find(m_busyList.begin(),
-			 m_busyList.end(),
-			 &theString);
+    StringListType::iterator    i =
+        find(m_busyList.begin(),
+             m_busyList.end(),
+             &theString);
 
-	if (i == m_busyList.end())
-	{
-		return false;
-	}
-	else
-	{
-		if (m_availableList.size() > m_maximumSize)
-		{
-			m_allocator.destroy(theString);
-		}
-		else
-		{
-			theString.erase();
+    if (i == m_busyList.end())
+    {
+        return false;
+    }
+    else
+    {
+        if (m_availableList.size() > m_maximumSize)
+        {
+            m_allocator.destroy(theString);
+        }
+        else
+        {
+            theString.erase();
 
-			m_availableList.push_back(*i);
-		}
+            m_availableList.push_back(*i);
+        }
 
-		m_busyList.erase(i);
+        m_busyList.erase(i);
 
-		return true;
-	}
+        return true;
+    }
 }
 
 
@@ -116,9 +116,9 @@ XalanDOMStringCache::release(XalanDOMString&	theString)
 void
 XalanDOMStringCache::clear()
 {
-	m_busyList.clear();
+    m_busyList.clear();
 
-	m_availableList.clear();
+    m_availableList.clear();
 
     m_allocator.reset();
 }
@@ -128,26 +128,26 @@ XalanDOMStringCache::clear()
 void
 XalanDOMStringCache::reset()
 {
-	const StringListType::size_type		theSize =
-		m_availableList.size();
+    const StringListType::size_type     theSize =
+        m_availableList.size();
 
-	while(m_busyList.empty() == false)
-	{
-		assert(m_busyList.back() != 0);
+    while(m_busyList.empty() == false)
+    {
+        assert(m_busyList.back() != 0);
 
-		if (theSize > m_maximumSize)
-		{
-			m_allocator.destroy(*m_busyList.back());
-		}
-		else
-		{
-			m_busyList.back()->clear();
+        if (theSize > m_maximumSize)
+        {
+            m_allocator.destroy(*m_busyList.back());
+        }
+        else
+        {
+            m_busyList.back()->clear();
 
-			m_availableList.push_back(m_busyList.back());
-		}
+            m_availableList.push_back(m_busyList.back());
+        }
 
-		m_busyList.pop_back();
-	}
+        m_busyList.pop_back();
+    }
 }
 
 

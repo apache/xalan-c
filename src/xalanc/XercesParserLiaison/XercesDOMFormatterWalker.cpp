@@ -39,9 +39,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMFormatterWalker::XercesDOMFormatterWalker(FormatterListener& 	formatterListener) :
-	XercesDOMWalker(),
-	m_formatterListener(formatterListener)
+XercesDOMFormatterWalker::XercesDOMFormatterWalker(FormatterListener&   formatterListener) :
+    XercesDOMWalker(),
+    m_formatterListener(formatterListener)
 {
 }
 
@@ -54,105 +54,105 @@ XercesDOMFormatterWalker::~XercesDOMFormatterWalker()
 
 
 bool
-XercesDOMFormatterWalker::startNode(const DOMNodeType*	node)
+XercesDOMFormatterWalker::startNode(const DOMNodeType*  node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	switch(node->getNodeType())
-	{
-	case DOMNodeType::COMMENT_NODE:
-		{
-			m_formatterListener.comment(node->getNodeValue());
-		}
-		break;
+    switch(node->getNodeType())
+    {
+    case DOMNodeType::COMMENT_NODE:
+        {
+            m_formatterListener.comment(node->getNodeValue());
+        }
+        break;
 
-	case DOMNodeType::DOCUMENT_FRAGMENT_NODE:
-		// ??
-		break;
+    case DOMNodeType::DOCUMENT_FRAGMENT_NODE:
+        // ??
+        break;
 
-	case DOMNodeType::DOCUMENT_NODE:
-		m_formatterListener.startDocument();
-		break;
+    case DOMNodeType::DOCUMENT_NODE:
+        m_formatterListener.startDocument();
+        break;
 
-	case DOMNodeType::ELEMENT_NODE:
-		{
-			const DOMElementType* const		theElementNode =
-				static_cast<const DOMElementType*>(node);
+    case DOMNodeType::ELEMENT_NODE:
+        {
+            const DOMElementType* const     theElementNode =
+                static_cast<const DOMElementType*>(node);
 
-			const DOMNamedNodeMapType* const	atts = theElementNode->getAttributes();
-			assert(atts != 0);
+            const DOMNamedNodeMapType* const    atts = theElementNode->getAttributes();
+            assert(atts != 0);
 
-			XercesNamedNodeMapAttributeList		theAttributeList(atts);
+            XercesNamedNodeMapAttributeList     theAttributeList(atts);
 
-			m_formatterListener.startElement(
-					theElementNode->getNodeName(),
-					theAttributeList);
-		}
-		break;
+            m_formatterListener.startElement(
+                    theElementNode->getNodeName(),
+                    theAttributeList);
+        }
+        break;
 
-	case DOMNodeType::PROCESSING_INSTRUCTION_NODE:
-		{
-			m_formatterListener.processingInstruction(
-					node->getNodeName(),
-					node->getNodeValue());
-		}
-		break;
+    case DOMNodeType::PROCESSING_INSTRUCTION_NODE:
+        {
+            m_formatterListener.processingInstruction(
+                    node->getNodeName(),
+                    node->getNodeValue());
+        }
+        break;
 
-	case DOMNodeType::CDATA_SECTION_NODE:
-		{
-			const XMLCh* const	data = node->getNodeValue();
+    case DOMNodeType::CDATA_SECTION_NODE:
+        {
+            const XMLCh* const  data = node->getNodeValue();
 
-			assert(length(data) == FormatterListener::size_type(length(data)));
+            assert(length(data) == FormatterListener::size_type(length(data)));
 
-			m_formatterListener.cdata(data, FormatterListener::size_type(length(data)));
-		}
-		break;
+            m_formatterListener.cdata(data, FormatterListener::size_type(length(data)));
+        }
+        break;
 
-	case DOMNodeType::TEXT_NODE:
-		{
-			const XMLCh* const	data = node->getNodeValue();
+    case DOMNodeType::TEXT_NODE:
+        {
+            const XMLCh* const  data = node->getNodeValue();
 
-			assert(length(data) == FormatterListener::size_type(length(data)));
+            assert(length(data) == FormatterListener::size_type(length(data)));
 
-			m_formatterListener.characters(data, FormatterListener::size_type(length(data)));
-		} 
-		break;
+            m_formatterListener.characters(data, FormatterListener::size_type(length(data)));
+        } 
+        break;
 
-	case DOMNodeType::ENTITY_REFERENCE_NODE:
-		m_formatterListener.entityReference(node->getNodeName());
-		break;
+    case DOMNodeType::ENTITY_REFERENCE_NODE:
+        m_formatterListener.entityReference(node->getNodeName());
+        break;
 
-	default:
-		// Do nothing...
-		break;
-	}
+    default:
+        // Do nothing...
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-XercesDOMFormatterWalker::endNode(const DOMNodeType*	node)
+XercesDOMFormatterWalker::endNode(const DOMNodeType*    node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	switch(node->getNodeType())
-	{
-	case DOMNodeType::DOCUMENT_NODE:
-		m_formatterListener.endDocument();
-		break;
+    switch(node->getNodeType())
+    {
+    case DOMNodeType::DOCUMENT_NODE:
+        m_formatterListener.endDocument();
+        break;
 
-	case DOMNodeType::ELEMENT_NODE:
-		m_formatterListener.endElement(node->getNodeName());
-		break;
+    case DOMNodeType::ELEMENT_NODE:
+        m_formatterListener.endElement(node->getNodeName());
+        break;
 
-	default:
-		// Do nothing
-		break;
-	}
+    default:
+        // Do nothing
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 

@@ -48,123 +48,123 @@ class ElemVariable : public ElemTemplateElement
 {
 public:
 
-	typedef ElemTemplateElement		ParentType;
+    typedef ElemTemplateElement     ParentType;
 
-	/**
-	 * Construct an object corresponding to an "xsl:variable" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemVariable(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:variable" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemVariable(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemVariable();
+    virtual
+    ~ElemVariable();
 
-	/**
-	 * Determines if this is a top level variable.
-	 * 
-	 * @return true if it is a top level variable
-	 */
-	bool
-	isTopLevel() const
-	{
-		return m_isTopLevel;
-	}
+    /**
+     * Determines if this is a top level variable.
+     * 
+     * @return true if it is a top level variable
+     */
+    bool
+    isTopLevel() const
+    {
+        return m_isTopLevel;
+    }
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual const XalanQName&
-	getNameAttribute() const;
+    // These methods are inherited from ElemTemplateElement ...
+    
+    virtual const XalanQName&
+    getNameAttribute() const;
 
-	virtual void
-	addToStylesheet(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						theStylesheet);
+    virtual void
+    addToStylesheet(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     theStylesheet);
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
-	const XObjectPtr
-	getValue(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode) const;
+    const XObjectPtr
+    getValue(
+            StylesheetExecutionContext&     executionContext,
+            XalanNode*                      sourceNode) const;
 
-	virtual void
-	setParentNodeElem(ElemTemplateElement*		theParent);
+    virtual void
+    setParentNodeElem(ElemTemplateElement*      theParent);
 
-	virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 protected:
 
-	/**
-	 * Construct an object corresponding to an "xsl:variable" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemVariable(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			int								xslToken);
+    /**
+     * Construct an object corresponding to an "xsl:variable" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemVariable(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            int                             xslToken);
 
-	/**
-	 * Do common initialization.
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 */
-	void
-	init(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts);
+    /**
+     * Do common initialization.
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     */
+    void
+    init(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts);
 
 
-	const XalanQName*	m_qname;
+    const XalanQName*   m_qname;
 
 private:
 
-	// not implemented
-	ElemVariable(const ElemVariable &);
+    // not implemented
+    ElemVariable(const ElemVariable &);
 
-	ElemVariable&
-	operator=(const ElemVariable &);
+    ElemVariable&
+    operator=(const ElemVariable &);
 
-	const XPath*	m_selectPattern;
+    const XPath*    m_selectPattern;
 
-	bool			m_isTopLevel;
+    bool            m_isTopLevel;
 
-	XObjectPtr		m_value;
+    XObjectPtr      m_value;
 
-	XalanNode*		m_varContext;
+    XalanNode*      m_varContext;
 };
 
 
@@ -173,4 +173,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMVARIABLE_HEADER_GUARD
+#endif  // XALAN_ELEMVARIABLE_HEADER_GUARD

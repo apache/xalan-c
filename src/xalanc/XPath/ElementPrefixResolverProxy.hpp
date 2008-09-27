@@ -48,53 +48,53 @@ class XALAN_XPATH_EXPORT ElementPrefixResolverProxy : public PrefixResolver
 {
 public:
 
-	/**
-	 * Construct an instance of an element prefix resolver proxy.
-	 * 
-	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport XPath environment support class instance
-	 * @param domSupport DOMSupport class instance
-	 *
-	 * @deprecated
-	 */
-	ElementPrefixResolverProxy(
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const DOMSupport& 		domSupport,
+    /**
+     * Construct an instance of an element prefix resolver proxy.
+     * 
+     * @param namespaceContext context object for namespace resolution
+     * @param envSupport XPath environment support class instance
+     * @param domSupport DOMSupport class instance
+     *
+     * @deprecated
+     */
+    ElementPrefixResolverProxy(
+            const XalanElement*     namespaceContext,
+            const XPathEnvSupport&  envSupport,
+            const DOMSupport&       domSupport,
             MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
-	/**
-	 * Construct an instance of an element prefix resolver proxy.
-	 * 
-	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport XPath environment support class instance
-	 *
-	 */
-	ElementPrefixResolverProxy(
-			const XalanElement*		namespaceContext,
+    /**
+     * Construct an instance of an element prefix resolver proxy.
+     * 
+     * @param namespaceContext context object for namespace resolution
+     * @param envSupport XPath environment support class instance
+     *
+     */
+    ElementPrefixResolverProxy(
+            const XalanElement*     namespaceContext,
             MemoryManager&      theManager XALAN_DEFAULT_MEMMGR,
-			const XPathEnvSupport*	envSupport = 0);
+            const XPathEnvSupport*  envSupport = 0);
 
-	virtual
-	~ElementPrefixResolverProxy();
+    virtual
+    ~ElementPrefixResolverProxy();
 
-	// These methods are inherited from PrefixResolver ...
+    // These methods are inherited from PrefixResolver ...
 
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+    virtual const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     prefix) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
 private:
     //notimplemented
     ElementPrefixResolverProxy(const ElementPrefixResolverProxy&);
 
-	const XalanElement* const		m_namespaceContext;
+    const XalanElement* const       m_namespaceContext;
 
-	const XPathEnvSupport* const	m_envSupport;
+    const XPathEnvSupport* const    m_envSupport;
 
-	mutable XalanDOMString			m_uri;
+    mutable XalanDOMString          m_uri;
 };
 
 
@@ -103,4 +103,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ELEMENTPREFIXRESOLVERPROXY_HEADER_GUARD_1357924680
+#endif  // ELEMENTPREFIXRESOLVERPROXY_HEADER_GUARD_1357924680

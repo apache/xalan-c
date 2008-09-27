@@ -47,8 +47,8 @@ ElemForwardCompatible::ElemForwardCompatible(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-            XalanFileLoc					columnNumber) :
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber) :
     ElemTemplateElement(
         constructionContext,
         stylesheetTree,
@@ -93,8 +93,8 @@ ElemForwardCompatible::create(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber)
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber)
 {
     typedef ElemForwardCompatible ThisType;
 

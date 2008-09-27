@@ -44,7 +44,7 @@ static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 XercesDOMSupport::XercesDOMSupport(XercesParserLiaison&     theLiaison) :
-	DOMSupport(),
+    DOMSupport(),
     m_liaison(theLiaison)
 {
 }
@@ -66,14 +66,14 @@ XercesDOMSupport::reset()
 
 const XalanDOMString&
 XercesDOMSupport::getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const
 {
-    const XercesDocumentWrapper* const	theWrapper =
-		m_liaison.mapDocumentToWrapper(&theDocument);
+    const XercesDocumentWrapper* const  theWrapper =
+        m_liaison.mapDocumentToWrapper(&theDocument);
 
     if (theWrapper != 0)
-	{
+    {
         XALAN_USING_XERCES(DOMDocument)
         XALAN_USING_XERCES(DOMDocumentType)
         XALAN_USING_XERCES(DOMEntity)
@@ -84,51 +84,51 @@ XercesDOMSupport::getUnparsedEntityURI(
             theWrapper->getXercesDocument();
         assert(theDOMDocument != 0);
 
-        const DOMDocumentType* const	theDoctype =
-		    theDOMDocument->getDoctype();
+        const DOMDocumentType* const    theDoctype =
+            theDOMDocument->getDoctype();
 
-	    if  (theDoctype != 0)
-	    {
-		    const DOMNamedNodeMap* const	theEntities =
-			    theDoctype->getEntities();
+        if  (theDoctype != 0)
+        {
+            const DOMNamedNodeMap* const    theEntities =
+                theDoctype->getEntities();
 
-		    if (theEntities != 0)
-		    {
-			    const DOMNode* const	theNode =
-				    theEntities->getNamedItem(theName.c_str());
+            if (theEntities != 0)
+            {
+                const DOMNode* const    theNode =
+                    theEntities->getNamedItem(theName.c_str());
 
-			    if (theNode != 0 && theNode->getNodeType() == DOMNode::ENTITY_NODE)
-			    {
-				    const DOMEntity* const    theEntity =
-					    static_cast<const DOMEntity*>(theNode);
+                if (theNode != 0 && theNode->getNodeType() == DOMNode::ENTITY_NODE)
+                {
+                    const DOMEntity* const    theEntity =
+                        static_cast<const DOMEntity*>(theNode);
 
-				    if(length(theEntity->getNotationName()) != 0) // then it's unparsed
-				    {
-					    // The draft says: "The XSLT processor may use the public
-					    // identifier to generate a URI for the entity instead of the URI
-					    // specified in the system identifier. If the XSLT processor does
-					    // not use the public identifier to generate the URI, it must use
-					    // the system identifier; if the system identifier is a relative
-					    // URI, it must be resolved into an absolute URI using the URI of
-					    // the resource containing the entity declaration as the base
-					    // URI [RFC2396]."
-					    // So I'm falling a bit short here.
-					    const XMLCh* theURI = theEntity->getSystemId();
+                    if(length(theEntity->getNotationName()) != 0) // then it's unparsed
+                    {
+                        // The draft says: "The XSLT processor may use the public
+                        // identifier to generate a URI for the entity instead of the URI
+                        // specified in the system identifier. If the XSLT processor does
+                        // not use the public identifier to generate the URI, it must use
+                        // the system identifier; if the system identifier is a relative
+                        // URI, it must be resolved into an absolute URI using the URI of
+                        // the resource containing the entity declaration as the base
+                        // URI [RFC2396]."
+                        // So I'm falling a bit short here.
+                        const XMLCh* theURI = theEntity->getSystemId();
 
                         if(theURI == 0)
-					    {
-						    theURI = theEntity->getPublicId();
-					    }
+                        {
+                            theURI = theEntity->getPublicId();
+                        }
 
                         if(theURI != 0)
-					    {
+                        {
                             return theWrapper->getPooledString(theURI);
-					    }
-				    }
-			    }
-		    }
-	    }
-	}
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return s_emptyString;
 }
@@ -137,10 +137,10 @@ XercesDOMSupport::getUnparsedEntityURI(
 
 bool
 XercesDOMSupport::isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
 {
-	return DOMServices::isNodeAfter(node1, node2);
+    return DOMServices::isNodeAfter(node1, node2);
 }
 
 

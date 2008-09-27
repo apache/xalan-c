@@ -41,35 +41,35 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctor : public XalanColl
 {
 public:
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
-	 */
-	ICUBridgeCollationCompareFunctor(MemoryManager& theManager, 
-                                                bool	fCacheCollators = false);
+    /**
+     * Constructor.
+     * 
+     * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
+     */
+    ICUBridgeCollationCompareFunctor(MemoryManager& theManager, 
+                                                bool    fCacheCollators = false);
 
-	static ICUBridgeCollationCompareFunctor*
-    create(MemoryManager& theManager, bool	fCacheCollators = false);
+    static ICUBridgeCollationCompareFunctor*
+    create(MemoryManager& theManager, bool  fCacheCollators = false);
 
-	virtual
-	~ICUBridgeCollationCompareFunctor();
+    virtual
+    ~ICUBridgeCollationCompareFunctor();
 
-	virtual int
-	operator()(
-			const XalanDOMChar*					theLHS,
-			const XalanDOMChar*					theRHS,
-			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
+    virtual int
+    operator()(
+            const XalanDOMChar*                 theLHS,
+            const XalanDOMChar*                 theRHS,
+            XalanCollationServices::eCaseOrder  theCaseOrder = XalanCollationServices::eDefault) const;
 
-	virtual int
-	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
+    virtual int
+    operator()(
+            const XalanDOMChar*     theLHS,
+            const XalanDOMChar*     theRHS,
+            const XalanDOMChar*     theLocale,
+            XalanCollationServices::eCaseOrder  theCaseOrder = XalanCollationServices::eDefault) const;
 private:
 
-	ICUBridgeCollationCompareFunctorImpl* const		m_impl;
+    ICUBridgeCollationCompareFunctorImpl* const     m_impl;
 };
 
 
@@ -78,4 +78,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ICUBRIDGE_COLLATIONCOMPAREFUNCTOR_GUARD_1357924680
+#endif  // ICUBRIDGE_COLLATIONCOMPAREFUNCTOR_GUARD_1357924680

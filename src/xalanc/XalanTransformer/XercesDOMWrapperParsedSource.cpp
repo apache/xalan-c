@@ -41,52 +41,52 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI,
+            const DOM_Document_Type&    theDocument,
+            XercesParserLiaison&        theParserLiaison,
+            XercesDOMSupport&           theDOMSupport,
+            const XalanDOMString&       theURI,
             MemoryManager&          theManager) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(theURI,theManager)
+    XalanParsedSource(),
+    m_parserLiaison(theParserLiaison),
+    m_domSupport(theDOMSupport),
+    m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
+    m_uri(theURI,theManager)
 {
     XalanDOMString& refURI = const_cast<XalanDOMString&>(m_uri);
 
     URISupport::NormalizeURIText(refURI);
 
-	assert(m_parsedSource != 0);
+    assert(m_parsedSource != 0);
 }
 #endif
 
 
 
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
- 			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI,
+            const DOMDocument_Type*     theDocument,
+            XercesParserLiaison&        theParserLiaison,
+            XercesDOMSupport&           theDOMSupport,
+            const XalanDOMString&       theURI,
             MemoryManager&          theManager) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(theURI, theManager)
+    XalanParsedSource(),
+    m_parserLiaison(theParserLiaison),
+    m_domSupport(theDOMSupport),
+    m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
+    m_uri(theURI, theManager)
 {
     XalanDOMString& refURI = const_cast<XalanDOMString&>(m_uri);
 
     URISupport::NormalizeURIText(refURI);
 
 
-	assert(m_parsedSource != 0);
+    assert(m_parsedSource != 0);
 }
 
 
 
 XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
 {
-	m_parserLiaison.destroyDocument(m_parsedSource);
+    m_parserLiaison.destroyDocument(m_parsedSource);
 }
 
 
@@ -94,7 +94,7 @@ XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
 XalanDocument*
 XercesDOMWrapperParsedSource::getDocument() const
 {
-	return m_parsedSource;
+    return m_parsedSource;
 }
 
 
@@ -110,7 +110,7 @@ XercesDOMWrapperParsedSource::createHelper(MemoryManager& theManager) const
 const XalanDOMString&
 XercesDOMWrapperParsedSource::getURI() const
 {
-	return m_uri;
+    return m_uri;
 }
 
 

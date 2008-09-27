@@ -46,30 +46,30 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportDefault : public DOMSupport
 public:
 
     // This constructor is deprecated.  Use the default constructor instead.
-	DOMSupportDefault(MemoryManager&    theManager);
+    DOMSupportDefault(MemoryManager&    theManager);
 
-	DOMSupportDefault();
+    DOMSupportDefault();
 
     virtual
-	~DOMSupportDefault();
+    ~DOMSupportDefault();
 
-	// These interfaces are inherited from Resettable...
+    // These interfaces are inherited from Resettable...
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
 
-	// These interfaces are inherited from DOMSupport...
+    // These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const;
 
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const;
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const;
 
 private:
 };
@@ -80,4 +80,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// DOMSUPPORTDEFAULT_HEADER_GUARD_1357924680
+#endif  // DOMSUPPORTDEFAULT_HEADER_GUARD_1357924680

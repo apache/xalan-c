@@ -41,132 +41,132 @@ class XALAN_PLATFORMSUPPORT_EXPORT DOMStringPrintWriter : public PrintWriter
 {
 public:
 
-	DOMStringPrintWriter(XalanDOMString&	theString);
+    DOMStringPrintWriter(XalanDOMString&    theString);
 
-	virtual
-	~DOMStringPrintWriter();
+    virtual
+    ~DOMStringPrintWriter();
 
-	XalanDOMString&
-	getString() const
-	{
-		return *m_outputString;
-	}
+    XalanDOMString&
+    getString() const
+    {
+        return *m_outputString;
+    }
 
-	void
-	setString(XalanDOMString& newString) 
-	{
-		m_outputString = &newString;
-	}
+    void
+    setString(XalanDOMString& newString) 
+    {
+        m_outputString = &newString;
+    }
 
-	// Output functions inherited from PrintWriter...
+    // Output functions inherited from PrintWriter...
 
-	virtual bool
+    virtual bool
     checkError() const;
 
-	virtual void
-	close();
+    virtual void
+    close();
 
-	virtual void
-	flush();
+    virtual void
+    flush();
 
-	virtual void
-	write(
-			const char*		s,
-			size_t			theOffset = 0,
-			size_t			theLength = npos);
+    virtual void
+    write(
+            const char*     s,
+            size_t          theOffset = 0,
+            size_t          theLength = npos);
 
-	virtual void
-	write(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+    virtual void
+    write(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
-	virtual void
-	write(XalanDOMChar		c);
+    virtual void
+    write(XalanDOMChar      c);
 
-	virtual void
-	write(
-			const XalanDOMString&		s,
-			XalanDOMString::size_type	theOffset = 0,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
-
-#if !defined(XALAN_BOOL_AS_INT)
-	virtual void
-	print(bool	b);
-#endif
-
-	virtual void
-	print(char	c);
-
-	virtual void
-	print(
-			const char*		s,
-			size_t			theLength = npos);
-
-	virtual void
-	print(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
-
-	virtual void
-	print(double	d);
-
-	virtual void
-	print(int	i);
-
-	virtual void
-	print(long	l);
-
-	virtual void
-	print(const XalanDOMString&		s);
-
-	virtual void
-	println();
+    virtual void
+    write(
+            const XalanDOMString&       s,
+            XalanDOMString::size_type   theOffset = 0,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
 #if !defined(XALAN_BOOL_AS_INT)
-	virtual void
-	println(bool	x);
+    virtual void
+    print(bool  b);
 #endif
 
-	virtual void
-	println(char	x);
+    virtual void
+    print(char  c);
 
-	virtual void
-	println(
-			const char*		s,
-		    size_t			theLength = npos);
+    virtual void
+    print(
+            const char*     s,
+            size_t          theLength = npos);
 
-	virtual void
-	println(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+    virtual void
+    print(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
-	virtual void
-	println(double	x);
+    virtual void
+    print(double    d);
 
-	virtual void
-	println(int		x);
+    virtual void
+    print(int   i);
 
-	virtual void
-	println(long	x);
+    virtual void
+    print(long  l);
 
-	virtual void
-	println(const XalanDOMString&	s);
+    virtual void
+    print(const XalanDOMString&     s);
+
+    virtual void
+    println();
+
+#if !defined(XALAN_BOOL_AS_INT)
+    virtual void
+    println(bool    x);
+#endif
+
+    virtual void
+    println(char    x);
+
+    virtual void
+    println(
+            const char*     s,
+            size_t          theLength = npos);
+
+    virtual void
+    println(
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
+
+    virtual void
+    println(double  x);
+
+    virtual void
+    println(int     x);
+
+    virtual void
+    println(long    x);
+
+    virtual void
+    println(const XalanDOMString&   s);
 
 protected:
 
-	XalanDOMString*		m_outputString;
+    XalanDOMString*     m_outputString;
 
 private:
 
-	// Not implemented
-	DOMStringPrintWriter(const DOMStringPrintWriter&);
+    // Not implemented
+    DOMStringPrintWriter(const DOMStringPrintWriter&);
 
-	DOMStringPrintWriter&
-	operator=(const DOMStringPrintWriter&);
+    DOMStringPrintWriter&
+    operator=(const DOMStringPrintWriter&);
 
-	bool
-	operator==(const DOMStringPrintWriter&);
+    bool
+    operator==(const DOMStringPrintWriter&);
 };
 
 
@@ -175,4 +175,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// DOMSTRING_PRINTWRITER_HEADER_GUARD_1357924680
+#endif  // DOMSTRING_PRINTWRITER_HEADER_GUARD_1357924680

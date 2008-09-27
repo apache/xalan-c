@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanNullOutputStream::XalanNullOutputStream(MemoryManager&      theManager) :
-	XalanOutputStream(theManager, 1)
+    XalanOutputStream(theManager, 1)
 {
 }
 
@@ -39,8 +39,8 @@ XalanNullOutputStream::~XalanNullOutputStream()
 
 void
 XalanNullOutputStream::writeData(
-			const char*		/* theBuffer */,
-			size_type		/* theBufferLength */)
+            const char*     /* theBuffer */,
+            size_type       /* theBufferLength */)
 {
 }
 

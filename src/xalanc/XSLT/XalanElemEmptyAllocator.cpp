@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanElemEmptyAllocator::XalanElemEmptyAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanElemEmptyAllocator::XalanElemEmptyAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,48 +40,48 @@ XalanElemEmptyAllocator::~XalanElemEmptyAllocator()
 
 XalanElemEmptyAllocator::data_type*
 XalanElemEmptyAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber,
-			const XalanDOMString*			elementName)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
+            const XalanDOMString*           elementName)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
-				constructionContext,
-				stylesheetTree,
-				lineNumber,
-				columnNumber,
-				elementName);
+    data_type* const    theResult =
+        new(theBlock) data_type(
+                constructionContext,
+                stylesheetTree,
+                lineNumber,
+                columnNumber,
+                elementName);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanElemEmptyAllocator::data_type*
 XalanElemEmptyAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMString*			elementName)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMString*           elementName)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(
-				constructionContext,
-				stylesheetTree,
-				elementName);
+    data_type* const    theResult =
+        new(theBlock) data_type(
+                constructionContext,
+                stylesheetTree,
+                elementName);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

@@ -38,13 +38,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesEntityReferenceBridge::XercesEntityReferenceBridge(
-			const DOM_EntityReferenceType&	theXercesDOMEntityReference,
-			const XercesBridgeNavigator&	theNavigator) :
-	XalanEntityReference(),
-	m_xercesNode(theXercesDOMEntityReference),
-	m_navigator(theNavigator),
-	m_children(theXercesDOMEntityReference.getChildNodes(),
-			   theNavigator)
+            const DOM_EntityReferenceType&  theXercesDOMEntityReference,
+            const XercesBridgeNavigator&    theNavigator) :
+    XalanEntityReference(),
+    m_xercesNode(theXercesDOMEntityReference),
+    m_navigator(theNavigator),
+    m_children(theXercesDOMEntityReference.getChildNodes(),
+               theNavigator)
 {
 }
 
@@ -59,7 +59,7 @@ XercesEntityReferenceBridge::~XercesEntityReferenceBridge()
 const XalanDOMString&
 XercesEntityReferenceBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName());
+    return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -67,7 +67,7 @@ XercesEntityReferenceBridge::getNodeName() const
 const XalanDOMString&
 XercesEntityReferenceBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -75,7 +75,7 @@ XercesEntityReferenceBridge::getNodeValue() const
 XercesEntityReferenceBridge::NodeType
 XercesEntityReferenceBridge::getNodeType() const
 {
-	return ENTITY_REFERENCE_NODE;
+    return ENTITY_REFERENCE_NODE;
 }
 
 
@@ -83,7 +83,7 @@ XercesEntityReferenceBridge::getNodeType() const
 XalanNode*
 XercesEntityReferenceBridge::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -91,7 +91,7 @@ XercesEntityReferenceBridge::getParentNode() const
 const XalanNodeList*
 XercesEntityReferenceBridge::getChildNodes() const
 {
-	return &m_children;
+    return &m_children;
 }
 
 
@@ -99,7 +99,7 @@ XercesEntityReferenceBridge::getChildNodes() const
 XalanNode*
 XercesEntityReferenceBridge::getFirstChild() const
 {
-	return m_navigator.getFirstChild(m_xercesNode);
+    return m_navigator.getFirstChild(m_xercesNode);
 }
 
 
@@ -107,7 +107,7 @@ XercesEntityReferenceBridge::getFirstChild() const
 XalanNode*
 XercesEntityReferenceBridge::getLastChild() const
 {
-	return m_navigator.getLastChild(m_xercesNode);
+    return m_navigator.getLastChild(m_xercesNode);
 }
 
 
@@ -115,7 +115,7 @@ XercesEntityReferenceBridge::getLastChild() const
 XalanNode*
 XercesEntityReferenceBridge::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -123,7 +123,7 @@ XercesEntityReferenceBridge::getPreviousSibling() const
 XalanNode*
 XercesEntityReferenceBridge::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -131,7 +131,7 @@ XercesEntityReferenceBridge::getNextSibling() const
 const XalanNamedNodeMap*
 XercesEntityReferenceBridge::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -139,7 +139,7 @@ XercesEntityReferenceBridge::getAttributes() const
 XalanDocument*
 XercesEntityReferenceBridge::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -149,15 +149,15 @@ XalanNode*
 #else
 XercesEntityReferenceBridge*
 #endif
-XercesEntityReferenceBridge::cloneNode(bool		deep) const
+XercesEntityReferenceBridge::cloneNode(bool     deep) const
 {
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return m_navigator.cloneNode(this, m_xercesNode, deep);
+    return m_navigator.cloneNode(this, m_xercesNode, deep);
 #else
-	XercesEntityReferenceBridge* const	theBridge =
-		static_cast<XercesEntityReferenceBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
+    XercesEntityReferenceBridge* const  theBridge =
+        static_cast<XercesEntityReferenceBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
-	return theBridge;
+    return theBridge;
 #endif
 }
 
@@ -165,36 +165,36 @@ XercesEntityReferenceBridge::cloneNode(bool		deep) const
 
 XalanNode*
 XercesEntityReferenceBridge::insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild)
+            XalanNode*  newChild,
+            XalanNode*  refChild)
 {
-	return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
+    return m_navigator.insertBefore(m_xercesNode, newChild, refChild);
 }
 
 
 
 XalanNode*
 XercesEntityReferenceBridge::replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild)
+            XalanNode*  newChild,
+            XalanNode*  oldChild)
 {
-	return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
+    return m_navigator.replaceChild(m_xercesNode, newChild, oldChild);
 }
 
 
 
 XalanNode*
-XercesEntityReferenceBridge::removeChild(XalanNode*	oldChild)
+XercesEntityReferenceBridge::removeChild(XalanNode* oldChild)
 {
-	return m_navigator.removeChild(m_xercesNode, oldChild);
+    return m_navigator.removeChild(m_xercesNode, oldChild);
 }
 
 
 
 XalanNode*
-XercesEntityReferenceBridge::appendChild(XalanNode*	newChild)
+XercesEntityReferenceBridge::appendChild(XalanNode* newChild)
 {
-	return m_navigator.appendChild(m_xercesNode, newChild);
+    return m_navigator.appendChild(m_xercesNode, newChild);
 }
 
 
@@ -202,15 +202,15 @@ XercesEntityReferenceBridge::appendChild(XalanNode*	newChild)
 bool
 XercesEntityReferenceBridge::hasChildNodes() const
 {
-	return m_xercesNode.hasChildNodes();
+    return m_xercesNode.hasChildNodes();
 }
 
 
 
 void
-XercesEntityReferenceBridge::setNodeValue(const XalanDOMString&	nodeValue)
+XercesEntityReferenceBridge::setNodeValue(const XalanDOMString& nodeValue)
 {
-	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
+    XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -218,19 +218,19 @@ XercesEntityReferenceBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesEntityReferenceBridge::normalize()
 {
-	XercesBridgeHelper::normalize(m_xercesNode);
+    XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
 
 bool
 XercesEntityReferenceBridge::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) const
 {
-	return m_xercesNode.isSupported(
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
+    return m_xercesNode.isSupported(
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
@@ -238,7 +238,7 @@ XercesEntityReferenceBridge::isSupported(
 const XalanDOMString&
 XercesEntityReferenceBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -246,7 +246,7 @@ XercesEntityReferenceBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesEntityReferenceBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix());
+    return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -254,15 +254,15 @@ XercesEntityReferenceBridge::getPrefix() const
 const XalanDOMString&
 XercesEntityReferenceBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName());
+    return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
 
 void
-XercesEntityReferenceBridge::setPrefix(const XalanDOMString&	prefix)
+XercesEntityReferenceBridge::setPrefix(const XalanDOMString&    prefix)
 {
-	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
+    XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -270,7 +270,7 @@ XercesEntityReferenceBridge::setPrefix(const XalanDOMString&	prefix)
 bool
 XercesEntityReferenceBridge::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -278,7 +278,7 @@ XercesEntityReferenceBridge::isIndexed() const
 XercesEntityReferenceBridge::IndexType
 XercesEntityReferenceBridge::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 

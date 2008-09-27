@@ -33,26 +33,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	ExtensionFunctionHandler::s_tokenDelimiterCharacters[] =
+const XalanDOMChar  ExtensionFunctionHandler::s_tokenDelimiterCharacters[] =
 {
-		XalanUnicode::charSpace,
-		XalanUnicode::charHTab,
-		XalanUnicode::charLF,
-		XalanUnicode::charCR,
-		0
+        XalanUnicode::charSpace,
+        XalanUnicode::charHTab,
+        XalanUnicode::charLF,
+        XalanUnicode::charCR,
+        0
 };
 
 
 
-ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&	namespaceUri,
+ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&    namespaceUri,
                                                    MemoryManager& theManager) :
-	m_namespaceUri(namespaceUri,theManager),
-	m_scriptLang(theManager),
-	m_scriptSrc(theManager),
-	m_scriptSrcURL(theManager),
-	m_javaObject(0),
-	m_functions(theManager),
-	m_componentStarted(false)
+    m_namespaceUri(namespaceUri,theManager),
+    m_scriptLang(theManager),
+    m_scriptSrc(theManager),
+    m_scriptSrcURL(theManager),
+    m_javaObject(0),
+    m_functions(theManager),
+    m_componentStarted(false)
 {
 }
 
@@ -66,74 +66,74 @@ ExtensionFunctionHandler::~ExtensionFunctionHandler()
 
 ExtensionFunctionHandler::ExtensionFunctionHandler (
             MemoryManager&      theManager,
-			const XalanDOMString&	namespaceUri,
-			const XalanDOMString&	funcNames,
-			const XalanDOMString&	lang,
-			const XalanDOMString&	srcURL,
-			const XalanDOMString&	src) :
-	m_namespaceUri(namespaceUri, theManager),
-	m_scriptLang(lang, theManager),
-	m_scriptSrc(src, theManager),
-	m_scriptSrcURL(srcURL, theManager),
-	m_javaObject(0),
-	m_functions(theManager),
-	m_componentStarted(false)
+            const XalanDOMString&   namespaceUri,
+            const XalanDOMString&   funcNames,
+            const XalanDOMString&   lang,
+            const XalanDOMString&   srcURL,
+            const XalanDOMString&   src) :
+    m_namespaceUri(namespaceUri, theManager),
+    m_scriptLang(lang, theManager),
+    m_scriptSrc(src, theManager),
+    m_scriptSrcURL(srcURL, theManager),
+    m_javaObject(0),
+    m_functions(theManager),
+    m_componentStarted(false)
 {
-	setFunctions (funcNames);
+    setFunctions (funcNames);
 }
 
 
 
 void
-ExtensionFunctionHandler::setFunctions(const XalanDOMString&	funcNames) 
+ExtensionFunctionHandler::setFunctions(const XalanDOMString&    funcNames) 
 {
-	if (funcNames.empty()) 
-	{
-		return;
-	}
+    if (funcNames.empty()) 
+    {
+        return;
+    }
 
-	StringTokenizer		st(funcNames, s_tokenDelimiterCharacters, false);
+    StringTokenizer     st(funcNames, s_tokenDelimiterCharacters, false);
 
     XalanDOMString theBuffer(getMemoryManager());
 
-	while (st.hasMoreTokens() == true)
-	{
+    while (st.hasMoreTokens() == true)
+    {
         st.nextToken(theBuffer);
 
-		m_functions.insert(theBuffer);
-	}
+        m_functions.insert(theBuffer);
+    }
 }
 
 
 void
 ExtensionFunctionHandler::setScript(
-			const XalanDOMString&	lang,
-			const XalanDOMString&	srcURL,
-			const XalanDOMString&	scriptSrc)
+            const XalanDOMString&   lang,
+            const XalanDOMString&   srcURL,
+            const XalanDOMString&   scriptSrc)
 {
-	m_scriptLang = lang;
-	m_scriptSrcURL = srcURL;
-	m_scriptSrc = scriptSrc;
+    m_scriptLang = lang;
+    m_scriptSrcURL = srcURL;
+    m_scriptSrc = scriptSrc;
 }
 
 
 
 bool
-ExtensionFunctionHandler::isFunctionAvailable (const XalanDOMString&	function) const
+ExtensionFunctionHandler::isFunctionAvailable (const XalanDOMString&    function) const
 {
-	return m_functions.find(function) != m_functions.end();
+    return m_functions.find(function) != m_functions.end();
 }
 
 
 
 XObjectPtr
 ExtensionFunctionHandler::callFunction(
-			const XalanDOMString&	/* funcName */,
-			const ArgVectorType&	/* args */)
+            const XalanDOMString&   /* funcName */,
+            const ArgVectorType&    /* args */)
 {
-	assert(0);	// @@ TODO: Not implemented
+    assert(0);  // @@ TODO: Not implemented
 
-	return XObjectPtr();
+    return XObjectPtr();
 }
 
 

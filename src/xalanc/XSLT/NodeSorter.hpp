@@ -55,10 +55,10 @@ class XalanNode;
 class XPath;
 
 
-typedef	XalanVector<double>			NumberVectorTypeDecl;
+typedef XalanVector<double>         NumberVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(NumberVectorTypeDecl)
 
-typedef	XalanVector<XalanDOMString>	StringVectorTypeDecl;
+typedef XalanVector<XalanDOMString> StringVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(StringVectorTypeDecl)
 
 
@@ -69,169 +69,169 @@ class XALAN_XSLT_EXPORT NodeSorter
 {
 public:
 
-	struct XALAN_XSLT_EXPORT VectorEntry
-	{
-	public:
+    struct XALAN_XSLT_EXPORT VectorEntry
+    {
+    public:
 
-		VectorEntry(
-			XalanNode*		theNode = 0,
-			XalanSize_t	    thePosition = 0) :
-			m_node(theNode),
-			m_position(thePosition)
-		{
-		}
+        VectorEntry(
+            XalanNode*      theNode = 0,
+            XalanSize_t     thePosition = 0) :
+            m_node(theNode),
+            m_position(thePosition)
+        {
+        }
 
-		XalanNode*		m_node;
-		XalanSize_t	    m_position;
-	};
+        XalanNode*      m_node;
+        XalanSize_t     m_position;
+    };
 
-	typedef XalanVector<VectorEntry>			NodeVectorType;
-	typedef XalanVector<NodeSortKey>			NodeSortKeyVectorType;
+    typedef XalanVector<VectorEntry>            NodeVectorType;
+    typedef XalanVector<NodeSortKey>            NodeSortKeyVectorType;
 
-	explicit
-	NodeSorter(MemoryManager& theManager);
+    explicit
+    NodeSorter(MemoryManager& theManager);
   
-	~NodeSorter();
+    ~NodeSorter();
 
-	NodeSortKeyVectorType&
-	getSortKeys()
-	{
-		return m_keys;
-	}
+    NodeSortKeyVectorType&
+    getSortKeys()
+    {
+        return m_keys;
+    }
 
-	/**
-	 * Given a list of nodes, sort each node according to the criteria in the
-	 * keys.  The list is assumed to be in document order.
-	 *
-	 * @param executionContext current execution context
-	 * @param v    list of Nodes
-	 */
-	void
-	sort(
-			StylesheetExecutionContext&		executionContext,
-			MutableNodeRefList&				theList);
+    /**
+     * Given a list of nodes, sort each node according to the criteria in the
+     * keys.  The list is assumed to be in document order.
+     *
+     * @param executionContext current execution context
+     * @param v    list of Nodes
+     */
+    void
+    sort(
+            StylesheetExecutionContext&     executionContext,
+            MutableNodeRefList&             theList);
 
-	/**
-	 * Return the results of a compare of two nodes.
-	 */
+    /**
+     * Return the results of a compare of two nodes.
+     */
 #if defined(XALAN_NO_STD_NAMESPACE)
-	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #else
-	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #endif
-	{
-	public:
+    {
+    public:
 
-	/**
-	 * Construct a NodeSortKeyCompare object, to perform the sort
-	 *
-	 * @param executionContext current execution context
-	 * @param theNodes        vector or nodes to be sorted
-	 * @param theNodeSortKeys vector of keys upon which to sort
-	 */
-		NodeSortKeyCompare(
-				StylesheetExecutionContext&		executionContext,
-				NodeSorter&						theSorter,
-				const NodeVectorType&			theNodes,
-				const NodeSortKeyVectorType&	theNodeSortKeys) :
-			m_executionContext(executionContext),
-			m_sorter(theSorter),
-			m_nodes(theNodes),
-			m_nodeSortKeys(theNodeSortKeys)
-		{
-		}
+    /**
+     * Construct a NodeSortKeyCompare object, to perform the sort
+     *
+     * @param executionContext current execution context
+     * @param theNodes        vector or nodes to be sorted
+     * @param theNodeSortKeys vector of keys upon which to sort
+     */
+        NodeSortKeyCompare(
+                StylesheetExecutionContext&     executionContext,
+                NodeSorter&                     theSorter,
+                const NodeVectorType&           theNodes,
+                const NodeSortKeyVectorType&    theNodeSortKeys) :
+            m_executionContext(executionContext),
+            m_sorter(theSorter),
+            m_nodes(theNodes),
+            m_nodeSortKeys(theNodeSortKeys)
+        {
+        }
 
-		/**
-		 * Compare two nodes, returning a value to indicate the
-		 * result
-		 *
-		 * @param theLHS the first node to compare
-		 * @param theRHS the second node to compare
-		 * @param theKeyIndex the index of the key to use
-		 * @result < 0 if theLHS is less than theRHS, 0 if they are equal, and > 0 if theLHS is greater than theRHS
-		 */
-		int
-		compare(
-				first_argument_type		theLHS,
-				second_argument_type	theRHS,
-				XalanSize_t			    theKeyIndex = 0) const;
+        /**
+         * Compare two nodes, returning a value to indicate the
+         * result
+         *
+         * @param theLHS the first node to compare
+         * @param theRHS the second node to compare
+         * @param theKeyIndex the index of the key to use
+         * @result < 0 if theLHS is less than theRHS, 0 if they are equal, and > 0 if theLHS is greater than theRHS
+         */
+        int
+        compare(
+                first_argument_type     theLHS,
+                second_argument_type    theRHS,
+                XalanSize_t             theKeyIndex = 0) const;
 
-		/**
-		 * Compare two nodes as a less predicate.
-		 *
-		 * @param theLHS the first node to compare
-		 * @param theRHS the second node to compare
-		 * @param theKeyIndex the index of the key to use
-		 * @return true if theLHS is less than theRHS
-		 */
-		result_type
-		operator()(
-				first_argument_type		theLHS,
-				second_argument_type	theRHS,
-				XalanSize_t			    theKeyIndex = 0) const
-		{
-			return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
-		}
+        /**
+         * Compare two nodes as a less predicate.
+         *
+         * @param theLHS the first node to compare
+         * @param theRHS the second node to compare
+         * @param theKeyIndex the index of the key to use
+         * @return true if theLHS is less than theRHS
+         */
+        result_type
+        operator()(
+                first_argument_type     theLHS,
+                second_argument_type    theRHS,
+                XalanSize_t             theKeyIndex = 0) const
+        {
+            return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
+        }
 
-	protected:
+    protected:
 
-		double
-		getNumberResult(
-				const NodeSortKey&		theKey,
-				XalanSize_t			    theKeyIndex,
-				first_argument_type		theEntry) const;
+        double
+        getNumberResult(
+                const NodeSortKey&      theKey,
+                XalanSize_t             theKeyIndex,
+                first_argument_type     theEntry) const;
 
-		const XalanDOMString&
-		getStringResult(
-				const NodeSortKey&		theKey,
-				XalanSize_t			    theKeyIndex,
-				first_argument_type		theEntry) const;
+        const XalanDOMString&
+        getStringResult(
+                const NodeSortKey&      theKey,
+                XalanSize_t             theKeyIndex,
+                first_argument_type     theEntry) const;
 
-	private:
+    private:
 
-		StylesheetExecutionContext&		m_executionContext;
-		NodeSorter&						m_sorter;
-		const NodeVectorType&			m_nodes;
-		const NodeSortKeyVectorType&	m_nodeSortKeys;
-	};
+        StylesheetExecutionContext&     m_executionContext;
+        NodeSorter&                     m_sorter;
+        const NodeVectorType&           m_nodes;
+        const NodeSortKeyVectorType&    m_nodeSortKeys;
+    };
 
-	friend struct NodeSortKeyCompare;
+    friend struct NodeSortKeyCompare;
 
-	typedef	NumberVectorTypeDecl		NumberVectorType;
-	typedef	XalanVector<XObjectPtr>		XObjectVectorType;
-	typedef	StringVectorTypeDecl    	StringVectorType;
+    typedef NumberVectorTypeDecl        NumberVectorType;
+    typedef XalanVector<XObjectPtr>     XObjectVectorType;
+    typedef StringVectorTypeDecl        StringVectorType;
 
-	typedef XalanVector<NumberVectorType>	NumberCacheType;
-	typedef XalanVector<XObjectVectorType>	XObjectCacheType;
-	typedef XalanVector<StringVectorType>	StringCacheType;
+    typedef XalanVector<NumberVectorType>   NumberCacheType;
+    typedef XalanVector<XObjectVectorType>  XObjectCacheType;
+    typedef XalanVector<StringVectorType>   StringCacheType;
 
-	typedef NumberCacheType		NumberResultsCacheType;
+    typedef NumberCacheType     NumberResultsCacheType;
 
 #if defined(XALAN_NODESORTER_CACHE_XOBJECTS)
-	typedef XObjectCacheType	StringResultsCacheType;
+    typedef XObjectCacheType    StringResultsCacheType;
 #else
-	typedef StringCacheType		StringResultsCacheType;
+    typedef StringCacheType     StringResultsCacheType;
 #endif
 
 private:
 
-	/**
-	 * Given a vector of nodes, sort each node according to the criteria in the
-	 * keys.
-	 *
-	 * @param executionContext current execution context
-	 */
-	void
-	sort(StylesheetExecutionContext&	executionContext);
+    /**
+     * Given a vector of nodes, sort each node according to the criteria in the
+     * keys.
+     *
+     * @param executionContext current execution context
+     */
+    void
+    sort(StylesheetExecutionContext&    executionContext);
 
-	// Data members...
-	NumberResultsCacheType	m_numberResultsCache;
+    // Data members...
+    NumberResultsCacheType  m_numberResultsCache;
 
-	StringResultsCacheType	m_stringResultsCache;
+    StringResultsCacheType  m_stringResultsCache;
 
-	NodeSortKeyVectorType	m_keys;
+    NodeSortKeyVectorType   m_keys;
 
-	NodeVectorType			m_scratchVector;
+    NodeVectorType          m_scratchVector;
 };
 
 
@@ -240,4 +240,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_NODESORTER_HEADER_GUARD
+#endif  // XALAN_NODESORTER_HEADER_GUARD

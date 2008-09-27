@@ -239,19 +239,19 @@ public:
     // These methods are inherited from XSLTProcessor ...
 
     virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode);
+            const XalanNode*        sourceNode);
 
-	virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode);
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
 
     virtual void
     process(

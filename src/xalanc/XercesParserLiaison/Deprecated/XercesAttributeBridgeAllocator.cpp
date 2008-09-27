@@ -30,8 +30,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesAttributeBridgeAllocator::XercesAttributeBridgeAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XercesAttributeBridgeAllocator::XercesAttributeBridgeAllocator(size_type    theBlockCount) :
+    m_allocator(theBlockCount)
 {
 }
 
@@ -45,17 +45,17 @@ XercesAttributeBridgeAllocator::~XercesAttributeBridgeAllocator()
 
 XercesAttributeBridgeAllocator::ObjectType*
 XercesAttributeBridgeAllocator::create(
-			const DOM_AttrType&				theXercesAttr,
-			const XercesBridgeNavigator&	theNavigator)
+            const DOM_AttrType&             theXercesAttr,
+            const XercesBridgeNavigator&    theNavigator)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(theXercesAttr, theNavigator);
+    new(theBlock) ObjectType(theXercesAttr, theNavigator);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -63,7 +63,7 @@ XercesAttributeBridgeAllocator::create(
 void 
 XercesAttributeBridgeAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

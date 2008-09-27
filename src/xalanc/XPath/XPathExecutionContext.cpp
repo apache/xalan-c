@@ -28,7 +28,7 @@ XPathExecutionContext::XPathExecutionContext(
             MemoryManager&      theMemoryManager,
             XObjectFactory*     theXObjectFactory) :
     ExecutionContext(theMemoryManager),
-	m_xobjectFactory(theXObjectFactory)
+    m_xobjectFactory(theXObjectFactory)
 {
 }
 

@@ -26,18 +26,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 TopLevelArg::TopLevelArg(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XalanDOMString&	expr) :
-	m_qname(name, theManager),
-	m_expression(expr, theManager),
-	m_xobject(0)
+        const XalanQName&       name,
+        const XalanDOMString&   expr) :
+    m_qname(name, theManager),
+    m_expression(expr, theManager),
+    m_xobject(0)
 {
 }
 TopLevelArg*
 TopLevelArg::create(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XalanDOMString&	expr)
+        const XalanQName&       name,
+        const XalanDOMString&   expr)
 {
     typedef TopLevelArg ThisType;
 
@@ -54,19 +54,19 @@ TopLevelArg::create(
 
 TopLevelArg::TopLevelArg(
         MemoryManager&  theManager,
-		const XalanQName&	name,
-		const XObjectPtr	variable) :
-	m_qname(name, theManager),
-	m_expression(theManager),
-	m_xobject(variable)
+        const XalanQName&   name,
+        const XObjectPtr    variable) :
+    m_qname(name, theManager),
+    m_expression(theManager),
+    m_xobject(variable)
 {
 }
 
 TopLevelArg*
 TopLevelArg::create(
         MemoryManager&      theManager,
-		const XalanQName&		name,
-		const XObjectPtr	    variable)
+        const XalanQName&       name,
+        const XObjectPtr        variable)
 {
     typedef TopLevelArg ThisType;
 
@@ -82,11 +82,11 @@ TopLevelArg::create(
 }
 
 
-TopLevelArg::TopLevelArg(const TopLevelArg&		theSource,
+TopLevelArg::TopLevelArg(const TopLevelArg&     theSource,
                          MemoryManager&     theManager) :
-	m_qname(theSource.m_qname, theManager),
-	m_expression(theSource.m_expression, theManager),
-	m_xobject(theSource.m_xobject)
+    m_qname(theSource.m_qname, theManager),
+    m_expression(theSource.m_expression, theManager),
+    m_xobject(theSource.m_xobject)
 {
 }
 

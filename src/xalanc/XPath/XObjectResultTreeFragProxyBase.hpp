@@ -39,78 +39,78 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxyBase : public XalanDocumentFr
 {
 public:
 
-	XObjectResultTreeFragProxyBase();
+    XObjectResultTreeFragProxyBase();
 
-	virtual
-	~XObjectResultTreeFragProxyBase();
+    virtual
+    ~XObjectResultTreeFragProxyBase();
 
 
-	// These interfaces are inherited from XalanDocumentFragment...
+    // These interfaces are inherited from XalanDocumentFragment...
 
-	virtual const XalanDOMString&
-	getNodeName() const;
+    virtual const XalanDOMString&
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const = 0;
+    virtual XalanNode*
+    getFirstChild() const = 0;
 
-	virtual XalanNode*
-	getLastChild() const = 0;
+    virtual XalanNode*
+    getLastChild() const = 0;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual XalanDocument*
-	getOwnerDocument() const;
+    virtual XalanDocument*
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
 protected:
 
-	XObjectResultTreeFragProxyBase(const XObjectResultTreeFragProxyBase&	theRHS);
+    XObjectResultTreeFragProxyBase(const XObjectResultTreeFragProxyBase&    theRHS);
 
 private:
 
-	// Not implemented...
-	XObjectResultTreeFragProxyBase&
-	operator=(const XObjectResultTreeFragProxyBase&	theRHS);
+    // Not implemented...
+    XObjectResultTreeFragProxyBase&
+    operator=(const XObjectResultTreeFragProxyBase& theRHS);
 
-	bool
-	operator==(const XObjectResultTreeFragProxyBase&	theRHS);
+    bool
+    operator==(const XObjectResultTreeFragProxyBase&    theRHS);
 
 
-	// Data members...
-	static const XalanDOMString				s_emptyString;
+    // Data members...
+    static const XalanDOMString             s_emptyString;
 };
 
 
@@ -119,4 +119,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECTRESULTTREEFRAGPROXYBASE_HEADER_GUARD_1357924680
+#endif  // XOBJECTRESULTTREEFRAGPROXYBASE_HEADER_GUARD_1357924680

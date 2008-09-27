@@ -44,96 +44,96 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextWrapper : public XalanText
 {
 public:
 
-	XercesTextWrapper(
-			const DOMTextType*				theXercesText,
-			const XercesWrapperNavigator&	theNavigator);
+    XercesTextWrapper(
+            const DOMTextType*              theXercesText,
+            const XercesWrapperNavigator&   theNavigator);
 
-	virtual
-	~XercesTextWrapper();
+    virtual
+    ~XercesTextWrapper();
 
 
     // These interfaces are inherited from XalanText
 
     virtual const XalanDOMString&
-	getNodeName() const;
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual XalanDocument*
-	getOwnerDocument() const;
+    virtual XalanDocument*
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
-	virtual const XalanDOMString&
-	getData() const;
+    virtual const XalanDOMString&
+    getData() const;
 
-	virtual bool
-	isWhitespace() const;
+    virtual bool
+    isWhitespace() const;
 
-	/**
-	 * Get the Xerces node this instance represent.
-	 *
-	 * @return The Xerces node
-	 */
-	const DOMTextType*
-	getXercesNode() const
-	{
-		return m_xercesNode;
-	}
+    /**
+     * Get the Xerces node this instance represent.
+     *
+     * @return The Xerces node
+     */
+    const DOMTextType*
+    getXercesNode() const
+    {
+        return m_xercesNode;
+    }
 
 private:
 
-	// Not implemented...
-	XercesTextWrapper(const XercesTextWrapper&	theSource);
+    // Not implemented...
+    XercesTextWrapper(const XercesTextWrapper&  theSource);
 
-	XercesTextWrapper&
-	operator=(const XercesTextWrapper&	theSource);
+    XercesTextWrapper&
+    operator=(const XercesTextWrapper&  theSource);
 
-	bool
-	operator==(const XercesTextWrapper&	theRHS) const;
+    bool
+    operator==(const XercesTextWrapper& theRHS) const;
 
-	// Data members...
-	const DOMTextType* const		m_xercesNode;
+    // Data members...
+    const DOMTextType* const        m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+    const XercesWrapperNavigator&   m_navigator;
 };
 
 
@@ -142,4 +142,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESTEXTWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESTEXTWRAPPER_HEADER_GUARD_1357924680)

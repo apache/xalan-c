@@ -157,76 +157,76 @@ XALAN_USING_STD(vector)
 void
 printArgOptions()
 {
-	cerr << endl
-		 << "TestXSLT options: "
-		 << endl
-		 << endl
-		 << "Options are case-sensitive."
-		 << endl
-		 << endl
-		 << " [-? Shows this message.]"
-		 << endl
-		 << endl
-		 << " [-h Shows this message.]"
-		 << endl
-		 << endl
-		 << " [-in <source URL> (If not specified, stdin is used.)]"
-		 << endl
-		 << endl
-		 << " [-xsl <stylesheet URL>]"
-		 << endl
-		 << " [-out <output file>]"
-		 << endl
-		 << " [-v  Show version information only.]"
-		 << endl
-		 << " [-qc  Quiet pattern conflicts warnings.]"
-		 << endl
-		 << " [-q  Use quiet mode.]"
-		 << endl
-		 << " [-indent n  Controls how many spaces to indent. (default is 0)]"
-		 << endl
-		 << " [-validate  Controls whether validation occurs. Validation is off by default.]"
-		 << endl
-		 << endl
-		 << " [-tt  Trace the templates as they are being called.]"
-		 << endl
-		 << " [-tg  Trace each generation event.]"
-		 << endl
-		 << " [-ts  Trace each selection event.]"
-		 << endl
-		 << " [-ttc  Trace the template children as they are being processed.]"
-		 << endl
-		 << endl
-		 << " [-xml  Use XML formatter.]"
-		 << endl
-		 << " [-text  Use Text formatter.]"
-		 << endl
-		 << " [-html  Use HTML formatter.]"
-		 << endl
-		 << " [-dom  Use DOM formatter.  Generates a DOM instance, then formats XML for output.]"
-		 << endl
-		 << " [-xst  Use source tree formatter.  Generates an instance of the default source tree, then formats XML for output.]"
-		 << endl
-		 << endl
-		 << " [-param name expression  Sets a stylesheet parameter.]"
-		 << endl
-		 << endl
-		 << " [-xd  Use Xerces DOM instead of Xalan source tree.]"
-		 << endl
-		 << endl
-		 << " [-de  Disable built-in extension functions.]"
-		 << endl
-		 << "The following option is valid only with -html."
-		 << endl
-		 << endl
-		 << " [-noindent  Turns off HTML indenting."
-		 << endl
-		 << endl
-		 << "The following option is valid only with -xml."
-		 << endl
-		 << endl
-		 << " [-nh  Don't generate the XML declaration.]"
-		 << endl;
+    cerr << endl
+         << "TestXSLT options: "
+         << endl
+         << endl
+         << "Options are case-sensitive."
+         << endl
+         << endl
+         << " [-? Shows this message.]"
+         << endl
+         << endl
+         << " [-h Shows this message.]"
+         << endl
+         << endl
+         << " [-in <source URL> (If not specified, stdin is used.)]"
+         << endl
+         << endl
+         << " [-xsl <stylesheet URL>]"
+         << endl
+         << " [-out <output file>]"
+         << endl
+         << " [-v  Show version information only.]"
+         << endl
+         << " [-qc  Quiet pattern conflicts warnings.]"
+         << endl
+         << " [-q  Use quiet mode.]"
+         << endl
+         << " [-indent n  Controls how many spaces to indent. (default is 0)]"
+         << endl
+         << " [-validate  Controls whether validation occurs. Validation is off by default.]"
+         << endl
+         << endl
+         << " [-tt  Trace the templates as they are being called.]"
+         << endl
+         << " [-tg  Trace each generation event.]"
+         << endl
+         << " [-ts  Trace each selection event.]"
+         << endl
+         << " [-ttc  Trace the template children as they are being processed.]"
+         << endl
+         << endl
+         << " [-xml  Use XML formatter.]"
+         << endl
+         << " [-text  Use Text formatter.]"
+         << endl
+         << " [-html  Use HTML formatter.]"
+         << endl
+         << " [-dom  Use DOM formatter.  Generates a DOM instance, then formats XML for output.]"
+         << endl
+         << " [-xst  Use source tree formatter.  Generates an instance of the default source tree, then formats XML for output.]"
+         << endl
+         << endl
+         << " [-param name expression  Sets a stylesheet parameter.]"
+         << endl
+         << endl
+         << " [-xd  Use Xerces DOM instead of Xalan source tree.]"
+         << endl
+         << endl
+         << " [-de  Disable built-in extension functions.]"
+         << endl
+         << "The following option is valid only with -html."
+         << endl
+         << endl
+         << " [-noindent  Turns off HTML indenting."
+         << endl
+         << endl
+         << "The following option is valid only with -xml."
+         << endl
+         << endl
+         << " [-nh  Don't generate the XML declaration.]"
+         << endl;
 }
 
 
@@ -244,442 +244,442 @@ XALAN_CPP_NAMESPACE_USE
 
 
 
-typedef vector<pair< const char*, const char*> >	StringPairVectorType;
+typedef vector<pair< const char*, const char*> >    StringPairVectorType;
 
 
 
 struct CmdLineParams
 {
-	StringPairVectorType	params;
+    StringPairVectorType    params;
 
-	bool		setQuietConflictWarnings;
-	bool		setQuietMode;
-	bool		versionOnly;
-	bool		traceTemplates;
-	bool		traceGenerationEvent;
-	bool		traceSelectionEvent;
-	bool		traceTemplateChildren;
-	bool		shouldWriteXMLHeader;
-	bool		doValidation;
-	bool		noIndent;
-	bool		formatToNull;
-	bool		formatToSourceTree;
-	bool		useDOM;
-	bool		disableExtensions;
+    bool        setQuietConflictWarnings;
+    bool        setQuietMode;
+    bool        versionOnly;
+    bool        traceTemplates;
+    bool        traceGenerationEvent;
+    bool        traceSelectionEvent;
+    bool        traceTemplateChildren;
+    bool        shouldWriteXMLHeader;
+    bool        doValidation;
+    bool        noIndent;
+    bool        formatToNull;
+    bool        formatToSourceTree;
+    bool        useDOM;
+    bool        disableExtensions;
 
-	int			indentAmount;
-	int			outputType;
+    int         indentAmount;
+    int         outputType;
 
-	const char*		outFileName;
-	const char*		xslFileName;
-	const char*		inFileName;
+    const char*     outFileName;
+    const char*     xslFileName;
+    const char*     inFileName;
 
-	CmdLineParams() :
-		params(),
-		setQuietConflictWarnings(false),
-		setQuietMode(false),
-		versionOnly(false),
-		traceTemplates(false),
-		traceGenerationEvent(false),
-		traceSelectionEvent(false),
-		traceTemplateChildren(false),
-		shouldWriteXMLHeader(true),
-		doValidation(false),
-		noIndent(false),
-		formatToNull(false),
-		formatToSourceTree(false),
-		useDOM(false),
-		disableExtensions(false),
-		indentAmount(-1),
-		outputType(-1),
-		outFileName(0),
-		xslFileName(0),
-		inFileName(0)
-	{
-	}
+    CmdLineParams() :
+        params(),
+        setQuietConflictWarnings(false),
+        setQuietMode(false),
+        versionOnly(false),
+        traceTemplates(false),
+        traceGenerationEvent(false),
+        traceSelectionEvent(false),
+        traceTemplateChildren(false),
+        shouldWriteXMLHeader(true),
+        doValidation(false),
+        noIndent(false),
+        formatToNull(false),
+        formatToSourceTree(false),
+        useDOM(false),
+        disableExtensions(false),
+        indentAmount(-1),
+        outputType(-1),
+        outFileName(0),
+        xslFileName(0),
+        inFileName(0)
+    {
+    }
 };
 
 
 
 void
-warnPreviousOutputMethod(int	outputMethod)
+warnPreviousOutputMethod(int    outputMethod)
 {
-	cerr << endl << "Warning: Ignoring previous output method switch ";
+    cerr << endl << "Warning: Ignoring previous output method switch ";
 
-	switch(outputMethod)
-	{
-	case FormatterListener::OUTPUT_METHOD_XML:
-		cerr << "-XML.";
-		break;
+    switch(outputMethod)
+    {
+    case FormatterListener::OUTPUT_METHOD_XML:
+        cerr << "-XML.";
+        break;
 
-	case FormatterListener::OUTPUT_METHOD_TEXT:
-		cerr << "-TEXT.";
-		break;
+    case FormatterListener::OUTPUT_METHOD_TEXT:
+        cerr << "-TEXT.";
+        break;
 
-	case FormatterListener::OUTPUT_METHOD_HTML:
-		cerr << "-HTML.";
-		break;
+    case FormatterListener::OUTPUT_METHOD_HTML:
+        cerr << "-HTML.";
+        break;
 
-	case FormatterListener::OUTPUT_METHOD_DOM:
-		cerr << "-DOM.";
-		break;		
-	}
+    case FormatterListener::OUTPUT_METHOD_DOM:
+        cerr << "-DOM.";
+        break;      
+    }
 
-	cerr << endl << endl;
+    cerr << endl << endl;
 }
 
 
 
 bool
 getArgs(
-			int				argc,
-			char*			argv[],
-			CmdLineParams&	p)
+            int             argc,
+            char*           argv[],
+            CmdLineParams&  p)
 {
-	bool fSuccess = true;
+    bool fSuccess = true;
 
-	for (int i = 1; i < argc && fSuccess == true; ++i)
-	{
-		if (!strcmp("-h", argv[i]) || !strcmp("-?", argv[i]))
-		{
-			fSuccess = false;
-		}
-		else if (!strcmp("-in", argv[i]))
-		{
-			++i;
+    for (int i = 1; i < argc && fSuccess == true; ++i)
+    {
+        if (!strcmp("-h", argv[i]) || !strcmp("-?", argv[i]))
+        {
+            fSuccess = false;
+        }
+        else if (!strcmp("-in", argv[i]))
+        {
+            ++i;
 
-			if(i < argc && argv[i][0] != '-')
-			{
-				p.inFileName = argv[i];
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if (!strcmp("-xsl", argv[i]))
-		{
-			++i;
+            if(i < argc && argv[i][0] != '-')
+            {
+                p.inFileName = argv[i];
+            }
+            else
+            {
+                fSuccess = false;
+            }
+        }
+        else if (!strcmp("-xsl", argv[i]))
+        {
+            ++i;
 
-			if(i < argc && argv[i][0] != '-')
-			{
-				p.xslFileName = argv[i];
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if (!strcmp("-out", argv[i]))
-		{
-			++i;
+            if(i < argc && argv[i][0] != '-')
+            {
+                p.xslFileName = argv[i];
+            }
+            else
+            {
+                fSuccess = false;
+            }
+        }
+        else if (!strcmp("-out", argv[i]))
+        {
+            ++i;
 
-			if(i < argc && argv[i][0] != '-')
-			{
-				p.outFileName = argv[i];
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if (!strcmp("-noindent", argv[i]))
-		{
-			p.noIndent = true;
-		} 
-		else if (!strcmp("-indent", argv[i]))
-		{
-			++i;
+            if(i < argc && argv[i][0] != '-')
+            {
+                p.outFileName = argv[i];
+            }
+            else
+            {
+                fSuccess = false;
+            }
+        }
+        else if (!strcmp("-noindent", argv[i]))
+        {
+            p.noIndent = true;
+        } 
+        else if (!strcmp("-indent", argv[i]))
+        {
+            ++i;
 
-			if(i < argc && argv[i][0] != '-')
-			{
+            if(i < argc && argv[i][0] != '-')
+            {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-				p.indentAmount = std::atoi(argv[i]);
+                p.indentAmount = std::atoi(argv[i]);
 #else
-				p.indentAmount = atoi(argv[i]);
+                p.indentAmount = atoi(argv[i]);
 #endif
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if(!strcmp("-validate", argv[i]))
-		{
-			p.doValidation = true;
-		}
-		else if (!strcmp("-param", argv[i])) 
-		{
-			++i;
+            }
+            else
+            {
+                fSuccess = false;
+            }
+        }
+        else if(!strcmp("-validate", argv[i]))
+        {
+            p.doValidation = true;
+        }
+        else if (!strcmp("-param", argv[i])) 
+        {
+            ++i;
 
-			if(i < argc && argv[i][0] != '-')
-			{
-				const char* const	name = argv[i];
+            if(i < argc && argv[i][0] != '-')
+            {
+                const char* const   name = argv[i];
 
-				++i;
+                ++i;
 
-				// Don't check for '-' here, since that might
-				// be a valid character in a parameter value.
-				if(i < argc)
-				{
-					typedef StringPairVectorType::value_type	value_type;
+                // Don't check for '-' here, since that might
+                // be a valid character in a parameter value.
+                if(i < argc)
+                {
+                    typedef StringPairVectorType::value_type    value_type;
 
-					p.params.push_back(value_type(name, argv[i]));
-				}
-				else
-				{
-					fSuccess = false;
-				}
-			}
-			else
-			{
-				fSuccess = false;
-			}
-		}
-		else if(!strcmp("-v", argv[i]))
-		{
-			p.versionOnly = true;
-		}
-		else if(!strcmp("-qc", argv[i]))
-		{
-			p.setQuietConflictWarnings = true;
-		}
-		else if(!strcmp("-q", argv[i]))
-		{
-			p.setQuietMode = true;
-		}
-		else if(!strcmp("-xml", argv[i]))
-		{
-			if (p.outputType != -1)
-			{
-				warnPreviousOutputMethod(p.outputType);
-			}
+                    p.params.push_back(value_type(name, argv[i]));
+                }
+                else
+                {
+                    fSuccess = false;
+                }
+            }
+            else
+            {
+                fSuccess = false;
+            }
+        }
+        else if(!strcmp("-v", argv[i]))
+        {
+            p.versionOnly = true;
+        }
+        else if(!strcmp("-qc", argv[i]))
+        {
+            p.setQuietConflictWarnings = true;
+        }
+        else if(!strcmp("-q", argv[i]))
+        {
+            p.setQuietMode = true;
+        }
+        else if(!strcmp("-xml", argv[i]))
+        {
+            if (p.outputType != -1)
+            {
+                warnPreviousOutputMethod(p.outputType);
+            }
 
-			p.outputType = FormatterListener::OUTPUT_METHOD_XML;
-		}
-		else if(!strcmp("-text", argv[i]))
-		{
-			if (p.outputType != -1)
-			{
-				warnPreviousOutputMethod(p.outputType);
-			}
+            p.outputType = FormatterListener::OUTPUT_METHOD_XML;
+        }
+        else if(!strcmp("-text", argv[i]))
+        {
+            if (p.outputType != -1)
+            {
+                warnPreviousOutputMethod(p.outputType);
+            }
 
-			p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
-		}
-		else if(!strcmp("-html", argv[i]))
-		{
-			if (p.outputType != -1)
-			{
-				warnPreviousOutputMethod(p.outputType);
-			}
+            p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
+        }
+        else if(!strcmp("-html", argv[i]))
+        {
+            if (p.outputType != -1)
+            {
+                warnPreviousOutputMethod(p.outputType);
+            }
 
-			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
-		}
-		else if(!strcmp("-dom", argv[i]))
-		{
-			if (p.outputType != -1)
-			{
-				warnPreviousOutputMethod(p.outputType);
-			}
+            p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
+        }
+        else if(!strcmp("-dom", argv[i]))
+        {
+            if (p.outputType != -1)
+            {
+                warnPreviousOutputMethod(p.outputType);
+            }
 
-			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
-		}
-		else if(!strcmp("-xst", argv[i]))
-		{
-			if (p.outputType != -1)
-			{
-				warnPreviousOutputMethod(p.outputType);
-			}
+            p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
+        }
+        else if(!strcmp("-xst", argv[i]))
+        {
+            if (p.outputType != -1)
+            {
+                warnPreviousOutputMethod(p.outputType);
+            }
 
-			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
+            p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 
-			p.formatToSourceTree = true;
-		}
-		else if(!strcmp("-null", argv[i]))
-		{
-			p.formatToNull = true;
-		}
-		else if (!strcmp("-nh", argv[i]))
-		{
-			p.shouldWriteXMLHeader = false;
-		}
-		else if(!strcmp("-tt", argv[i]))
-		{
-			p.traceTemplates = true;
-		}
-		else if(!strcmp("-tg", argv[i]))
-		{
-			p.traceGenerationEvent = true;
-		}
-		else if(!strcmp("-ts", argv[i]))
-		{
-			p.traceSelectionEvent = true;
-		}
-		else if(!strcmp("-ttc", argv[i]))
-		{
-			p.traceTemplateChildren = true;
-		}
-		else if (!strcmp("-xd", argv[i]))
-		{
-			p.useDOM = true;
-		}
-		else if (!strcmp("-de", argv[i]))
-		{
-			p.disableExtensions = true;
-		}
-		else
-		{
-			cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
-		}
-	}
+            p.formatToSourceTree = true;
+        }
+        else if(!strcmp("-null", argv[i]))
+        {
+            p.formatToNull = true;
+        }
+        else if (!strcmp("-nh", argv[i]))
+        {
+            p.shouldWriteXMLHeader = false;
+        }
+        else if(!strcmp("-tt", argv[i]))
+        {
+            p.traceTemplates = true;
+        }
+        else if(!strcmp("-tg", argv[i]))
+        {
+            p.traceGenerationEvent = true;
+        }
+        else if(!strcmp("-ts", argv[i]))
+        {
+            p.traceSelectionEvent = true;
+        }
+        else if(!strcmp("-ttc", argv[i]))
+        {
+            p.traceTemplateChildren = true;
+        }
+        else if (!strcmp("-xd", argv[i]))
+        {
+            p.useDOM = true;
+        }
+        else if (!strcmp("-de", argv[i]))
+        {
+            p.disableExtensions = true;
+        }
+        else
+        {
+            cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
+        }
+    }
 
-	return fSuccess;
+    return fSuccess;
 }
 
 
 
 FormatterListener*
 createFormatter(
-			int								outputType,
-			bool							shouldWriteXMLHeader,
-			bool							noIndent,
-			bool							formatToNull,
-			bool							formatToSourceTree,
-			PrintWriter&					resultWriter,
-			int								indentAmount,
-			const XalanDOMString&			mimeEncoding,
-			const StylesheetRoot*			stylesheet,
-			XercesParserLiaison&		    parserLiaison,
-			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison,
-			const PrefixResolver&			prefixResolver,
-			const XalanDocument*&			theResultDocument)
+            int                             outputType,
+            bool                            shouldWriteXMLHeader,
+            bool                            noIndent,
+            bool                            formatToNull,
+            bool                            formatToSourceTree,
+            PrintWriter&                    resultWriter,
+            int                             indentAmount,
+            const XalanDOMString&           mimeEncoding,
+            const StylesheetRoot*           stylesheet,
+            XercesParserLiaison&            parserLiaison,
+            XalanSourceTreeParserLiaison&   sourceTreeParserLiaison,
+            const PrefixResolver&           prefixResolver,
+            const XalanDocument*&           theResultDocument)
 {
     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-	FormatterListener*	formatter = 0;
+    FormatterListener*  formatter = 0;
 
-	if (formatToNull == true)
-	{
-		formatter = new FormatterToNull;
-	}
-	else if(FormatterListener::OUTPUT_METHOD_XML == outputType)
-	{
-		XalanDOMString	version(theManager);
-		bool			outputIndent = false;
-		XalanDOMString	mediatype(theManager);
-		XalanDOMString	doctypeSystem(theManager);
-		XalanDOMString	doctypePublic(theManager);
-		XalanDOMString	standalone(theManager);
+    if (formatToNull == true)
+    {
+        formatter = new FormatterToNull;
+    }
+    else if(FormatterListener::OUTPUT_METHOD_XML == outputType)
+    {
+        XalanDOMString  version(theManager);
+        bool            outputIndent = false;
+        XalanDOMString  mediatype(theManager);
+        XalanDOMString  doctypeSystem(theManager);
+        XalanDOMString  doctypePublic(theManager);
+        XalanDOMString  standalone(theManager);
 
-		if (stylesheet != 0)
-		{
-			stylesheet->getOutputVersion(version);
+        if (stylesheet != 0)
+        {
+            stylesheet->getOutputVersion(version);
 
-			stylesheet->getOutputMediaType(mediatype);
-			stylesheet->getOutputDoctypeSystem(doctypeSystem);
-			stylesheet->getOutputDoctypePublic(doctypePublic);
-			stylesheet->getOutputStandalone(standalone);
-		}
+            stylesheet->getOutputMediaType(mediatype);
+            stylesheet->getOutputDoctypeSystem(doctypeSystem);
+            stylesheet->getOutputDoctypePublic(doctypePublic);
+            stylesheet->getOutputStandalone(standalone);
+        }
 
-		FormatterToXML* const	fToXML =
-			new FormatterToXML(
-					resultWriter,
-					version,
-					outputIndent,
-					indentAmount,
-					mimeEncoding,
-					mediatype,
-					doctypeSystem,
-					doctypePublic,
-					true,	// xmlDecl
-					standalone,
+        FormatterToXML* const   fToXML =
+            new FormatterToXML(
+                    resultWriter,
+                    version,
+                    outputIndent,
+                    indentAmount,
+                    mimeEncoding,
+                    mediatype,
+                    doctypeSystem,
+                    doctypePublic,
+                    true,   // xmlDecl
+                    standalone,
                     FormatterToXML::OUTPUT_METHOD_XML,
                     true,
                     theManager);
 
-		fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
+        fToXML->setShouldWriteXMLHeader(shouldWriteXMLHeader);
 
-		formatter = fToXML;
-	}
-	else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
-	{
-		formatter = new FormatterToText(
+        formatter = fToXML;
+    }
+    else if(FormatterListener::OUTPUT_METHOD_TEXT == outputType)
+    {
+        formatter = new FormatterToText(
                             resultWriter,
                             mimeEncoding,
                             true,
                             true,
                             theManager);
-	}
-	else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
-	{
-		XalanDOMString	version(theManager);
-		bool			outputIndent = !noIndent;
-		XalanDOMString	mediatype(theManager);
-		XalanDOMString	doctypeSystem(theManager);
-		XalanDOMString	doctypePublic(theManager);
-		XalanDOMString	standalone(theManager);
+    }
+    else if(FormatterListener::OUTPUT_METHOD_HTML == outputType)
+    {
+        XalanDOMString  version(theManager);
+        bool            outputIndent = !noIndent;
+        XalanDOMString  mediatype(theManager);
+        XalanDOMString  doctypeSystem(theManager);
+        XalanDOMString  doctypePublic(theManager);
+        XalanDOMString  standalone(theManager);
 
-		if (stylesheet != 0)
-		{
-			stylesheet->getOutputVersion(version);
+        if (stylesheet != 0)
+        {
+            stylesheet->getOutputVersion(version);
 
-			if (noIndent == false)
-			{
-				outputIndent = stylesheet->getOutputIndent();
-			}
+            if (noIndent == false)
+            {
+                outputIndent = stylesheet->getOutputIndent();
+            }
 
-			 stylesheet->getOutputMediaType(mediatype);
-			 stylesheet->getOutputDoctypeSystem(doctypeSystem);
-			 stylesheet->getOutputDoctypePublic(doctypePublic);
-			 stylesheet->getOutputStandalone(standalone);
-		}
+             stylesheet->getOutputMediaType(mediatype);
+             stylesheet->getOutputDoctypeSystem(doctypeSystem);
+             stylesheet->getOutputDoctypePublic(doctypePublic);
+             stylesheet->getOutputStandalone(standalone);
+        }
 
-		FormatterToHTML* const	fToHTML =
-				new FormatterToHTML(
-						resultWriter,
-						mimeEncoding,
-						mediatype,
-						doctypeSystem,
-						doctypePublic,
-						outputIndent,
-						indentAmount,
+        FormatterToHTML* const  fToHTML =
+                new FormatterToHTML(
+                        resultWriter,
+                        mimeEncoding,
+                        mediatype,
+                        doctypeSystem,
+                        doctypePublic,
+                        outputIndent,
+                        indentAmount,
                         true,
                         false,
                         theManager);
 
-		fToHTML->setPrefixResolver(&prefixResolver);
+        fToHTML->setPrefixResolver(&prefixResolver);
 
-		formatter = fToHTML;
-	}
-	else if(FormatterListener::OUTPUT_METHOD_DOM == outputType)
-	{
-		if (formatToSourceTree == true)
-		{
-			XalanSourceTreeDocument*	theDocument =
-				sourceTreeParserLiaison.createXalanSourceTreeDocument();
-			assert(theDocument != 0);
+        formatter = fToHTML;
+    }
+    else if(FormatterListener::OUTPUT_METHOD_DOM == outputType)
+    {
+        if (formatToSourceTree == true)
+        {
+            XalanSourceTreeDocument*    theDocument =
+                sourceTreeParserLiaison.createXalanSourceTreeDocument();
+            assert(theDocument != 0);
 
-			theResultDocument = theDocument;
+            theResultDocument = theDocument;
 
-			FormatterToSourceTree* const	fToSourceTree =
-				new FormatterToSourceTree(theManager, theDocument);
+            FormatterToSourceTree* const    fToSourceTree =
+                new FormatterToSourceTree(theManager, theDocument);
 
-			fToSourceTree->setPrefixResolver(&prefixResolver);
+            fToSourceTree->setPrefixResolver(&prefixResolver);
 
-			formatter = fToSourceTree;
-		}
-		else
-		{
-			DOMDocument_Type* const     theDocument =
-				parserLiaison.createDOMFactory();
-			assert(theDocument != 0);
+            formatter = fToSourceTree;
+        }
+        else
+        {
+            DOMDocument_Type* const     theDocument =
+                parserLiaison.createDOMFactory();
+            assert(theDocument != 0);
 
-			FormatterToXercesDOM* const     fToDOM =
-				new FormatterToXercesDOM( theDocument, 0, theManager);
+            FormatterToXercesDOM* const     fToDOM =
+                new FormatterToXercesDOM( theDocument, 0, theManager);
 
-			fToDOM->setPrefixResolver(&prefixResolver);
+            fToDOM->setPrefixResolver(&prefixResolver);
 
-			formatter = fToDOM;
+            formatter = fToDOM;
 
             theResultDocument =
                 parserLiaison.createDocument(
@@ -687,58 +687,58 @@ createFormatter(
                     false,
                     false,
                     false);
-		}
-	}
+        }
+    }
 
-	return formatter;
+    return formatter;
 }
 
 
 
 XalanOutputStream*
-createOutputStream(MemoryManager& theManager , const CmdLineParams&		params)
+createOutputStream(MemoryManager& theManager , const CmdLineParams&     params)
 {
-	if (params.outFileName == 0)
-	{
-		return new XalanStdOutputStream(cout, theManager);
-	}
-	else
-	{
+    if (params.outFileName == 0)
+    {
+        return new XalanStdOutputStream(cout, theManager);
+    }
+    else
+    {
         XalanDOMString buffer(theManager);
         
         TranscodeFromLocalCodePage(params.outFileName, buffer); 
 
-		return new XalanFileOutputStream(buffer, theManager);
-	}
+        return new XalanFileOutputStream(buffer, theManager);
+    }
 }
 
 
 
 TraceListener*
 createTraceListener(
-            XPathExecutionContext&	theExecutionContext,
+            XPathExecutionContext&  theExecutionContext,
             MemoryManager&          theManager,
-			const CmdLineParams&	params,
-			PrintWriter&			diagnosticsWriter)
+            const CmdLineParams&    params,
+            PrintWriter&            diagnosticsWriter)
 {
-	if (params.traceTemplates == true ||
-		params.traceTemplateChildren == true ||
-		params.traceGenerationEvent == true ||
-		params.traceSelectionEvent == true)
-	{
-		return new TraceListenerDefault(
+    if (params.traceTemplates == true ||
+        params.traceTemplateChildren == true ||
+        params.traceGenerationEvent == true ||
+        params.traceSelectionEvent == true)
+    {
+        return new TraceListenerDefault(
                 theExecutionContext,
-				diagnosticsWriter,
+                diagnosticsWriter,
                 theManager,
-				params.traceTemplates,
-				params.traceTemplateChildren,
-				params.traceGenerationEvent,
-				params.traceSelectionEvent);
-	}
-	else
-	{
-		return 0;
-	}
+                params.traceTemplates,
+                params.traceTemplateChildren,
+                params.traceGenerationEvent,
+                params.traceSelectionEvent);
+    }
+    else
+    {
+        return 0;
+    }
 
 }
 
@@ -746,495 +746,495 @@ createTraceListener(
 
 DOMSupport&
 getDOMSupport(
-		XalanSourceTreeDOMSupport&	theXalanSourceTreeDOMSupport,
-		XercesDOMSupport&			theXercesDOMSupport,
-		const CmdLineParams&		params)
+        XalanSourceTreeDOMSupport&  theXalanSourceTreeDOMSupport,
+        XercesDOMSupport&           theXercesDOMSupport,
+        const CmdLineParams&        params)
 {
-	if (params.useDOM == false)
-	{
-		return theXalanSourceTreeDOMSupport;
-	}
-	else
-	{
-		return theXercesDOMSupport;
-	}
+    if (params.useDOM == false)
+    {
+        return theXalanSourceTreeDOMSupport;
+    }
+    else
+    {
+        return theXercesDOMSupport;
+    }
 }
 
 
 
 XMLParserLiaison&
 getParserLiaison(
-		XalanSourceTreeParserLiaison&	theXalanSourceTreeParserLiaison,
-		XercesParserLiaison&			theXercesParserLiaison,
-		const CmdLineParams&			params)
+        XalanSourceTreeParserLiaison&   theXalanSourceTreeParserLiaison,
+        XercesParserLiaison&            theXercesParserLiaison,
+        const CmdLineParams&            params)
 {
-	if (params.useDOM == false)
-	{
-		return theXalanSourceTreeParserLiaison;
-	}
-	else
-	{
-		return theXercesParserLiaison;
-	}
+    if (params.useDOM == false)
+    {
+        return theXalanSourceTreeParserLiaison;
+    }
+    else
+    {
+        return theXercesParserLiaison;
+    }
 }
 
 
 
 int
-xsltMain(const CmdLineParams&	params)
+xsltMain(const CmdLineParams&   params)
 {
-	// Initialize the XSLT subsystem.  This must stay in scope until
-	// we're done with the subsystem, since its destructor shuts down
-	// the subsystem.
+    // Initialize the XSLT subsystem.  This must stay in scope until
+    // we're done with the subsystem, since its destructor shuts down
+    // the subsystem.
     MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-	XSLTInit	theInit(theManager);
+    XSLTInit    theInit(theManager);
 
-	const XalanDOMString	mimeEncoding("UTF-8", theManager);
-	const XalanDOMString	encoding("UTF-8", theManager);
+    const XalanDOMString    mimeEncoding("UTF-8", theManager);
+    const XalanDOMString    encoding("UTF-8", theManager);
 
-	/**
-	 * The default diagnostic writer...
-	 */
-	XalanStdOutputStream				theStdErr(cerr, theManager);
-	XalanOutputStreamPrintWriter		diagnosticsWriter(theStdErr);
+    /**
+     * The default diagnostic writer...
+     */
+    XalanStdOutputStream                theStdErr(cerr, theManager);
+    XalanOutputStreamPrintWriter        diagnosticsWriter(theStdErr);
 
-	// Make sure that error reporting, which includes any TraceListener output
-	// does not throw exceptions when transcoding, since that could result in
-	// an exception being thrown will another exception is active.  In particular,
-	// characters that the TraceListener writes might not be representable in the
-	// local code page.
-	theStdErr.setThrowTranscodeException(false);
+    // Make sure that error reporting, which includes any TraceListener output
+    // does not throw exceptions when transcoding, since that could result in
+    // an exception being thrown will another exception is active.  In particular,
+    // characters that the TraceListener writes might not be representable in the
+    // local code page.
+    theStdErr.setThrowTranscodeException(false);
 
-	// Initialize the XalanSourceTree subsystem.  This must stay in scope until
-	// we're done with the subsystem, since its destructor shuts down the
-	// subsystem.
-	XalanSourceTreeInit				theXalanSourceTreeInit(theManager);
+    // Initialize the XalanSourceTree subsystem.  This must stay in scope until
+    // we're done with the subsystem, since its destructor shuts down the
+    // subsystem.
+    XalanSourceTreeInit             theXalanSourceTreeInit(theManager);
 
-	XalanSourceTreeDOMSupport		theXalanSourceTreeDOMSupport;
-	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theXalanSourceTreeDOMSupport, theManager);
+    XalanSourceTreeDOMSupport       theXalanSourceTreeDOMSupport;
+    XalanSourceTreeParserLiaison    theXalanSourceTreeParserLiaison(theXalanSourceTreeDOMSupport, theManager);
 
-	// Hookup the parser liaison instance to the support instance.
-	theXalanSourceTreeDOMSupport.setParserLiaison( &theXalanSourceTreeParserLiaison);
+    // Hookup the parser liaison instance to the support instance.
+    theXalanSourceTreeDOMSupport.setParserLiaison( &theXalanSourceTreeParserLiaison);
 
 
-	XercesParserLiaison		theXercesParserLiaison(theManager);
-	XercesDOMSupport		theXercesDOMSupport(theXercesParserLiaison);
+    XercesParserLiaison     theXercesParserLiaison(theManager);
+    XercesDOMSupport        theXercesDOMSupport(theXercesParserLiaison);
 
-	DOMSupport&				theDOMSupport = getDOMSupport(
-		theXalanSourceTreeDOMSupport,
-		theXercesDOMSupport,
-		params);
+    DOMSupport&             theDOMSupport = getDOMSupport(
+        theXalanSourceTreeDOMSupport,
+        theXercesDOMSupport,
+        params);
 
-	XMLParserLiaison&		xmlParserLiaison = getParserLiaison(
-		theXalanSourceTreeParserLiaison,
-		theXercesParserLiaison,
-		params);
+    XMLParserLiaison&       xmlParserLiaison = getParserLiaison(
+        theXalanSourceTreeParserLiaison,
+        theXercesParserLiaison,
+        params);
 
-	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport(theManager);
+    XSLTProcessorEnvSupportDefault  theXSLProcessorSupport(theManager);
 
-	if (params.disableExtensions == false)
-	{
-		XalanExtensionsInstaller::installGlobal(theManager);
-		XalanEXSLTCommonFunctionsInstaller::installGlobal(theManager);
-		XalanEXSLTMathFunctionsInstaller::installGlobal(theManager);
-		XalanEXSLTSetFunctionsInstaller::installGlobal(theManager);
-		XalanEXSLTStringFunctionsInstaller::installGlobal(theManager);
-	}
+    if (params.disableExtensions == false)
+    {
+        XalanExtensionsInstaller::installGlobal(theManager);
+        XalanEXSLTCommonFunctionsInstaller::installGlobal(theManager);
+        XalanEXSLTMathFunctionsInstaller::installGlobal(theManager);
+        XalanEXSLTSetFunctionsInstaller::installGlobal(theManager);
+        XalanEXSLTStringFunctionsInstaller::installGlobal(theManager);
+    }
 
-	XObjectFactoryDefault	theXObjectFactory(theManager);
+    XObjectFactoryDefault   theXObjectFactory(theManager);
 
-	XPathFactoryDefault		theXPathFactory(theManager);
+    XPathFactoryDefault     theXPathFactory(theManager);
 
-	XSLTEngineImpl	processor(
+    XSLTEngineImpl  processor(
             theManager,
-			xmlParserLiaison,
-			theXSLProcessorSupport,
-			theDOMSupport,
-			theXObjectFactory,
-			theXPathFactory);
+            xmlParserLiaison,
+            theXSLProcessorSupport,
+            theDOMSupport,
+            theXObjectFactory,
+            theXPathFactory);
 
-	theXSLProcessorSupport.setProcessor(&processor);
+    theXSLProcessorSupport.setProcessor(&processor);
 
-	// Use a different factory type for the stylesheet.  This is an optimization, since
-	// stylesheet XPath instances are built all at once and are deleted all at once when
-	// the stylesheet is destroyed.
-	XPathFactoryBlock	theStylesheetXPathFactory(theManager);
+    // Use a different factory type for the stylesheet.  This is an optimization, since
+    // stylesheet XPath instances are built all at once and are deleted all at once when
+    // the stylesheet is destroyed.
+    XPathFactoryBlock   theStylesheetXPathFactory(theManager);
 
-	StylesheetConstructionContextDefault	theConstructionContext(
+    StylesheetConstructionContextDefault    theConstructionContext(
             theManager,
-			processor,
-			theStylesheetXPathFactory);
+            processor,
+            theStylesheetXPathFactory);
 
-	/*
-	 * Set specified processor flags
-	 */
-	processor.setQuietConflictWarnings(params.setQuietConflictWarnings);
+    /*
+     * Set specified processor flags
+     */
+    processor.setQuietConflictWarnings(params.setQuietConflictWarnings);
 
-	if (params.params.empty() == false)
-	{
-		StringPairVectorType::const_iterator	it = params.params.begin();
+    if (params.params.empty() == false)
+    {
+        StringPairVectorType::const_iterator    it = params.params.begin();
 
-		for ( ; it != params.params.end(); ++it)
-		{
-			assert((*it).first != 0 && (*it).second != 0);
+        for ( ; it != params.params.end(); ++it)
+        {
+            assert((*it).first != 0 && (*it).second != 0);
 
-			processor.setStylesheetParam(
-					XalanDOMString((*it).first, theManager),
-					XalanDOMString((*it).second, theManager));
-		}
-	}
+            processor.setStylesheetParam(
+                    XalanDOMString((*it).first, theManager),
+                    XalanDOMString((*it).second, theManager));
+        }
+    }
 
-	/*
-	 * Set specified parser flags
-	 */
-	if (params.indentAmount != 0)
-	{
-		xmlParserLiaison.setIndent(params.indentAmount);
-	}
+    /*
+     * Set specified parser flags
+     */
+    if (params.indentAmount != 0)
+    {
+        xmlParserLiaison.setIndent(params.indentAmount);
+    }
 
-	xmlParserLiaison.setUseValidation(params.doValidation);
+    xmlParserLiaison.setUseValidation(params.doValidation);
 
-	if (!params.setQuietMode)
-	{
-		processor.setDiagnosticsOutput(&diagnosticsWriter);
-	}
+    if (!params.setQuietMode)
+    {
+        processor.setDiagnosticsOutput(&diagnosticsWriter);
+    }
 
-	XalanDOMString	xslFileName(theManager);
+    XalanDOMString  xslFileName(theManager);
 
-	if(params.xslFileName != 0)
-	{
-		xslFileName = params.xslFileName;
-	}
+    if(params.xslFileName != 0)
+    {
+        xslFileName = params.xslFileName;
+    }
 
-	const StylesheetRoot*	stylesheet = 0;
+    const StylesheetRoot*   stylesheet = 0;
 
-	if (!xslFileName.empty())
-	{
-		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
-	}
+    if (!xslFileName.empty())
+    {
+        stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
+    }
 
-	XalanAutoPtr<XalanOutputStream>		outputFileStream(createOutputStream(theManager, params));
-	assert(outputFileStream.get() != 0);
+    XalanAutoPtr<XalanOutputStream>     outputFileStream(createOutputStream(theManager, params));
+    assert(outputFileStream.get() != 0);
 
-	XalanOutputStreamPrintWriter	resultWriter(*outputFileStream.get());
+    XalanOutputStreamPrintWriter    resultWriter(*outputFileStream.get());
 
-	const XalanDocument*	theResultDocument = 0;
+    const XalanDocument*    theResultDocument = 0;
 
-	const XalanAutoPtr<FormatterListener>	formatter(
-			createFormatter(
-				params.outputType,
-				params.shouldWriteXMLHeader,
-				params.noIndent,
-				params.formatToNull,
-				params.formatToSourceTree,
-				resultWriter,
-				xmlParserLiaison.getIndent(),
-				mimeEncoding,
-				stylesheet,
-				theXercesParserLiaison,
-				theXalanSourceTreeParserLiaison,
-				processor,
-				theResultDocument));
+    const XalanAutoPtr<FormatterListener>   formatter(
+            createFormatter(
+                params.outputType,
+                params.shouldWriteXMLHeader,
+                params.noIndent,
+                params.formatToNull,
+                params.formatToSourceTree,
+                resultWriter,
+                xmlParserLiaison.getIndent(),
+                mimeEncoding,
+                stylesheet,
+                theXercesParserLiaison,
+                theXalanSourceTreeParserLiaison,
+                processor,
+                theResultDocument));
 
-	XSLTResultTarget	rTreeTarget(theManager);
+    XSLTResultTarget    rTreeTarget(theManager);
 
-	if(formatter.get() == 0)
-	{
-		rTreeTarget.setCharacterStream(&resultWriter);
-	}
-	else
-	{
-		rTreeTarget.setFormatterListener(formatter.get());
-	}
+    if(formatter.get() == 0)
+    {
+        rTreeTarget.setCharacterStream(&resultWriter);
+    }
+    else
+    {
+        rTreeTarget.setFormatterListener(formatter.get());
+    }
 
-	// Do the transformation...
-	XSLTInputSource		theInputSource;
+    // Do the transformation...
+    XSLTInputSource     theInputSource;
 
-	if (params.inFileName != 0)
-	{
-		theInputSource.setSystemId(XalanDOMString(params.inFileName, theManager).c_str());
-	}
-	else
-	{
-		theInputSource.setStream(&cin);
+    if (params.inFileName != 0)
+    {
+        theInputSource.setSystemId(XalanDOMString(params.inFileName, theManager).c_str());
+    }
+    else
+    {
+        theInputSource.setStream(&cin);
 
-		cerr << "Reading input document from stdin..." << endl;
-	}
+        cerr << "Reading input document from stdin..." << endl;
+    }
 
-	StylesheetExecutionContextDefault	theExecutionContext(theManager, processor,
-			theXSLProcessorSupport,
-			theDOMSupport,
-			theXObjectFactory);
+    StylesheetExecutionContextDefault   theExecutionContext(theManager, processor,
+            theXSLProcessorSupport,
+            theDOMSupport,
+            theXObjectFactory);
 
-	const XalanAutoPtr<TraceListener>		theTraceListener(
-			createTraceListener(
+    const XalanAutoPtr<TraceListener>       theTraceListener(
+            createTraceListener(
                 theExecutionContext,
                 theManager,
-				params,
-				diagnosticsWriter));
+                params,
+                diagnosticsWriter));
 
-	if (theTraceListener.get() != 0)
-	{
-		processor.setTraceSelects(params.traceSelectionEvent);
-		processor.addTraceListener(theTraceListener.get());
-	}
+    if (theTraceListener.get() != 0)
+    {
+        processor.setTraceSelects(params.traceSelectionEvent);
+        processor.addTraceListener(theTraceListener.get());
+    }
 
 #if defined(XALAN_USE_ICU)
-	// Create a collation function for the ICU, and have it
-	// cache collators...
-	ICUBridgeCollationCompareFunctor	theICUFunctor(theManager, true);
+    // Create a collation function for the ICU, and have it
+    // cache collators...
+    ICUBridgeCollationCompareFunctor    theICUFunctor(theManager, true);
 
-	theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
+    theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
 
     XalanAutoPtr<ICUFormatNumberFunctor>  theFormatNumberFunctor(ICUFormatNumberFunctor::create(theManager));
     theExecutionContext.installFormatNumberFunctor(theFormatNumberFunctor.get());
     theFormatNumberFunctor.release();
 #endif
 
-	if (params.useDOM == false)
-	{
-		theXalanSourceTreeParserLiaison.setExecutionContext(theExecutionContext);
-	}
-	else
-	{
-		theXercesParserLiaison.setExecutionContext(theExecutionContext);
-	}
+    if (params.useDOM == false)
+    {
+        theXalanSourceTreeParserLiaison.setExecutionContext(theExecutionContext);
+    }
+    else
+    {
+        theXercesParserLiaison.setExecutionContext(theExecutionContext);
+    }
 
-	if (stylesheet == 0)
-	{
-		// No stylesheet, so our only hope is that the xml file has
-		// PI with the stylesheet...
+    if (stylesheet == 0)
+    {
+        // No stylesheet, so our only hope is that the xml file has
+        // PI with the stylesheet...
 
-		// Dummy input source...
-		XSLTInputSource		theStylesheetSource;
+        // Dummy input source...
+        XSLTInputSource     theStylesheetSource;
 
-		processor.process(
-				theInputSource,
-				theStylesheetSource,
-				rTreeTarget,
-				theConstructionContext,
-				theExecutionContext);
-	}
-	else
-	{
-		theExecutionContext.setStylesheetRoot(stylesheet);
+        processor.process(
+                theInputSource,
+                theStylesheetSource,
+                rTreeTarget,
+                theConstructionContext,
+                theExecutionContext);
+    }
+    else
+    {
+        theExecutionContext.setStylesheetRoot(stylesheet);
 
-		processor.process(
-				theInputSource,
-				rTreeTarget,
-				theExecutionContext);
-	}
+        processor.process(
+                theInputSource,
+                rTreeTarget,
+                theExecutionContext);
+    }
 
-	if (params.outputType == FormatterListener::OUTPUT_METHOD_DOM)
-	{
-		// Output is to DOM, so we have to format to XML to
-		// produce output...
-		assert(rTreeTarget.getFormatterListener() != 0 &&
-			   rTreeTarget.getFormatterListener()->getOutputFormat() ==
-					FormatterListener::OUTPUT_METHOD_DOM);
+    if (params.outputType == FormatterListener::OUTPUT_METHOD_DOM)
+    {
+        // Output is to DOM, so we have to format to XML to
+        // produce output...
+        assert(rTreeTarget.getFormatterListener() != 0 &&
+               rTreeTarget.getFormatterListener()->getOutputFormat() ==
+                    FormatterListener::OUTPUT_METHOD_DOM);
 
-		if (theResultDocument == 0)
-		{
-			cerr << endl << "Error: No document to format!!!" << endl;
-		}
-		else
-		{
-			// Create a FormaterToXML with the required output
-			// options...
-			const XalanAutoPtr<FormatterListener>	formatter(
-					createFormatter(
-						FormatterListener::OUTPUT_METHOD_XML,
-						params.shouldWriteXMLHeader,
-						params.noIndent,
-						false,
-						false,
-						resultWriter,
-						xmlParserLiaison.getIndent(),
-						mimeEncoding,
-						stylesheet,
-						theXercesParserLiaison,
-						theXalanSourceTreeParserLiaison,
-						processor,
-						theResultDocument));
+        if (theResultDocument == 0)
+        {
+            cerr << endl << "Error: No document to format!!!" << endl;
+        }
+        else
+        {
+            // Create a FormaterToXML with the required output
+            // options...
+            const XalanAutoPtr<FormatterListener>   formatter(
+                    createFormatter(
+                        FormatterListener::OUTPUT_METHOD_XML,
+                        params.shouldWriteXMLHeader,
+                        params.noIndent,
+                        false,
+                        false,
+                        resultWriter,
+                        xmlParserLiaison.getIndent(),
+                        mimeEncoding,
+                        stylesheet,
+                        theXercesParserLiaison,
+                        theXalanSourceTreeParserLiaison,
+                        processor,
+                        theResultDocument));
 
-			// Create a FormatterTreeWalker with the the
-			// new formatter...
-			FormatterTreeWalker theTreeWalker(*formatter.get(), theManager);
+            // Create a FormatterTreeWalker with the the
+            // new formatter...
+            FormatterTreeWalker theTreeWalker(*formatter.get(), theManager);
 
-			// Walk the document and produce the XML...
-			theTreeWalker.traverse(theResultDocument);
-		}
-	}
+            // Walk the document and produce the XML...
+            theTreeWalker.traverse(theResultDocument);
+        }
+    }
 
-	theExecutionContext.reset();
+    theExecutionContext.reset();
 
-	theConstructionContext.reset();
-	theStylesheetXPathFactory.reset();
+    theConstructionContext.reset();
+    theStylesheetXPathFactory.reset();
 
-	processor.reset();
+    processor.reset();
 
-	theXPathFactory.reset();
-	theXObjectFactory.reset();
-	theXSLProcessorSupport.reset();
-	theDOMSupport.reset();
+    theXPathFactory.reset();
+    theXObjectFactory.reset();
+    theXSLProcessorSupport.reset();
+    theDOMSupport.reset();
 
-	xmlParserLiaison.reset();
+    xmlParserLiaison.reset();
 
-	if (params.disableExtensions == false)
-	{
-		XalanExtensionsInstaller::uninstallGlobal(theManager);
-		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(theManager);
-		XalanEXSLTMathFunctionsInstaller::uninstallGlobal(theManager);
-		XalanEXSLTSetFunctionsInstaller::uninstallGlobal(theManager);
-		XalanEXSLTStringFunctionsInstaller::uninstallGlobal(theManager);
-	}
+    if (params.disableExtensions == false)
+    {
+        XalanExtensionsInstaller::uninstallGlobal(theManager);
+        XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(theManager);
+        XalanEXSLTMathFunctionsInstaller::uninstallGlobal(theManager);
+        XalanEXSLTSetFunctionsInstaller::uninstallGlobal(theManager);
+        XalanEXSLTStringFunctionsInstaller::uninstallGlobal(theManager);
+    }
 
-	return 0;
+    return 0;
 }
 
 
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-	QuantifyStopRecordingData();
+    QuantifyStopRecordingData();
 #endif
 
-	int				theResult = 0;
+    int             theResult = 0;
 
-	CmdLineParams	theParams;
+    CmdLineParams   theParams;
 
-	/*
-	 *		Get command line arguments
-	 */
-	if (getArgs(argc, argv, theParams) == false)
-	{
-		printArgOptions();
-	}
-	else if (theParams.versionOnly == true)
-	{
-		cout << endl
-			 << "Xalan version "
-			 << XALAN_FULLVERSIONDOT
-			 << endl
-			 << "Xerces version "
-			 << XERCES_FULLVERSIONDOT
-			 << endl;
-	}
-	else
-	{
-		XMLPlatformUtils::Initialize();
+    /*
+     *      Get command line arguments
+     */
+    if (getArgs(argc, argv, theParams) == false)
+    {
+        printArgOptions();
+    }
+    else if (theParams.versionOnly == true)
+    {
+        cout << endl
+             << "Xalan version "
+             << XALAN_FULLVERSIONDOT
+             << endl
+             << "Xerces version "
+             << XERCES_FULLVERSIONDOT
+             << endl;
+    }
+    else
+    {
+        XMLPlatformUtils::Initialize();
 
-		try
-		{
-			theResult = xsltMain(theParams);
-		}
-		catch (const XSLException&	e)
-		{
-			cout << "\nXSLException ";
+        try
+        {
+            theResult = xsltMain(theParams);
+        }
+        catch (const XSLException&  e)
+        {
+            cout << "\nXSLException ";
 
-			cout << "Type is: " << e.getType() << endl;
+            cout << "Type is: " << e.getType() << endl;
 
-			cout << "Message is: " << e.getMessage() << " (";
+            cout << "Message is: " << e.getMessage() << " (";
 
-			const XalanDOMString&	theURI = e.getURI();
+            const XalanDOMString&   theURI = e.getURI();
 
-			if (theURI.length() != 0)
-			{
-				cout << theURI;
-			}
-			else
-			{
-				cout << "Unknown URI";
-			}
+            if (theURI.length() != 0)
+            {
+                cout << theURI;
+            }
+            else
+            {
+                cout << "Unknown URI";
+            }
 
-			cout << ", line "
-				 << e.getLineNumber()
-				 << ", column "
-				 << e.getColumnNumber()
-				 << ")"
-				 << endl;
+            cout << ", line "
+                 << e.getLineNumber()
+                 << ", column "
+                 << e.getColumnNumber()
+                 << ")"
+                 << endl;
 
-			theResult = -1;
-		}
-		catch (const SAXParseException&		e)
-		{
-			cout << "\nSAXParseException ";
+            theResult = -1;
+        }
+        catch (const SAXParseException&     e)
+        {
+            cout << "\nSAXParseException ";
 
-			cout << "Message is: " << e.getMessage() << " (";
+            cout << "Message is: " << e.getMessage() << " (";
 
-			const XMLCh* const	theSystemID = e.getSystemId();
+            const XMLCh* const  theSystemID = e.getSystemId();
 
-			if (theSystemID != 0)
-			{
-				cout << theSystemID;
-			}
-			else
-			{
-				cout << "Unknown system ID";
-			}
+            if (theSystemID != 0)
+            {
+                cout << theSystemID;
+            }
+            else
+            {
+                cout << "Unknown system ID";
+            }
 
-			cout << ", line "
-				 << e.getLineNumber()
-				 << ", column "
-				 << e.getColumnNumber()
-				 << ")"
-				 << endl;
+            cout << ", line "
+                 << e.getLineNumber()
+                 << ", column "
+                 << e.getColumnNumber()
+                 << ")"
+                 << endl;
 
-			theResult = -2;
-		}
-		catch (const SAXException&	e)
-		{
-			cout << "\nSAXException ";
+            theResult = -2;
+        }
+        catch (const SAXException&  e)
+        {
+            cout << "\nSAXException ";
 
-			cout << "Message is: " << e.getMessage() << endl;
+            cout << "Message is: " << e.getMessage() << endl;
 
-			theResult = -2;
-		}
-		catch (const XMLException&	e)
-		{
-			cout << "\nXMLException ";
+            theResult = -2;
+        }
+        catch (const XMLException&  e)
+        {
+            cout << "\nXMLException ";
 
-			cout << "Type is: " << e.getType() << endl;
+            cout << "Type is: " << e.getType() << endl;
 
-			cout << "Message is: " << e.getMessage() << endl;
+            cout << "Message is: " << e.getMessage() << endl;
 
-			theResult = -3;
-		}
-		catch(const XalanDOMException&	e)
-		{
-			cout << endl
-				 << "XalanDOMException caught.  The code is "
-				 << int(e.getExceptionCode())
-				 << "."
-				 << endl;
+            theResult = -3;
+        }
+        catch(const XalanDOMException&  e)
+        {
+            cout << endl
+                 << "XalanDOMException caught.  The code is "
+                 << int(e.getExceptionCode())
+                 << "."
+                 << endl;
 
-			theResult = -4;
-		}
-		catch (...)
-		{
-			cout << "\nUnhandled Exception\n";
+            theResult = -4;
+        }
+        catch (...)
+        {
+            cout << "\nUnhandled Exception\n";
 
-			theResult = -5;
-		}
+            theResult = -5;
+        }
 
-		XMLPlatformUtils::Terminate();
-	}
+        XMLPlatformUtils::Terminate();
+    }
 
 #if defined(XALAN_USE_ICU)
     ICUBridgeCleanup::cleanup();
 #endif
 
-	return theResult;
+    return theResult;
 }

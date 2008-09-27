@@ -42,26 +42,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XObjectFactoryDefault::XObjectFactoryDefault(
             MemoryManager&  theManager,
-			size_type	    theXStringBlockSize,
-			size_type	    theXNumberBlockSize,
-			size_type	    theXNodeSetBlockSize,
-			size_type	    theXNodeSetNodeProxyBlockSize) : 
-	XObjectFactory(theManager),
-	m_xstringAdapterAllocator(theManager, theXStringBlockSize),
-	m_xstringAllocator(theManager, theXStringBlockSize),
-	m_xstringCachedAllocator(theManager, theXStringBlockSize),
-	m_xstringReferenceAllocator(theManager, theXStringBlockSize),
-	m_xnumberAllocator(theManager, theXNumberBlockSize),
-	m_xnodesetAllocator(theManager, theXNodeSetBlockSize),
-	m_xnodesetNodeProxyAllocator(theManager, theXNodeSetNodeProxyBlockSize),
-	m_xtokenNumberAdapterAllocator(theManager, theXNumberBlockSize),
-	m_xtokenStringAdapterAllocator(theManager, theXStringBlockSize),
-	m_xobjects(theManager),
-	m_xnumberCache(theManager),
-	m_xnodesetCache(theManager),
-	m_xstringCache(theManager),
-	m_xbooleanFalse(false, theManager),
-	m_xbooleanTrue(true, theManager)
+            size_type       theXStringBlockSize,
+            size_type       theXNumberBlockSize,
+            size_type       theXNodeSetBlockSize,
+            size_type       theXNodeSetNodeProxyBlockSize) : 
+    XObjectFactory(theManager),
+    m_xstringAdapterAllocator(theManager, theXStringBlockSize),
+    m_xstringAllocator(theManager, theXStringBlockSize),
+    m_xstringCachedAllocator(theManager, theXStringBlockSize),
+    m_xstringReferenceAllocator(theManager, theXStringBlockSize),
+    m_xnumberAllocator(theManager, theXNumberBlockSize),
+    m_xnodesetAllocator(theManager, theXNodeSetBlockSize),
+    m_xnodesetNodeProxyAllocator(theManager, theXNodeSetNodeProxyBlockSize),
+    m_xtokenNumberAdapterAllocator(theManager, theXNumberBlockSize),
+    m_xtokenStringAdapterAllocator(theManager, theXStringBlockSize),
+    m_xobjects(theManager),
+    m_xnumberCache(theManager),
+    m_xnodesetCache(theManager),
+    m_xstringCache(theManager),
+    m_xbooleanFalse(false, theManager),
+    m_xbooleanTrue(true, theManager)
 {
 }
 
@@ -70,10 +70,10 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 XObjectFactoryDefault*
 XObjectFactoryDefault::create(
                               MemoryManager&    theManager,
-                              size_type	        theXStringBlockSize ,
-                              size_type	        theXNumberBlockSize ,
-                              size_type	        theXNodeSetBlockSize,
-                              size_type	        theXNodeSetNodeProxyBlockSize)
+                              size_type         theXStringBlockSize ,
+                              size_type         theXNumberBlockSize ,
+                              size_type         theXNodeSetBlockSize,
+                              size_type         theXNodeSetNodeProxyBlockSize)
 {
     typedef XObjectFactoryDefault Type;
 
@@ -96,163 +96,163 @@ XObjectFactoryDefault::create(
 
 XObjectFactoryDefault::~XObjectFactoryDefault()
 {
-	reset();
+    reset();
 }
 
 
 
 bool
 XObjectFactoryDefault::doReturnObject(
-			XObject*	theXObject,
-			bool		fInReset)
+            XObject*    theXObject,
+            bool        fInReset)
 {
-	assert(theXObject != 0);
+    assert(theXObject != 0);
 
-	bool bStatus = false;	
+    bool bStatus = false;   
 
-	const XObject::eObjectType	theType = getRealType(*theXObject);
+    const XObject::eObjectType  theType = getRealType(*theXObject);
 
-	switch(theType)
-	{
-	case XObject::eTypeBoolean:
-	case XObject::eTypeNull:
-		{		
-			bStatus = true;
-		}
+    switch(theType)
+    {
+    case XObject::eTypeBoolean:
+    case XObject::eTypeNull:
+        {       
+            bStatus = true;
+        }
 
-	case XObject::eTypeStringAdapter:
-		{
-			XStringAdapter* const		theXStringAdapter =
-				static_cast<XStringAdapter*>(theXObject);
+    case XObject::eTypeStringAdapter:
+        {
+            XStringAdapter* const       theXStringAdapter =
+                static_cast<XStringAdapter*>(theXObject);
 
-			bStatus = m_xstringAdapterAllocator.destroy(theXStringAdapter);
-		}
-		break;
+            bStatus = m_xstringAdapterAllocator.destroy(theXStringAdapter);
+        }
+        break;
 
-	case XObject::eTypeXTokenNumberAdapter:
-		{
-			XTokenNumberAdapter* const	theAdapter =
-				static_cast<XTokenNumberAdapter*>(theXObject);
+    case XObject::eTypeXTokenNumberAdapter:
+        {
+            XTokenNumberAdapter* const  theAdapter =
+                static_cast<XTokenNumberAdapter*>(theXObject);
 
-			bStatus = m_xtokenNumberAdapterAllocator.destroy(theAdapter);
-		}
-		break;
+            bStatus = m_xtokenNumberAdapterAllocator.destroy(theAdapter);
+        }
+        break;
 
-	case XObject::eTypeXTokenStringAdapter:
-		{
-			XTokenStringAdapter* const	theAdapter =
-				static_cast<XTokenStringAdapter*>(theXObject);
+    case XObject::eTypeXTokenStringAdapter:
+        {
+            XTokenStringAdapter* const  theAdapter =
+                static_cast<XTokenStringAdapter*>(theXObject);
 
-			bStatus = m_xtokenStringAdapterAllocator.destroy(theAdapter);
-		}
-		break;
+            bStatus = m_xtokenStringAdapterAllocator.destroy(theAdapter);
+        }
+        break;
 
-	case XObject::eTypeString:
-		{
-			XString* const	theXString =
-				static_cast<XString*>(theXObject);
+    case XObject::eTypeString:
+        {
+            XString* const  theXString =
+                static_cast<XString*>(theXObject);
 
-			if (m_xstringCache.size() < eXStringCacheMax)
-			{
-				m_xstringCache.push_back(theXString);
+            if (m_xstringCache.size() < eXStringCacheMax)
+            {
+                m_xstringCache.push_back(theXString);
 
-				bStatus = true;
-			}
-			else
-			{
-				bStatus = m_xstringAllocator.destroy(theXString);
-			}
-		}
-		break;
+                bStatus = true;
+            }
+            else
+            {
+                bStatus = m_xstringAllocator.destroy(theXString);
+            }
+        }
+        break;
 
-	case XObject::eTypeStringCached:
-		{
-			XStringCached* const	theXStringCached =
-				static_cast<XStringCached*>(theXObject);
+    case XObject::eTypeStringCached:
+        {
+            XStringCached* const    theXStringCached =
+                static_cast<XStringCached*>(theXObject);
 
-			bStatus = m_xstringCachedAllocator.destroy(theXStringCached);
-		}
-		break;
+            bStatus = m_xstringCachedAllocator.destroy(theXStringCached);
+        }
+        break;
 
-	case XObject::eTypeStringReference:
-		{
-			XStringReference* const		theXStringReference =
-				static_cast<XStringReference*>(theXObject);
+    case XObject::eTypeStringReference:
+        {
+            XStringReference* const     theXStringReference =
+                static_cast<XStringReference*>(theXObject);
 
-			bStatus = m_xstringReferenceAllocator.destroy(theXStringReference);
-		}
-		break;
+            bStatus = m_xstringReferenceAllocator.destroy(theXStringReference);
+        }
+        break;
 
-	case  XObject::eTypeNumber:
-		{
-			XNumber* const	theXNumber =
-				static_cast<XNumber*>(theXObject);
+    case  XObject::eTypeNumber:
+        {
+            XNumber* const  theXNumber =
+                static_cast<XNumber*>(theXObject);
 
-			if (m_xnumberCache.size() < eXNumberCacheMax)
-			{
-				m_xnumberCache.push_back(theXNumber);
+            if (m_xnumberCache.size() < eXNumberCacheMax)
+            {
+                m_xnumberCache.push_back(theXNumber);
 
-				bStatus = true;
-			}
-			else
-			{
-				bStatus = m_xnumberAllocator.destroy(theXNumber);
-			}
-		}
-		break;
+                bStatus = true;
+            }
+            else
+            {
+                bStatus = m_xnumberAllocator.destroy(theXNumber);
+            }
+        }
+        break;
 
-	case XObject::eTypeNodeSet:
-		{
-			XNodeSet* const		theXNodeSet =
-				static_cast<XNodeSet*>(theXObject);
+    case XObject::eTypeNodeSet:
+        {
+            XNodeSet* const     theXNodeSet =
+                static_cast<XNodeSet*>(theXObject);
 
-			if (m_xnodesetCache.size() < eXNodeSetCacheMax)
-			{
-				theXNodeSet->release();
+            if (m_xnodesetCache.size() < eXNodeSetCacheMax)
+            {
+                theXNodeSet->release();
 
-				m_xnodesetCache.push_back(theXNodeSet);
+                m_xnodesetCache.push_back(theXNodeSet);
 
-				bStatus = true;
-			}
-			else
-			{
-				bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
-			}
-		}
-		break;
+                bStatus = true;
+            }
+            else
+            {
+                bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
+            }
+        }
+        break;
 
-	case XObject::eTypeNodeSetNodeProxy:
-		{
-			XNodeSetNodeProxy* const	theXNodeSet =
-				static_cast<XNodeSetNodeProxy*>(theXObject);
+    case XObject::eTypeNodeSetNodeProxy:
+        {
+            XNodeSetNodeProxy* const    theXNodeSet =
+                static_cast<XNodeSetNodeProxy*>(theXObject);
 
-			bStatus = m_xnodesetNodeProxyAllocator.destroy(theXNodeSet);
-		}
-		break;
+            bStatus = m_xnodesetNodeProxyAllocator.destroy(theXNodeSet);
+        }
+        break;
 
-	default:
-		{
-			XALAN_USING_STD(find)
+    default:
+        {
+            XALAN_USING_STD(find)
 
-			const XObjectCollectionType::iterator	i =
-					find(m_xobjects.begin(), m_xobjects.end(), theXObject);
+            const XObjectCollectionType::iterator   i =
+                    find(m_xobjects.begin(), m_xobjects.end(), theXObject);
 
-			if (i != m_xobjects.end())
-			{
-				if (fInReset == false)
-				{
-					m_xobjects.erase(i);
-				}
+            if (i != m_xobjects.end())
+            {
+                if (fInReset == false)
+                {
+                    m_xobjects.erase(i);
+                }
 
-				deleteObject(theXObject);
+                deleteObject(theXObject);
 
-				bStatus = true;
-			}
-		}
-		break;
-	}
-	
-	return bStatus;
+                bStatus = true;
+            }
+        }
+        break;
+    }
+    
+    return bStatus;
 }
 
 
@@ -260,199 +260,199 @@ XObjectFactoryDefault::doReturnObject(
 const XObjectPtr
 XObjectFactoryDefault::createBoolean(bool   theValue)
 {
-	if (theValue == true)
-	{
-		return XObjectPtr(&m_xbooleanTrue);
-	}
-	else
-	{
-		return XObjectPtr(&m_xbooleanFalse);
-	}
+    if (theValue == true)
+    {
+        return XObjectPtr(&m_xbooleanTrue);
+    }
+    else
+    {
+        return XObjectPtr(&m_xbooleanFalse);
+    }
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createUnknown(const XalanDOMString&	theValue)
+XObjectFactoryDefault::createUnknown(const XalanDOMString&  theValue)
 {
-    XUnknown* const	theXUnknown = XUnknown::create(theValue, getMemoryManager());
+    XUnknown* const theXUnknown = XUnknown::create(theValue, getMemoryManager());
 
-	m_xobjects.push_back(theXUnknown);
+    m_xobjects.push_back(theXUnknown);
 
-	theXUnknown->setFactory(this);
+    theXUnknown->setFactory(this);
 
-	return XObjectPtr(theXUnknown);
+    return XObjectPtr(theXUnknown);
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNumber(double	theValue)
+XObjectFactoryDefault::createNumber(double  theValue)
 {
-	if (m_xnumberCache.empty() == false)
-	{
-		XNumber* const	theXNumber = m_xnumberCache.back();
+    if (m_xnumberCache.empty() == false)
+    {
+        XNumber* const  theXNumber = m_xnumberCache.back();
 
-		m_xnumberCache.pop_back();
+        m_xnumberCache.pop_back();
 
-		theXNumber->set(theValue);
+        theXNumber->set(theValue);
 
-		return XObjectPtr(theXNumber);
-	}
-	else
-	{
-		m_xnumberCache.reserve(eXNumberCacheMax);
+        return XObjectPtr(theXNumber);
+    }
+    else
+    {
+        m_xnumberCache.reserve(eXNumberCacheMax);
 
-		XObject* const	theXObject = m_xnumberAllocator.createNumber(theValue);
+        XObject* const  theXObject = m_xnumberAllocator.createNumber(theValue);
 
-		theXObject->setFactory(this);
+        theXObject->setFactory(this);
 
-		return XObjectPtr(theXObject);
-	}
+        return XObjectPtr(theXObject);
+    }
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNumber(const XToken&	theValue)
+XObjectFactoryDefault::createNumber(const XToken&   theValue)
 {
-	XObject*	theXObject = m_xtokenNumberAdapterAllocator.create(theValue);
+    XObject*    theXObject = m_xtokenNumberAdapterAllocator.create(theValue);
 
-	theXObject->setFactory(this);
+    theXObject->setFactory(this);
 
-	return XObjectPtr(theXObject);
+    return XObjectPtr(theXObject);
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
+XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&    theValue)
 {
-	if (m_xnodesetCache.empty() == false)
-	{
-		XNodeSet* const		theXObject = m_xnodesetCache.back();
+    if (m_xnodesetCache.empty() == false)
+    {
+        XNodeSet* const     theXObject = m_xnodesetCache.back();
 
-		m_xnodesetCache.pop_back();
+        m_xnodesetCache.pop_back();
 
-		theXObject->set(theValue);
+        theXObject->set(theValue);
 
-		return XObjectPtr(theXObject);
-	}
-	else
-	{
-		m_xnodesetCache.reserve(eXNodeSetCacheMax);
+        return XObjectPtr(theXObject);
+    }
+    else
+    {
+        m_xnodesetCache.reserve(eXNodeSetCacheMax);
 
-		XNodeSet* const		theXObject = m_xnodesetAllocator.createNodeSet(theValue);
+        XNodeSet* const     theXObject = m_xnodesetAllocator.createNodeSet(theValue);
 
-		theXObject->setFactory(this);
+        theXObject->setFactory(this);
 
-		return XObjectPtr(theXObject);
-	}
+        return XObjectPtr(theXObject);
+    }
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createNodeSet(XalanNode* 	theValue)
+XObjectFactoryDefault::createNodeSet(XalanNode*     theValue)
 {
-	XNodeSetNodeProxy* const	theNodeSet =
-		m_xnodesetNodeProxyAllocator.create(theValue);
+    XNodeSetNodeProxy* const    theNodeSet =
+        m_xnodesetNodeProxyAllocator.create(theValue);
 
-	theNodeSet->setFactory(this);
+    theNodeSet->setFactory(this);
 
-	return XObjectPtr(theNodeSet);
+    return XObjectPtr(theNodeSet);
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(const XalanDOMString&	theValue)
+XObjectFactoryDefault::createString(const XalanDOMString&   theValue)
 {
-	if (m_xstringCache.empty() == false)
-	{
-		XString* const	theXString = m_xstringCache.back();
+    if (m_xstringCache.empty() == false)
+    {
+        XString* const  theXString = m_xstringCache.back();
 
-		m_xstringCache.pop_back();
+        m_xstringCache.pop_back();
 
-		theXString->set(theValue);
+        theXString->set(theValue);
 
-		return XObjectPtr(theXString);
-	}
-	else
-	{
-		m_xstringCache.reserve(eXStringCacheMax);
+        return XObjectPtr(theXString);
+    }
+    else
+    {
+        m_xstringCache.reserve(eXStringCacheMax);
 
-		XString* const	theXString = m_xstringAllocator.createString(theValue);
+        XString* const  theXString = m_xstringAllocator.createString(theValue);
 
-		theXString->setFactory(this);
+        theXString->setFactory(this);
 
-		return XObjectPtr(theXString);
-	}
+        return XObjectPtr(theXString);
+    }
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(const XalanDOMChar*		theValue)
+XObjectFactoryDefault::createString(const XalanDOMChar*     theValue)
 {
-	XString* const	theXString = m_xstringAllocator.createString(theValue);
+    XString* const  theXString = m_xstringAllocator.createString(theValue);
 
-	theXString->setFactory(this);
+    theXString->setFactory(this);
 
-	return XObjectPtr(theXString);
+    return XObjectPtr(theXString);
 }
 
 
 
 const XObjectPtr
 XObjectFactoryDefault::createString(
-			const XalanDOMChar*		theValue,
-			XalanSize_t			    theLength)
+            const XalanDOMChar*     theValue,
+            XalanSize_t             theLength)
 {
-	XString* const	theXString = m_xstringAllocator.createString(theValue, theLength);
+    XString* const  theXString = m_xstringAllocator.createString(theValue, theLength);
 
-	theXString->setFactory(this);
+    theXString->setFactory(this);
 
-	return XObjectPtr(theXString);
+    return XObjectPtr(theXString);
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createString(const XToken&	theValue)
+XObjectFactoryDefault::createString(const XToken&   theValue)
 {
-	XObject*	theXObject = m_xtokenStringAdapterAllocator.create(theValue);
+    XObject*    theXObject = m_xtokenStringAdapterAllocator.create(theValue);
 
-	theXObject->setFactory(this);
+    theXObject->setFactory(this);
 
-	return XObjectPtr(theXObject);
+    return XObjectPtr(theXObject);
 }
 
 
 
 const XObjectPtr
-XObjectFactoryDefault::createStringReference(const XalanDOMString&	theValue)
+XObjectFactoryDefault::createStringReference(const XalanDOMString&  theValue)
 {
-	XStringReference* const	theXStringReference = m_xstringReferenceAllocator.createString(theValue);
+    XStringReference* const theXStringReference = m_xstringReferenceAllocator.createString(theValue);
 
-	theXStringReference->setFactory(this);
+    theXStringReference->setFactory(this);
 
-	return XObjectPtr(theXStringReference);
+    return XObjectPtr(theXStringReference);
 }
 
 
 
 const XObjectPtr
 XObjectFactoryDefault::createStringAdapter(
-            const XObjectPtr&	    theValue,
+            const XObjectPtr&       theValue,
             XPathExecutionContext&  theExecutionContext)
 {
-	XStringAdapter* const	theXStringAdapter =
+    XStringAdapter* const   theXStringAdapter =
         m_xstringAdapterAllocator.createString(theValue, theExecutionContext);
 
-	theXStringAdapter->setFactory(this);
+    theXStringAdapter->setFactory(this);
 
-	return XObjectPtr(theXStringAdapter);
+    return XObjectPtr(theXStringAdapter);
 }
 
 
@@ -460,11 +460,11 @@ XObjectFactoryDefault::createStringAdapter(
 const XObjectPtr
 XObjectFactoryDefault::createString(GetCachedString&    theValue)
 {
-	XStringCached* const	theXStringCached = m_xstringCachedAllocator.createString(theValue);
+    XStringCached* const    theXStringCached = m_xstringCachedAllocator.createString(theValue);
 
-	theXStringCached->setFactory(this);
+    theXStringCached->setFactory(this);
 
-	return XObjectPtr(theXStringCached);
+    return XObjectPtr(theXStringCached);
 }
 
 
@@ -472,39 +472,39 @@ XObjectFactoryDefault::createString(GetCachedString&    theValue)
 void
 XObjectFactoryDefault::reset()
 {
-	m_xstringAdapterAllocator.reset();
+    m_xstringAdapterAllocator.reset();
 
-	m_xstringAllocator.reset();
+    m_xstringAllocator.reset();
 
-	m_xstringCachedAllocator.reset();
+    m_xstringCachedAllocator.reset();
 
-	m_xstringReferenceAllocator.reset();
+    m_xstringReferenceAllocator.reset();
 
-	m_xnumberAllocator.reset();
+    m_xnumberAllocator.reset();
 
-	m_xnodesetAllocator.reset();
+    m_xnodesetAllocator.reset();
 
-	m_xnodesetNodeProxyAllocator.reset();
+    m_xnodesetNodeProxyAllocator.reset();
 
-	m_xtokenNumberAdapterAllocator.reset();
+    m_xtokenNumberAdapterAllocator.reset();
 
-	m_xtokenStringAdapterAllocator.reset();
+    m_xtokenStringAdapterAllocator.reset();
 
 #if !defined(XALAN_NO_STD_NAMESPACE)
-	using std::for_each;
+    using std::for_each;
 #endif
 
-	for_each(m_xobjects.begin(),
-			 m_xobjects.end(),
-			 DeleteXObjectFunctor(*this, true));
+    for_each(m_xobjects.begin(),
+             m_xobjects.end(),
+             DeleteXObjectFunctor(*this, true));
 
-	m_xobjects.clear();
+    m_xobjects.clear();
 
-	m_xnumberCache.clear();
+    m_xnumberCache.clear();
 
-	m_xnodesetCache.clear();
+    m_xnodesetCache.clear();
 
-	m_xstringCache.clear();
+    m_xstringCache.clear();
 }
 
 

@@ -33,9 +33,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 NodeNameTreeWalker::NodeNameTreeWalker(MemoryManager& theManager) :
-	TreeWalker(),
-	m_nodeName(theManager),
-	m_matchingNodes(theManager)
+    TreeWalker(),
+    m_nodeName(theManager),
+    m_matchingNodes(theManager)
 {
 }
 
@@ -49,80 +49,80 @@ NodeNameTreeWalker::~NodeNameTreeWalker()
 
 void
 NodeNameTreeWalker::findMatchingNodes(
-			const XalanDOMString&	theNodeName,
-			const XalanNode*		theStartNode)
+            const XalanDOMString&   theNodeName,
+            const XalanNode*        theStartNode)
 {
-	assert(theStartNode != 0);
+    assert(theStartNode != 0);
 
-	m_nodeName = theNodeName;
+    m_nodeName = theNodeName;
 
-	m_matchingNodes.clear();
+    m_matchingNodes.clear();
 
-	traverse(theStartNode->getFirstChild(),
-			 theStartNode);
+    traverse(theStartNode->getFirstChild(),
+             theStartNode);
 }
 
 
 
 void
 NodeNameTreeWalker::findMatchingNodes(
-			const XalanDOMString&	theNodeName,
-			XalanNode*				theStartNode)
+            const XalanDOMString&   theNodeName,
+            XalanNode*              theStartNode)
 {
-	assert(theStartNode != 0);
+    assert(theStartNode != 0);
 
-	m_nodeName = theNodeName;
+    m_nodeName = theNodeName;
 
-	m_matchingNodes.clear();
+    m_matchingNodes.clear();
 
-	traverse(theStartNode->getFirstChild(),
-			 theStartNode);
+    traverse(theStartNode->getFirstChild(),
+             theStartNode);
 }
 
 
 
 bool
-NodeNameTreeWalker::startNode(XalanNode*	node)
+NodeNameTreeWalker::startNode(XalanNode*    node)
 {
-	const XalanDOMString&	theNodeName = node->getNodeName();
+    const XalanDOMString&   theNodeName = node->getNodeName();
 
-	if (equals(theNodeName, m_nodeName) == true)
-	{
-		m_matchingNodes.push_back(node);
-	}
+    if (equals(theNodeName, m_nodeName) == true)
+    {
+        m_matchingNodes.push_back(node);
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-NodeNameTreeWalker::endNode(XalanNode*	/* node */)
+NodeNameTreeWalker::endNode(XalanNode*  /* node */)
 {
-	return false;
+    return false;
 }
 
 
 
 bool
-NodeNameTreeWalker::startNode(const XalanNode*	node)
+NodeNameTreeWalker::startNode(const XalanNode*  node)
 {
-	const XalanDOMString&	theNodeName = node->getNodeName();
+    const XalanDOMString&   theNodeName = node->getNodeName();
 
-	if (equals(theNodeName, m_nodeName) == true)
-	{
-		m_matchingNodes.push_back(node);
-	}
+    if (equals(theNodeName, m_nodeName) == true)
+    {
+        m_matchingNodes.push_back(node);
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-NodeNameTreeWalker::endNode(const XalanNode*	/* node */)
+NodeNameTreeWalker::endNode(const XalanNode*    /* node */)
 {
-	return false;
+    return false;
 }
 
 

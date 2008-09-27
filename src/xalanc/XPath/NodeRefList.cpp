@@ -34,28 +34,28 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 NodeRefList::NodeRefList(MemoryManager& theManager) :
-	NodeRefListBase(),
-	m_nodeList(theManager)
+    NodeRefListBase(),
+    m_nodeList(theManager)
 {
 }
 
 
 
-NodeRefList::NodeRefList(const NodeRefList&		theSource,
+NodeRefList::NodeRefList(const NodeRefList&     theSource,
                          MemoryManager& theManager) :
-	NodeRefListBase(theSource),
-	m_nodeList(theSource.m_nodeList, theManager)
+    NodeRefListBase(theSource),
+    m_nodeList(theSource.m_nodeList, theManager)
 {
 }
 
 
 
-NodeRefList::NodeRefList(const NodeRefListBase&		theSource,
+NodeRefList::NodeRefList(const NodeRefListBase&     theSource,
                          MemoryManager& theManager) :
-	NodeRefListBase(theSource),
-	m_nodeList(theManager)
+    NodeRefListBase(theSource),
+    m_nodeList(theManager)
 {
-	*this = theSource;
+    *this = theSource;
 }
 
 
@@ -67,57 +67,57 @@ NodeRefList::~NodeRefList()
 
 
 NodeRefList&
-NodeRefList::operator=(const NodeRefListBase&	theRHS)
+NodeRefList::operator=(const NodeRefListBase&   theRHS)
 {
-	if (&theRHS != this)
-	{
-		m_nodeList.clear();
+    if (&theRHS != this)
+    {
+        m_nodeList.clear();
 
-		const size_type		theLength = theRHS.getLength();
+        const size_type     theLength = theRHS.getLength();
 
-		m_nodeList.reserve(theLength);
+        m_nodeList.reserve(theLength);
 
-		for(size_type i = 0; i < theLength; i++)
-		{
-			XalanNode* const	theNode = theRHS.item(i);
+        for(size_type i = 0; i < theLength; i++)
+        {
+            XalanNode* const    theNode = theRHS.item(i);
 
-			if (theNode != 0)
-			{
-				m_nodeList.push_back(theNode);
-			}
-		}
+            if (theNode != 0)
+            {
+                m_nodeList.push_back(theNode);
+            }
+        }
 
-		// Chain up...
-		NodeRefListBase::operator=(theRHS);
-	}
+        // Chain up...
+        NodeRefListBase::operator=(theRHS);
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 NodeRefList&
-NodeRefList::operator=(const NodeRefList&	theRHS)
+NodeRefList::operator=(const NodeRefList&   theRHS)
 {
-	if (&theRHS != this)
-	{
-		m_nodeList = theRHS.m_nodeList;
+    if (&theRHS != this)
+    {
+        m_nodeList = theRHS.m_nodeList;
 
-		// Chain up...
-		NodeRefListBase::operator=(theRHS);
-	}
+        // Chain up...
+        NodeRefListBase::operator=(theRHS);
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 XalanNode*
-NodeRefList::item(size_type		index) const
+NodeRefList::item(size_type     index) const
 {
-	assert(index < m_nodeList.size());
+    assert(index < m_nodeList.size());
 
-	return m_nodeList[index];
+    return m_nodeList[index];
 }
 
 
@@ -127,26 +127,26 @@ NodeRefList::getLength() const
 {
     assert(size_type(m_nodeList.size()) == m_nodeList.size());
 
-	return size_type(m_nodeList.size());
+    return size_type(m_nodeList.size());
 }
 
 
 
 NodeRefList::size_type
-NodeRefList::indexOf(const XalanNode*	theNode) const
+NodeRefList::indexOf(const XalanNode*   theNode) const
 {
-	XALAN_USING_STD(find)
+    XALAN_USING_STD(find)
 
-	// Look for the node in the list.
-	NodeListVectorType::const_iterator	i =
-		find(
-			m_nodeList.begin(),
-			m_nodeList.end(),
-			theNode);
+    // Look for the node in the list.
+    NodeListVectorType::const_iterator  i =
+        find(
+            m_nodeList.begin(),
+            m_nodeList.end(),
+            theNode);
 
-	// If not found, return npos.  Otherwise, subtract the iterator
-	// from the first iterator to get the distance between them.
-	return i == m_nodeList.end() ? npos : i - m_nodeList.begin();
+    // If not found, return npos.  Otherwise, subtract the iterator
+    // from the first iterator to get the distance between them.
+    return i == m_nodeList.end() ? npos : i - m_nodeList.begin();
 }
 
 
@@ -155,32 +155,32 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 bool
 NodeRefList::checkForDuplicates(MemoryManager& theManager) const
 {
-	typedef XalanSet<const XalanNode*>	NodeSetType;
+    typedef XalanSet<const XalanNode*>  NodeSetType;
 
-	bool	fResult = false;
+    bool    fResult = false;
 
-	const size_type		theLength = getLength();
+    const size_type     theLength = getLength();
 
-	if (theLength > 0)
-	{
-		NodeSetType		theNodes(theManager);
+    if (theLength > 0)
+    {
+        NodeSetType     theNodes(theManager);
 
-		for (size_type i = 0; i < theLength && fResult == false; ++i)
-		{
-			const XalanNode* const	theNode = item(i);
+        for (size_type i = 0; i < theLength && fResult == false; ++i)
+        {
+            const XalanNode* const  theNode = item(i);
 
-			if (theNodes.find(theNode) != theNodes.end())
-			{
-				fResult = true;
-			}
-			else
-			{
-				theNodes.insert(theNode);
-			}
-		}
-	}
+            if (theNodes.find(theNode) != theNodes.end())
+            {
+                fResult = true;
+            }
+            else
+            {
+                theNodes.insert(theNode);
+            }
+        }
+    }
 
-	return fResult;
+    return fResult;
 }
 #endif
 

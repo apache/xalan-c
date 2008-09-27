@@ -34,7 +34,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
 XALAN_USING_XERCES(Locator)
 
 
@@ -44,84 +44,84 @@ class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 public:
 
     /**
-	 * Constructor
-	 *
-	 * @param theMessage The message to display when exception thrown
-	 * @param theManager The MemoryManager instance to use.
-	 * @param theLocator The locator instance for error reporting, if any.
-	 */
-	XSLException(
-			const XalanDOMString&	theMessage,
+     * Constructor
+     *
+     * @param theMessage The message to display when exception thrown
+     * @param theManager The MemoryManager instance to use.
+     * @param theLocator The locator instance for error reporting, if any.
+     */
+    XSLException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
-            const Locator*		    theLocator);
+            const Locator*          theLocator);
 
     /**
-	 * Constructor.  Use this constructor when the message has 
+     * Constructor.  Use this constructor when the message has 
      * already been formatted.
-	 * 
-	 * @param theMessage The message to display when exception thrown
-	 * @param theManager The MemoryManager instance to use.
-	 */
-	XSLException(
-			const XalanDOMString&	theMessage,
+     * 
+     * @param theMessage The message to display when exception thrown
+     * @param theManager The MemoryManager instance to use.
+     */
+    XSLException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager);
 
-	XSLException(const XSLException&	other);
+    XSLException(const XSLException&    other);
 
-	virtual
-	~XSLException();
+    virtual
+    ~XSLException();
 
-	/**
-	 * Retrieve type of exception
-	 * 
-	 * @return type of exception
-	 */
-	virtual const XalanDOMChar*
-	getType() const = 0;
+    /**
+     * Retrieve type of exception
+     * 
+     * @return type of exception
+     */
+    virtual const XalanDOMChar*
+    getType() const = 0;
 
-	/**
-	 * Retrieve message for exception
-	 * 
-	 * @return exception message
-	 */
-	const XalanDOMString&
-	getMessage() const
-	{
-		return m_message;
-	}
+    /**
+     * Retrieve message for exception
+     * 
+     * @return exception message
+     */
+    const XalanDOMString&
+    getMessage() const
+    {
+        return m_message;
+    }
 
-	/**
-	 * Get the URI for the associated document, if any
-	 * 
-	 * @return The URI.
-	 */
-	const XalanDOMString&
-	getURI() const
-	{
-		return m_uri;
-	}
+    /**
+     * Get the URI for the associated document, if any
+     * 
+     * @return The URI.
+     */
+    const XalanDOMString&
+    getURI() const
+    {
+        return m_uri;
+    }
 
-	/**
-	 * Retrieve the line number.
-	 * 
-	 * @return the line number
-	 */
-	XalanFileLoc
-	getLineNumber() const
-	{
-		return m_lineNumber;
-	}
+    /**
+     * Retrieve the line number.
+     * 
+     * @return the line number
+     */
+    XalanFileLoc
+    getLineNumber() const
+    {
+        return m_lineNumber;
+    }
 
-	/**
-	 * Retrieve the column number.
-	 * 
-	 * @return the column number
-	 */
-	XalanFileLoc
-	getColumnNumber() const
-	{
-		return m_columnNumber;
-	}
+    /**
+     * Retrieve the column number.
+     * 
+     * @return the column number
+     */
+    XalanFileLoc
+    getColumnNumber() const
+    {
+        return m_columnNumber;
+    }
 
     const MemoryManager&
     getMemoryManager() const
@@ -135,76 +135,76 @@ public:
         return m_memoryManager;
     }
 
-	void
-	defaultFormat(XalanDOMString&	theBuffer) const;
+    void
+    defaultFormat(XalanDOMString&   theBuffer) const;
 
-	static void
-	defaultFormat(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-			const XalanDOMChar*		theType,
-			XalanDOMString&			theBuffer)
-	{
-		defaultFormat(
-			theMessage.c_str(),
-			theMessage.size(),
-			theURI.c_str(),
-			theURI.size(),
-			theLineNumber,
-			theColumnNumber,
-			theType,
-			XalanDOMString::length(theType),
-			theBuffer);
-	}
+    static void
+    defaultFormat(
+            const XalanDOMString&   theMessage,
+            const XalanDOMString&   theURI,
+            XalanFileLoc            theLineNumber,
+            XalanFileLoc            theColumnNumber,
+            const XalanDOMChar*     theType,
+            XalanDOMString&         theBuffer)
+    {
+        defaultFormat(
+            theMessage.c_str(),
+            theMessage.size(),
+            theURI.c_str(),
+            theURI.size(),
+            theLineNumber,
+            theColumnNumber,
+            theType,
+            XalanDOMString::length(theType),
+            theBuffer);
+    }
 
-	static void
-	defaultFormat(
-			const XalanDOMChar*		theMessage,
-			const XalanDOMChar*		theURI,
-			XalanFileLoc			theLineNumber,
-			XalanFileLoc			theColumnNumber,
-			const XalanDOMChar*		theType,
-			XalanDOMString&			theBuffer)
-	{
-		assert(theMessage != 0);
+    static void
+    defaultFormat(
+            const XalanDOMChar*     theMessage,
+            const XalanDOMChar*     theURI,
+            XalanFileLoc            theLineNumber,
+            XalanFileLoc            theColumnNumber,
+            const XalanDOMChar*     theType,
+            XalanDOMString&         theBuffer)
+    {
+        assert(theMessage != 0);
 
-		defaultFormat(
-			theMessage,
-			XalanDOMString::length(theMessage),
-			theURI,
+        defaultFormat(
+            theMessage,
+            XalanDOMString::length(theMessage),
+            theURI,
             theURI == 0 ? 0 : XalanDOMString::length(theURI),
-			theLineNumber,
-			theColumnNumber,
-			theType,
-			theType == 0 ? 0 : XalanDOMString::length(theType),
-			theBuffer);
-	}
+            theLineNumber,
+            theColumnNumber,
+            theType,
+            theType == 0 ? 0 : XalanDOMString::length(theType),
+            theBuffer);
+    }
 
-	static void
-	defaultFormat(
-			const XalanDOMChar*					theMessage,
-			const XalanDOMString::size_type		theMessageLength,
-			const XalanDOMChar*					theURI,
-			const XalanDOMString::size_type		theURILength,
-			XalanFileLoc			            theLineNumber,
-			XalanFileLoc			            theColumnNumber,
-			const XalanDOMChar*					theType,
-			const XalanDOMString::size_type		theTypeLength,
-			XalanDOMString&						theBuffer);
+    static void
+    defaultFormat(
+            const XalanDOMChar*                 theMessage,
+            const XalanDOMString::size_type     theMessageLength,
+            const XalanDOMChar*                 theURI,
+            const XalanDOMString::size_type     theURILength,
+            XalanFileLoc                        theLineNumber,
+            XalanFileLoc                        theColumnNumber,
+            const XalanDOMChar*                 theType,
+            const XalanDOMString::size_type     theTypeLength,
+            XalanDOMString&                     theBuffer);
 
 protected:
 
     mutable MemoryManager&  m_memoryManager;
-	
+    
 private:
 
-	const XalanDOMString	m_message;
-	const XalanDOMString	m_uri;
+    const XalanDOMString    m_message;
+    const XalanDOMString    m_uri;
 
-	const XalanFileLoc		m_lineNumber;
-	const XalanFileLoc	    m_columnNumber;
+    const XalanFileLoc      m_lineNumber;
+    const XalanFileLoc      m_columnNumber;
 
     // When true, the message has already formatted.
     const bool              m_formatted;
@@ -216,4 +216,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XSLEXCEPTION_HEADER_GUARD_1357924680
+#endif  // XSLEXCEPTION_HEADER_GUARD_1357924680

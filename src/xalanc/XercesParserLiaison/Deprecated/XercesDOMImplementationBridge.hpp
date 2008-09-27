@@ -47,38 +47,38 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationBridge : public Xa
 {
 public:
 
-	XercesDOMImplementationBridge(DOM_DOMImplementationType&	theXercesDOMImplementation);
+    XercesDOMImplementationBridge(DOM_DOMImplementationType&    theXercesDOMImplementation);
 
-	virtual
-	~XercesDOMImplementationBridge();
+    virtual
+    ~XercesDOMImplementationBridge();
 
-	/** @name Getter functions */
-	//@{
+    /** @name Getter functions */
+    //@{
 
-	/**
-	 * Test if the DOM implementation implements a specific feature.
-	 *
-	 * @param feature The string of the feature to test (case-insensitive). The legal 
-	 *        values are defined throughout this specification. The string must be 
-	 *        an <EM>XML name</EM> (see also Compliance).
-	 * @param version This is the version number of the package name to test.  
-	 *   In Level 1, this is the string "1.0". If the version is not specified, 
-	 *   supporting any version of the  feature will cause the method to return 
-	 *   <code>true</code>. 
-	 * @return <code>true</code> if the feature is implemented in the specified 
-	 *   version, <code>false</code> otherwise.
-	 */
-	virtual bool
-	hasFeature(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version);
+    /**
+     * Test if the DOM implementation implements a specific feature.
+     *
+     * @param feature The string of the feature to test (case-insensitive). The legal 
+     *        values are defined throughout this specification. The string must be 
+     *        an <EM>XML name</EM> (see also Compliance).
+     * @param version This is the version number of the package name to test.  
+     *   In Level 1, this is the string "1.0". If the version is not specified, 
+     *   supporting any version of the  feature will cause the method to return 
+     *   <code>true</code>. 
+     * @return <code>true</code> if the feature is implemented in the specified 
+     *   version, <code>false</code> otherwise.
+     */
+    virtual bool
+    hasFeature(
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version);
 
  //@}
 
     /** @name Functions introduced in DOM Level 2. */
     //@{
 
-	/**
+    /**
      * Creates an empty <code>DOM_DocumentType</code> node.
      * Entity declarations and notations are not made available.
      * Entity reference expansions and default attribute additions
@@ -91,11 +91,11 @@ public:
      * @return A new <code>DocumentType</code> node with
      * <code>Node.ownerDocument</code> set to <code>null</code>.
      */
-	virtual XalanDocumentType*
-	createDocumentType(
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	publicId,
-			const XalanDOMString&	systemId);
+    virtual XalanDocumentType*
+    createDocumentType(
+            const XalanDOMString&   qualifiedName,
+            const XalanDOMString&   publicId,
+            const XalanDOMString&   systemId);
 
     /**
      * Creates an XML <code>DOM_Document</code> object of the specified type
@@ -114,39 +114,39 @@ public:
      *   been used with a different document.
      */
     virtual XalanDocument*
-	createDocument(
-			const XalanDOMString&		namespaceURI,
-			const XalanDOMString&		qualifiedName,
-			const XalanDocumentType&	doctype);
+    createDocument(
+            const XalanDOMString&       namespaceURI,
+            const XalanDOMString&       qualifiedName,
+            const XalanDocumentType&    doctype);
 
-	/**
-	 * Get the Xerces node this instance represent.
-	 *
-	 * @return The Xerces node
-	 */
-	DOM_DOMImplementationType&
-	getXercesNode() const
-	{
-		return m_xercesNode;
-	}
+    /**
+     * Get the Xerces node this instance represent.
+     *
+     * @return The Xerces node
+     */
+    DOM_DOMImplementationType&
+    getXercesNode() const
+    {
+        return m_xercesNode;
+    }
 
     //@}
 
 private:
 
-	// These are not defined...
+    // These are not defined...
 
-	XercesDOMImplementationBridge(const XercesDOMImplementationBridge&	theSource);
+    XercesDOMImplementationBridge(const XercesDOMImplementationBridge&  theSource);
 
-	XercesDOMImplementationBridge&
-	operator=(const XercesDOMImplementationBridge&		theSource);
+    XercesDOMImplementationBridge&
+    operator=(const XercesDOMImplementationBridge&      theSource);
 
-	bool
-	operator==(const XercesDOMImplementationBridge&	theRHS) const;
+    bool
+    operator==(const XercesDOMImplementationBridge& theRHS) const;
 
-	// Data members...
+    // Data members...
 
-	DOM_DOMImplementationType&	m_xercesNode;
+    DOM_DOMImplementationType&  m_xercesNode;
 };
 
 
@@ -155,4 +155,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined (XERCESDOMIMPLEMENTATIONBRIDGE_HEADER_GUARD_1357924680)
+#endif  // !defined (XERCESDOMIMPLEMENTATIONBRIDGE_HEADER_GUARD_1357924680)

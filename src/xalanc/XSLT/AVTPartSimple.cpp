@@ -35,12 +35,12 @@ XALAN_CPP_NAMESPACE_BEGIN
  * Simple string part of a complex AVT.
  */
 AVTPartSimple::AVTPartSimple(
-			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMChar*				val,
-			XalanDOMString::size_type		len) :
-	AVTPart(),
-	m_val(constructionContext.allocateXalanDOMCharVector(val, len, false)),
-	m_len(len)
+            StylesheetConstructionContext&  constructionContext,
+            const XalanDOMChar*             val,
+            XalanDOMString::size_type       len) :
+    AVTPart(),
+    m_val(constructionContext.allocateXalanDOMCharVector(val, len, false)),
+    m_len(len)
 {
 }
 
@@ -48,25 +48,25 @@ AVTPartSimple::AVTPartSimple(
 
 void
 AVTPartSimple::evaluate(
-			XalanDOMString&			buf,
-			XalanNode*				/* contextNode */,
-			const PrefixResolver&	/* prefixResolver */,
-			XPathExecutionContext&	/* executionContext */) const
+            XalanDOMString&         buf,
+            XalanNode*              /* contextNode */,
+            const PrefixResolver&   /* prefixResolver */,
+            XPathExecutionContext&  /* executionContext */) const
 
 {
-	buf.append(m_val, m_len);
+    buf.append(m_val, m_len);
 }
 
 
 
 void
 AVTPartSimple::evaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	/* prefixResolver */,
-			XPathExecutionContext&	/* executionContext */) const
+            XalanDOMString&         buf,
+            const PrefixResolver&   /* prefixResolver */,
+            XPathExecutionContext&  /* executionContext */) const
 
 {
-	buf.append(m_val, m_len);
+    buf.append(m_val, m_len);
 }
 
 

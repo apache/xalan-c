@@ -40,8 +40,8 @@ ElemParam::ElemParam(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-            XalanFileLoc					columnNumber) :
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber) :
     ElemVariable(constructionContext,
                  stylesheetTree,
                  atts,

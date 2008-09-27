@@ -27,8 +27,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XStringReferenceAllocator::XStringReferenceAllocator(
             MemoryManager&  theManager,
-            size_type	    theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+            size_type       theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -41,25 +41,25 @@ XStringReferenceAllocator::~XStringReferenceAllocator()
 
 
 XStringReferenceAllocator::string_type*
-XStringReferenceAllocator::createString(const XalanDOMString&	theString) 
+XStringReferenceAllocator::createString(const XalanDOMString&   theString) 
 {
-	string_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    string_type* const  theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    string_type* const	theResult = new(theBlock) string_type(theString, m_allocator.getMemoryManager());
+    string_type* const  theResult = new(theBlock) string_type(theString, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 
 bool 
-XStringReferenceAllocator::destroy(string_type*	theString)
+XStringReferenceAllocator::destroy(string_type* theString)
 {
-	return m_allocator.destroyObject(theString);
+    return m_allocator.destroyObject(theString);
 }
 
 
@@ -67,7 +67,7 @@ XStringReferenceAllocator::destroy(string_type*	theString)
 void 
 XStringReferenceAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

@@ -73,29 +73,29 @@ void icu_free(const void * /* context */, void * mem)
 
 int
 main(
-			int		argc,
-			char*	/* argv */[])
+            int     argc,
+            char*   /* argv */[])
 {
-	XALAN_USING_STD(cerr)
-	XALAN_USING_STD(endl)
+    XALAN_USING_STD(cerr)
+    XALAN_USING_STD(endl)
 
-	int	theResult = -1;
+    int theResult = -1;
 
-	if (argc != 1)
-	{
-		cerr << "Usage: SimpleTransform"
-			 << endl
-			 << endl;
-	}
-	else
-	{
-		try
-		{
-			XALAN_USING_XERCES(XMLPlatformUtils)
+    if (argc != 1)
+    {
+        cerr << "Usage: SimpleTransform"
+             << endl
+             << endl;
+    }
+    else
+    {
+        try
+        {
+            XALAN_USING_XERCES(XMLPlatformUtils)
             
             XALAN_USING_XERCES(XMLUni)
 
-			XALAN_USING_XALAN(XalanTransformer)
+            XALAN_USING_XALAN(XalanTransformer)
 
             XalanMemoryManagerImpl memoryManager;
 
@@ -114,47 +114,47 @@ main(
             }
 #endif 
 
-			// Call the static initializer for Xerces.
-			XMLPlatformUtils::Initialize( 
+            // Call the static initializer for Xerces.
+            XMLPlatformUtils::Initialize( 
                                     XMLUni::fgXercescDefaultLocale,
                                     0,
                                     0,
 
                                     &memoryManager );
 
-			// Initialize Xalan.
-			XalanTransformer::initialize( memoryManager );
+            // Initialize Xalan.
+            XalanTransformer::initialize( memoryManager );
 
-			{
-				// Create a XalanTransformer.
-				XalanTransformer theXalanTransformer( memoryManager );
+            {
+                // Create a XalanTransformer.
+                XalanTransformer theXalanTransformer( memoryManager );
 
-				// The assumption is that the executable will be run
-				// from same directory as the input files.
-				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+                // The assumption is that the executable will be run
+                // from same directory as the input files.
+                theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
 
-				if(theResult != 0)
-				{
-					cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
-						 << endl
-						 << endl;
-				}
-			}
+                if(theResult != 0)
+                {
+                    cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
+                         << endl
+                         << endl;
+                }
+            }
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
+            // Terminate Xalan...
+            XalanTransformer::terminate();
 
-			// Terminate Xerces...
-			XMLPlatformUtils::Terminate();
+            // Terminate Xerces...
+            XMLPlatformUtils::Terminate();
 
-			// Clean up the ICU, if it's integrated...
-			XalanTransformer::ICUCleanUp();
-		}
-		catch(...)
-		{
-			cerr << "Initialization failed!" << endl;
-		}
-	}
+            // Clean up the ICU, if it's integrated...
+            XalanTransformer::ICUCleanUp();
+        }
+        catch(...)
+        {
+            cerr << "Initialization failed!" << endl;
+        }
+    }
 
-	return theResult;
+    return theResult;
 }

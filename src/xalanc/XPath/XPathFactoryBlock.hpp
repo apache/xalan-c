@@ -43,38 +43,38 @@ class XALAN_XPATH_EXPORT XPathFactoryBlock : public XPathFactory
 
 public:
 
-	enum { eDefaultBlockSize = 20u };
+    enum { eDefaultBlockSize = 20u };
 
-	explicit
-	XPathFactoryBlock(
+    explicit
+    XPathFactoryBlock(
             MemoryManager&      theManager,
             XalanSize_t             theBlockSize = eDefaultBlockSize);
 
-	virtual
-	~XPathFactoryBlock();
+    virtual
+    ~XPathFactoryBlock();
 
 
-	// Inherited from XPathFactory...
-	virtual void
-	reset();
+    // Inherited from XPathFactory...
+    virtual void
+    reset();
 
-	// Inherited from XPathFactory...
+    // Inherited from XPathFactory...
 
-	virtual XPath*
-	create();
+    virtual XPath*
+    create();
 
 protected:
 
-	// Inherited from XPathFactory...
+    // Inherited from XPathFactory...
 
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
+    virtual bool
+    doReturnObject(
+            const XPath*    theXPath,
+            bool            fInReset = false);
 
 private:
 
-	XPathAllocator	m_allocator;
+    XPathAllocator  m_allocator;
 };
 
 
@@ -83,4 +83,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHFACTORYBLOCK_HEADER_GUARD_1357924680
+#endif  // XPATHFACTORYBLOCK_HEADER_GUARD_1357924680

@@ -35,17 +35,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDocumentPrefixResolver::XalanDocumentPrefixResolver(
-			const XalanDocument*	theDocument,
-			const XalanDOMString&	theURI,
+            const XalanDocument*    theDocument,
+            const XalanDOMString&   theURI,
             MemoryManager&      theManager) :
-	m_namespaces(theManager),
-	m_uri(theURI, theManager)
+    m_namespaces(theManager),
+    m_uri(theURI, theManager)
 {
-	assert(theDocument != 0);
+    assert(theDocument != 0);
 
-	NamespaceNodesTreeWalker	theWalker(m_namespaces);
+    NamespaceNodesTreeWalker    theWalker(m_namespaces);
 
-	theWalker.traverse(theDocument);
+    theWalker.traverse(theDocument);
 }
 
 
@@ -57,31 +57,31 @@ XalanDocumentPrefixResolver::~XalanDocumentPrefixResolver()
 
 
 const XalanDOMString*
-XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&    prefix) const
 {
-	const NamespacesMapType::const_iterator		i = m_namespaces.find(&prefix);
+    const NamespacesMapType::const_iterator     i = m_namespaces.find(&prefix);
 
-	if (i == m_namespaces.end())
-	{
-		return 0;
-	}
-	else
-	{
-		const AttributeVectorType&	theVector = (*i).second;
+    if (i == m_namespaces.end())
+    {
+        return 0;
+    }
+    else
+    {
+        const AttributeVectorType&  theVector = (*i).second;
 
-		assert(theVector.empty() == false);
+        assert(theVector.empty() == false);
 
-		if (theVector.size() == 1)
-		{
-			assert(theVector.front() != 0);
+        if (theVector.size() == 1)
+        {
+            assert(theVector.front() != 0);
 
-			return &(theVector.front()->getNodeValue());
-		}
-		else
-		{
-			return duplicateBinding(theVector);
-		}
-	}
+            return &(theVector.front()->getNodeValue());
+        }
+        else
+        {
+            return duplicateBinding(theVector);
+        }
+    }
 }
 
 
@@ -89,24 +89,24 @@ XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix)
 const XalanDOMString&
 XalanDocumentPrefixResolver::getURI() const
 {
-	return m_uri;
+    return m_uri;
 }
 
 
 
 const XalanDOMString*
-XalanDocumentPrefixResolver::duplicateBinding(const AttributeVectorType&	theVector) const
+XalanDocumentPrefixResolver::duplicateBinding(const AttributeVectorType&    theVector) const
 {
-	assert(theVector.front() != 0);
+    assert(theVector.front() != 0);
 
-	return &(theVector.front()->getNodeValue());
+    return &(theVector.front()->getNodeValue());
 }
 
 
 
-XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::NamespaceNodesTreeWalker(NamespacesMapType& 	theMap) :
-	TreeWalker(),
-	m_map(theMap)
+XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::NamespaceNodesTreeWalker(NamespacesMapType&  theMap) :
+    TreeWalker(),
+    m_map(theMap)
 {
 }
 
@@ -119,69 +119,69 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::~NamespaceNodesTreeWalker
 
 
 bool
-XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode*	node)
+XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode*   node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	switch(node->getNodeType())
-	{
-	case XalanNode::ELEMENT_NODE:
-		{
-			const XalanElement*	theElementNode =
-				static_cast<const XalanElement*>(node);
+    switch(node->getNodeType())
+    {
+    case XalanNode::ELEMENT_NODE:
+        {
+            const XalanElement* theElementNode =
+                static_cast<const XalanElement*>(node);
 
-			const XalanNamedNodeMap* const	atts = theElementNode->getAttributes();
-			assert(atts != 0);
+            const XalanNamedNodeMap* const  atts = theElementNode->getAttributes();
+            assert(atts != 0);
 
-			const XalanSize_t	theSize = atts->getLength();
+            const XalanSize_t   theSize = atts->getLength();
 
-			for (XalanSize_t i = 0; i < theSize; ++i)
-			{
-				assert(atts->item(i) != 0 && atts->item(i)->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+            for (XalanSize_t i = 0; i < theSize; ++i)
+            {
+                assert(atts->item(i) != 0 && atts->item(i)->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-				const XalanAttr* const	theAttr =
-					static_cast<const XalanAttr*>(atts->item(i));
+                const XalanAttr* const  theAttr =
+                    static_cast<const XalanAttr*>(atts->item(i));
 
-				if (DOMServices::isNamespaceDeclaration(*theAttr) == true)
-				{
-					m_map[&theAttr->getLocalName()].push_back(theAttr);
-				}
-			}
-		}
-		break;
+                if (DOMServices::isNamespaceDeclaration(*theAttr) == true)
+                {
+                    m_map[&theAttr->getLocalName()].push_back(theAttr);
+                }
+            }
+        }
+        break;
 
-	default:
-		// Do nothing...
-		break;
-	}
+    default:
+        // Do nothing...
+        break;
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(XalanNode*		node)
+XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(XalanNode*     node)
 {
-	assert(node != 0);
+    assert(node != 0);
 
-	return startNode(const_cast<const XalanNode*>(node));
+    return startNode(const_cast<const XalanNode*>(node));
 }
 
 
 
 bool
-XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::endNode(const XalanNode*		/* node */)
+XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::endNode(const XalanNode*     /* node */)
 {
-	return false;
+    return false;
 }
 
 
 
 bool
-XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::endNode(XalanNode*	/* node */)
+XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::endNode(XalanNode*   /* node */)
 {
-	return false;
+    return false;
 }
 
 

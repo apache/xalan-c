@@ -37,52 +37,52 @@ class XALAN_XSLT_EXPORT FunctionFormatNumber : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionFormatNumber();
+    FunctionFormatNumber();
 
-	virtual
-	~FunctionFormatNumber();
+    virtual
+    ~FunctionFormatNumber();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,            
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const LocatorType*      locator) const;
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const XObjectPtr		arg3,
-			const LocatorType*		locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,            
+            const XObjectPtr        arg1,
+            const XObjectPtr        arg2,
+            const XObjectPtr        arg3,
+            const LocatorType*      locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionFormatNumber*
+    virtual FunctionFormatNumber*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 private:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
-	// Not implemented...
-	FunctionFormatNumber&
-	operator=(const FunctionFormatNumber&);
+    // Not implemented...
+    FunctionFormatNumber&
+    operator=(const FunctionFormatNumber&);
 
-	bool
-	operator==(const FunctionFormatNumber&) const;
+    bool
+    operator==(const FunctionFormatNumber&) const;
 
 };
 
@@ -92,4 +92,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONFORMATNUMBER_HEADER_GUARD_1357924680
+#endif  // FUNCTIONFORMATNUMBER_HEADER_GUARD_1357924680

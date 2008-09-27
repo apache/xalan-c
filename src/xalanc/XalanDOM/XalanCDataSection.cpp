@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanCDATASection::XalanCDATASection() :
-	XalanText()
+    XalanText()
 {
 }
 
@@ -36,27 +36,27 @@ XalanCDATASection::~XalanCDATASection()
 
 
 
-XalanCDATASection::XalanCDATASection(const XalanCDATASection&	theSource) :
-	XalanText(theSource)
+XalanCDATASection::XalanCDATASection(const XalanCDATASection&   theSource) :
+    XalanText(theSource)
 {
 }
 
 
 
 XalanCDATASection&
-XalanCDATASection::operator=(const XalanCDATASection&		theSource)
+XalanCDATASection::operator=(const XalanCDATASection&       theSource)
 {
-	XalanText::operator=(theSource);
+    XalanText::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanCDATASection::operator==(const XalanCDATASection&	/* theRHS */) const
+XalanCDATASection::operator==(const XalanCDATASection&  /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

@@ -38,99 +38,99 @@ class XALAN_XPATH_EXPORT XalanQNameByReference : public XalanQName
 {
 public:
 
-	/**
-	 * Construct an empty XalanQNameByReference.
-	 */
-	explicit
-	XalanQNameByReference();
+    /**
+     * Construct an empty XalanQNameByReference.
+     */
+    explicit
+    XalanQNameByReference();
 
-	/**
-	 * Construct a XalanQNameByReference, with the supplied namespace and local part.
-	 * The instance keeps only a _reference_ to the string, to avoid making a
-	 * copy.
-	 *
-	 * @param theNamespace namespace string
-	 * @param theLocalPart local part string
-	 */
-	XalanQNameByReference(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	theLocalPart);
+    /**
+     * Construct a XalanQNameByReference, with the supplied namespace and local part.
+     * The instance keeps only a _reference_ to the string, to avoid making a
+     * copy.
+     *
+     * @param theNamespace namespace string
+     * @param theLocalPart local part string
+     */
+    XalanQNameByReference(
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   theLocalPart);
 
-	/**
-	 * Construct a XalanQNameByReference, with the supplied local part.
-	 * The instance keeps only a _reference_ to the string, to avoid making a
-	 * copy.
-	 *
-	 * @param theLocalPart local part string
-	 */
-	XalanQNameByReference(const XalanDOMString&		theLocalPart);
+    /**
+     * Construct a XalanQNameByReference, with the supplied local part.
+     * The instance keeps only a _reference_ to the string, to avoid making a
+     * copy.
+     *
+     * @param theLocalPart local part string
+     */
+    XalanQNameByReference(const XalanDOMString&     theLocalPart);
 
-	/**
-	 * Construct a XalanQNameByReference, from the supplied XalanQName.  The instance
-	 * keeps only a _reference_ to the string, to avoid making a copy.
-	 *
-	 * @param theQName The source QName
-	 */
-	XalanQNameByReference(const XalanQName&		theQName);
+    /**
+     * Construct a XalanQNameByReference, from the supplied XalanQName.  The instance
+     * keeps only a _reference_ to the string, to avoid making a copy.
+     *
+     * @param theQName The source QName
+     */
+    XalanQNameByReference(const XalanQName&     theQName);
 
-	virtual
-	~XalanQNameByReference();
+    virtual
+    ~XalanQNameByReference();
 
-	/**
-	 * Retrieve the local part of qualified name.
-	 * 
-	 * @return local part string
-	 */
-	virtual const XalanDOMString&
-	getLocalPart() const;
+    /**
+     * Retrieve the local part of qualified name.
+     * 
+     * @return local part string
+     */
+    virtual const XalanDOMString&
+    getLocalPart() const;
 
-	/**
-	 * Set the local part of qualified name.
-	 * 
-	 * @param theLocalPart local part string
-	 */
-	void
-	setLocalPart(const XalanDOMString&	theLocalPart)
-	{
-		m_localpart = &theLocalPart;
-	}
+    /**
+     * Set the local part of qualified name.
+     * 
+     * @param theLocalPart local part string
+     */
+    void
+    setLocalPart(const XalanDOMString&  theLocalPart)
+    {
+        m_localpart = &theLocalPart;
+    }
 
-	/**
-	 * Retrieve the namespace of qualified name.
-	 * 
-	 * @return namespace string
-	 */
-	virtual const XalanDOMString&
-	getNamespace() const;
+    /**
+     * Retrieve the namespace of qualified name.
+     * 
+     * @return namespace string
+     */
+    virtual const XalanDOMString&
+    getNamespace() const;
 
-	/**
-	 * Set the Namespace URI of qualified name.
-	 * 
-	 * @param theLocalPart local part string
-	 */
-	void
-	setNamespace(const XalanDOMString&	theNamespace)
-	{
-		m_namespace = &theNamespace;
-	}
+    /**
+     * Set the Namespace URI of qualified name.
+     * 
+     * @param theLocalPart local part string
+     */
+    void
+    setNamespace(const XalanDOMString&  theNamespace)
+    {
+        m_namespace = &theNamespace;
+    }
 
-	/**
-	 * Clear the instance.
-	 */
-	void
-	clear()
-	{
-		m_namespace = &s_emptyString;
-		m_localpart = &s_emptyString;
-	}
+    /**
+     * Clear the instance.
+     */
+    void
+    clear()
+    {
+        m_namespace = &s_emptyString;
+        m_localpart = &s_emptyString;
+    }
 
 private:
 
-	// OK, we said reference, but using pointers
-	// allows for copy and assignment semantics.
-	const XalanDOMString*	m_namespace;
+    // OK, we said reference, but using pointers
+    // allows for copy and assignment semantics.
+    const XalanDOMString*   m_namespace;
 
-	const XalanDOMString*	m_localpart;
+    const XalanDOMString*   m_localpart;
 };
 
 
@@ -146,4 +146,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANQNAMEBYREFERENCE_HEADER_GUARD_1357924680
+#endif  // XALANQNAMEBYREFERENCE_HEADER_GUARD_1357924680

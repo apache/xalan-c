@@ -37,57 +37,57 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeVectorEntryExtended : public Attribu
 {
 public:
 
-	AttributeVectorEntryExtended(
-			const XMLChVectorType&	theName,
-			const XMLChVectorType&	theValue,
-			const XMLChVectorType&	theType,
-			const XMLChVectorType&	theURI ,
-			const XMLChVectorType&	theLocalName,
+    AttributeVectorEntryExtended(
+            const XMLChVectorType&  theName,
+            const XMLChVectorType&  theValue,
+            const XMLChVectorType&  theType,
+            const XMLChVectorType&  theURI ,
+            const XMLChVectorType&  theLocalName,
             MemoryManager&      theManager) :
-		AttributeVectorEntry(theName, theValue, theType, theManager),
-		m_uri(theURI, theManager),
-		m_localName(theLocalName, theManager)
-	{
-	}
+        AttributeVectorEntry(theName, theValue, theType, theManager),
+        m_uri(theURI, theManager),
+        m_localName(theLocalName, theManager)
+    {
+    }
 
-	AttributeVectorEntryExtended(
-			const XMLCh*	theName,
-			const XMLCh*	theValue,
-			const XMLCh*	theType,
-			const XMLCh*	theURI,
-			const XMLCh*	theLocalName,
+    AttributeVectorEntryExtended(
+            const XMLCh*    theName,
+            const XMLCh*    theValue,
+            const XMLCh*    theType,
+            const XMLCh*    theURI,
+            const XMLCh*    theLocalName,
             MemoryManager&      theManager) :
-		AttributeVectorEntry(theName, theValue, theType, theManager),
-		m_uri(theURI, theURI + length(theURI) + 1, theManager),
-		m_localName(theLocalName, theLocalName + length(theLocalName) + 1,theManager)
-	{
-	}
+        AttributeVectorEntry(theName, theValue, theType, theManager),
+        m_uri(theURI, theURI + length(theURI) + 1, theManager),
+        m_localName(theLocalName, theLocalName + length(theLocalName) + 1,theManager)
+    {
+    }
 
-	AttributeVectorEntryExtended(
-			const XMLCh*	theName,
-			const XMLCh*	theValue,
-			const XMLCh*	theType,
+    AttributeVectorEntryExtended(
+            const XMLCh*    theName,
+            const XMLCh*    theValue,
+            const XMLCh*    theType,
             MemoryManager&      theManager) :
-		AttributeVectorEntry(theName, theValue, theType,theManager),
-		m_uri(theManager),
-		m_localName(theManager)
-	{
-	}
+        AttributeVectorEntry(theName, theValue, theType,theManager),
+        m_uri(theManager),
+        m_localName(theManager)
+    {
+    }
 
-	AttributeVectorEntryExtended(MemoryManager&      theManager) :
-		AttributeVectorEntry(theManager),
-		m_uri(theManager),
-		m_localName(theManager)
-	{
-	}
+    AttributeVectorEntryExtended(MemoryManager&      theManager) :
+        AttributeVectorEntry(theManager),
+        m_uri(theManager),
+        m_localName(theManager)
+    {
+    }
 
     static AttributeVectorEntryExtended*
     create(
-			const XMLCh*	theName,
-			const XMLCh*	theValue,
-			const XMLCh*	theType,
-			const XMLCh*	theURI,
-			const XMLCh*	theLocalName,
+            const XMLCh*    theName,
+            const XMLCh*    theValue,
+            const XMLCh*    theType,
+            const XMLCh*    theURI,
+            const XMLCh*    theLocalName,
             MemoryManager&      theManager)
     {
         typedef AttributeVectorEntryExtended ThisType;
@@ -104,21 +104,21 @@ public:
     }
 
     virtual
-	~AttributeVectorEntryExtended()
-	{
-	}
+    ~AttributeVectorEntryExtended()
+    {
+    }
 
-	void
-	clear()
-	{
-		AttributeVectorEntry::clear();
+    void
+    clear()
+    {
+        AttributeVectorEntry::clear();
 
-		m_uri.clear();
-		m_localName.clear();
-	}
+        m_uri.clear();
+        m_localName.clear();
+    }
 
-	XMLChVectorType		m_uri;
-	XMLChVectorType		m_localName;
+    XMLChVectorType     m_uri;
+    XMLChVectorType     m_localName;
 };
 
 
@@ -127,4 +127,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ATTRIBUTEVECTORENTRY_HEADER_GUARD_1357924680
+#endif  // ATTRIBUTEVECTORENTRY_HEADER_GUARD_1357924680

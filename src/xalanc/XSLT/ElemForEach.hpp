@@ -59,171 +59,171 @@ class ElemForEach: public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:for-each" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber			line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemForEach(
-			StylesheetConstructionContext&  constructionContext,
-			Stylesheet&                     stylesheetTree,
-			const AttributeListType&        atts,
-			XalanFileLoc                    lineNumber,
-			XalanFileLoc                    columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:for-each" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber            line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemForEach(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemForEach();
+    virtual
+    ~ElemForEach();
 
-	typedef XalanVector<ElemSort*>		SortElemsVectorType;
+    typedef XalanVector<ElemSort*>      SortElemsVectorType;
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	virtual void
-	processSortElement(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						theStylesheet,
-			const AttributeListType&		atts,
-			const LocatorType*				locator = 0);
+    virtual void
+    processSortElement(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     theStylesheet,
+            const AttributeListType&        atts,
+            const LocatorType*              locator = 0);
 
-	virtual void
-	postConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler);
+    virtual void
+    postConstruction(
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler);
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
-	
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
+    
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual const ElemTemplateElement*
-	getNextChildElemToExecute(
-			   StylesheetExecutionContext&	executionContext,
-			   const ElemTemplateElement*	currentElem) const;
+    virtual const ElemTemplateElement*
+    getNextChildElemToExecute(
+               StylesheetExecutionContext&  executionContext,
+               const ElemTemplateElement*   currentElem) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
-	
-	virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 protected:
 
-	/**
-	 * Construct an object derived from ElemForEach
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param lineNumber			line number in document
-	 * @param columnNumber			column number in document
-	 * @param xslToken             an integer representing the type of instance.
-	 */
-	ElemForEach(
-			StylesheetConstructionContext&  constructionContext,
-			Stylesheet&                     stylesheetTree,
-			XalanFileLoc                    lineNumber,
-			XalanFileLoc                    columnNumber,
-			int                             xslToken);
+    /**
+     * Construct an object derived from ElemForEach
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param lineNumber            line number in document
+     * @param columnNumber          column number in document
+     * @param xslToken             an integer representing the type of instance.
+     */
+    ElemForEach(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber,
+            int                             xslToken);
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
-	/*
-	 * Returns a pointer to a list of the selected nodes.  The
-	 * nodes are sorted if required. 
-	 * 
-	 * @param executionContext	context for executing this element
-	 * @return pointer to the list of selected (and sorted) nodes
-	 */
-	virtual const NodeRefListBase*
-	createSelectedAndSortedNodeList(
-			StylesheetExecutionContext&		executionContext) const;
-	
-	/*
-	 * Release any objects used to maintain the last selected 
-	 * (and sorted) node list to be created
-	 * 
-	 * @param executionContext	context for executing this element
-	 */
-	virtual void
-	releaseSelectedAndSortedNodeList(
-			StylesheetExecutionContext&		executionContext) const;
+    /*
+     * Returns a pointer to a list of the selected nodes.  The
+     * nodes are sorted if required. 
+     * 
+     * @param executionContext  context for executing this element
+     * @return pointer to the list of selected (and sorted) nodes
+     */
+    virtual const NodeRefListBase*
+    createSelectedAndSortedNodeList(
+            StylesheetExecutionContext&     executionContext) const;
+    
+    /*
+     * Release any objects used to maintain the last selected 
+     * (and sorted) node list to be created
+     * 
+     * @param executionContext  context for executing this element
+     */
+    virtual void
+    releaseSelectedAndSortedNodeList(
+            StylesheetExecutionContext&     executionContext) const;
 
-	/*
-	 * Sorts a list of nodes 
-	 *
-	 * @param executionContext	context for executing this element
-	 * @param selectedNodeList	list of nodes to be sorted
-	 * @param sortedNodeList	list for sorted nodes
-	 *
-	 * @returns pointer to list of sorted nodes
-	 */
-	virtual const NodeRefListBase*
-	sortChildren(	
-			StylesheetExecutionContext&		executionContext,
-			const NodeRefListBase&			selectedNodeList,
-			MutableNodeRefList&				sortedNodeList) const;
+    /*
+     * Sorts a list of nodes 
+     *
+     * @param executionContext  context for executing this element
+     * @param selectedNodeList  list of nodes to be sorted
+     * @param sortedNodeList    list for sorted nodes
+     *
+     * @returns pointer to list of sorted nodes
+     */
+    virtual const NodeRefListBase*
+    sortChildren(   
+            StylesheetExecutionContext&     executionContext,
+            const NodeRefListBase&          selectedNodeList,
+            MutableNodeRefList&             sortedNodeList) const;
 
 #else
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext  The current execution context
-	 * @param template The owning template context.
-	 * @param sourceNodeContext The current source node context.
-	 */
-	void
-	transformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		theTemplate) const;
+    /**
+     * Perform a query if needed, and call transformChild for each child.
+     * 
+     * @param executionContext  The current execution context
+     * @param template The owning template context.
+     * @param sourceNodeContext The current source node context.
+     */
+    void
+    transformSelectedChildren(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      theTemplate) const;
 
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext The current execution context
-	 * @param theTemplate The owning template context.
-	 * @param sourceNodes The source nodes to transform.
-	 * @param sourceNodesCount The count of source nodes to transform.
-	 */
-	void
-	transformSelectedChildren(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement*		theTemplate,
-			const NodeRefListBase&			sourceNodes,
-			NodeRefListBase::size_type		sourceNodesCount) const;
+    /**
+     * Perform a query if needed, and call transformChild for each child.
+     * 
+     * @param executionContext The current execution context
+     * @param theTemplate The owning template context.
+     * @param sourceNodes The source nodes to transform.
+     * @param sourceNodesCount The count of source nodes to transform.
+     */
+    void
+    transformSelectedChildren(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      theTemplate,
+            const NodeRefListBase&          sourceNodes,
+            NodeRefListBase::size_type      sourceNodesCount) const;
 
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext	The current execution context
-	 * @param template The owning template context.
-	 * @param sorter The NodeSorter instance, if any.
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *								select statement
-	 */
-	virtual void
-	selectAndSortChildren(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement*		theTemplate,
-			NodeSorter* 					sorter,
-			int 							selectStackFrameIndex) const;
+    /**
+     * Perform a query if needed, and call transformChild for each child.
+     * 
+     * @param executionContext  The current execution context
+     * @param template The owning template context.
+     * @param sorter The NodeSorter instance, if any.
+     * @param selectStackFrameIndex stack frame context for executing the
+     *                              select statement
+     */
+    virtual void
+    selectAndSortChildren(
+            StylesheetExecutionContext&     executionContext,
+            const ElemTemplateElement*      theTemplate,
+            NodeSorter*                     sorter,
+            int                             selectStackFrameIndex) const;
 #endif
 
-	const XPath*			m_selectPattern;
+    const XPath*            m_selectPattern;
 
 private:
 
-	SortElemsVectorType				m_sortElems;
+    SortElemsVectorType             m_sortElems;
 
-	SortElemsVectorType::size_type	m_sortElemsCount;
+    SortElemsVectorType::size_type  m_sortElemsCount;
 
 };
 
@@ -233,4 +233,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMFOREACH_HEADER_GUARD
+#endif  // XALAN_ELEMFOREACH_HEADER_GUARD

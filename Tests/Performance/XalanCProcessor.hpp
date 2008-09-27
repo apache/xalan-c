@@ -81,12 +81,12 @@ public:
 
     XalanDOMString m_name;
 
-    typedef const XalanCompiledStylesheet*	CompiledStylesheetType;
-    typedef const XalanParsedSource* 	        ParsedInputSourceType;
+    typedef const XalanCompiledStylesheet*  CompiledStylesheetType;
+    typedef const XalanParsedSource*            ParsedInputSourceType;
 
     struct ResultTarget {
         virtual
-	~ ResultTarget(){}
+    ~ ResultTarget(){}
 
         XSLTResultTarget resultTarget;
 
@@ -94,7 +94,7 @@ public:
         virtual void reset() = 0;
     };
 
-    typedef ResultTarget*  	        ResultTargetType;
+    typedef ResultTarget*           ResultTargetType;
 
     typedef XSLTInputSource::StreamType StreamType;
 
@@ -103,150 +103,150 @@ public:
 
 
 
-	/**
-	 * Initializes the processor interface.
-	 * Assumes static processor initialization functions are already completed.
-	 */
+    /**
+     * Initializes the processor interface.
+     * Assumes static processor initialization functions are already completed.
+     */
     void
     init();
 
 
 
-	/**
-	 * Terminates the processor interface.
-	 */
+    /**
+     * Terminates the processor interface.
+     */
     void
     terminate();
 
 
 
-	/**
-	 *  Returns the name of the processor implementation.
-	 *  @returns name of the processor
-	 */
+    /**
+     *  Returns the name of the processor implementation.
+     *  @returns name of the processor
+     */
     XalanDOMString& getName() { return m_name;}
 
 
 
-	/** 
-	 *  Compiles the specified stylesheet.
-	 *  Xalan interface does not support any options.
-	 *  @param fileName stylesheet to compile
-	 *  @param compileOptions (none for this interface)
-	 *  @returns compiled stylesheet
-	 */
-	CompiledStylesheetType 
-	compileStylesheet(
-		const XalanDOMString& fileName,
+    /** 
+     *  Compiles the specified stylesheet.
+     *  Xalan interface does not support any options.
+     *  @param fileName stylesheet to compile
+     *  @param compileOptions (none for this interface)
+     *  @returns compiled stylesheet
+     */
+    CompiledStylesheetType 
+    compileStylesheet(
+        const XalanDOMString& fileName,
         const XalanNode* compileOptions = 0);
 
 
 
-	/** 
-	 *  Compiles the specified stylesheet.
-	 *  Xalan interface does not support any options.
-	 *  @param stream stylesheet to compile
-	 *  @param compileOptions (none for this interface)
-	 *  @returns compiled stylesheet
-	 */
-	CompiledStylesheetType 
-	compileStylesheet(
-		StreamType& stream,
+    /** 
+     *  Compiles the specified stylesheet.
+     *  Xalan interface does not support any options.
+     *  @param stream stylesheet to compile
+     *  @param compileOptions (none for this interface)
+     *  @returns compiled stylesheet
+     */
+    CompiledStylesheetType 
+    compileStylesheet(
+        StreamType& stream,
         const XalanNode* compileOptions = 0);
 
 
-	/**
-	 *  Release stylesheet object
-	 *  @param stylesheet object to release
-	 */
+    /**
+     *  Release stylesheet object
+     *  @param stylesheet object to release
+     */
     void
     releaseStylesheet(CompiledStylesheetType stylesheet);
-	
+    
 
 
-	/**
-	 * Parses an input document.
-	 * Parse options, a text node containing:<ul>
-	 * <li><b>xst</b>: parse to XalanSourceTree (default)
-	 * <li><b>xerces-dom</b>: parse to XercesDOM</ul>
-	 * @param fileName input document to parse.
-	 * @param parseOptions  options to the parser.
-	 * @returns parsed document
-	 */
-	ParsedInputSourceType
-	parseInputSource(
-		const XalanDOMString& fileName,
-		const XalanNode* parseOptions = 0);
-
-
-
-	/**
-	 * Parses an input document.
-	 * Parse options, a text node containing:<ul>
-	 * <li><b>xst</b>: parse to XalanSourceTree (default)
-	 * <li><b>xerces-dom</b>: parse to XercesDOM</ul>
-	 * @param stream input document to parse.
-	 * @param parseOptions  options to the parser.
-	 * @returns parsed document
-	 */
-	ParsedInputSourceType 
-	parseInputSource(
-		StreamType& stream,
-		const XalanNode* parseOptions = 0);
+    /**
+     * Parses an input document.
+     * Parse options, a text node containing:<ul>
+     * <li><b>xst</b>: parse to XalanSourceTree (default)
+     * <li><b>xerces-dom</b>: parse to XercesDOM</ul>
+     * @param fileName input document to parse.
+     * @param parseOptions  options to the parser.
+     * @returns parsed document
+     */
+    ParsedInputSourceType
+    parseInputSource(
+        const XalanDOMString& fileName,
+        const XalanNode* parseOptions = 0);
 
 
 
-	/**
-	 * Releases and parsed input source
-	 * @param inputSource source to release
-	 */
+    /**
+     * Parses an input document.
+     * Parse options, a text node containing:<ul>
+     * <li><b>xst</b>: parse to XalanSourceTree (default)
+     * <li><b>xerces-dom</b>: parse to XercesDOM</ul>
+     * @param stream input document to parse.
+     * @param parseOptions  options to the parser.
+     * @returns parsed document
+     */
+    ParsedInputSourceType 
+    parseInputSource(
+        StreamType& stream,
+        const XalanNode* parseOptions = 0);
+
+
+
+    /**
+     * Releases and parsed input source
+     * @param inputSource source to release
+     */
     void
     releaseInputSource(ParsedInputSourceType inputSource);
 
 
 
-	/**
-	 * Creates a result target.
-	 * Result target options, a text node containing:<ul>
-	 * <li><b>file</b>: result to a file (default)</li>
-	 * <li><b>xst</b>: result to a XalanSourceTree</li>
-	 * <li><b>xerces-dom</b>: result to XercesDOM</li>
-	 * <li><b>null</b>:  generate no result</li>
-	 * <li><b>stream</b>: result to a stream (string)</li></ul>
-	 * @param resultFileName file to write result to, if any
-	 * @param resultOptions  options to create result
-	 * @return result target
-	 */
-	ResultTargetType
-	createResultTarget(
+    /**
+     * Creates a result target.
+     * Result target options, a text node containing:<ul>
+     * <li><b>file</b>: result to a file (default)</li>
+     * <li><b>xst</b>: result to a XalanSourceTree</li>
+     * <li><b>xerces-dom</b>: result to XercesDOM</li>
+     * <li><b>null</b>:  generate no result</li>
+     * <li><b>stream</b>: result to a stream (string)</li></ul>
+     * @param resultFileName file to write result to, if any
+     * @param resultOptions  options to create result
+     * @return result target
+     */
+    ResultTargetType
+    createResultTarget(
         const XalanDOMString& resultFileName,
-		const XalanNode* resultOptions = 0);
+        const XalanNode* resultOptions = 0);
 
 
-	
-	/**
-	 * Releases result target
-	 * @param resultTarget target to release
-	 */
+    
+    /**
+     * Releases result target
+     * @param resultTarget target to release
+     */
     void
     releaseResultTarget(ResultTargetType resultTarget);
 
 
 
-	/**
-	 * Executes a transform
-	 * @param compileStyle stylesheet
-	 * @param parsedInputSourceType parsed document
-	 * @param resultTargetType result target
-	 * @param transformOptions (none for this interface)
-	 */
-	void transform(
-		const CompiledStylesheetType&   compiledStylesheet,
-		const ParsedInputSourceType&	parsedInputSourceType,
-		const ResultTargetType&	        resultTargetType,
+    /**
+     * Executes a transform
+     * @param compileStyle stylesheet
+     * @param parsedInputSourceType parsed document
+     * @param resultTargetType result target
+     * @param transformOptions (none for this interface)
+     */
+    void transform(
+        const CompiledStylesheetType&   compiledStylesheet,
+        const ParsedInputSourceType&    parsedInputSourceType,
+        const ResultTargetType&         resultTargetType,
         const XalanNode* transformOptions = 0);
 
-	typedef enum {eInvalid, eXalanSourceTree, eXercesDOM} ParseOptionType;
+    typedef enum {eInvalid, eXalanSourceTree, eXercesDOM} ParseOptionType;
 
 protected:
 

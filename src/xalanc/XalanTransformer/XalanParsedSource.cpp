@@ -22,7 +22,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-	
+    
 XalanParsedSource::XalanParsedSource()
 {
 }

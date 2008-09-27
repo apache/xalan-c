@@ -44,44 +44,44 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapWrapper : public XalanN
 {
 public:
 
-	XercesNamedNodeMapWrapper(
-			const DOMNamedNodeMapType*		theXercesNamedNodeMap,
-			const XercesWrapperNavigator&	theNavigator);
+    XercesNamedNodeMapWrapper(
+            const DOMNamedNodeMapType*      theXercesNamedNodeMap,
+            const XercesWrapperNavigator&   theNavigator);
 
-	virtual
-	~XercesNamedNodeMapWrapper();
+    virtual
+    ~XercesNamedNodeMapWrapper();
 
     // These interfaces are inherited from XalanNamedNodeMap...
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanNode*
-	getNamedItem(const XalanDOMString& 	name) const;
+    virtual XalanNode*
+    getNamedItem(const XalanDOMString&  name) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
-	virtual XalanNode*
-	getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
+    virtual XalanNode*
+    getNamedItemNS(
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const;
 
 private:
 
-	// Not implemented...
-	XercesNamedNodeMapWrapper(const XercesNamedNodeMapWrapper&	theSource);
+    // Not implemented...
+    XercesNamedNodeMapWrapper(const XercesNamedNodeMapWrapper&  theSource);
 
-	XercesNamedNodeMapWrapper&
-	operator=(const XercesNamedNodeMapWrapper&	theRHS);
+    XercesNamedNodeMapWrapper&
+    operator=(const XercesNamedNodeMapWrapper&  theRHS);
 
-	bool
-	operator==(const XercesNamedNodeMapWrapper&	theRHS) const;
+    bool
+    operator==(const XercesNamedNodeMapWrapper& theRHS) const;
 
 
-	const DOMNamedNodeMapType* const	m_xercesNamedNodeMap;
+    const DOMNamedNodeMapType* const    m_xercesNamedNodeMap;
 
-	const XercesWrapperNavigator&		m_navigator;
+    const XercesWrapperNavigator&       m_navigator;
 };
 
 
@@ -90,4 +90,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESNAMEDNODEMAPWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESNAMEDNODEMAPWRAPPER_HEADER_GUARD_1357924680)

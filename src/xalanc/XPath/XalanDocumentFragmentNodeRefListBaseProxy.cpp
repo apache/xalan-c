@@ -33,17 +33,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&	value) :
-	NodeRefListBase(),
-	m_value(value)
+XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&   value) :
+    NodeRefListBase(),
+    m_value(value)
 {
 }
 
 
 
-XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&	source) :
-	NodeRefListBase(),
-	m_value(source.m_value)
+XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&   source) :
+    NodeRefListBase(),
+    m_value(source.m_value)
 {
 }
 
@@ -59,12 +59,12 @@ XalanNode*
 #if defined(NDEBUG)
 XalanDocumentFragmentNodeRefListBaseProxy::item(size_type) const
 #else
-XalanDocumentFragmentNodeRefListBaseProxy::item(size_type	index) const
+XalanDocumentFragmentNodeRefListBaseProxy::item(size_type   index) const
 #endif
 {
-	assert(index == 0);
+    assert(index == 0);
 
-	return const_cast<XalanDocumentFragment*>(&m_value);
+    return const_cast<XalanDocumentFragment*>(&m_value);
 }
 
 
@@ -72,15 +72,15 @@ XalanDocumentFragmentNodeRefListBaseProxy::item(size_type	index) const
 XalanDocumentFragmentNodeRefListBaseProxy::size_type
 XalanDocumentFragmentNodeRefListBaseProxy::getLength() const
 {
-	return 1;
+    return 1;
 }
 
 
 
 XalanDocumentFragmentNodeRefListBaseProxy::size_type
-XalanDocumentFragmentNodeRefListBaseProxy::indexOf(const XalanNode*		theNode) const
+XalanDocumentFragmentNodeRefListBaseProxy::indexOf(const XalanNode*     theNode) const
 {
-	return theNode == &m_value ? 0 : npos;
+    return theNode == &m_value ? 0 : npos;
 }
 
 

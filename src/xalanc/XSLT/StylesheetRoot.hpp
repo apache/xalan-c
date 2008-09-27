@@ -52,7 +52,7 @@ class XalanText;
 class XSLTResultTarget;
 
 
-typedef XalanVector<ElemAttributeSet*> 		AttributeSetVectorTypeDecl;
+typedef XalanVector<ElemAttributeSet*>      AttributeSetVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(AttributeSetVectorTypeDecl)
 
 /**
@@ -64,12 +64,12 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
 
-    typedef XalanVector<const XalanQName*> 		XalanQNameVectorType;
+    typedef XalanVector<const XalanQName*>      XalanQNameVectorType;
 
-    typedef AttributeSetVectorTypeDecl			AttributeSetVectorType;
+    typedef AttributeSetVectorTypeDecl          AttributeSetVectorType;
 
     typedef XalanMap<const XalanQName*,
-                AttributeSetVectorType>			AttributeSetMapType;
+                AttributeSetVectorType>         AttributeSetMapType;
 
     /**
      * Construct a Stylesheet from a Document.
@@ -78,8 +78,8 @@ public:
      * @param constructionContext context for construction of object
      */
     StylesheetRoot(
-        const XalanDOMString&			baseIdentifier,
-        StylesheetConstructionContext&	constructionContext);    
+        const XalanDOMString&           baseIdentifier,
+        StylesheetConstructionContext&  constructionContext);    
 
     virtual 
     ~StylesheetRoot();
@@ -87,8 +87,8 @@ public:
     static StylesheetRoot*
     create(
         MemoryManager&              theManager,
-        const XalanDOMString&			baseIdentifier,
-        StylesheetConstructionContext&	constructionContext);
+        const XalanDOMString&           baseIdentifier,
+        StylesheetConstructionContext&  constructionContext);
 
     MemoryManager&
     getMemoryManager()
@@ -99,7 +99,7 @@ public:
      * Called after construction is completed.
      */
     virtual void
-    postConstruction(StylesheetConstructionContext&		constructionContext);
+    postConstruction(StylesheetConstructionContext&     constructionContext);
 
     /**
      * Transform the source tree to the output in the given result tree target.
@@ -110,9 +110,9 @@ public:
      */
     void
     process(
-            XalanNode*						sourceTree,
-            XSLTResultTarget&				outputTarget,
-            StylesheetExecutionContext&		executionContext) const;
+            XalanNode*                      sourceTree,
+            XSLTResultTarget&               outputTarget,
+            StylesheetExecutionContext&     executionContext) const;
 
     /**
      * Have the stylesheet create the appropriate FormatterListener,
@@ -128,8 +128,8 @@ public:
      */
     FormatterListener*
     setupFormatterListener(
-            XSLTResultTarget&				outputTarget,
-            StylesheetExecutionContext&		executionContext) const;
+            XSLTResultTarget&               outputTarget,
+            StylesheetExecutionContext&     executionContext) const;
 
     /** 
      * Return the output method that was specified in the stylesheet. 
@@ -313,9 +313,9 @@ public:
      */
     void 
     processOutputSpec(
-            const XalanDOMChar*				name, 
-            const AttributeListType&		atts,
-            StylesheetConstructionContext&	constructionContext);
+            const XalanDOMChar*             name, 
+            const AttributeListType&        atts,
+            StylesheetConstructionContext&  constructionContext);
 
     /**
      * Retrieve the stack of imported stylesheets.
@@ -357,7 +357,7 @@ public:
      * @param meth new method number
      */
     void
-    setOutputMethod(FormatterListener::eFormat	meth)
+    setOutputMethod(FormatterListener::eFormat  meth)
     {
         m_outputMethod = meth;
     }
@@ -379,17 +379,17 @@ public:
      * @return true or false
      */
     bool
-    isCDATASectionElementName(const XalanQName&		theQName) const;
+    isCDATASectionElementName(const XalanQName&     theQName) const;
 
     /**
      * Given a valid element key, return the corresponding node list.
      *
-     * @param context		   context node
-     * @param qname			   qname of the key, which must match the 'name'
-     *						   attribute on xsl:key
-     * @param ref			   value that must match the value found by the
-     *						   'match' attribute on xsl:key
-     * @param resolver		   resolver for namespace resolution
+     * @param context          context node
+     * @param qname            qname of the key, which must match the 'name'
+     *                         attribute on xsl:key
+     * @param ref              value that must match the value found by the
+     *                         'match' attribute on xsl:key
+     * @param resolver         resolver for namespace resolution
      * @param nodelist         A node list to contain the nodes found
      * @param executionContext The current execution context
      * @param theKeysTable     The table of keys to search.
@@ -397,13 +397,13 @@ public:
     void
     getNodeSetByKey(
             XalanNode*                      context,
-            const XalanQName&				qname,
-            const XalanDOMString&			ref,
-            const PrefixResolver&			resolver,
-            MutableNodeRefList&				nodelist,
-            StylesheetExecutionContext&		executionContext,
+            const XalanQName&               qname,
+            const XalanDOMString&           ref,
+            const PrefixResolver&           resolver,
+            MutableNodeRefList&             nodelist,
+            StylesheetExecutionContext&     executionContext,
             const LocatorType*              locator,
-            KeyTablesTableType&				theKeysTable) const;
+            KeyTablesTableType&             theKeysTable) const;
 
     unsigned long
     getNextElemNumberID()
@@ -442,30 +442,30 @@ public:
     }
 
     void
-    addAttributeSet(ElemAttributeSet&	theAttributeSet);
+    addAttributeSet(ElemAttributeSet&   theAttributeSet);
     
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     /**
      * Get the nth attribute set with the specified name.
      *  
-     * @param execution		context for executing this stylesheet
-     * @param theQName		the name of the attribute set
-     * @param matchingIndex	index of the attribute set with the specified name
-     * @param theLocator	the locator
+     * @param execution     context for executing this stylesheet
+     * @param theQName      the name of the attribute set
+     * @param matchingIndex index of the attribute set with the specified name
+     * @param theLocator    the locator
      * @returns a pointer to the attribute, 0 if no matching attribute set 
      */
     const ElemAttributeSet*
     getAttributeSet(
-            StylesheetExecutionContext&		theExecutionContext,
-            const XalanQName&				theQName,
-            size_type						matchingIndex,
-            const LocatorType*				theLocator) const;
+            StylesheetExecutionContext&     theExecutionContext,
+            const XalanQName&               theQName,
+            size_type                       matchingIndex,
+            const LocatorType*              theLocator) const;
 #else
     void
     executeAttributeSet(
-            StylesheetExecutionContext&		theExecutionContext,
-            const XalanQName&				theQName,
-            const LocatorType*				theLocator) const;
+            StylesheetExecutionContext&     theExecutionContext,
+            const XalanQName&               theQName,
+            const LocatorType*              theLocator) const;
 #endif
 
 
@@ -479,7 +479,7 @@ private:
      * @return The chosen encoding
      */
     const XalanDOMString&
-    getEncoding(const XSLTResultTarget&		outputTarget) const;
+    getEncoding(const XSLTResultTarget&     outputTarget) const;
 
     /**
      * Create the default rule if needed.
@@ -487,7 +487,7 @@ private:
      * @param constructionContext context for construction of object
      */
     void 
-    initDefaultRule(StylesheetConstructionContext&	constructionContext);
+    initDefaultRule(StylesheetConstructionContext&  constructionContext);
 
     /**
      * Check to see if a whitespace text node should be stripped from
@@ -502,7 +502,7 @@ private:
      * The version tells the version of XML to be used for outputting the result tree,
      * as specified in xsl:output.
      */
-    XalanDOMString	m_version;
+    XalanDOMString  m_version;
 
     enum eIndentType { eIndentNoImplicit, eIndentNoExplicit, eIndentYesImplicit, eIndentYesExplicit };
 
@@ -510,26 +510,26 @@ private:
      * indent-result is by default no, which means an XSL processor must not
      * change the whitespace on output.
      */
-    eIndentType		m_indentResult;
+    eIndentType     m_indentResult;
 
     /**
      * The encoding attribute specifies the preferred encoding to use 
      * for outputting the result tree. 
      */
-    XalanDOMString	m_encoding;
+    XalanDOMString  m_encoding;
 
     /**
      * The media-type attribute is applicable for the xml output method. 
      * The default value for the media-type attribute is text/xml.
      */
-    XalanDOMString	m_mediatype;
+    XalanDOMString  m_mediatype;
 
     /**
      * If the doctype-system-id attribute is specified, the xml output method should 
      * output a document type declaration immediately before the first element. 
      * The name following <!DOCTYPE should be the name of the first element. 
      */
-    XalanDOMString	m_doctypeSystem;
+    XalanDOMString  m_doctypeSystem;
 
     /**
      * If doctype-public-id attribute is also specified, then the xml output 
@@ -539,91 +539,91 @@ private:
      * doctype-public-id attribute should be ignored unless the doctype-system-id 
      * attribute is specified.
      */
-    XalanDOMString	m_doctypePublic;
+    XalanDOMString  m_doctypePublic;
 
     /**
      * Tells whether or not to output an XML declaration.
      */
-    bool			m_omitxmlDecl;
+    bool            m_omitxmlDecl;
 
     /**
      * Tells what the xmldecl should specify for the standalone value.
      */
-    XalanDOMString	m_standalone;
+    XalanDOMString  m_standalone;
 
     /**
      * The URL that belongs to the result namespace.
      * @serial
      */
-    XalanDOMString				m_resultNameSpaceURL;
+    XalanDOMString              m_resultNameSpaceURL;
 
     /**
      * The output method as specified in xsl:output.
      */
-    FormatterListener::eFormat	m_outputMethod;
+    FormatterListener::eFormat  m_outputMethod;
 
     /**
      * Vector of qnames that specifies elements that should be formatted 
      * as CDATA.
      */
-    XalanQNameVectorType		m_cdataSectionElems;
+    XalanQNameVectorType        m_cdataSectionElems;
 
-    bool						m_hasCDATASectionElems;
+    bool                        m_hasCDATASectionElems;
 
     /**
      * A stack of who's importing whom is needed in order to detect 
      * a recursive include or import, which is an error.
      */
-    URLStackType				m_importStack;
+    URLStackType                m_importStack;
 
 
     /**
      * The default template to use for text nodes if we don't find 
      * anything else.  This is initialized in initDefaultRule().
      */
-    ElemTemplateElement*		m_defaultTextRule;
+    ElemTemplateElement*        m_defaultTextRule;
 
     /**
      * The default template to use if we don't find anything
      * else.  This is initialized in initDefaultRule().
      */
-    ElemTemplateElement*		m_defaultRule;
+    ElemTemplateElement*        m_defaultRule;
 
     /**
      * The default template to use for the root if we don't find 
      * anything else.  This is initialized in initDefaultRule().
      */
-    ElemTemplateElement*		m_defaultRootRule;
+    ElemTemplateElement*        m_defaultRootRule;
 
     /**
      * This is set to true if an xsl:key directive is found.
      */
-    bool						m_needToBuildKeysTable;
+    bool                        m_needToBuildKeysTable;
 
     /**
      * This is set to true if URLs should be escaped in HTML output (the default)
      */
-    bool						m_outputEscapeURLs;
+    bool                        m_outputEscapeURLs;
 
     /**
      * The amount to indent.  The default is -1, which indicates not to indent.
      */
-    int							m_indentAmount;
+    int                         m_indentAmount;
 
     /**
      * This is set to true if we should omit the META tag in HTML output (the default is false)
      */
-    bool						m_omitMETATag;
+    bool                        m_omitMETATag;
 
     /**
      * This is set to true if we should omit the META tag in HTML output (the default is false)
      */
-    unsigned long				m_elemNumberNextID;
+    unsigned long               m_elemNumberNextID;
 
     /**
      * A lookup table of all attribute sets.
      */
-    AttributeSetMapType			m_attributeSetsMap;
+    AttributeSetMapType         m_attributeSetsMap;
 
     /**
      * true if there are any whitespace strip or preserve
@@ -648,4 +648,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_STYLESHEETROOT_HEADER_GUARD
+#endif  // XALAN_STYLESHEETROOT_HEADER_GUARD

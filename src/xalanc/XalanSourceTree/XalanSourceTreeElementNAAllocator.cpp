@@ -28,7 +28,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanSourceTreeElementNAAllocator::XalanSourceTreeElementNAAllocator(
             MemoryManager&  theManager,
             size_type       theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -42,28 +42,28 @@ XalanSourceTreeElementNAAllocator::~XalanSourceTreeElementNAAllocator()
 
 XalanSourceTreeElementNAAllocator::ObjectType*
 XalanSourceTreeElementNAAllocator::create(
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex)
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(
+    new(theBlock) ObjectType(
                         m_allocator.getMemoryManager(),
-						theTagName,
-						theOwnerDocument,
-						theParentNode,
-						thePreviousSibling,
-						theNextSibling,
-						theIndex);
+                        theTagName,
+                        theOwnerDocument,
+                        theParentNode,
+                        thePreviousSibling,
+                        theNextSibling,
+                        theIndex);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -71,7 +71,7 @@ XalanSourceTreeElementNAAllocator::create(
 void 
 XalanSourceTreeElementNAAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

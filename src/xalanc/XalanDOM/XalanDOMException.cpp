@@ -23,15 +23,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDOMException::XalanDOMException(ExceptionCode 	code) :
-	m_code(code)
+XalanDOMException::XalanDOMException(ExceptionCode  code) :
+    m_code(code)
 {
 }
 
 
 
-XalanDOMException::XalanDOMException(const XalanDOMException&	theSource) :
-	m_code(theSource.m_code)
+XalanDOMException::XalanDOMException(const XalanDOMException&   theSource) :
+    m_code(theSource.m_code)
 {
 }
 
@@ -46,7 +46,7 @@ XalanDOMException::~XalanDOMException()
 XalanDOMException::ExceptionCode
 XalanDOMException::getExceptionCode() const
 {
-	return m_code;
+    return m_code;
 }
 
 

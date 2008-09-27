@@ -41,44 +41,44 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionIntersection : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionIntersection();
+    FunctionIntersection();
 
-	virtual
-	~FunctionIntersection();
+    virtual
+    ~FunctionIntersection();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionIntersection*
+    virtual FunctionIntersection*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionIntersection&
-	operator=(const FunctionIntersection&);
+    // Not implemented...
+    FunctionIntersection&
+    operator=(const FunctionIntersection&);
 
-	bool
-	operator==(const FunctionIntersection&) const;
+    bool
+    operator==(const FunctionIntersection&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONINTERSECTION_HEADER_GUARD_1357924680
+#endif  // FUNCTIONINTERSECTION_HEADER_GUARD_1357924680

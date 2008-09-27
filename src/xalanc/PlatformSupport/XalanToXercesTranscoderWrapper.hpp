@@ -42,50 +42,50 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanToXercesTranscoderWrapper : public Xalan
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLTranscoder	XMLTranscoderType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLTranscoder    XMLTranscoderType;
 
-	explicit
-	XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&	theTranscoder);
+    explicit
+    XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&    theTranscoder);
 
     static XalanToXercesTranscoderWrapper*
-    create(MemoryManager& theManager, XMLTranscoderType&	theTranscoder);
+    create(MemoryManager& theManager, XMLTranscoderType&    theTranscoder);
 
-	virtual
-	~XalanToXercesTranscoderWrapper();
+    virtual
+    ~XalanToXercesTranscoderWrapper();
 
-	virtual eCode
-	transcode(
-			const XalanDOMChar*		theSourceData,
-			size_type				theSourceCount,
-			XalanXMLByte*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed);
+    virtual eCode
+    transcode(
+            const XalanDOMChar*     theSourceData,
+            size_type               theSourceCount,
+            XalanXMLByte*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed);
 
-	virtual eCode
-	transcode(
-			const XalanXMLByte*		theSourceData,
-			size_type				theSourceCount,
-			XalanDOMChar*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed,
-			unsigned char*			theCharSizes);
+    virtual eCode
+    transcode(
+            const XalanXMLByte*     theSourceData,
+            size_type               theSourceCount,
+            XalanDOMChar*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed,
+            unsigned char*          theCharSizes);
 
-	virtual bool
-	canTranscodeTo(XalanUnicodeChar     theChar) const;
+    virtual bool
+    canTranscodeTo(XalanUnicodeChar     theChar) const;
 
 private:
 
-	// Not implemented...
-	XalanToXercesTranscoderWrapper(const XalanToXercesTranscoderWrapper&);
+    // Not implemented...
+    XalanToXercesTranscoderWrapper(const XalanToXercesTranscoderWrapper&);
 
-	XalanToXercesTranscoderWrapper&
-	operator=(const XalanToXercesTranscoderWrapper&);
+    XalanToXercesTranscoderWrapper&
+    operator=(const XalanToXercesTranscoderWrapper&);
 
 
-	// Data members...
-	XMLTranscoderType* const	m_transcoder;
+    // Data members...
+    XMLTranscoderType* const    m_transcoder;
 };
 
 
@@ -94,4 +94,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANTOXERCESTRANSCODERWRAPPER_HEADER_GUARD_1357924680
+#endif  // XALANTOXERCESTRANSCODERWRAPPER_HEADER_GUARD_1357924680

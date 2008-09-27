@@ -29,26 +29,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanEmptyNamedNodeMap	XalanSourceTreeElementNA::s_emptyAttributes;
+const XalanEmptyNamedNodeMap    XalanSourceTreeElementNA::s_emptyAttributes;
 
 
 
 XalanSourceTreeElementNA::XalanSourceTreeElementNA(
             MemoryManager&          theManager,
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex) :
-	XalanSourceTreeElement(
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex) :
+    XalanSourceTreeElement(
         theManager,
-		theTagName,
-		theOwnerDocument,
-		theParentNode,
-		thePreviousSibling,
-		theNextSibling,
-		theIndex)
+        theTagName,
+        theOwnerDocument,
+        theParentNode,
+        thePreviousSibling,
+        theNextSibling,
+        theIndex)
 {
 }
 
@@ -63,7 +63,7 @@ XalanSourceTreeElementNA::~XalanSourceTreeElementNA()
 const XalanNamedNodeMap*
 XalanSourceTreeElementNA::getAttributes() const
 {
-	return &s_emptyAttributes;
+    return &s_emptyAttributes;
 }
 
 
@@ -71,7 +71,7 @@ XalanSourceTreeElementNA::getAttributes() const
 const XalanDOMString&
 XalanSourceTreeElementNA::getNamespaceURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -79,7 +79,7 @@ XalanSourceTreeElementNA::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeElementNA::getPrefix() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -87,7 +87,7 @@ XalanSourceTreeElementNA::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementNA::getLocalName() const
 {
-	return m_tagName;
+    return m_tagName;
 }
 
 

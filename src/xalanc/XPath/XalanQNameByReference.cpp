@@ -26,38 +26,38 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanQNameByReference::XalanQNameByReference() :
-	XalanQName(),
-	m_namespace(&s_emptyString),
-	m_localpart(&s_emptyString)
+    XalanQName(),
+    m_namespace(&s_emptyString),
+    m_localpart(&s_emptyString)
 {
 }
 
 
 
 XalanQNameByReference::XalanQNameByReference(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	theLocalPart) :
-	XalanQName(),
-	m_namespace(&theNamespace),
-	m_localpart(&theLocalPart)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   theLocalPart) :
+    XalanQName(),
+    m_namespace(&theNamespace),
+    m_localpart(&theLocalPart)
 {
 }
 
 
 
-XalanQNameByReference::XalanQNameByReference(const XalanDOMString&	theLocalPart) :
-	XalanQName(),
-	m_namespace(&s_emptyString),
-	m_localpart(&theLocalPart)
+XalanQNameByReference::XalanQNameByReference(const XalanDOMString&  theLocalPart) :
+    XalanQName(),
+    m_namespace(&s_emptyString),
+    m_localpart(&theLocalPart)
 {
 }
 
 
 
-XalanQNameByReference::XalanQNameByReference(const XalanQName&	theQName) :
-	XalanQName(),
-	m_namespace(&theQName.getNamespace()),
-	m_localpart(&theQName.getLocalPart())
+XalanQNameByReference::XalanQNameByReference(const XalanQName&  theQName) :
+    XalanQName(),
+    m_namespace(&theQName.getNamespace()),
+    m_localpart(&theQName.getLocalPart())
 {
 }
 
@@ -72,9 +72,9 @@ XalanQNameByReference::~XalanQNameByReference()
 const XalanDOMString&
 XalanQNameByReference::getLocalPart() const
 {
-	assert(m_localpart != 0);
+    assert(m_localpart != 0);
 
-	return *m_localpart;
+    return *m_localpart;
 }
 
 
@@ -82,9 +82,9 @@ XalanQNameByReference::getLocalPart() const
 const XalanDOMString&
 XalanQNameByReference::getNamespace() const
 {
-	assert(m_namespace != 0);
+    assert(m_namespace != 0);
 
-	return *m_namespace;
+    return *m_namespace;
 }
 
 

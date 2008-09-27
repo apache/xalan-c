@@ -43,11 +43,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesCDATASectionBridge::XercesCDATASectionBridge(
-			const DOM_CDATASectionType&		theXercesCDATASection,
-			const XercesBridgeNavigator&	theNavigator) :
-	XalanCDATASection(),
-	m_xercesNode(theXercesCDATASection),
-	m_navigator(theNavigator)
+            const DOM_CDATASectionType&     theXercesCDATASection,
+            const XercesBridgeNavigator&    theNavigator) :
+    XalanCDATASection(),
+    m_xercesNode(theXercesCDATASection),
+    m_navigator(theNavigator)
 {
 }
 
@@ -62,7 +62,7 @@ XercesCDATASectionBridge::~XercesCDATASectionBridge()
 const XalanDOMString&
 XercesCDATASectionBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName());
+    return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -70,7 +70,7 @@ XercesCDATASectionBridge::getNodeName() const
 const XalanDOMString&
 XercesCDATASectionBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -78,7 +78,7 @@ XercesCDATASectionBridge::getNodeValue() const
 XercesCDATASectionBridge::NodeType
 XercesCDATASectionBridge::getNodeType() const
 {
-	return CDATA_SECTION_NODE;
+    return CDATA_SECTION_NODE;
 }
 
 
@@ -86,7 +86,7 @@ XercesCDATASectionBridge::getNodeType() const
 XalanNode*
 XercesCDATASectionBridge::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -94,7 +94,7 @@ XercesCDATASectionBridge::getParentNode() const
 const XalanNodeList*
 XercesCDATASectionBridge::getChildNodes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -102,7 +102,7 @@ XercesCDATASectionBridge::getChildNodes() const
 XalanNode*
 XercesCDATASectionBridge::getFirstChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -110,7 +110,7 @@ XercesCDATASectionBridge::getFirstChild() const
 XalanNode*
 XercesCDATASectionBridge::getLastChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -118,7 +118,7 @@ XercesCDATASectionBridge::getLastChild() const
 XalanNode*
 XercesCDATASectionBridge::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -126,7 +126,7 @@ XercesCDATASectionBridge::getPreviousSibling() const
 XalanNode*
 XercesCDATASectionBridge::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -134,7 +134,7 @@ XercesCDATASectionBridge::getNextSibling() const
 const XalanNamedNodeMap*
 XercesCDATASectionBridge::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -142,7 +142,7 @@ XercesCDATASectionBridge::getAttributes() const
 XalanDocument*
 XercesCDATASectionBridge::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -152,15 +152,15 @@ XalanNode*
 #else
 XercesCDATASectionBridge*
 #endif
-XercesCDATASectionBridge::cloneNode(bool	deep) const
+XercesCDATASectionBridge::cloneNode(bool    deep) const
 {
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return m_navigator.cloneNode(this, m_xercesNode, deep);
+    return m_navigator.cloneNode(this, m_xercesNode, deep);
 #else
-	XercesCDATASectionBridge* const	theBridge =
-		static_cast<XercesCDATASectionBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
+    XercesCDATASectionBridge* const theBridge =
+        static_cast<XercesCDATASectionBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
-	return theBridge;
+    return theBridge;
 #endif
 }
 
@@ -168,44 +168,44 @@ XercesCDATASectionBridge::cloneNode(bool	deep) const
 
 XalanNode*
 XercesCDATASectionBridge::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
+            XalanNode*  /* newChild */,
+            XalanNode*  /* refChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
 XercesCDATASectionBridge::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
+            XalanNode*  /* newChild */,
+            XalanNode*  /* oldChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
-XercesCDATASectionBridge::removeChild(XalanNode*	/* oldChild */)
+XercesCDATASectionBridge::removeChild(XalanNode*    /* oldChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanNode*
-XercesCDATASectionBridge::appendChild(XalanNode*	 /* newChild */)
+XercesCDATASectionBridge::appendChild(XalanNode*     /* newChild */)
 {
-	throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
+    throw XercesDOMException(XercesDOMException::HIERARCHY_REQUEST_ERR);
 
-	return 0;
+    return 0;
 }
 
 
@@ -213,15 +213,15 @@ XercesCDATASectionBridge::appendChild(XalanNode*	 /* newChild */)
 bool
 XercesCDATASectionBridge::hasChildNodes() const
 {
-	return false;
+    return false;
 }
 
 
 
 void
-XercesCDATASectionBridge::setNodeValue(const XalanDOMString&	nodeValue)
+XercesCDATASectionBridge::setNodeValue(const XalanDOMString&    nodeValue)
 {
-	XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
+    XercesBridgeHelper::setNodeValue(m_xercesNode, nodeValue);
 }
 
 
@@ -229,19 +229,19 @@ XercesCDATASectionBridge::setNodeValue(const XalanDOMString&	nodeValue)
 void
 XercesCDATASectionBridge::normalize()
 {
-	XercesBridgeHelper::normalize(m_xercesNode);
+    XercesBridgeHelper::normalize(m_xercesNode);
 }
 
 
 
 bool
 XercesCDATASectionBridge::isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) const
 {
-	return m_xercesNode.isSupported(
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
-				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
+    return m_xercesNode.isSupported(
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
+                XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
 
 
@@ -249,7 +249,7 @@ XercesCDATASectionBridge::isSupported(
 const XalanDOMString&
 XercesCDATASectionBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -257,7 +257,7 @@ XercesCDATASectionBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesCDATASectionBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix());
+    return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -265,15 +265,15 @@ XercesCDATASectionBridge::getPrefix() const
 const XalanDOMString&
 XercesCDATASectionBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName());
+    return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
 
 void
-XercesCDATASectionBridge::setPrefix(const XalanDOMString&	prefix)
+XercesCDATASectionBridge::setPrefix(const XalanDOMString&   prefix)
 {
-	XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
+    XercesBridgeHelper::setPrefix(m_xercesNode, prefix);
 }
 
 
@@ -282,7 +282,7 @@ XercesCDATASectionBridge::setPrefix(const XalanDOMString&	prefix)
 bool
 XercesCDATASectionBridge::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -290,7 +290,7 @@ XercesCDATASectionBridge::isIndexed() const
 XercesCDATASectionBridge::IndexType
 XercesCDATASectionBridge::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 
@@ -298,7 +298,7 @@ XercesCDATASectionBridge::getIndex() const
 const XalanDOMString&
 XercesCDATASectionBridge::getData() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getData());
+    return m_navigator.getPooledString(m_xercesNode.getData());
 }
 
 
@@ -306,64 +306,64 @@ XercesCDATASectionBridge::getData() const
 unsigned int
 XercesCDATASectionBridge::getLength() const
 {
-	return m_xercesNode.getLength();
+    return m_xercesNode.getLength();
 }
 
 
 
 XalanDOMString
 XercesCDATASectionBridge::substringData(
-			unsigned int	offset, 
-			unsigned int	count) const
+            unsigned int    offset, 
+            unsigned int    count) const
 {
-	return XercesBridgeHelper::substringData(m_xercesNode, offset, count);
+    return XercesBridgeHelper::substringData(m_xercesNode, offset, count);
 }
 
 
 
 void
-XercesCDATASectionBridge::appendData(const XalanDOMString&	arg)
+XercesCDATASectionBridge::appendData(const XalanDOMString&  arg)
 {
-	XercesBridgeHelper::appendData(m_xercesNode, arg);
+    XercesBridgeHelper::appendData(m_xercesNode, arg);
 }
 
 
 
 void
 XercesCDATASectionBridge::insertData(
-			unsigned int			offset,
-			const  XalanDOMString& 	arg)
+            unsigned int            offset,
+            const  XalanDOMString&  arg)
 {
-	XercesBridgeHelper::insertData(m_xercesNode, offset, arg);
+    XercesBridgeHelper::insertData(m_xercesNode, offset, arg);
 }
 
 
 
 void
 XercesCDATASectionBridge::deleteData(
-			unsigned int	offset, 
-			unsigned int	count)
+            unsigned int    offset, 
+            unsigned int    count)
 {
-	XercesBridgeHelper::deleteData(m_xercesNode, offset, count);
+    XercesBridgeHelper::deleteData(m_xercesNode, offset, count);
 }
 
 
 
 void
 XercesCDATASectionBridge::replaceData(
-			unsigned int			offset, 
-			unsigned int			count, 
-			const XalanDOMString&	arg)
+            unsigned int            offset, 
+            unsigned int            count, 
+            const XalanDOMString&   arg)
 {
-	XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
+    XercesBridgeHelper::replaceData(m_xercesNode, offset, count, arg);
 }
 
 
 
 XalanText*
-XercesCDATASectionBridge::splitText(unsigned int	offset)
+XercesCDATASectionBridge::splitText(unsigned int    offset)
 {
-	return m_navigator.splitText(m_xercesNode, offset);
+    return m_navigator.splitText(m_xercesNode, offset);
 }
 
 
@@ -371,7 +371,7 @@ XercesCDATASectionBridge::splitText(unsigned int	offset)
 bool
 XercesCDATASectionBridge::isWhitespace() const
 {
-	return isXMLWhitespace(getData());
+    return isXMLWhitespace(getData());
 }
 
 

@@ -30,20 +30,20 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	XalanSourceTreeInit::s_initCounter = 0;
+unsigned long   XalanSourceTreeInit::s_initCounter = 0;
 
 
 
 XalanSourceTreeInit::XalanSourceTreeInit(MemoryManager& theManager) :
-	m_platformSupportInit(theManager),
-	m_domSupportInit(theManager),
-	m_xmlSupportInit(theManager)
+    m_platformSupportInit(theManager),
+    m_domSupportInit(theManager),
+    m_xmlSupportInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
     }
 }
 
@@ -51,12 +51,12 @@ XalanSourceTreeInit::XalanSourceTreeInit(MemoryManager& theManager) :
 
 XalanSourceTreeInit::~XalanSourceTreeInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 
@@ -64,11 +64,11 @@ XalanSourceTreeInit::~XalanSourceTreeInit()
 void
 XalanSourceTreeInit::initialize(MemoryManager& theManager)
 {
-	XalanSourceTreeDocument::initialize(theManager);
+    XalanSourceTreeDocument::initialize(theManager);
 
-	XalanSourceTreeComment::initialize(theManager);
+    XalanSourceTreeComment::initialize(theManager);
 
-	XalanSourceTreeText::initialize(theManager);
+    XalanSourceTreeText::initialize(theManager);
 }
 
 
@@ -76,11 +76,11 @@ XalanSourceTreeInit::initialize(MemoryManager& theManager)
 void
 XalanSourceTreeInit::terminate()
 {
-	XalanSourceTreeText::terminate();
+    XalanSourceTreeText::terminate();
 
-	XalanSourceTreeComment::terminate();
+    XalanSourceTreeComment::terminate();
 
-	XalanSourceTreeDocument::terminate();
+    XalanSourceTreeDocument::terminate();
 }
 
 

@@ -28,32 +28,32 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	XMLSupportInit::s_initCounter = 0;
+unsigned long   XMLSupportInit::s_initCounter = 0;
 
 
 
 XMLSupportInit::XMLSupportInit(MemoryManager& theManager) :
-	m_platformSupportInit(theManager),
-	m_domSupportInit(theManager)
+    m_platformSupportInit(theManager),
+    m_domSupportInit(theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 
 
 XMLSupportInit::~XMLSupportInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 
@@ -61,7 +61,7 @@ XMLSupportInit::~XMLSupportInit()
 void
 XMLSupportInit::initialize(MemoryManager& theManager)
 {
-	XalanXMLSerializerBase::initialize(theManager);
+    XalanXMLSerializerBase::initialize(theManager);
 }
 
 

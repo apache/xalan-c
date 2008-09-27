@@ -32,10 +32,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNLSMessageLoader : public XalanMessageLo
 {
 public:
 
-	XalanNLSMessageLoader(MemoryManager& theManager);
+    XalanNLSMessageLoader(MemoryManager& theManager);
 
-	virtual
-	~XalanNLSMessageLoader();
+    virtual
+    ~XalanNLSMessageLoader();
 
 protected:
 
@@ -51,13 +51,13 @@ protected:
 
 private:
 
-	XalanNLSMessageLoader(const XalanNLSMessageLoader&);
+    XalanNLSMessageLoader(const XalanNLSMessageLoader&);
 
-	XalanNLSMessageLoader&
-	operator=(const XalanNLSMessageLoader&);
+    XalanNLSMessageLoader&
+    operator=(const XalanNLSMessageLoader&);
 
  
-    nl_catd 	m_catalogHandle;
+    nl_catd     m_catalogHandle;
     
     MemoryManager& m_memoryManager;
 };

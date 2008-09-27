@@ -25,10 +25,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanXPathException::XalanXPathException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager,
         theLocator)
@@ -38,9 +38,9 @@ XalanXPathException::XalanXPathException(
 
 
 XalanXPathException::XalanXPathException(
-			const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager) :
-	XSLException(
+    XSLException(
         theMessage,
         theManager)
 {
@@ -63,26 +63,26 @@ XalanXPathException::~XalanXPathException()
 
 static const XalanDOMChar   s_type[] = 
 {
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_h,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_P,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_h,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 

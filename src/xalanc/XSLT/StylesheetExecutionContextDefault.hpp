@@ -961,20 +961,20 @@ public:
             XalanDocument*          theDocument);
 
     // These interfaces are inherited from ExecutionContext...
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode);
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode);
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode);
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
 
     class XPathCacheReturnFunctor
     {

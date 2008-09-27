@@ -35,18 +35,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] = 
+const XalanDOMChar  XalanNumberFormat::s_defaultGroupingSeparator[] = 
 {
-	XalanUnicode::charComma,
-	0
+    XalanUnicode::charComma,
+    0
 };
 
 
 
 XalanNumberFormat::XalanNumberFormat(MemoryManager&     theManager) :
-	m_isGroupingUsed(false),
-	m_groupingSeparator(s_defaultGroupingSeparator, theManager),
-	m_groupingSize(3)	// Default to US values
+    m_isGroupingUsed(false),
+    m_groupingSeparator(s_defaultGroupingSeparator, theManager),
+    m_groupingSize(3)   // Default to US values
 {
 }
 
@@ -60,12 +60,12 @@ XalanNumberFormat::~XalanNumberFormat()
 
 XalanDOMString&
 XalanNumberFormat::format(
-			double				theValue,
-			XalanDOMString&		theResult)
+            double              theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
 
     return theResult;
 }
@@ -75,14 +75,14 @@ XalanNumberFormat::format(
 
 XalanDOMString&
 XalanNumberFormat::format(
-			int					theValue,
-			XalanDOMString&		theResult)
+            int                 theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -90,30 +90,14 @@ XalanNumberFormat::format(
 
 XalanDOMString&
 XalanNumberFormat::format(
-			unsigned int		theValue,
-			XalanDOMString&		theResult)
+            unsigned int        theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
 
-	return theResult;
-}
-
-
-
-
-
-XalanDOMString&
-XalanNumberFormat::format(
-			long				theValue,
-			XalanDOMString&		theResult)
-{
-	NumberToDOMString(theValue, theResult);
-
-	applyGrouping(theResult, theResult);
-
-	return theResult;
+    return theResult;
 }
 
 
@@ -122,12 +106,28 @@ XalanNumberFormat::format(
 
 XalanDOMString&
 XalanNumberFormat::format(
-			unsigned long		theValue,
-			XalanDOMString&		theResult)
+            long                theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
+
+    return theResult;
+}
+
+
+
+
+
+XalanDOMString&
+XalanNumberFormat::format(
+            unsigned long       theValue,
+            XalanDOMString&     theResult)
+{
+    NumberToDOMString(theValue, theResult);
+
+    applyGrouping(theResult, theResult);
 
     return theResult;
 }
@@ -136,12 +136,12 @@ XalanNumberFormat::format(
 
 XalanDOMString&
 XalanNumberFormat::format(
-			XALAN_INT64	        theValue,
-			XalanDOMString&		theResult)
+            XALAN_INT64         theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
 
     return theResult;
 }
@@ -150,12 +150,12 @@ XalanNumberFormat::format(
 
 XalanDOMString&
 XalanNumberFormat::format(
-			XALAN_UINT64	    theValue,
-			XalanDOMString&		theResult)
+            XALAN_UINT64        theValue,
+            XalanDOMString&     theResult)
 {
-	NumberToDOMString(theValue, theResult);
+    NumberToDOMString(theValue, theResult);
 
-	applyGrouping(theResult, theResult);
+    applyGrouping(theResult, theResult);
 
     return theResult;
 }
@@ -168,57 +168,57 @@ XalanNumberFormat::format(
  */
 void
 XalanNumberFormat::applyGrouping(
-			const XalanDOMString&	value,
-			XalanDOMString&			result)
+            const XalanDOMString&   value,
+            XalanDOMString&         result)
 {
-	if (m_isGroupingUsed == false ||
-		m_groupingSize == 0)
-	{
-		result = value;
-	}
-	else
-	{
-		const XalanDOMString::size_type     len = value.length();
+    if (m_isGroupingUsed == false ||
+        m_groupingSize == 0)
+    {
+        result = value;
+    }
+    else
+    {
+        const XalanDOMString::size_type     len = value.length();
 
-		if (len == 0)
-		{
-			result = value;
-		}
-		else
-		{
-			// Add two, so we leave one byte at the beginning as empty space
-			const XalanDOMString::size_type		bufsize = len + len / m_groupingSize + 2;
+        if (len == 0)
+        {
+            result = value;
+        }
+        else
+        {
+            // Add two, so we leave one byte at the beginning as empty space
+            const XalanDOMString::size_type     bufsize = len + len / m_groupingSize + 2;
 
             typedef XalanMemMngArrayAllocate<XalanDOMChar> XalanDOMCharHeapAllocator;
 
-			XalanDOMChar* const		buffer = XalanDOMCharHeapAllocator::allocate( bufsize, 
+            XalanDOMChar* const     buffer = XalanDOMCharHeapAllocator::allocate( bufsize, 
                                                                                  result.getMemoryManager());
 
-			XalanMemMgrAutoPtrArray<XalanDOMChar>		theGuard(result.getMemoryManager(),
+            XalanMemMgrAutoPtrArray<XalanDOMChar>       theGuard(result.getMemoryManager(),
                                                                   buffer,
                                                                   bufsize);
 
-			XalanDOMChar*			p = buffer + bufsize - 1;
+            XalanDOMChar*           p = buffer + bufsize - 1;
 
-			*p-- = 0;	// null terminate
+            *p-- = 0;   // null terminate
 
-			for (XalanDOMString::size_type i = 0, ix = len - 1; i < len && p > buffer; i++, ix--)
-			{
-				const XalanDOMChar		c = value[ix];
+            for (XalanDOMString::size_type i = 0, ix = len - 1; i < len && p > buffer; i++, ix--)
+            {
+                const XalanDOMChar      c = value[ix];
 
-				if (i && !(i% m_groupingSize))
-				{
-					// Could be a multiple character separator??
-					for (long j = long(m_groupingSeparator.length() - 1); j >= 0 && p > buffer; j--)
-						*p-- = m_groupingSeparator[j];
-				}
+                if (i && !(i% m_groupingSize))
+                {
+                    // Could be a multiple character separator??
+                    for (long j = long(m_groupingSeparator.length() - 1); j >= 0 && p > buffer; j--)
+                        *p-- = m_groupingSeparator[j];
+                }
 
-				*p-- = c;
-			}
+                *p-- = c;
+            }
 
-			result = ++p;
-		}
-	}
+            result = ++p;
+        }
+    }
 }
 
 
@@ -226,7 +226,7 @@ XalanNumberFormat::applyGrouping(
 bool
 XalanNumberFormat::isGroupingUsed() const
 {
-	return m_isGroupingUsed;
+    return m_isGroupingUsed;
 }
 
 
@@ -234,25 +234,25 @@ XalanNumberFormat::isGroupingUsed() const
 void
 XalanNumberFormat::setGroupingUsed(bool bUsed)
 {
-	m_isGroupingUsed = bUsed;
+    m_isGroupingUsed = bUsed;
 }
 
 
 
 void
-XalanNumberFormat::setGroupingSize(unsigned long	size)
+XalanNumberFormat::setGroupingSize(unsigned long    size)
 {
-	assert(size > 0);
+    assert(size > 0);
 
-	m_groupingSize = size;
+    m_groupingSize = size;
 }
 
 
 
 void
-XalanNumberFormat::setGroupingSeparator(const XalanDOMString&	s)
+XalanNumberFormat::setGroupingSeparator(const XalanDOMString&   s)
 {
-	m_groupingSeparator = s;
+    m_groupingSeparator = s;
 }
 
 

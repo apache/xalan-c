@@ -43,45 +43,45 @@ class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
 
 public:
 
-	explicit
-	XPathFactoryDefault(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
+    explicit
+    XPathFactoryDefault(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
-	virtual
-	~XPathFactoryDefault();
+    virtual
+    ~XPathFactoryDefault();
 
-	static XPathFactoryDefault*
-	createXPathFactoryDefault(MemoryManager& theManager);
+    static XPathFactoryDefault*
+    createXPathFactoryDefault(MemoryManager& theManager);
 
-	// Inherited from XPathFactory...
-	virtual void
-	reset();
+    // Inherited from XPathFactory...
+    virtual void
+    reset();
 
-	// Inherited from XPathFactory...
+    // Inherited from XPathFactory...
 
 
-	virtual XPath*
-	create();
+    virtual XPath*
+    create();
 
-    typedef XalanSet<const XPath*>	CollectionType;
+    typedef XalanSet<const XPath*>  CollectionType;
 
-	CollectionType::size_type
-	getInstanceCount() const
-	{
-		return m_xpaths.size();
-	}
+    CollectionType::size_type
+    getInstanceCount() const
+    {
+        return m_xpaths.size();
+    }
 
 protected:
 
-	// Inherited from XPathFactory...
+    // Inherited from XPathFactory...
 
-	virtual bool
-	doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset = false);
+    virtual bool
+    doReturnObject(
+            const XPath*    theXPath,
+            bool            fInReset = false);
 
 private:
 
-	CollectionType	m_xpaths;
+    CollectionType  m_xpaths;
 };
 
 
@@ -90,4 +90,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680
+#endif  // XPATHFACTORYDEFAULT_HEADER_GUARD_1357924680

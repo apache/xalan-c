@@ -29,7 +29,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManager& theManager) :
-	XalanOutputTranscoder(theManager)
+    XalanOutputTranscoder(theManager)
 {
 }
 
@@ -58,81 +58,81 @@ XalanUTF16Transcoder::~XalanUTF16Transcoder()
 
 XalanUTF16Transcoder::eCode
 XalanUTF16Transcoder::transcode(
-			const XalanDOMChar*		theSourceData,
-			size_type				theSourceCount,
-			XalanXMLByte*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed)
+            const XalanDOMChar*     theSourceData,
+            size_type               theSourceCount,
+            XalanXMLByte*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed)
 {
-	size_type	theSourceEaten = 0;
-	size_type	theTargetPosition = 0;
+    size_type   theSourceEaten = 0;
+    size_type   theTargetPosition = 0;
 
-	while(theSourceEaten < theSourceCount)
-	{
-		// Swap bytes to big endian...
-		if (theTargetPosition + 1 >= theTargetSize)
-		{
-			break;
-		}
-		else
-		{
-			*reinterpret_cast<XalanDOMChar*>(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
+    while(theSourceEaten < theSourceCount)
+    {
+        // Swap bytes to big endian...
+        if (theTargetPosition + 1 >= theTargetSize)
+        {
+            break;
+        }
+        else
+        {
+            *reinterpret_cast<XalanDOMChar*>(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
 
-			theTargetPosition += 2;
-		}
-	}
+            theTargetPosition += 2;
+        }
+    }
 
-	theSourceCharsTranscoded = theSourceEaten;
+    theSourceCharsTranscoded = theSourceEaten;
 
-	theTargetBytesUsed = theTargetPosition;
+    theTargetBytesUsed = theTargetPosition;
 
-	return XalanTranscodingServices::OK;
+    return XalanTranscodingServices::OK;
 }
 
 
 
 XalanUTF16Transcoder::eCode
 XalanUTF16Transcoder::transcode(
-			const XalanXMLByte*		theSourceData,
-			size_type				theSourceCount,
-			XalanDOMChar*			theTarget,
-			size_type				theTargetSize,
-			size_type&				theSourceCharsTranscoded,
-			size_type&				theTargetBytesUsed,
-			unsigned char*			theCharSizes)
+            const XalanXMLByte*     theSourceData,
+            size_type               theSourceCount,
+            XalanDOMChar*           theTarget,
+            size_type               theTargetSize,
+            size_type&              theSourceCharsTranscoded,
+            size_type&              theTargetBytesUsed,
+            unsigned char*          theCharSizes)
 {
-	size_type	theSourceEaten = 0;
-	size_type	theTargetPosition = 0;
+    size_type   theSourceEaten = 0;
+    size_type   theTargetPosition = 0;
 
-	while(theSourceEaten + 1 < theSourceCount)
-	{
-		// Swap bytes to big endian...
-		if (theTargetPosition + 1 >= theTargetSize)
-		{
-			break;
-		}
-		else
-		{
-			theTarget[theTargetPosition++] = *reinterpret_cast<const XalanDOMChar*>(theSourceData + theSourceCount++);
+    while(theSourceEaten + 1 < theSourceCount)
+    {
+        // Swap bytes to big endian...
+        if (theTargetPosition + 1 >= theTargetSize)
+        {
+            break;
+        }
+        else
+        {
+            theTarget[theTargetPosition++] = *reinterpret_cast<const XalanDOMChar*>(theSourceData + theSourceCount++);
 
-			*theCharSizes++ = 2;
-		}
-	}
+            *theCharSizes++ = 2;
+        }
+    }
 
-	theSourceCharsTranscoded = theSourceEaten;
+    theSourceCharsTranscoded = theSourceEaten;
 
-	theTargetBytesUsed = theTargetPosition;
+    theTargetBytesUsed = theTargetPosition;
 
-	return XalanTranscodingServices::OK;
+    return XalanTranscodingServices::OK;
 }
 
 
 
 bool
-XalanUTF16Transcoder::canTranscodeTo(XalanUnicodeChar	/* theChar */) const
+XalanUTF16Transcoder::canTranscodeTo(XalanUnicodeChar   /* theChar */) const
 {
-	return true;
+    return true;
 }
 
 

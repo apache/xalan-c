@@ -38,16 +38,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
+static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManager&         theManager, 
-                                                                 XalanSourceTreeDocument&	theOwnerDocument) :
-	XalanDocumentFragment(),
+                                                                 XalanSourceTreeDocument&   theOwnerDocument) :
+    XalanDocumentFragment(),
     m_manager(theManager),
-	m_ownerDocument(&theOwnerDocument),
-	m_firstChild(0)
+    m_ownerDocument(&theOwnerDocument),
+    m_firstChild(0)
 {
 }
 
@@ -55,12 +55,12 @@ XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManager& 
 /*
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
             MemoryManager&                      theManager,
-			const XalanSourceTreeDocumentFragment&	theSource,
-			bool									deep) :
-	XalanDocumentFragment(),
+            const XalanSourceTreeDocumentFragment&  theSource,
+            bool                                    deep) :
+    XalanDocumentFragment(),
     m_manager(theManager),
-	m_ownerDocument(theSource.m_ownerDocument),
-	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep))
+    m_ownerDocument(theSource.m_ownerDocument),
+    m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep))
 {
 }
 */
@@ -75,7 +75,7 @@ XalanSourceTreeDocumentFragment::~XalanSourceTreeDocumentFragment()
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getNodeName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -83,7 +83,7 @@ XalanSourceTreeDocumentFragment::getNodeName() const
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getNodeValue() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -91,7 +91,7 @@ XalanSourceTreeDocumentFragment::getNodeValue() const
 XalanSourceTreeDocumentFragment::NodeType
 XalanSourceTreeDocumentFragment::getNodeType() const
 {
-	return DOCUMENT_FRAGMENT_NODE;
+    return DOCUMENT_FRAGMENT_NODE;
 }
 
 
@@ -99,7 +99,7 @@ XalanSourceTreeDocumentFragment::getNodeType() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getParentNode() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -107,10 +107,10 @@ XalanSourceTreeDocumentFragment::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeDocumentFragment::getChildNodes() const
 {
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+    throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
-	// Dummy return value...
-	return 0;
+    // Dummy return value...
+    return 0;
 }
 
 
@@ -118,7 +118,7 @@ XalanSourceTreeDocumentFragment::getChildNodes() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getFirstChild() const
 {
-	return m_firstChild;
+    return m_firstChild;
 }
 
 
@@ -126,7 +126,7 @@ XalanSourceTreeDocumentFragment::getFirstChild() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getLastChild() const
 {
-	return XalanSourceTreeHelper::getLastSibling(m_firstChild);
+    return XalanSourceTreeHelper::getLastSibling(m_firstChild);
 }
 
 
@@ -134,7 +134,7 @@ XalanSourceTreeDocumentFragment::getLastChild() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getPreviousSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -142,7 +142,7 @@ XalanSourceTreeDocumentFragment::getPreviousSibling() const
 XalanNode*
 XalanSourceTreeDocumentFragment::getNextSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -150,7 +150,7 @@ XalanSourceTreeDocumentFragment::getNextSibling() const
 const XalanNamedNodeMap*
 XalanSourceTreeDocumentFragment::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -162,7 +162,7 @@ XalanSourceTreeDocument*
 #endif
 XalanSourceTreeDocumentFragment::getOwnerDocument() const
 {
-	return m_ownerDocument;
+    return m_ownerDocument;
 }
 
 
@@ -170,7 +170,7 @@ XalanSourceTreeDocumentFragment::getOwnerDocument() const
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getNamespaceURI() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -178,7 +178,7 @@ XalanSourceTreeDocumentFragment::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getPrefix() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -186,7 +186,7 @@ XalanSourceTreeDocumentFragment::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeDocumentFragment::getLocalName() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -194,7 +194,7 @@ XalanSourceTreeDocumentFragment::getLocalName() const
 bool
 XalanSourceTreeDocumentFragment::isIndexed() const
 {
-	return false;
+    return false;
 }
 
 
@@ -202,39 +202,39 @@ XalanSourceTreeDocumentFragment::isIndexed() const
 XalanSourceTreeDocumentFragment::IndexType
 XalanSourceTreeDocumentFragment::getIndex() const
 {
-	return 0;
+    return 0;
 }
 
 
 
 void
-XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeComment*	theChild)
+XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeComment*    theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeElement*	theChild)
+XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeElement*    theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeProcessingInstruction*	theChild)
+XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeProcessingInstruction*  theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeText*	theChild)
+XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeText*   theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
@@ -242,7 +242,7 @@ XalanSourceTreeDocumentFragment::appendChildNode(XalanSourceTreeText*	theChild)
 void
 XalanSourceTreeDocumentFragment::clearChildren()
 {
-	m_firstChild = 0;
+    m_firstChild = 0;
 }
 
 

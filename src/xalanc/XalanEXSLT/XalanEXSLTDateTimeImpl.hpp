@@ -36,51 +36,51 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionDateTime : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	XalanEXSLTFunctionDateTime()
-	{
-	}
+    XalanEXSLTFunctionDateTime()
+    {
+    }
 
-	virtual
-	~XalanEXSLTFunctionDateTime()
-	{
-	}
+    virtual
+    ~XalanEXSLTFunctionDateTime()
+    {
+    }
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual XalanEXSLTFunctionDateTime*
+    virtual XalanEXSLTFunctionDateTime*
 #endif
-	clone(MemoryManager& theManager) const
-	{
-	    return XalanCopyConstruct(theManager, *this);
-	}
+    clone(MemoryManager& theManager) const
+    {
+        return XalanCopyConstruct(theManager, *this);
+    }
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	XalanEXSLTFunctionDateTime&
-	operator=(const XalanEXSLTFunctionDateTime&);
+    // Not implemented...
+    XalanEXSLTFunctionDateTime&
+    operator=(const XalanEXSLTFunctionDateTime&);
 
-	bool
-	operator==(const XalanEXSLTFunctionDateTime&) const;
+    bool
+    operator==(const XalanEXSLTFunctionDateTime&) const;
 };
 
 

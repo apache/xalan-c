@@ -48,154 +48,154 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeProcessingInstruction : public
 {
 public:
 
-	/**
-	 * Create an instance.
-	 * 
-	 * @param theTarget The target for the processing instruction.
-	 * @param theData The data for the node
-	 * @param theOwnerDocument The document that owns the instance.
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The next sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 *
-	 * @return pointer to the instance
-	 */
-	XalanSourceTreeProcessingInstruction(
-			const XalanDOMString&		theTarget,
-			const XalanDOMString&		theData,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			IndexType					theIndex = 0);
+    /**
+     * Create an instance.
+     * 
+     * @param theTarget The target for the processing instruction.
+     * @param theData The data for the node
+     * @param theOwnerDocument The document that owns the instance.
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The next sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     *
+     * @return pointer to the instance
+     */
+    XalanSourceTreeProcessingInstruction(
+            const XalanDOMString&       theTarget,
+            const XalanDOMString&       theData,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode = 0,
+            XalanNode*                  thePreviousSibling = 0,
+            XalanNode*                  theNextSibling = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeProcessingInstruction();
+    virtual
+    ~XalanSourceTreeProcessingInstruction();
 
 
-	// These interfaces are inherited from XalanProcessingInstruction...
-
-	virtual const XalanDOMString&
-	getNodeName() const;
-
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
-	virtual NodeType
-	getNodeType() const;
-
-	virtual XalanNode*
-	getParentNode() const;
-
-	virtual const XalanNodeList*
-	getChildNodes() const;
-
-	virtual XalanNode*
-	getFirstChild() const;
-
-	virtual XalanNode*
-	getLastChild() const;
-
-	virtual XalanNode*
-	getPreviousSibling() const;
-
-	virtual XalanNode*
-	getNextSibling() const;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
-
-	virtual XalanDocument*
-	getOwnerDocument() const;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
-
-	virtual const XalanDOMString&
-	getPrefix() const;
-
-	virtual const XalanDOMString&
-	getLocalName() const;
-
-	virtual bool
-	isIndexed() const;
-
-	virtual IndexType
-	getIndex() const;
+    // These interfaces are inherited from XalanProcessingInstruction...
 
     virtual const XalanDOMString&
-	getTarget() const;
+    getNodeName() const;
 
     virtual const XalanDOMString&
-	getData() const;
+    getNodeValue() const;
+
+    virtual NodeType
+    getNodeType() const;
+
+    virtual XalanNode*
+    getParentNode() const;
+
+    virtual const XalanNodeList*
+    getChildNodes() const;
+
+    virtual XalanNode*
+    getFirstChild() const;
+
+    virtual XalanNode*
+    getLastChild() const;
+
+    virtual XalanNode*
+    getPreviousSibling() const;
+
+    virtual XalanNode*
+    getNextSibling() const;
+
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
+
+    virtual XalanDocument*
+    getOwnerDocument() const;
+
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
+
+    virtual const XalanDOMString&
+    getPrefix() const;
+
+    virtual const XalanDOMString&
+    getLocalName() const;
+
+    virtual bool
+    isIndexed() const;
+
+    virtual IndexType
+    getIndex() const;
+
+    virtual const XalanDOMString&
+    getTarget() const;
+
+    virtual const XalanDOMString&
+    getData() const;
 
 
     // public interfaces not inherited from XalanProcessingInstruction...
 
-	void
-	setParent(XalanSourceTreeElement*	theParent);
+    void
+    setParent(XalanSourceTreeElement*   theParent);
 
-	void
-	setParent(XalanSourceTreeDocumentFragment*	theParent);
+    void
+    setParent(XalanSourceTreeDocumentFragment*  theParent);
 
-	void
-	setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling);
+    void
+    setPreviousSibling(XalanSourceTreeComment*  thePreviousSibling);
 
-	void
-	setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling);
+    void
+    setPreviousSibling(XalanSourceTreeElement*  thePreviousSibling);
 
-	void
-	setPreviousSibling(XalanSourceTreeProcessingInstruction*	thePreviousSibling);
+    void
+    setPreviousSibling(XalanSourceTreeProcessingInstruction*    thePreviousSibling);
 
-	void
-	setPreviousSibling(XalanSourceTreeText*		thePreviousSibling);
+    void
+    setPreviousSibling(XalanSourceTreeText*     thePreviousSibling);
 
-	void
-	appendSiblingNode(XalanSourceTreeComment*	theSibling);
+    void
+    appendSiblingNode(XalanSourceTreeComment*   theSibling);
 
-	void
-	appendSiblingNode(XalanSourceTreeElement*	theSibling);
+    void
+    appendSiblingNode(XalanSourceTreeElement*   theSibling);
 
-	void
-	appendSiblingNode(XalanSourceTreeProcessingInstruction*		theSibling);
+    void
+    appendSiblingNode(XalanSourceTreeProcessingInstruction*     theSibling);
 
-	void
-	appendSiblingNode(XalanSourceTreeText*	theSibling);
+    void
+    appendSiblingNode(XalanSourceTreeText*  theSibling);
 
-	void
-	setIndex(IndexType	theIndex)
-	{
-		m_index = theIndex;
-	}
+    void
+    setIndex(IndexType  theIndex)
+    {
+        m_index = theIndex;
+    }
 
 private:
 
-	// Not implemented...
-	XalanSourceTreeProcessingInstruction(
-			const XalanSourceTreeProcessingInstruction&		theSource);
+    // Not implemented...
+    XalanSourceTreeProcessingInstruction(
+            const XalanSourceTreeProcessingInstruction&     theSource);
 
     XalanSourceTreeProcessingInstruction&
-	operator=(const XalanSourceTreeProcessingInstruction&	theSource);
+    operator=(const XalanSourceTreeProcessingInstruction&   theSource);
 
-	bool
-	operator==(const XalanSourceTreeProcessingInstruction&		theRHS) const;
+    bool
+    operator==(const XalanSourceTreeProcessingInstruction&      theRHS) const;
 
 
-	// Data members...
-	const XalanDOMString&		m_target;
+    // Data members...
+    const XalanDOMString&       m_target;
 
-	const XalanDOMString&		m_data;
+    const XalanDOMString&       m_data;
 
-	XalanSourceTreeDocument*	m_ownerDocument;
+    XalanSourceTreeDocument*    m_ownerDocument;
 
-	XalanNode*					m_parentNode;
+    XalanNode*                  m_parentNode;
 
-	XalanNode*					m_previousSibling;
+    XalanNode*                  m_previousSibling;
 
-	XalanNode*					m_nextSibling;
+    XalanNode*                  m_nextSibling;
 
-	IndexType					m_index;
+    IndexType                   m_index;
 };
 
 
@@ -204,4 +204,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEPROCESSINGINSTRUCTION_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEPROCESSINGINSTRUCTION_HEADER_GUARD_1357924680)

@@ -45,12 +45,12 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperToXalanNodeMap
 public:
 
 
-	typedef XalanMap<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
+    typedef XalanMap<const DOMNodeType*, XalanNode*>    XercesNodeMapType;
 
 
-	XercesWrapperToXalanNodeMap(MemoryManager& theManager);
+    XercesWrapperToXalanNodeMap(MemoryManager& theManager);
 
-	~XercesWrapperToXalanNodeMap();
+    ~XercesWrapperToXalanNodeMap();
 
     MemoryManager&
     getMemoryManager()
@@ -58,20 +58,20 @@ public:
         return m_xercesMap.getMemoryManager();
     }
 
-	void
-	addAssociation(
-			const DOMNodeType*	theXercesNode,
-			XalanNode*			theXalanNode);
+    void
+    addAssociation(
+            const DOMNodeType*  theXercesNode,
+            XalanNode*          theXalanNode);
 
-	void
-	clear();
+    void
+    clear();
 
-	XalanNode*
-	getNode(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    getNode(const DOMNodeType*  theXercesNode) const;
 
 private:
 
-	XercesNodeMapType	m_xercesMap;
+    XercesNodeMapType   m_xercesMap;
 };
 
 
@@ -80,4 +80,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESWRAPPERTOXALANNODEMAP_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESWRAPPERTOXALANNODEMAP_HEADER_GUARD_1357924680)

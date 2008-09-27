@@ -42,124 +42,124 @@ class ElemLiteralResult: public ElemUse
 {
 public:
 
-	/**
-	 * Construct an object corresponding to a literal result element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemLiteralResult(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to a literal result element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param name                name of element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemLiteralResult(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemLiteralResult();
+    virtual
+    ~ElemLiteralResult();
 
-	// These methods are inherited from ElemUse ...
+    // These methods are inherited from ElemUse ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
-	virtual void
-	postConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler);
+    virtual void
+    postConstruction(
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler);
 
-	virtual bool
-	isAttrOK(
-			const XalanDOMChar*				attrName,
-			const AttributeListType&		atts,
-			XalanSize_t						which,
-			StylesheetConstructionContext&	constructionContext) const;
+    virtual bool
+    isAttrOK(
+            const XalanDOMChar*             attrName,
+            const AttributeListType&        atts,
+            XalanSize_t                     which,
+            StylesheetConstructionContext&  constructionContext) const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&		executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&        executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual void
-	evaluateAVTs(StylesheetExecutionContext&	executionContext) const;
+    virtual void
+    evaluateAVTs(StylesheetExecutionContext&    executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 protected:
 
-	/**
-	 * Do common initialization.
-	 * 
-	 * @param constructionContext The current onstruction context.
-	 * @param stylesheetTree The stylesheet containing the element.
-	 * @param name The name of the element.
-	 * @param atts The list of attributes for the element.
-	 */
-	void
-	init(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts);
+    /**
+     * Do common initialization.
+     * 
+     * @param constructionContext The current onstruction context.
+     * @param stylesheetTree The stylesheet containing the element.
+     * @param name The name of the element.
+     * @param atts The list of attributes for the element.
+     */
+    void
+    init(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts);
 
-	/**
-	 * Construct an object corresponding to a literal result element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param name                name of element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 * @param xslToken			The xsl token value for this class
-	 */
-	ElemLiteralResult(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const XalanDOMChar*				name,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-			int								xslToken);
+    /**
+     * Construct an object corresponding to a literal result element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param name                name of element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     * @param xslToken          The xsl token value for this class
+     */
+    ElemLiteralResult(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const XalanDOMChar*             name,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            int                             xslToken);
 
-	virtual void
-	namespacesPostConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler,
-			NamespacesHandler&				theHandler);
+    virtual void
+    namespacesPostConstruction(
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler,
+            NamespacesHandler&              theHandler);
 
 private:
 
-	// not implemented
-	ElemLiteralResult(const ElemLiteralResult &);
+    // not implemented
+    ElemLiteralResult(const ElemLiteralResult &);
 
-	ElemLiteralResult&
-	operator=(const ElemLiteralResult&);
+    ElemLiteralResult&
+    operator=(const ElemLiteralResult&);
 
 
-	/**
-	 * The name of the literal result element.
-	 */
-	const XalanDOMString&	m_elementName;
+    /**
+     * The name of the literal result element.
+     */
+    const XalanDOMString&   m_elementName;
 
-	/**
-	 * A vector to keep track of the attribute elements.
-	 */
-	const AVT**				m_avts;
+    /**
+     * A vector to keep track of the attribute elements.
+     */
+    const AVT**             m_avts;
 
-	/**
-	 * The size of m_avts, once the stylesheet is compiled...
-	 */
-	XalanSize_t			    m_avtsCount;
+    /**
+     * The size of m_avts, once the stylesheet is compiled...
+     */
+    XalanSize_t             m_avtsCount;
 };
 
 
@@ -168,4 +168,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMLITERALRESULT_HEADER_GUARD
+#endif  // XALAN_ELEMLITERALRESULT_HEADER_GUARD

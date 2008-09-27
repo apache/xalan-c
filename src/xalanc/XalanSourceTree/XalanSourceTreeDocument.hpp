@@ -62,8 +62,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes		AttributesType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes       AttributesType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
 
 
 
@@ -76,172 +76,172 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocument : public XalanDocumen
 {
 public:
 
-	typedef XalanArrayAllocator<XalanSourceTreeAttr*>		AttributesArrayAllocatorType;
+    typedef XalanArrayAllocator<XalanSourceTreeAttr*>       AttributesArrayAllocatorType;
 
-	typedef XalanMap<
-				const XalanDOMChar*,
-				XalanSourceTreeElement*>		            ElementByIDMapType;
+    typedef XalanMap<
+                const XalanDOMChar*,
+                XalanSourceTreeElement*>                    ElementByIDMapType;
 
-	typedef XalanMap<
-				XalanDOMString,
-				XalanDOMString>								UnparsedEntityURIMapType;
-
-
-	/**
-	 * Perform static initialization.  See class XalanSourceTreeInit.
-	 */
-	static void
-	initialize(MemoryManager& theManager);
-
-	/**
-	 * Perform static shut down.  See class XalanSourceTreeInit.
-	 */
-	static void
-	terminate();
+    typedef XalanMap<
+                XalanDOMString,
+                XalanDOMString>                             UnparsedEntityURIMapType;
 
 
-	enum { eDefaultAttributeAllocatorBlockSize = 100,
-		   eDefaultAttributeNSAllocatorBlockSize = 50,
-		   eDefaultCommentAllocatorBlockSize = 10,
-		   eDefaultElementAllocatorBlockSize = 100,
-		   eDefaultElementNSAllocatorBlockSize = 100,
-		   eDefaultPIAllocatorBlockSize = 10,
-		   eDefaultTextAllocatorBlockSize = 100,
-		   eDefaultTextIWSAllocatorBlockSize = 100,
-		   eDefaultNamesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
-		   eDefaultNamesStringPoolBucketCount = XalanDOMStringPool::eDefaultBucketCount,
-		   eDefaultNamesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize,
-		   eDefaultValuesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
-		   eDefaultValuesStringPoolBucketCount = 997,
-		   eDefaultValuesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize };
+    /**
+     * Perform static initialization.  See class XalanSourceTreeInit.
+     */
+    static void
+    initialize(MemoryManager& theManager);
+
+    /**
+     * Perform static shut down.  See class XalanSourceTreeInit.
+     */
+    static void
+    terminate();
 
 
-	typedef XalanSourceTreeAttributeAllocator::size_type	allocator_size_type;
-	typedef XalanDOMStringPool::block_size_type				block_size_type;
-	typedef XalanDOMStringPool::bucket_count_type			bucket_count_type;
-	typedef XalanDOMStringPool::bucket_size_type			bucket_size_type;
+    enum { eDefaultAttributeAllocatorBlockSize = 100,
+           eDefaultAttributeNSAllocatorBlockSize = 50,
+           eDefaultCommentAllocatorBlockSize = 10,
+           eDefaultElementAllocatorBlockSize = 100,
+           eDefaultElementNSAllocatorBlockSize = 100,
+           eDefaultPIAllocatorBlockSize = 10,
+           eDefaultTextAllocatorBlockSize = 100,
+           eDefaultTextIWSAllocatorBlockSize = 100,
+           eDefaultNamesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
+           eDefaultNamesStringPoolBucketCount = XalanDOMStringPool::eDefaultBucketCount,
+           eDefaultNamesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize,
+           eDefaultValuesStringPoolBlockSize = XalanDOMStringPool::eDefaultBlockSize,
+           eDefaultValuesStringPoolBucketCount = 997,
+           eDefaultValuesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize };
 
-	/**
-	 *
-	 * Constructor for XalanSourceTreeDocument.
-	 *
-	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
-	 * @param theNamesStringPoolBlockSize The block size for allocating strings in the name pool
-	 * @param theNamesStringPoolBucketCount The number of buckets for allocating strings in the name pool
-	 * @param theNamesStringPoolBucketSize The bucket size for allocating strings in the name pool
-	 * @param theValuesStringPoolBlockSize The block size for allocating strings in the values pool
-	 * @param theValuesStringPoolBucketCount The number of buckets for allocating strings in the values pool
-	 * @param theValuesStringPoolBucketSize The bucket size for allocating strings in the values pool
-	 *
-	 */
-	XalanSourceTreeDocument(
+
+    typedef XalanSourceTreeAttributeAllocator::size_type    allocator_size_type;
+    typedef XalanDOMStringPool::block_size_type             block_size_type;
+    typedef XalanDOMStringPool::bucket_count_type           bucket_count_type;
+    typedef XalanDOMStringPool::bucket_size_type            bucket_size_type;
+
+    /**
+     *
+     * Constructor for XalanSourceTreeDocument.
+     *
+     * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+     * @param theNamesStringPoolBlockSize The block size for allocating strings in the name pool
+     * @param theNamesStringPoolBucketCount The number of buckets for allocating strings in the name pool
+     * @param theNamesStringPoolBucketSize The bucket size for allocating strings in the name pool
+     * @param theValuesStringPoolBlockSize The block size for allocating strings in the values pool
+     * @param theValuesStringPoolBucketCount The number of buckets for allocating strings in the values pool
+     * @param theValuesStringPoolBucketSize The bucket size for allocating strings in the values pool
+     *
+     */
+    XalanSourceTreeDocument(
             MemoryManager&  theManager,
-			bool				fPoolAllText = s_poolAllTextNodes,
-			block_size_type		theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
-			bucket_count_type	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
-			bucket_size_type	theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
-			block_size_type		theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
-			bucket_count_type	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
-			bucket_size_type	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
+            bool                fPoolAllText = s_poolAllTextNodes,
+            block_size_type     theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
+            bucket_count_type   theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
+            bucket_size_type    theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
+            block_size_type     theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
+            bucket_count_type   theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
+            bucket_size_type    theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
 
 
     static XalanSourceTreeDocument*
     create( 
             MemoryManager&  theManager,
-			bool				fPoolAllText = s_poolAllTextNodes,
-			block_size_type		theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
-			bucket_count_type	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
-			bucket_size_type	theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
-			block_size_type		theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
-			bucket_count_type	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
-			bucket_size_type	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
+            bool                fPoolAllText = s_poolAllTextNodes,
+            block_size_type     theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
+            bucket_count_type   theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
+            bucket_size_type    theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
+            block_size_type     theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
+            bucket_count_type   theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
+            bucket_size_type    theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
 
-	/**
-	 *
-	 * Constructor for XalanSourceTreeDocument.
-	 *
-	 * @param theAttributeBlockSize The block size for allocating attribute nodes
-	 * @param theAttributeNSBlockSize The block size for allocating attribute NS nodes
-	 * @param theCommentBlockSize The block size for allocating comment nodes
-	 * @param theElementBlockSize The block size for allocating element nodes
-	 * @param theElementNSBlockSize The block size for allocating element nodes
-	 * @param theTextBlockSize The block size for allocating text nodes,
-	 * @param theTextIWSBlockSize The block size for allocating text IWS nodes,
-	 * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
-	 *
-	 */
-	XalanSourceTreeDocument(
+    /**
+     *
+     * Constructor for XalanSourceTreeDocument.
+     *
+     * @param theAttributeBlockSize The block size for allocating attribute nodes
+     * @param theAttributeNSBlockSize The block size for allocating attribute NS nodes
+     * @param theCommentBlockSize The block size for allocating comment nodes
+     * @param theElementBlockSize The block size for allocating element nodes
+     * @param theElementNSBlockSize The block size for allocating element nodes
+     * @param theTextBlockSize The block size for allocating text nodes,
+     * @param theTextIWSBlockSize The block size for allocating text IWS nodes,
+     * @param fPoolAllText If false, text node data that is not whitespace will not be pooled.
+     *
+     */
+    XalanSourceTreeDocument(
             MemoryManager&      theManager,
-			allocator_size_type		theAttributeBlockSize,
-			allocator_size_type		theAttributeNSBlockSize,
-			allocator_size_type		theCommentBlockSize,
-			allocator_size_type		theElementBlockSize,
-			allocator_size_type		theElementNSBlockSize,
-			allocator_size_type		thePIBlockSize,
-			allocator_size_type		theTextBlockSize,
-			allocator_size_type		theTextIWSBlockSize,
+            allocator_size_type     theAttributeBlockSize,
+            allocator_size_type     theAttributeNSBlockSize,
+            allocator_size_type     theCommentBlockSize,
+            allocator_size_type     theElementBlockSize,
+            allocator_size_type     theElementNSBlockSize,
+            allocator_size_type     thePIBlockSize,
+            allocator_size_type     theTextBlockSize,
+            allocator_size_type     theTextIWSBlockSize,
             bool                    fPoolAllText = s_poolAllTextNodes);
 
-	virtual
-	~XalanSourceTreeDocument();
+    virtual
+    ~XalanSourceTreeDocument();
 
-	// These interfaces are inherited from XalanNode...
-	virtual const XalanDOMString&
-	getNodeName() const;
+    // These interfaces are inherited from XalanNode...
+    virtual const XalanDOMString&
+    getNodeName() const;
 
-	virtual const XalanDOMString&
-	getNodeValue() const;
+    virtual const XalanDOMString&
+    getNodeValue() const;
 
-	virtual NodeType
-	getNodeType() const;
+    virtual NodeType
+    getNodeType() const;
 
-	virtual XalanNode*
-	getParentNode() const;
+    virtual XalanNode*
+    getParentNode() const;
 
-	virtual const XalanNodeList*
-	getChildNodes() const;
+    virtual const XalanNodeList*
+    getChildNodes() const;
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
-	virtual XalanNode*
-	getPreviousSibling() const;
+    virtual XalanNode*
+    getPreviousSibling() const;
 
-	virtual XalanNode*
-	getNextSibling() const;
+    virtual XalanNode*
+    getNextSibling() const;
 
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+    virtual const XalanNamedNodeMap*
+    getAttributes() const;
 
-	virtual XalanDocument*
-	getOwnerDocument() const;
+    virtual XalanDocument*
+    getOwnerDocument() const;
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
-	virtual bool
-	isIndexed() const;
+    virtual bool
+    isIndexed() const;
 
-	virtual IndexType
-	getIndex() const;
+    virtual IndexType
+    getIndex() const;
 
-	virtual XalanElement*
-	getDocumentElement() const;
+    virtual XalanElement*
+    getDocumentElement() const;
 
-	virtual XalanElement*
-	getElementById(const XalanDOMString&	elementId) const;
+    virtual XalanElement*
+    getElementById(const XalanDOMString&    elementId) const;
 
 
-	// Interfaces not inherited from XalanDocument...
+    // Interfaces not inherited from XalanDocument...
 
     static bool
     getPoolAllTextNodes()
@@ -355,121 +355,121 @@ private:
         return m_stringBuffer.getMemoryManager();
     }
 
-	// Helper functions...
-	XalanSourceTreeAttr*
-	createAttribute(
-			const XalanDOMChar*			theName,
-			const XalanDOMChar*			theValue,
-			XalanSourceTreeElement*		theOwnerElement,
-			const PrefixResolver&		thePrefixResolver);
+    // Helper functions...
+    XalanSourceTreeAttr*
+    createAttribute(
+            const XalanDOMChar*         theName,
+            const XalanDOMChar*         theValue,
+            XalanSourceTreeElement*     theOwnerElement,
+            const PrefixResolver&       thePrefixResolver);
 
-	XalanSourceTreeAttr*
-	createAttribute(
-			const XalanDOMChar*			theName,
-			const XalanDOMChar*			theValue,
-			XalanSourceTreeElement*		theOwnerElement);
+    XalanSourceTreeAttr*
+    createAttribute(
+            const XalanDOMChar*         theName,
+            const XalanDOMChar*         theValue,
+            XalanSourceTreeElement*     theOwnerElement);
 
-	size_t
-	createAttributes(
-			XalanSourceTreeAttr**		theAttributeVector,
-			const AttributeListType&	attrs,
-			size_t						theStartIndex,
-			XalanSourceTreeElement*		theOwnerElement,
-			bool						fCreateNamespaces,
-			const PrefixResolver*		thePrefixResolver = 0);
+    size_t
+    createAttributes(
+            XalanSourceTreeAttr**       theAttributeVector,
+            const AttributeListType&    attrs,
+            size_t                      theStartIndex,
+            XalanSourceTreeElement*     theOwnerElement,
+            bool                        fCreateNamespaces,
+            const PrefixResolver*       thePrefixResolver = 0);
 
-	XalanSourceTreeElement*
-	createElementNode(
-			const XalanDOMChar*		theTagName,
-			XalanSourceTreeAttr**	theAttributeVector,
-			XalanSize_t		        theAttributeCount,
-			XalanNode*				theParentNode,
-			XalanNode*				thePreviousSibling,
-			XalanNode*				theNextSibling,
-			const PrefixResolver&	thePrefixResolver);
+    XalanSourceTreeElement*
+    createElementNode(
+            const XalanDOMChar*     theTagName,
+            XalanSourceTreeAttr**   theAttributeVector,
+            XalanSize_t             theAttributeCount,
+            XalanNode*              theParentNode,
+            XalanNode*              thePreviousSibling,
+            XalanNode*              theNextSibling,
+            const PrefixResolver&   thePrefixResolver);
 
-	size_t
-	createAttributes(
-			XalanSourceTreeAttr**		theAttributeVector,
-			const AttributesType&		theAttributes,
-			size_t						theStartIndex,
-			XalanSourceTreeElement*		theOwnerElement,
-			bool						fCreateNamespaces);
+    size_t
+    createAttributes(
+            XalanSourceTreeAttr**       theAttributeVector,
+            const AttributesType&       theAttributes,
+            size_t                      theStartIndex,
+            XalanSourceTreeElement*     theOwnerElement,
+            bool                        fCreateNamespaces);
 
-	void
-	createAttributes(
-			const AttributesType&		theAttributes,
-			XalanSourceTreeAttr**		theAttributeVector,
-			XalanSourceTreeElement*		theOwnerElement,
-			bool						fAddXMLNamespaceAttribute);
+    void
+    createAttributes(
+            const AttributesType&       theAttributes,
+            XalanSourceTreeAttr**       theAttributeVector,
+            XalanSourceTreeElement*     theOwnerElement,
+            bool                        fAddXMLNamespaceAttribute);
 
-	const XalanDOMString&
-	getTextNodeString(
-			const XalanDOMChar*			chars,
-			XalanDOMString::size_type	length);
+    const XalanDOMString&
+    getTextNodeString(
+            const XalanDOMChar*         chars,
+            XalanDOMString::size_type   length);
 
-	const XalanDOMString*
-	getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix,
-			bool					fUseDefault,
+    const XalanDOMString*
+    getNamespaceForPrefix(
+            const XalanDOMChar*     theName,
+            const PrefixResolver&   thePrefixResolver,
+            XalanDOMString&         thePrefix,
+            bool                    fUseDefault,
             const XalanDOMChar**    theLocalName = 0);
 
-	// Not implemented...
-	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);
+    // Not implemented...
+    XalanSourceTreeDocument(const XalanSourceTreeDocument&  theSource);
 
-	XalanSourceTreeDocument&
-	operator=(const XalanSourceTreeDocument&	theRHS);
+    XalanSourceTreeDocument&
+    operator=(const XalanSourceTreeDocument&    theRHS);
 
-	bool
-	operator==(const XalanSourceTreeDocument&	theRHS) const;
+    bool
+    operator==(const XalanSourceTreeDocument&   theRHS) const;
 
 
-	// Data members...
-	XalanNode*										m_firstChild;
+    // Data members...
+    XalanNode*                                      m_firstChild;
 
-	XalanSourceTreeElement*							m_documentElement;
+    XalanSourceTreeElement*                         m_documentElement;
 
-	XalanSourceTreeAttributeAllocator				m_attributeAllocator;
+    XalanSourceTreeAttributeAllocator               m_attributeAllocator;
 
-	XalanSourceTreeAttributeNSAllocator				m_attributeNSAllocator;
+    XalanSourceTreeAttributeNSAllocator             m_attributeNSAllocator;
 
-	XalanSourceTreeCommentAllocator					m_commentAllocator;
+    XalanSourceTreeCommentAllocator                 m_commentAllocator;
 
-	XalanSourceTreeElementAAllocator				m_elementAAllocator;
+    XalanSourceTreeElementAAllocator                m_elementAAllocator;
 
-	XalanSourceTreeElementANSAllocator				m_elementANSAllocator;
+    XalanSourceTreeElementANSAllocator              m_elementANSAllocator;
 
-	XalanSourceTreeElementNAAllocator				m_elementNAAllocator;
+    XalanSourceTreeElementNAAllocator               m_elementNAAllocator;
 
-	XalanSourceTreeElementNANSAllocator				m_elementNANSAllocator;
+    XalanSourceTreeElementNANSAllocator             m_elementNANSAllocator;
 
-	XalanSourceTreeProcessingInstructionAllocator	m_piAllocator;
+    XalanSourceTreeProcessingInstructionAllocator   m_piAllocator;
 
-	XalanSourceTreeTextAllocator					m_textAllocator;
+    XalanSourceTreeTextAllocator                    m_textAllocator;
 
-	XalanSourceTreeTextIWSAllocator					m_textIWSAllocator;
+    XalanSourceTreeTextIWSAllocator                 m_textIWSAllocator;
 
-	XalanDOMStringPool								m_namesStringPool;
+    XalanDOMStringPool                              m_namesStringPool;
 
-	XalanDOMStringPool								m_valuesStringPool;
+    XalanDOMStringPool                              m_valuesStringPool;
 
-	AttributesArrayAllocatorType					m_attributesVector;
+    AttributesArrayAllocatorType                    m_attributesVector;
 
-	IndexType										m_nextIndexValue;
+    IndexType                                       m_nextIndexValue;
 
-	const bool										m_poolAllText;
+    const bool                                      m_poolAllText;
 
-	ElementByIDMapType								m_elementsByID;
+    ElementByIDMapType                              m_elementsByID;
 
-	UnparsedEntityURIMapType						m_unparsedEntityURIs;
+    UnparsedEntityURIMapType                        m_unparsedEntityURIs;
 
-	XalanDOMStringAllocator							m_nonPooledStrings;
+    XalanDOMStringAllocator                         m_nonPooledStrings;
 
-	XalanDOMString									m_stringBuffer;
+    XalanDOMString                                  m_stringBuffer;
 
-	static const XalanDOMString&					s_nameString;
+    static const XalanDOMString&                    s_nameString;
 
     static bool                                     s_poolAllTextNodes;
 };
@@ -480,4 +480,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEDOCUMENT_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEDOCUMENT_HEADER_GUARD_1357924680)

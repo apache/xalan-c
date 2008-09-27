@@ -44,9 +44,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMImplementationBridge::XercesDOMImplementationBridge(DOM_DOMImplementationType&	theXercesDOMImplementation) :
-	XalanDOMImplementation(),
-	m_xercesNode(theXercesDOMImplementation)
+XercesDOMImplementationBridge::XercesDOMImplementationBridge(DOM_DOMImplementationType& theXercesDOMImplementation) :
+    XalanDOMImplementation(),
+    m_xercesNode(theXercesDOMImplementation)
 {
 }
 
@@ -58,9 +58,9 @@ XercesDOMImplementationBridge::~XercesDOMImplementationBridge()
 
 
 
-XercesDOMImplementationBridge::XercesDOMImplementationBridge(const XercesDOMImplementationBridge&	theSource) :
-	XalanDOMImplementation(theSource),
-	m_xercesNode(theSource.m_xercesNode)
+XercesDOMImplementationBridge::XercesDOMImplementationBridge(const XercesDOMImplementationBridge&   theSource) :
+    XalanDOMImplementation(theSource),
+    m_xercesNode(theSource.m_xercesNode)
 {
 }
 
@@ -68,36 +68,36 @@ XercesDOMImplementationBridge::XercesDOMImplementationBridge(const XercesDOMImpl
 
 bool
 XercesDOMImplementationBridge::hasFeature(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version)
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version)
 {
-	return m_xercesNode.hasFeature(feature.c_str(), version.c_str());
+    return m_xercesNode.hasFeature(feature.c_str(), version.c_str());
 }
 
 
 
 XalanDocumentType*
 XercesDOMImplementationBridge::createDocumentType(
-			const XalanDOMString&	/* qualifiedName */,
-			const XalanDOMString&	/* publicId */,
-			const XalanDOMString&	/* systemId */)
+            const XalanDOMString&   /* qualifiedName */,
+            const XalanDOMString&   /* publicId */,
+            const XalanDOMString&   /* systemId */)
 {
-	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
+    throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
-	return 0;
+    return 0;
 }
 
 
 
 XalanDocument*
 XercesDOMImplementationBridge::createDocument(
-			const XalanDOMString&		/* namespaceURI */,
-			const XalanDOMString&		/* qualifiedName */,
-			const XalanDocumentType&	/* doctype */)
+            const XalanDOMString&       /* namespaceURI */,
+            const XalanDOMString&       /* qualifiedName */,
+            const XalanDocumentType&    /* doctype */)
 {
-	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
+    throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
-	return 0;
+    return 0;
 }
 
 

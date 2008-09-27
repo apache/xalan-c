@@ -24,30 +24,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-unsigned long	XalanDOMInit::s_initCounter = 0;
+unsigned long   XalanDOMInit::s_initCounter = 0;
 
 
 
 XalanDOMInit::XalanDOMInit(MemoryManager&      theManager)
 {
-	++s_initCounter;
+    ++s_initCounter;
 
-	if (s_initCounter == 1)
-	{
-		initialize(theManager);
-	}
+    if (s_initCounter == 1)
+    {
+        initialize(theManager);
+    }
 }
 
 
 
 XalanDOMInit::~XalanDOMInit()
 {
-	--s_initCounter;
+    --s_initCounter;
 
-	if (s_initCounter == 0)
-	{
-		terminate();
-	}
+    if (s_initCounter == 0)
+    {
+        terminate();
+    }
 }
 
 

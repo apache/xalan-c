@@ -29,14 +29,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 // Pre-constructed masks for bit twiddling.  Update these if not using chars for storing the bits.
-const int	XalanBitmap::s_setMasks[XalanBitmap::eBitsPerUnit] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-const int	XalanBitmap::s_clearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~8, ~16, ~32, ~64, ~128 };
+const int   XalanBitmap::s_setMasks[XalanBitmap::eBitsPerUnit] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+const int   XalanBitmap::s_clearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~8, ~16, ~32, ~64, ~128 };
 
 
 
-XalanBitmap::XalanBitmap(MemoryManager& theManager, size_type	theSize) :
-	m_size(theSize),
-	m_bitmap(size_type((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0), theManager)
+XalanBitmap::XalanBitmap(MemoryManager& theManager, size_type   theSize) :
+    m_size(theSize),
+    m_bitmap(size_type((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0), theManager)
 {
 }
 
@@ -51,7 +51,7 @@ XalanBitmap::~XalanBitmap()
 void
 XalanBitmap::clearAll()
 {
-	XALAN_STD_QUALIFIER fill(m_bitmap.begin(), m_bitmap.end(), '\0');
+    XALAN_STD_QUALIFIER fill(m_bitmap.begin(), m_bitmap.end(), '\0');
 }
 
 

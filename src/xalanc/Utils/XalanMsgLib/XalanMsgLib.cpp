@@ -27,28 +27,28 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-static const XalanDOMChar	s_errString[] =
+static const XalanDOMChar   s_errString[] =
 {
-	XalanUnicode::charLetter_M,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_g,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charSpace,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charSpace,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_f,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_d,
-	0
+    XalanUnicode::charLetter_M,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charSpace,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charSpace,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_d,
+    0
 };
 
 
@@ -56,7 +56,7 @@ static const XalanDOMChar	s_errString[] =
 XalanSize_t
 XalanMsgContainer::getMessageCount()
 {
-	return gXalanMsgArraySize;
+    return gXalanMsgArraySize;
 }
 
 
@@ -64,13 +64,13 @@ XalanMsgContainer::getMessageCount()
 const XalanDOMChar*
 XalanMsgContainer::getMessage(XalanSize_t   msgID)
 {
-	if (msgID < gXalanMsgArraySize)
+    if (msgID < gXalanMsgArraySize)
     {
-		return msgArray[msgID];
+        return msgArray[msgID];
     }
-	else
+    else
     {
-		return s_errString;
+        return s_errString;
     }
 }
 

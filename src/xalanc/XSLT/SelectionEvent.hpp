@@ -48,133 +48,133 @@ class XALAN_XSLT_EXPORT SelectionEvent
 {
 public:
 
-	/**
-	 * Create an event originating at the given node of the style tree.
-	 *
-	 * @param executionContext The current execution context
-	 * @param sourceNode The source node selected.
-	 * @param styleNode The node in the style tree reference for the event
-	 * @param attributeName The attribute name where the XPath expression was supplied
-	 * @param xpath The XPath instance executed
-	 * @param selection The result of evaluating the XPath
-	 *
-	 */
-	SelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode*				sourceNode,
-			const ElemTemplateElement&		styleNode,
-			const XalanDOMString&			attributeName,
-			const XPath&					xpath,
-			const XObjectPtr				selection);
+    /**
+     * Create an event originating at the given node of the style tree.
+     *
+     * @param executionContext The current execution context
+     * @param sourceNode The source node selected.
+     * @param styleNode The node in the style tree reference for the event
+     * @param attributeName The attribute name where the XPath expression was supplied
+     * @param xpath The XPath instance executed
+     * @param selection The result of evaluating the XPath
+     *
+     */
+    SelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            const XalanNode*                sourceNode,
+            const ElemTemplateElement&      styleNode,
+            const XalanDOMString&           attributeName,
+            const XPath&                    xpath,
+            const XObjectPtr                selection);
 
-	/**
-	 * Create an event originating at the given node of the style tree.
-	 *
-	 * @param executionContext The current execution context
-	 * @param sourceNode The source node selected.
-	 * @param styleNode The node in the style tree reference for the event
-	 * @param attributeName The attribute name where the XPath expression was supplied
-	 * @param xpathExpression The XPath expression executed
-	 * @param selection The result of evaluating the XPath
-	 *
-	 */
-	SelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode*				sourceNode,
-			const ElemTemplateElement&		styleNode,
-			const XalanDOMString&			attributeName,
-			const XalanDOMString&			xpathExpression,
-			const XObjectPtr				selection);
+    /**
+     * Create an event originating at the given node of the style tree.
+     *
+     * @param executionContext The current execution context
+     * @param sourceNode The source node selected.
+     * @param styleNode The node in the style tree reference for the event
+     * @param attributeName The attribute name where the XPath expression was supplied
+     * @param xpathExpression The XPath expression executed
+     * @param selection The result of evaluating the XPath
+     *
+     */
+    SelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            const XalanNode*                sourceNode,
+            const ElemTemplateElement&      styleNode,
+            const XalanDOMString&           attributeName,
+            const XalanDOMString&           xpathExpression,
+            const XObjectPtr                selection);
 
-	/**
-	 * Create an event originating at the given node of the style tree.
-	 *
-	 * @param executionContext The current execution context
-	 * @param sourceNode The source node selected.
-	 * @param styleNode The node in the style tree reference for the event
-	 * @param attributeName The attribute name where the XPath expression was supplied
-	 * @param xpath The XPath instance executed
-	 * @param selection The result of evaluating the XPath
-	 *
-	 */
-	SelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode*				sourceNode,
-			const ElemTemplateElement&		styleNode,
-			const XalanDOMString&			attributeName,
-			const XPath&					xpath,
-			bool							selection);
+    /**
+     * Create an event originating at the given node of the style tree.
+     *
+     * @param executionContext The current execution context
+     * @param sourceNode The source node selected.
+     * @param styleNode The node in the style tree reference for the event
+     * @param attributeName The attribute name where the XPath expression was supplied
+     * @param xpath The XPath instance executed
+     * @param selection The result of evaluating the XPath
+     *
+     */
+    SelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            const XalanNode*                sourceNode,
+            const ElemTemplateElement&      styleNode,
+            const XalanDOMString&           attributeName,
+            const XPath&                    xpath,
+            bool                            selection);
 
-	/**
-	 * Create an event originating at the given node of the style tree.
-	 *
-	 * @param executionContext The current execution context
-	 * @param sourceNode The source node selected.
-	 * @param styleNode The node in the style tree reference for the event
-	 * @param attributeName The attribute name where the XPath expression was supplied
-	 * @param xpath The XPath instance executed
-	 * @param selection The result of evaluating the XPath
-	 *
-	 */
-	SelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			const XalanNode*				sourceNode,
-			const ElemTemplateElement&		styleNode,
-			const XalanDOMString&			attributeName,
-			const XPath&					xpath,
-			const NodeRefListBase&			selection);
+    /**
+     * Create an event originating at the given node of the style tree.
+     *
+     * @param executionContext The current execution context
+     * @param sourceNode The source node selected.
+     * @param styleNode The node in the style tree reference for the event
+     * @param attributeName The attribute name where the XPath expression was supplied
+     * @param xpath The XPath instance executed
+     * @param selection The result of evaluating the XPath
+     *
+     */
+    SelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            const XalanNode*                sourceNode,
+            const ElemTemplateElement&      styleNode,
+            const XalanDOMString&           attributeName,
+            const XPath&                    xpath,
+            const NodeRefListBase&          selection);
 
-	virtual
-	~SelectionEvent();
+    virtual
+    ~SelectionEvent();
 
-	enum eSelectionType { eNone, eBoolean, eNodeSet, eUnknown };
+    enum eSelectionType { eNone, eBoolean, eNodeSet, eUnknown };
 
-	/**
-	 * The executionContext instance.
-	 */
-	const StylesheetExecutionContext&	m_executionContext;
+    /**
+     * The executionContext instance.
+     */
+    const StylesheetExecutionContext&   m_executionContext;
 
-	/**
-	 * The current context node.
-	 */
-	const XalanNode*					m_sourceNode;
+    /**
+     * The current context node.
+     */
+    const XalanNode*                    m_sourceNode;
   
-	/**
-	 * The node in the style tree where the event occurs.
-	 */
-	const ElemTemplateElement&			m_styleNode;
+    /**
+     * The node in the style tree where the event occurs.
+     */
+    const ElemTemplateElement&          m_styleNode;
 
-	/**
-	 * The attribute name from which the selection is made.
-	 */
-	const XalanDOMString&				m_attributeName;
+    /**
+     * The attribute name from which the selection is made.
+     */
+    const XalanDOMString&               m_attributeName;
 
-	/**
-	 * The XPath expression evaluated.
-	 */
-	const XalanDOMString&				m_xpathExpression;
+    /**
+     * The XPath expression evaluated.
+     */
+    const XalanDOMString&               m_xpathExpression;
   
-	/**
-	 * The result of the selection.  If it's null, m_sourceNode
-	 * was selected, or some specific type was selected.  See
-	 * the above enums.
-	 */
-	const XObjectPtr					m_selection;
+    /**
+     * The result of the selection.  If it's null, m_sourceNode
+     * was selected, or some specific type was selected.  See
+     * the above enums.
+     */
+    const XObjectPtr                    m_selection;
 
-	/**
-	 * The type of the selection.
-	 */
-	const eSelectionType				m_type;
+    /**
+     * The type of the selection.
+     */
+    const eSelectionType                m_type;
 
-	bool								m_boolean;
+    bool                                m_boolean;
 
-	const NodeRefListBase* const		m_nodeList;
+    const NodeRefListBase* const        m_nodeList;
 
 private:
 
-	// Unimplemented...
-	SelectionEvent&
-	operator=(const SelectionEvent&	other);
+    // Unimplemented...
+    SelectionEvent&
+    operator=(const SelectionEvent& other);
 };
 
 
@@ -183,4 +183,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	//XALAN_SelectionEvent_HEADER_GUARD
+#endif  //XALAN_SelectionEvent_HEADER_GUARD

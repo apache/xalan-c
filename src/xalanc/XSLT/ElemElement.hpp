@@ -42,97 +42,97 @@ class ElemElement: public ElemUse
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:element" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemElement(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber,
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:element" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemElement(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber,
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemElement();
+    virtual
+    ~ElemElement();
 
-	// These methods are inherited from ElemUse ...
+    // These methods are inherited from ElemUse ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&	executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&    executionContext) const;
 
-	virtual void
-	endElement(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    endElement(StylesheetExecutionContext&      executionContext) const;
 
-	virtual bool 
-	executeChildElement(
-			StylesheetExecutionContext& executionContext,
-			const ElemTemplateElement*	element) const;
+    virtual bool 
+    executeChildElement(
+            StylesheetExecutionContext& executionContext,
+            const ElemTemplateElement*  element) const;
 #else
-	virtual void 
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void 
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
 
 protected:
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	/** 
-	 * Process the children of a template.
-	 * 
-	 * @param executionContext The current execution context
-	 * @param skipAttributeChildren If true, attribute children will not be executed.
-	 */
-	virtual void
-	doExecuteChildren(
-			StylesheetExecutionContext&		executionContext,
-			bool							skipAttributeChildren) const;
+    /** 
+     * Process the children of a template.
+     * 
+     * @param executionContext The current execution context
+     * @param skipAttributeChildren If true, attribute children will not be executed.
+     */
+    virtual void
+    doExecuteChildren(
+            StylesheetExecutionContext&     executionContext,
+            bool                            skipAttributeChildren) const;
 #endif
 
-	virtual void
-	namespacesPostConstruction(
-			StylesheetConstructionContext&	constructionContext,
-			const NamespacesHandler&		theParentHandler,
-			NamespacesHandler&				theHandler);
+    virtual void
+    namespacesPostConstruction(
+            StylesheetConstructionContext&  constructionContext,
+            const NamespacesHandler&        theParentHandler,
+            NamespacesHandler&              theHandler);
 
 private:
 
-	/** 
-	 * Do any necessary fixup for the default namespace
-	 * 
-	 * @param executionContext The current execution context
-	 */
-	void
-	fixupDefaultNamespace(StylesheetExecutionContext&	executionContext) const;
+    /** 
+     * Do any necessary fixup for the default namespace
+     * 
+     * @param executionContext The current execution context
+     */
+    void
+    fixupDefaultNamespace(StylesheetExecutionContext&   executionContext) const;
 
-	/** 
-	 * Get the default namespace from the parent of this element.  Returns
-	 * an empty string if there's no default namespace.
-	 *
-	 * @return The default namespace of the parent, if any.
-	 */
-	const XalanDOMString&
-	getParentDefaultNamespace() const;
+    /** 
+     * Get the default namespace from the parent of this element.  Returns
+     * an empty string if there's no default namespace.
+     *
+     * @return The default namespace of the parent, if any.
+     */
+    const XalanDOMString&
+    getParentDefaultNamespace() const;
 
 
-	// not implemented
-	ElemElement(const ElemElement &);
+    // not implemented
+    ElemElement(const ElemElement &);
 
-	ElemElement&
-	operator=(const ElemElement &);
+    ElemElement&
+    operator=(const ElemElement &);
 
-	// Data members...
-	const AVT*				m_nameAVT;
+    // Data members...
+    const AVT*              m_nameAVT;
 
-	const AVT*				m_namespaceAVT;
+    const AVT*              m_namespaceAVT;
 };
 
 
@@ -141,4 +141,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMELEMENT_HEADER_GUARD
+#endif  // XALAN_ELEMELEMENT_HEADER_GUARD

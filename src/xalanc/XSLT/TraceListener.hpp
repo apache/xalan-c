@@ -37,83 +37,83 @@ class XALAN_XSLT_EXPORT TraceListener
 {
 public:
 
-	TraceListener();
+    TraceListener();
 
-	virtual
-	~TraceListener();
+    virtual
+    ~TraceListener();
 
-	/**
-	 * Method that is called when a trace event occurs. The method is blocking.
-	 * It must return before processing continues.
-	 *
-	 * @param ev trace event
-	 */
-	virtual void
-	trace(const TracerEvent&	ev) = 0;
+    /**
+     * Method that is called when a trace event occurs. The method is blocking.
+     * It must return before processing continues.
+     *
+     * @param ev trace event
+     */
+    virtual void
+    trace(const TracerEvent&    ev) = 0;
 
-	/**
-	 * Method that is called just after the formatter listener is called.
-	 *
-	 * @param ev generate event
-	 */
-	virtual void
-	selected(const SelectionEvent&	ev) = 0;
+    /**
+     * Method that is called just after the formatter listener is called.
+     *
+     * @param ev generate event
+     */
+    virtual void
+    selected(const SelectionEvent&  ev) = 0;
 
-	/**
-	 * Method that is called just after the formatter listener is called.
-	 *
-	 * @param ev generate event
-	 */
-	virtual void
-	generated(const GenerateEvent&	ev) = 0;
+    /**
+     * Method that is called just after the formatter listener is called.
+     *
+     * @param ev generate event
+     */
+    virtual void
+    generated(const GenerateEvent&  ev) = 0;
 
-	struct TraceListenerTraceFunctor
-	{
-		TraceListenerTraceFunctor(const TracerEvent&	theEvent) :
-			m_event(theEvent)
-		{
-		}
+    struct TraceListenerTraceFunctor
+    {
+        TraceListenerTraceFunctor(const TracerEvent&    theEvent) :
+            m_event(theEvent)
+        {
+        }
 
-		void
-		operator()(TraceListener*	theListener) const
-		{
-			theListener->trace(m_event);
-		}
+        void
+        operator()(TraceListener*   theListener) const
+        {
+            theListener->trace(m_event);
+        }
 
-		const TracerEvent&	m_event;
-	};
+        const TracerEvent&  m_event;
+    };
 
-	struct TraceListenerSelectFunctor
-	{
-		TraceListenerSelectFunctor(const SelectionEvent&		theEvent) :
-			m_event(theEvent)
-		{
-		}
+    struct TraceListenerSelectFunctor
+    {
+        TraceListenerSelectFunctor(const SelectionEvent&        theEvent) :
+            m_event(theEvent)
+        {
+        }
 
-		void
-		operator()(TraceListener*	theListener) const
-		{
-			theListener->selected(m_event);
-		}
+        void
+        operator()(TraceListener*   theListener) const
+        {
+            theListener->selected(m_event);
+        }
 
-		const SelectionEvent&	m_event;
-	};
+        const SelectionEvent&   m_event;
+    };
 
-	struct TraceListenerGenerateFunctor
-	{
-		TraceListenerGenerateFunctor(const GenerateEvent&	theEvent) :
-			m_event(theEvent)
-		{
-		}
+    struct TraceListenerGenerateFunctor
+    {
+        TraceListenerGenerateFunctor(const GenerateEvent&   theEvent) :
+            m_event(theEvent)
+        {
+        }
 
-		void
-		operator()(TraceListener*	theListener) const
-		{
-			theListener->generated(m_event);
-		}
+        void
+        operator()(TraceListener*   theListener) const
+        {
+            theListener->generated(m_event);
+        }
 
-		const GenerateEvent&	m_event;
-	};
+        const GenerateEvent&    m_event;
+    };
 
 };
 

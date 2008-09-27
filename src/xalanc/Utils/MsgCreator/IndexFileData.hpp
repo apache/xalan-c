@@ -66,14 +66,14 @@ static const char* szStartIndexFile[]=
 "{ \n",
 "public : \n",
 "    enum Codes \n",
-"	{ \n",
+"   { \n",
 "      ",
 0
 };
 
 static const char* szEndIndexFile[]=
 {
-"	};\n",
+"   };\n",
 "\n",
 "\n",
 "};\n",

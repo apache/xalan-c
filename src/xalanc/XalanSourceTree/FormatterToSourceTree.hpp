@@ -58,183 +58,183 @@ class XALAN_XALANSOURCETREE_EXPORT FormatterToSourceTree : public FormatterListe
 {
 public:
 
-	typedef XalanVector<XalanSourceTreeElement*>			ElementStackType;
-	typedef XalanVector<XalanNode*> 						LastChildStackType;
+    typedef XalanVector<XalanSourceTreeElement*>            ElementStackType;
+    typedef XalanVector<XalanNode*>                         LastChildStackType;
 
-	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
+    enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
 
-	/**
-	 * Perform static initialization.  See class XalanSourceTreeInit.
-	 */
-	static void
-	initialize(MemoryManager& theManager);
+    /**
+     * Perform static initialization.  See class XalanSourceTreeInit.
+     */
+    static void
+    initialize(MemoryManager& theManager);
 
-	/**
-	 * Perform static shut down.  See class XalanSourceTreeInit.
-	 */
-	static void
-	terminate();
+    /**
+     * Perform static shut down.  See class XalanSourceTreeInit.
+     */
+    static void
+    terminate();
 
 
-	/**
-	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
-	 * to the document.
-	 *
-	 * @param theDocument The document for nodes
-	 */
-	explicit
-	FormatterToSourceTree(
+    /**
+     * Construct a FormatterToSourceTree instance.  it will add the nodes 
+     * to the document.
+     *
+     * @param theDocument The document for nodes
+     */
+    explicit
+    FormatterToSourceTree(
             MemoryManager&          theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR,
-            XalanSourceTreeDocument*	theDocument = 0);
+            XalanSourceTreeDocument*    theDocument = 0);
 
-	/**
-	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
-	 * to the document fragment.
-	 *
-	 * @param theDocument The document for nodes
-	 * @param theDocumentFragment The document fragment for nodes
-	 */
-	FormatterToSourceTree(
-			XalanSourceTreeDocument*			theDocument,
-			XalanSourceTreeDocumentFragment*	theDocumentFragment,
+    /**
+     * Construct a FormatterToSourceTree instance.  it will add the nodes 
+     * to the document fragment.
+     *
+     * @param theDocument The document for nodes
+     * @param theDocumentFragment The document fragment for nodes
+     */
+    FormatterToSourceTree(
+            XalanSourceTreeDocument*            theDocument,
+            XalanSourceTreeDocumentFragment*    theDocumentFragment,
             MemoryManager&                  theManager XALAN_DEFAULT_MEMMGR);
 
-	virtual
-	~FormatterToSourceTree();
+    virtual
+    ~FormatterToSourceTree();
 
 
-	XalanSourceTreeDocument*
-	getDocument() const
-	{
-		return m_document;
-	}
+    XalanSourceTreeDocument*
+    getDocument() const
+    {
+        return m_document;
+    }
 
-	void
-	setDocument(XalanSourceTreeDocument*	theDocument)
-	{
-		m_document = theDocument;
-	}
+    void
+    setDocument(XalanSourceTreeDocument*    theDocument)
+    {
+        m_document = theDocument;
+    }
 
-	XalanSourceTreeDocumentFragment*
-	getDocumentFragment() const
-	{
-		return m_documentFragment;
-	}
+    XalanSourceTreeDocumentFragment*
+    getDocumentFragment() const
+    {
+        return m_documentFragment;
+    }
 
-	void
-	setDocumentFragment(XalanSourceTreeDocumentFragment*	theDocumentFragment)
-	{
-		m_documentFragment = theDocumentFragment;
-	}
+    void
+    setDocumentFragment(XalanSourceTreeDocumentFragment*    theDocumentFragment)
+    {
+        m_documentFragment = theDocumentFragment;
+    }
 
-	XalanSourceTreeElement*
-	getCurrentElement() const
-	{
-		return m_currentElement;
-	}
+    XalanSourceTreeElement*
+    getCurrentElement() const
+    {
+        return m_currentElement;
+    }
 
-	void
-	setCurrentElement(XalanSourceTreeElement*	theElement)
-	{
-		m_currentElement = theElement;
-	}
+    void
+    setCurrentElement(XalanSourceTreeElement*   theElement)
+    {
+        m_currentElement = theElement;
+    }
 
-	// These methods are inherited from DocumentHandler ...
+    // These methods are inherited from DocumentHandler ...
 
-	virtual void
-	charactersRaw(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const size_type     length);
 
-	virtual void
-	comment(const XMLCh* const	data);
+    virtual void
+    comment(const XMLCh* const  data);
 
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const size_type 	length);
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const size_type     length);
 
-	virtual void
-	entityReference(const XMLCh* const	name);
+    virtual void
+    entityReference(const XMLCh* const  name);
 
-	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
+    virtual void
+    setDocumentLocator(const LocatorType* const     locator);
 
-	virtual void
-	startDocument();
+    virtual void
+    startDocument();
 
-	virtual void
-	endDocument();
+    virtual void
+    endDocument();
 
-	virtual void
-	startElement(
-				const XMLCh* const	name,
-				AttributeListType&	attrs);
+    virtual void
+    startElement(
+                const XMLCh* const  name,
+                AttributeListType&  attrs);
 
-	virtual void
-	endElement(const XMLCh* const	name);
+    virtual void
+    endElement(const XMLCh* const   name);
 
-	virtual void
-	characters(
-				const XMLCh* const	chars,
-				const size_type	    length);
+    virtual void
+    characters(
+                const XMLCh* const  chars,
+                const size_type     length);
 
-	virtual void
-	ignorableWhitespace(
-				const XMLCh* const	chars,
-				const size_type	    length);
+    virtual void
+    ignorableWhitespace(
+                const XMLCh* const  chars,
+                const size_type     length);
 
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
+    virtual void
+    processingInstruction(
+            const XMLCh* const  target,
+            const XMLCh* const  data);
 
-	virtual void
-	resetDocument();
+    virtual void
+    resetDocument();
 
 private:
 
-	// Some utility functions...
-	void
-	processAccumulatedText();
+    // Some utility functions...
+    void
+    processAccumulatedText();
 
-	XalanSourceTreeElement*
-	createElementNode(
-			const XalanDOMChar*			name,
-			AttributeListType&			attrs,
-			XalanSourceTreeElement*		theParentElement);
+    XalanSourceTreeElement*
+    createElementNode(
+            const XalanDOMChar*         name,
+            AttributeListType&          attrs,
+            XalanSourceTreeElement*     theParentElement);
 
-	void
-	doCharacters(
-			const XalanDOMChar*		chars,
-			size_type	            length);
+    void
+    doCharacters(
+            const XalanDOMChar*     chars,
+            size_type               length);
 
-	void
-	doProcessingInstruction(
-			const XalanDOMChar*		target,
-			const XalanDOMChar*		data);
+    void
+    doProcessingInstruction(
+            const XalanDOMChar*     target,
+            const XalanDOMChar*     data);
 
 
-	// Data members...
-	XalanSourceTreeDocument*			m_document;
+    // Data members...
+    XalanSourceTreeDocument*            m_document;
 
-	XalanSourceTreeDocumentFragment*	m_documentFragment;
+    XalanSourceTreeDocumentFragment*    m_documentFragment;
 
-	XalanSourceTreeElement*				m_currentElement;
+    XalanSourceTreeElement*             m_currentElement;
 
-	ElementStackType					m_elementStack;
+    ElementStackType                    m_elementStack;
 
-	// The last child appended to the current element.  This is
-	// an important optimization, because XalanSourceTreeElement
-	// does not have a pointer to it's last child.  Without this,
-	// appending a child becomes a linear search.
-	XalanNode* 							m_lastChild;
+    // The last child appended to the current element.  This is
+    // an important optimization, because XalanSourceTreeElement
+    // does not have a pointer to it's last child.  Without this,
+    // appending a child becomes a linear search.
+    XalanNode*                          m_lastChild;
 
-	// Stack of last children appended.  There is a one-to-one
-	// correspondance to the entries in m_elementStack.
-	LastChildStackType					m_lastChildStack;
+    // Stack of last children appended.  There is a one-to-one
+    // correspondance to the entries in m_elementStack.
+    LastChildStackType                  m_lastChildStack;
 
-	XalanDOMString						m_textBuffer;
+    XalanDOMString                      m_textBuffer;
 };
 
 
@@ -243,4 +243,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FORMATTERTOSOURCETREE_HEADER_GUARD_1357924680
+#endif  // FORMATTERTOSOURCETREE_HEADER_GUARD_1357924680

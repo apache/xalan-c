@@ -43,66 +43,66 @@ class ElemValueOf : public ElemTemplateElement
 {
 public:
 
-	/**
-	 * Construct an object corresponding to an "xsl:value-of" element
-	 * 
-	 * @param constructionContext context for construction of object
-	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
-	 * @param columnNumber			column number in document
-	 */
-	ElemValueOf(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			const AttributeListType&		atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber);
+    /**
+     * Construct an object corresponding to an "xsl:value-of" element
+     * 
+     * @param constructionContext context for construction of object
+     * @param stylesheetTree      stylesheet containing element
+     * @param atts                list of attributes for element
+     * @param lineNumber                line number in document
+     * @param columnNumber          column number in document
+     */
+    ElemValueOf(
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            const AttributeListType&        atts,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber);
 
-	virtual
-	~ElemValueOf();
+    virtual
+    ~ElemValueOf();
 
-	// These methods are inherited from ElemTemplateElement ...
+    // These methods are inherited from ElemTemplateElement ...
 
-	virtual const XalanDOMString&
-	getElementName() const;
+    virtual const XalanDOMString&
+    getElementName() const;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	virtual const ElemTemplateElement*
-	startElement(StylesheetExecutionContext&		executionContext) const;
+    virtual const ElemTemplateElement*
+    startElement(StylesheetExecutionContext&        executionContext) const;
 #else
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
+    virtual void
+    execute(StylesheetExecutionContext&     executionContext) const;
 #endif
-	virtual	const XPath*
-	getXPath(XalanSize_t    index) const;
+    virtual const XPath*
+    getXPath(XalanSize_t    index) const;
 
 private:
 
-	void
-	fireSelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const XalanDOMString&			theValue) const;
+    void
+    fireSelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            XalanNode*                      sourceNode,
+            const XalanDOMString&           theValue) const;
 
-	void
-	fireSelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const XObjectPtr				theValue) const;
+    void
+    fireSelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            XalanNode*                      sourceNode,
+            const XObjectPtr                theValue) const;
 
-	void
-	fireSelectionEvent(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
-			const XObjectPtr				theValue,
-			const XalanDOMString&			thePattern) const;
+    void
+    fireSelectionEvent(
+            StylesheetExecutionContext&     executionContext,
+            XalanNode*                      sourceNode,
+            const XObjectPtr                theValue,
+            const XalanDOMString&           thePattern) const;
 
 
-	/**
-	 * The select pattern used to locate the value.
-	 */
-	const XPath*	m_selectPattern;
+    /**
+     * The select pattern used to locate the value.
+     */
+    const XPath*    m_selectPattern;
 };
 
 
@@ -111,4 +111,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_ELEMVALUEOF_HEADER_GUARD
+#endif  // XALAN_ELEMVALUEOF_HEADER_GUARD

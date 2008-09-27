@@ -45,100 +45,100 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringCache
 {
 public:
 
-	enum { eDefaultMaximumSize = 100u };
+    enum { eDefaultMaximumSize = 100u };
 
-	typedef XalanVector<XalanDOMString*>	StringListType;
+    typedef XalanVector<XalanDOMString*>    StringListType;
 
-	explicit
-	XalanDOMStringCache(
+    explicit
+    XalanDOMStringCache(
             MemoryManager&  theManager,
-            XalanSize_t	        theMaximumSize = eDefaultMaximumSize);
+            XalanSize_t         theMaximumSize = eDefaultMaximumSize);
 
-	~XalanDOMStringCache();
+    ~XalanDOMStringCache();
 
-	XalanSize_t
-	getMaximumSize() const
-	{
-		return m_maximumSize;
-	}
+    XalanSize_t
+    getMaximumSize() const
+    {
+        return m_maximumSize;
+    }
 
-	void
-	setMaximumSize(XalanSize_t	theSize)
-	{
-		m_maximumSize = theSize;
-	}
+    void
+    setMaximumSize(XalanSize_t  theSize)
+    {
+        m_maximumSize = theSize;
+    }
 
-	XalanDOMString&
-	get();
+    XalanDOMString&
+    get();
 
-	bool
-	release(XalanDOMString&		theString);
+    bool
+    release(XalanDOMString&     theString);
 
-	/*
-	 * Clear all of the strings in the cache.  This
-	 * destroys all of the strings.
-	 *
-	 */
-	void
-	clear();
+    /*
+     * Clear all of the strings in the cache.  This
+     * destroys all of the strings.
+     *
+     */
+    void
+    clear();
 
-	/*
-	 * Reset the cache so that all strings that are
-	 * currently in use are available.
-	 */
-	void
-	reset();
+    /*
+     * Reset the cache so that all strings that are
+     * currently in use are available.
+     */
+    void
+    reset();
 
-	class GetAndRelease
-	{
-	public:
+    class GetAndRelease
+    {
+    public:
 
-		GetAndRelease(XalanDOMStringCache&	theCache) :
-			m_cache(theCache),
-			m_string(&theCache.get())
-		{
-		}
+        GetAndRelease(XalanDOMStringCache&  theCache) :
+            m_cache(theCache),
+            m_string(&theCache.get())
+        {
+        }
 
-		~GetAndRelease()
-		{
-			m_cache.release(*m_string);
-		}
+        ~GetAndRelease()
+        {
+            m_cache.release(*m_string);
+        }
 
-		XalanDOMString&
-		get() const
-		{
-			return *m_string;
-		}
+        XalanDOMString&
+        get() const
+        {
+            return *m_string;
+        }
 
-	private:
+    private:
 
-		XalanDOMStringCache&	m_cache;
+        XalanDOMStringCache&    m_cache;
 
-		XalanDOMString* const	m_string;
-	};
+        XalanDOMString* const   m_string;
+    };
 
 private:
 
-	// not implemented
-	XalanDOMStringCache(const XalanDOMStringCache&);
+    // not implemented
+    XalanDOMStringCache(const XalanDOMStringCache&);
 
-	bool
-	operator==(const XalanDOMStringCache&) const;
+    bool
+    operator==(const XalanDOMStringCache&) const;
 
-	XalanDOMStringCache&
-	operator=(const XalanDOMStringCache&);
+    XalanDOMStringCache&
+    operator=(const XalanDOMStringCache&);
 
-	/**
-	 * A list to hold the strings that are available...
-	 */
-	StringListType	                    m_availableList;
+    /**
+     * A list to hold the strings that are available...
+     */
+    StringListType                      m_availableList;
 
-	/**
-	 * A list to hold the strings that are busy...
-	 */
-	StringListType	                    m_busyList;
+    /**
+     * A list to hold the strings that are busy...
+     */
+    StringListType                      m_busyList;
 
-	XalanSize_t	                        m_maximumSize;
+    XalanSize_t                         m_maximumSize;
 
     XalanDOMStringReusableAllocator     m_allocator;
 };
@@ -149,4 +149,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD
+#endif  // XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD

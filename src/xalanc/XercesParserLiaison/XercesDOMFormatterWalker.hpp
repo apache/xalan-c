@@ -40,30 +40,30 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMFormatterWalker : public XercesD
 {
 public:
 
-	typedef XercesDOMWalker		ParentType;
+    typedef XercesDOMWalker     ParentType;
 
-	/**
-	 * Constructor.
-	 */
-	XercesDOMFormatterWalker(FormatterListener&		theFormatterListener);
+    /**
+     * Constructor.
+     */
+    XercesDOMFormatterWalker(FormatterListener&     theFormatterListener);
 
-	virtual
-	~XercesDOMFormatterWalker();
+    virtual
+    ~XercesDOMFormatterWalker();
 
 protected:
 
-	virtual bool
-	startNode(const DOMNodeType*	node);
+    virtual bool
+    startNode(const DOMNodeType*    node);
 
-	virtual bool
-	endNode(const DOMNodeType*	node);
+    virtual bool
+    endNode(const DOMNodeType*  node);
 
-	using ParentType::startNode;
-	using ParentType::endNode;
+    using ParentType::startNode;
+    using ParentType::endNode;
 
 private:
 
-	FormatterListener&	m_formatterListener;
+    FormatterListener&  m_formatterListener;
 
 
 };
@@ -74,4 +74,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XERCESDOMFORMATTERWALKER_HEADER_GUARD_1357924680
+#endif  // XERCESDOMFORMATTERWALKER_HEADER_GUARD_1357924680

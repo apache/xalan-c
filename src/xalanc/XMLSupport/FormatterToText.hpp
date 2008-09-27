@@ -50,49 +50,49 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToText : public FormatterListener
 {
 public:
 
-	/**
-	 * FormatterToText instance constructor.
-	 */
-	FormatterToText(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    /**
+     * FormatterToText instance constructor.
+     */
+    FormatterToText(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * FormatterToText instance constructor.
-	 *
-	 * @param writer writer for output
-	 * @param normalizeLindefeed Normalize \n or \r\n (on certain platforms).
-	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
-	 */
-	FormatterToText(
-			Writer&		        writer,
-			bool		        normalizeLinefeed = true,
-			bool		        handleIgnorableWhitespace = true,
+    /**
+     * FormatterToText instance constructor.
+     *
+     * @param writer writer for output
+     * @param normalizeLindefeed Normalize \n or \r\n (on certain platforms).
+     * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
+     */
+    FormatterToText(
+            Writer&             writer,
+            bool                normalizeLinefeed = true,
+            bool                handleIgnorableWhitespace = true,
             MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
-	/**
-	 * FormatterToText instance constructor.
-	 *
-	 * @param writer writer for output
-	 * @param encoding character encoding for the writer
-	 * @param normalizeLindefeed Normalize \n or \r\n on certain platforms.
-	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
-	 */
-	FormatterToText(
-			Writer&					writer,
-			const XalanDOMString&	encoding,
-			bool					normalizeLinefeed = true,
-			bool					handleIgnorableWhitespace = true,
+    /**
+     * FormatterToText instance constructor.
+     *
+     * @param writer writer for output
+     * @param encoding character encoding for the writer
+     * @param normalizeLindefeed Normalize \n or \r\n on certain platforms.
+     * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
+     */
+    FormatterToText(
+            Writer&                 writer,
+            const XalanDOMString&   encoding,
+            bool                    normalizeLinefeed = true,
+            bool                    handleIgnorableWhitespace = true,
             MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
-	static FormatterToText*
+    static FormatterToText*
     create(
             MemoryManager&      theManager,
-			Writer&					writer,
-			const XalanDOMString&	encoding,
-			bool					normalizeLinefeed = true,
-			bool					handleIgnorableWhitespace = true);
+            Writer&                 writer,
+            const XalanDOMString&   encoding,
+            bool                    normalizeLinefeed = true,
+            bool                    handleIgnorableWhitespace = true);
 
-	virtual
-	~FormatterToText();
+    virtual
+    ~FormatterToText();
 
     MemoryManager&
     getMemoryManager()
@@ -100,158 +100,158 @@ public:
         return m_encoding.getMemoryManager();
     }
 
-	Writer*
-	getWriter() const
-	{
-		return m_writer;
-	}
+    Writer*
+    getWriter() const
+    {
+        return m_writer;
+    }
 
-	void
-	setWriter(Writer*	theWriter)
-	{
-		m_writer = theWriter;
+    void
+    setWriter(Writer*   theWriter)
+    {
+        m_writer = theWriter;
 
-		update(false);
-	}
+        update(false);
+    }
 
-	void
-	clearEncoding();
+    void
+    clearEncoding();
 
-	const XalanDOMString&
-	getEncoding() const
-	{
-		return m_encoding;
-	}
+    const XalanDOMString&
+    getEncoding() const
+    {
+        return m_encoding;
+    }
 
-	void
-	setEncoding(const XalanDOMString&	theEncoding)
-	{
-		m_encoding = theEncoding;
+    void
+    setEncoding(const XalanDOMString&   theEncoding)
+    {
+        m_encoding = theEncoding;
 
-		update(false);
-	}
+        update(false);
+    }
 
-	XalanDOMChar
-	getMaxCharacter() const
-	{
-		return m_maxCharacter;
-	}
+    XalanDOMChar
+    getMaxCharacter() const
+    {
+        return m_maxCharacter;
+    }
 
-	void
-	setMaxCharacter(XalanDOMChar	theMaxChar)
-	{
-		m_maxCharacter = theMaxChar;
-	}
+    void
+    setMaxCharacter(XalanDOMChar    theMaxChar)
+    {
+        m_maxCharacter = theMaxChar;
+    }
 
-	bool
-	getNormalizeLinefeed() const
-	{
-		return m_normalize;
-	}
+    bool
+    getNormalizeLinefeed() const
+    {
+        return m_normalize;
+    }
 
-	void
-	setNormalizeLinefeed(bool	fNormalize)
-	{
-		m_normalize = fNormalize;
-	}
+    void
+    setNormalizeLinefeed(bool   fNormalize)
+    {
+        m_normalize = fNormalize;
+    }
 
-	bool
-	getHandleIgnorableWhitespace() const
-	{
-		return m_handleIgnorableWhitespace;
-	}
+    bool
+    getHandleIgnorableWhitespace() const
+    {
+        return m_handleIgnorableWhitespace;
+    }
 
-	void
-	setHandleIgnorableWhitespace(bool	fHandle)
-	{
-		m_handleIgnorableWhitespace = fHandle;
-	}
+    void
+    setHandleIgnorableWhitespace(bool   fHandle)
+    {
+        m_handleIgnorableWhitespace = fHandle;
+    }
 
-	// These methods are inherited from FormatterListener ...
-
-	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
-
-	virtual void
-	startDocument();
-
-	virtual void
-	endDocument();
-
-	virtual void
-	startElement(
-			const XMLCh* const	name,
-			AttributeListType&	attrs);
+    // These methods are inherited from FormatterListener ...
 
     virtual void
-	endElement(const XMLCh* const	name);
+    setDocumentLocator(const LocatorType* const     locator);
 
     virtual void
-	characters(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    startDocument();
 
     virtual void
-	charactersRaw(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    endDocument();
 
-	virtual void
-	entityReference(const XMLCh* const	name);
+    virtual void
+    startElement(
+            const XMLCh* const  name,
+            AttributeListType&  attrs);
 
-	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	chars,
-			const size_type	    length);
+    virtual void
+    endElement(const XMLCh* const   name);
 
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
+    virtual void
+    characters(
+            const XMLCh* const  chars,
+            const size_type     length);
 
-	virtual void
-	resetDocument();
+    virtual void
+    charactersRaw(
+            const XMLCh* const  chars,
+            const size_type     length);
 
-	virtual void
-	comment(const XMLCh* const	data);
+    virtual void
+    entityReference(const XMLCh* const  name);
 
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const size_type 	length);
+    virtual void
+    ignorableWhitespace(
+            const XMLCh* const  chars,
+            const size_type     length);
+
+    virtual void
+    processingInstruction(
+            const XMLCh* const  target,
+            const XMLCh* const  data);
+
+    virtual void
+    resetDocument();
+
+    virtual void
+    comment(const XMLCh* const  data);
+
+    virtual void
+    cdata(
+            const XMLCh* const  ch,
+            const size_type     length);
 
 private:
 
-	// These are not implemented.
-	FormatterToText(const FormatterToText&);
+    // These are not implemented.
+    FormatterToText(const FormatterToText&);
 
-	FormatterToText&
-	operator=(const FormatterToText&);
+    FormatterToText&
+    operator=(const FormatterToText&);
 
-	bool
-	operator==(const FormatterToText&) const;
+    bool
+    operator==(const FormatterToText&) const;
 
-	// Utility function to update various member variables
-	// when data changes.
-	void
-	update(bool	fNormalizationOnly);
+    // Utility function to update various member variables
+    // when data changes.
+    void
+    update(bool fNormalizationOnly);
 
-	// Data members...
-	Writer*			m_writer;
+    // Data members...
+    Writer*         m_writer;
 
-	XalanDOMChar	m_maxCharacter;
+    XalanDOMChar    m_maxCharacter;
 
-	XalanDOMString	m_encoding;
+    XalanDOMString  m_encoding;
 
-	bool			m_haveEncoding;
+    bool            m_haveEncoding;
 
-	bool			m_normalize;
+    bool            m_normalize;
 
-	bool			m_handleIgnorableWhitespace;
+    bool            m_handleIgnorableWhitespace;
 
-	const XalanDOMChar*			m_newlineString;
+    const XalanDOMChar*         m_newlineString;
 
-	XalanDOMString::size_type	m_newlineStringLength;
+    XalanDOMString::size_type   m_newlineStringLength;
 };
 
 
@@ -260,4 +260,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FORMATTERTOTEXT_HEADER_GUARD_1357924680
+#endif  // FORMATTERTOTEXT_HEADER_GUARD_1357924680

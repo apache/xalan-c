@@ -36,51 +36,51 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XalanVector<UChar>	UCharVectorType;
+typedef XalanVector<UChar>  UCharVectorType;
 
 
 
 // Use a stack-based buffer up to this size.
-const XalanSize_t	theStackBufferSize = 200u;
+const XalanSize_t   theStackBufferSize = 200u;
 
 
 
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(
             MemoryManager&      theManager,
-            const XalanDOMChar*	    theString)
+            const XalanDOMChar*     theString)
 {
-	if (theString == 0)
-	{
-		return UnicodeString();
-	}
-	else
-	{
-		return XalanDOMCharStringToUnicodeString(theManager, theString, length(theString));
-	}
+    if (theString == 0)
+    {
+        return UnicodeString();
+    }
+    else
+    {
+        return XalanDOMCharStringToUnicodeString(theManager, theString, length(theString));
+    }
 }
 
 
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(
             MemoryManager&        /*  theManager */,
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength)
 {
-	assert(theString != 0);
+    assert(theString != 0);
 
-	if (theLength == 0)
-	{
-		return UnicodeString();
-	}
-	else
-	{
+    if (theLength == 0)
+    {
+        return UnicodeString();
+    }
+    else
+    {
         assert(theLength == static_cast<int32_t>(theLength));
 
         return UnicodeString(
                     theString,
                     static_cast<int32_t>(theLength));
-	}
+    }
 }
 
 
@@ -90,47 +90,47 @@ ICUBridge::XalanDOMStringToUnicodeString(
             MemoryManager&      theManager,
             const XalanDOMString&   theString)
 {
-	// Just call up to the XalanDOMChar* version...
-	return XalanDOMCharStringToUnicodeString(theManager, theString.c_str(), theString.length());
+    // Just call up to the XalanDOMChar* version...
+    return XalanDOMCharStringToUnicodeString(theManager, theString.c_str(), theString.length());
 }
 
 
 
 XalanDOMString&
 ICUBridge::UnicodeStringToXalanDOMString(
-            const UnicodeString&	theString,
+            const UnicodeString&    theString,
             XalanDOMString&         theResult)
 {
-	const int32_t	theLength = theString.length();
+    const int32_t   theLength = theString.length();
 
-	if (theStackBufferSize > theLength)
-	{
-		UChar	theBuffer[theStackBufferSize];
+    if (theStackBufferSize > theLength)
+    {
+        UChar   theBuffer[theStackBufferSize];
 
-		// Extract the data...
-		theString.extract(0, theLength, theBuffer);
+        // Extract the data...
+        theString.extract(0, theLength, theBuffer);
 
         theResult.assign(theBuffer, theLength);
 
-		return theResult;
-	}
-	else
-	{
-		// Create a buffer to copy out the UnicodeString data...
-        UCharVectorType		theBuffer(theResult.getMemoryManager());
+        return theResult;
+    }
+    else
+    {
+        // Create a buffer to copy out the UnicodeString data...
+        UCharVectorType     theBuffer(theResult.getMemoryManager());
 
-		// Resize the buffer appropriately...
-		theBuffer.resize(theLength);
+        // Resize the buffer appropriately...
+        theBuffer.resize(theLength);
 
-		// Extract the data...
-		theString.extract(0, theLength, &theBuffer[0]);
+        // Extract the data...
+        theString.extract(0, theLength, &theBuffer[0]);
 
-		assert(theLength == int32_t(theBuffer.size()));
+        assert(theLength == int32_t(theBuffer.size()));
 
         theResult.assign(&theBuffer[0], theLength);
 
-		return theResult;
-	}
+        return theResult;
+    }
 }
 
 

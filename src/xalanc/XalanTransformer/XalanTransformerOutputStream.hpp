@@ -39,47 +39,47 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformerOutputStream : public XalanOutput
 {
 public:
 
-	/**
-	 * Construct a XalanTransformerOutputStream instance for output to a
-	 * user defined (callback) function.
-	 *
-	 * @param theOutputHandle	void pointer passed through to callback.
-	 * @param theOutputHandler	a user defined (callback) function.
-	 * @param theFlushHandler	a user defined (callback) function.
-	 */
+    /**
+     * Construct a XalanTransformerOutputStream instance for output to a
+     * user defined (callback) function.
+     *
+     * @param theOutputHandle   void pointer passed through to callback.
+     * @param theOutputHandler  a user defined (callback) function.
+     * @param theFlushHandler   a user defined (callback) function.
+     */
     XalanTransformerOutputStream(
         MemoryManager&          theManager,
-		void*						theOutputHandle, 
-		XalanOutputHandlerType		theOutputHandler,
-		XalanFlushHandlerType		theFlushHandler = 0);
+        void*                       theOutputHandle, 
+        XalanOutputHandlerType      theOutputHandler,
+        XalanFlushHandlerType       theFlushHandler = 0);
 
 
     virtual
-	~XalanTransformerOutputStream();
+    ~XalanTransformerOutputStream();
 
 protected:
 
-	virtual void
-	writeData(
-			const char*		    theBuffer,
-			size_type		    theBufferLength);
+    virtual void
+    writeData(
+            const char*         theBuffer,
+            size_type           theBufferLength);
 
-	virtual void
-	doFlush();
+    virtual void
+    doFlush();
 
-private:	
-	
+private:    
+    
     // These are not implemented...
     XalanTransformerOutputStream(const XalanTransformerOutputStream&);
 
     XalanTransformerOutputStream&
-	operator=(const XalanTransformerOutputStream&);
+    operator=(const XalanTransformerOutputStream&);
 
-	void* const				m_outputHandle;
+    void* const             m_outputHandle;
 
-	XalanOutputHandlerType	m_outputHandler;
+    XalanOutputHandlerType  m_outputHandler;
 
-	XalanFlushHandlerType	m_flushHandler;
+    XalanFlushHandlerType   m_flushHandler;
 };
 
 
@@ -88,6 +88,6 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANTRANSFORMEROUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // XALANTRANSFORMEROUTPUTSTREAM_HEADER_GUARD_1357924680
 
 

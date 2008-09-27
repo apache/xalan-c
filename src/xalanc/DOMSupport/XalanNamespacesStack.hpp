@@ -46,341 +46,341 @@ class XALAN_DOMSUPPORT_EXPORT XalanNamespacesStack
 {
 public:
 
-	class XALAN_DOMSUPPORT_EXPORT PrefixResolverProxy : public PrefixResolver
-	{
-	public:
+    class XALAN_DOMSUPPORT_EXPORT PrefixResolverProxy : public PrefixResolver
+    {
+    public:
 
-		/**
-		 * Construct a PrefixResolver from a XalanNamespaceStack
-		 * instance.
-		 *
-		 * @param theStack The stack to use for prefix resolution
-		 * @param theURI The namespace URI of the resolver, if any.  Only a reference is kept, so this cannot be a temporary
-		 * @return pointer to the string value if found, otherwise 0.
-		 */
-		PrefixResolverProxy(
-				const XalanNamespacesStack&		theStack,
-				const XalanDOMString&			theURI);
+        /**
+         * Construct a PrefixResolver from a XalanNamespaceStack
+         * instance.
+         *
+         * @param theStack The stack to use for prefix resolution
+         * @param theURI The namespace URI of the resolver, if any.  Only a reference is kept, so this cannot be a temporary
+         * @return pointer to the string value if found, otherwise 0.
+         */
+        PrefixResolverProxy(
+                const XalanNamespacesStack&     theStack,
+                const XalanDOMString&           theURI);
 
-		virtual
-		~PrefixResolverProxy();
+        virtual
+        ~PrefixResolverProxy();
 
-		virtual const XalanDOMString*
-		getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+        virtual const XalanDOMString*
+        getNamespaceForPrefix(const XalanDOMString&     prefix) const;
 
-		virtual const XalanDOMString&
-		getURI() const;
+        virtual const XalanDOMString&
+        getURI() const;
 
-	private:
+    private:
 
-		const XalanNamespacesStack&		m_stack;
+        const XalanNamespacesStack&     m_stack;
 
-		const XalanDOMString&			m_uri;
-	};
+        const XalanDOMString&           m_uri;
+    };
 
-	class XALAN_DOMSUPPORT_EXPORT XalanNamespacesStackEntry
-	{
-	public:
+    class XALAN_DOMSUPPORT_EXPORT XalanNamespacesStackEntry
+    {
+    public:
 
-		typedef XalanNamespace	value_type;
+        typedef XalanNamespace  value_type;
 
-        typedef	XalanDeque<value_type>	NamespaceCollectionType;
+        typedef XalanDeque<value_type>  NamespaceCollectionType;
 
-		typedef const XalanDOMString& (value_type::*MemberFunctionType)() const;
+        typedef const XalanDOMString& (value_type::*MemberFunctionType)() const;
 
-		typedef NamespaceCollectionType::iterator					iterator;
-		typedef NamespaceCollectionType::reverse_iterator			reverse_iterator;
-		typedef NamespaceCollectionType::const_iterator				const_iterator;
-		typedef NamespaceCollectionType::const_reverse_iterator		const_reverse_iterator;
+        typedef NamespaceCollectionType::iterator                   iterator;
+        typedef NamespaceCollectionType::reverse_iterator           reverse_iterator;
+        typedef NamespaceCollectionType::const_iterator             const_iterator;
+        typedef NamespaceCollectionType::const_reverse_iterator     const_reverse_iterator;
 
-		XalanNamespacesStackEntry(MemoryManager& theManager);
+        XalanNamespacesStackEntry(MemoryManager& theManager);
 
-		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource,
+        XalanNamespacesStackEntry(const XalanNamespacesStackEntry&  theSource,
                                     MemoryManager&              theManager);
 
-		~XalanNamespacesStackEntry();
+        ~XalanNamespacesStackEntry();
 
-		XalanNamespacesStackEntry&
-		set(const XalanNamespacesStackEntry&	theRHS,
+        XalanNamespacesStackEntry&
+        set(const XalanNamespacesStackEntry&    theRHS,
                   MemoryManager&                theManager);
 
-		void
-		addDeclaration(
-				const XalanDOMString&		thePrefix,
-				const XalanDOMChar*			theNamespaceURI,
-				XalanDOMString::size_type	theLength);
+        void
+        addDeclaration(
+                const XalanDOMString&       thePrefix,
+                const XalanDOMChar*         theNamespaceURI,
+                XalanDOMString::size_type   theLength);
 
-		/**
-		 * Get the namespace for a prefix.
-		 *
-		 * @param thePrefix The prefix to find
-		 * @return pointer to the string value if found, otherwise 0.
-		 */
-		const XalanDOMString*
-		getNamespaceForPrefix(const XalanDOMString&		thePrefix) const
-		{
-			return findEntry(thePrefix, &XalanNamespace::getPrefix, &XalanNamespace::getURI);
-		}
+        /**
+         * Get the namespace for a prefix.
+         *
+         * @param thePrefix The prefix to find
+         * @return pointer to the string value if found, otherwise 0.
+         */
+        const XalanDOMString*
+        getNamespaceForPrefix(const XalanDOMString&     thePrefix) const
+        {
+            return findEntry(thePrefix, &XalanNamespace::getPrefix, &XalanNamespace::getURI);
+        }
 
-		/**
-		 * Get the prefix for a namespace.
-		 *
-		 * @param theURI The namespace URI to find
-		 * @return pointer to the string value if found, otherwise 0.
-		 */
-		const XalanDOMString*
-		getPrefixForNamespace(const XalanDOMString&		theURI) const
-		{
-			return findEntry(theURI, &XalanNamespace::getURI, &XalanNamespace::getPrefix);
-		}
+        /**
+         * Get the prefix for a namespace.
+         *
+         * @param theURI The namespace URI to find
+         * @return pointer to the string value if found, otherwise 0.
+         */
+        const XalanDOMString*
+        getPrefixForNamespace(const XalanDOMString&     theURI) const
+        {
+            return findEntry(theURI, &XalanNamespace::getURI, &XalanNamespace::getPrefix);
+        }
 
-		bool
-		isPrefixPresent(const XalanDOMString&	thePrefix) const
-		{
-			return getNamespaceForPrefix(thePrefix) == 0 ? false : true;
-		}
+        bool
+        isPrefixPresent(const XalanDOMString&   thePrefix) const
+        {
+            return getNamespaceForPrefix(thePrefix) == 0 ? false : true;
+        }
 
-		iterator
-		begin()
-		{
-			return m_namespaces.begin();
-		}
+        iterator
+        begin()
+        {
+            return m_namespaces.begin();
+        }
 
-		const_iterator
-		begin() const
-		{
-			return m_namespaces.begin();
-		}
+        const_iterator
+        begin() const
+        {
+            return m_namespaces.begin();
+        }
 
-		iterator
-		end()
-		{
-			return m_position;
-		}
+        iterator
+        end()
+        {
+            return m_position;
+        }
 
-		const_iterator
-		end() const
-		{
-			return const_iterator(m_position);
-		}
+        const_iterator
+        end() const
+        {
+            return const_iterator(m_position);
+        }
 
-		reverse_iterator
-		rbegin()
-		{
-			return reverse_iterator(end());
-		}
+        reverse_iterator
+        rbegin()
+        {
+            return reverse_iterator(end());
+        }
 
-		const_reverse_iterator
-		rbegin() const
-		{
-			return const_reverse_iterator(end());
-		}
+        const_reverse_iterator
+        rbegin() const
+        {
+            return const_reverse_iterator(end());
+        }
 
-		reverse_iterator
-		rend()
-		{
-			return reverse_iterator(begin());
-		}
+        reverse_iterator
+        rend()
+        {
+            return reverse_iterator(begin());
+        }
 
-		const_reverse_iterator
-		rend() const
-		{
-			return const_reverse_iterator(begin());
-		}
+        const_reverse_iterator
+        rend() const
+        {
+            return const_reverse_iterator(begin());
+        }
 
-		void
-		clear();
+        void
+        clear();
 
-		void
-		reset()
-		{
-			m_position = m_namespaces.begin();
-		}
+        void
+        reset()
+        {
+            m_position = m_namespaces.begin();
+        }
 
-		void
-		swap(XalanNamespacesStackEntry&		theOther);
+        void
+        swap(XalanNamespacesStackEntry&     theOther);
 
-	private:
+    private:
         //Not implemented
         XalanNamespacesStackEntry();
-		XalanNamespacesStackEntry(const XalanNamespacesStackEntry&	theSource);
+        XalanNamespacesStackEntry(const XalanNamespacesStackEntry&  theSource);
 
-		const XalanDOMString*
-		findEntry(
-			const XalanDOMString&	theKey,
-			MemberFunctionType		theKeyFunction,
-			MemberFunctionType		theValueFunction) const;
+        const XalanDOMString*
+        findEntry(
+            const XalanDOMString&   theKey,
+            MemberFunctionType      theKeyFunction,
+            MemberFunctionType      theValueFunction) const;
 
-		NamespaceCollectionType		m_namespaces;
+        NamespaceCollectionType     m_namespaces;
 
-		iterator					m_position;
-	};
-
-
-	typedef XalanNamespacesStackEntry	value_type;
-
-    typedef	XalanDeque<value_type, ConstructWithMemoryManagerTraits<value_type> >		NamespacesStackType;
-	typedef XalanVector<bool>			BoolVectorType;
-
-	typedef NamespacesStackType::iterator					iterator;
-	typedef NamespacesStackType::reverse_iterator			reverse_iterator;
-	typedef NamespacesStackType::const_iterator				const_iterator;
-	typedef NamespacesStackType::const_reverse_iterator		const_reverse_iterator;
-
-	typedef NamespacesStackType::size_type	size_type;
-
-	typedef const XalanDOMString* (value_type::*MemberFunctionType)(const XalanDOMString&) const;
+        iterator                    m_position;
+    };
 
 
-	explicit
-	XalanNamespacesStack(MemoryManager& theManager);
+    typedef XalanNamespacesStackEntry   value_type;
 
-	~XalanNamespacesStack();
+    typedef XalanDeque<value_type, ConstructWithMemoryManagerTraits<value_type> >       NamespacesStackType;
+    typedef XalanVector<bool>           BoolVectorType;
 
-	void
-	addDeclaration(
-			const XalanDOMString&	thePrefix,
-	        const XalanDOMString&	theURI)
-	{
-		addDeclaration(
-			thePrefix,
-			theURI.c_str(),
-			theURI.length());
-	}
+    typedef NamespacesStackType::iterator                   iterator;
+    typedef NamespacesStackType::reverse_iterator           reverse_iterator;
+    typedef NamespacesStackType::const_iterator             const_iterator;
+    typedef NamespacesStackType::const_reverse_iterator     const_reverse_iterator;
 
-	void
-	addDeclaration(
-			const XalanDOMString&	thePrefix,
-	        const XalanDOMChar*		theURI)
-	{
-		addDeclaration(
-			thePrefix,
-			theURI,
-			length(theURI));
-	}
+    typedef NamespacesStackType::size_type  size_type;
 
-	void
-	addDeclaration(
-			const XalanDOMString&		thePrefix,
-	        const XalanDOMChar*			theURI,
-			XalanDOMString::size_type	theLength);
+    typedef const XalanDOMString* (value_type::*MemberFunctionType)(const XalanDOMString&) const;
 
-	void
-	pushContext();
 
-	void
-	popContext();
+    explicit
+    XalanNamespacesStack(MemoryManager& theManager);
 
-	const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
+    ~XalanNamespacesStack();
 
-	const XalanDOMString*
-	getPrefixForNamespace(const XalanDOMString&		theURI) const
-	{
-		return findEntry(theURI, &value_type::getPrefixForNamespace);
-	}
+    void
+    addDeclaration(
+            const XalanDOMString&   thePrefix,
+            const XalanDOMString&   theURI)
+    {
+        addDeclaration(
+            thePrefix,
+            theURI.c_str(),
+            theURI.length());
+    }
 
-	/**
-	 * See if the prefix has been mapped to a namespace in the current
-	 * context, without looking down the stack of namespaces.
-	 */
-	bool
-	prefixIsPresentLocal(const XalanDOMString&	thePrefix);
+    void
+    addDeclaration(
+            const XalanDOMString&   thePrefix,
+            const XalanDOMChar*     theURI)
+    {
+        addDeclaration(
+            thePrefix,
+            theURI,
+            length(theURI));
+    }
 
-	void
-	clear();
+    void
+    addDeclaration(
+            const XalanDOMString&       thePrefix,
+            const XalanDOMChar*         theURI,
+            XalanDOMString::size_type   theLength);
 
-	iterator
-	begin()
-	{
-		return m_stackBegin + 1;
-	}
+    void
+    pushContext();
 
-	const_iterator
-	begin() const
-	{
-		return const_iterator(m_stackBegin + 1);
-	}
+    void
+    popContext();
 
-	iterator
-	end()
-	{
-		return m_stackPosition + 1;
-	}
+    const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     thePrefix) const;
 
-	const_iterator
-	end() const
-	{
-		return const_iterator(m_stackPosition + 1);
-	}
+    const XalanDOMString*
+    getPrefixForNamespace(const XalanDOMString&     theURI) const
+    {
+        return findEntry(theURI, &value_type::getPrefixForNamespace);
+    }
 
-	reverse_iterator
-	rbegin()
-	{
-		return reverse_iterator(end());
-	}
+    /**
+     * See if the prefix has been mapped to a namespace in the current
+     * context, without looking down the stack of namespaces.
+     */
+    bool
+    prefixIsPresentLocal(const XalanDOMString&  thePrefix);
 
-	const_reverse_iterator
-	rbegin() const
-	{
-		return const_reverse_iterator(end());
-	}
+    void
+    clear();
 
-	reverse_iterator
-	rend()
-	{
-		return reverse_iterator(begin());
-	}
+    iterator
+    begin()
+    {
+        return m_stackBegin + 1;
+    }
 
-	const_reverse_iterator
-	rend() const
-	{
-		return const_reverse_iterator(begin());
-	}
+    const_iterator
+    begin() const
+    {
+        return const_iterator(m_stackBegin + 1);
+    }
 
-	size_type
-	size() const
-	{
-		return m_resultNamespaces.size() - 1;
-	}
+    iterator
+    end()
+    {
+        return m_stackPosition + 1;
+    }
 
-	bool
-	empty() const
-	{
-		return NamespacesStackType::const_iterator(m_stackPosition) == m_resultNamespaces.begin() ? true : false;
-	}
+    const_iterator
+    end() const
+    {
+        return const_iterator(m_stackPosition + 1);
+    }
+
+    reverse_iterator
+    rbegin()
+    {
+        return reverse_iterator(end());
+    }
+
+    const_reverse_iterator
+    rbegin() const
+    {
+        return const_reverse_iterator(end());
+    }
+
+    reverse_iterator
+    rend()
+    {
+        return reverse_iterator(begin());
+    }
+
+    const_reverse_iterator
+    rend() const
+    {
+        return const_reverse_iterator(begin());
+    }
+
+    size_type
+    size() const
+    {
+        return m_resultNamespaces.size() - 1;
+    }
+
+    bool
+    empty() const
+    {
+        return NamespacesStackType::const_iterator(m_stackPosition) == m_resultNamespaces.begin() ? true : false;
+    }
 
 private:
 
-	// not implemented
-	XalanNamespacesStack(const XalanNamespacesStack&);
+    // not implemented
+    XalanNamespacesStack(const XalanNamespacesStack&);
     XalanNamespacesStack();
-	XalanNamespacesStackEntry&
-	operator=(const XalanNamespacesStackEntry&	theRHS);
+    XalanNamespacesStackEntry&
+    operator=(const XalanNamespacesStackEntry&  theRHS);
 
-	bool
-	operator==(const XalanNamespacesStack&) const;
+    bool
+    operator==(const XalanNamespacesStack&) const;
 
-	XalanNamespacesStack&
-	operator=(const XalanNamespacesStack&);
+    XalanNamespacesStack&
+    operator=(const XalanNamespacesStack&);
 
-	enum { eDefaultCreateNewContextStackSize = 25 };
+    enum { eDefaultCreateNewContextStackSize = 25 };
 
-	const XalanDOMString*
-	findEntry(
-			const XalanDOMString&	theKey,
-			MemberFunctionType		theFunction) const;
+    const XalanDOMString*
+    findEntry(
+            const XalanDOMString&   theKey,
+            MemberFunctionType      theFunction) const;
 
-	/**
-	 * A stack to keep track of the result tree namespaces.
-	 */
-	NamespacesStackType				m_resultNamespaces;
+    /**
+     * A stack to keep track of the result tree namespaces.
+     */
+    NamespacesStackType             m_resultNamespaces;
 
-	NamespacesStackType::iterator	m_stackBegin;
+    NamespacesStackType::iterator   m_stackBegin;
 
-	NamespacesStackType::iterator	m_stackPosition;
+    NamespacesStackType::iterator   m_stackPosition;
 
-	BoolVectorType					m_createNewContextStack;
+    BoolVectorType                  m_createNewContextStack;
 };
 
 
@@ -389,4 +389,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_XALANNAMESPACESSTACK_HEADER_GUARD
+#endif  // XALAN_XALANNAMESPACESSTACK_HEADER_GUARD

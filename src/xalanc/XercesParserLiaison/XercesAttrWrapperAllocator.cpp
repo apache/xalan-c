@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesAttrWrapperAllocator::XercesAttrWrapperAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XercesAttrWrapperAllocator::XercesAttrWrapperAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,17 +40,17 @@ XercesAttrWrapperAllocator::~XercesAttrWrapperAllocator()
 
 XercesAttrWrapperAllocator::ObjectType*
 XercesAttrWrapperAllocator::create(
-			const DOMAttrType*				theXercesAttr,
-			const XercesWrapperNavigator&	theNavigator)
+            const DOMAttrType*              theXercesAttr,
+            const XercesWrapperNavigator&   theNavigator)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(theXercesAttr, theNavigator);
+    new(theBlock) ObjectType(theXercesAttr, theNavigator);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -58,7 +58,7 @@ XercesAttrWrapperAllocator::create(
 void 
 XercesAttrWrapperAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

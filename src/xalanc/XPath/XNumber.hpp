@@ -42,74 +42,74 @@ class XALAN_XPATH_EXPORT XNumber : public XNumberBase
 {
 public:
 
-	/**
-	 * Create an XNumber from a number.
-	 *
-	 * @param val numeric value to use
-	 */
-	XNumber(
-            double	        val,
+    /**
+     * Create an XNumber from a number.
+     *
+     * @param val numeric value to use
+     */
+    XNumber(
+            double          val,
             MemoryManager&  theMemoryManager);
 
-	XNumber(
-            const XNumber&	source,
+    XNumber(
+            const XNumber&  source,
             MemoryManager&  theMemoryManager);
 
-	virtual
-	~XNumber();
+    virtual
+    ~XNumber();
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual double
-	num(XPathExecutionContext&  executionContext) const;
+    virtual double
+    num(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str() const;
+    virtual const XalanDOMString&
+    str() const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const;
+            XalanDOMString&         theBuffer) const;
 
-	virtual void
-	str(XalanDOMString&     theBuffer) const;
+    virtual void
+    str(XalanDOMString&     theBuffer) const;
 
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const;
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const;
 
-	// These methods are new to XNumber...
+    // These methods are new to XNumber...
 
-	/**
-	 * Change the value of an XNumber
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(double	theValue);
+    /**
+     * Change the value of an XNumber
+     *
+     * @param theValue The new value.
+     */
+    void
+    set(double  theValue);
 
 private:
     // not implemented
     XNumber();
     XNumber(const XNumber&);
 
-	// Value of the number being represented.
-	double					m_value;
+    // Value of the number being represented.
+    double                  m_value;
 
-	mutable XalanDOMString	m_cachedStringValue;
+    mutable XalanDOMString  m_cachedStringValue;
 };
 
 
@@ -118,4 +118,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNUMBER_HEADER_GUARD_1357924680
+#endif  // XNUMBER_HEADER_GUARD_1357924680

@@ -36,17 +36,17 @@ class XALAN_EXSLT_EXPORT XalanEXSLTMathFunctionsInstaller : public XalanExtensio
 {
 public:
 
-	static void
-	installLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    installLocal(XPathEnvSupportDefault&    theSupport);
 
-	static void
-	installGlobal(MemoryManager& theManager);
+    static void
+    installGlobal(MemoryManager& theManager);
 
-	static void
-	uninstallLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    uninstallLocal(XPathEnvSupportDefault&  theSupport);
 
-	static void
-	uninstallGlobal(MemoryManager& theManager);
+    static void
+    uninstallGlobal(MemoryManager& theManager);
 
 private:
 };
@@ -57,4 +57,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXSLT_MATH_HEADER_GUARD_1357924680
+#endif  // EXSLT_MATH_HEADER_GUARD_1357924680

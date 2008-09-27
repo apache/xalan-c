@@ -31,9 +31,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-StdBinInputStream::StdBinInputStream(StreamType&	theStream) :
-	ParentType(),
-	m_stream(theStream)
+StdBinInputStream::StdBinInputStream(StreamType&    theStream) :
+    ParentType(),
+    m_stream(theStream)
 {
 }
 
@@ -48,38 +48,38 @@ StdBinInputStream::~StdBinInputStream()
 XalanFilePos
 StdBinInputStream::curPos() const
 {
-	return m_stream.tellg();
+    return m_stream.tellg();
 }
 
 
 
 XalanSize_t
 StdBinInputStream::readBytes(
-			XMLByte* const      toFill,
-			const XalanSize_t	maxToRead)
+            XMLByte* const      toFill,
+            const XalanSize_t   maxToRead)
 {
-	assert(sizeof(XMLByte) == sizeof(char));
+    assert(sizeof(XMLByte) == sizeof(char));
 
-	if (!m_stream)
-	{
-		return 0;
-	}
-	else
-	{
+    if (!m_stream)
+    {
+        return 0;
+    }
+    else
+    {
         XALAN_USING_STD(streamsize)
 
         assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
 
 #if !defined(XALAN_CLASSIC_IOSTREAMS)
-		m_stream.read(
+        m_stream.read(
             reinterpret_cast<char*>(toFill),
             static_cast<streamsize>(maxToRead));
 #else
-		m_stream.read(toFill, maxToRead);
+        m_stream.read(toFill, maxToRead);
 #endif
 
-		return m_stream.gcount();
-	}
+        return m_stream.gcount();
+    }
 }
 
 

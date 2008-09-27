@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeDocumentAllocator::XalanSourceTreeDocumentAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanSourceTreeDocumentAllocator::XalanSourceTreeDocumentAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -41,72 +41,72 @@ XalanSourceTreeDocumentAllocator::~XalanSourceTreeDocumentAllocator()
 
 XalanSourceTreeDocumentAllocator::data_type*
 XalanSourceTreeDocumentAllocator::create(
-			bool				fPoolAllText,
-			block_size_type		theNamesStringPoolBlockSize,
-			bucket_count_type	theNamesStringPoolBucketCount,
-			bucket_size_type	theNamesStringPoolBucketSize,
-			block_size_type		theValuesStringPoolBlockSize,
-			bucket_count_type	theValuesStringPoolBucketCount,
-			bucket_size_type	theValuesStringPoolBucketSize)
+            bool                fPoolAllText,
+            block_size_type     theNamesStringPoolBlockSize,
+            bucket_count_type   theNamesStringPoolBucketCount,
+            bucket_size_type    theNamesStringPoolBucketSize,
+            block_size_type     theValuesStringPoolBlockSize,
+            bucket_count_type   theValuesStringPoolBucketCount,
+            bucket_size_type    theValuesStringPoolBucketSize)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(
+    data_type* const    theResult = new(theBlock) data_type(
                 m_allocator.getMemoryManager(),
-				fPoolAllText,
-				theNamesStringPoolBlockSize,
-				theNamesStringPoolBucketCount,
-				theNamesStringPoolBucketSize,
-				theValuesStringPoolBlockSize,
-				theValuesStringPoolBucketCount,
-				theValuesStringPoolBucketSize);
+                fPoolAllText,
+                theNamesStringPoolBlockSize,
+                theNamesStringPoolBucketCount,
+                theNamesStringPoolBucketSize,
+                theValuesStringPoolBlockSize,
+                theValuesStringPoolBucketCount,
+                theValuesStringPoolBucketSize);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XalanSourceTreeDocumentAllocator::data_type*
 XalanSourceTreeDocumentAllocator::create(
-			size_type	theAttributeBlockSize,
-			size_type	theAttributeNSBlockSize,
-			size_type	theCommentBlockSize,
-			size_type	theElementBlockSize,
-			size_type	theElementNSBlockSize,
-			size_type	thePIBlockSize,
-			size_type	theTextBlockSize,
-			size_type	theTextIWSBlockSize,
-			bool		fPoolAllText)
+            size_type   theAttributeBlockSize,
+            size_type   theAttributeNSBlockSize,
+            size_type   theCommentBlockSize,
+            size_type   theElementBlockSize,
+            size_type   theElementNSBlockSize,
+            size_type   thePIBlockSize,
+            size_type   theTextBlockSize,
+            size_type   theTextIWSBlockSize,
+            bool        fPoolAllText)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult = new(theBlock) data_type(
+    data_type* const    theResult = new(theBlock) data_type(
                 m_allocator.getMemoryManager(),
-				theAttributeBlockSize,
-				theAttributeNSBlockSize,
-				theCommentBlockSize,
-				theElementBlockSize,
-				theElementNSBlockSize,
-				thePIBlockSize,
-				theTextBlockSize,
-				theTextIWSBlockSize,
-				fPoolAllText);
+                theAttributeBlockSize,
+                theAttributeNSBlockSize,
+                theCommentBlockSize,
+                theElementBlockSize,
+                theElementNSBlockSize,
+                thePIBlockSize,
+                theTextBlockSize,
+                theTextIWSBlockSize,
+                fPoolAllText);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 bool
-XalanSourceTreeDocumentAllocator::destroy(data_type*	theObject)
+XalanSourceTreeDocumentAllocator::destroy(data_type*    theObject)
 {
-	return m_allocator.destroyObject(theObject);
+    return m_allocator.destroyObject(theObject);
 }
 
 
@@ -114,7 +114,7 @@ XalanSourceTreeDocumentAllocator::destroy(data_type*	theObject)
 void 
 XalanSourceTreeDocumentAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

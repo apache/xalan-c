@@ -50,14 +50,14 @@ public:
 
     Logger(StreamType&  stream);
 
-	enum eLogType
+    enum eLogType
     {
         eMessage = 0,
         eWarning = 1,
         eError = 2
     };
 
-	StreamType&
+    StreamType&
     message();
 
     StreamType&
@@ -66,14 +66,14 @@ public:
     StreamType&
     error();
 
-	StreamType&
+    StreamType&
     log(eLogType    logType);
 
 protected:
 
-	const char*     logText[3];
+    const char*     logText[3];
 
-	StreamType&        m_stream;
+    StreamType&        m_stream;
 };
 
 

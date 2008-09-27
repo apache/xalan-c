@@ -33,16 +33,16 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XNumberBase::XNumberBase(MemoryManager&  theMemoryManager) :
-	XObject(eTypeNumber, theMemoryManager)
+    XObject(eTypeNumber, theMemoryManager)
 {
 }
 
 
 
 XNumberBase::XNumberBase(
-            const XNumberBase&	source,
+            const XNumberBase&  source,
             MemoryManager&      theMemoryManager) :
-	XObject(source, theMemoryManager)
+    XObject(source, theMemoryManager)
 {
 }
 
@@ -57,7 +57,7 @@ XNumberBase::~XNumberBase()
 const XalanDOMString&
 XNumberBase::getTypeString() const
 {
-	return s_numberString;
+    return s_numberString;
 }
 
 
@@ -65,15 +65,15 @@ XNumberBase::getTypeString() const
 bool
 XNumberBase::boolean(XPathExecutionContext&     executionContext) const
 {
-	return XObject::boolean(num(executionContext));
+    return XObject::boolean(num(executionContext));
 }
 
 
 
 void
-XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject)
 {
-	theCallbackObject.Number(
+    theCallbackObject.Number(
         *this,
         num(theCallbackObject.getExecutionContext()));
 }
@@ -81,9 +81,9 @@ XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 
 
 void
-XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XNumberBase::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject) const
 {
-	theCallbackObject.Number(
+    theCallbackObject.Number(
         *this,
         num(theCallbackObject.getExecutionContext()));
 }

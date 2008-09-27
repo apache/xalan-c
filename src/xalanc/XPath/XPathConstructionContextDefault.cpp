@@ -42,9 +42,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XPathConstructionContextDefault::XPathConstructionContextDefault(MemoryManager&     theManager) :
-	XPathConstructionContext(theManager),
-	m_stringPool(theManager),
-	m_stringCache(theManager)
+    XPathConstructionContext(theManager),
+    m_stringPool(theManager),
+    m_stringCache(theManager)
 {
 }
 
@@ -68,7 +68,7 @@ XPathConstructionContextDefault::create(MemoryManager&  theManager)
 
 XPathConstructionContextDefault::~XPathConstructionContextDefault()
 {
-	reset();
+    reset();
 }
 
 
@@ -76,25 +76,25 @@ XPathConstructionContextDefault::~XPathConstructionContextDefault()
 void
 XPathConstructionContextDefault::reset()
 {
-	m_stringCache.reset();
+    m_stringCache.reset();
 }
 
 
 
 const XalanDOMString&
-XPathConstructionContextDefault::getPooledString(const XalanDOMString&	theString)
+XPathConstructionContextDefault::getPooledString(const XalanDOMString&  theString)
 {
-	return m_stringPool.get(theString);
+    return m_stringPool.get(theString);
 }
 
 
 
 const XalanDOMString&
 XPathConstructionContextDefault::getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength)
 {
-	return m_stringPool.get(theString, theLength);
+    return m_stringPool.get(theString, theLength);
 }
 
 
@@ -102,26 +102,26 @@ XPathConstructionContextDefault::getPooledString(
 XalanDOMString&
 XPathConstructionContextDefault::getCachedString()
 {
-	return m_stringCache.get();
+    return m_stringCache.get();
 }
 
 
 
 bool
-XPathConstructionContextDefault::releaseCachedString(XalanDOMString&	theString)
+XPathConstructionContextDefault::releaseCachedString(XalanDOMString&    theString)
 {
-	return m_stringCache.release(theString);
+    return m_stringCache.release(theString);
 }
 
 
 
 void
 XPathConstructionContextDefault::problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     MemoryManager&  theManager = getMemoryManager();
 
@@ -140,8 +140,8 @@ XPathConstructionContextDefault::problem(
 
     if (classification == eError)
     {
-		throw XPathParserException(msg, theManager, locator);
-	}
+        throw XPathParserException(msg, theManager, locator);
+    }
 }
 
 
@@ -150,8 +150,8 @@ void
 XPathConstructionContextDefault::problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     MemoryManager&  theManager = getMemoryManager();
 
@@ -169,8 +169,8 @@ XPathConstructionContextDefault::problem(
 
     if (classification == eError)
     {
-		throw XPathParserException(msg, theManager);
-	}
+        throw XPathParserException(msg, theManager);
+    }
 }
 
 

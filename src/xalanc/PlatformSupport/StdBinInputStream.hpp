@@ -46,45 +46,45 @@ class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public XERCES_CPP_NAMESPA
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream   ParentType;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef istream			StreamType;
+    typedef istream         StreamType;
 #else
-	typedef std::istream	StreamType;
+    typedef std::istream    StreamType;
 #endif
 
 
-	StdBinInputStream(StreamType&	theStream);
+    StdBinInputStream(StreamType&   theStream);
 
-	virtual
-	~StdBinInputStream();
+    virtual
+    ~StdBinInputStream();
 
-	virtual XalanFilePos
-	curPos() const;
+    virtual XalanFilePos
+    curPos() const;
 
-	virtual XalanSize_t
-	readBytes(
-			XMLByte* const      toFill,
-			const XalanSize_t   maxToRead);
+    virtual XalanSize_t
+    readBytes(
+            XMLByte* const      toFill,
+            const XalanSize_t   maxToRead);
 
     virtual const XalanDOMChar*
     getContentType() const;
 
 private:
 
-	// Unimplemented...
-	StdBinInputStream(const StdBinInputStream&	theSource);
+    // Unimplemented...
+    StdBinInputStream(const StdBinInputStream&  theSource);
 
-	bool
-	operator==(const StdBinInputStream&	theSource) const;
+    bool
+    operator==(const StdBinInputStream& theSource) const;
 
-	StdBinInputStream&
-	operator=(const StdBinInputStream&	theSource);
+    StdBinInputStream&
+    operator=(const StdBinInputStream&  theSource);
 
 
-	// Data members...
-	StreamType&		m_stream;
+    // Data members...
+    StreamType&     m_stream;
 };
 
 
@@ -93,4 +93,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_STDBININPUTSTREAM_HEADER_GUARD
+#endif  // XALAN_STDBININPUTSTREAM_HEADER_GUARD

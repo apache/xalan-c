@@ -28,9 +28,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
+DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&  theString) :
 PrintWriter(true, theString.getMemoryManager()),
-	m_outputString(&theString)
+    m_outputString(&theString)
 {
 }
 
@@ -45,7 +45,7 @@ DOMStringPrintWriter::~DOMStringPrintWriter()
 bool
 DOMStringPrintWriter::checkError() const
 {
-	return false;
+    return false;
 }
 
 
@@ -65,9 +65,9 @@ DOMStringPrintWriter::flush()
 
 void
 DOMStringPrintWriter::write(
-			const char*		s,
-			size_t			theOffset,
-			size_t			theLength)
+            const char*     s,
+            size_t          theOffset,
+            size_t          theLength)
 {
     assert(XalanDOMString::size_type(theOffset) == theOffset);
     assert(XalanDOMString::size_type(theLength) == theLength);
@@ -77,7 +77,7 @@ DOMStringPrintWriter::write(
     XalanDOMString tmpString( m_outputString->getMemoryManager() );
 
     tmpString = TranscodeFromLocalCodePage(s, tmpString);
-	write(
+    write(
         tmpString,
         XalanDOMString::size_type(theOffset),
         XalanDOMString::size_type(theLength));
@@ -87,96 +87,96 @@ DOMStringPrintWriter::write(
 
 void
 DOMStringPrintWriter::write(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theOffset,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theOffset,
+            XalanDOMString::size_type   theLength)
 {
-	assert(s != 0);
+    assert(s != 0);
 
-	m_outputString->append(s + theOffset, theLength);
+    m_outputString->append(s + theOffset, theLength);
 }
 
 
 
 void
-DOMStringPrintWriter::write(XalanDOMChar	c)
+DOMStringPrintWriter::write(XalanDOMChar    c)
 {
-	(*m_outputString) += c;
+    (*m_outputString) += c;
 }
 
 
 
 void
 DOMStringPrintWriter::write(
-			const XalanDOMString&		s,
-			XalanDOMString::size_type	theOffset,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMString&       s,
+            XalanDOMString::size_type   theOffset,
+            XalanDOMString::size_type   theLength)
 {
-	assert(theLength == npos || s.length() >= theOffset + theLength);
+    assert(theLength == npos || s.length() >= theOffset + theLength);
 
-	if (theOffset == 0 && theLength == npos)
-	{
-		(*m_outputString) += s;
-	}
-	else
-	{
-		(*m_outputString).append(s, theOffset, theLength);
-	}
+    if (theOffset == 0 && theLength == npos)
+    {
+        (*m_outputString) += s;
+    }
+    else
+    {
+        (*m_outputString).append(s, theOffset, theLength);
+    }
 }
 
 
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-DOMStringPrintWriter::print(bool	b)
+DOMStringPrintWriter::print(bool    b)
 {
-	if (b == true)
-	{
-		print(s_trueString);
-	}
-	else
-	{
-		print(s_falseString);
-	}
+    if (b == true)
+    {
+        print(s_trueString);
+    }
+    else
+    {
+        print(s_falseString);
+    }
 }
 #endif
 
 
 
 void
-DOMStringPrintWriter::print(char	c)
+DOMStringPrintWriter::print(char    c)
 {
-	write(c);
+    write(c);
 }
 
 
 
 void
 DOMStringPrintWriter::print(
-			const char*		s,
-			size_t			theLength)
+            const char*     s,
+            size_t          theLength)
 {
-	write(s,
-		  0,
-		  theLength);
+    write(s,
+          0,
+          theLength);
 }
 
 
 
 void
 DOMStringPrintWriter::print(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength)
 {
-	write(s,
-		  0,
-		  theLength);
+    write(s,
+          0,
+          theLength);
 }
 
 
 
 void
-DOMStringPrintWriter::print(double	d)
+DOMStringPrintWriter::print(double  d)
 {
     assert ( m_outputString != 0 );
 
@@ -184,13 +184,13 @@ DOMStringPrintWriter::print(double	d)
 
     NumberToDOMString(d, tmpString);
 
-	(*m_outputString) += tmpString;
+    (*m_outputString) += tmpString;
 }
 
 
 
 void
-DOMStringPrintWriter::print(int	i)
+DOMStringPrintWriter::print(int i)
 {
     assert ( m_outputString != 0 );
 
@@ -198,13 +198,13 @@ DOMStringPrintWriter::print(int	i)
 
     NumberToDOMString(i, tmpString);
 
-	(*m_outputString) += tmpString;
+    (*m_outputString) += tmpString;
 }
 
 
 
 void
-DOMStringPrintWriter::print(long	l)
+DOMStringPrintWriter::print(long    l)
 {
     assert ( m_outputString != 0 );
 
@@ -212,15 +212,15 @@ DOMStringPrintWriter::print(long	l)
 
     NumberToDOMString(l, tmpString);
 
-	(*m_outputString) += tmpString;
+    (*m_outputString) += tmpString;
 }
 
 
 
 void
-DOMStringPrintWriter::print(const XalanDOMString&	s)
+DOMStringPrintWriter::print(const XalanDOMString&   s)
 {
-	(*m_outputString) += s;
+    (*m_outputString) += s;
 }
 
 
@@ -228,93 +228,93 @@ DOMStringPrintWriter::print(const XalanDOMString&	s)
 void
 DOMStringPrintWriter::println()
 {
-	(*m_outputString) += s_newlineString;
+    (*m_outputString) += s_newlineString;
 }
 
 
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-DOMStringPrintWriter::println(bool	b)
+DOMStringPrintWriter::println(bool  b)
 {
-	print(b);
+    print(b);
 
-	println();
+    println();
 }
 #endif
 
 
 
 void
-DOMStringPrintWriter::println(char	c)
+DOMStringPrintWriter::println(char  c)
 {
-	print(c);
+    print(c);
 
-	println();
+    println();
 }
 
 
 
 void
 DOMStringPrintWriter::println(
-			const char*		s,
-			size_t			theLength)
+            const char*     s,
+            size_t          theLength)
 {
-	print(s, theLength);
+    print(s, theLength);
 
-	println();
+    println();
 }
 
 
 
 void
 DOMStringPrintWriter::println(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength)
 {
-	print(s, theLength);
+    print(s, theLength);
 
-	println();
+    println();
 }
 
 
 
 void
-DOMStringPrintWriter::println(double	d)
+DOMStringPrintWriter::println(double    d)
 {
-	print(d);
+    print(d);
 
-	println();
+    println();
 }
 
 
 
 void
-DOMStringPrintWriter::println(int	i)
+DOMStringPrintWriter::println(int   i)
 {
-	print(i);
+    print(i);
 
-	println();
+    println();
 }
 
 
 
 void
-DOMStringPrintWriter::println(long	l)
+DOMStringPrintWriter::println(long  l)
 {
-	print(l);
+    print(l);
 
-	println();
+    println();
 }
 
 
 
 void
-DOMStringPrintWriter::println(const XalanDOMString&		s)
+DOMStringPrintWriter::println(const XalanDOMString&     s)
 {
-	print(s);
+    print(s);
 
-	println();
+    println();
 }
 
 

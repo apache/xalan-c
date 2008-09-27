@@ -42,42 +42,42 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupport
 {
 public:
 
-	DOMSupport();
+    DOMSupport();
 
-	virtual
-	~DOMSupport();
+    virtual
+    ~DOMSupport();
 
-	// These interfaces are inherited from Resettable...
+    // These interfaces are inherited from Resettable...
 
-	virtual void
-	reset() = 0;
+    virtual void
+    reset() = 0;
 
-	// These interfaces are new to DOMSupport...
+    // These interfaces are new to DOMSupport...
 
-	/**
-	 * Retrieves the URI of the named unparsed entity
-	 * from the supplied document.
-	 * 
-	 * @param theName The name of the entity
-	 * @param theDocument The document that contains the entity
-	 * @return The URI of the entity
-	 */
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const = 0;
+    /**
+     * Retrieves the URI of the named unparsed entity
+     * from the supplied document.
+     * 
+     * @param theName The name of the entity
+     * @param theDocument The document that contains the entity
+     * @return The URI of the entity
+     */
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const = 0;
 
-	/**
-	 * Determine if a node is after another node, in document order.
-	 *
-	 * @param node1 The first node
-	 * @param node2 The second node
-	 * @return true if node1 one is after node2, or false if it is not.
-	 */
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const = 0;
+    /**
+     * Determine if a node is after another node, in document order.
+     *
+     * @param node1 The first node
+     * @param node2 The second node
+     * @return true if node1 one is after node2, or false if it is not.
+     */
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const = 0;
 };
 
 
@@ -86,4 +86,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// DOMSUPPORT_HEADER_GUARD_1357924680
+#endif  // DOMSUPPORT_HEADER_GUARD_1357924680

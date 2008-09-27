@@ -39,23 +39,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
-			const DOMDocumentType_Type*		theXercesDOMDocumentType,
-			const XercesWrapperNavigator&	theNavigator) :
-	XalanDocumentType(),
-	m_xercesNode(theXercesDOMDocumentType),
-	m_entities(m_xercesNode->getEntities(),
-			   theNavigator),
-	m_notations(m_xercesNode->getNotations(),
-			    theNavigator),
-	m_navigator(theNavigator)
+            const DOMDocumentType_Type*     theXercesDOMDocumentType,
+            const XercesWrapperNavigator&   theNavigator) :
+    XalanDocumentType(),
+    m_xercesNode(theXercesDOMDocumentType),
+    m_entities(m_xercesNode->getEntities(),
+               theNavigator),
+    m_notations(m_xercesNode->getNotations(),
+                theNavigator),
+    m_navigator(theNavigator)
 {
-	assert(theXercesDOMDocumentType != 0);
+    assert(theXercesDOMDocumentType != 0);
 }
 
 XercesDocumentTypeWrapper*
 XercesDocumentTypeWrapper::create( MemoryManager& theManager,
-			const DOMDocumentType_Type*		theXercesDOMDocumentType,
-			const XercesWrapperNavigator&	theNavigator)
+            const DOMDocumentType_Type*     theXercesDOMDocumentType,
+            const XercesWrapperNavigator&   theNavigator)
 {
     typedef XercesDocumentTypeWrapper ThisType;
 
@@ -79,7 +79,7 @@ XercesDocumentTypeWrapper::~XercesDocumentTypeWrapper()
 const XalanDOMString&
 XercesDocumentTypeWrapper::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeName());
+    return m_navigator.getPooledString(m_xercesNode->getNodeName());
 }
 
 
@@ -87,7 +87,7 @@ XercesDocumentTypeWrapper::getNodeName() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNodeValue());
+    return m_navigator.getPooledString(m_xercesNode->getNodeValue());
 }
 
 
@@ -95,7 +95,7 @@ XercesDocumentTypeWrapper::getNodeValue() const
 XercesDocumentTypeWrapper::NodeType
 XercesDocumentTypeWrapper::getNodeType() const
 {
-	return DOCUMENT_TYPE_NODE;
+    return DOCUMENT_TYPE_NODE;
 }
 
 
@@ -103,7 +103,7 @@ XercesDocumentTypeWrapper::getNodeType() const
 XalanNode*
 XercesDocumentTypeWrapper::getParentNode() const
 {
-	return m_navigator.getParentNode(m_xercesNode);
+    return m_navigator.getParentNode(m_xercesNode);
 }
 
 
@@ -111,7 +111,7 @@ XercesDocumentTypeWrapper::getParentNode() const
 const XalanNodeList*
 XercesDocumentTypeWrapper::getChildNodes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -119,7 +119,7 @@ XercesDocumentTypeWrapper::getChildNodes() const
 XalanNode*
 XercesDocumentTypeWrapper::getFirstChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -127,7 +127,7 @@ XercesDocumentTypeWrapper::getFirstChild() const
 XalanNode*
 XercesDocumentTypeWrapper::getLastChild() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -135,7 +135,7 @@ XercesDocumentTypeWrapper::getLastChild() const
 XalanNode*
 XercesDocumentTypeWrapper::getPreviousSibling() const
 {
-	return m_navigator.getPreviousSibling(m_xercesNode);
+    return m_navigator.getPreviousSibling(m_xercesNode);
 }
 
 
@@ -143,7 +143,7 @@ XercesDocumentTypeWrapper::getPreviousSibling() const
 XalanNode*
 XercesDocumentTypeWrapper::getNextSibling() const
 {
-	return m_navigator.getNextSibling(m_xercesNode);
+    return m_navigator.getNextSibling(m_xercesNode);
 }
 
 
@@ -151,7 +151,7 @@ XercesDocumentTypeWrapper::getNextSibling() const
 const XalanNamedNodeMap*
 XercesDocumentTypeWrapper::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -159,7 +159,7 @@ XercesDocumentTypeWrapper::getAttributes() const
 XalanDocument*
 XercesDocumentTypeWrapper::getOwnerDocument() const
 {
-	return m_navigator.getOwnerDocument();
+    return m_navigator.getOwnerDocument();
 }
 
 
@@ -167,7 +167,7 @@ XercesDocumentTypeWrapper::getOwnerDocument() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
+    return m_navigator.getPooledString(m_xercesNode->getNamespaceURI());
 }
 
 
@@ -175,7 +175,7 @@ XercesDocumentTypeWrapper::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getPrefix());
+    return m_navigator.getPooledString(m_xercesNode->getPrefix());
 }
 
 
@@ -183,7 +183,7 @@ XercesDocumentTypeWrapper::getPrefix() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getLocalName());
+    return m_navigator.getPooledString(m_xercesNode->getLocalName());
 }
 
 
@@ -191,7 +191,7 @@ XercesDocumentTypeWrapper::getLocalName() const
 bool
 XercesDocumentTypeWrapper::isIndexed() const
 {
-	return m_navigator.getOwnerDocument()->isIndexed();
+    return m_navigator.getOwnerDocument()->isIndexed();
 }
 
 
@@ -199,7 +199,7 @@ XercesDocumentTypeWrapper::isIndexed() const
 XercesDocumentTypeWrapper::IndexType
 XercesDocumentTypeWrapper::getIndex() const
 {
-	return m_navigator.getIndex();
+    return m_navigator.getIndex();
 }
 
 
@@ -207,7 +207,7 @@ XercesDocumentTypeWrapper::getIndex() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getName() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getName());
+    return m_navigator.getPooledString(m_xercesNode->getName());
 }
 
 
@@ -215,7 +215,7 @@ XercesDocumentTypeWrapper::getName() const
 const XalanNamedNodeMap*
 XercesDocumentTypeWrapper::getEntities() const
 {
-	return &m_entities;
+    return &m_entities;
 }
 
 
@@ -223,7 +223,7 @@ XercesDocumentTypeWrapper::getEntities() const
 const XalanNamedNodeMap*
 XercesDocumentTypeWrapper::getNotations() const
 {
-	return &m_notations;
+    return &m_notations;
 }
 
 
@@ -231,7 +231,7 @@ XercesDocumentTypeWrapper::getNotations() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getPublicId() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getPublicId());
+    return m_navigator.getPooledString(m_xercesNode->getPublicId());
 }
 
 
@@ -239,7 +239,7 @@ XercesDocumentTypeWrapper::getPublicId() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getSystemId() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getSystemId());
+    return m_navigator.getPooledString(m_xercesNode->getSystemId());
 }
 
 
@@ -247,7 +247,7 @@ XercesDocumentTypeWrapper::getSystemId() const
 const XalanDOMString&
 XercesDocumentTypeWrapper::getInternalSubset() const
 {
-	return m_navigator.getPooledString(m_xercesNode->getInternalSubset());
+    return m_navigator.getPooledString(m_xercesNode->getInternalSubset());
 }
 
 

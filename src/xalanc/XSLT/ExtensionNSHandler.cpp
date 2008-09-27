@@ -46,25 +46,25 @@ class XSLTProcessor;
 
 struct XSLProcessorContext
 {
-	const XSLTProcessor&	m_processor;
-	const Stylesheet&		m_stylesheetTree;
-	const XalanNode*		m_sourceTree;
-	const XalanNode*		m_sourceNode;
-	const XalanQName&		m_mode;
+    const XSLTProcessor&    m_processor;
+    const Stylesheet&       m_stylesheetTree;
+    const XalanNode*        m_sourceTree;
+    const XalanNode*        m_sourceNode;
+    const XalanQName&       m_mode;
 
-	XSLProcessorContext(
-			const XSLTProcessor&	processor,
-			const Stylesheet&		stylesheetTree, 
-			const XalanNode*		sourceTree,
-			const XalanNode*		sourceNode,
-			const XalanQName&		mode) :
-		m_processor(processor),
-		m_stylesheetTree(stylesheetTree),
-		m_sourceTree(sourceTree),
-		m_sourceNode(sourceNode),
-		m_mode(mode)
-	{
-	}
+    XSLProcessorContext(
+            const XSLTProcessor&    processor,
+            const Stylesheet&       stylesheetTree, 
+            const XalanNode*        sourceTree,
+            const XalanNode*        sourceNode,
+            const XalanQName&       mode) :
+        m_processor(processor),
+        m_stylesheetTree(stylesheetTree),
+        m_sourceTree(sourceTree),
+        m_sourceNode(sourceNode),
+        m_mode(mode)
+    {
+    }
 };
 
 
@@ -75,16 +75,16 @@ struct XSLProcessorContext
  * 
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
-ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri,
+ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&    namespaceUri,
                                        MemoryManager& theManager) :
-	ExtensionFunctionHandler(namespaceUri, theManager),
-	m_elements(theManager),
-	m_componentDescLoaded(false)
+    ExtensionFunctionHandler(namespaceUri, theManager),
+    m_elements(theManager),
+    m_componentDescLoaded(false)
 {
 }
 
 ExtensionNSHandler*
-ExtensionNSHandler::create(const XalanDOMString&	namespaceUri,
+ExtensionNSHandler::create(const XalanDOMString&    namespaceUri,
                            MemoryManager&       theManager)
 {
     typedef ExtensionNSHandler ThisType;
@@ -102,24 +102,24 @@ ExtensionNSHandler::create(const XalanDOMString&	namespaceUri,
 
 ExtensionNSHandler::ExtensionNSHandler (
             MemoryManager&    theManager,
-			const XalanDOMString& namespaceUri,
-			const XalanDOMString& elemNames,
-			const XalanDOMString& funcNames,
-			const XalanDOMString& lang,
-			const XalanDOMString& srcURL,
-			const XalanDOMString& src) :
-	ExtensionFunctionHandler(theManager, namespaceUri, funcNames, lang, srcURL, src),
-	m_elements(theManager),
-	m_componentDescLoaded(true)
-		 
+            const XalanDOMString& namespaceUri,
+            const XalanDOMString& elemNames,
+            const XalanDOMString& funcNames,
+            const XalanDOMString& lang,
+            const XalanDOMString& srcURL,
+            const XalanDOMString& src) :
+    ExtensionFunctionHandler(theManager, namespaceUri, funcNames, lang, srcURL, src),
+    m_elements(theManager),
+    m_componentDescLoaded(true)
+         
 {
-	setElements(elemNames);
+    setElements(elemNames);
 }
 
 
 
 void
-ExtensionNSHandler::setFunctions(const XalanDOMString&	funcNames)
+ExtensionNSHandler::setFunctions(const XalanDOMString&  funcNames)
 {
     ExtensionFunctionHandler::setFunctions(funcNames);
 
@@ -130,9 +130,9 @@ ExtensionNSHandler::setFunctions(const XalanDOMString&	funcNames)
 
 void
 ExtensionNSHandler::setScript(
-			const XalanDOMString&	lang,
-			const XalanDOMString&	srcURL,
-			const XalanDOMString&	scriptSrc)
+            const XalanDOMString&   lang,
+            const XalanDOMString&   srcURL,
+            const XalanDOMString&   scriptSrc)
 {
     ExtensionFunctionHandler::setScript(lang, srcURL, scriptSrc);
 
@@ -142,29 +142,29 @@ ExtensionNSHandler::setScript(
 
 
 void
-ExtensionNSHandler::setElements(const XalanDOMString&	elemNames)
+ExtensionNSHandler::setElements(const XalanDOMString&   elemNames)
 {
     if (elemNames.empty() == false)
-	{
-		StringTokenizer		st(elemNames, s_tokenDelimiterCharacters, false);
+    {
+        StringTokenizer     st(elemNames, s_tokenDelimiterCharacters, false);
 
         XalanDOMString theResult(m_elements.getMemoryManager());
 
-		while (st.hasMoreTokens() == true)
-		{
+        while (st.hasMoreTokens() == true)
+        {
             st.nextToken(theResult);
 
-			m_elements.insert(theResult); // just stick it in there basically
-		}
-	
-		m_componentDescLoaded = true;
-	}
+            m_elements.insert(theResult); // just stick it in there basically
+        }
+    
+        m_componentDescLoaded = true;
+    }
 }
 
 
 
 bool
-ExtensionNSHandler::isElementAvailable(const XalanDOMString&	element) const
+ExtensionNSHandler::isElementAvailable(const XalanDOMString&    element) const
 {
     return (m_elements.find(element) != m_elements.end());
 }
@@ -173,13 +173,13 @@ ExtensionNSHandler::isElementAvailable(const XalanDOMString&	element) const
 
 void
 ExtensionNSHandler::processElement(
-			StylesheetExecutionContext&		/* executionContext */,
-			const XalanDOMString&			/* localPart */,
-			const XalanElement*				/* element */,
-			Stylesheet&						/* stylesheetTree */, 
-			const XalanNode*				/* sourceTree */,
-			const XalanNode*				/* sourceNode */,
-			const XalanQName&				/* mode */)
+            StylesheetExecutionContext&     /* executionContext */,
+            const XalanDOMString&           /* localPart */,
+            const XalanElement*             /* element */,
+            Stylesheet&                     /* stylesheetTree */, 
+            const XalanNode*                /* sourceTree */,
+            const XalanNode*                /* sourceNode */,
+            const XalanQName&               /* mode */)
 {
 }
 
@@ -188,7 +188,7 @@ ExtensionNSHandler::processElement(
 void
 ExtensionNSHandler::startupComponent()
 {
-	ExtensionFunctionHandler::startupComponent();
+    ExtensionFunctionHandler::startupComponent();
 }
 
 
@@ -196,17 +196,17 @@ ExtensionNSHandler::startupComponent()
 void
 ExtensionNSHandler::loadComponentDescription()
 {
-	assert(0);		// Don't try this in C++
+    assert(0);      // Don't try this in C++
 }
 
 
 
 XalanDOMString&
-ExtensionNSHandler::getScriptString(const XalanElement&		/* elem */,
+ExtensionNSHandler::getScriptString(const XalanElement&     /* elem */,
                                     XalanDOMString& theResult)
 {
     theResult.erase();
-	return theResult;
+    return theResult;
 }
 
 

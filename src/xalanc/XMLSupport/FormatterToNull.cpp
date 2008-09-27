@@ -25,7 +25,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterToNull::FormatterToNull() :
-	FormatterListener(OUTPUT_METHOD_NONE)
+    FormatterListener(OUTPUT_METHOD_NONE)
 {
 }
 
@@ -38,7 +38,7 @@ FormatterToNull::~FormatterToNull()
 
 
 void
-FormatterToNull::setDocumentLocator(const LocatorType* const	/* locator */)
+FormatterToNull::setDocumentLocator(const LocatorType* const    /* locator */)
 {
 }
 
@@ -60,8 +60,8 @@ FormatterToNull::endDocument()
 
 void
 FormatterToNull::startElement(
-			const XMLCh* const	/* name */,
-			AttributeListType&	/* attrs */)
+            const XMLCh* const  /* name */,
+            AttributeListType&  /* attrs */)
 {
 }
 
@@ -69,7 +69,7 @@ FormatterToNull::startElement(
 
 void
 FormatterToNull::endElement(
-			const	XMLCh* const	/* name */)
+            const   XMLCh* const    /* name */)
 {
 }
 
@@ -77,8 +77,8 @@ FormatterToNull::endElement(
 
 void
 FormatterToNull::characters(
-			const XMLCh* const	/* chars */,
-			const size_type	    /* length */)
+            const XMLCh* const  /* chars */,
+            const size_type     /* length */)
 {
 }
 
@@ -86,14 +86,14 @@ FormatterToNull::characters(
 
 void
 FormatterToNull::charactersRaw(
-		const XMLCh* const	/* chars */,
-		const size_type	    /*length */)
+        const XMLCh* const  /* chars */,
+        const size_type     /*length */)
 {
 }
 
 
 void
-FormatterToNull::entityReference(const XMLCh* const	/* name */)
+FormatterToNull::entityReference(const XMLCh* const /* name */)
 {
 }
 
@@ -101,8 +101,8 @@ FormatterToNull::entityReference(const XMLCh* const	/* name */)
 
 void
 FormatterToNull::ignorableWhitespace(
-			const XMLCh* const	/* chars */,
-			const size_type	    /* length */)
+            const XMLCh* const  /* chars */,
+            const size_type     /* length */)
 {
 }
 
@@ -110,8 +110,8 @@ FormatterToNull::ignorableWhitespace(
 
 void
 FormatterToNull::processingInstruction(
-			const XMLCh* const	/* target */,
-			const XMLCh* const	/* data */)
+            const XMLCh* const  /* target */,
+            const XMLCh* const  /* data */)
 {
 }
 
@@ -125,7 +125,7 @@ FormatterToNull::resetDocument()
 
 
 void
-FormatterToNull::comment(const XMLCh* const	/* data */)
+FormatterToNull::comment(const XMLCh* const /* data */)
 {
 }
 
@@ -133,8 +133,8 @@ FormatterToNull::comment(const XMLCh* const	/* data */)
 
 void
 FormatterToNull::cdata(
-			const XMLCh* const  /* ch */,
-			const size_type	    /* length */)
+            const XMLCh* const  /* ch */,
+            const size_type     /* length */)
 {
 }
 

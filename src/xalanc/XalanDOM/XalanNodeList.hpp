@@ -37,44 +37,44 @@ class XALAN_DOM_EXPORT XalanNodeList
 {
 public:
 
-	XalanNodeList();
+    XalanNodeList();
 
-	virtual
-	~XalanNodeList();
+    virtual
+    ~XalanNodeList();
 
-	/** @name Get functions. */
-	//@{
-	/**
-	 * Returns the <code>index</code>th item in the collection. 
-	 *
-	 * If <code>index</code> is greater than or equal to the number of nodes in 
-	 * the list, this returns <code>null</code>.
-	 *
-	 * @param index Index into the collection.
-	 * @return The node at the <code>index</code>th position in the 
-	 *	 <code>NodeList</code>, or <code>null</code> if that is not a valid 
-	 *	 index.
-	 */
-	virtual XalanNode*
-	item(XalanSize_t	index) const = 0;
+    /** @name Get functions. */
+    //@{
+    /**
+     * Returns the <code>index</code>th item in the collection. 
+     *
+     * If <code>index</code> is greater than or equal to the number of nodes in 
+     * the list, this returns <code>null</code>.
+     *
+     * @param index Index into the collection.
+     * @return The node at the <code>index</code>th position in the 
+     *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
+     *   index.
+     */
+    virtual XalanNode*
+    item(XalanSize_t    index) const = 0;
 
-	/**
-	 * Returns the number of nodes in the list. 
-	 *
-	 * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
-	 */
-	virtual XalanSize_t
-	getLength() const = 0;
+    /**
+     * Returns the number of nodes in the list. 
+     *
+     * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
+     */
+    virtual XalanSize_t
+    getLength() const = 0;
 
 protected:
 
-	XalanNodeList(const XalanNodeList&	theSource);
+    XalanNodeList(const XalanNodeList&  theSource);
 
-	XalanNodeList&
-	operator=(const XalanNodeList&	theSource);
+    XalanNodeList&
+    operator=(const XalanNodeList&  theSource);
 
-	bool
-	operator==(const XalanNodeList& 	theRHS) const;
+    bool
+    operator==(const XalanNodeList&     theRHS) const;
 
 private:
 };
@@ -85,4 +85,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANNODELIST_HEADER_GUARD_1357924680
+#endif  // XALANNODELIST_HEADER_GUARD_1357924680

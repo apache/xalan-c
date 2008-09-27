@@ -97,19 +97,19 @@ public:
     // These interfaces are inherited from ProblemListenerBase.
 
     virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode) = 0;
+            const XalanNode*        sourceNode) = 0;
 
-	virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode) = 0;
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode) = 0;
 
     // These interfaces are new to XSLTProcessor
     /**

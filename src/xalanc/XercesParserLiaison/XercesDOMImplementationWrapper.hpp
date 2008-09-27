@@ -44,41 +44,41 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationWrapper : public X
 {
 public:
 
-	XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation);
+    XercesDOMImplementationWrapper(DOMImplementationType*   theXercesDOMImplementation);
 
     static XercesDOMImplementationWrapper*
-    create(MemoryManager& theManager, DOMImplementationType*	theXercesDOMImplementation);
+    create(MemoryManager& theManager, DOMImplementationType*    theXercesDOMImplementation);
 
-	virtual
-	~XercesDOMImplementationWrapper();
+    virtual
+    ~XercesDOMImplementationWrapper();
 
-	/** @name Getter functions */
-	//@{
+    /** @name Getter functions */
+    //@{
 
-	/**
-	 * Test if the DOM implementation implements a specific feature.
-	 *
-	 * @param feature The string of the feature to test (case-insensitive). The legal 
-	 *        values are defined throughout this specification. The string must be 
-	 *        an <EM>XML name</EM> (see also Compliance).
-	 * @param version This is the version number of the package name to test.  
-	 *   In Level 1, this is the string "1.0". If the version is not specified, 
-	 *   supporting any version of the  feature will cause the method to return 
-	 *   <code>true</code>. 
-	 * @return <code>true</code> if the feature is implemented in the specified 
-	 *   version, <code>false</code> otherwise.
-	 */
-	virtual bool
-	hasFeature(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version);
+    /**
+     * Test if the DOM implementation implements a specific feature.
+     *
+     * @param feature The string of the feature to test (case-insensitive). The legal 
+     *        values are defined throughout this specification. The string must be 
+     *        an <EM>XML name</EM> (see also Compliance).
+     * @param version This is the version number of the package name to test.  
+     *   In Level 1, this is the string "1.0". If the version is not specified, 
+     *   supporting any version of the  feature will cause the method to return 
+     *   <code>true</code>. 
+     * @return <code>true</code> if the feature is implemented in the specified 
+     *   version, <code>false</code> otherwise.
+     */
+    virtual bool
+    hasFeature(
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version);
 
  //@}
 
     /** @name Functions introduced in DOM Level 2. */
     //@{
 
-	/**
+    /**
      * Creates an empty <code>DOMDocumentType</code> node.
      * Entity declarations and notations are not made available.
      * Entity reference expansions and default attribute additions
@@ -91,11 +91,11 @@ public:
      * @return A new <code>DocumentType</code> node with
      * <code>Node.ownerDocument</code> set to <code>null</code>.
      */
-	virtual XalanDocumentType*
-	createDocumentType(
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	publicId,
-			const XalanDOMString&	systemId);
+    virtual XalanDocumentType*
+    createDocumentType(
+            const XalanDOMString&   qualifiedName,
+            const XalanDOMString&   publicId,
+            const XalanDOMString&   systemId);
 
     /**
      * Creates an XML <code>DOMDocument</code> object of the specified type
@@ -114,39 +114,39 @@ public:
      *   been used with a different document.
      */
     virtual XalanDocument*
-	createDocument(
-			const XalanDOMString&		namespaceURI,
-			const XalanDOMString&		qualifiedName,
-			const XalanDocumentType&	doctype);
+    createDocument(
+            const XalanDOMString&       namespaceURI,
+            const XalanDOMString&       qualifiedName,
+            const XalanDocumentType&    doctype);
 
-	/**
-	 * Get the Xerces node this instance represent.
-	 *
-	 * @return The Xerces node
-	 */
-	DOMImplementationType*
-	getXercesNode() const
-	{
-		return m_xercesNode;
-	}
+    /**
+     * Get the Xerces node this instance represent.
+     *
+     * @return The Xerces node
+     */
+    DOMImplementationType*
+    getXercesNode() const
+    {
+        return m_xercesNode;
+    }
 
     //@}
 
 private:
 
-	// These are not defined...
+    // These are not defined...
 
-	XercesDOMImplementationWrapper(const XercesDOMImplementationWrapper&	theSource);
+    XercesDOMImplementationWrapper(const XercesDOMImplementationWrapper&    theSource);
 
-	XercesDOMImplementationWrapper&
-	operator=(const XercesDOMImplementationWrapper&		theSource);
+    XercesDOMImplementationWrapper&
+    operator=(const XercesDOMImplementationWrapper&     theSource);
 
-	bool
-	operator==(const XercesDOMImplementationWrapper&	theRHS) const;
+    bool
+    operator==(const XercesDOMImplementationWrapper&    theRHS) const;
 
-	// Data members...
+    // Data members...
 
-	DOMImplementationType* const	m_xercesNode;
+    DOMImplementationType* const    m_xercesNode;
 };
 
 
@@ -155,4 +155,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined (XERCESDOMIMPLEMENTATIONWRAPPER_HEADER_GUARD_1357924680)
+#endif  // !defined (XERCESDOMIMPLEMENTATIONWRAPPER_HEADER_GUARD_1357924680)

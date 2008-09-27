@@ -42,31 +42,31 @@ class XALAN_XMLSUPPORT_EXPORT XMLSupportInit
 {
 public:
 
-	explicit
-	XMLSupportInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
+    explicit
+    XMLSupportInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
-	~XMLSupportInit();
+    ~XMLSupportInit();
 
 private:
 
-	// Not implemented...
-	XMLSupportInit(const XMLSupportInit&);
+    // Not implemented...
+    XMLSupportInit(const XMLSupportInit&);
 
-	XMLSupportInit&
-	operator=(const XMLSupportInit&);
+    XMLSupportInit&
+    operator=(const XMLSupportInit&);
 
-	
-	static void
-	initialize(MemoryManager& theManager);
+    
+    static void
+    initialize(MemoryManager& theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const PlatformSupportInit	m_platformSupportInit;
+    const PlatformSupportInit   m_platformSupportInit;
 
-	const DOMSupportInit		m_domSupportInit;
+    const DOMSupportInit        m_domSupportInit;
 
-	static unsigned long		s_initCounter;
+    static unsigned long        s_initCounter;
 };
 
 
@@ -75,4 +75,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XMLSUPPORTINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(XMLSUPPORTINIT_INCLUDE_GUARD_1357924680)

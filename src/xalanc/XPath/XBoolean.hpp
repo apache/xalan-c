@@ -38,81 +38,81 @@ class XALAN_XPATH_EXPORT XBoolean : public XObject
 {
 public:
 
-	typedef XObject		ParentType;
+    typedef XObject     ParentType;
 
-	/**
-	 * Construct an XBoolean object from a boolean value
-	 * 
-	 * @param val	The boolean value to initialize object
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XBoolean(
-            bool	        val,
+    /**
+     * Construct an XBoolean object from a boolean value
+     * 
+     * @param val   The boolean value to initialize object
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XBoolean(
+            bool            val,
             MemoryManager&  theMemoryManager);
 
-	/**
-	 * Construct an XBoolean object from another.
-	 * 
-	 * @param source The source XBoolean instance.
-	 * @param theMemoryManager The MemoryManager instance.
-	 */
-	XBoolean(
-            const XBoolean&	    source,
+    /**
+     * Construct an XBoolean object from another.
+     * 
+     * @param source The source XBoolean instance.
+     * @param theMemoryManager The MemoryManager instance.
+     */
+    XBoolean(
+            const XBoolean&     source,
             MemoryManager&      theMemoryManager);
 
-	virtual
-	~XBoolean();
+    virtual
+    ~XBoolean();
 
-	// These methods are inherited from XObject ...
+    // These methods are inherited from XObject ...
 
-	virtual const XalanDOMString&
-	getTypeString() const;
+    virtual const XalanDOMString&
+    getTypeString() const;
 
-	virtual double
-	num(XPathExecutionContext&  executionContext) const;
+    virtual double
+    num(XPathExecutionContext&  executionContext) const;
 
-	virtual bool
-	boolean(XPathExecutionContext&  executionContext) const;
+    virtual bool
+    boolean(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str(XPathExecutionContext&  executionContext) const;
+    virtual const XalanDOMString&
+    str(XPathExecutionContext&  executionContext) const;
 
-	virtual const XalanDOMString&
-	str() const;
+    virtual const XalanDOMString&
+    str() const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const;
+    virtual void
+    str(
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const;
 
-	virtual void
-	str(
+    virtual void
+    str(
             XPathExecutionContext&  executionContext,
-            XalanDOMString&	        theBuffer) const;
+            XalanDOMString&         theBuffer) const;
 
-	virtual void
-	str(XalanDOMString&     theBuffer) const;
+    virtual void
+    str(XalanDOMString&     theBuffer) const;
 
-	using ParentType::str;
+    using ParentType::str;
 
-	virtual double
-	stringLength(XPathExecutionContext&     executionContext) const;
+    virtual double
+    stringLength(XPathExecutionContext&     executionContext) const;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject);
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const;
 
 private:
 
-	bool	m_value;
+    bool    m_value;
 };
 
 
@@ -121,4 +121,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XBOOLEAN_HEADER_GUARD_1357924680
+#endif  // XBOOLEAN_HEADER_GUARD_1357924680

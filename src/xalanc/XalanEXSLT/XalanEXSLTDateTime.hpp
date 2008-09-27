@@ -35,17 +35,17 @@ class XALAN_EXSLT_EXPORT XalanEXSLTDateTimeFunctionsInstaller : public XalanExte
 {
 public:
 
-	static void
-	installLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    installLocal(XPathEnvSupportDefault&    theSupport);
 
-	static void
-	installGlobal(MemoryManager& theManager);
+    static void
+    installGlobal(MemoryManager& theManager);
 
-	static void
-	uninstallLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    uninstallLocal(XPathEnvSupportDefault&  theSupport);
 
-	static void
-	uninstallGlobal(MemoryManager& theManager);
+    static void
+    uninstallGlobal(MemoryManager& theManager);
 
 private:
 };

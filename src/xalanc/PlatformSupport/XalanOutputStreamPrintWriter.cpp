@@ -38,18 +38,18 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
-			XalanOutputStream&	theOutputStream,
-			bool				fAutoFlush) :
+            XalanOutputStream&  theOutputStream,
+            bool                fAutoFlush) :
     PrintWriter(fAutoFlush, theOutputStream.getMemoryManager()),
-	m_outputStream(theOutputStream),
+    m_outputStream(theOutputStream),
     m_buffer(theOutputStream.getMemoryManager()),
-	m_flushWideChars(false)
+    m_flushWideChars(false)
 {
 }
 XalanOutputStreamPrintWriter*
 XalanOutputStreamPrintWriter::create(
-			XalanOutputStream&	theOutputStream,
-			bool				fAutoFlush) 
+            XalanOutputStream&  theOutputStream,
+            bool                fAutoFlush) 
 {
     typedef XalanOutputStreamPrintWriter ThisType;
 
@@ -68,7 +68,7 @@ XalanOutputStreamPrintWriter::create(
 
 XalanOutputStreamPrintWriter::~XalanOutputStreamPrintWriter()
 {
-	flush();
+    flush();
 }
 
 
@@ -76,12 +76,12 @@ XalanOutputStreamPrintWriter::~XalanOutputStreamPrintWriter()
 void
 XalanOutputStreamPrintWriter::flushWideChars()
 {
-	if (m_flushWideChars == true)
-	{
-		m_outputStream.flushBuffer();
+    if (m_flushWideChars == true)
+    {
+        m_outputStream.flushBuffer();
 
-		m_flushWideChars = false;
-	}
+        m_flushWideChars = false;
+    }
 }
 
 
@@ -89,7 +89,7 @@ XalanOutputStreamPrintWriter::flushWideChars()
 bool
 XalanOutputStreamPrintWriter::checkError() const
 {
-	return false;
+    return false;
 }
 
 
@@ -97,14 +97,14 @@ XalanOutputStreamPrintWriter::checkError() const
 void
 XalanOutputStreamPrintWriter::close()
 {
-	flush();
+    flush();
 }
 
 
 void
 XalanOutputStreamPrintWriter::flush()
 {
-	m_outputStream.flush();
+    m_outputStream.flush();
 }
 
 
@@ -112,7 +112,7 @@ XalanOutputStreamPrintWriter::flush()
 XalanOutputStream*
 XalanOutputStreamPrintWriter::getStream()
 {
-	return &m_outputStream;
+    return &m_outputStream;
 }
 
 
@@ -120,87 +120,87 @@ XalanOutputStreamPrintWriter::getStream()
 const XalanOutputStream*
 XalanOutputStreamPrintWriter::getStream() const
 {
-	return &m_outputStream;
+    return &m_outputStream;
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::write(
-			const char*		s,
-			size_t			theOffset,
-			size_t			theLength)
+            const char*     s,
+            size_t          theOffset,
+            size_t          theLength)
 {
-	assert(s != 0);
+    assert(s != 0);
     assert(XalanDOMString::size_type(theLength) == theLength);
 
-	flushWideChars();
+    flushWideChars();
 
-	if (theLength != npos)
-	{
-		m_outputStream.write(
+    if (theLength != npos)
+    {
+        m_outputStream.write(
             s + theOffset,
             XalanDOMString::size_type(theLength));
-	}
-	else
-	{
-		if (theOffset == 0)
-		{
-			m_outputStream.write(s);
-		}
-		else
-		{
-			m_outputStream.write(s + theOffset);
-		}
-	}
+    }
+    else
+    {
+        if (theOffset == 0)
+        {
+            m_outputStream.write(s);
+        }
+        else
+        {
+            m_outputStream.write(s + theOffset);
+        }
+    }
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::write(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theOffset,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theOffset,
+            XalanDOMString::size_type   theLength)
 {
-	assert(s != 0);
+    assert(s != 0);
 
-	if (theLength == XalanDOMString::npos)
-	{
-		if (theOffset == 0)
-		{
-			m_outputStream.write(s);
-		}
-		else
-		{
-			m_outputStream.write(s + theOffset);
-		}
-	}
-	else
-	{
-		m_outputStream.write(s + theOffset, theLength);
-	}
+    if (theLength == XalanDOMString::npos)
+    {
+        if (theOffset == 0)
+        {
+            m_outputStream.write(s);
+        }
+        else
+        {
+            m_outputStream.write(s + theOffset);
+        }
+    }
+    else
+    {
+        m_outputStream.write(s + theOffset, theLength);
+    }
 
-	m_flushWideChars = true;
+    m_flushWideChars = true;
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::write(XalanDOMChar	c)
+XalanOutputStreamPrintWriter::write(XalanDOMChar    c)
 {
-	m_outputStream.write(c);
+    m_outputStream.write(c);
 
-	m_flushWideChars = true;
+    m_flushWideChars = true;
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::write(
-			const XalanDOMString&		s,
-			XalanDOMString::size_type	theOffset,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMString&       s,
+            XalanDOMString::size_type   theOffset,
+            XalanDOMString::size_type   theLength)
 {
     write(s.c_str(), theOffset, theLength);
 }
@@ -209,93 +209,93 @@ XalanOutputStreamPrintWriter::write(
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-XalanOutputStreamPrintWriter::print(bool	b)
+XalanOutputStreamPrintWriter::print(bool    b)
 {
-	if (b == true)
-	{
-		print(s_trueString);
-	}
-	else
-	{
-		print(s_falseString);
-	}
+    if (b == true)
+    {
+        print(s_trueString);
+    }
+    else
+    {
+        print(s_falseString);
+    }
 }
 #endif
 
 
 
 void
-XalanOutputStreamPrintWriter::print(char	c)
+XalanOutputStreamPrintWriter::print(char    c)
 {
-	write(c);
+    write(c);
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::print(
-			const char*		s,
-			size_t			theLength)
+            const char*     s,
+            size_t          theLength)
 {
-	write(s,
-		  0,
-		  theLength);
+    write(s,
+          0,
+          theLength);
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::print(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength)
 {
-	assert(s != 0);
+    assert(s != 0);
 
-	write(s,
-		  0,
-		  theLength);
+    write(s,
+          0,
+          theLength);
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::print(double	d)
+XalanOutputStreamPrintWriter::print(double  d)
 {
-	m_buffer.clear();
+    m_buffer.clear();
 
-	NumberToDOMString(d, m_buffer);
+    NumberToDOMString(d, m_buffer);
 
-	print(m_buffer);
+    print(m_buffer);
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::print(int		i)
+XalanOutputStreamPrintWriter::print(int     i)
 {
-	m_buffer.clear();
+    m_buffer.clear();
 
-	NumberToDOMString(i, m_buffer);
+    NumberToDOMString(i, m_buffer);
 
-	print(m_buffer);
+    print(m_buffer);
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::print(long	l)
+XalanOutputStreamPrintWriter::print(long    l)
 {
-	m_buffer.clear();
+    m_buffer.clear();
 
-	NumberToDOMString(l, m_buffer);
+    NumberToDOMString(l, m_buffer);
 
-	print(m_buffer);
+    print(m_buffer);
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
+XalanOutputStreamPrintWriter::print(const XalanDOMString&   s)
 {
     write(s.c_str(), 0, s.length());
 }
@@ -305,95 +305,95 @@ XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 void
 XalanOutputStreamPrintWriter::println()
 {
-	write(s_newlineString, 0, length(s_newlineString));
+    write(s_newlineString, 0, length(s_newlineString));
 
-	flush();
+    flush();
 }
 
 
 
 #if !defined(XALAN_BOOL_AS_INT)
 void
-XalanOutputStreamPrintWriter::println(bool	b)
+XalanOutputStreamPrintWriter::println(bool  b)
 {
-	print(b);
+    print(b);
 
-	println();
+    println();
 }
 #endif
 
 
 
 void
-XalanOutputStreamPrintWriter::println(char	c)
+XalanOutputStreamPrintWriter::println(char  c)
 {
-	print(c);
+    print(c);
 
-	println();
+    println();
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::println(
-			const char*		s,
-			size_t			theLength)
+            const char*     s,
+            size_t          theLength)
 {
-	print(s, theLength);
+    print(s, theLength);
 
-	println();
+    println();
 }
 
 
 
 void
 XalanOutputStreamPrintWriter::println(
-			const XalanDOMChar*			s,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         s,
+            XalanDOMString::size_type   theLength)
 {
-	print(s, theLength);
+    print(s, theLength);
 
-	println();
+    println();
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::println(double	d)
+XalanOutputStreamPrintWriter::println(double    d)
 {
-	print(d);
+    print(d);
 
-	println();
+    println();
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::println(int	i)
+XalanOutputStreamPrintWriter::println(int   i)
 {
-	print(i);
+    print(i);
 
-	println();
+    println();
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::println(long	l)
+XalanOutputStreamPrintWriter::println(long  l)
 {
-	print(l);
+    print(l);
 
-	println();
+    println();
 }
 
 
 
 void
-XalanOutputStreamPrintWriter::println(const XalanDOMString&		s)
+XalanOutputStreamPrintWriter::println(const XalanDOMString&     s)
 {
-	print(s);
+    print(s);
 
-	println();
+    println();
 }
 
 

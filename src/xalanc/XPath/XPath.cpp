@@ -1052,9 +1052,9 @@ stringToCharacters(
 
     if (theLength != 0)
     {
-	    assert(theLength == FormatterListener::size_type(theLength));
+        assert(theLength == FormatterListener::size_type(theLength));
 
-	    (formatterListener.*function)(
+        (formatterListener.*function)(
             str.c_str(),
             FormatterListener::size_type(theLength));
     }
@@ -3029,11 +3029,11 @@ XPath::step(
 
 XPath::eMatchScore
 XPath::doStepPredicate(
-            XPathExecutionContext&	executionContext,
-            XalanNode* 				context,
-            OpCodeMapPositionType 	opPos,
-            OpCodeMapPositionType 	startOpPos,
-            eMatchScore 			score) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,
+            OpCodeMapPositionType   opPos,
+            OpCodeMapPositionType   startOpPos,
+            eMatchScore             score) const
 {
     const XPathExpression&  currentExpression = getExpression();
 

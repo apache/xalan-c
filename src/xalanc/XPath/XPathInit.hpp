@@ -42,34 +42,34 @@ class XALAN_XPATH_EXPORT XPathInit
 {
 public:
 
-	explicit
-	XPathInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
+    explicit
+    XPathInit(MemoryManager& theManager XALAN_DEFAULT_MEMMGR);
 
     static XPathInit*
     create(MemoryManager& theManager);
 
-	~XPathInit();
+    ~XPathInit();
 
 private:
 
-	// Not implemented...
-	XPathInit(const XPathInit&);
+    // Not implemented...
+    XPathInit(const XPathInit&);
 
-	XPathInit&
-	operator=(const XPathInit&);
+    XPathInit&
+    operator=(const XPathInit&);
 
-	
-	static void
-	initialize(MemoryManager& theManager);
+    
+    static void
+    initialize(MemoryManager& theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const PlatformSupportInit	m_platformSupportInit;
+    const PlatformSupportInit   m_platformSupportInit;
 
-	const DOMSupportInit		m_domSupportInit;
+    const DOMSupportInit        m_domSupportInit;
 
-	static unsigned long		s_initCounter;
+    static unsigned long        s_initCounter;
 };
 
 
@@ -78,4 +78,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XPATHINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(XPATHINIT_INCLUDE_GUARD_1357924680)

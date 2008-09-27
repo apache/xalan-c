@@ -41,33 +41,33 @@ class XALAN_XPATH_EXPORT XNodeSetResultTreeFragProxy : public XObjectResultTreeF
 {
 public:
 
-	XNodeSetResultTreeFragProxy(const XNodeSetBase&	value);
+    XNodeSetResultTreeFragProxy(const XNodeSetBase& value);
 
-	virtual
-	~XNodeSetResultTreeFragProxy();
+    virtual
+    ~XNodeSetResultTreeFragProxy();
 
-	// These interfaces are inherited from XObjectResultTreeFragProxyBase...
+    // These interfaces are inherited from XObjectResultTreeFragProxyBase...
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
 private:
 
-	// Not implemented...
-	XNodeSetResultTreeFragProxy(const XNodeSetResultTreeFragProxy&	theSource);
+    // Not implemented...
+    XNodeSetResultTreeFragProxy(const XNodeSetResultTreeFragProxy&  theSource);
 
-	XNodeSetResultTreeFragProxy&
-	operator=(const XNodeSetResultTreeFragProxy&	theRHS);
+    XNodeSetResultTreeFragProxy&
+    operator=(const XNodeSetResultTreeFragProxy&    theRHS);
 
-	bool
-	operator==(const XNodeSetResultTreeFragProxy&	theRHS);
+    bool
+    operator==(const XNodeSetResultTreeFragProxy&   theRHS);
 
 
-	// Data members...
-	const XNodeSetBase&		m_value;
+    // Data members...
+    const XNodeSetBase&     m_value;
 };
 
 
@@ -76,4 +76,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNODESETRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680
+#endif  // XNODESETRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680

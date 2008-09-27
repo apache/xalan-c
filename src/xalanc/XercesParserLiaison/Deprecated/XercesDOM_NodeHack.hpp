@@ -58,23 +58,23 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_NodeHack : public XERCES_CPP_NA
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node		ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node     ParentType;
 
-	XercesDOM_NodeHack(NodeImplType*	theImpl = 0);
+    XercesDOM_NodeHack(NodeImplType*    theImpl = 0);
 
-	~XercesDOM_NodeHack();
+    ~XercesDOM_NodeHack();
 
-	NodeImplType*
-	getImpl() const
-	{
-		return fImpl;
-	}
+    NodeImplType*
+    getImpl() const
+    {
+        return fImpl;
+    }
 
-	static NodeImplType*
-	getImpl(const ParentType&		theNode)
-	{
-		return static_cast<const XercesDOM_NodeHack&>(theNode).getImpl();
-	}
+    static NodeImplType*
+    getImpl(const ParentType&       theNode)
+    {
+        return static_cast<const XercesDOM_NodeHack&>(theNode).getImpl();
+    }
 };
 
 
@@ -83,13 +83,13 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_AttrHack : public XERCES_CPP_NA
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr		ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr     ParentType;
 
-	XercesDOM_AttrHack(AttrImplType*	theImpl = 0);
+    XercesDOM_AttrHack(AttrImplType*    theImpl = 0);
 
-	XercesDOM_AttrHack(const ParentType&	theSource);
+    XercesDOM_AttrHack(const ParentType&    theSource);
 
-	~XercesDOM_AttrHack();
+    ~XercesDOM_AttrHack();
 };
 
 
@@ -98,52 +98,52 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_ElementHack : public XERCES_CPP
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element	ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element  ParentType;
 
-	XercesDOM_ElementHack(ElementImplType*	theImpl = 0);
+    XercesDOM_ElementHack(ElementImplType*  theImpl = 0);
 
-	XercesDOM_ElementHack(const ParentType&		theSource);
+    XercesDOM_ElementHack(const ParentType&     theSource);
 
-	~XercesDOM_ElementHack();
+    ~XercesDOM_ElementHack();
 
 
-	const DOMStringType
-	getNodeNameImpl() const;
+    const DOMStringType
+    getNodeNameImpl() const;
 
-	const DOMStringType
-	getNodeValueImpl() const;
+    const DOMStringType
+    getNodeValueImpl() const;
 
-	const DOMStringType
-	getNamespaceURIImpl() const;
+    const DOMStringType
+    getNamespaceURIImpl() const;
 
-	const DOMStringType
-	getPrefixImpl() const;
+    const DOMStringType
+    getPrefixImpl() const;
 
-	const DOMStringType
-	getLocalNameImpl() const;
+    const DOMStringType
+    getLocalNameImpl() const;
 
-	const DOMStringType
-	getTagNameImpl() const;
+    const DOMStringType
+    getTagNameImpl() const;
 
-	const DOMStringType
-	getAttributeImpl(const DOMStringType&	name) const;
+    const DOMStringType
+    getAttributeImpl(const DOMStringType&   name) const;
 
-	const DOMStringType
-	getAttributeNSImpl(
-			const DOMStringType&	namespaceURI,
-			const DOMStringType&	localName) const;
+    const DOMStringType
+    getAttributeNSImpl(
+            const DOMStringType&    namespaceURI,
+            const DOMStringType&    localName) const;
 
-	ElementImplType*
-	getImpl() const
-	{
-		return reinterpret_cast<ElementImplType*>(fImpl);
-	}
+    ElementImplType*
+    getImpl() const
+    {
+        return reinterpret_cast<ElementImplType*>(fImpl);
+    }
 
-	static ElementImplType*
-	getImpl(const ParentType&	theNode)
-	{
-		return static_cast<const XercesDOM_ElementHack&>(theNode).getImpl();
-	}
+    static ElementImplType*
+    getImpl(const ParentType&   theNode)
+    {
+        return static_cast<const XercesDOM_ElementHack&>(theNode).getImpl();
+    }
 };
 
 
@@ -152,44 +152,44 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_TextHack : public XERCES_CPP_NA
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text		ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text     ParentType;
 
-	XercesDOM_TextHack(TextImplType*	theImpl = 0);
+    XercesDOM_TextHack(TextImplType*    theImpl = 0);
 
-	XercesDOM_TextHack(const ParentType&	theSource);
+    XercesDOM_TextHack(const ParentType&    theSource);
 
-	~XercesDOM_TextHack();
+    ~XercesDOM_TextHack();
 
 
-	const DOMStringType
-	getNodeNameImpl() const;
+    const DOMStringType
+    getNodeNameImpl() const;
 
-	const DOMStringType
-	getNodeValueImpl() const;
+    const DOMStringType
+    getNodeValueImpl() const;
 
-	const DOMStringType
-	getNamespaceURIImpl() const;
+    const DOMStringType
+    getNamespaceURIImpl() const;
 
-	const DOMStringType
-	getPrefixImpl() const;
+    const DOMStringType
+    getPrefixImpl() const;
 
-	const DOMStringType
-	getLocalNameImpl() const;
+    const DOMStringType
+    getLocalNameImpl() const;
 
-	const DOMStringType
-	getDataImpl() const;
+    const DOMStringType
+    getDataImpl() const;
 
-	TextImplType*
-	getImpl() const
-	{
-		return reinterpret_cast<TextImplType*>(fImpl);
-	}
+    TextImplType*
+    getImpl() const
+    {
+        return reinterpret_cast<TextImplType*>(fImpl);
+    }
 
-	static TextImplType*
-	getImpl(const ParentType&	theNode)
-	{
-		return static_cast<const XercesDOM_TextHack&>(theNode).getImpl();
-	}
+    static TextImplType*
+    getImpl(const ParentType&   theNode)
+    {
+        return static_cast<const XercesDOM_TextHack&>(theNode).getImpl();
+    }
 };
 
 
@@ -198,4 +198,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESDOM_NODEHACK_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESDOM_NODEHACK_HEADER_GUARD_1357924680)

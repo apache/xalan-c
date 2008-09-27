@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDocumentType::XalanDocumentType() :
-	XalanNode()
+    XalanNode()
 {
 }
 
@@ -36,27 +36,27 @@ XalanDocumentType::~XalanDocumentType()
 
 
 
-XalanDocumentType::XalanDocumentType(const XalanDocumentType&	theSource) :
-	XalanNode(theSource)
+XalanDocumentType::XalanDocumentType(const XalanDocumentType&   theSource) :
+    XalanNode(theSource)
 {
 }
 
 
 
 XalanDocumentType&
-XalanDocumentType::operator=(const XalanDocumentType&		theSource)
+XalanDocumentType::operator=(const XalanDocumentType&       theSource)
 {
-	XalanNode::operator=(theSource);
+    XalanNode::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanDocumentType::operator==(const XalanDocumentType&	/* theRHS */) const
+XalanDocumentType::operator==(const XalanDocumentType&  /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

@@ -47,39 +47,39 @@ class XalanDefaultParsedSourceDOMSupport : public XalanSourceTreeDOMSupport
 {
 public:
 
-	XalanDefaultParsedSourceDOMSupport(
-			const XalanSourceTreeParserLiaison&		theParserLiaison,
-			const XalanSourceTreeDOMSupport&		theDOMSupport);
+    XalanDefaultParsedSourceDOMSupport(
+            const XalanSourceTreeParserLiaison&     theParserLiaison,
+            const XalanSourceTreeDOMSupport&        theDOMSupport);
 
-	virtual
-	~XalanDefaultParsedSourceDOMSupport();
+    virtual
+    ~XalanDefaultParsedSourceDOMSupport();
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
-	// These interfaces are inherited from DOMSupport...
+    // These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString&
-	getUnparsedEntityURI(
-			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+    virtual const XalanDOMString&
+    getUnparsedEntityURI(
+            const XalanDOMString&   theName,
+            const XalanDocument&    theDocument) const;
 
-	virtual bool
-	isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const;
+    virtual bool
+    isNodeAfter(
+            const XalanNode&    node1,
+            const XalanNode&    node2) const;
 
 private:
 
-	// Not implemented...
-	XalanDefaultParsedSourceDOMSupport(const XalanDefaultParsedSourceDOMSupport&);
+    // Not implemented...
+    XalanDefaultParsedSourceDOMSupport(const XalanDefaultParsedSourceDOMSupport&);
 
-	XalanDefaultParsedSourceDOMSupport&
-	operator=(const XalanDefaultParsedSourceDOMSupport&);
+    XalanDefaultParsedSourceDOMSupport&
+    operator=(const XalanDefaultParsedSourceDOMSupport&);
 
 
-	// Data members...
-	const XalanSourceTreeDOMSupport&	m_domSupport;
+    // Data members...
+    const XalanSourceTreeDOMSupport&    m_domSupport;
 };
 
 
@@ -88,34 +88,34 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanPars
 {
 public:
 
-	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+    XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&     theSourceDOMSupport,
                                     MemoryManager&                  theManager XALAN_DEFAULT_MEMMGR);
 
     static XalanDefaultParsedSourceHelper*
-    create(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+    create(const XalanSourceTreeDOMSupport&     theSourceDOMSupport,
             MemoryManager&                  theManager);
 
-	~XalanDefaultParsedSourceHelper();
+    ~XalanDefaultParsedSourceHelper();
 
-	virtual DOMSupport&
-	getDOMSupport();
+    virtual DOMSupport&
+    getDOMSupport();
 
-	virtual XMLParserLiaison&
-	getParserLiaison();
+    virtual XMLParserLiaison&
+    getParserLiaison();
 
 private:
 
-	// Not implemented...
-	XalanDefaultParsedSourceHelper(const XalanDefaultParsedSourceHelper&);
+    // Not implemented...
+    XalanDefaultParsedSourceHelper(const XalanDefaultParsedSourceHelper&);
 
-	XalanDefaultParsedSourceHelper&
-	operator=(const XalanDefaultParsedSourceHelper&);
+    XalanDefaultParsedSourceHelper&
+    operator=(const XalanDefaultParsedSourceHelper&);
 
 
-	// Data members...
-	XalanSourceTreeParserLiaison		m_parserLiaison;
+    // Data members...
+    XalanSourceTreeParserLiaison        m_parserLiaison;
 
-	XalanDefaultParsedSourceDOMSupport	m_domSupport;
+    XalanDefaultParsedSourceDOMSupport  m_domSupport;
 };
 
 
@@ -128,58 +128,58 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSour
 {
 public:
 
-	XalanDefaultParsedSource(
-			const InputSource&	    theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0,
-			XMLEntityResolver*		theXMLEntityResolver = 0,
-			const XalanDOMChar*		theExternalSchemaLocation = 0,
+    XalanDefaultParsedSource(
+            const InputSource&      theInputSource,
+            bool                    fValidate = false,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0,
+            XMLEntityResolver*      theXMLEntityResolver = 0,
+            const XalanDOMChar*     theExternalSchemaLocation = 0,
             const XalanDOMChar*     theExternalNoNamespaceSchemaLocation = 0,
             bool                    fPoolAllTextNodes = XalanSourceTreeDocument::getPoolAllTextNodes(),
             MemoryManager&          theManager XALAN_DEFAULT_MEMMGR);
 
-	static XalanDefaultParsedSource*
+    static XalanDefaultParsedSource*
     create(
             MemoryManager&          theManager,
-			const InputSource&	    theInputSource,
-			bool					fValidate = false,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0,
-			XMLEntityResolver*		theXMLEntityResolver = 0,
-			const XalanDOMChar*		theExternalSchemaLocation = 0,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0,
+            const InputSource&      theInputSource,
+            bool                    fValidate = false,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0,
+            XMLEntityResolver*      theXMLEntityResolver = 0,
+            const XalanDOMChar*     theExternalSchemaLocation = 0,
+            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation = 0,
             bool                    fPoolAllTextNodes = XalanSourceTreeDocument::getPoolAllTextNodes());
 
-	virtual
-	~XalanDefaultParsedSource();
+    virtual
+    ~XalanDefaultParsedSource();
 
-	virtual XalanDocument*
-	getDocument() const;
+    virtual XalanDocument*
+    getDocument() const;
 
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager&     theManager) const;
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager&     theManager) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
 private:
 
-	// Not implemented...
-	XalanDefaultParsedSource(const XalanDefaultParsedSource&);
+    // Not implemented...
+    XalanDefaultParsedSource(const XalanDefaultParsedSource&);
 
-	XalanDefaultParsedSource&
-	operator=(const XalanDefaultParsedSource&);
+    XalanDefaultParsedSource&
+    operator=(const XalanDefaultParsedSource&);
 
 
-	// Data members...
-	XalanSourceTreeParserLiaison	m_parserLiaison;
+    // Data members...
+    XalanSourceTreeParserLiaison    m_parserLiaison;
 
-	XalanSourceTreeDOMSupport		m_domSupport;
+    XalanSourceTreeDOMSupport       m_domSupport;
 
-	XalanSourceTreeDocument*		m_parsedSource;
+    XalanSourceTreeDocument*        m_parsedSource;
 
-	XalanDOMString					m_uri;
+    XalanDOMString                  m_uri;
 };
 
 
@@ -188,7 +188,7 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANDEFAULTPARSEDSOURCE_HEADER_GUARD
+#endif  // XALANDEFAULTPARSEDSOURCE_HEADER_GUARD
 
 
 

@@ -50,28 +50,28 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStream
 {
 public :
 
-	enum { eDefaultBufferSize = 512u, eDefaultTranscoderBlockSize = 1024u };
+    enum { eDefaultBufferSize = 512u, eDefaultTranscoderBlockSize = 1024u };
 
-	typedef XalanVector<XalanDOMChar>		BufferType;
-	typedef XalanVector<char>				TranscodeVectorType;
-	typedef XalanTranscodingServices::size_type	        size_type;
+    typedef XalanVector<XalanDOMChar>       BufferType;
+    typedef XalanVector<char>               TranscodeVectorType;
+    typedef XalanTranscodingServices::size_type         size_type;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theBufferSize the size of the transcoding buffer
-	 * @param theTranscoderBlockSize the size of the block used by the transcoder
-	 * @param fThrowTranscodeException If true, an error transcoding will result in an exception being thrown.
-	 */
-	explicit
-	XalanOutputStream(
+    /**
+     * Constructor.
+     *
+     * @param theBufferSize the size of the transcoding buffer
+     * @param theTranscoderBlockSize the size of the block used by the transcoder
+     * @param fThrowTranscodeException If true, an error transcoding will result in an exception being thrown.
+     */
+    explicit
+    XalanOutputStream(
             MemoryManager&  theManager,
-			size_type	        theBufferSize = eDefaultBufferSize,
-			size_type	        theTranscoderBlockSize = eDefaultTranscoderBlockSize,
-			bool		        fThrowTranscodeException = true);
+            size_type           theBufferSize = eDefaultBufferSize,
+            size_type           theTranscoderBlockSize = eDefaultTranscoderBlockSize,
+            bool                fThrowTranscodeException = true);
 
-	virtual
-	~XalanOutputStream();
+    virtual
+    ~XalanOutputStream();
 
     MemoryManager& 
     getMemoryManager()
@@ -79,247 +79,247 @@ public :
         return m_buffer.getMemoryManager();
     }
 
-	static const XalanDOMChar*
-	defaultNewlineString()
-	{
+    static const XalanDOMChar*
+    defaultNewlineString()
+    {
 #if defined(XALAN_NEWLINE_IS_CRLF)
-		return s_nlCRString;
+        return s_nlCRString;
 #else
-		return s_nlString;
+        return s_nlString;
 #endif
-	}
+    }
 
-	/**
-	 * Write the appropriate newline character(s) to the stream.
-	 */
-	virtual void
-	newline();
+    /**
+     * Write the appropriate newline character(s) to the stream.
+     */
+    virtual void
+    newline();
 
-	/**
-	 * Get the string which is appropriate for inserting a line feed in the stream.
-	 */
-	virtual const XalanDOMChar*
-	getNewlineString() const;
+    /**
+     * Get the string which is appropriate for inserting a line feed in the stream.
+     */
+    virtual const XalanDOMChar*
+    getNewlineString() const;
 
-	/**
-	 * Flush the stream's transcoding buffer, but do not request
-	 * the implementation class to flush its buffer.
-	 * .
-	 */
-	void
-	flushBuffer();
+    /**
+     * Flush the stream's transcoding buffer, but do not request
+     * the implementation class to flush its buffer.
+     * .
+     */
+    void
+    flushBuffer();
 
-	/**
-	 * Flush the stream's buffer.
-	 */
-	void
-	flush()
-	{
-		flushBuffer();
+    /**
+     * Flush the stream's buffer.
+     */
+    void
+    flush()
+    {
+        flushBuffer();
 
-		doFlush();
-	}
+        doFlush();
+    }
 
-	/**
-	 * Write a character to the output stream.	The character
-	 * will not be transcoded.
-	 *
-	 * @param theChar		the character to write
-	 */
-	void
-	write(char	theChar)
-	{
-		write(&theChar, 1);
-	}
+    /**
+     * Write a character to the output stream.  The character
+     * will not be transcoded.
+     *
+     * @param theChar       the character to write
+     */
+    void
+    write(char  theChar)
+    {
+        write(&theChar, 1);
+    }
 
-	/**
-	 * Write a wide character to the output stream.  The character
-	 * will be transcoded, if an output encoding is specified.
-	 *
-	 * @param theChar		the character to write
-	 */
-	void
-	write(XalanDOMChar	theChar)
-	{
-		assert(m_bufferSize > 0);
+    /**
+     * Write a wide character to the output stream.  The character
+     * will be transcoded, if an output encoding is specified.
+     *
+     * @param theChar       the character to write
+     */
+    void
+    write(XalanDOMChar  theChar)
+    {
+        assert(m_bufferSize > 0);
 
-		if (m_buffer.size() == m_bufferSize)
-		{
-			flushBuffer();
-		}
+        if (m_buffer.size() == m_bufferSize)
+        {
+            flushBuffer();
+        }
 
-		m_buffer.push_back(theChar);
-	}
+        m_buffer.push_back(theChar);
+    }
 
-	/**
-	 * Write a null-terminated string to the output file.  The character
-	 * will not be transcoded.  The caller is responsible for making sure the
-	 * buffer is flushed before calling this member function.
-	 *
-	 * @param theBuffer 	  character buffer to write
-	 */
-	void
-	write(const char*	theBuffer)
-	{
-		assert(theBuffer != 0);
-		assert(m_buffer.empty() == true);
+    /**
+     * Write a null-terminated string to the output file.  The character
+     * will not be transcoded.  The caller is responsible for making sure the
+     * buffer is flushed before calling this member function.
+     *
+     * @param theBuffer       character buffer to write
+     */
+    void
+    write(const char*   theBuffer)
+    {
+        assert(theBuffer != 0);
+        assert(m_buffer.empty() == true);
 
-		write(theBuffer, length(theBuffer));
-	}
+        write(theBuffer, length(theBuffer));
+    }
 
-	/**
-	 * Write a null-terminated wide string to the output file.	The string
-	 * will be transcoded, if an output encoding is specified.
-	 *
-	 * @param theBuffer 	  character buffer to write
-	 */
-	void
-	write(const XalanDOMChar*	theBuffer)
-	{
-		write(theBuffer, length(theBuffer));
-	}
+    /**
+     * Write a null-terminated wide string to the output file.  The string
+     * will be transcoded, if an output encoding is specified.
+     *
+     * @param theBuffer       character buffer to write
+     */
+    void
+    write(const XalanDOMChar*   theBuffer)
+    {
+        write(theBuffer, length(theBuffer));
+    }
 
-	/**
-	 * Write a specified number of characters to the output stream.  The string
-	 * will not be transcoded.  The caller is responsible for making sure the
-	 * buffer is flushed before calling this member function.
-	 *
-	 * @param theBuffer 	  character buffer to write
-	 * @param theBufferLength number of characters to write
-	 */
-	void
-	write(
-			const char* 	theBuffer,
-			size_type		theBufferLength)
-	{
-		assert(theBuffer != 0);
-		assert(m_buffer.empty() == true);
+    /**
+     * Write a specified number of characters to the output stream.  The string
+     * will not be transcoded.  The caller is responsible for making sure the
+     * buffer is flushed before calling this member function.
+     *
+     * @param theBuffer       character buffer to write
+     * @param theBufferLength number of characters to write
+     */
+    void
+    write(
+            const char*     theBuffer,
+            size_type       theBufferLength)
+    {
+        assert(theBuffer != 0);
+        assert(m_buffer.empty() == true);
 
-		writeData(theBuffer,
-				  theBufferLength);
-	}
+        writeData(theBuffer,
+                  theBufferLength);
+    }
 
-	/**
-	 * Write a specified number of characters to the output stream.  The string
-	 * will be transcoded, if an output encoding is specified.
-	 *
-	 * @param theBuffer 	  character buffer to write
-	 * @param theBufferLength number of characters to write
-	 */
-	void
-	write(
-			const XalanDOMChar* 	theBuffer,
-			size_type				theBufferLength);
+    /**
+     * Write a specified number of characters to the output stream.  The string
+     * will be transcoded, if an output encoding is specified.
+     *
+     * @param theBuffer       character buffer to write
+     * @param theBufferLength number of characters to write
+     */
+    void
+    write(
+            const XalanDOMChar*     theBuffer,
+            size_type               theBufferLength);
 
-	/**
-	 * Get the output encoding for the stream.
-	 *
-	 * @return The encoding name
-	 */
-	const XalanDOMString&
-	getOutputEncoding() const
-	{
-		return m_encoding;
-	}
+    /**
+     * Get the output encoding for the stream.
+     *
+     * @return The encoding name
+     */
+    const XalanDOMString&
+    getOutputEncoding() const
+    {
+        return m_encoding;
+    }
 
-	/**
-	 * Set the output encoding for the stream.
-	 *
-	 * @param theEncoding The encoding name
-	 */
-	void
-	setOutputEncoding(const XalanDOMString& 	theEncoding);
+    /**
+     * Set the output encoding for the stream.
+     *
+     * @param theEncoding The encoding name
+     */
+    void
+    setOutputEncoding(const XalanDOMString&     theEncoding);
 
-	/**
-	 * Determine if a given value can be represented in
-	 * the output encoding.
-	 *
-	 * @return true if the value can be represented, and false if not.
-	 */
-	bool
-	canTranscodeTo(XalanUnicodeChar     theChar) const;
-
-
-	const XalanOutputTranscoder*
-	getTranscoder() const
-	{
-		return m_transcoder;
-	}
-
-	/**
-	 * Set the flag that indicates whether a transcoding
-	 * error should throw an exception.  The default is
-	 * to throw an exception.  If this flag is false, and
-	 * and an error occurs transcoding, then data will
-	 * likely be lost.
-	 *
-	 * @return the value of the flag.
-	 */
-	bool
-	getThrowTranscodeException() const
-	{
-		return m_throwTranscodeException;
-	}
-
-	/**
-	 * Set the flag that indicates whether a transcoding
-	 * error should throw an exception.  The default is
-	 * to throw an exception.  If this flag is false, and
-	 * and an error occurs transcoding, then data will
-	 * likely be lost.
-	 *
-	 * @param the new value of the flag.
-	 */
-	void
-	setThrowTranscodeException(bool     flag)
-	{
-		m_throwTranscodeException = flag;
-	}
-
-	/**
-	 * Set the size of the output buffer.
-	 *
-	 * @param theBufferSize The buffer size.
-	 */
-	void
-	setBufferSize(size_type     theBufferSize);
+    /**
+     * Determine if a given value can be represented in
+     * the output encoding.
+     *
+     * @return true if the value can be represented, and false if not.
+     */
+    bool
+    canTranscodeTo(XalanUnicodeChar     theChar) const;
 
 
-	class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamException : public XSLException
-	{
-	public:
+    const XalanOutputTranscoder*
+    getTranscoder() const
+    {
+        return m_transcoder;
+    }
 
-		XalanOutputStreamException(
-			const XalanDOMString&	theMessage,
+    /**
+     * Set the flag that indicates whether a transcoding
+     * error should throw an exception.  The default is
+     * to throw an exception.  If this flag is false, and
+     * and an error occurs transcoding, then data will
+     * likely be lost.
+     *
+     * @return the value of the flag.
+     */
+    bool
+    getThrowTranscodeException() const
+    {
+        return m_throwTranscodeException;
+    }
+
+    /**
+     * Set the flag that indicates whether a transcoding
+     * error should throw an exception.  The default is
+     * to throw an exception.  If this flag is false, and
+     * and an error occurs transcoding, then data will
+     * likely be lost.
+     *
+     * @param the new value of the flag.
+     */
+    void
+    setThrowTranscodeException(bool     flag)
+    {
+        m_throwTranscodeException = flag;
+    }
+
+    /**
+     * Set the size of the output buffer.
+     *
+     * @param theBufferSize The buffer size.
+     */
+    void
+    setBufferSize(size_type     theBufferSize);
+
+
+    class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamException : public XSLException
+    {
+    public:
+
+        XalanOutputStreamException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator);
 
-		XalanOutputStreamException(
-			const XalanDOMString&	theMessage,
+        XalanOutputStreamException(
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager);
 
         XalanOutputStreamException(const XalanOutputStreamException& other);
 
-		virtual
-		~XalanOutputStreamException();
+        virtual
+        ~XalanOutputStreamException();
 
-		virtual const XalanDOMChar*
-		getType() const;
+        virtual const XalanDOMChar*
+        getType() const;
 
-	private:
-	};
+    private:
+    };
 
-	class XALAN_PLATFORMSUPPORT_EXPORT UnsupportedEncodingException : public XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT UnsupportedEncodingException : public XalanOutputStreamException
+    {
+    public:
 
-		UnsupportedEncodingException(
-            const XalanDOMString&	theEncoding,
+        UnsupportedEncodingException(
+            const XalanDOMString&   theEncoding,
             XalanDOMString&         theBuffer,
             const Locator*          theLocator);
 
-		UnsupportedEncodingException(
-            const XalanDOMString&	theEncoding,
+        UnsupportedEncodingException(
+            const XalanDOMString&   theEncoding,
             XalanDOMString&         theBuffer);
 
         UnsupportedEncodingException(const UnsupportedEncodingException&    other) :
@@ -330,145 +330,145 @@ public :
         {
         }
 
-		virtual
-		~UnsupportedEncodingException();
+        virtual
+        ~UnsupportedEncodingException();
 
-		const XalanDOMString&
-		getEncoding() const
-		{
-			return m_encoding;
-		}
+        const XalanDOMString&
+        getEncoding() const
+        {
+            return m_encoding;
+        }
 
-		virtual const XalanDOMChar*
-		getType() const;
+        virtual const XalanDOMChar*
+        getType() const;
 
     private:
 
-		const XalanDOMString	m_encoding;
-	};
+        const XalanDOMString    m_encoding;
+    };
 
-	class XALAN_PLATFORMSUPPORT_EXPORT TranscoderInternalFailureException : public XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT TranscoderInternalFailureException : public XalanOutputStreamException
+    {
+    public:
 
-		TranscoderInternalFailureException(
-            const XalanDOMString&	theEncoding,
+        TranscoderInternalFailureException(
+            const XalanDOMString&   theEncoding,
             XalanDOMString&         theBuffer,
             const Locator*          theLocator);
 
-		TranscoderInternalFailureException(
-            const XalanDOMString&	theEncoding,
+        TranscoderInternalFailureException(
+            const XalanDOMString&   theEncoding,
             XalanDOMString&         theBuffer);
 
         TranscoderInternalFailureException(const TranscoderInternalFailureException& other);
 
-		virtual
-		~TranscoderInternalFailureException();
+        virtual
+        ~TranscoderInternalFailureException();
 
-		virtual const XalanDOMChar*
-		getType() const;
+        virtual const XalanDOMChar*
+        getType() const;
 
-		const XalanDOMString&
-		getEncoding() const
-		{
-			return m_encoding;
-		}
+        const XalanDOMString&
+        getEncoding() const
+        {
+            return m_encoding;
+        }
 
-	private:
+    private:
 
-		const XalanDOMString	m_encoding;
-	};
+        const XalanDOMString    m_encoding;
+    };
 
-	class XALAN_PLATFORMSUPPORT_EXPORT TranscodingException : public XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT TranscodingException : public XalanOutputStreamException
+    {
+    public:
 
-		TranscodingException(
+        TranscodingException(
             XalanDOMString&     theBuffer,
             const Locator*      theLocator);
 
-		explicit
-		TranscodingException(XalanDOMString&    theBuffer);
+        explicit
+        TranscodingException(XalanDOMString&    theBuffer);
 
         TranscodingException(const TranscodingException& other);
 
-		virtual
-		~TranscodingException();
+        virtual
+        ~TranscodingException();
 
         virtual const XalanDOMChar*
-		getType() const;
-	};
+        getType() const;
+    };
 
 protected:
 
-	/**
-	 * Transcode a wide string.
-	 *
-	 * @param theBuffer The string to transcode.
-	 * @param theBufferLength The length of the string.
-	 * @param theDestination The destination vector.
-	 */
-	void
-	transcode(
-			const XalanDOMChar* 	theBuffer,
-			size_type				theBufferLength,
-			TranscodeVectorType&	theDestination);
+    /**
+     * Transcode a wide string.
+     *
+     * @param theBuffer The string to transcode.
+     * @param theBufferLength The length of the string.
+     * @param theDestination The destination vector.
+     */
+    void
+    transcode(
+            const XalanDOMChar*     theBuffer,
+            size_type               theBufferLength,
+            TranscodeVectorType&    theDestination);
 
-	/**
-	 * Write the data in the buffer
-	 *
-	 * @param theBuffer The data to write
-	 * @param theBufferLength The length of theBuffer.
-	 */
-	virtual void
-	writeData(
-			const char* 	    theBuffer,
-			size_type		    theBufferLength) = 0;
+    /**
+     * Write the data in the buffer
+     *
+     * @param theBuffer The data to write
+     * @param theBufferLength The length of theBuffer.
+     */
+    virtual void
+    writeData(
+            const char*         theBuffer,
+            size_type           theBufferLength) = 0;
 
-	/**
-	 * Flush the stream.
-	 */
-	virtual void
-	doFlush() = 0;
+    /**
+     * Flush the stream.
+     */
+    virtual void
+    doFlush() = 0;
 
-	static const XalanDOMChar				s_nlString[];
-	static const XalanDOMChar				s_nlCRString[];
+    static const XalanDOMChar               s_nlString[];
+    static const XalanDOMChar               s_nlCRString[];
 
-	static const XalanDOMString::size_type	s_nlStringLength;
-	static const XalanDOMString::size_type	s_nlCRStringLength;
+    static const XalanDOMString::size_type  s_nlStringLength;
+    static const XalanDOMString::size_type  s_nlCRStringLength;
 
 private:
 
-	// These are not implemented...
-	XalanOutputStream(const XalanOutputStream&);
+    // These are not implemented...
+    XalanOutputStream(const XalanOutputStream&);
 
-	XalanOutputStream&
-	operator=(const XalanOutputStream&);
+    XalanOutputStream&
+    operator=(const XalanOutputStream&);
 
-	bool
-	operator==(const XalanOutputStream&) const;
+    bool
+    operator==(const XalanOutputStream&) const;
 
-	void
-	doWrite(
-			const XalanDOMChar* 	theBuffer,
-			size_type				theBufferLength);
+    void
+    doWrite(
+            const XalanDOMChar*     theBuffer,
+            size_type               theBufferLength);
 
 
-	const size_type	        m_transcoderBlockSize;
+    const size_type         m_transcoderBlockSize;
 
-	XalanOutputTranscoder*	m_transcoder;
+    XalanOutputTranscoder*  m_transcoder;
 
-	size_type	            m_bufferSize;
+    size_type               m_bufferSize;
 
-	BufferType				m_buffer;
+    BufferType              m_buffer;
 
-	XalanDOMString			m_encoding;
+    XalanDOMString          m_encoding;
 
-	bool					m_writeAsUTF16;
+    bool                    m_writeAsUTF16;
 
-	bool					m_throwTranscodeException;
+    bool                    m_throwTranscodeException;
 
-	TranscodeVectorType 	m_transcodingBuffer;
+    TranscodeVectorType     m_transcodingBuffer;
 };
 
 
@@ -477,4 +477,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // XALANOUTPUTSTREAM_HEADER_GUARD_1357924680

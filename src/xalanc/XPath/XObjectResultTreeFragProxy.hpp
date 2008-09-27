@@ -46,20 +46,20 @@ class XALAN_XPATH_EXPORT XObjectResultTreeFragProxy : public XObjectResultTreeFr
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theXObject The XObject instance for which this is a proxy.
+    /**
+     * Constructor.
+     *
+     * @param theXObject The XObject instance for which this is a proxy.
      * @param theManager The MemoryManager for this instance.
      * @param theExecutionContext An optional XPathExecutionContext instance.
-	 */
-	XObjectResultTreeFragProxy(
-            const XObject&	        value,
+     */
+    XObjectResultTreeFragProxy(
+            const XObject&          value,
             MemoryManager&          theManager,
             XPathExecutionContext*  theExecutionContext);
 
-	virtual
-	~XObjectResultTreeFragProxy();
+    virtual
+    ~XObjectResultTreeFragProxy();
 
 
     XPathExecutionContext*
@@ -70,26 +70,26 @@ public:
 
     // These interfaces are inherited from XalanDocumentFragment...
 
-	virtual XalanNode*
-	getFirstChild() const;
+    virtual XalanNode*
+    getFirstChild() const;
 
-	virtual XalanNode*
-	getLastChild() const;
+    virtual XalanNode*
+    getLastChild() const;
 
 private:
 
-	// Not implemented...
-	XObjectResultTreeFragProxy(const XObjectResultTreeFragProxy&	theSource);
+    // Not implemented...
+    XObjectResultTreeFragProxy(const XObjectResultTreeFragProxy&    theSource);
 
-	XObjectResultTreeFragProxy&
-	operator=(const XObjectResultTreeFragProxy&	theRHS);
+    XObjectResultTreeFragProxy&
+    operator=(const XObjectResultTreeFragProxy& theRHS);
 
-	bool
-	operator==(const XObjectResultTreeFragProxy&	theRHS);
+    bool
+    operator==(const XObjectResultTreeFragProxy&    theRHS);
 
 
-	// Data members...
-	mutable XObjectResultTreeFragProxyText	m_proxy;
+    // Data members...
+    mutable XObjectResultTreeFragProxyText  m_proxy;
 };
 
 
@@ -98,4 +98,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECTRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680
+#endif  // XOBJECTRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680

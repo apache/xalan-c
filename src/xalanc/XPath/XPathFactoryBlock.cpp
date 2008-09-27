@@ -30,9 +30,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XPathFactoryBlock::XPathFactoryBlock(
             MemoryManager&  theManager,
-            XalanSize_t	        theBlockSize) :
-	XPathFactory(),
-	m_allocator(theManager, theBlockSize)
+            XalanSize_t         theBlockSize) :
+    XPathFactory(),
+    m_allocator(theManager, theBlockSize)
 {
 }
 
@@ -47,19 +47,19 @@ XPathFactoryBlock::~XPathFactoryBlock()
 void
 XPathFactoryBlock::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 
 
 bool
 XPathFactoryBlock::doReturnObject(
-			const XPath*	theXPath,
-			bool			/* fInReset */)
+            const XPath*    theXPath,
+            bool            /* fInReset */)
 {
-	// We never really delete anything, but return
-	// false if our allocator didn't create the instance.
-	return m_allocator.ownsObject(theXPath);
+    // We never really delete anything, but return
+    // false if our allocator didn't create the instance.
+    return m_allocator.ownsObject(theXPath);
 }
 
 
@@ -67,7 +67,7 @@ XPathFactoryBlock::doReturnObject(
 XPath*
 XPathFactoryBlock::create()
 {
-	return m_allocator.create();
+    return m_allocator.create();
 }
 
 

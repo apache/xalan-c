@@ -45,34 +45,34 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanEncodingPropertyCache
 {
 public:
 
-	XalanEncodingPropertyCache(
+    XalanEncodingPropertyCache(
             MemoryManager&                  theManager,
-			size_t								theCacheSize = XalanDOMChar(~0),
-			const XalanOutputTranscoder*		theTranscoder = 0);
+            size_t                              theCacheSize = XalanDOMChar(~0),
+            const XalanOutputTranscoder*        theTranscoder = 0);
 
-	~XalanEncodingPropertyCache();
+    ~XalanEncodingPropertyCache();
 
-	bool
-	canEncodeCharacter(XalanUnicodeChar     theChar) const;
+    bool
+    canEncodeCharacter(XalanUnicodeChar     theChar) const;
 
-	const XalanOutputTranscoder*
-	getTranscoder() const
-	{
-		return m_transcoder;
-	}
+    const XalanOutputTranscoder*
+    getTranscoder() const
+    {
+        return m_transcoder;
+    }
 
-	void
-	setTranscoder(const XalanOutputTranscoder*	theTranscoder)
-	{
-		m_transcoder = theTranscoder;
-	}
+    void
+    setTranscoder(const XalanOutputTranscoder*  theTranscoder)
+    {
+        m_transcoder = theTranscoder;
+    }
 private:
 
-	const XalanOutputTranscoder*	m_transcoder;
+    const XalanOutputTranscoder*    m_transcoder;
 
-	mutable XalanBitmap				m_presentBitmap;
+    mutable XalanBitmap             m_presentBitmap;
 
-	mutable XalanBitmap				m_valueBitmap;
+    mutable XalanBitmap             m_valueBitmap;
 };
 
 
@@ -81,4 +81,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANENCODINGPROPERTYCACHE_HEADER_GUARD_1357924680
+#endif  // XALANENCODINGPROPERTYCACHE_HEADER_GUARD_1357924680

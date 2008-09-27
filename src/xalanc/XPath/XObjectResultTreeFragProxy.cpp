@@ -25,11 +25,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XObjectResultTreeFragProxy::XObjectResultTreeFragProxy(
-            const XObject&	        theValue,
+            const XObject&          theValue,
             MemoryManager&          theManager,
             XPathExecutionContext*  theExecutionContext) :
-	XObjectResultTreeFragProxyBase(),
-	m_proxy(theValue, theManager, theExecutionContext)
+    XObjectResultTreeFragProxyBase(),
+    m_proxy(theValue, theManager, theExecutionContext)
 {
 }
 
@@ -44,7 +44,7 @@ XObjectResultTreeFragProxy::~XObjectResultTreeFragProxy()
 XalanNode*
 XObjectResultTreeFragProxy::getFirstChild() const
 {
-	return &m_proxy;
+    return &m_proxy;
 }
 
 
@@ -52,7 +52,7 @@ XObjectResultTreeFragProxy::getFirstChild() const
 XalanNode*
 XObjectResultTreeFragProxy::getLastChild() const
 {
-	return &m_proxy;
+    return &m_proxy;
 }
 
 

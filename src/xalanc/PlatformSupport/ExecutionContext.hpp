@@ -41,7 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
 
 
 
@@ -58,27 +58,27 @@ class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext : public ProblemListenerBase
 {
 public:
 
-	ExecutionContext(MemoryManager&     theMemoryManager);
+    ExecutionContext(MemoryManager&     theMemoryManager);
 
-	virtual
-	~ExecutionContext();
+    virtual
+    ~ExecutionContext();
 
 
     // These interfaces are inherited from ProblemListenerBase
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode) = 0;
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode) = 0;
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode) = 0;
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode) = 0;
 
     bool
     hasPreserveOrStripSpaceConditions() const
@@ -121,4 +121,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// EXECUTIONCONTEXT_HEADER_GUARD_1357924680
+#endif  // EXECUTIONCONTEXT_HEADER_GUARD_1357924680

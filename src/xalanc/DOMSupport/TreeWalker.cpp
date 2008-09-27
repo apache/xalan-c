@@ -45,245 +45,245 @@ TreeWalker::~TreeWalker()
 
 
 const XalanNode*
-TreeWalker::traverse(const XalanNode*	pos)
+TreeWalker::traverse(const XalanNode*   pos)
 {
-	assert(pos != 0);
+    assert(pos != 0);
 
-	const XalanNode*	thePos = pos;
+    const XalanNode*    thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(0 != thePos && fStop == false)
-	{
-		fStop = startNode(thePos);
+    while(0 != thePos && fStop == false)
+    {
+        fStop = startNode(thePos);
 
-		const XalanNode*	nextNode = thePos->getFirstChild();
+        const XalanNode*    nextNode = thePos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(0 == nextNode)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				thePos = thePos->getParentNode();
+            if(0 == nextNode)
+            {
+                thePos = thePos->getParentNode();
 
-				if(0 == thePos)
-				{
-					nextNode = thePos;
+                if(0 == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 XalanNode*
-TreeWalker::traverse(XalanNode*		pos)
+TreeWalker::traverse(XalanNode*     pos)
 {
-	assert(pos != 0);
+    assert(pos != 0);
 
-	XalanNode*	thePos = pos;
+    XalanNode*  thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(0 != thePos && fStop == false)
-	{
-		fStop = startNode(thePos);
+    while(0 != thePos && fStop == false)
+    {
+        fStop = startNode(thePos);
 
-		XalanNode*	nextNode = thePos->getFirstChild();
+        XalanNode*  nextNode = thePos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(0 == nextNode)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				thePos = thePos->getParentNode();
+            if(0 == nextNode)
+            {
+                thePos = thePos->getParentNode();
 
-				if(0 == thePos)
-				{
-					nextNode = thePos;
+                if(0 == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 const XalanNode*
 TreeWalker::traverse(
-			const XalanNode*	pos,
-			const XalanNode*	parent)
+            const XalanNode*    pos,
+            const XalanNode*    parent)
 {
-	assert(pos != 0);
-	assert(parent != 0);
+    assert(pos != 0);
+    assert(parent != 0);
 
-	const XalanNode*	thePos = pos;
+    const XalanNode*    thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(parent != thePos && fStop == false)
-	{	  
-		fStop = startNode(thePos);
-	  
-		const XalanNode*	nextNode = thePos->getFirstChild();
+    while(parent != thePos && fStop == false)
+    {     
+        fStop = startNode(thePos);
+      
+        const XalanNode*    nextNode = thePos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(0 == nextNode)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				thePos = thePos->getParentNode();
-				assert(thePos != 0);
+            if(0 == nextNode)
+            {
+                thePos = thePos->getParentNode();
+                assert(thePos != 0);
 
-				if(parent == thePos)
-				{
-					nextNode = thePos;
+                if(parent == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 XalanNode*
 TreeWalker::traverse(
-			XalanNode*	pos,
-			XalanNode*	parent)
+            XalanNode*  pos,
+            XalanNode*  parent)
 {
-	assert(pos != 0);
-	assert(parent != 0);
+    assert(pos != 0);
+    assert(parent != 0);
 
-	XalanNode*	thePos = pos;
+    XalanNode*  thePos = pos;
 
-	bool	fStop = false;
+    bool    fStop = false;
 
-	while(parent != thePos && fStop == false)
-	{	  
-		fStop = startNode(thePos);
-	  
-		XalanNode*	nextNode = thePos->getFirstChild();
+    while(parent != thePos && fStop == false)
+    {     
+        fStop = startNode(thePos);
+      
+        XalanNode*  nextNode = thePos->getFirstChild();
 
-		while(0 == nextNode)
-		{
-			if (fStop == false)
-			{
-				fStop = endNode(thePos);
-			}
-			else
-			{
-				endNode(thePos);
-			}
+        while(0 == nextNode)
+        {
+            if (fStop == false)
+            {
+                fStop = endNode(thePos);
+            }
+            else
+            {
+                endNode(thePos);
+            }
 
-			nextNode = thePos->getNextSibling();
+            nextNode = thePos->getNextSibling();
 
-			if(0 == nextNode)
-			{
-				thePos = thePos->getParentNode();
-				assert(thePos != 0);
+            if(0 == nextNode)
+            {
+                thePos = thePos->getParentNode();
+                assert(thePos != 0);
 
-				if(parent == thePos)
-				{
-					nextNode = thePos;
+                if(parent == thePos)
+                {
+                    nextNode = thePos;
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
-		thePos = nextNode;
-	}
+        thePos = nextNode;
+    }
 
-	return thePos;
+    return thePos;
 }
 
 
 
 void
-TreeWalker::traverseSubtree(const XalanNode*	pos)
+TreeWalker::traverseSubtree(const XalanNode*    pos)
 {
-	if (pos != 0)
-	{
-		startNode(pos);
+    if (pos != 0)
+    {
+        startNode(pos);
 
-		const XalanNode* const	theFirstChild = pos->getFirstChild();
+        const XalanNode* const  theFirstChild = pos->getFirstChild();
 
-		if (theFirstChild != 0)
-		{
-			traverse(theFirstChild, pos);
-		}
+        if (theFirstChild != 0)
+        {
+            traverse(theFirstChild, pos);
+        }
 
-		endNode(pos);
-	}
+        endNode(pos);
+    }
 }
 
 
 
 void
-TreeWalker::traverseSubtree(XalanNode*	pos)
+TreeWalker::traverseSubtree(XalanNode*  pos)
 {
-	if (pos != 0)
-	{
-		startNode(pos);
+    if (pos != 0)
+    {
+        startNode(pos);
 
-		XalanNode* const	theFirstChild = pos->getFirstChild();
+        XalanNode* const    theFirstChild = pos->getFirstChild();
 
-		if (theFirstChild != 0)
-		{
-			traverse(theFirstChild, pos);
-		}
+        if (theFirstChild != 0)
+        {
+            traverse(theFirstChild, pos);
+        }
 
-		endNode(pos);
-	}
+        endNode(pos);
+    }
 }
 
 

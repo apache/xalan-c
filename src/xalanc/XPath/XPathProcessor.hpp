@@ -50,68 +50,68 @@ class XALAN_XPATH_EXPORT XPathProcessor
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
 
-	explicit
-	XPathProcessor();
+    explicit
+    XPathProcessor();
 
-	virtual
-	~XPathProcessor();
+    virtual
+    ~XPathProcessor();
 
-	/**
-	 * Given a string, make an XPath object, in order that a parse doesn't 
-	 * have to be done each time the expression is executed.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the LocatorType to use for error report. May be null
+    /**
+     * Given a string, make an XPath object, in order that a parse doesn't 
+     * have to be done each time the expression is executed.
+     *
+     * @param pathObj        XPath object to be initialized
+     * @param constructionContext The construction context
+     * @param expression     expression that will be evaluated
+     * @param resolver       prefix resolver to use
+     * @param locator        the LocatorType to use for error report. May be null
      * @param allowVariableReferences If true, variable references are allowed.
      * @param allowKeyFunction If true, calls to the key() function are allowed.
-	 */
-	virtual void
-	initXPath(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const LocatorType*			locator = 0,
+     */
+    virtual void
+    initXPath(
+            XPath&                      pathObj,
+            XPathConstructionContext&   constructionContext,
+            const XalanDOMString&       expression,
+            const PrefixResolver&       resolver,
+            const LocatorType*          locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true) = 0;
 
-	/**
-	 * Given a string, create an XSLT Match Pattern object.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the LocatorType to use for error report. May be null
+    /**
+     * Given a string, create an XSLT Match Pattern object.
+     *
+     * @param pathObj        XPath object to be initialized
+     * @param constructionContext The construction context
+     * @param expression     expression that will be evaluated
+     * @param resolver       prefix resolver to use
+     * @param locator        the LocatorType to use for error report. May be null
      * @param allowVariableReferences If true, variable references are allowed.
      * @param allowKeyFunction If true, calls to the key() function are allowed.
-	 */
-	virtual void
-	initMatchPattern(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const LocatorType*			locator = 0,
+     */
+    virtual void
+    initMatchPattern(
+            XPath&                      pathObj,
+            XPathConstructionContext&   constructionContext,
+            const XalanDOMString&       expression,
+            const PrefixResolver&       resolver,
+            const LocatorType*          locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true) = 0;
 
-	/**
-	 * Given a string, and a reference to a function object, install the
-	 * function with the given name.
-	 *
-	 * @param theFunctionName name of function
-	 * @param theFunction     function object corresponding to name
-	 */
-	static void
-	installFunction(
-			const XalanDOMString&	theFunctionName,
-			const Function&			theFunction);
+    /**
+     * Given a string, and a reference to a function object, install the
+     * function with the given name.
+     *
+     * @param theFunctionName name of function
+     * @param theFunction     function object corresponding to name
+     */
+    static void
+    installFunction(
+            const XalanDOMString&   theFunctionName,
+            const Function&         theFunction);
 };
 
 
@@ -120,4 +120,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHPROCESSOR_HEADER_GUARD_1357924680
+#endif  // XPATHPROCESSOR_HEADER_GUARD_1357924680

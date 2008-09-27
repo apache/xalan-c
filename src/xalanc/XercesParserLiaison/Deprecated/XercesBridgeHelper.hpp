@@ -61,70 +61,70 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeHelper
 {
 public:
 
-	typedef unsigned int	XercesStringLengthType;
+    typedef unsigned int    XercesStringLengthType;
 
-	static const DOMStringType
-	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
-	{
-		assert(XercesStringLengthType(theString.length()) == theString.length());
+    static const DOMStringType
+    XalanDOMStringToXercesDOMString(const XalanDOMString&   theString)
+    {
+        assert(XercesStringLengthType(theString.length()) == theString.length());
 
-		return DOMStringType(&theString[0], XercesStringLengthType(theString.length()));
-	}
+        return DOMStringType(&theString[0], XercesStringLengthType(theString.length()));
+    }
 
-	static void
-	setNodeValue(
-			DOM_NodeType&			theXercesNode,
-			const XalanDOMString&	nodeValue);
+    static void
+    setNodeValue(
+            DOM_NodeType&           theXercesNode,
+            const XalanDOMString&   nodeValue);
 
-	static void
-	normalize(DOM_NodeType&		theXercesNode);
+    static void
+    normalize(DOM_NodeType&     theXercesNode);
 
-	static bool
-	isSupported(
-			const DOM_NodeType&		theXercesNode,
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version);
+    static bool
+    isSupported(
+            const DOM_NodeType&     theXercesNode,
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version);
 
-	static void
-	setPrefix(
-			DOM_NodeType&			theXercesNode,
-			const XalanDOMString&	prefix);
+    static void
+    setPrefix(
+            DOM_NodeType&           theXercesNode,
+            const XalanDOMString&   prefix);
 
-	static const XalanDOMString
-	substringData(
-			const DOM_CharacterDataType&	theXercesNode,
-			unsigned int					offset, 
-			unsigned int					count);
+    static const XalanDOMString
+    substringData(
+            const DOM_CharacterDataType&    theXercesNode,
+            unsigned int                    offset, 
+            unsigned int                    count);
 
-	static void
-	appendData(
-			DOM_CharacterDataType&	theXercesNode,
-			const XalanDOMString&	arg);
+    static void
+    appendData(
+            DOM_CharacterDataType&  theXercesNode,
+            const XalanDOMString&   arg);
 
-	static void
-	insertData(
-			DOM_CharacterDataType&	theXercesNode,
-			unsigned int			offset,
-			const  XalanDOMString& 	arg);
+    static void
+    insertData(
+            DOM_CharacterDataType&  theXercesNode,
+            unsigned int            offset,
+            const  XalanDOMString&  arg);
 
-	static void
-	deleteData(
-			DOM_CharacterDataType&	theXercesNode,
-			unsigned int			offset, 
-			unsigned int			count);
+    static void
+    deleteData(
+            DOM_CharacterDataType&  theXercesNode,
+            unsigned int            offset, 
+            unsigned int            count);
 
-	static void
-	replaceData(
-			DOM_CharacterDataType&	theXercesNode,
-			unsigned int			offset, 
-			unsigned int			count, 
-			const XalanDOMString&	arg);
+    static void
+    replaceData(
+            DOM_CharacterDataType&  theXercesNode,
+            unsigned int            offset, 
+            unsigned int            count, 
+            const XalanDOMString&   arg);
 private:
 
-	// Not implemented...
-	XercesBridgeHelper();
+    // Not implemented...
+    XercesBridgeHelper();
 
-	XercesBridgeHelper(const XercesBridgeHelper&);
+    XercesBridgeHelper(const XercesBridgeHelper&);
 };
 
 
@@ -133,4 +133,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESBRIDGEHELPER_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESBRIDGEHELPER_HEADER_GUARD_1357924680)

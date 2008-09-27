@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XResultTreeFragAllocator::XResultTreeFragAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XResultTreeFragAllocator::XResultTreeFragAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,39 +40,39 @@ XResultTreeFragAllocator::~XResultTreeFragAllocator()
 
 
 XResultTreeFragAllocator::data_type*
-XResultTreeFragAllocator::create(XalanDocumentFragment&		theValue)
+XResultTreeFragAllocator::create(XalanDocumentFragment&     theValue)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    data_type* const	theResult = new(theBlock) data_type(theValue, m_allocator.getMemoryManager());
+    data_type* const    theResult = new(theBlock) data_type(theValue, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 XResultTreeFragAllocator::data_type*
-XResultTreeFragAllocator::create(const data_type&	theSource)
+XResultTreeFragAllocator::create(const data_type&   theSource)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) data_type(theSource, m_allocator.getMemoryManager());
+    new(theBlock) data_type(theSource, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
 
 bool
-XResultTreeFragAllocator::destroy(data_type*	theObject)
+XResultTreeFragAllocator::destroy(data_type*    theObject)
 {
-	return m_allocator.destroyObject(theObject);
+    return m_allocator.destroyObject(theObject);
 }
 
 
@@ -80,7 +80,7 @@ XResultTreeFragAllocator::destroy(data_type*	theObject)
 void 
 XResultTreeFragAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

@@ -44,50 +44,50 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMWrapperException : public XalanD
 {
 public:
 
-	/** @name Constructors and assignment operator */
-	//@{
+    /** @name Constructors and assignment operator */
+    //@{
 
-	/**
-	  * Constructor which takes an error code.
-	  *
-	  * @param code The error code which indicates the exception
-	  */
-	explicit
-	XercesDOMWrapperException(ExceptionCode 	code = UNKNOWN_ERR);
+    /**
+      * Constructor which takes an error code.
+      *
+      * @param code The error code which indicates the exception
+      */
+    explicit
+    XercesDOMWrapperException(ExceptionCode     code = UNKNOWN_ERR);
 
-	/**
-	  * Constructor which takes a Xerces exception and
-	  * translates it into a XercesDOMException.
-	  *
-	  * @param code The Xerces DOMException instance.
-	  */
-	XercesDOMWrapperException(const DOMExceptionType&	theException);
+    /**
+      * Constructor which takes a Xerces exception and
+      * translates it into a XercesDOMException.
+      *
+      * @param code The Xerces DOMException instance.
+      */
+    XercesDOMWrapperException(const DOMExceptionType&   theException);
 
-	/**
-	  * Copy constructor.
-	  *
-	  * @param other The object to be copied.
-	  */
-	XercesDOMWrapperException(const XercesDOMWrapperException&	theSource);
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    XercesDOMWrapperException(const XercesDOMWrapperException&  theSource);
 
-	//@}
-	/** @name Destructor. */
-	//@{
+    //@}
+    /** @name Destructor. */
+    //@{
 
-	 /**
-	  * Destructor for XercesDOMException.
-	  */
-	virtual
-	~XercesDOMWrapperException();
-	//@}
+     /**
+      * Destructor for XercesDOMException.
+      */
+    virtual
+    ~XercesDOMWrapperException();
+    //@}
 
 private:
 
-	static ExceptionCode
-	translateErrorCode(DOMExceptionType::ExceptionCode	theCode);
+    static ExceptionCode
+    translateErrorCode(DOMExceptionType::ExceptionCode  theCode);
 
-	static ExceptionCode
-	translateErrorCode(short    theCode)
+    static ExceptionCode
+    translateErrorCode(short    theCode)
     {
         return translateErrorCode(static_cast<DOMExceptionType::ExceptionCode>(theCode));
     }
@@ -99,4 +99,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESDOMWRAPPEREXCEPTION_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESDOMWRAPPEREXCEPTION_HEADER_GUARD_1357924680)

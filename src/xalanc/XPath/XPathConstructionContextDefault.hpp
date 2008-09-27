@@ -52,56 +52,56 @@ class XALAN_XPATH_EXPORT XPathConstructionContextDefault : public XPathConstruct
 {
 public:
 
-	/*
-	 * Construct an instance.
-	 */
-	XPathConstructionContextDefault(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
+    /*
+     * Construct an instance.
+     */
+    XPathConstructionContextDefault(MemoryManager&  theManager XALAN_DEFAULT_MEMMGR);
 
     static XPathConstructionContextDefault*
     create(MemoryManager&   theManager);
 
-	virtual
-	~XPathConstructionContextDefault();
+    virtual
+    ~XPathConstructionContextDefault();
 
 
     // These interfaces are inherited from XPathConstructionContext...
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode);
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode);
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode);
 
     virtual void
-	reset();
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
 
-	virtual const XalanDOMString&
-	getPooledString(const XalanDOMString&	theString);
+    virtual void
+    reset();
 
-	virtual const XalanDOMString&
-	getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+    virtual const XalanDOMString&
+    getPooledString(const XalanDOMString&   theString);
 
-	virtual XalanDOMString&
-	getCachedString();
+    virtual const XalanDOMString&
+    getPooledString(
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
-	virtual bool
-	releaseCachedString(XalanDOMString&		theString);
+    virtual XalanDOMString&
+    getCachedString();
+
+    virtual bool
+    releaseCachedString(XalanDOMString&     theString);
 
 private:
 
-	XalanDOMStringPool		m_stringPool;
+    XalanDOMStringPool      m_stringPool;
 
-	XalanDOMStringCache		m_stringCache;
+    XalanDOMStringCache     m_stringCache;
 };
 
 
@@ -110,4 +110,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XPATHCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
+#endif  // XPATHCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680

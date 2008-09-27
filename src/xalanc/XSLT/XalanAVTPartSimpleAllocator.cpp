@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanAVTPartSimpleAllocator::XalanAVTPartSimpleAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanAVTPartSimpleAllocator::XalanAVTPartSimpleAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,19 +40,19 @@ XalanAVTPartSimpleAllocator::~XalanAVTPartSimpleAllocator()
 
 XalanAVTPartSimpleAllocator::data_type*
 XalanAVTPartSimpleAllocator::create(
-			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMChar*				val,
-			XalanDOMString::size_type		len)
+            StylesheetConstructionContext&  constructionContext,
+            const XalanDOMChar*             val,
+            XalanDOMString::size_type       len)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(constructionContext, val, len);
+    data_type* const    theResult =
+        new(theBlock) data_type(constructionContext, val, len);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

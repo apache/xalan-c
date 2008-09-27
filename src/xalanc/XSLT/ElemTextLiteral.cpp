@@ -39,28 +39,28 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 ElemTextLiteral::ElemTextLiteral(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
-            const XMLCh*					ch,
-			XalanDOMString::size_type		start,
-			XalanDOMString::size_type		length,
-			bool							fPreserveSpace,
-            bool							fDisableOutputEscaping) :
-	ElemTemplateElement(
-		constructionContext,
-		stylesheetTree,
-		StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT,
-		stylesheetTree.getBaseIdentifier(),
-		lineNumber,
-		columnNumber),
-	m_isWhitespace(isXMLWhitespace(ch, start, length)),
-	// Always null-terminate our buffer, since we may need it that way.
-	m_ch(constructionContext.allocateXalanDOMCharVector(ch + start, length, true)),
-	m_length(length)
+            StylesheetConstructionContext&  constructionContext,
+            Stylesheet&                     stylesheetTree,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
+            const XMLCh*                    ch,
+            XalanDOMString::size_type       start,
+            XalanDOMString::size_type       length,
+            bool                            fPreserveSpace,
+            bool                            fDisableOutputEscaping) :
+    ElemTemplateElement(
+        constructionContext,
+        stylesheetTree,
+        StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT,
+        stylesheetTree.getBaseIdentifier(),
+        lineNumber,
+        columnNumber),
+    m_isWhitespace(isXMLWhitespace(ch, start, length)),
+    // Always null-terminate our buffer, since we may need it that way.
+    m_ch(constructionContext.allocateXalanDOMCharVector(ch + start, length, true)),
+    m_length(length)
 {
-	disableOutputEscaping(fDisableOutputEscaping);
+    disableOutputEscaping(fDisableOutputEscaping);
 
     preserveSpace(fPreserveSpace);
 }
@@ -76,7 +76,7 @@ ElemTextLiteral::~ElemTextLiteral()
 const XalanDOMString&
 ElemTextLiteral::getElementName() const
 {
-	return Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING;
+    return Constants::ELEMNAME_TEXT_WITH_PREFIX_STRING;
 }
 
 
@@ -84,25 +84,25 @@ ElemTextLiteral::getElementName() const
 bool
 ElemTextLiteral::isWhitespace() const
 {
-	return m_isWhitespace;
+    return m_isWhitespace;
 }
 
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
-ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) const
+ElemTextLiteral::startElement(StylesheetExecutionContext&   executionContext) const
 {
-	ElemTemplateElement::startElement(executionContext);
+    ElemTemplateElement::startElement(executionContext);
 
     if (disableOutputEscaping() == false)
     {
-		executionContext.characters(m_ch, 0, m_length);
+        executionContext.characters(m_ch, 0, m_length);
     }
     else
     {
-		executionContext.charactersRaw(m_ch, 0, m_length);
+        executionContext.charactersRaw(m_ch, 0, m_length);
     }
-	return 0;
+    return 0;
 }
 #endif
 
@@ -110,17 +110,17 @@ ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) cons
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
+ElemTextLiteral::execute(StylesheetExecutionContext&    executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+    ElemTemplateElement::execute(executionContext);
 
     if (disableOutputEscaping() == false)
     {
-		executionContext.characters(m_ch, 0, m_length);
+        executionContext.characters(m_ch, 0, m_length);
     }
     else
     {
-		executionContext.charactersRaw(m_ch, 0, m_length);
+        executionContext.charactersRaw(m_ch, 0, m_length);
     }
 }
 #endif

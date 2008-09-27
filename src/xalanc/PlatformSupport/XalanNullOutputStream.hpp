@@ -38,22 +38,22 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanNullOutputStream : public XalanOutputStr
 {
 public :
 
-	explicit
+    explicit
     XalanNullOutputStream(MemoryManager&      theManager);
 
     virtual
-	~XalanNullOutputStream();
+    ~XalanNullOutputStream();
 
 protected:
 
     // These are inherited from XalanOutputStream...
-	virtual void
-	writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength);
+    virtual void
+    writeData(
+            const char*     theBuffer,
+            size_type       theBufferLength);
 
-	virtual void
-	doFlush();
+    virtual void
+    doFlush();
 
 private:
 
@@ -61,10 +61,10 @@ private:
     XalanNullOutputStream(const XalanNullOutputStream&);
 
     XalanNullOutputStream&
-	operator=(const XalanNullOutputStream&);
+    operator=(const XalanNullOutputStream&);
 
     bool
-	operator==(const XalanNullOutputStream&) const;
+    operator==(const XalanNullOutputStream&) const;
 };
 
 
@@ -73,4 +73,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NULLTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // NULLTEXTOUTPUTSTREAM_HEADER_GUARD_1357924680

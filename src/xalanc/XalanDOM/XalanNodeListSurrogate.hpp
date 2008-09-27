@@ -48,38 +48,38 @@ class XALAN_DOM_EXPORT XalanNodeListSurrogate : public XalanNodeList
 {
 public:
 
-	XalanNodeListSurrogate(const XalanNode&		theNode);
+    XalanNodeListSurrogate(const XalanNode&     theNode);
 
-	XalanNodeListSurrogate(const XalanNodeListSurrogate&	theSource);
+    XalanNodeListSurrogate(const XalanNodeListSurrogate&    theSource);
 
-	virtual
-	~XalanNodeListSurrogate();
+    virtual
+    ~XalanNodeListSurrogate();
 
-	XalanNodeListSurrogate&
-	operator=(const XalanNodeListSurrogate&	theSource)
-	{
-		m_node = theSource.m_node;
+    XalanNodeListSurrogate&
+    operator=(const XalanNodeListSurrogate& theSource)
+    {
+        m_node = theSource.m_node;
 
-		XalanNodeList::operator=(theSource);
+        XalanNodeList::operator=(theSource);
 
-		return *this;
-	}
+        return *this;
+    }
 
-	bool
-	operator==(const XalanNodeListSurrogate& 	theRHS) const
-	{
-		return m_node == theRHS.m_node ? true : false;
-	}
+    bool
+    operator==(const XalanNodeListSurrogate&    theRHS) const
+    {
+        return m_node == theRHS.m_node ? true : false;
+    }
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
 private:
 
-	const XalanNode*	m_node;
+    const XalanNode*    m_node;
 };
 
 
@@ -88,4 +88,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANNODELISTSURROGATE_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANNODELISTSURROGATE_HEADER_GUARD_1357924680)

@@ -26,8 +26,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesLiaisonXalanDOMStringPool::XercesLiaisonXalanDOMStringPool(MemoryManager& theManager) :
-	ParentType(theManager),
-	m_mutex(&theManager)
+    ParentType(theManager),
+    m_mutex(&theManager)
 {
 }
 
@@ -59,9 +59,9 @@ XercesLiaisonXalanDOMStringPool::~XercesLiaisonXalanDOMStringPool()
 void
 XercesLiaisonXalanDOMStringPool::clear()
 {
-	XMLMutexLockType	theLock(&m_mutex);
+    XMLMutexLockType    theLock(&m_mutex);
 
-	ParentType::clear();
+    ParentType::clear();
 }
 
 
@@ -69,31 +69,31 @@ XercesLiaisonXalanDOMStringPool::clear()
 size_t
 XercesLiaisonXalanDOMStringPool::size() const
 {
-	XMLMutexLockType	theLock(&m_mutex);
+    XMLMutexLockType    theLock(&m_mutex);
 
-	return ParentType::size();
+    return ParentType::size();
 }
 
 
 
 const XalanDOMString&
-XercesLiaisonXalanDOMStringPool::get(const XalanDOMString&	theString)
+XercesLiaisonXalanDOMStringPool::get(const XalanDOMString&  theString)
 {
-	XMLMutexLockType	theLock(&m_mutex);
+    XMLMutexLockType    theLock(&m_mutex);
 
-	return ParentType::get(theString);
+    return ParentType::get(theString);
 }
 
 
 
 const XalanDOMString&
 XercesLiaisonXalanDOMStringPool::get(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength)
 {
-	XMLMutexLockType	theLock(&m_mutex);
+    XMLMutexLockType    theLock(&m_mutex);
 
-	return ParentType::get(theString, theLength);
+    return ParentType::get(theString, theLength);
 }
 
 

@@ -49,97 +49,97 @@ class XalanObjectStackCache
 {
 public:
 
-	typedef XalanVector<ObjectType*>			VectorType;
+    typedef XalanVector<ObjectType*>            VectorType;
 
-	typedef ObjectType	CacheObjectType;
+    typedef ObjectType  CacheObjectType;
 
-	explicit
-	XalanObjectStackCache(
+    explicit
+    XalanObjectStackCache(
             MemoryManager&  theManager, 
-            XalanSize_t	        initialListSize = 0) :
+            XalanSize_t         initialListSize = 0) :
         m_createFunctor(),
         m_deleteFunctor(theManager),
-	    m_stack(theManager),
+        m_stack(theManager),
         m_numObjectsOnStack(0)
-	{
-		m_stack.reserve(initialListSize);
-	}
+    {
+        m_stack.reserve(initialListSize);
+    }
 
-	~XalanObjectStackCache()
-	{
+    ~XalanObjectStackCache()
+    {
 #if !defined(XALAN_NO_STD_NAMESPACE)
-		using std::for_each;
+        using std::for_each;
 #endif
-		for_each(
-				m_stack.begin(),
-				m_stack.end(),
-				m_deleteFunctor);
-	}
+        for_each(
+                m_stack.begin(),
+                m_stack.end(),
+                m_deleteFunctor);
+    }
 
-	ObjectType*
-	get()
-	{
-		
-		if (m_stack.size() == m_numObjectsOnStack)
-		{
-            ObjectType* const	theNewObject = m_createFunctor(m_stack.getMemoryManager());
-			m_stack.push_back(theNewObject);
-			++m_numObjectsOnStack;
-			return theNewObject;
-		}
-		else
-		{
-			return m_stack[m_numObjectsOnStack++];
-		}
-	}
+    ObjectType*
+    get()
+    {
+        
+        if (m_stack.size() == m_numObjectsOnStack)
+        {
+            ObjectType* const   theNewObject = m_createFunctor(m_stack.getMemoryManager());
+            m_stack.push_back(theNewObject);
+            ++m_numObjectsOnStack;
+            return theNewObject;
+        }
+        else
+        {
+            return m_stack[m_numObjectsOnStack++];
+        }
+    }
 
-	ObjectType*
-	top()
-	{
-		assert (m_numObjectsOnStack > 0);
+    ObjectType*
+    top()
+    {
+        assert (m_numObjectsOnStack > 0);
 
-		return m_stack[m_numObjectsOnStack-1];
-	}
+        return m_stack[m_numObjectsOnStack-1];
+    }
 
-	ObjectType*
-	release()
-	{
-		assert(m_numObjectsOnStack > 0);
+    ObjectType*
+    release()
+    {
+        assert(m_numObjectsOnStack > 0);
 
-		return m_stack[--m_numObjectsOnStack];
-	}
+        return m_stack[--m_numObjectsOnStack];
+    }
 
-	void
-	reset()
-	{
-		typename VectorType::iterator iterator;
+    void
+    reset()
+    {
+        typename VectorType::iterator iterator;
 
-		for (iterator = m_stack.begin(); iterator < m_stack.end(); iterator++)
-		{
-			m_resetFunctor(*iterator);
-		}
-	}
+        for (iterator = m_stack.begin(); iterator < m_stack.end(); iterator++)
+        {
+            m_resetFunctor(*iterator);
+        }
+    }
 
-	// Functors for various operations...
-	CreateFunctorType	m_createFunctor;
+    // Functors for various operations...
+    CreateFunctorType   m_createFunctor;
 
-	DeleteFunctorType	m_deleteFunctor;
+    DeleteFunctorType   m_deleteFunctor;
 
-	ResetFunctorType	m_resetFunctor;
+    ResetFunctorType    m_resetFunctor;
 
 private:
 
-	// There are not defined...
-	XalanObjectStackCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    // There are not defined...
+    XalanObjectStackCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&   theRHS);
 
-	XalanObjectStackCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
-	operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+    XalanObjectStackCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
+    operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&   theRHS);
 
 
-	// Data members...
-	VectorType			m_stack;
+    // Data members...
+    VectorType          m_stack;
 
-	typename VectorType::size_type m_numObjectsOnStack;
+    typename VectorType::size_type m_numObjectsOnStack;
 
 };
 
@@ -151,13 +151,13 @@ class XalanObjectStackCacheDefault : public XalanObjectStackCache<ObjectType, De
 {
 public:
 
-	typedef XalanObjectStackCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >		BaseClassType;
+    typedef XalanObjectStackCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >      BaseClassType;
 
-	explicit
-	XalanObjectStackCacheDefault(XalanSize_t    initialListSize = 0) :
-		BaseClassType(initialListSize)
-	{
-	}
+    explicit
+    XalanObjectStackCacheDefault(XalanSize_t    initialListSize = 0) :
+        BaseClassType(initialListSize)
+    {
+    }
 };
 
 

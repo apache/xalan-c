@@ -58,110 +58,110 @@ class XALAN_XSLT_EXPORT NodeSortKey
 {
 public:
 
-	/**
-	 * Construct a node sort key.
-	 *
-	 * @param executionContext current execution context
-	 * @param selectPat        XPath for selection
-	 * @param treatAsNumbers   treat as numeric values if true
-	 * @param descending       sort in descending order if true
-	 * @param caseOrder        case sort order enum
-	 * @param langValue        language
-	 * @param resolver         resolver for namespace resolution
-	 */
-	NodeSortKey(
-			ExecutionContext&					executionContext,
-			const XPath*						selectPat,
-			bool								treatAsNumbers, 
-			bool								descending,
-			XalanCollationServices::eCaseOrder	caseOrder,
-			const XalanDOMString&				langValue, 
-			const PrefixResolver&				resolver);
+    /**
+     * Construct a node sort key.
+     *
+     * @param executionContext current execution context
+     * @param selectPat        XPath for selection
+     * @param treatAsNumbers   treat as numeric values if true
+     * @param descending       sort in descending order if true
+     * @param caseOrder        case sort order enum
+     * @param langValue        language
+     * @param resolver         resolver for namespace resolution
+     */
+    NodeSortKey(
+            ExecutionContext&                   executionContext,
+            const XPath*                        selectPat,
+            bool                                treatAsNumbers, 
+            bool                                descending,
+            XalanCollationServices::eCaseOrder  caseOrder,
+            const XalanDOMString&               langValue, 
+            const PrefixResolver&               resolver);
 
-	NodeSortKey();
+    NodeSortKey();
 
-	NodeSortKey(const NodeSortKey&	theSource);
+    NodeSortKey(const NodeSortKey&  theSource);
 
-	~NodeSortKey();
+    ~NodeSortKey();
 
-	NodeSortKey&
-	operator=(const NodeSortKey&	theRHS);
+    NodeSortKey&
+    operator=(const NodeSortKey&    theRHS);
 
-	/**
-	 * Retrieve the selection XPath.
-	 * 
-	 * @return XPath for selection
-	 */
-	const XPath*
-	getSelectPattern() const
-	{
-		return m_selectPat;
-	}
+    /**
+     * Retrieve the selection XPath.
+     * 
+     * @return XPath for selection
+     */
+    const XPath*
+    getSelectPattern() const
+    {
+        return m_selectPat;
+    }
 
-	/**
-	 * Whether to treat values as numbers.
-	 * 
-	 * @return treat as numeric values if true
-	 */
-	bool
-	getTreatAsNumbers() const
-	{
-		return m_treatAsNumbers;
-	}
+    /**
+     * Whether to treat values as numbers.
+     * 
+     * @return treat as numeric values if true
+     */
+    bool
+    getTreatAsNumbers() const
+    {
+        return m_treatAsNumbers;
+    }
 
-	/**
-	 * Whether to sort in descending order.
-	 * 
-	 * @return sort in descending order if true
-	 */
-	bool
-	getDescending() const
-	{
-		return m_descending;
-	}
+    /**
+     * Whether to sort in descending order.
+     * 
+     * @return sort in descending order if true
+     */
+    bool
+    getDescending() const
+    {
+        return m_descending;
+    }
 
-	/**
-	 * Get the enumeration value for the case order.
-	 * 
-	 * @return sort upper case before lower case if true
-	 */
-	XalanCollationServices::eCaseOrder
-	getCaseOrder() const
-	{
-		return m_caseOrder;
-	}
+    /**
+     * Get the enumeration value for the case order.
+     * 
+     * @return sort upper case before lower case if true
+     */
+    XalanCollationServices::eCaseOrder
+    getCaseOrder() const
+    {
+        return m_caseOrder;
+    }
 
-	/**
-	 * Retrieve the resolver for namespaces.
-	 * 
-	 * @return object for namespace resolution
-	 */
-	const PrefixResolver*
-	getPrefixResolver() const
-	{
-		return m_prefixResolver;
-	}
+    /**
+     * Retrieve the resolver for namespaces.
+     * 
+     * @return object for namespace resolution
+     */
+    const PrefixResolver*
+    getPrefixResolver() const
+    {
+        return m_prefixResolver;
+    }
 
-	const XalanDOMString&
-	getLanguageString() const
-	{
-		return *m_languageString;
-	}
+    const XalanDOMString&
+    getLanguageString() const
+    {
+        return *m_languageString;
+    }
 
 private:
 
-	ExecutionContext*					m_executionContext; // needed for error reporting.
+    ExecutionContext*                   m_executionContext; // needed for error reporting.
 
-	const XPath*						m_selectPat;
+    const XPath*                        m_selectPat;
 
-	bool								m_treatAsNumbers;
-	bool								m_descending;
+    bool                                m_treatAsNumbers;
+    bool                                m_descending;
 
-	XalanCollationServices::eCaseOrder	m_caseOrder;	
+    XalanCollationServices::eCaseOrder  m_caseOrder;    
 
-	const PrefixResolver*				m_prefixResolver;
+    const PrefixResolver*               m_prefixResolver;
 
-	const XalanDOMString*				m_languageString;
+    const XalanDOMString*               m_languageString;
 };
 
 

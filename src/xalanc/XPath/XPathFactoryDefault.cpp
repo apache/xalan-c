@@ -34,8 +34,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XPathFactoryDefault::XPathFactoryDefault(MemoryManager& theManager) :
-	XPathFactory(),
-	m_xpaths(theManager)
+    XPathFactory(),
+    m_xpaths(theManager)
 {
 }
 
@@ -57,7 +57,7 @@ XPathFactoryDefault::createXPathFactoryDefault(MemoryManager& theManager)
 
 XPathFactoryDefault::~XPathFactoryDefault()
 {
-	reset();
+    reset();
 }
 
 
@@ -65,21 +65,21 @@ XPathFactoryDefault::~XPathFactoryDefault()
 void
 XPathFactoryDefault::reset()
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	for_each(m_xpaths.begin(),
-			 m_xpaths.end(),
-			 DeleteXPathFunctor(*this, true));
+    for_each(m_xpaths.begin(),
+             m_xpaths.end(),
+             DeleteXPathFunctor(*this, true));
 
-	m_xpaths.clear();
+    m_xpaths.clear();
 }
 
 
 
 bool
 XPathFactoryDefault::doReturnObject(
-			const XPath*	theXPath,
-			bool			fInReset)
+            const XPath*    theXPath,
+            bool            fInReset)
 {
     const CollectionType::size_type     theCount =
         fInReset == true ? m_xpaths.count(theXPath) : m_xpaths.erase(theXPath);
@@ -92,8 +92,8 @@ XPathFactoryDefault::doReturnObject(
     {
         destroyObjWithMemMgr(theXPath, m_xpaths.getMemoryManager());
 
-		return true;
-	}
+        return true;
+    }
 }
 
 
@@ -101,11 +101,11 @@ XPathFactoryDefault::doReturnObject(
 XPath*
 XPathFactoryDefault::create()
 {
-    XPath* const	theXPath = XPath::create(m_xpaths.getMemoryManager());
+    XPath* const    theXPath = XPath::create(m_xpaths.getMemoryManager());
 
-	m_xpaths.insert(theXPath);
+    m_xpaths.insert(theXPath);
 
-	return theXPath;
+    return theXPath;
 }
 
 

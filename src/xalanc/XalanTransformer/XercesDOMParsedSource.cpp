@@ -36,8 +36,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper(MemoryManager&     theManager) :
-	m_parserLiaison(theManager),
-	m_domSupport(m_parserLiaison)
+    m_parserLiaison(theManager),
+    m_domSupport(m_parserLiaison)
 {
 }
 
@@ -65,7 +65,7 @@ XercesDOMParsedSourceHelper::~XercesDOMParsedSourceHelper()
 DOMSupport&
 XercesDOMParsedSourceHelper::getDOMSupport()
 {
-	return m_domSupport;
+    return m_domSupport;
 }
 
 
@@ -73,52 +73,52 @@ XercesDOMParsedSourceHelper::getDOMSupport()
 XMLParserLiaison&
 XercesDOMParsedSourceHelper::getParserLiaison()
 {
-	return m_parserLiaison;
+    return m_parserLiaison;
 }
 
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-			const InputSource&	    theInputSource,
-			bool					fValidate,
-			ErrorHandler*		    theErrorHandler,
-			EntityResolver*		    theEntityResolver,
-			XMLEntityResolver*		theXMLEntityResolver,
-			const XalanDOMChar*		theExternalSchemaLocation,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
+            const InputSource&      theInputSource,
+            bool                    fValidate,
+            ErrorHandler*           theErrorHandler,
+            EntityResolver*         theEntityResolver,
+            XMLEntityResolver*      theXMLEntityResolver,
+            const XalanDOMChar*     theExternalSchemaLocation,
+            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation,
             MemoryManager&          theManager) :
-	XalanParsedSource(),
-	m_parserLiaison(theManager),
-	m_parsedSource(0),
+    XalanParsedSource(),
+    m_parserLiaison(theManager),
+    m_parsedSource(0),
     m_uri(theManager)
 {
-	m_parserLiaison.setUseValidation(fValidate);
-	m_parserLiaison.setEntityResolver(theEntityResolver);
-	m_parserLiaison.setXMLEntityResolver(theXMLEntityResolver);
-	m_parserLiaison.setErrorHandler(theErrorHandler);
-	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
-	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
+    m_parserLiaison.setUseValidation(fValidate);
+    m_parserLiaison.setEntityResolver(theEntityResolver);
+    m_parserLiaison.setXMLEntityResolver(theXMLEntityResolver);
+    m_parserLiaison.setErrorHandler(theErrorHandler);
+    m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
+    m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
 
-	m_parsedSource = m_parserLiaison.parseXMLStream(theInputSource);
-	assert(m_parsedSource != 0);
+    m_parsedSource = m_parserLiaison.parseXMLStream(theInputSource);
+    assert(m_parsedSource != 0);
 
-	const XalanDOMChar* const	theSystemID = theInputSource.getSystemId();
+    const XalanDOMChar* const   theSystemID = theInputSource.getSystemId();
 
-	if (theSystemID != 0)
-	{
-		try
-		{
-			URISupport::getURLStringFromString(theSystemID, m_uri);
-		}
-		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
-		{
-			// Assume that any exception here relates to get the url from
-			// the system ID.  We'll assume that it's just a fake base identifier
-			// since the parser would have thrown an error if the system ID
-			// wasn't resolved.
-			m_uri = theSystemID;
-		}
-	}
+    if (theSystemID != 0)
+    {
+        try
+        {
+            URISupport::getURLStringFromString(theSystemID, m_uri);
+        }
+        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        {
+            // Assume that any exception here relates to get the url from
+            // the system ID.  We'll assume that it's just a fake base identifier
+            // since the parser would have thrown an error if the system ID
+            // wasn't resolved.
+            m_uri = theSystemID;
+        }
+    }
 }
 
 
@@ -126,13 +126,13 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 XercesDOMParsedSource*
 XercesDOMParsedSource::create(
             MemoryManager&          theManager,
-			const InputSource&	    theInputSource,
-			bool					fValidate,
-			ErrorHandler*		    theErrorHandler,
-			EntityResolver*		    theEntityResolver,
-			XMLEntityResolver*		theXMLEntityResolver,
-			const XalanDOMChar*		theExternalSchemaLocation,
-			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation)
+            const InputSource&      theInputSource,
+            bool                    fValidate,
+            ErrorHandler*           theErrorHandler,
+            EntityResolver*         theEntityResolver,
+            XMLEntityResolver*      theXMLEntityResolver,
+            const XalanDOMChar*     theExternalSchemaLocation,
+            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation)
 {
     typedef XercesDOMParsedSource ThisType;
 
@@ -168,7 +168,7 @@ XercesDOMParsedSource::~XercesDOMParsedSource()
 XalanDocument*
 XercesDOMParsedSource::getDocument() const
 {
-	return m_parsedSource;
+    return m_parsedSource;
 }
 
 
@@ -184,7 +184,7 @@ XercesDOMParsedSource::createHelper(MemoryManager& theManager) const
 const XalanDOMString&
 XercesDOMParsedSource::getURI() const
 {
-	return m_uri;
+    return m_uri;
 }
 
 

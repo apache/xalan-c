@@ -27,8 +27,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XNumberAllocator::XNumberAllocator(
             MemoryManager&  theMemoryManager,
-            size_type	    theBlockCount) :
-	m_allocator(theMemoryManager, theBlockCount)
+            size_type       theBlockCount) :
+    m_allocator(theMemoryManager, theBlockCount)
 {
 }
 
@@ -41,25 +41,25 @@ XNumberAllocator::~XNumberAllocator()
 
 
 XNumberAllocator::number_type*
-XNumberAllocator::createNumber(double	theNumber) 
+XNumberAllocator::createNumber(double   theNumber) 
 {
-	number_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    number_type* const  theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    number_type* const	theResult = new(theBlock) number_type(theNumber, m_allocator.getMemoryManager());
+    number_type* const  theResult = new(theBlock) number_type(theNumber, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 
 bool
-XNumberAllocator::destroy(number_type*	theNumber)
+XNumberAllocator::destroy(number_type*  theNumber)
 {
-	return m_allocator.destroyObject(theNumber);
+    return m_allocator.destroyObject(theNumber);
 }
 
 
@@ -67,7 +67,7 @@ XNumberAllocator::destroy(number_type*	theNumber)
 void 
 XNumberAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

@@ -42,89 +42,89 @@ class XALAN_XPATH_EXPORT XStringAdapterAllocator
 {
 public:
 
-	typedef XStringAdapter	string_type;
+    typedef XStringAdapter  string_type;
 
-	typedef ReusableArenaAllocator<string_type>		ArenaAllocatorType;
-	typedef ArenaAllocatorType::size_type			size_type;
+    typedef ReusableArenaAllocator<string_type>     ArenaAllocatorType;
+    typedef ArenaAllocatorType::size_type           size_type;
 
-	/**
-	 * Construct an instance that will allocate blocks of the specified size.
-	 *
-	 * @param theBlockSize The block size.
-	 */
-	XStringAdapterAllocator(
+    /**
+     * Construct an instance that will allocate blocks of the specified size.
+     *
+     * @param theBlockSize The block size.
+     */
+    XStringAdapterAllocator(
             MemoryManager&  theManager,
             size_type       theBlockCount);
 
-	~XStringAdapterAllocator();
+    ~XStringAdapterAllocator();
 
-	/**
-	 * Create an XString object from a string.
-	 * 
-	 * @param theXObject The source XObject
-	 *
-	 * @return a pointer to string
-	 */
-	string_type*
-	createString(
-            const XObjectPtr&	    theXObject,
+    /**
+     * Create an XString object from a string.
+     * 
+     * @param theXObject The source XObject
+     *
+     * @return a pointer to string
+     */
+    string_type*
+    createString(
+            const XObjectPtr&       theXObject,
             XPathExecutionContext&  theExecutionContext);
 
 
-	/**
-	 * Delete an XStringAdapter object from allocator.	 
-	 */
-	bool
-	destroy(string_type*	theString);
+    /**
+     * Delete an XStringAdapter object from allocator.   
+     */
+    bool
+    destroy(string_type*    theString);
 
-	/**
-	 * Determine if an object is owned by the allocator...
-	 */
-	bool
-	ownsObject(const string_type*	theObject)
-	{
-		return m_allocator.ownsObject(theObject);
-	}
+    /**
+     * Determine if an object is owned by the allocator...
+     */
+    bool
+    ownsObject(const string_type*   theObject)
+    {
+        return m_allocator.ownsObject(theObject);
+    }
 
-	/**
-	 * Delete all XStringAdapter objects from allocator.	 
-	 */
-	void 
-	reset();
+    /**
+     * Delete all XStringAdapter objects from allocator.     
+     */
+    void 
+    reset();
 
-	/**
-	 * Get size of an ArenaBlock, that is, the number
-	 * of objects in each block.
-	 *
-	 * @return The size of the block
-	 */
-	size_type
-	getBlockCount() const
-	{
-		return m_allocator.getBlockCount();
-	}
+    /**
+     * Get size of an ArenaBlock, that is, the number
+     * of objects in each block.
+     *
+     * @return The size of the block
+     */
+    size_type
+    getBlockCount() const
+    {
+        return m_allocator.getBlockCount();
+    }
 
-	/**
-	 * Get the number of ArenaBlocks currently allocated.
-	 *
-	 * @return The number of blocks.
-	 */
-	size_type
-	getBlockSize() const
-	{
-		return m_allocator.getBlockSize();
-	}
+    /**
+     * Get the number of ArenaBlocks currently allocated.
+     *
+     * @return The number of blocks.
+     */
+    size_type
+    getBlockSize() const
+    {
+        return m_allocator.getBlockSize();
+    }
 
 private:
 
-	// Not implemented...
-	XStringAdapterAllocator(const XStringAdapterAllocator&);
+    // Not implemented...
+    XStringAdapterAllocator(const XStringAdapterAllocator&);
 
-	XStringAdapterAllocator&
-	operator=(const XStringAdapterAllocator&);
+    XStringAdapterAllocator&
+    operator=(const XStringAdapterAllocator&);
 
-	// Data members...
-	ArenaAllocatorType	m_allocator;
+    // Data members...
+    ArenaAllocatorType  m_allocator;
 };
 
 
@@ -133,4 +133,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XSTRINGADAPTERALLOCATOR_INCLUDE_GUARD_1357924680
+#endif  // XSTRINGADAPTERALLOCATOR_INCLUDE_GUARD_1357924680

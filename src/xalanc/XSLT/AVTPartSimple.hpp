@@ -48,42 +48,42 @@ class AVTPartSimple: public AVTPart
 {
 public:
 
-	/**
-	 * Construct a simple Attribute Value Template (AVT) part.
-	 *
-	 * @param constructionContext  context when object constructed
-	 * @param val A pure string section of an AVT
-	 * @param len The length of val
-	 */
-	AVTPartSimple(
-			StylesheetConstructionContext&	constructionContext,
-			const XalanDOMChar*				val,
-			XalanDOMString::size_type		len);
+    /**
+     * Construct a simple Attribute Value Template (AVT) part.
+     *
+     * @param constructionContext  context when object constructed
+     * @param val A pure string section of an AVT
+     * @param len The length of val
+     */
+    AVTPartSimple(
+            StylesheetConstructionContext&  constructionContext,
+            const XalanDOMChar*             val,
+            XalanDOMString::size_type       len);
 
 
-	// These methods are inherited from AVTPart ...
+    // These methods are inherited from AVTPart ...
 
-	virtual void
-	evaluate(
-			XalanDOMString&			buf,
-			XalanNode*				contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    virtual void
+    evaluate(
+            XalanDOMString&         buf,
+            XalanNode*              contextNode,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
-	virtual void
-	evaluate(
-			XalanDOMString&			buf,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+    virtual void
+    evaluate(
+            XalanDOMString&         buf,
+            const PrefixResolver&   prefixResolver,
+            XPathExecutionContext&  executionContext) const;
 
 private:
 
-	/**
-	 * Simple string value;
-	 */
-	const XalanDOMChar* const			m_val;
+    /**
+     * Simple string value;
+     */
+    const XalanDOMChar* const           m_val;
 
-	const XalanDOMString::size_type		m_len;
+    const XalanDOMString::size_type     m_len;
 };
 
 
@@ -92,4 +92,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	//XALAN_AVTPARTSIMPLE_HEADER_GUARD 
+#endif  //XALAN_AVTPARTSIMPLE_HEADER_GUARD 

@@ -76,54 +76,54 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XercesDocumentWrapper::XercesDocumentWrapper(
             MemoryManager&          theManager,
-			const DOMDocument_Type*		theXercesDocument,
-			bool						threadSafe,
-			bool						buildWrapper,
- 			bool						buildMaps) :
-	XalanDocument(),
-	m_xercesDocument(theXercesDocument),
-	m_documentElement(0),
-	m_nodeMap(theManager),
-	m_navigatorAllocator(theManager, 25),
-	m_navigator(0),
-	m_children(theXercesDocument->getChildNodes(),
-			   *m_navigator),
-	m_nodes(theManager),
-	m_doctype(0),
-	m_mappingMode(threadSafe == true ? false : !buildWrapper),
-	m_indexValid(false),
-	m_buildMaps(m_mappingMode == true ? true : buildMaps),
-	m_elementAllocator(theManager, 25),
-	m_textAllocator(theManager, 25),
-	m_attributeAllocator(theManager, 25),
+            const DOMDocument_Type*     theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildWrapper,
+            bool                        buildMaps) :
+    XalanDocument(),
+    m_xercesDocument(theXercesDocument),
+    m_documentElement(0),
+    m_nodeMap(theManager),
+    m_navigatorAllocator(theManager, 25),
+    m_navigator(0),
+    m_children(theXercesDocument->getChildNodes(),
+               *m_navigator),
+    m_nodes(theManager),
+    m_doctype(0),
+    m_mappingMode(threadSafe == true ? false : !buildWrapper),
+    m_indexValid(false),
+    m_buildMaps(m_mappingMode == true ? true : buildMaps),
+    m_elementAllocator(theManager, 25),
+    m_textAllocator(theManager, 25),
+    m_attributeAllocator(theManager, 25),
     m_stringPool(theManager, threadSafe == true ? XercesLiaisonXalanDOMStringPool::create(theManager) : XalanDOMStringPool::create(theManager))
 {
-	assert(theXercesDocument != 0);
+    assert(theXercesDocument != 0);
 
     m_navigator = m_navigatorAllocator.create(this);
 
-	if (m_mappingMode == false)
-	{
-		// The document index is always 1...
-		m_navigator->setIndex(1);
+    if (m_mappingMode == false)
+    {
+        // The document index is always 1...
+        m_navigator->setIndex(1);
 
-		// OK, let's build the nodes.  This makes things
-		// thread-safe, so the document can be shared...
-		buildWrapperNodes();
-	}
-	else
-	{
-		m_nodeMap.addAssociation(theXercesDocument, this);
-	}
+        // OK, let's build the nodes.  This makes things
+        // thread-safe, so the document can be shared...
+        buildWrapperNodes();
+    }
+    else
+    {
+        m_nodeMap.addAssociation(theXercesDocument, this);
+    }
 }
 
 XercesDocumentWrapper*
 XercesDocumentWrapper::create( 
             MemoryManager&          theManager,
-			const DOMDocument_Type*		theXercesDocument,
-			bool						threadSafe,
-			bool						buildWrapper,
- 			bool						buildMaps)
+            const DOMDocument_Type*     theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildWrapper,
+            bool                        buildMaps)
 {
     typedef XercesDocumentWrapper ThisType;
 
@@ -144,126 +144,126 @@ XercesDocumentWrapper::create(
 
 XercesDocumentWrapper::~XercesDocumentWrapper()
 {
-	destroyWrapper();
+    destroyWrapper();
 }
 
 
 
 XalanNode*
-XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
+XercesDocumentWrapper::mapNode(const DOMNodeType*   theXercesNode) const
 {
-	XalanNode*	theXalanNode = 0;
+    XalanNode*  theXalanNode = 0;
 
-	if (theXercesNode != 0)
-	{
-		theXalanNode = m_nodeMap.getNode(theXercesNode);
+    if (theXercesNode != 0)
+    {
+        theXalanNode = m_nodeMap.getNode(theXercesNode);
 
-		if (theXalanNode == 0)
-		{
-			if (theXercesNode != m_xercesDocument &&
-					theXercesNode->getOwnerDocument() != m_xercesDocument &&
-				theXercesNode->getParentNode() != static_cast<const DOMNodeType*>(m_xercesDocument))
-			{
-				throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
-			}
-			else if (m_mappingMode == true)
-			{
-				// OK, we haven't yet created a wrapper, so go ahead and
-				// create one.
-				theXalanNode = createWrapperNode(theXercesNode, 0, true);
-				assert(theXalanNode != 0);
-			}
-		}
-	}
+        if (theXalanNode == 0)
+        {
+            if (theXercesNode != m_xercesDocument &&
+                    theXercesNode->getOwnerDocument() != m_xercesDocument &&
+                theXercesNode->getParentNode() != static_cast<const DOMNodeType*>(m_xercesDocument))
+            {
+                throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
+            }
+            else if (m_mappingMode == true)
+            {
+                // OK, we haven't yet created a wrapper, so go ahead and
+                // create one.
+                theXalanNode = createWrapperNode(theXercesNode, 0, true);
+                assert(theXalanNode != 0);
+            }
+        }
+    }
 
-	return theXalanNode;
+    return theXalanNode;
 }
 
 
 
 const DOMNodeType*
-XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
+XercesDocumentWrapper::mapNode(XalanNode*   theXalanNode) const
 {
-	if (static_cast<const XalanNode*>(this) == theXalanNode)
-	{
-		return m_xercesDocument;
-	}
-	else if (theXalanNode == 0 ||
-			 static_cast<const XalanNode*>(this) != theXalanNode->getOwnerDocument())
-	{
-		throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
-	}
-	else
-	{
-		switch(theXalanNode->getNodeType())
-		{
-		case XalanNode::ATTRIBUTE_NODE:
-			return static_cast<const XercesAttrWrapper*>(theXalanNode)->getXercesNode();
-			break;
+    if (static_cast<const XalanNode*>(this) == theXalanNode)
+    {
+        return m_xercesDocument;
+    }
+    else if (theXalanNode == 0 ||
+             static_cast<const XalanNode*>(this) != theXalanNode->getOwnerDocument())
+    {
+        throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
+    }
+    else
+    {
+        switch(theXalanNode->getNodeType())
+        {
+        case XalanNode::ATTRIBUTE_NODE:
+            return static_cast<const XercesAttrWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::CDATA_SECTION_NODE:
-			return static_cast<const XercesCDATASectionWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::CDATA_SECTION_NODE:
+            return static_cast<const XercesCDATASectionWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::COMMENT_NODE:
-			return static_cast<const XercesCommentWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::COMMENT_NODE:
+            return static_cast<const XercesCommentWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::DOCUMENT_FRAGMENT_NODE:
-			throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-			break;
+        case XalanNode::DOCUMENT_FRAGMENT_NODE:
+            throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
+            break;
 
-		case XalanNode::ELEMENT_NODE:
-			return static_cast<const XercesElementWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::ELEMENT_NODE:
+            return static_cast<const XercesElementWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::ENTITY_NODE:
-			return static_cast<const XercesEntityWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::ENTITY_NODE:
+            return static_cast<const XercesEntityWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::ENTITY_REFERENCE_NODE:
-			return static_cast<const XercesEntityReferenceWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::ENTITY_REFERENCE_NODE:
+            return static_cast<const XercesEntityReferenceWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::NOTATION_NODE:
-			return static_cast<const XercesNotationWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::NOTATION_NODE:
+            return static_cast<const XercesNotationWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::PROCESSING_INSTRUCTION_NODE:
-			return static_cast<const XercesProcessingInstructionWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::PROCESSING_INSTRUCTION_NODE:
+            return static_cast<const XercesProcessingInstructionWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::TEXT_NODE:
-			return static_cast<const XercesTextWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::TEXT_NODE:
+            return static_cast<const XercesTextWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		case XalanNode::DOCUMENT_TYPE_NODE:
-			return static_cast<const XercesDocumentTypeWrapper*>(theXalanNode)->getXercesNode();
-			break;
+        case XalanNode::DOCUMENT_TYPE_NODE:
+            return static_cast<const XercesDocumentTypeWrapper*>(theXalanNode)->getXercesNode();
+            break;
 
-		default:
-			assert(false);
-			break;
-		}
+        default:
+            assert(false);
+            break;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 }
 
 
 
 XalanAttr*
-XercesDocumentWrapper::mapNode(const DOMAttrType* 	theXercesNode) const
+XercesDocumentWrapper::mapNode(const DOMAttrType*   theXercesNode) const
 {
-	return static_cast<XalanAttr*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
+    return static_cast<XalanAttr*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
 }
 
 
 
 XalanElement*
-XercesDocumentWrapper::mapNode(const DOMElementType* 	theXercesNode) const
+XercesDocumentWrapper::mapNode(const DOMElementType*    theXercesNode) const
 {
-	return static_cast<XercesElementWrapper*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
+    return static_cast<XercesElementWrapper*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
 }
 
 
@@ -271,35 +271,35 @@ XercesDocumentWrapper::mapNode(const DOMElementType* 	theXercesNode) const
 void
 XercesDocumentWrapper::destroyWrapper()
 {
-	XALAN_USING_STD(for_each)
+    XALAN_USING_STD(for_each)
 
-	// Set this to null, since it will be deleted
-	// by the next for_each...
-	m_doctype = 0;
+    // Set this to null, since it will be deleted
+    // by the next for_each...
+    m_doctype = 0;
 
-	// m_bridgeMap contains all of the nodes that
-	// are still alive...
-	for_each(
-			m_nodes.begin(),
-			m_nodes.end(),
+    // m_bridgeMap contains all of the nodes that
+    // are still alive...
+    for_each(
+            m_nodes.begin(),
+            m_nodes.end(),
             DeleteFunctor<XalanNode>(m_nodes.getMemoryManager()));
 
-	// Clear everything out, since we just delete everything...
-	m_nodes.clear();
+    // Clear everything out, since we just delete everything...
+    m_nodes.clear();
 
-	// Clear out all of the navigators, except ours...
-	m_navigatorAllocator.reset();
+    // Clear out all of the navigators, except ours...
+    m_navigatorAllocator.reset();
 
-	m_navigator = m_navigatorAllocator.create(this);
+    m_navigator = m_navigatorAllocator.create(this);
 
-	// Clear the node map...
-	m_nodeMap.clear();
+    // Clear the node map...
+    m_nodeMap.clear();
 
-	m_indexValid = false;
+    m_indexValid = false;
 
-	m_mappingMode = true;
+    m_mappingMode = true;
 
-	m_stringPool->clear();
+    m_stringPool->clear();
 }
 
 
@@ -307,9 +307,9 @@ XercesDocumentWrapper::destroyWrapper()
 void
 XercesDocumentWrapper::rebuildWrapper()
 {
-	destroyWrapper();
+    destroyWrapper();
 
-	buildWrapperNodes();
+    buildWrapperNodes();
 }
 
 
@@ -317,497 +317,497 @@ XercesDocumentWrapper::rebuildWrapper()
 XercesWrapperNavigator&
 XercesDocumentWrapper::createNavigator() const
 {
-	return *m_navigatorAllocator.create(const_cast<XercesDocumentWrapper*>(this));
+    return *m_navigatorAllocator.create(const_cast<XercesDocumentWrapper*>(this));
 }
 
 
 
 XercesDocumentTypeWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMDocumentType_Type*		theDoctype,
-			IndexType						theIndex,
-			bool							mapNode,
+            const DOMDocumentType_Type*     theDoctype,
+            IndexType                       theIndex,
+            bool                            mapNode,
             XercesWrapperNavigator**        theWrapperNodeNavigator) const
 {
-	// This is a special case, since there is only one
-	// doctype node allowed...
-	assert(m_doctype == 0);
-	assert(m_xercesDocument->getDoctype() != 0 &&
-		   m_xercesDocument->getDoctype() == theDoctype);
+    // This is a special case, since there is only one
+    // doctype node allowed...
+    assert(m_doctype == 0);
+    assert(m_xercesDocument->getDoctype() != 0 &&
+           m_xercesDocument->getDoctype() == theDoctype);
 
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	// Update the member variable for the new instance.
+    // Update the member variable for the new instance.
     m_doctype =  XercesDocumentTypeWrapper::create(getMemoryManager(), theDoctype, theNavigator);
 
-	if (mapNode == true)
-	{
-		m_nodeMap.addAssociation(theDoctype, m_doctype);
-	}
+    if (mapNode == true)
+    {
+        m_nodeMap.addAssociation(theDoctype, m_doctype);
+    }
 
-	m_nodes.push_back(m_doctype);
+    m_nodes.push_back(m_doctype);
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return m_doctype;
+    return m_doctype;
 }
 
 
 
 XercesElementWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMElementType* 	    theXercesNode,
-			IndexType				    theIndex,
-			bool					    mapNode,
+            const DOMElementType*       theXercesNode,
+            IndexType                   theIndex,
+            bool                        mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesElementWrapper* const	theWrapper =
-		m_elementAllocator.create(theXercesNode, theNavigator);
+    XercesElementWrapper* const theWrapper =
+        m_elementAllocator.create(theXercesNode, theNavigator);
 
-	if (m_doctype != 0 || mapNode == true)
-	{
-		// Add it to the node map, since we my need it for getting
-		// elements by ID, or we're in mapping mode.
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (m_doctype != 0 || mapNode == true)
+    {
+        // Add it to the node map, since we my need it for getting
+        // elements by ID, or we're in mapping mode.
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesTextWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMTextType*	        theXercesNode,
-			IndexType			        theIndex,
-			bool				        mapNode,
+            const DOMTextType*          theXercesNode,
+            IndexType                   theIndex,
+            bool                        mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesTextWrapper* const		theWrapper =
-		m_textAllocator.create(theXercesNode, theNavigator);
+    XercesTextWrapper* const        theWrapper =
+        m_textAllocator.create(theXercesNode, theNavigator);
 
-	if (mapNode == true)
-	{
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (mapNode == true)
+    {
+        // Add it to the node map...
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesCommentWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMCommentType*	    theXercesNode,
- 			IndexType				    theIndex,
-			bool					    mapNode,
+            const DOMCommentType*       theXercesNode,
+            IndexType                   theIndex,
+            bool                        mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesCommentWrapper* const	theWrapper =
+    XercesCommentWrapper* const theWrapper =
         XercesCommentWrapper::create(
                                 getMemoryManager(),
                                 theXercesNode,
-								theNavigator);
+                                theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	if (mapNode == true)
-	{
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (mapNode == true)
+    {
+        // Add it to the node map...
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesCDATASectionWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMCDATASectionType*	theXercesNode,
-			IndexType					theIndex,
-			bool						mapNode,
+            const DOMCDATASectionType*  theXercesNode,
+            IndexType                   theIndex,
+            bool                        mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesCDATASectionWrapper* const		theWrapper =
+    XercesCDATASectionWrapper* const        theWrapper =
         XercesCDATASectionWrapper::create(
                                      getMemoryManager(),
                                      theXercesNode,
-									 theNavigator);
+                                     theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	if (mapNode == true)
-	{
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (mapNode == true)
+    {
+        // Add it to the node map...
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesProcessingInstructionWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMProcessingInstructionType*		theXercesNode,
-			IndexType								theIndex,
-			bool									mapNode,
+            const DOMProcessingInstructionType*     theXercesNode,
+            IndexType                               theIndex,
+            bool                                    mapNode,
             XercesWrapperNavigator**                theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesProcessingInstructionWrapper* const	theWrapper =
+    XercesProcessingInstructionWrapper* const   theWrapper =
         XercesProcessingInstructionWrapper::create(
                                               getMemoryManager(),
                                               theXercesNode,
-											  theNavigator);
+                                              theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	if (mapNode == true)
-	{
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (mapNode == true)
+    {
+        // Add it to the node map...
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesAttrWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMAttrType*	        theXercesNode,
-			IndexType			        theIndex,
-			bool				        /* mapNode */,
+            const DOMAttrType*          theXercesNode,
+            IndexType                   theIndex,
+            bool                        /* mapNode */,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesAttrWrapper* const		theWrapper =
-		m_attributeAllocator.create(theXercesNode, theNavigator);
+    XercesAttrWrapper* const        theWrapper =
+        m_attributeAllocator.create(theXercesNode, theNavigator);
 
-	// Add it to the node map -- attributes ALWAYS go in the map
-	// for now...
-	m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    // Add it to the node map -- attributes ALWAYS go in the map
+    // for now...
+    m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesEntityWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMEntityType*	    theXercesNode,
-			IndexType				    theIndex,
-			bool					    /* mapNode */,
+            const DOMEntityType*        theXercesNode,
+            IndexType                   theIndex,
+            bool                        /* mapNode */,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesEntityWrapper* const	theWrapper =
+    XercesEntityWrapper* const  theWrapper =
         XercesEntityWrapper::create(
                                getMemoryManager(),
                                theXercesNode,
-							   theNavigator);
+                               theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	// Add it to the node map -- entities ALWAYS go in the map
-	// for now...
-	m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    // Add it to the node map -- entities ALWAYS go in the map
+    // for now...
+    m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesEntityReferenceWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMEntityReferenceType* 	theXercesNode,
-			IndexType						theIndex,
-			bool							mapNode,
+            const DOMEntityReferenceType*   theXercesNode,
+            IndexType                       theIndex,
+            bool                            mapNode,
             XercesWrapperNavigator**        theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesEntityReferenceWrapper* const	theWrapper =
+    XercesEntityReferenceWrapper* const theWrapper =
         XercesEntityReferenceWrapper::create(
                                         getMemoryManager(),
                                         theXercesNode,
-										theNavigator);
+                                        theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	if (mapNode == true)
-	{
-		// Add it to the node map...
-		m_nodeMap.addAssociation(theXercesNode, theWrapper);
-	}
+    if (mapNode == true)
+    {
+        // Add it to the node map...
+        m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    }
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XercesNotationWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMNotationType*	    theXercesNode,
-			IndexType				    theIndex,
-			bool					    /* mapNode */,
+            const DOMNotationType*      theXercesNode,
+            IndexType                   theIndex,
+            bool                        /* mapNode */,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = createNavigator();
+    // Create a navigator...
+    XercesWrapperNavigator& theNavigator = createNavigator();
 
-	theNavigator.setIndex(theIndex);
+    theNavigator.setIndex(theIndex);
 
-	XercesNotationWrapper* const		theWrapper =
+    XercesNotationWrapper* const        theWrapper =
         XercesNotationWrapper::create(
                                  getMemoryManager(),
                                  theXercesNode,
-								 theNavigator);
+                                 theNavigator);
 
-	m_nodes.push_back(theWrapper);
+    m_nodes.push_back(theWrapper);
 
-	// Add it to the node map -- notations ALWAYS go in the map
-	// for now...
-	m_nodeMap.addAssociation(theXercesNode, theWrapper);
+    // Add it to the node map -- notations ALWAYS go in the map
+    // for now...
+    m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
     if (theWrapperNodeNavigator != 0)
     {
         *theWrapperNodeNavigator = &theNavigator;
     }
 
-	return theWrapper;
+    return theWrapper;
 }
 
 
 
 XalanNode*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMNodeType*	        theXercesNode,
-			IndexType			        theIndex,
-			bool				        mapNode,
+            const DOMNodeType*          theXercesNode,
+            IndexType                   theIndex,
+            bool                        mapNode,
             XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
-	assert(theXercesNode != 0);
+    assert(theXercesNode != 0);
 
-	XalanNode*				theNewNode = 0;
+    XalanNode*              theNewNode = 0;
 
-	switch(theXercesNode->getNodeType())
-	{
-	case DOMNodeType::ATTRIBUTE_NODE:
-		{
-			const DOMAttrType*		theAttrNode =
-						static_cast<const DOMAttrType*>(theXercesNode);
+    switch(theXercesNode->getNodeType())
+    {
+    case DOMNodeType::ATTRIBUTE_NODE:
+        {
+            const DOMAttrType*      theAttrNode =
+                        static_cast<const DOMAttrType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theAttrNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theAttrNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::CDATA_SECTION_NODE:
-		{
-			const DOMCDATASectionType*	theCDATASectionNode =
-						static_cast<const DOMCDATASectionType*>(theXercesNode);
+    case DOMNodeType::CDATA_SECTION_NODE:
+        {
+            const DOMCDATASectionType*  theCDATASectionNode =
+                        static_cast<const DOMCDATASectionType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theCDATASectionNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
+            theNewNode = createWrapperNode(theCDATASectionNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
 
-		}
-		break;
+        }
+        break;
 
-	case DOMNodeType::COMMENT_NODE:
-		{
-			const DOMCommentType*	theCommentNode =
-						static_cast<const DOMCommentType*>(theXercesNode);
+    case DOMNodeType::COMMENT_NODE:
+        {
+            const DOMCommentType*   theCommentNode =
+                        static_cast<const DOMCommentType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theCommentNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theCommentNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::DOCUMENT_FRAGMENT_NODE:
-		throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
-		break;
+    case DOMNodeType::DOCUMENT_FRAGMENT_NODE:
+        throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
+        break;
 
-	case DOMNodeType::ELEMENT_NODE:
-		{
-			const DOMElementType*	theElementNode =
-						static_cast<const DOMElementType*>(theXercesNode);
+    case DOMNodeType::ELEMENT_NODE:
+        {
+            const DOMElementType*   theElementNode =
+                        static_cast<const DOMElementType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theElementNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theElementNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::ENTITY_NODE:
-		{
-			const DOMEntityType*	theEntityNode =
-						static_cast<const DOMEntityType*>(theXercesNode);
+    case DOMNodeType::ENTITY_NODE:
+        {
+            const DOMEntityType*    theEntityNode =
+                        static_cast<const DOMEntityType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theEntityNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theEntityNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::ENTITY_REFERENCE_NODE:
-		{
-			const DOMEntityReferenceType*	theEntityReferenceNode =
-						static_cast<const DOMEntityReferenceType*>(theXercesNode);
+    case DOMNodeType::ENTITY_REFERENCE_NODE:
+        {
+            const DOMEntityReferenceType*   theEntityReferenceNode =
+                        static_cast<const DOMEntityReferenceType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theEntityReferenceNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theEntityReferenceNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::NOTATION_NODE:
-		{
-			const DOMNotationType*	theNotationNode =
-						static_cast<const DOMNotationType*>(theXercesNode);
+    case DOMNodeType::NOTATION_NODE:
+        {
+            const DOMNotationType*  theNotationNode =
+                        static_cast<const DOMNotationType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theNotationNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theNotationNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::PROCESSING_INSTRUCTION_NODE:
-		{
-			const DOMProcessingInstructionType*		thePINode =
-						static_cast<const DOMProcessingInstructionType*>(theXercesNode);
+    case DOMNodeType::PROCESSING_INSTRUCTION_NODE:
+        {
+            const DOMProcessingInstructionType*     thePINode =
+                        static_cast<const DOMProcessingInstructionType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(thePINode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(thePINode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::TEXT_NODE:
-		{
-			const DOMTextType*	theTextNode =
-						static_cast<const DOMTextType*>(theXercesNode);
+    case DOMNodeType::TEXT_NODE:
+        {
+            const DOMTextType*  theTextNode =
+                        static_cast<const DOMTextType*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theTextNode, theIndex, mapNode, theWrapperNodeNavigator);
-			assert(theNewNode != 0);
-		}
-		break;
+            theNewNode = createWrapperNode(theTextNode, theIndex, mapNode, theWrapperNodeNavigator);
+            assert(theNewNode != 0);
+        }
+        break;
 
-	case DOMNodeType::DOCUMENT_TYPE_NODE:
-		{
-			const DOMDocumentType_Type*		theDoctypeNode =
-						static_cast<const DOMDocumentType_Type*>(theXercesNode);
+    case DOMNodeType::DOCUMENT_TYPE_NODE:
+        {
+            const DOMDocumentType_Type*     theDoctypeNode =
+                        static_cast<const DOMDocumentType_Type*>(theXercesNode);
 
-			theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode, theWrapperNodeNavigator);
+            theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode, theWrapperNodeNavigator);
 
-			assert(theNewNode != 0);
-		}
-		break;
+            assert(theNewNode != 0);
+        }
+        break;
 
-	default:
-		assert(false);
-		break;
-	}
+    default:
+        assert(false);
+        break;
+    }
 
-	return theNewNode;
+    return theNewNode;
 }
 
 
 
 void
-XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
+XercesDocumentWrapper::destroyNode(XalanNode*   theNode)
 {
-	XALAN_USING_STD(find)
+    XALAN_USING_STD(find)
 
-	const NodeVectorType::iterator 	i =
-		find(m_nodes.begin(), m_nodes.end(), theNode);
+    const NodeVectorType::iterator  i =
+        find(m_nodes.begin(), m_nodes.end(), theNode);
 
-	if (i == m_nodes.end())
-	{
-		// Doesn't belong to this doc, so throw...
-		throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
-	}
-	else
-	{
+    if (i == m_nodes.end())
+    {
+        // Doesn't belong to this doc, so throw...
+        throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
+    }
+    else
+    {
         assert(*i != 0);
 
         // Delete the node...
@@ -815,9 +815,9 @@ XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
             m_nodes.getMemoryManager(),
             **i);
 
-		// Erase it from the map...
-		m_nodes.erase(i);
-	}
+        // Erase it from the map...
+        m_nodes.erase(i);
+    }
 }
 
 
@@ -825,9 +825,9 @@ XercesDocumentWrapper::destroyNode(XalanNode*	theNode)
 const XalanDOMString&
 XercesDocumentWrapper::getNodeName() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getPooledString(m_xercesDocument->getNodeName());
+    return m_navigator->getPooledString(m_xercesDocument->getNodeName());
 }
 
 
@@ -835,9 +835,9 @@ XercesDocumentWrapper::getNodeName() const
 const XalanDOMString&
 XercesDocumentWrapper::getNodeValue() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getPooledString(m_xercesDocument->getNodeValue());
+    return m_navigator->getPooledString(m_xercesDocument->getNodeValue());
 }
 
 
@@ -845,7 +845,7 @@ XercesDocumentWrapper::getNodeValue() const
 XercesDocumentWrapper::NodeType
 XercesDocumentWrapper::getNodeType() const
 {
-	return DOCUMENT_NODE;
+    return DOCUMENT_NODE;
 }
 
 
@@ -853,7 +853,7 @@ XercesDocumentWrapper::getNodeType() const
 XalanNode*
 XercesDocumentWrapper::getParentNode() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -861,7 +861,7 @@ XercesDocumentWrapper::getParentNode() const
 const XalanNodeList*
 XercesDocumentWrapper::getChildNodes() const
 {
-	return &m_children;
+    return &m_children;
 }
 
 
@@ -869,9 +869,9 @@ XercesDocumentWrapper::getChildNodes() const
 XalanNode*
 XercesDocumentWrapper::getFirstChild() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getFirstChild(m_xercesDocument);
+    return m_navigator->getFirstChild(m_xercesDocument);
 }
 
 
@@ -879,9 +879,9 @@ XercesDocumentWrapper::getFirstChild() const
 XalanNode*
 XercesDocumentWrapper::getLastChild() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getLastChild(m_xercesDocument);
+    return m_navigator->getLastChild(m_xercesDocument);
 }
 
 
@@ -889,7 +889,7 @@ XercesDocumentWrapper::getLastChild() const
 XalanNode*
 XercesDocumentWrapper::getPreviousSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -897,7 +897,7 @@ XercesDocumentWrapper::getPreviousSibling() const
 XalanNode*
 XercesDocumentWrapper::getNextSibling() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -905,7 +905,7 @@ XercesDocumentWrapper::getNextSibling() const
 const XalanNamedNodeMap*
 XercesDocumentWrapper::getAttributes() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -913,7 +913,7 @@ XercesDocumentWrapper::getAttributes() const
 XalanDocument*
 XercesDocumentWrapper::getOwnerDocument() const
 {
-	return 0;
+    return 0;
 }
 
 
@@ -921,9 +921,9 @@ XercesDocumentWrapper::getOwnerDocument() const
 const XalanDOMString&
 XercesDocumentWrapper::getNamespaceURI() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getPooledString(m_xercesDocument->getNamespaceURI());
+    return m_navigator->getPooledString(m_xercesDocument->getNamespaceURI());
 }
 
 
@@ -931,9 +931,9 @@ XercesDocumentWrapper::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentWrapper::getPrefix() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getPooledString(m_xercesDocument->getPrefix());
+    return m_navigator->getPooledString(m_xercesDocument->getPrefix());
 }
 
 
@@ -941,9 +941,9 @@ XercesDocumentWrapper::getPrefix() const
 const XalanDOMString&
 XercesDocumentWrapper::getLocalName() const
 {
-	assert(m_navigator != 0);
+    assert(m_navigator != 0);
 
-	return m_navigator->getPooledString(m_xercesDocument->getLocalName());
+    return m_navigator->getPooledString(m_xercesDocument->getLocalName());
 }
 
 
@@ -951,7 +951,7 @@ XercesDocumentWrapper::getLocalName() const
 bool
 XercesDocumentWrapper::isIndexed() const
 {
-	return m_indexValid;
+    return m_indexValid;
 }
 
 
@@ -959,10 +959,10 @@ XercesDocumentWrapper::isIndexed() const
 XercesDocumentWrapper::IndexType
 XercesDocumentWrapper::getIndex() const
 {
-	assert(m_navigator != 0);
-	assert(m_navigator->getIndex() == 1);
+    assert(m_navigator != 0);
+    assert(m_navigator->getIndex() == 1);
 
-	return m_navigator->getIndex();
+    return m_navigator->getIndex();
 }
 
 
@@ -970,27 +970,27 @@ XercesDocumentWrapper::getIndex() const
 XalanElement*
 XercesDocumentWrapper::getDocumentElement() const
 {
-	// If we're working in mapping mode, m_documentElement will
-	// be null, so we'll have to map the node...
-	return m_documentElement != 0 ? m_documentElement : mapNode(m_xercesDocument->getDocumentElement());
+    // If we're working in mapping mode, m_documentElement will
+    // be null, so we'll have to map the node...
+    return m_documentElement != 0 ? m_documentElement : mapNode(m_xercesDocument->getDocumentElement());
 }
 
 
 
 XalanElement*
-XercesDocumentWrapper::getElementById(const XalanDOMString&		elementId) const
+XercesDocumentWrapper::getElementById(const XalanDOMString&     elementId) const
 {
-	const DOMNodeType* const	theXercesNode =
+    const DOMNodeType* const    theXercesNode =
         m_xercesDocument->getElementById(elementId.c_str());
 
-	if (theXercesNode == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return static_cast<XalanElement*>(mapNode(theXercesNode));
-	}
+    if (theXercesNode == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return static_cast<XalanElement*>(mapNode(theXercesNode));
+    }
 }
 
 
@@ -998,63 +998,63 @@ XercesDocumentWrapper::getElementById(const XalanDOMString&		elementId) const
 void
 XercesDocumentWrapper::buildWrapperNodes()
 {
-	const DOMNodeType*	theStartChild = m_xercesDocument->getFirstChild();
+    const DOMNodeType*  theStartChild = m_xercesDocument->getFirstChild();
 
-	if (theStartChild != 0)
-	{
-		assert(m_navigator != 0);
+    if (theStartChild != 0)
+    {
+        assert(m_navigator != 0);
 
-		m_navigator->setIndex(1);
-		m_navigator->setFirstChild(0);
+        m_navigator->setIndex(1);
+        m_navigator->setFirstChild(0);
 
-		BuildWrapperTreeWalker	theTreeWalker(
-				this,
-				m_navigator,
-				2,
-				m_buildMaps);
+        BuildWrapperTreeWalker  theTreeWalker(
+                this,
+                m_navigator,
+                2,
+                m_buildMaps);
 
-		theTreeWalker.traverse(theStartChild, m_xercesDocument);
-	}
+        theTreeWalker.traverse(theStartChild, m_xercesDocument);
+    }
 
-	// OK, now set m_documentElement...
-	XalanNode*	theChild = m_navigator->getFirstChild();
+    // OK, now set m_documentElement...
+    XalanNode*  theChild = m_navigator->getFirstChild();
 
-	while(theChild != 0 && theChild->getNodeType() != XalanNode::ELEMENT_NODE)
-	{
-		theChild = theChild->getNextSibling();
-	}
+    while(theChild != 0 && theChild->getNodeType() != XalanNode::ELEMENT_NODE)
+    {
+        theChild = theChild->getNextSibling();
+    }
 
-	m_documentElement = static_cast<XalanElement*>(theChild);
+    m_documentElement = static_cast<XalanElement*>(theChild);
 
-	m_indexValid = true;
+    m_indexValid = true;
 
-	m_mappingMode = false;
+    m_mappingMode = false;
 }
 
 
 
 XercesDocumentWrapper::BuildWrapperTreeWalker::BuildWrapperTreeWalker(
-			XercesDocumentWrapper*			    theDocument,
-			XercesWrapperNavigator*			    theDocumentNavigator,
-			IndexType						    theStartIndex,
-			bool							    theBuildMapsFlag) :
-	m_document(theDocument),
-	m_currentIndex(theStartIndex),
-	m_parentNavigatorStack(theDocument->getMemoryManager()),
-	m_siblingNavigatorStack(theDocument->getMemoryManager()),
-	m_buildMaps(theBuildMapsFlag)
+            XercesDocumentWrapper*              theDocument,
+            XercesWrapperNavigator*             theDocumentNavigator,
+            IndexType                           theStartIndex,
+            bool                                theBuildMapsFlag) :
+    m_document(theDocument),
+    m_currentIndex(theStartIndex),
+    m_parentNavigatorStack(theDocument->getMemoryManager()),
+    m_siblingNavigatorStack(theDocument->getMemoryManager()),
+    m_buildMaps(theBuildMapsFlag)
 {
-	assert(theDocument != 0 && theDocumentNavigator != 0);
+    assert(theDocument != 0 && theDocumentNavigator != 0);
 
-	// Reserve some space...
-	m_parentNavigatorStack.reserve(100);
-	m_parentNavigatorStack.reserve(100);
+    // Reserve some space...
+    m_parentNavigatorStack.reserve(100);
+    m_parentNavigatorStack.reserve(100);
 
-	// The document navigator is the last navigator on the stack...
-	m_parentNavigatorStack.push_back(NavigatorStackEntryType(theDocumentNavigator, theDocument));
+    // The document navigator is the last navigator on the stack...
+    m_parentNavigatorStack.push_back(NavigatorStackEntryType(theDocumentNavigator, theDocument));
 
-	// There is no previous sibling...
-	m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
+    // There is no previous sibling...
+    m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
 }
 
 
@@ -1066,185 +1066,185 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::~BuildWrapperTreeWalker()
 
 
 bool
-XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		node)
+XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*     node)
 {
     XercesWrapperNavigator*     theWrapperNodeNavigator;
 
-	XalanNode* const	theWrapperNode =
-		m_document->createWrapperNode(
+    XalanNode* const    theWrapperNode =
+        m_document->createWrapperNode(
                 node,
                 m_currentIndex,
                 m_buildMaps,
                 &theWrapperNodeNavigator);
     assert(theWrapperNodeNavigator != 0);
 
-	assert(m_parentNavigatorStack.empty() == false);
-	assert(m_siblingNavigatorStack.empty() == false);
+    assert(m_parentNavigatorStack.empty() == false);
+    assert(m_siblingNavigatorStack.empty() == false);
 
-	// Get the two navigators...
-	NavigatorStackEntryType&	theParentEntry = m_parentNavigatorStack.back();
-	NavigatorStackEntryType&	theSiblingEntry = m_siblingNavigatorStack.back();
+    // Get the two navigators...
+    NavigatorStackEntryType&    theParentEntry = m_parentNavigatorStack.back();
+    NavigatorStackEntryType&    theSiblingEntry = m_siblingNavigatorStack.back();
 
-	theWrapperNodeNavigator->setParentNode(theParentEntry.m_node);
+    theWrapperNodeNavigator->setParentNode(theParentEntry.m_node);
 
-	// If the first child has not been set, then set it
-	// now...
-	if (theParentEntry.m_navigator->getFirstChild() == 0)
-	{
-		assert(theSiblingEntry.m_node == 0);
+    // If the first child has not been set, then set it
+    // now...
+    if (theParentEntry.m_navigator->getFirstChild() == 0)
+    {
+        assert(theSiblingEntry.m_node == 0);
 
-		theParentEntry.m_navigator->setFirstChild(theWrapperNode);
-	}
+        theParentEntry.m_navigator->setFirstChild(theWrapperNode);
+    }
 
-	// Always set the last child...
-	theParentEntry.m_navigator->setLastChild(theWrapperNode);
+    // Always set the last child...
+    theParentEntry.m_navigator->setLastChild(theWrapperNode);
 
-	theWrapperNodeNavigator->setPreviousSibling(theSiblingEntry.m_node);
+    theWrapperNodeNavigator->setPreviousSibling(theSiblingEntry.m_node);
 
-	if (theSiblingEntry.m_navigator != 0)
-	{
-		theSiblingEntry.m_navigator->setNextSibling(theWrapperNode);
-	}
+    if (theSiblingEntry.m_navigator != 0)
+    {
+        theSiblingEntry.m_navigator->setNextSibling(theWrapperNode);
+    }
 
-	// Build an entry for the stacks...
-	const NavigatorStackEntryType	theCurrentEntry(theWrapperNodeNavigator, theWrapperNode);
+    // Build an entry for the stacks...
+    const NavigatorStackEntryType   theCurrentEntry(theWrapperNodeNavigator, theWrapperNode);
 
-	// My child nodes will now be visited, so push the current
-	// context on the parent stack...
-	m_parentNavigatorStack.push_back(theCurrentEntry);
+    // My child nodes will now be visited, so push the current
+    // context on the parent stack...
+    m_parentNavigatorStack.push_back(theCurrentEntry);
 
-	// My siblings will also need to know about me as well...
-	m_siblingNavigatorStack.push_back(theCurrentEntry);
+    // My siblings will also need to know about me as well...
+    m_siblingNavigatorStack.push_back(theCurrentEntry);
 
-	// This will serve to mark the sibling context for my first child,
-	// since it has no previous sibling.  This will be popped off
-	// when endNode() is called.
-	m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
+    // This will serve to mark the sibling context for my first child,
+    // since it has no previous sibling.  This will be popped off
+    // when endNode() is called.
+    m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
 
-	// Finally, increment the index counter...
-	++m_currentIndex;
+    // Finally, increment the index counter...
+    ++m_currentIndex;
 
-	if (node->getNodeType() == DOMNodeType::DOCUMENT_TYPE_NODE)
-	{
-		// Special case for doctype -- we have to build its entities...
-		const DOMDocumentType_Type* const	theDoctype =
-			static_cast<const DOMDocumentType_Type*>(node);
+    if (node->getNodeType() == DOMNodeType::DOCUMENT_TYPE_NODE)
+    {
+        // Special case for doctype -- we have to build its entities...
+        const DOMDocumentType_Type* const   theDoctype =
+            static_cast<const DOMDocumentType_Type*>(node);
 
-		const DOMNamedNodeMapType* const	theEntities =
-			theDoctype->getEntities();
+        const DOMNamedNodeMapType* const    theEntities =
+            theDoctype->getEntities();
 
-		const XalanSize_t	theLength =
-			theEntities->getLength();
+        const XalanSize_t   theLength =
+            theEntities->getLength();
 
-		for (XalanSize_t i = 0; i < theLength; ++i)
-		{
-			// Build it, but don't index it...
-			m_document->createWrapperNode(theEntities->item(i), m_currentIndex++, true);
-		}
-	}
-	else if (node->getNodeType() == DOMNodeType::ELEMENT_NODE)
-	{
-	    // Special case for element nodes -- we have to build the attributes...
-		const DOMElementType* const		theElement =
-			static_cast<const DOMElementType*>(node);
+        for (XalanSize_t i = 0; i < theLength; ++i)
+        {
+            // Build it, but don't index it...
+            m_document->createWrapperNode(theEntities->item(i), m_currentIndex++, true);
+        }
+    }
+    else if (node->getNodeType() == DOMNodeType::ELEMENT_NODE)
+    {
+        // Special case for element nodes -- we have to build the attributes...
+        const DOMElementType* const     theElement =
+            static_cast<const DOMElementType*>(node);
 
-		const DOMNamedNodeMapType* const	theAttributes =
-			theElement->getAttributes();
-		assert(theAttributes != 0);
+        const DOMNamedNodeMapType* const    theAttributes =
+            theElement->getAttributes();
+        assert(theAttributes != 0);
 
-		const XalanSize_t	theLength =
-			theAttributes->getLength();
+        const XalanSize_t   theLength =
+            theAttributes->getLength();
 
-		XercesWrapperNavigator*	thePreviousAttrNavigator = 0;
-		XalanNode*				thePreviousAttr = 0;
+        XercesWrapperNavigator* thePreviousAttrNavigator = 0;
+        XalanNode*              thePreviousAttr = 0;
 
-		for (XalanSize_t i = 0; i < theLength; ++i)
-		{
-			// Get the attribute from the node map...
-			const DOMNodeType* const	theAttr = theAttributes->item(i);
-			assert(theAttr != 0);
+        for (XalanSize_t i = 0; i < theLength; ++i)
+        {
+            // Get the attribute from the node map...
+            const DOMNodeType* const    theAttr = theAttributes->item(i);
+            assert(theAttr != 0);
 
             XercesWrapperNavigator*     theCurrentAttrNavigator;
 
-			// Create a wrapper node.
-			XalanNode* const	theCurrentAttr =
-				m_document->createWrapperNode(
+            // Create a wrapper node.
+            XalanNode* const    theCurrentAttr =
+                m_document->createWrapperNode(
                     theAttr,
                     m_currentIndex,
                     m_buildMaps,
                     &theCurrentAttrNavigator);
-			assert(theCurrentAttr != 0 && theCurrentAttrNavigator != 0);
+            assert(theCurrentAttr != 0 && theCurrentAttrNavigator != 0);
 
-			// Set the parent node...
-			theCurrentAttrNavigator->setParentNode(theWrapperNode);
+            // Set the parent node...
+            theCurrentAttrNavigator->setParentNode(theWrapperNode);
 
-			if (thePreviousAttr != 0)
-			{
-				assert(thePreviousAttrNavigator != 0);
+            if (thePreviousAttr != 0)
+            {
+                assert(thePreviousAttrNavigator != 0);
 
-				// Link in the previous attribute...
-				theCurrentAttrNavigator->setPreviousSibling(thePreviousAttr);
+                // Link in the previous attribute...
+                theCurrentAttrNavigator->setPreviousSibling(thePreviousAttr);
 
-				thePreviousAttrNavigator->setNextSibling(theCurrentAttr);
-			}
+                thePreviousAttrNavigator->setNextSibling(theCurrentAttr);
+            }
 
-			// Update the pointers so they point to this attribute...
-			thePreviousAttr = theCurrentAttr;
-			thePreviousAttrNavigator = theCurrentAttrNavigator;
+            // Update the pointers so they point to this attribute...
+            thePreviousAttr = theCurrentAttr;
+            thePreviousAttrNavigator = theCurrentAttrNavigator;
 
-			// Finally, increment the index...
-			++m_currentIndex;
-		}
-	}
+            // Finally, increment the index...
+            ++m_currentIndex;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 
 
 bool
-XercesDocumentWrapper::BuildWrapperTreeWalker::endNode(const DOMNodeType*	/* node */)
+XercesDocumentWrapper::BuildWrapperTreeWalker::endNode(const DOMNodeType*   /* node */)
 {
-	assert(m_parentNavigatorStack.empty() == false);
-	assert(m_siblingNavigatorStack.empty() == false);
+    assert(m_parentNavigatorStack.empty() == false);
+    assert(m_siblingNavigatorStack.empty() == false);
 
-	// I have to pop my entry, since my children are finished...
-	m_parentNavigatorStack.pop_back();
+    // I have to pop my entry, since my children are finished...
+    m_parentNavigatorStack.pop_back();
 
-	// Pop any sibling navigators my child pushed...
-	while(m_siblingNavigatorStack.back().m_navigator != 0)
-	{
-		assert(m_siblingNavigatorStack.back().m_node != 0);
+    // Pop any sibling navigators my child pushed...
+    while(m_siblingNavigatorStack.back().m_navigator != 0)
+    {
+        assert(m_siblingNavigatorStack.back().m_node != 0);
 
-		m_siblingNavigatorStack.pop_back();
-	}
+        m_siblingNavigatorStack.pop_back();
+    }
 
-	// There must be a context marker...
-	assert(m_siblingNavigatorStack.back().m_navigator == 0 &&
-		   m_siblingNavigatorStack.back().m_node == 0);
+    // There must be a context marker...
+    assert(m_siblingNavigatorStack.back().m_navigator == 0 &&
+           m_siblingNavigatorStack.back().m_node == 0);
 
-	// Pop the context marker...
-	m_siblingNavigatorStack.pop_back();
+    // Pop the context marker...
+    m_siblingNavigatorStack.pop_back();
 
-	return false;
+    return false;
 }
 
 
 
 const XalanDOMString&
-XercesDocumentWrapper::getPooledString(const XalanDOMString&	theString) const
+XercesDocumentWrapper::getPooledString(const XalanDOMString&    theString) const
 {
-	return m_stringPool->get(theString);
+    return m_stringPool->get(theString);
 }
 
 
 
 const XalanDOMString&
 XercesDocumentWrapper::getPooledString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength) const
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength) const
 {
-	return m_stringPool->get(theString, theLength);
+    return m_stringPool->get(theString, theLength);
 }
 
 

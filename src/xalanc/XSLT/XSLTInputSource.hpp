@@ -50,8 +50,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	BinInputStreamType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream   BinInputStreamType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
 XALAN_USING_XERCES(MemoryManager)
 
 
@@ -65,211 +65,211 @@ class XALAN_XSLT_EXPORT XSLTInputSource : public InputSourceType
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef istream			StreamType;
+    typedef istream         StreamType;
 #else
-	typedef std::istream	StreamType;
+    typedef std::istream    StreamType;
 #endif
 
-	explicit
+    explicit
     XSLTInputSource(MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Copy constructor.
-	 */
-	XSLTInputSource(
+    /**
+     * Copy constructor.
+     */
+    XSLTInputSource(
             const XSLTInputSource&  theSource,
             MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Assignment operator.
-	 */
-	XSLTInputSource&
-	operator=(const XSLTInputSource&	theRHS);
+    /**
+     * Assignment operator.
+     */
+    XSLTInputSource&
+    operator=(const XSLTInputSource&    theRHS);
 
-	/**
-	 * Create a new input source with a system identifier.
-	 *
-	 * <p>Applications may use setPublicId to include a public identifier as
-	 * well, or setEncoding to specify the character encoding, if known.</p>
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId  system identifier (URI)
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
+    /**
+     * Create a new input source with a system identifier.
+     *
+     * <p>Applications may use setPublicId to include a public identifier as
+     * well, or setEncoding to specify the character encoding, if known.</p>
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId  system identifier (URI)
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
             const XMLCh*    systemId,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a system identifier.
-	 *
-	 * <p>Applications may use setPublicId to include a public identifier as
-	 * well, or setEncoding to specify the character encoding, if known.</p>
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId  system identifier (URI)
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-            const XalanDOMString&	systemId,
+    /**
+     * Create a new input source with a system identifier.
+     *
+     * <p>Applications may use setPublicId to include a public identifier as
+     * well, or setEncoding to specify the character encoding, if known.</p>
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId  system identifier (URI)
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            const XalanDOMString&   systemId,
             MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a system identifier.
-	 *
-	 * <p>Applications may use setPublicId to include a public identifier as
-	 * well, or setEncoding to specify the character encoding, if known.</p>
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId  system identifier (URI)
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-            const char*		systemId,
+    /**
+     * Create a new input source with a system identifier.
+     *
+     * <p>Applications may use setPublicId to include a public identifier as
+     * well, or setEncoding to specify the character encoding, if known.</p>
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId  system identifier (URI)
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            const char*     systemId,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a system identifier and a public
-	 * identifier.
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId system identifier (URI)
-	 * @param publicId public identifier
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-			const char*		systemId,
-			const char*		publicId,
+    /**
+     * Create a new input source with a system identifier and a public
+     * identifier.
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId system identifier (URI)
+     * @param publicId public identifier
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            const char*     systemId,
+            const char*     publicId,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a system identifier and a public
-	 * identifier.
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId system identifier (URI)
-	 * @param publicId public identifier
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-			const XMLCh*	systemId,
-			const XMLCh*	publicId,
+    /**
+     * Create a new input source with a system identifier and a public
+     * identifier.
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId system identifier (URI)
+     * @param publicId public identifier
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            const XMLCh*    systemId,
+            const XMLCh*    publicId,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a system identifier and a public
-	 * identifier.
-	 *
-	 * <p>If the system identifier is a URL, it must be full resolved.</p>
-	 *
-	 * @param systemId system identifier (URI)
-	 * @param publicId public identifier
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-			const XalanDOMString&	systemId,
-			const XalanDOMString&	publicId,
+    /**
+     * Create a new input source with a system identifier and a public
+     * identifier.
+     *
+     * <p>If the system identifier is a URL, it must be full resolved.</p>
+     *
+     * @param systemId system identifier (URI)
+     * @param publicId public identifier
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            const XalanDOMString&   systemId,
+            const XalanDOMString&   publicId,
             MemoryManager&          theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with a DOM node.
-	 *
-	 * <p>Application writers may use setSystemId() to provide a base for
-	 * resolving relative URIs, and setPublicId to include a public
-	 * identifier.</p>
-	 *
-	 * @param node DOM node that is root of the document
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-            XalanNode*	    node,
+    /**
+     * Create a new input source with a DOM node.
+     *
+     * <p>Application writers may use setSystemId() to provide a base for
+     * resolving relative URIs, and setPublicId to include a public
+     * identifier.</p>
+     *
+     * @param node DOM node that is root of the document
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            XalanNode*      node,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with std stream.
-	 *
-	 * <p>Application writers may use setSystemId() to provide a base for
-	 * resolving relative URIs, and setPublicId to include a public
-	 * identifier.</p>
-	 *
-	 * @param stream the input stream...
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
-            StreamType*		stream,
+    /**
+     * Create a new input source with std stream.
+     *
+     * <p>Application writers may use setSystemId() to provide a base for
+     * resolving relative URIs, and setPublicId to include a public
+     * identifier.</p>
+     *
+     * @param stream the input stream...
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
+            StreamType*     stream,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Create a new input source with std stream.
-	 *
-	 * <p>Application writers may use setSystemId() to provide a base for
-	 * resolving relative URIs, and setPublicId to include a public
-	 * identifier.</p>
-	 *
-	 * @param stream the input stream...
-	 * @param theMemoryManager  The MemoryManager instance to use.
-	 */
-	XSLTInputSource(
+    /**
+     * Create a new input source with std stream.
+     *
+     * <p>Application writers may use setSystemId() to provide a base for
+     * resolving relative URIs, and setPublicId to include a public
+     * identifier.</p>
+     *
+     * @param stream the input stream...
+     * @param theMemoryManager  The MemoryManager instance to use.
+     */
+    XSLTInputSource(
             StreamType&     stream,
             MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
 
-	/**
-	 * Makes the byte stream for this input source.
-	 *
-	 * <p>The SAX parser will ignore this if there is also a character
-	 * stream specified, but it will use a byte stream in preference
-	 * to opening a URI connection itself.</p>
-	 *
-	 *
-	 * @return pointer to byte stream created
-	 */
-	virtual BinInputStreamType*
-	makeStream() const;
+    /**
+     * Makes the byte stream for this input source.
+     *
+     * <p>The SAX parser will ignore this if there is also a character
+     * stream specified, but it will use a byte stream in preference
+     * to opening a URI connection itself.</p>
+     *
+     *
+     * @return pointer to byte stream created
+     */
+    virtual BinInputStreamType*
+    makeStream() const;
 
-	/**
-	 * Set the DOM node for this input source.
-	 *
-	 * @param node DOM node that is root of the document
-	 */
-	void
-	setNode(XalanNode*	node)
-	{
-		m_node = node;
-	}
+    /**
+     * Set the DOM node for this input source.
+     *
+     * @param node DOM node that is root of the document
+     */
+    void
+    setNode(XalanNode*  node)
+    {
+        m_node = node;
+    }
 
-	/**
-	 * Retrieve the DOM node for this input source.
-	 *
-	 * @return DOM node that is root of the document
-	 */
-	XalanNode*
-	getNode() const
-	{
-		return m_node;
-	}
+    /**
+     * Retrieve the DOM node for this input source.
+     *
+     * @return DOM node that is root of the document
+     */
+    XalanNode*
+    getNode() const
+    {
+        return m_node;
+    }
 
-	StreamType*
-	getStream() const
-	{
-		return m_stream;
-	}
+    StreamType*
+    getStream() const
+    {
+        return m_stream;
+    }
 
-	void
-	setStream(StreamType*	stream)
-	{
-		m_stream = stream;
-	}
+    void
+    setStream(StreamType*   stream)
+    {
+        m_stream = stream;
+    }
 
 private:
 
-	StreamType*		m_stream;
+    StreamType*     m_stream;
 
-	XalanNode*		m_node;
+    XalanNode*      m_node;
 };
 
 
@@ -278,4 +278,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_XSLTINPUTSOURCE_HEADER_GUARD
+#endif  // XALAN_XSLTINPUTSOURCE_HEADER_GUARD

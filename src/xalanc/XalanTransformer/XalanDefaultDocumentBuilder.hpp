@@ -48,53 +48,53 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultDocumentBuilder : public XalanDocumen
     
 public:
 
-	/**
-	 * Create a XalanDefaultDocumentBuilder instance,
-	 *
-	 * @param theURI An optional string to identify the document.
-	 */
-	XalanDefaultDocumentBuilder(MemoryManager& theManager, const XalanDOMString&	theURI);
+    /**
+     * Create a XalanDefaultDocumentBuilder instance,
+     *
+     * @param theURI An optional string to identify the document.
+     */
+    XalanDefaultDocumentBuilder(MemoryManager& theManager, const XalanDOMString&    theURI);
 
     static XalanDefaultDocumentBuilder*
-    create(MemoryManager& theManager, const XalanDOMString&	theURI);
+    create(MemoryManager& theManager, const XalanDOMString& theURI);
 
-	virtual
-	~XalanDefaultDocumentBuilder();
+    virtual
+    ~XalanDefaultDocumentBuilder();
 
-	virtual XalanDocument*
-	getDocument() const;
+    virtual XalanDocument*
+    getDocument() const;
 
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager& theManager) const;
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager& theManager) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
-	virtual ContentHandlerType*
-	getContentHandler();
+    virtual ContentHandlerType*
+    getContentHandler();
 
-	virtual DTDHandlerType*
-	getDTDHandler();
+    virtual DTDHandlerType*
+    getDTDHandler();
 
-	virtual LexicalHandlerType*
-	getLexicalHandler();
+    virtual LexicalHandlerType*
+    getLexicalHandler();
 
 private:
 
-	// not implemented...
-	XalanDefaultDocumentBuilder(const XalanDefaultDocumentBuilder&);
+    // not implemented...
+    XalanDefaultDocumentBuilder(const XalanDefaultDocumentBuilder&);
 
-	XalanDefaultDocumentBuilder&
-	operator=(const XalanDefaultDocumentBuilder&);
+    XalanDefaultDocumentBuilder&
+    operator=(const XalanDefaultDocumentBuilder&);
 
-	// Data members...
-	XalanSourceTreeDOMSupport		m_domSupport;
+    // Data members...
+    XalanSourceTreeDOMSupport       m_domSupport;
 
-	XalanSourceTreeParserLiaison	m_parserLiaison;
+    XalanSourceTreeParserLiaison    m_parserLiaison;
 
-	XalanSourceTreeContentHandler	m_contentHandler;
+    XalanSourceTreeContentHandler   m_contentHandler;
 
-	const XalanDOMString			m_uri;
+    const XalanDOMString            m_uri;
 };
 
 
@@ -103,4 +103,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANDEFAULTDOCUMENTBUILDER_HEADER_GUARD
+#endif  // XALANDEFAULTDOCUMENTBUILDER_HEADER_GUARD

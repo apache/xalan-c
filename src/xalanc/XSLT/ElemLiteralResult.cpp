@@ -49,8 +49,8 @@ ElemLiteralResult::ElemLiteralResult(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-            XalanFileLoc					columnNumber) :
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber) :
     ElemUse(
         constructionContext,
         stylesheetTree,
@@ -71,8 +71,8 @@ ElemLiteralResult::ElemLiteralResult(
             Stylesheet&                     stylesheetTree,
             const XalanDOMChar*             name,
             const AttributeListType&        atts,
-			XalanFileLoc					lineNumber, 
-			XalanFileLoc					columnNumber,
+            XalanFileLoc                    lineNumber, 
+            XalanFileLoc                    columnNumber,
             int                             xslToken) :
     ElemUse(constructionContext,
             stylesheetTree,

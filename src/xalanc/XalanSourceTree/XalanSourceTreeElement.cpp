@@ -41,27 +41,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString		XalanSourceTreeElement::s_emptyString(XalanMemMgrs::getDummyMemMgr());
+const XalanDOMString        XalanSourceTreeElement::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeElement::XalanSourceTreeElement(
             MemoryManager&              theManager,
-			const XalanDOMString&		theTagName,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex) :
-	XalanElement(),
-	m_tagName(theTagName),
+            const XalanDOMString&       theTagName,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex) :
+    XalanElement(),
+    m_tagName(theTagName),
     m_memoryManager(theManager),
-	m_ownerDocument(theOwnerDocument),
-	m_parentNode(theParentNode),
-	m_previousSibling(thePreviousSibling),
-	m_nextSibling(theNextSibling),
-	m_firstChild(0),
-	m_index(theIndex)
+    m_ownerDocument(theOwnerDocument),
+    m_parentNode(theParentNode),
+    m_previousSibling(thePreviousSibling),
+    m_nextSibling(theNextSibling),
+    m_firstChild(0),
+    m_index(theIndex)
 {
 }
 
@@ -75,17 +75,17 @@ XalanSourceTreeElement::~XalanSourceTreeElement()
 /*
 XalanSourceTreeElement::XalanSourceTreeElement(
             MemoryManager&              theManager,
-			const XalanSourceTreeElement&	theSource,
-			bool								deep) :
-	XalanElement(theSource),
-	m_tagName(theSource.m_tagName),
+            const XalanSourceTreeElement&   theSource,
+            bool                                deep) :
+    XalanElement(theSource),
+    m_tagName(theSource.m_tagName),
     m_memoryManager(theManager),
-	m_ownerDocument(theSource.m_ownerDocument),
-	m_parentNode(0),
-	m_previousSibling(0),
-	m_nextSibling(0),
-	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep)),
-	m_index(0)
+    m_ownerDocument(theSource.m_ownerDocument),
+    m_parentNode(0),
+    m_previousSibling(0),
+    m_nextSibling(0),
+    m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep)),
+    m_index(0)
 {
 }
 */
@@ -94,7 +94,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 const XalanDOMString&
 XalanSourceTreeElement::getNodeName() const
 {
-	return m_tagName;
+    return m_tagName;
 }
 
 
@@ -102,7 +102,7 @@ XalanSourceTreeElement::getNodeName() const
 const XalanDOMString&
 XalanSourceTreeElement::getNodeValue() const
 {
-	return s_emptyString;
+    return s_emptyString;
 }
 
 
@@ -110,7 +110,7 @@ XalanSourceTreeElement::getNodeValue() const
 XalanSourceTreeElement::NodeType
 XalanSourceTreeElement::getNodeType() const
 {
-	return ELEMENT_NODE;
+    return ELEMENT_NODE;
 }
 
 
@@ -118,14 +118,14 @@ XalanSourceTreeElement::getNodeType() const
 XalanNode*
 XalanSourceTreeElement::getParentNode() const
 {
-	if (m_parentNode != 0)
-	{
-		return m_parentNode;
-	}
-	else
-	{
-		return m_ownerDocument;
-	}
+    if (m_parentNode != 0)
+    {
+        return m_parentNode;
+    }
+    else
+    {
+        return m_ownerDocument;
+    }
 }
 
 
@@ -133,10 +133,10 @@ XalanSourceTreeElement::getParentNode() const
 const XalanNodeList*
 XalanSourceTreeElement::getChildNodes() const
 {
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+    throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
-	// Dummy return value...
-	return 0;
+    // Dummy return value...
+    return 0;
 }
 
 
@@ -144,7 +144,7 @@ XalanSourceTreeElement::getChildNodes() const
 XalanNode*
 XalanSourceTreeElement::getFirstChild() const
 {
-	return m_firstChild;
+    return m_firstChild;
 }
 
 
@@ -152,7 +152,7 @@ XalanSourceTreeElement::getFirstChild() const
 XalanNode*
 XalanSourceTreeElement::getLastChild() const
 {
-	return XalanSourceTreeHelper::getLastSibling(m_firstChild);
+    return XalanSourceTreeHelper::getLastSibling(m_firstChild);
 }
 
 
@@ -160,7 +160,7 @@ XalanSourceTreeElement::getLastChild() const
 XalanNode*
 XalanSourceTreeElement::getPreviousSibling() const
 {
-	return m_previousSibling;
+    return m_previousSibling;
 }
 
 
@@ -168,7 +168,7 @@ XalanSourceTreeElement::getPreviousSibling() const
 XalanNode*
 XalanSourceTreeElement::getNextSibling() const
 {
-	return m_nextSibling;
+    return m_nextSibling;
 }
 
 
@@ -176,7 +176,7 @@ XalanSourceTreeElement::getNextSibling() const
 XalanDocument*
 XalanSourceTreeElement::getOwnerDocument() const
 {
-	return m_ownerDocument;
+    return m_ownerDocument;
 }
 
 
@@ -184,7 +184,7 @@ XalanSourceTreeElement::getOwnerDocument() const
 bool
 XalanSourceTreeElement::isIndexed() const
 {
-	return true;
+    return true;
 }
 
 
@@ -192,7 +192,7 @@ XalanSourceTreeElement::isIndexed() const
 XalanSourceTreeElement::IndexType
 XalanSourceTreeElement::getIndex() const
 {
-	return m_index;
+    return m_index;
 }
 
 
@@ -200,111 +200,111 @@ XalanSourceTreeElement::getIndex() const
 const XalanDOMString&
 XalanSourceTreeElement::getTagName() const
 {
-	return m_tagName;
+    return m_tagName;
 }
 
 
 
 void
-XalanSourceTreeElement::setParent(XalanSourceTreeDocumentFragment*	theParent)
+XalanSourceTreeElement::setParent(XalanSourceTreeDocumentFragment*  theParent)
 {
-	m_parentNode = theParent;
+    m_parentNode = theParent;
 }
 
 
 
 void
-XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling)
+XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeComment*  thePreviousSibling)
 {
-	m_previousSibling = thePreviousSibling;
+    m_previousSibling = thePreviousSibling;
 }
 
 
 
 void
-XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling)
+XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeElement*  thePreviousSibling)
 {
-	m_previousSibling = thePreviousSibling;
+    m_previousSibling = thePreviousSibling;
 }
 
 
 
 void
-XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeProcessingInstruction*	thePreviousSibling)
+XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeProcessingInstruction*    thePreviousSibling)
 {
-	m_previousSibling = thePreviousSibling;
+    m_previousSibling = thePreviousSibling;
 }
 
 
 
 void
-XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeText*		thePreviousSibling)
+XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeText*     thePreviousSibling)
 {
-	m_previousSibling = thePreviousSibling;
+    m_previousSibling = thePreviousSibling;
 }
 
 
 
 void
-XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeComment*	theSibling)
+XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeComment*   theSibling)
 {
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
+    XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }
 
 
 
 void
-XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeElement*	theSibling)
+XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeElement*   theSibling)
 {
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
+    XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }
 
 
 
 void
-XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeProcessingInstruction*		theSibling)
+XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeProcessingInstruction*     theSibling)
 {
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
+    XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }
 
 
 
 void
-XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeText*	theSibling)
+XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeText*  theSibling)
 {
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
+    XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }
 
 
 
 void
-XalanSourceTreeElement::appendChildNode(XalanSourceTreeComment*		theChild)
+XalanSourceTreeElement::appendChildNode(XalanSourceTreeComment*     theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeElement::appendChildNode(XalanSourceTreeElement*		theChild)
+XalanSourceTreeElement::appendChildNode(XalanSourceTreeElement*     theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeElement::appendChildNode(XalanSourceTreeProcessingInstruction*	theChild)
+XalanSourceTreeElement::appendChildNode(XalanSourceTreeProcessingInstruction*   theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 
 
 void
-XalanSourceTreeElement::appendChildNode(XalanSourceTreeText*	theChild)
+XalanSourceTreeElement::appendChildNode(XalanSourceTreeText*    theChild)
 {
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
+    XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }
 
 

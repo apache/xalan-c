@@ -39,9 +39,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XSLTInputSource::XSLTInputSource(MemoryManager&     theMemoryManager) :
-	InputSource(&theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    InputSource(&theMemoryManager),
+    m_stream(0),
+    m_node(0)
 {
 }
 
@@ -50,127 +50,127 @@ XSLTInputSource::XSLTInputSource(MemoryManager&     theMemoryManager) :
 // $$$ ToDo:  Xerces' InputSource class does not yet have a copy
 // constructor or assignment operator.  See bug #7944.
 XSLTInputSource::XSLTInputSource(
-            const XSLTInputSource&	theSource,
+            const XSLTInputSource&  theSource,
             MemoryManager&          theMemoryManager) :
-	InputSource(&theMemoryManager),
-	m_stream(theSource.m_stream),
-	m_node(theSource.m_node)
+    InputSource(&theMemoryManager),
+    m_stream(theSource.m_stream),
+    m_node(theSource.m_node)
 {
-	setIssueFatalErrorIfNotFound(theSource.getIssueFatalErrorIfNotFound());
+    setIssueFatalErrorIfNotFound(theSource.getIssueFatalErrorIfNotFound());
 
-	const XMLCh*	theValue = theSource.getSystemId();
+    const XMLCh*    theValue = theSource.getSystemId();
 
-	if (theValue != 0)
-	{
-		setSystemId(theValue);
-	}
+    if (theValue != 0)
+    {
+        setSystemId(theValue);
+    }
 
-	theValue = theSource.getPublicId();
+    theValue = theSource.getPublicId();
 
-	if (theValue != 0)
-	{
-		setPublicId(theValue);
-	}
+    if (theValue != 0)
+    {
+        setPublicId(theValue);
+    }
 
-	theValue = theSource.getEncoding();
+    theValue = theSource.getEncoding();
 
-	if (theValue != 0)
-	{
-		setEncoding(theValue);
-	}
+    if (theValue != 0)
+    {
+        setEncoding(theValue);
+    }
 }
 
 
 
 XSLTInputSource&
-XSLTInputSource::operator=(const XSLTInputSource&	theRHS)
+XSLTInputSource::operator=(const XSLTInputSource&   theRHS)
 {
-	if (this != &theRHS)
-	{
-		m_stream = theRHS.m_stream;
-		m_node = theRHS.m_node;
+    if (this != &theRHS)
+    {
+        m_stream = theRHS.m_stream;
+        m_node = theRHS.m_node;
 
-		setIssueFatalErrorIfNotFound(theRHS.getIssueFatalErrorIfNotFound());
+        setIssueFatalErrorIfNotFound(theRHS.getIssueFatalErrorIfNotFound());
 
-		const XMLCh*	theValue = theRHS.getSystemId();
+        const XMLCh*    theValue = theRHS.getSystemId();
 
-		if (theValue != 0)
-		{
-			setSystemId(theValue);
-		}
+        if (theValue != 0)
+        {
+            setSystemId(theValue);
+        }
 
-		theValue = theRHS.getPublicId();
+        theValue = theRHS.getPublicId();
 
-		if (theValue != 0)
-		{
-			setPublicId(theValue);
-		}
+        if (theValue != 0)
+        {
+            setPublicId(theValue);
+        }
 
-		theValue = theRHS.getEncoding();
+        theValue = theRHS.getEncoding();
 
-		if (theValue != 0)
-		{
-			setEncoding(theValue);
-		}
+        if (theValue != 0)
+        {
+            setEncoding(theValue);
+        }
 
-	}
+    }
 
-	return *this;
+    return *this;
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-            const XMLCh*	systemId,
+            const XMLCh*    systemId,
             MemoryManager&  theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId,
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-            const XalanDOMString&	systemId,
+            const XalanDOMString&   systemId,
             MemoryManager&          theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId.c_str(),
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-			const XMLCh*	systemId,
-			const XMLCh*	publicId,
+            const XMLCh*    systemId,
+            const XMLCh*    publicId,
             MemoryManager&  theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId,
         publicId,
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-			const XalanDOMString&	systemId,
-			const XalanDOMString&	publicId,
+            const XalanDOMString&   systemId,
+            const XalanDOMString&   publicId,
             MemoryManager&          theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId.c_str(),
         publicId.c_str(),
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
@@ -179,59 +179,59 @@ XSLTInputSource::XSLTInputSource(
 XSLTInputSource::XSLTInputSource(
             const char*     systemId,
             MemoryManager&  theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId,
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-			const char*		systemId,
-			const char*		publicId,
+            const char*     systemId,
+            const char*     publicId,
             MemoryManager&  theMemoryManager) :
-	InputSource(
+    InputSource(
         systemId,
-		publicId,
+        publicId,
         &theMemoryManager),
-	m_stream(0),
-	m_node(0)
+    m_stream(0),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-            XalanNode*		node,
+            XalanNode*      node,
             MemoryManager&  theMemoryManager) :
-	InputSource(&theMemoryManager),
-	m_stream(0),
-	m_node(node)
+    InputSource(&theMemoryManager),
+    m_stream(0),
+    m_node(node)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-            StreamType*	    stream,
+            StreamType*     stream,
             MemoryManager&  theMemoryManager) :
-	InputSource(&theMemoryManager),
-	m_stream(stream),
-	m_node(0)
+    InputSource(&theMemoryManager),
+    m_stream(stream),
+    m_node(0)
 {
 }
 
 
 
 XSLTInputSource::XSLTInputSource(
-            StreamType&	    stream,
+            StreamType&     stream,
             MemoryManager&  theMemoryManager) :
-	InputSource(&theMemoryManager),
-	m_stream(&stream),
-	m_node(0)
+    InputSource(&theMemoryManager),
+    m_stream(&stream),
+    m_node(0)
 {
 }
 
@@ -240,34 +240,34 @@ XSLTInputSource::XSLTInputSource(
 BinInputStreamType*
 XSLTInputSource::makeStream() const
 {
-	BinInputStreamType*		theResult = 0;
+    BinInputStreamType*     theResult = 0;
 
     MemoryManager*  theManager = getMemoryManager();
 
     assert(theManager != 0 );
 
-	if (m_stream != 0)
-	{
+    if (m_stream != 0)
+    {
         
-		theResult = new (theManager) StdBinInputStream(*m_stream);
-	}
-	else if (m_node == 0)
-	{
-		const XalanDOMChar* const	theSystemId = getSystemId();
+        theResult = new (theManager) StdBinInputStream(*m_stream);
+    }
+    else if (m_node == 0)
+    {
+        const XalanDOMChar* const   theSystemId = getSystemId();
 
-		if (theSystemId != 0)
-		{
+        if (theSystemId != 0)
+        {
             XALAN_USING_XERCES(XMLURL)
 
-			XMLURL  theURL(theManager);
+            XMLURL  theURL(theManager);
 
-			URISupport::getURLFromString(theSystemId, theURL, *theManager);
+            URISupport::getURLFromString(theSystemId, theURL, *theManager);
 
-			theResult = theURL.makeNewStream();
-		}
-	}
+            theResult = theURL.makeNewStream();
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 

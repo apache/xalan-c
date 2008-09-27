@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -39,17 +39,17 @@ XalanAVTPartXPathAllocator::~XalanAVTPartXPathAllocator()
 
 
 XalanAVTPartXPathAllocator::data_type*
-XalanAVTPartXPathAllocator::create(const XPath*	xpath)
+XalanAVTPartXPathAllocator::create(const XPath* xpath)
 {
-	data_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    data_type* const    theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	data_type* const	theResult =
-		new(theBlock) data_type(xpath);
+    data_type* const    theResult =
+        new(theBlock) data_type(xpath);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 

@@ -72,20 +72,20 @@ template <class Type>
 class CreateObjFunctor
 {
 public:
-	Type*
-	operator()(MemoryManager& theManager)
-	{
-		
-		XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
-		
-		Type* theResult = theGuard.get();
-		
-		new (theResult) Type(theManager);
-		
-		theGuard.release();
-		
-		return theResult;
-	}
+    Type*
+    operator()(MemoryManager& theManager)
+    {
+        
+        XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+        
+        Type* theResult = theGuard.get();
+        
+        new (theResult) Type(theManager);
+        
+        theGuard.release();
+        
+        return theResult;
+    }
 };
 
 template <class Type>
@@ -109,4 +109,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// if !defined(XALANMEMMGRHELPER_HEADER_GUARD_1357924680)
+#endif  // if !defined(XALANMEMMGRHELPER_HEADER_GUARD_1357924680)

@@ -42,49 +42,49 @@ class XALAN_XALANEXTENSIONS_EXPORT XalanExtensionsInstaller
 {
 public:
 
-	struct FunctionTableEntry
-	{
-		const XalanDOMChar*		theFunctionName;
-		const Function*			theFunction;
-	};
+    struct FunctionTableEntry
+    {
+        const XalanDOMChar*     theFunctionName;
+        const Function*         theFunction;
+    };
 
-	static void
-	installLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    installLocal(XPathEnvSupportDefault&    theSupport);
 
-	static void
-	installGlobal(MemoryManager& theManager);
+    static void
+    installGlobal(MemoryManager& theManager);
 
-	static void
-	uninstallLocal(XPathEnvSupportDefault&	theSupport);
+    static void
+    uninstallLocal(XPathEnvSupportDefault&  theSupport);
 
-	static void
-	uninstallGlobal(MemoryManager& theManager);
+    static void
+    uninstallGlobal(MemoryManager& theManager);
 
 protected:
 
-	static void
-	doInstallLocal(
-			const XalanDOMChar*			theNamespace,
-			const FunctionTableEntry	theFunctionTable[],
-			XPathEnvSupportDefault&		theSupport);
+    static void
+    doInstallLocal(
+            const XalanDOMChar*         theNamespace,
+            const FunctionTableEntry    theFunctionTable[],
+            XPathEnvSupportDefault&     theSupport);
 
-	static void
-	doInstallGlobal(
+    static void
+    doInstallGlobal(
             MemoryManager&          theManager,
-			const XalanDOMChar*			theNamespace,
-			const FunctionTableEntry	theFunctionTable[]);
+            const XalanDOMChar*         theNamespace,
+            const FunctionTableEntry    theFunctionTable[]);
 
-	static void
-	doUninstallLocal(
-			const XalanDOMChar*			theNamespace,
-			const FunctionTableEntry	theFunctionTable[],
-			XPathEnvSupportDefault&		theSupport);
+    static void
+    doUninstallLocal(
+            const XalanDOMChar*         theNamespace,
+            const FunctionTableEntry    theFunctionTable[],
+            XPathEnvSupportDefault&     theSupport);
 
-	static void
-	doUninstallGlobal(
+    static void
+    doUninstallGlobal(
             MemoryManager&          theManager,
-			const XalanDOMChar*			theNamespace,
-			const FunctionTableEntry	theFunctionTable[]);
+            const XalanDOMChar*         theNamespace,
+            const FunctionTableEntry    theFunctionTable[]);
 };
 
 
@@ -93,4 +93,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANEXTENSIONS_HEADER_GUARD_1357924680
+#endif  // XALANEXTENSIONS_HEADER_GUARD_1357924680

@@ -38,41 +38,41 @@ class XALAN_XSLT_EXPORT XSLTProcessorException : public XSLException
 {
 public:
 
-	/**
-	 * Construct an XSLT Processor exception object
-	 * 
-	 * @param theManager The MemoryManager instance to use.
-	 * @param theMessage The message to print when exception thrown
-	 * @param theLocator The Locator instance for error reporting, if any.
-	 */
-	XSLTProcessorException(
+    /**
+     * Construct an XSLT Processor exception object
+     * 
+     * @param theManager The MemoryManager instance to use.
+     * @param theMessage The message to print when exception thrown
+     * @param theLocator The Locator instance for error reporting, if any.
+     */
+    XSLTProcessorException(
             MemoryManager&          theManager,
-		    const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             const Locator*          theLocator);
 
-	/**
-	 * Construct an XSLT Processor exception object.  Use this
+    /**
+     * Construct an XSLT Processor exception object.  Use this
      * constructor when the error message is already formatted.
-	 * 
-	 * @param theManager The MemoryManager instance to use.
-	 * @param theMessage The message to print when exception thrown
-	 */
-	XSLTProcessorException(
+     * 
+     * @param theManager The MemoryManager instance to use.
+     * @param theMessage The message to print when exception thrown
+     */
+    XSLTProcessorException(
             MemoryManager&          theManager,
-		    const XalanDOMString&	theMessage);
+            const XalanDOMString&   theMessage);
 
-	virtual
-	~XSLTProcessorException();
+    virtual
+    ~XSLTProcessorException();
 
-	virtual const XalanDOMChar*
-	getType() const
-	{
-		return m_type;
-	}
+    virtual const XalanDOMChar*
+    getType() const
+    {
+        return m_type;
+    }
 
 private:
 
-	static const XalanDOMChar	m_type[];
+    static const XalanDOMChar   m_type[];
 };
 
 
@@ -81,4 +81,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XSLTPROCESSOREXCEPTION_HEADER_GUARD_1357924680
+#endif  // XSLTPROCESSOREXCEPTION_HEADER_GUARD_1357924680

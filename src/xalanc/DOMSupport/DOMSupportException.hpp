@@ -42,34 +42,34 @@ class XALAN_DOMSUPPORT_EXPORT DOMSupportException : public XSLException
 {
 public:
 
-	/**
-	 * Constructor for an exception arising from DOMSupport classes
-	 * 
-	 * @param theMessage The error message.
+    /**
+     * Constructor for an exception arising from DOMSupport classes
+     * 
+     * @param theMessage The error message.
      * @param theManager the MemoryManager instance to use.
      * @param theLocator The Locator instance to use, if any.
-	 */
+     */
     DOMSupportException(
-            const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager,
             const Locator*          theLocator);
 
-	/**
-	 * Constructor for an exception arising from DOMSupport classes.
+    /**
+     * Constructor for an exception arising from DOMSupport classes.
      * Use this constructor when the error message is already formatted.
-	 * 
-	 * @param theMessage The error message.
+     * 
+     * @param theMessage The error message.
      * @param theManager the MemoryManager instance to use.
-	 */
+     */
     DOMSupportException(
-            const XalanDOMString&	theMessage,
+            const XalanDOMString&   theMessage,
             MemoryManager&          theManager);
 
-	virtual
-	~DOMSupportException();
+    virtual
+    ~DOMSupportException();
 
-	virtual const XalanDOMChar*
-	getType() const;
+    virtual const XalanDOMChar*
+    getType() const;
 
 private:
 };
@@ -80,4 +80,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// DOMSUPPORTEXCEPTION_HEADER_GUARD_1357924680
+#endif  // DOMSUPPORTEXCEPTION_HEADER_GUARD_1357924680

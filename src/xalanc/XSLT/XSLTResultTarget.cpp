@@ -36,129 +36,129 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XSLTResultTarget::XSLTResultTarget(MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName,
+XSLTResultTarget::XSLTResultTarget(const XalanDOMString&    fileName,
                                    MemoryManager& theManager) :
-	m_fileName(fileName, theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(fileName, theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*	fileName,
+XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*  fileName,
                                    MemoryManager& theManager) :
-	m_fileName(fileName, theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(fileName, theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(const char*	fileName,
+XSLTResultTarget::XSLTResultTarget(const char*  fileName,
                                    MemoryManager& theManager) :
-	m_fileName(fileName, theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(fileName, theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
 }
 
 XSLTResultTarget::XSLTResultTarget(const XSLTResultTarget& other,
                                    MemoryManager&   theManager) :
-	m_fileName(other.m_fileName, theManager),
-	m_byteStream(other.m_byteStream),
-	m_encoding(other.m_encoding, theManager),
-	m_characterStream(other.m_characterStream),
-	m_formatterListener(other.m_formatterListener),
-	m_stream(other.m_stream)
+    m_fileName(other.m_fileName, theManager),
+    m_byteStream(other.m_byteStream),
+    m_encoding(other.m_encoding, theManager),
+    m_characterStream(other.m_characterStream),
+    m_formatterListener(other.m_formatterListener),
+    m_stream(other.m_stream)
 {
 }
 
 
-XSLTResultTarget::XSLTResultTarget(StreamType*	theStream,
+XSLTResultTarget::XSLTResultTarget(StreamType*  theStream,
                                    MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(theStream),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(theManager),
+    m_byteStream(theStream),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
-	assert(theStream != 0);
+    assert(theStream != 0);
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(StreamType&	theStream,
+XSLTResultTarget::XSLTResultTarget(StreamType&  theStream,
                                    MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(&theStream),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(theManager),
+    m_byteStream(&theStream),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(0)
 {
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(Writer*	characterStream,
+XSLTResultTarget::XSLTResultTarget(Writer*  characterStream,
                                    MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(characterStream),
-	m_formatterListener(0),
-	m_stream(0)
+    m_fileName(theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(characterStream),
+    m_formatterListener(0),
+    m_stream(0)
 {
-	assert(characterStream != 0);
+    assert(characterStream != 0);
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(FILE*	stream,
+XSLTResultTarget::XSLTResultTarget(FILE*    stream,
                                    MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(0),
-	m_stream(stream)
+    m_fileName(theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(0),
+    m_stream(stream)
 {
-	assert(stream != 0);
+    assert(stream != 0);
 }
 
 
 
-XSLTResultTarget::XSLTResultTarget(FormatterListener&	flistener,
+XSLTResultTarget::XSLTResultTarget(FormatterListener&   flistener,
                                    MemoryManager& theManager) :
-	m_fileName(theManager),
-	m_byteStream(0),
-	m_encoding(theManager),
-	m_characterStream(0),
-	m_formatterListener(&flistener),
-	m_stream(0)
+    m_fileName(theManager),
+    m_byteStream(0),
+    m_encoding(theManager),
+    m_characterStream(0),
+    m_formatterListener(&flistener),
+    m_stream(0)
 {
 }
 

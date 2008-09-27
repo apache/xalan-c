@@ -106,10 +106,10 @@ public:
     static XercesDocumentWrapper*
     create( 
             MemoryManager&          theManager,
-			const DOMDocument_Type*		theXercesDocument,
-			bool						threadSafe,
-			bool						buildWrapper,
- 			bool						buildMaps);
+            const DOMDocument_Type*     theXercesDocument,
+            bool                        threadSafe,
+            bool                        buildWrapper,
+            bool                        buildMaps);
 
     MemoryManager&
     getMemoryManager() const

@@ -33,14 +33,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 DOMSupportDefault::DOMSupportDefault(MemoryManager&     /* theManager */) :
-	DOMSupport()
+    DOMSupport()
 {
 }
 
 
 
 DOMSupportDefault::DOMSupportDefault() :
-	DOMSupport()
+    DOMSupport()
 {
 }
 
@@ -65,8 +65,8 @@ static const XalanDOMString     s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
-			const XalanDOMString&	/* theName */,
-			const XalanDocument&	/* theDocument */) const
+            const XalanDOMString&   /* theName */,
+            const XalanDocument&    /* theDocument */) const
 {
     return s_emptyString;
 }
@@ -75,10 +75,10 @@ DOMSupportDefault::getUnparsedEntityURI(
 
 bool
 DOMSupportDefault::isNodeAfter(
-			const XalanNode&	node1,
-			const XalanNode&	node2) const
+            const XalanNode&    node1,
+            const XalanNode&    node2) const
 {
-	return DOMServices::isNodeAfter(node1, node2);
+    return DOMServices::isNodeAfter(node1, node2);
 }
 
 

@@ -51,8 +51,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
 
 XALAN_USING_XERCES(EntityResolver)
 XALAN_USING_XERCES(ErrorHandler)
@@ -61,36 +61,36 @@ XALAN_USING_XERCES(ErrorHandler)
 class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet
 {
 public:
-	
-	XalanCompiledStylesheetDefault(
+    
+    XalanCompiledStylesheetDefault(
             MemoryManager&          theManager,
-			const XSLTInputSource&	theStylesheetSource,
-			XSLTEngineImpl&			theProcessor,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0);
+            const XSLTInputSource&  theStylesheetSource,
+            XSLTEngineImpl&         theProcessor,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0);
 
-	
-	static XalanCompiledStylesheetDefault*
+    
+    static XalanCompiledStylesheetDefault*
     create(
             MemoryManager&          theManager,
-			const XSLTInputSource&	theStylesheetSource,
-			XSLTEngineImpl&			theProcessor,
-			ErrorHandler*		    theErrorHandler = 0,
-			EntityResolver*		    theEntityResolver = 0);
+            const XSLTInputSource&  theStylesheetSource,
+            XSLTEngineImpl&         theProcessor,
+            ErrorHandler*           theErrorHandler = 0,
+            EntityResolver*         theEntityResolver = 0);
 
-	virtual
-	~XalanCompiledStylesheetDefault();
+    virtual
+    ~XalanCompiledStylesheetDefault();
 
-	virtual const StylesheetRoot*
-	getStylesheetRoot() const;
+    virtual const StylesheetRoot*
+    getStylesheetRoot() const;
 
 private:
 
-	XPathFactoryBlock						m_stylesheetXPathFactory;
+    XPathFactoryBlock                       m_stylesheetXPathFactory;
 
-	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
+    StylesheetConstructionContextDefault    m_stylesheetConstructionContext;
 
-	const StylesheetRoot* const				m_stylesheetRoot;
+    const StylesheetRoot* const             m_stylesheetRoot;
 };
 
 
@@ -99,4 +99,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANCOMPILEDSTYLESHEETDEFAULT_HEADER_GUARD
+#endif  // XALANCOMPILEDSTYLESHEETDEFAULT_HEADER_GUARD

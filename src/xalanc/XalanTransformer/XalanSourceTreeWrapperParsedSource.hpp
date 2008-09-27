@@ -52,37 +52,37 @@ class XALAN_TRANSFORMER_EXPORT XalanSourceTreeWrapperParsedSource : public Xalan
     
 public:
 
-	XalanSourceTreeWrapperParsedSource(
-			XalanSourceTreeDocument*		theDocument,
-			XalanSourceTreeParserLiaison&	theParserLiaison,
-			XalanSourceTreeDOMSupport&		theDOMSupport,
-			const XalanDOMString&			theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+    XalanSourceTreeWrapperParsedSource(
+            XalanSourceTreeDocument*        theDocument,
+            XalanSourceTreeParserLiaison&   theParserLiaison,
+            XalanSourceTreeDOMSupport&      theDOMSupport,
+            const XalanDOMString&           theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
             MemoryManager&              theManager XALAN_DEFAULT_MEMMGR);
 
-	virtual
-	~XalanSourceTreeWrapperParsedSource();
+    virtual
+    ~XalanSourceTreeWrapperParsedSource();
 
-	virtual XalanDocument*
-	getDocument() const;
+    virtual XalanDocument*
+    getDocument() const;
 
-	virtual XalanParsedSourceHelper*
-	createHelper(MemoryManager& theManager XALAN_DEFAULT_MEMMGR) const;
+    virtual XalanParsedSourceHelper*
+    createHelper(MemoryManager& theManager XALAN_DEFAULT_MEMMGR) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
 private:
     //not implemented
     XalanSourceTreeWrapperParsedSource();
     XalanSourceTreeWrapperParsedSource(const XalanSourceTreeWrapperParsedSource&);
 
-	XalanSourceTreeParserLiaison&	m_parserLiaison;
+    XalanSourceTreeParserLiaison&   m_parserLiaison;
 
-	XalanSourceTreeDOMSupport&		m_domSupport;
+    XalanSourceTreeDOMSupport&      m_domSupport;
 
-	XalanSourceTreeDocument* const	m_parsedSource;
+    XalanSourceTreeDocument* const  m_parsedSource;
 
-	const XalanDOMString			m_uri;
+    const XalanDOMString            m_uri;
 };
 
 
@@ -91,4 +91,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANSOURCETREEWRAPPERPARSEDSOURCE_HEADER_GUARD
+#endif  // XALANSOURCETREEWRAPPERPARSEDSOURCE_HEADER_GUARD

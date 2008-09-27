@@ -37,7 +37,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesWrapperToXalanNodeMap::XercesWrapperToXalanNodeMap(MemoryManager& theManager) :
-	m_xercesMap(theManager)
+    m_xercesMap(theManager)
 {
 }
 
@@ -51,10 +51,10 @@ XercesWrapperToXalanNodeMap::~XercesWrapperToXalanNodeMap()
 
 void
 XercesWrapperToXalanNodeMap::addAssociation(
-			const DOMNodeType*	theXercesNode,
-			XalanNode*			theXalanNode)
+            const DOMNodeType*  theXercesNode,
+            XalanNode*          theXalanNode)
 {
-	m_xercesMap.insert(XercesNodeMapType::value_type(theXercesNode, theXalanNode));
+    m_xercesMap.insert(XercesNodeMapType::value_type(theXercesNode, theXalanNode));
 }
 
 
@@ -62,25 +62,25 @@ XercesWrapperToXalanNodeMap::addAssociation(
 void
 XercesWrapperToXalanNodeMap::clear()
 {
-	m_xercesMap.clear();
+    m_xercesMap.clear();
 }
 
 
 
 XalanNode*
-XercesWrapperToXalanNodeMap::getNode(const DOMNodeType*		theXercesNode) const
+XercesWrapperToXalanNodeMap::getNode(const DOMNodeType*     theXercesNode) const
 {
-	const XercesNodeMapType::const_iterator		i =
-				m_xercesMap.find(theXercesNode);
+    const XercesNodeMapType::const_iterator     i =
+                m_xercesMap.find(theXercesNode);
 
-	if (i == m_xercesMap.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return (*i).second;
-	}
+    if (i == m_xercesMap.end())
+    {
+        return 0;
+    }
+    else
+    {
+        return (*i).second;
+    }
 }
 
 

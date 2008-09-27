@@ -33,14 +33,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] = 
+const XalanDOMChar  NamedNodeMapAttributeList::s_typeString[] = 
 {
-	XalanUnicode::charLetter_C,
-	XalanUnicode::charLetter_D,
-	XalanUnicode::charLetter_A,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_A,
-	0
+    XalanUnicode::charLetter_C,
+    XalanUnicode::charLetter_D,
+    XalanUnicode::charLetter_A,
+    XalanUnicode::charLetter_T,
+    XalanUnicode::charLetter_A,
+    0
 };
 
 
@@ -48,12 +48,12 @@ const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] =
 NamedNodeMapAttributeList::NamedNodeMapAttributeList(
             const XalanNamedNodeMap&    theMap,
             MemoryManager&              theManager) :
-	ParentType(),
-	m_nodeMap(theMap),
-	m_length(theMap.getLength()),
+    ParentType(),
+    m_nodeMap(theMap),
+    m_length(theMap.getLength()),
     m_memoryManager(theManager)
 {
-	assert(length(s_typeString) > 0);
+    assert(length(s_typeString) > 0);
 }
 
 
@@ -67,7 +67,7 @@ NamedNodeMapAttributeList::~NamedNodeMapAttributeList()
 XalanSize_t
 NamedNodeMapAttributeList::getLength() const
 {
-	return m_nodeMap.getLength();
+    return m_nodeMap.getLength();
 }
 
 
@@ -81,10 +81,10 @@ NamedNodeMapAttributeList::getName(const XalanSize_t    index) const
     }
     else
     {
-	    const XalanNode* const	theAttribute = m_nodeMap.item(m_length - 1 - index);
-	    assert(theAttribute != 0);
+        const XalanNode* const  theAttribute = m_nodeMap.item(m_length - 1 - index);
+        assert(theAttribute != 0);
 
-	    return theAttribute->getNodeName().c_str();
+        return theAttribute->getNodeName().c_str();
     }
 }
 
@@ -99,7 +99,7 @@ NamedNodeMapAttributeList::getType(const XalanSize_t    index) const
     }
     else
     {
-	    return s_typeString;
+        return s_typeString;
     }
 }
 
@@ -114,10 +114,10 @@ NamedNodeMapAttributeList::getValue(const XalanSize_t   index) const
     }
     else
     {
-        const XalanNode* const	theAttribute = m_nodeMap.item(m_length - 1 - index);
-	    assert(theAttribute != 0);
+        const XalanNode* const  theAttribute = m_nodeMap.item(m_length - 1 - index);
+        assert(theAttribute != 0);
 
-	    return theAttribute->getNodeValue().c_str();
+        return theAttribute->getNodeValue().c_str();
     }
 }
 
@@ -126,15 +126,15 @@ NamedNodeMapAttributeList::getValue(const XalanSize_t   index) const
 const XMLCh*
 NamedNodeMapAttributeList::getType(const XMLCh* const   name) const
 {
-	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
+    const XalanNode*    theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
 
-	if (theNode == 0)
-	{
-		return 0;
-	}
-	else
+    if (theNode == 0)
     {
-	    return s_typeString;
+        return 0;
+    }
+    else
+    {
+        return s_typeString;
     }
 }
 
@@ -143,16 +143,16 @@ NamedNodeMapAttributeList::getType(const XMLCh* const   name) const
 const XMLCh*
 NamedNodeMapAttributeList::getValue(const XMLCh* const  name) const
 {
-	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
+    const XalanNode*    theNode = m_nodeMap.getNamedItem(XalanDOMString(name, m_memoryManager));
 
-	if (theNode == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return theNode->getNodeValue().c_str();
-	}
+    if (theNode == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return theNode->getNodeValue().c_str();
+    }
 }
 
 
@@ -162,7 +162,7 @@ NamedNodeMapAttributeList::getValue(const char* const name) const
 {
     XalanDOMString  theBuffer(m_memoryManager);
 
-	return getValue(TranscodeFromLocalCodePage(name, theBuffer).c_str());
+    return getValue(TranscodeFromLocalCodePage(name, theBuffer).c_str());
 }
 
 

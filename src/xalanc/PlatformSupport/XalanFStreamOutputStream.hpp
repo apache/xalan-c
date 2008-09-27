@@ -42,63 +42,63 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanFStreamOutputStream : public XalanOutput
 {
 public :
 
-	enum { eDefaultBufferSize = 8192u };
+    enum { eDefaultBufferSize = 8192u };
 
 
-	/**
-	 * Construct a XalanFStreamOutputStream object.
-	 * 
-	 * @param theHandle handle of file.  Must not be null.
-	 * @param theBufferSize The size of the transcoding buffer
-	 */
+    /**
+     * Construct a XalanFStreamOutputStream object.
+     * 
+     * @param theHandle handle of file.  Must not be null.
+     * @param theBufferSize The size of the transcoding buffer
+     */
     XalanFStreamOutputStream(
-			FILE*			    theFileHandle,
+            FILE*               theFileHandle,
             MemoryManager&  theManager,
-			size_type	        theBufferSize = eDefaultBufferSize);
+            size_type           theBufferSize = eDefaultBufferSize);
 
     static XalanFStreamOutputStream*
     create(
-            FILE*			    theFileHandle,
+            FILE*               theFileHandle,
             MemoryManager&  theManager,
-			size_type	        theBufferSize = eDefaultBufferSize);
+            size_type           theBufferSize = eDefaultBufferSize);
     virtual
-	~XalanFStreamOutputStream();
+    ~XalanFStreamOutputStream();
 
-	class XALAN_PLATFORMSUPPORT_EXPORT XalanFStreamOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
-	{
-	public:
+    class XALAN_PLATFORMSUPPORT_EXPORT XalanFStreamOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
+    {
+    public:
 
-		/**
-		 * Construct an XalanFStreamOutputStreamWriteException exception object for an exception
-		 * that occurred while writing to a file stream.
-		 * 
-		 * @param theErrorCode number of error encountered
-		 */
-		XalanFStreamOutputStreamWriteException(int	theErrorCode,
+        /**
+         * Construct an XalanFStreamOutputStreamWriteException exception object for an exception
+         * that occurred while writing to a file stream.
+         * 
+         * @param theErrorCode number of error encountered
+         */
+        XalanFStreamOutputStreamWriteException(int  theErrorCode,
                                                 XalanDOMString& theBuffer);
 
-		virtual
-		~XalanFStreamOutputStreamWriteException();
+        virtual
+        ~XalanFStreamOutputStreamWriteException();
 
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
 
-	private:
-		static const XalanDOMChar	m_type[];
-	};
+    private:
+        static const XalanDOMChar   m_type[];
+    };
 
 protected:
 
-	virtual void
-	writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength);
+    virtual void
+    writeData(
+            const char*     theBuffer,
+            size_type       theBufferLength);
 
-	virtual void
-	doFlush();
+    virtual void
+    doFlush();
 
 private:
 
@@ -106,14 +106,14 @@ private:
     XalanFStreamOutputStream(const XalanFStreamOutputStream&);
 
     XalanFStreamOutputStream&
-	operator=(const XalanFStreamOutputStream&);
+    operator=(const XalanFStreamOutputStream&);
 
     bool
-	operator==(const XalanFStreamOutputStream&) const;
+    operator==(const XalanFStreamOutputStream&) const;
 
 
-	// Data members...
-	FILE* const		m_handle;
+    // Data members...
+    FILE* const     m_handle;
 };
 
 
@@ -122,4 +122,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANFSTREAMOUTPUTSTREAM_HEADER_GUARD_1357924680
+#endif  // XALANFSTREAMOUTPUTSTREAM_HEADER_GUARD_1357924680

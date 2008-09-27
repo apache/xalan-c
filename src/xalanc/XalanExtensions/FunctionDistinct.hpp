@@ -41,44 +41,44 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionDistinct : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionDistinct();
+    FunctionDistinct();
 
-	virtual
-	~FunctionDistinct();
+    virtual
+    ~FunctionDistinct();
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionDistinct*
+    virtual FunctionDistinct*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionDistinct&
-	operator=(const FunctionDistinct&);
+    // Not implemented...
+    FunctionDistinct&
+    operator=(const FunctionDistinct&);
 
-	bool
-	operator==(const FunctionDistinct&) const;
+    bool
+    operator==(const FunctionDistinct&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONDISTINCT_HEADER_GUARD_1357924680
+#endif  // FUNCTIONDISTINCT_HEADER_GUARD_1357924680

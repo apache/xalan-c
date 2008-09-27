@@ -36,22 +36,22 @@ class XALAN_DOM_EXPORT XalanNodeListDummy : public XalanNodeList
 {
 public:
 
-	XalanNodeListDummy();
+    XalanNodeListDummy();
 
-	virtual
-	~XalanNodeListDummy();
+    virtual
+    ~XalanNodeListDummy();
 
-	XalanNodeListDummy&
-	operator=(const XalanNodeListDummy&		/* theSource */)
-	{
-		return *this;
-	}
+    XalanNodeListDummy&
+    operator=(const XalanNodeListDummy&     /* theSource */)
+    {
+        return *this;
+    }
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
 private:
 };
@@ -62,4 +62,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANNODELISTSURROGATE_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANNODELISTSURROGATE_HEADER_GUARD_1357924680)

@@ -59,158 +59,158 @@ class XALAN_XPATH_EXPORT XObjectFactoryDefault : public XObjectFactory
 {
 public:
 
-	// Default block size for strings.
-	enum
-	{
-		eDefaultXStringBlockSize = 10,
-		eDefaultXNumberBlockSize = 10,
-		eDefaultXNodeSetBlockSize = 10,
-		eDefaultXNodeSetNodeProxyBlockSize = 5,
-		eXNumberCacheMax = 40,
-		eXNodeSetCacheMax = 40,
-		eXStringCacheMax = 40,
-		eXResultTreeFragCacheMax = 40
-	};
+    // Default block size for strings.
+    enum
+    {
+        eDefaultXStringBlockSize = 10,
+        eDefaultXNumberBlockSize = 10,
+        eDefaultXNodeSetBlockSize = 10,
+        eDefaultXNodeSetNodeProxyBlockSize = 5,
+        eXNumberCacheMax = 40,
+        eXNodeSetCacheMax = 40,
+        eXStringCacheMax = 40,
+        eXResultTreeFragCacheMax = 40
+    };
 
-    typedef XNodeSetAllocator::size_type	size_type;
+    typedef XNodeSetAllocator::size_type    size_type;
 
-	/**
-	 * Construct a factory for creating XObjects.
-	 * 
-	 * @param theXStringBlockSize allocation block size
-	 * @param theXNumberBlockSize allocation block size
-	 * @param theXNodeSetBlockSize allocation block size
-	 */
-	explicit
-	XObjectFactoryDefault(
+    /**
+     * Construct a factory for creating XObjects.
+     * 
+     * @param theXStringBlockSize allocation block size
+     * @param theXNumberBlockSize allocation block size
+     * @param theXNodeSetBlockSize allocation block size
+     */
+    explicit
+    XObjectFactoryDefault(
             MemoryManager& theManager XALAN_DEFAULT_MEMMGR,
-			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
-			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
-			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
-			size_type	theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize); 
+            size_type   theXStringBlockSize = eDefaultXStringBlockSize,
+            size_type   theXNumberBlockSize = eDefaultXNumberBlockSize,
+            size_type   theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
+            size_type   theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize); 
 
     static XObjectFactoryDefault*
     create(
             MemoryManager& theManager,
-			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
-			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
-			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
-			size_type	theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize);
+            size_type   theXStringBlockSize = eDefaultXStringBlockSize,
+            size_type   theXNumberBlockSize = eDefaultXNumberBlockSize,
+            size_type   theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
+            size_type   theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize);
 
 
-	virtual
-	~XObjectFactoryDefault();
+    virtual
+    ~XObjectFactoryDefault();
 
     MemoryManager&
     getMemoryManager()
     {
         return m_xobjects.getMemoryManager();
     }
-	// These methods are inherited from XObjectFactory ...
+    // These methods are inherited from XObjectFactory ...
 
-	virtual void
-	reset();
+    virtual void
+    reset();
 
-	virtual const XObjectPtr
-	createBoolean(bool	theValue);
+    virtual const XObjectPtr
+    createBoolean(bool  theValue);
 
-	virtual const XObjectPtr
-	createNodeSet(BorrowReturnMutableNodeRefList&	theValue);
+    virtual const XObjectPtr
+    createNodeSet(BorrowReturnMutableNodeRefList&   theValue);
 
-	virtual const XObjectPtr
-	createNodeSet(XalanNode* 	theValue);
+    virtual const XObjectPtr
+    createNodeSet(XalanNode*    theValue);
 
-	virtual const XObjectPtr
-	createNumber(double		theValue);
+    virtual const XObjectPtr
+    createNumber(double     theValue);
 
-	virtual const XObjectPtr
-	createNumber(const XToken&	theValue);
+    virtual const XObjectPtr
+    createNumber(const XToken&  theValue);
 
-	virtual const XObjectPtr
-	createString(const XalanDOMString&	theValue);
+    virtual const XObjectPtr
+    createString(const XalanDOMString&  theValue);
 
-	virtual const XObjectPtr
-	createString(const XalanDOMChar*	theValue);
+    virtual const XObjectPtr
+    createString(const XalanDOMChar*    theValue);
 
-	virtual const XObjectPtr
-	createString(
-			const XalanDOMChar*		theValue,
-			XalanSize_t			    theLength);
+    virtual const XObjectPtr
+    createString(
+            const XalanDOMChar*     theValue,
+            XalanSize_t             theLength);
 
-	virtual const XObjectPtr
-	createString(const XToken&	theValue);
+    virtual const XObjectPtr
+    createString(const XToken&  theValue);
 
-	virtual const XObjectPtr
-	createStringReference(const XalanDOMString&		theValue);
+    virtual const XObjectPtr
+    createStringReference(const XalanDOMString&     theValue);
 
-	virtual const XObjectPtr
-	createStringAdapter(
-            const XObjectPtr&	    theValue,
+    virtual const XObjectPtr
+    createStringAdapter(
+            const XObjectPtr&       theValue,
             XPathExecutionContext&  theExecutionContext);
 
-	virtual const XObjectPtr
-	createString(GetCachedString&   theValue);
+    virtual const XObjectPtr
+    createString(GetCachedString&   theValue);
 
-	virtual const XObjectPtr
-	createUnknown(const XalanDOMString&     theValue);
+    virtual const XObjectPtr
+    createUnknown(const XalanDOMString&     theValue);
 
-	typedef XalanVector<XObject*>		XObjectCollectionType;
-	typedef XalanVector<XNumber*>		XNumberCacheType;
-	typedef XalanVector<XNodeSet*>		XNodeSetCacheType;
-	typedef XalanVector<XString*>		XStringCacheType;
+    typedef XalanVector<XObject*>       XObjectCollectionType;
+    typedef XalanVector<XNumber*>       XNumberCacheType;
+    typedef XalanVector<XNodeSet*>      XNodeSetCacheType;
+    typedef XalanVector<XString*>       XStringCacheType;
 
 protected:
 
-	virtual bool
-	doReturnObject(
-			XObject*	theXObject,
-			bool		fInReset = false);
+    virtual bool
+    doReturnObject(
+            XObject*    theXObject,
+            bool        fInReset = false);
 
 private:
 
-	// Not implemented...
-	XObjectFactoryDefault(const XObjectFactoryDefault&);
+    // Not implemented...
+    XObjectFactoryDefault(const XObjectFactoryDefault&);
 
-	XObjectFactoryDefault&
-	operator=(const XObjectFactoryDefault&);
+    XObjectFactoryDefault&
+    operator=(const XObjectFactoryDefault&);
 
-	bool
-	operator==(const XObjectFactoryDefault&) const;
+    bool
+    operator==(const XObjectFactoryDefault&) const;
 
 
-	// Data members...
+    // Data members...
 
-	// This one's first, since it may be be holding references
-	// to objects in other allocators.
-	XStringAdapterAllocator			m_xstringAdapterAllocator;
+    // This one's first, since it may be be holding references
+    // to objects in other allocators.
+    XStringAdapterAllocator         m_xstringAdapterAllocator;
 
-	XStringAllocator				m_xstringAllocator;
+    XStringAllocator                m_xstringAllocator;
 
-	XStringCachedAllocator			m_xstringCachedAllocator;
+    XStringCachedAllocator          m_xstringCachedAllocator;
 
-	XStringReferenceAllocator		m_xstringReferenceAllocator;
+    XStringReferenceAllocator       m_xstringReferenceAllocator;
 
-	XNumberAllocator				m_xnumberAllocator;
+    XNumberAllocator                m_xnumberAllocator;
 
-	XNodeSetAllocator				m_xnodesetAllocator;
+    XNodeSetAllocator               m_xnodesetAllocator;
 
-	XNodeSetNodeProxyAllocator		m_xnodesetNodeProxyAllocator;
+    XNodeSetNodeProxyAllocator      m_xnodesetNodeProxyAllocator;
 
-	XTokenNumberAdapterAllocator	m_xtokenNumberAdapterAllocator;
+    XTokenNumberAdapterAllocator    m_xtokenNumberAdapterAllocator;
 
-	XTokenStringAdapterAllocator	m_xtokenStringAdapterAllocator;
+    XTokenStringAdapterAllocator    m_xtokenStringAdapterAllocator;
 
-	XObjectCollectionType			m_xobjects;
+    XObjectCollectionType           m_xobjects;
 
-	XNumberCacheType				m_xnumberCache;
+    XNumberCacheType                m_xnumberCache;
 
-	XNodeSetCacheType				m_xnodesetCache;
+    XNodeSetCacheType               m_xnodesetCache;
 
-	XStringCacheType				m_xstringCache;
+    XStringCacheType                m_xstringCache;
 
-	XBoolean	                    m_xbooleanFalse;
+    XBoolean                        m_xbooleanFalse;
 
-	XBoolean	                    m_xbooleanTrue;
+    XBoolean                        m_xbooleanTrue;
 };
 
 
@@ -219,4 +219,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECTFACTORYDEFAULT_HEADER_GUARD_1357924680
+#endif  // XOBJECTFACTORYDEFAULT_HEADER_GUARD_1357924680

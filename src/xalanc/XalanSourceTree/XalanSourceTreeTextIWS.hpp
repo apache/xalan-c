@@ -36,41 +36,41 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeTextIWS : public XalanSourceTr
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theData The text data of the node
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The previous sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeTextIWS(
-			const XalanDOMString&	theData,
-			XalanNode*				theParentNode = 0,
-			XalanNode*				thePreviousSibling = 0,
-			XalanNode*				theNextSibling = 0,
-			IndexType				theIndex = 0);
+    /**
+     * Constructor.
+     *
+     * @param theData The text data of the node
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The previous sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeTextIWS(
+            const XalanDOMString&   theData,
+            XalanNode*              theParentNode = 0,
+            XalanNode*              thePreviousSibling = 0,
+            XalanNode*              theNextSibling = 0,
+            IndexType               theIndex = 0);
 
-	virtual
-	~XalanSourceTreeTextIWS();
+    virtual
+    ~XalanSourceTreeTextIWS();
 
 
-	virtual bool
-	isWhitespace() const;
+    virtual bool
+    isWhitespace() const;
 
 private:
 
-	// Not implemented...
+    // Not implemented...
     XalanSourceTreeTextIWS(const XalanSourceTreeTextIWS&);
 
-	XalanSourceTreeTextIWS&
-	operator=(const XalanSourceTreeTextIWS&		theSource);
+    XalanSourceTreeTextIWS&
+    operator=(const XalanSourceTreeTextIWS&     theSource);
 
-	bool
-	operator==(const XalanSourceTreeTextIWS&	theRHS) const;
+    bool
+    operator==(const XalanSourceTreeTextIWS&    theRHS) const;
 
-	// Data members...
+    // Data members...
 };
 
 
@@ -79,4 +79,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREETEXTIWS_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREETEXTIWS_HEADER_GUARD_1357924680)

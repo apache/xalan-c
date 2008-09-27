@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeAttributeNSAllocator::XalanSourceTreeAttributeNSAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanSourceTreeAttributeNSAllocator::XalanSourceTreeAttributeNSAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,29 +40,29 @@ XalanSourceTreeAttributeNSAllocator::~XalanSourceTreeAttributeNSAllocator()
 
 XalanSourceTreeAttributeNSAllocator::ObjectType*
 XalanSourceTreeAttributeNSAllocator::create(
-			const XalanDOMString&		theName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			const XalanDOMString&		theValue,
-			XalanSourceTreeElement*		theOwnerElement,
-			IndexType					theIndex)
+            const XalanDOMString&       theName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            const XalanDOMString&       theValue,
+            XalanSourceTreeElement*     theOwnerElement,
+            IndexType                   theIndex)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(
-						theName,
-						theLocalName,
-						theNamespaceURI,
-						thePrefix,
-						theValue,
-						theOwnerElement,
-						theIndex);
+    new(theBlock) ObjectType(
+                        theName,
+                        theLocalName,
+                        theNamespaceURI,
+                        thePrefix,
+                        theValue,
+                        theOwnerElement,
+                        theIndex);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -70,7 +70,7 @@ XalanSourceTreeAttributeNSAllocator::create(
 void 
 XalanSourceTreeAttributeNSAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

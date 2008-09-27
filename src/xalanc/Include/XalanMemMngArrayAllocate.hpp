@@ -38,70 +38,70 @@ class XalanMemMngArrayAllocate
     typedef typename XalanMemMgrAutoPtrArray<Type>::size_type size_type;
 
 public:
-	static Type*
-	allocate(	size_t				size, 
-				MemoryManager& 	memoryManager)
-	{		
-		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
-													(Type*)memoryManager.allocate( sizeof(Type)*size),
-													size_type(size) );
+    static Type*
+    allocate(   size_t              size, 
+                MemoryManager&  memoryManager)
+    {       
+        XalanMemMgrAutoPtrArray<Type> theGuard (    memoryManager,
+                                                    (Type*)memoryManager.allocate( sizeof(Type)*size),
+                                                    size_type(size) );
 
-		size_t allocated = 0;
+        size_t allocated = 0;
 
-		for ( Type* runPtr = theGuard.get() ; allocated < size ; ++ allocated )
-		{
-			new ( runPtr + allocated ) Type();
+        for ( Type* runPtr = theGuard.get() ; allocated < size ; ++ allocated )
+        {
+            new ( runPtr + allocated ) Type();
 
-			++theGuard;
-		}
+            ++theGuard;
+        }
 
-		Type*  theResult = theGuard.get();
+        Type*  theResult = theGuard.get();
 
-		theGuard.release();
+        theGuard.release();
 
-		return theResult;
-	}
-	
-	static Type*
-	allocateMemMgr(	size_t				size, 
-				MemoryManager& 	memoryManager)
-	{		
-		XalanMemMgrAutoPtrArray<Type> theGuard (	memoryManager,
-													(Type*)memoryManager.allocate( sizeof(Type)*size),
-													size_type(size) );
+        return theResult;
+    }
+    
+    static Type*
+    allocateMemMgr( size_t              size, 
+                MemoryManager&  memoryManager)
+    {       
+        XalanMemMgrAutoPtrArray<Type> theGuard (    memoryManager,
+                                                    (Type*)memoryManager.allocate( sizeof(Type)*size),
+                                                    size_type(size) );
 
-		size_t allocated = 0;
+        size_t allocated = 0;
 
-		for ( Type* runPtr = theGuard.get() ; allocated < size ; ++ allocated )
-		{
-			new ( runPtr + allocated ) Type(memoryManager);
+        for ( Type* runPtr = theGuard.get() ; allocated < size ; ++ allocated )
+        {
+            new ( runPtr + allocated ) Type(memoryManager);
 
-			++theGuard;
-		}
+            ++theGuard;
+        }
 
-		Type*  theResult = theGuard.get();
+        Type*  theResult = theGuard.get();
 
-		theGuard.release();
+        theGuard.release();
 
-		return theResult;
-	}
-	
-	static void
-	deallocate (	Type*				ptr,
-					size_t				size,
-					MemoryManager& 	memoryManager)
-	{
-		assert ( ptr != 0 );
+        return theResult;
+    }
+    
+    static void
+    deallocate (    Type*               ptr,
+                    size_t              size,
+                    MemoryManager&  memoryManager)
+    {
+        assert ( ptr != 0 );
 
-		Type* runPtr = ptr;
+        Type* runPtr = ptr;
 
-		for ( size_t i = 0; i < size ; ++i )
-		{
-			runPtr->~Type();
-		}
+        for ( size_t i = 0; i < size ; ++i )
+        {
+            runPtr->~Type();
+        }
 
-		memoryManager.deallocate ( ptr);
-	}
+        memoryManager.deallocate ( ptr);
+    }
  
 };
 
@@ -110,6 +110,6 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// if !defined(XALANMEMMGRARRAYALLOCATE_HEADER_GUARD_1357924680)
+#endif  // if !defined(XALANMEMMGRARRAYALLOCATE_HEADER_GUARD_1357924680)
 
 

@@ -46,16 +46,16 @@ class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryM
 public:
 
     XalanMemoryManagerImpl(DWORD    defSize = 0) :
-	    m_heapHandle(NULL)
-	{
-		m_heapHandle =
+        m_heapHandle(NULL)
+    {
+        m_heapHandle =
             HeapCreate(
                 HEAP_NO_SERIALIZE,
-		        0, // dwInitialSize
-		        defSize);
+                0, // dwInitialSize
+                defSize);
 
         if (m_heapHandle == NULL)
-		{
+        {
             XALAN_USING_STD(runtime_error)
 
             char buffer[20];
@@ -64,11 +64,11 @@ public:
             _ultoa( GetLastError(), buffer, 10);
 
             throw runtime_error(buffer);
-		}
-	}
+        }
+    }
 
-	virtual void*
-	allocate(size_type  size)	
+    virtual void*
+    allocate(size_type  size)   
     {
         LPVOID ptr = HeapAlloc(
                         m_heapHandle,   //HANDLE hHeap
@@ -80,15 +80,15 @@ public:
         {
             XALAN_USING_XERCES(OutOfMemoryException)
 
-		    throw OutOfMemoryException();
+            throw OutOfMemoryException();
         }
 
         return ptr;
     }
 
-	virtual void
-	deallocate(void* 	pDataPointer)
-	{
+    virtual void
+    deallocate(void*    pDataPointer)
+    {
         if (0 == HeapFree(
                         m_heapHandle,   //HANDLE hHeap,
                         0,              //DWORD dwFlags,
@@ -96,7 +96,7 @@ public:
         {
             XALAN_USING_XERCES(OutOfMemoryException)
 
-		    throw OutOfMemoryException();
+            throw OutOfMemoryException();
         }
     }
 
@@ -107,8 +107,8 @@ public:
     }
 
     virtual 
-	~XalanMemoryManagerImpl()
-	{
+    ~XalanMemoryManagerImpl()
+    {
         if (0 == HeapDestroy(m_heapHandle))
         {
             XALAN_USING_STD(runtime_error)
@@ -120,18 +120,18 @@ public:
 
             throw runtime_error(buffer);
        }
-	}
+    }
 
 private:
 
     // Not implemented
-	XalanMemoryManagerImpl&
-	operator=(const XalanMemoryManagerImpl&);
+    XalanMemoryManagerImpl&
+    operator=(const XalanMemoryManagerImpl&);
 
-	XalanMemoryManagerImpl(const XalanMemoryManagerImpl&);
+    XalanMemoryManagerImpl(const XalanMemoryManagerImpl&);
 
-	//Data
-	HANDLE  m_heapHandle;	
+    //Data
+    HANDLE  m_heapHandle;   
 };
 
 #else
@@ -143,21 +143,21 @@ public:
     typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
 
     virtual
-	~XalanMemoryManagerImpl()
-	{
-	}
+    ~XalanMemoryManagerImpl()
+    {
+    }
 
-	virtual void*
-	allocate(size_type  size)
-	{
+    virtual void*
+    allocate(size_type  size)
+    {
         try
         {
-	        void* memptr = ::operator new(size);
+            void* memptr = ::operator new(size);
 
-	        if (memptr != 0) 
-	        {
-	            return memptr;
-	        }
+            if (memptr != 0) 
+            {
+                return memptr;
+            }
         }
         catch (...)
         {
@@ -166,13 +166,13 @@ public:
         XALAN_USING_XERCES(OutOfMemoryException)
 
         throw OutOfMemoryException();
-	}	
+    }   
 
     virtual void
-	deallocate(void*    pDataPointer)
-	{
-		operator delete(pDataPointer);
-	}
+    deallocate(void*    pDataPointer)
+    {
+        operator delete(pDataPointer);
+    }
 
     virtual MemoryManager*
     getExceptionMemoryManager()

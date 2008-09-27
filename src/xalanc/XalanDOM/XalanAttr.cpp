@@ -24,7 +24,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanAttr::XalanAttr() :
-	XalanNode()
+    XalanNode()
 {
 }
 
@@ -36,27 +36,27 @@ XalanAttr::~XalanAttr()
 
 
 
-XalanAttr::XalanAttr(const XalanAttr&	theSource) :
-	XalanNode(theSource)
+XalanAttr::XalanAttr(const XalanAttr&   theSource) :
+    XalanNode(theSource)
 {
 }
 
 
 
 XalanAttr&
-XalanAttr::operator=(const XalanAttr&		theSource)
+XalanAttr::operator=(const XalanAttr&       theSource)
 {
-	XalanNode::operator=(theSource);
+    XalanNode::operator=(theSource);
 
-	return *this;
+    return *this;
 }
 
 
 
 bool
-XalanAttr::operator==(const XalanAttr&	/* theRHS */) const
+XalanAttr::operator==(const XalanAttr&  /* theRHS */) const
 {
-	return false;
+    return false;
 }
 
 

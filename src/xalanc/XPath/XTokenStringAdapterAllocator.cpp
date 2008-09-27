@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XTokenStringAdapterAllocator::XTokenStringAdapterAllocator(MemoryManager&  theManager, size_type    theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -39,25 +39,25 @@ XTokenStringAdapterAllocator::~XTokenStringAdapterAllocator()
 
 
 XTokenStringAdapterAllocator::object_type*
-XTokenStringAdapterAllocator::create(const XToken&	theXToken) 
+XTokenStringAdapterAllocator::create(const XToken&  theXToken) 
 {
-	object_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    object_type* const  theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    object_type* const	theResult = new(theBlock) object_type(theXToken, m_allocator.getMemoryManager());
+    object_type* const  theResult = new(theBlock) object_type(theXToken, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 
 bool 
-XTokenStringAdapterAllocator::destroy(object_type*	theString)
+XTokenStringAdapterAllocator::destroy(object_type*  theString)
 {
-	return m_allocator.destroyObject(theString);
+    return m_allocator.destroyObject(theString);
 }
 
 
@@ -65,7 +65,7 @@ XTokenStringAdapterAllocator::destroy(object_type*	theString)
 void 
 XTokenStringAdapterAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

@@ -40,60 +40,60 @@ class NodeNameTreeWalker : public TreeWalker
 {
 public:
 
-	typedef XalanVector<const XalanNode*>		NodeVectorType;
+    typedef XalanVector<const XalanNode*>       NodeVectorType;
 
-	NodeNameTreeWalker(MemoryManager& theManager);
+    NodeNameTreeWalker(MemoryManager& theManager);
 
-	virtual
-	~NodeNameTreeWalker();
+    virtual
+    ~NodeNameTreeWalker();
 
-	/**
-	 * Find all nodes matching a specified node in a specified node tree.  The
-	 * member m_matchingNodes is populated as a side effect.
-	 *
-	 * @param theNodeName  name of node sought
-	 * @param theStartNode start node for search
-	 */
-	virtual void
-	findMatchingNodes(
-			const XalanDOMString&	theNodeName,
-			const XalanNode*		theStartNode);
+    /**
+     * Find all nodes matching a specified node in a specified node tree.  The
+     * member m_matchingNodes is populated as a side effect.
+     *
+     * @param theNodeName  name of node sought
+     * @param theStartNode start node for search
+     */
+    virtual void
+    findMatchingNodes(
+            const XalanDOMString&   theNodeName,
+            const XalanNode*        theStartNode);
 
-	virtual void
-	findMatchingNodes(
-			const XalanDOMString&	theNodeName,
-			XalanNode*				theStartNode);
+    virtual void
+    findMatchingNodes(
+            const XalanDOMString&   theNodeName,
+            XalanNode*              theStartNode);
 
-	/**
-	 * Retrieve the matching nodes from the last search.
-	 *
-	 * @return vector of nodes
-	 */
-	const NodeVectorType&
-	getMatchingNodes() const
-	{
-		return m_matchingNodes;
-	}
+    /**
+     * Retrieve the matching nodes from the last search.
+     *
+     * @return vector of nodes
+     */
+    const NodeVectorType&
+    getMatchingNodes() const
+    {
+        return m_matchingNodes;
+    }
 
 protected:
 
-	virtual bool
-	startNode(XalanNode*	node);
+    virtual bool
+    startNode(XalanNode*    node);
 
-	virtual bool
-	endNode(XalanNode*	node);
+    virtual bool
+    endNode(XalanNode*  node);
 
-	virtual bool
-	startNode(const XalanNode*	node);
+    virtual bool
+    startNode(const XalanNode*  node);
 
-	virtual bool
-	endNode(const XalanNode*	node);
+    virtual bool
+    endNode(const XalanNode*    node);
 
 private:
 
-	XalanDOMString	m_nodeName;
+    XalanDOMString  m_nodeName;
 
-	NodeVectorType	m_matchingNodes;
+    NodeVectorType  m_matchingNodes;
 };
 
 
@@ -102,4 +102,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// NODENAMETREEWALKER_HEADER_GUARD_1357924680
+#endif  // NODENAMETREEWALKER_HEADER_GUARD_1357924680

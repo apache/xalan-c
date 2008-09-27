@@ -32,33 +32,33 @@ class XALAN_DOM_EXPORT XalanEmptyNamedNodeMap : public XalanNamedNodeMap
 {
 public:
 
-	XalanEmptyNamedNodeMap();
+    XalanEmptyNamedNodeMap();
 
-	virtual
-	~XalanEmptyNamedNodeMap();
+    virtual
+    ~XalanEmptyNamedNodeMap();
 
-	XalanEmptyNamedNodeMap(const XalanEmptyNamedNodeMap&	theSource);
+    XalanEmptyNamedNodeMap(const XalanEmptyNamedNodeMap&    theSource);
 
-	XalanEmptyNamedNodeMap&
-	operator=(const XalanEmptyNamedNodeMap&		theSource);
+    XalanEmptyNamedNodeMap&
+    operator=(const XalanEmptyNamedNodeMap&     theSource);
 
-	bool
-	operator==(const XalanEmptyNamedNodeMap& 	theRHS) const;
+    bool
+    operator==(const XalanEmptyNamedNodeMap&    theRHS) const;
 
 
-	virtual XalanNode*
-	item(XalanSize_t	index) const;
+    virtual XalanNode*
+    item(XalanSize_t    index) const;
 
-	virtual XalanNode*
-	getNamedItem(const XalanDOMString& 	name) const;
+    virtual XalanNode*
+    getNamedItem(const XalanDOMString&  name) const;
 
-	virtual XalanSize_t
-	getLength() const;
+    virtual XalanSize_t
+    getLength() const;
 
-	virtual XalanNode*
-	getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
+    virtual XalanNode*
+    getNamedItemNS(
+            const XalanDOMString&   namespaceURI,
+            const XalanDOMString&   localName) const;
 
 private:
 };
@@ -69,4 +69,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANEMPTYNAMEDNODEMAP_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANEMPTYNAMEDNODEMAP_HEADER_GUARD_1357924680)

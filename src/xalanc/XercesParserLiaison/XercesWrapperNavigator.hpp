@@ -56,160 +56,160 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperNavigator
 {
 public:
 
-	typedef XalanNode::IndexType	IndexType;
+    typedef XalanNode::IndexType    IndexType;
 
-	explicit
-	XercesWrapperNavigator(XercesDocumentWrapper*	theOwnerDocument = 0);
+    explicit
+    XercesWrapperNavigator(XercesDocumentWrapper*   theOwnerDocument = 0);
 
-	XercesWrapperNavigator(const XercesWrapperNavigator&	theSource);
+    XercesWrapperNavigator(const XercesWrapperNavigator&    theSource);
 
-	virtual
-	~XercesWrapperNavigator();
+    virtual
+    ~XercesWrapperNavigator();
 
 
-	XercesDocumentWrapper*
-	getOwnerDocument() const
-	{
-		return m_ownerDocument;
-	}
+    XercesDocumentWrapper*
+    getOwnerDocument() const
+    {
+        return m_ownerDocument;
+    }
 
-	void
-	setOwnerDocument(XercesDocumentWrapper*		theDocument)
-	{
-		m_ownerDocument = theDocument;
-	}
+    void
+    setOwnerDocument(XercesDocumentWrapper*     theDocument)
+    {
+        m_ownerDocument = theDocument;
+    }
 
-	XalanNode*
-	mapNode(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    mapNode(const DOMNodeType*  theXercesNode) const;
 
-	XalanAttr*
-	mapNode(const DOMAttrType*	theXercesNode) const;
+    XalanAttr*
+    mapNode(const DOMAttrType*  theXercesNode) const;
 
-	const DOMNodeType*
-	mapNode(XalanNode*	theXalanNode) const;
+    const DOMNodeType*
+    mapNode(XalanNode*  theXalanNode) const;
 
-	IndexType
-	getIndex() const
-	{
-		return m_index;
-	}
+    IndexType
+    getIndex() const
+    {
+        return m_index;
+    }
 
-	void
-	setIndex(IndexType	theIndex)
-	{
-		m_index = theIndex;
-	}
+    void
+    setIndex(IndexType  theIndex)
+    {
+        m_index = theIndex;
+    }
 
-	XalanNode*
-	getParentNode(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    getParentNode(const DOMNodeType*    theXercesNode) const;
 
-	XalanNode*
-	getParentNode() const
-	{
-		return m_parentNode;
-	}
+    XalanNode*
+    getParentNode() const
+    {
+        return m_parentNode;
+    }
 
-	void
-	setParentNode(XalanNode*	theParent)
-	{
-		m_parentNode = theParent;
-	}
+    void
+    setParentNode(XalanNode*    theParent)
+    {
+        m_parentNode = theParent;
+    }
 
-	XalanNode*
-	getPreviousSibling(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    getPreviousSibling(const DOMNodeType*   theXercesNode) const;
 
-	XalanNode*
-	getPreviousSibling() const
-	{
-		return m_previousSibling;
-	}
+    XalanNode*
+    getPreviousSibling() const
+    {
+        return m_previousSibling;
+    }
 
-	void
-	setPreviousSibling(XalanNode*	thePreviousSibling)
-	{
-		m_previousSibling = thePreviousSibling;
-	}
+    void
+    setPreviousSibling(XalanNode*   thePreviousSibling)
+    {
+        m_previousSibling = thePreviousSibling;
+    }
 
-	XalanNode*
-	getNextSibling(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    getNextSibling(const DOMNodeType*   theXercesNode) const;
 
-	XalanNode*
-	getNextSibling() const
-	{
-		return m_nextSibling;
-	}
+    XalanNode*
+    getNextSibling() const
+    {
+        return m_nextSibling;
+    }
 
-	void
-	setNextSibling(XalanNode*	theNextSibling)
-	{
-		m_nextSibling = theNextSibling;
-	}
+    void
+    setNextSibling(XalanNode*   theNextSibling)
+    {
+        m_nextSibling = theNextSibling;
+    }
 
-	XalanNode*
-	getFirstChild(const DOMNodeType*	theXercesNode) const;
+    XalanNode*
+    getFirstChild(const DOMNodeType*    theXercesNode) const;
 
-	XalanNode*
-	getFirstChild() const
-	{
-		return m_firstChild;
-	}
+    XalanNode*
+    getFirstChild() const
+    {
+        return m_firstChild;
+    }
 
-	void
-	setFirstChild(XalanNode*	theFirstChild)
-	{
-		m_firstChild = theFirstChild;
-	}
+    void
+    setFirstChild(XalanNode*    theFirstChild)
+    {
+        m_firstChild = theFirstChild;
+    }
 
-	XalanNode*
-	getLastChild(const DOMNodeType*		theXercesNode) const;
+    XalanNode*
+    getLastChild(const DOMNodeType*     theXercesNode) const;
 
-	XalanNode*
-	getLastChild() const
-	{
-		return m_lastChild;
-	}
+    XalanNode*
+    getLastChild() const
+    {
+        return m_lastChild;
+    }
 
-	void
-	setLastChild(XalanNode*	theLastChild)
-	{
-		m_lastChild = theLastChild;
-	}
+    void
+    setLastChild(XalanNode* theLastChild)
+    {
+        m_lastChild = theLastChild;
+    }
 
-	XalanElement*
-	getOwnerElement(const DOMAttrType*	theXercesAttr) const;
+    XalanElement*
+    getOwnerElement(const DOMAttrType*  theXercesAttr) const;
 
-	/**
-	 * Get a pooled string.  If the string is not in the pool,
-	 * add it.
-	 *
-	 * @param theString The string to pool.
-	 * @return A const reference to the pooled string.
-	 */
-	const XalanDOMString&
-	getPooledString(const XMLCh*	theString) const;
+    /**
+     * Get a pooled string.  If the string is not in the pool,
+     * add it.
+     *
+     * @param theString The string to pool.
+     * @return A const reference to the pooled string.
+     */
+    const XalanDOMString&
+    getPooledString(const XMLCh*    theString) const;
 
 private:
 
-	// Not implemented...
-	bool
-	operator==(const XercesWrapperNavigator&	theRHS) const;
+    // Not implemented...
+    bool
+    operator==(const XercesWrapperNavigator&    theRHS) const;
 
-	// Data members...
-	XercesDocumentWrapper*	m_ownerDocument;
+    // Data members...
+    XercesDocumentWrapper*  m_ownerDocument;
 
-	XalanNode*				m_parentNode;
+    XalanNode*              m_parentNode;
 
-	XalanNode*				m_previousSibling;
+    XalanNode*              m_previousSibling;
 
-	XalanNode*				m_nextSibling;
+    XalanNode*              m_nextSibling;
 
-	XalanNode*				m_firstChild;
+    XalanNode*              m_firstChild;
 
-	XalanNode*				m_lastChild;
+    XalanNode*              m_lastChild;
 
-	IndexType				m_index;
+    IndexType               m_index;
 
-	static const XalanDOMString		s_emptyString;
+    static const XalanDOMString     s_emptyString;
 };
 
 
@@ -218,4 +218,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESWRAPPERNAVIGATOR_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESWRAPPERNAVIGATOR_HEADER_GUARD_1357924680)

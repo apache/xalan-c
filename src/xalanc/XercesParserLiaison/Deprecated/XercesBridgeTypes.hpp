@@ -56,31 +56,31 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr				DOM_AttrType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CharacterData	DOM_CharacterDataType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Comment			DOM_CommentType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CDATASection		DOM_CDATASectionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr             DOM_AttrType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CharacterData    DOM_CharacterDataType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Comment          DOM_CommentType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CDATASection     DOM_CDATASectionType;
 // These next two have an extra '_' because they collide without it...
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentType_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document			DOM_Document_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment	DOM_DocumentFragmentType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMImplementation	DOM_DOMImplementationType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element			DOM_ElementType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity			DOM_EntityType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_EntityReference	DOM_EntityReferenceType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node				DOM_NodeType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NamedNodeMap		DOM_NamedNodeMapType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NodeList			DOM_NodeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Notation			DOM_NotationType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_ProcessingInstruction	DOM_ProcessingInstructionType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text				DOM_TextType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMException		DOM_DOMExceptionType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttrImpl				AttrImplType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ElementImpl			ElementImplType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl				NodeImplType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER TextImpl				TextImplType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMString			DOMStringType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType     DOM_DocumentType_Type;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document         DOM_Document_Type;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment DOM_DocumentFragmentType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMImplementation    DOM_DOMImplementationType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element          DOM_ElementType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity           DOM_EntityType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_EntityReference  DOM_EntityReferenceType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node             DOM_NodeType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text             DOM_TextType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NamedNodeMap     DOM_NamedNodeMapType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NodeList         DOM_NodeListType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Notation         DOM_NotationType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_ProcessingInstruction    DOM_ProcessingInstructionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text             DOM_TextType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMException     DOM_DOMExceptionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttrImpl             AttrImplType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ElementImpl          ElementImplType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl             NodeImplType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER TextImpl             TextImplType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMString            DOMStringType;
 
 
 
@@ -90,4 +90,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESBRIDGETYPES_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESBRIDGETYPES_HEADER_GUARD_1357924680)

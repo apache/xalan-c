@@ -46,38 +46,38 @@ class XALAN_DOM_EXPORT XalanDOMImplementation
 {
 public:
 
-	XalanDOMImplementation();
+    XalanDOMImplementation();
 
-	virtual
-	~XalanDOMImplementation();
+    virtual
+    ~XalanDOMImplementation();
 
-	/** @name Getter functions */
-	//@{
+    /** @name Getter functions */
+    //@{
 
-	/**
-	 * Test if the DOM implementation implements a specific feature.
-	 *
-	 * @param feature The string of the feature to test (case-insensitive). The legal 
-	 *        values are defined throughout this specification. The string must be 
-	 *        an <EM>XML name</EM> (see also Compliance).
-	 * @param version This is the version number of the package name to test.  
-	 *   In Level 1, this is the string "1.0". If the version is not specified, 
-	 *   supporting any version of the  feature will cause the method to return 
-	 *   <code>true</code>. 
-	 * @return <code>true</code> if the feature is implemented in the specified 
-	 *   version, <code>false</code> otherwise.
-	 */
-	virtual bool
-	hasFeature(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) = 0;
+    /**
+     * Test if the DOM implementation implements a specific feature.
+     *
+     * @param feature The string of the feature to test (case-insensitive). The legal 
+     *        values are defined throughout this specification. The string must be 
+     *        an <EM>XML name</EM> (see also Compliance).
+     * @param version This is the version number of the package name to test.  
+     *   In Level 1, this is the string "1.0". If the version is not specified, 
+     *   supporting any version of the  feature will cause the method to return 
+     *   <code>true</code>. 
+     * @return <code>true</code> if the feature is implemented in the specified 
+     *   version, <code>false</code> otherwise.
+     */
+    virtual bool
+    hasFeature(
+            const XalanDOMString&   feature,
+            const XalanDOMString&   version) = 0;
 
  //@}
 
     /** @name Functions introduced in DOM Level 2. */
     //@{
 
-	/**
+    /**
      * Creates an empty <code>DocumentType</code> node.
      * Entity declarations and notations are not made available.
      * Entity reference expansions and default attribute additions
@@ -90,11 +90,11 @@ public:
      * @return A new <code>DocumentType</code> node with
      * <code>Node.ownerDocument</code> set to <code>null</code>.
      */
-	virtual XalanDocumentType*
-	createDocumentType(
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	publicId,
-			const XalanDOMString&	systemId) = 0;
+    virtual XalanDocumentType*
+    createDocumentType(
+            const XalanDOMString&   qualifiedName,
+            const XalanDOMString&   publicId,
+            const XalanDOMString&   systemId) = 0;
 
     /**
      * Creates an XML <code>Document</code> object of the specified type
@@ -113,22 +113,22 @@ public:
      *   been used with a different document.
      */
     virtual XalanDocument*
-	createDocument(
-			const XalanDOMString&		namespaceURI,
-			const XalanDOMString&		qualifiedName,
-			const XalanDocumentType&	doctype) = 0;
+    createDocument(
+            const XalanDOMString&       namespaceURI,
+            const XalanDOMString&       qualifiedName,
+            const XalanDocumentType&    doctype) = 0;
 
     //@}
 
 protected:
 
-	XalanDOMImplementation(const XalanDOMImplementation&	theSource);
+    XalanDOMImplementation(const XalanDOMImplementation&    theSource);
 
-	XalanDOMImplementation&
-	operator=(const XalanDOMImplementation&		theSource);
+    XalanDOMImplementation&
+    operator=(const XalanDOMImplementation&     theSource);
 
-	bool
-	operator==(const XalanDOMImplementation&	theRHS) const;
+    bool
+    operator==(const XalanDOMImplementation&    theRHS) const;
 
 private:
 };
@@ -139,4 +139,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined (XALANDOMIMPLEMENTATION_HEADER_GUARD_1357924680)
+#endif  // !defined (XALANDOMIMPLEMENTATION_HEADER_GUARD_1357924680)

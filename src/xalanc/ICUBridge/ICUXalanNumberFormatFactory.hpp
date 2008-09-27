@@ -39,13 +39,13 @@ class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatFactory : public StylesheetExec
 {
 public:
 
-	ICUXalanNumberFormatFactory(MemoryManager& theManager);
+    ICUXalanNumberFormatFactory(MemoryManager& theManager);
 
-	virtual
-	~ICUXalanNumberFormatFactory();
+    virtual
+    ~ICUXalanNumberFormatFactory();
 
-	virtual XalanNumberFormat*
-	create();
+    virtual XalanNumberFormat*
+    create();
 private:
     MemoryManager& m_memoryManager;
 };
@@ -56,4 +56,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ICUXALANNUMBERFORMATFACTORY_HEADER_GUARD_1357924680
+#endif  // ICUXALANNUMBERFORMATFACTORY_HEADER_GUARD_1357924680

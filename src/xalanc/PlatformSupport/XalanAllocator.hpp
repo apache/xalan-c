@@ -33,87 +33,87 @@ template <class Type>
 class XalanAllocator
 {
 public:
-	typedef size_t			size_type;
-	typedef ptrdiff_t		difference_type;
-	typedef Type*			pointer;
-	typedef const Type*		const_pointer;
-	typedef Type&			reference;
-	typedef const Type&		const_reference;
-	typedef Type			value_type;
+    typedef size_t          size_type;
+    typedef ptrdiff_t       difference_type;
+    typedef Type*           pointer;
+    typedef const Type*     const_pointer;
+    typedef Type&           reference;
+    typedef const Type&     const_reference;
+    typedef Type            value_type;
 
-	
-	XalanAllocator(MemoryManager&      theManager) :
+    
+    XalanAllocator(MemoryManager&      theManager) :
         m_memoryManager(theManager)
-	{
-	}
+    {
+    }
 
 
-	~XalanAllocator()
-	{
-	}
-	
+    ~XalanAllocator()
+    {
+    }
+    
     MemoryManager&
     getMemoryManager()
     {
         return m_memoryManager;
     }
     
-	pointer
-	address(reference	x) const
-	{
-		return &x;
-	}
+    pointer
+    address(reference   x) const
+    {
+        return &x;
+    }
 
-	const_pointer
-	address(const_reference		x) const
-	{
-		return &x;
-	}
+    const_pointer
+    address(const_reference     x) const
+    {
+        return &x;
+    }
 
-	pointer
-	allocate(
-			size_type		size,
-			const void*		/* hint */ = 0)
-	{
-		return (pointer)m_memoryManager.allocate(size * sizeof(Type));
-	}
+    pointer
+    allocate(
+            size_type       size,
+            const void*     /* hint */ = 0)
+    {
+        return (pointer)m_memoryManager.allocate(size * sizeof(Type));
+    }
 
-	void
-	deallocate(
-				pointer		p,
-				size_type	/* n */)
-	{
+    void
+    deallocate(
+                pointer     p,
+                size_type   /* n */)
+    {
         if( p == 0 )
         {
             return;
         }
 
         m_memoryManager.deallocate(p);
-	}
+    }
 
-	size_type
-	max_size() const
-	{
-		return ~0;
-	}
+    size_type
+    max_size() const
+    {
+        return ~0;
+    }
 
-	void
-	construct(
-			pointer			p,
-			const Type&		val)
-	{
-		new (p) Type(val);
-	}
+    void
+    construct(
+            pointer         p,
+            const Type&     val)
+    {
+        new (p) Type(val);
+    }
 
-	void
-	destroy(pointer		p)
-	{
-		p->Type::~Type();
-	}
-	
+    void
+    destroy(pointer     p)
+    {
+        p->Type::~Type();
+    }
+    
 private:
-	XalanAllocator(const XalanAllocator<Type>&);
-	
+    XalanAllocator(const XalanAllocator<Type>&);
+    
     XalanAllocator<Type>&
     operator=(const XalanAllocator<Type>&);
     
@@ -126,4 +126,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANALLOCATOR_INCLUDE_GUARD_1357924680
+#endif  // XALANALLOCATOR_INCLUDE_GUARD_1357924680

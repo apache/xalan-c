@@ -41,44 +41,44 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionEvaluate : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionEvaluate();
+    FunctionEvaluate();
 
-	virtual
-	~FunctionEvaluate();
+    virtual
+    ~FunctionEvaluate();
 
-	using ParentType::execute;
+    using ParentType::execute;
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionEvaluate*
+    virtual FunctionEvaluate*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionEvaluate&
-	operator=(const FunctionEvaluate&);
+    // Not implemented...
+    FunctionEvaluate&
+    operator=(const FunctionEvaluate&);
 
-	bool
-	operator==(const FunctionEvaluate&) const;
+    bool
+    operator==(const FunctionEvaluate&) const;
 };
 
 
@@ -87,4 +87,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONEVALUATE_HEADER_GUARD_1357924680
+#endif  // FUNCTIONEVALUATE_HEADER_GUARD_1357924680

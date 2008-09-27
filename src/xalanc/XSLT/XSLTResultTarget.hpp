@@ -51,277 +51,277 @@ class XALAN_XSLT_EXPORT XSLTResultTarget
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream			StreamType;
+    typedef ostream         StreamType;
 #else
-	typedef std::ostream	StreamType;
+    typedef std::ostream    StreamType;
 #endif
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::FILE	FILE;
+    typedef std::FILE   FILE;
 #endif
 
 
-	explicit
-	XSLTResultTarget(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
+    explicit
+    XSLTResultTarget(MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a file name.
-	 *
-	 * @param fileName valid system file name
-	 */
-	XSLTResultTarget(const XalanDOMString&	fileName,
+    /**
+     * Create a new output target with a file name.
+     *
+     * @param fileName valid system file name
+     */
+    XSLTResultTarget(const XalanDOMString&  fileName,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a file name.
-	 *
-	 * @param fileName valid system file name
-	 */
-	XSLTResultTarget(const XalanDOMChar*	fileName,
+    /**
+     * Create a new output target with a file name.
+     *
+     * @param fileName valid system file name
+     */
+    XSLTResultTarget(const XalanDOMChar*    fileName,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a file name.
-	 *
-	 * @param fileName valid system file name
-	 */
-	XSLTResultTarget(const char*	fileName,
+    /**
+     * Create a new output target with a file name.
+     *
+     * @param fileName valid system file name
+     */
+    XSLTResultTarget(const char*    fileName,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a stream.
-	 *
-	 * @param byteStream a pointer to a std ostream for the output
-	 */
-	XSLTResultTarget(StreamType*	theStream,
+    /**
+     * Create a new output target with a stream.
+     *
+     * @param byteStream a pointer to a std ostream for the output
+     */
+    XSLTResultTarget(StreamType*    theStream,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a stream.
-	 *
-	 * @param byteStream a reference to a std ostream for the output
-	 */
-	XSLTResultTarget(StreamType&	theStream,
+    /**
+     * Create a new output target with a stream.
+     *
+     * @param byteStream a reference to a std ostream for the output
+     */
+    XSLTResultTarget(StreamType&    theStream,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a character stream.
-	 *
-	 * @param characterStream pointer to character stream where the results
-	 *                        will be written
-	 */ 
-	XSLTResultTarget(Writer*	characterStream,
+    /**
+     * Create a new output target with a character stream.
+     *
+     * @param characterStream pointer to character stream where the results
+     *                        will be written
+     */ 
+    XSLTResultTarget(Writer*    characterStream,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a stream.
-	 *
-	 * @param characterStream pointer to character stream where the results
-	 *                        will be written
-	 */ 
-	XSLTResultTarget(FILE*	characterStream,
+    /**
+     * Create a new output target with a stream.
+     *
+     * @param characterStream pointer to character stream where the results
+     *                        will be written
+     */ 
+    XSLTResultTarget(FILE*  characterStream,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
-	/**
-	 * Create a new output target with a FormatterListener.
-	 *
-	 * @param flistener A FormatterListener instance for result tree events.
-	 */
-	XSLTResultTarget(FormatterListener&		flistener,
+    /**
+     * Create a new output target with a FormatterListener.
+     *
+     * @param flistener A FormatterListener instance for result tree events.
+     */
+    XSLTResultTarget(FormatterListener&     flistener,
                     MemoryManager& theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 
     XSLTResultTarget(const XSLTResultTarget& other,
                     MemoryManager&      theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
-	~XSLTResultTarget();
+    ~XSLTResultTarget();
 
-	/**
-	 * Set the file name where the results will be written.
-	 *
-	 * @param fileName system identifier as a string
-	 */
-	void
-	setFileName(const char*		fileName)
-	{
-		if (fileName == 0)
-		{
-			m_fileName.clear();
-		}
-		else
-		{
-			m_fileName = fileName;
-		}
-	}
+    /**
+     * Set the file name where the results will be written.
+     *
+     * @param fileName system identifier as a string
+     */
+    void
+    setFileName(const char*     fileName)
+    {
+        if (fileName == 0)
+        {
+            m_fileName.clear();
+        }
+        else
+        {
+            m_fileName = fileName;
+        }
+    }
 
-	/**
-	 * Set the file name where the results will be written.
-	 *
-	 * @param fileName system identifier as a string
-	 */
-	void
-	setFileName(const XalanDOMString&	fileName)
-	{
-		m_fileName = fileName;
-	}
+    /**
+     * Set the file name where the results will be written.
+     *
+     * @param fileName system identifier as a string
+     */
+    void
+    setFileName(const XalanDOMString&   fileName)
+    {
+        m_fileName = fileName;
+    }
 
-	/**
-	 * Get the file name where the results will be written to.
-	 * 
-	 * @return file name string
-	 */
-	const XalanDOMString&
-	getFileName() const
-	{
-		return m_fileName;
-	}
+    /**
+     * Get the file name where the results will be written to.
+     * 
+     * @return file name string
+     */
+    const XalanDOMString&
+    getFileName() const
+    {
+        return m_fileName;
+    }
 
-	/**
-	 * Set the byte stream for this output target.
-	 *
-	 * @param byteStream pointer to byte stream that will contain the result
-	 *                   document
-	 */
-	void
-	setByteStream(StreamType*			byteStream)
-	{
-		m_byteStream = byteStream;
-	}
+    /**
+     * Set the byte stream for this output target.
+     *
+     * @param byteStream pointer to byte stream that will contain the result
+     *                   document
+     */
+    void
+    setByteStream(StreamType*           byteStream)
+    {
+        m_byteStream = byteStream;
+    }
 
-	/**
-	 * Get the byte stream for this output target.
-	 *
-	 * @return pointer to byte stream, or null if none was supplied.
-	 */
-	StreamType*
-	getByteStream() const
-	{
-		return m_byteStream;
-	}
+    /**
+     * Get the byte stream for this output target.
+     *
+     * @return pointer to byte stream, or null if none was supplied.
+     */
+    StreamType*
+    getByteStream() const
+    {
+        return m_byteStream;
+    }
 
-	/** 
-	 * Set the character encoding, if known.
-	 *
-	 * @param encoding new encoding string
-	 */
-	void
-	setEncoding(const XalanDOMChar*		encoding)
-	{
-		if (encoding == 0)
-		{
-			m_encoding.clear();
-		}
-		else
-		{
-			m_encoding = encoding;
-		}
-	}
+    /** 
+     * Set the character encoding, if known.
+     *
+     * @param encoding new encoding string
+     */
+    void
+    setEncoding(const XalanDOMChar*     encoding)
+    {
+        if (encoding == 0)
+        {
+            m_encoding.clear();
+        }
+        else
+        {
+            m_encoding = encoding;
+        }
+    }
 
-	/** 
-	 * Set the character encoding, if known.
-	 *
-	 * @param encoding new encoding string
-	 */
-	void
-	setEncoding(const XalanDOMString&	encoding)
-	{
-		m_encoding = encoding;
-	}
+    /** 
+     * Set the character encoding, if known.
+     *
+     * @param encoding new encoding string
+     */
+    void
+    setEncoding(const XalanDOMString&   encoding)
+    {
+        m_encoding = encoding;
+    }
 
-	/**
-	 * Get the character encoding in use.
-	 *
-	 * @return encoding string, or empty string if none was supplied.
-	 */
-	const XalanDOMString&
-	getEncoding() const
-	{
-		return m_encoding;
-	}
+    /**
+     * Get the character encoding in use.
+     *
+     * @return encoding string, or empty string if none was supplied.
+     */
+    const XalanDOMString&
+    getEncoding() const
+    {
+        return m_encoding;
+    }
 
-	/**
-	 * Set the character stream for this output target.
-	 *
-	 * @param characterStream pointer to character stream that will contain 
-	 *                        the result document
-	 */
-	void
-	setCharacterStream(Writer*	characterStream)
-	{
-		m_characterStream = characterStream;
-	}
+    /**
+     * Set the character stream for this output target.
+     *
+     * @param characterStream pointer to character stream that will contain 
+     *                        the result document
+     */
+    void
+    setCharacterStream(Writer*  characterStream)
+    {
+        m_characterStream = characterStream;
+    }
 
-	/**
-	 * Get the character stream for this output target.
-	 *
-	 * @return pointer to character stream, or null if none was supplied.
-	 */
-	Writer*
-	getCharacterStream() const
-	{
-		return m_characterStream;
-	}
+    /**
+     * Get the character stream for this output target.
+     *
+     * @return pointer to character stream, or null if none was supplied.
+     */
+    Writer*
+    getCharacterStream() const
+    {
+        return m_characterStream;
+    }
 
-	/**
-	 * Get the stream for this output target.
-	 *
-	 * @return pointer to stream, or null if none was supplied.
-	 */
-	FILE*
-	getStream() const
-	{
-		return m_stream;
-	}
+    /**
+     * Get the stream for this output target.
+     *
+     * @return pointer to stream, or null if none was supplied.
+     */
+    FILE*
+    getStream() const
+    {
+        return m_stream;
+    }
 
-	/**
-	 * Set the stream for this output target.
-	 *
-	 * @theStream pointer to stream.
-	 */
-	void
-	setStream(FILE*		theStream)
-	{
-		m_stream = theStream;
-	}
+    /**
+     * Set the stream for this output target.
+     *
+     * @theStream pointer to stream.
+     */
+    void
+    setStream(FILE*     theStream)
+    {
+        m_stream = theStream;
+    }
 
-	/**
-	 * Set a FormatterListener to process the result tree events.
-	 *
-	 * @param handler pointer to new listener
-	 */
-	void
-	setFormatterListener(FormatterListener*		handler)
-	{
-		m_formatterListener = handler;
-	}
+    /**
+     * Set a FormatterListener to process the result tree events.
+     *
+     * @param handler pointer to new listener
+     */
+    void
+    setFormatterListener(FormatterListener*     handler)
+    {
+        m_formatterListener = handler;
+    }
 
-	/**
-	 * Get the FormatterListener that will process the result tree events.
-	 *
-	 * @return pointer to new listener
-	 */
-	FormatterListener*
-	getFormatterListener() const
-	{
-		return m_formatterListener;
-	}
+    /**
+     * Get the FormatterListener that will process the result tree events.
+     *
+     * @return pointer to new listener
+     */
+    FormatterListener*
+    getFormatterListener() const
+    {
+        return m_formatterListener;
+    }
 
 private:
 
 #if defined(XALAN_DEVELOPMENT)
     XSLTResultTarget();
-	XSLTResultTarget(const XSLTResultTarget&);
+    XSLTResultTarget(const XSLTResultTarget&);
 #endif
 
-	XalanDOMString			m_fileName;
+    XalanDOMString          m_fileName;
 
-	StreamType*				m_byteStream;
+    StreamType*             m_byteStream;
 
-	XalanDOMString			m_encoding;
+    XalanDOMString          m_encoding;
 
-	Writer*					m_characterStream;
+    Writer*                 m_characterStream;
 
-	FormatterListener*		m_formatterListener;
+    FormatterListener*      m_formatterListener;
 
-	FILE*					m_stream;
+    FILE*                   m_stream;
 };
 
 
@@ -330,4 +330,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_XSLTRESULTTARGET_HEADER_GUARD
+#endif  // XALAN_XSLTRESULTTARGET_HEADER_GUARD

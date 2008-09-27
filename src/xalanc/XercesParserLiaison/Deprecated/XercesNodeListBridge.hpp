@@ -56,56 +56,56 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNodeListBridge : public XalanNodeLi
 {
 public:
 
-	XercesNodeListBridge(
-			const DOM_NodeListType&			theXercesNodeList,
-			const XercesBridgeNavigator&	theNavigator);
+    XercesNodeListBridge(
+            const DOM_NodeListType&         theXercesNodeList,
+            const XercesBridgeNavigator&    theNavigator);
 
-	XercesNodeListBridge(const XercesNodeListBridge&	theSource);
+    XercesNodeListBridge(const XercesNodeListBridge&    theSource);
 
-	virtual
-	~XercesNodeListBridge();
+    virtual
+    ~XercesNodeListBridge();
 
-	bool
-	operator==(const XercesNodeListBridge& 	theRHS) const
-	{
-		return m_xercesNodeList == theRHS.m_xercesNodeList ? true : false;
-	}
+    bool
+    operator==(const XercesNodeListBridge&  theRHS) const
+    {
+        return m_xercesNodeList == theRHS.m_xercesNodeList ? true : false;
+    }
 
-	/** @name Get functions. */
-	//@{
-	/**
-	 * Returns the <code>index</code>th item in the collection. 
-	 *
-	 * If <code>index</code> is greater than or equal to the number of nodes in 
-	 * the list, this returns <code>null</code>.
-	 *
-	 * @param index Index into the collection.
-	 * @return The node at the <code>index</code>th position in the 
-	 *	 <code>NodeList</code>, or <code>null</code> if that is not a valid 
-	 *	 index.
-	 */
-	virtual XalanNode*
-	item(unsigned int	index) const;
+    /** @name Get functions. */
+    //@{
+    /**
+     * Returns the <code>index</code>th item in the collection. 
+     *
+     * If <code>index</code> is greater than or equal to the number of nodes in 
+     * the list, this returns <code>null</code>.
+     *
+     * @param index Index into the collection.
+     * @return The node at the <code>index</code>th position in the 
+     *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
+     *   index.
+     */
+    virtual XalanNode*
+    item(unsigned int   index) const;
 
-	/**
-	 * Returns the number of nodes in the list. 
-	 *
-	 * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
-	 */
-	virtual unsigned int
-	getLength() const;
+    /**
+     * Returns the number of nodes in the list. 
+     *
+     * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
+     */
+    virtual unsigned int
+    getLength() const;
 
 private:
 
-	// Not implemented...
-	XercesNodeListBridge&
-	operator=(const XercesNodeListBridge&	theRHS);
+    // Not implemented...
+    XercesNodeListBridge&
+    operator=(const XercesNodeListBridge&   theRHS);
 
 
-	// Data members...
-	DOM_NodeListType				m_xercesNodeList;
+    // Data members...
+    DOM_NodeListType                m_xercesNodeList;
 
-	const XercesBridgeNavigator&	m_navigator;
+    const XercesBridgeNavigator&    m_navigator;
 };
 
 
@@ -114,4 +114,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESNODELISTBRIDGE_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESNODELISTBRIDGE_HEADER_GUARD_1357924680)

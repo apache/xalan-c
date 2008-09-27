@@ -53,9 +53,9 @@ XALAN_USING_STD(endl)
 
 
 
-static const char* const	excludeStylesheets[] =
+static const char* const    excludeStylesheets[] =
 {
-	0
+    0
 };
 
 
@@ -66,208 +66,208 @@ XALAN_USING_XALAN(XalanDOMString)
 
 
 inline bool
-checkForExclusion(const XalanDOMString&		currentFile)
+checkForExclusion(const XalanDOMString&     currentFile)
 {
-	for (int i = 0; excludeStylesheets[i] != 0; ++i)
-	{	
-		if (currentFile == XalanDOMString(excludeStylesheets[i]))
-		{
-			return true;
-		}
-	}
+    for (int i = 0; excludeStylesheets[i] != 0; ++i)
+    {   
+        if (currentFile == XalanDOMString(excludeStylesheets[i]))
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 
 
 void
-setHelp(XalanFileUtility&	h)
+setHelp(XalanFileUtility&   h)
 {
-	h.args.getHelpStream() << endl
-		 << "stressmem dirname [-out -sub]"
-		 << endl
-		 << endl
-		 << "dirname		(base directory for testcases)"
-		 << endl
-		 << "-out dirname	(base directory for output)"
-		 << endl
-		 << "-sub dirname (run files only from a specific directory)"
-		 << endl;
+    h.args.getHelpStream() << endl
+         << "stressmem dirname [-out -sub]"
+         << endl
+         << endl
+         << "dirname        (base directory for testcases)"
+         << endl
+         << "-out dirname   (base directory for output)"
+         << endl
+         << "-sub dirname (run files only from a specific directory)"
+         << endl;
 }
 
 
 
 int
 runTests(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
-	int	theResult = 0;
+    int theResult = 0;
 
-	try
-	{
-		XalanFileUtility	h;
+    try
+    {
+        XalanFileUtility    h;
 
-		setHelp(h);
+        setHelp(h);
 
-		bool setGold = false;
+        bool setGold = false;
 
-		// Set the program help string,  then get the command line parameters.
-		//
-		if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
-		{
-			//XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-			//XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-			XALAN_USING_XALAN(XalanXMLFileReporter)
+        // Set the program help string,  then get the command line parameters.
+        //
+        if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
+        {
+            //XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+            //XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+            XALAN_USING_XALAN(XalanXMLFileReporter)
 
-			typedef XalanFileUtility::FileNameVectorType	FileNameVectorType;
+            typedef XalanFileUtility::FileNameVectorType    FileNameVectorType;
 
-			// Get the list of Directories that are below perf
-			const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+            // Get the list of Directories that are below perf
+            const FileNameVectorType    dirs = h.getDirectoryNames(h.args.base);
 
-			// Generate Unique Run id. (Only used to name the result logfile.)
-			const XalanDOMString		UniqRunid = h.generateUniqRunid();
+            // Generate Unique Run id. (Only used to name the result logfile.)
+            const XalanDOMString        UniqRunid = h.generateUniqRunid();
 
-			// Defined basic constants for file manipulation 
+            // Defined basic constants for file manipulation 
 
-			const XalanDOMString    resultFilePrefix(XalanDOMString("cpp-mem"));
-			const XalanDOMString    resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
+            const XalanDOMString    resultFilePrefix(XalanDOMString("cpp-mem"));
+            const XalanDOMString    resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
-			XalanXMLFileReporter	logFile(resultsFile);
+            XalanXMLFileReporter    logFile(resultsFile);
 
-			logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+            logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
 
-			try
-			{
-				XALAN_USING_XALAN(XalanTransformer)
+            try
+            {
+                XALAN_USING_XALAN(XalanTransformer)
 
-				bool foundDir = false;
+                bool foundDir = false;
 
-				XalanTransformer	transformEngine;
+                XalanTransformer    transformEngine;
 
-				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
-				{
-					// Skip all but the specified directory if the -sub cmd-line option was used.
-					//
-					if (h.args.sub.length() > 0 && dirs[j] != h.args.sub)
-					{
-						continue;
-					}					
-						
-					// Check that output directory is there.
-					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
-					h.checkAndCreateDir(theOutputDir);
+                for(FileNameVectorType::size_type   j = 0; j < dirs.size(); ++j)
+                {
+                    // Skip all but the specified directory if the -sub cmd-line option was used.
+                    //
+                    if (h.args.sub.length() > 0 && dirs[j] != h.args.sub)
+                    {
+                        continue;
+                    }                   
+                        
+                    // Check that output directory is there.
+                    const XalanDOMString  theOutputDir = h.args.output + dirs[j];
+                    h.checkAndCreateDir(theOutputDir);
 
-					const FileNameVectorType	files = h.getTestFileNames(h.args.base, dirs[j],true);
-					foundDir = true;
+                    const FileNameVectorType    files = h.getTestFileNames(h.args.base, dirs[j],true);
+                    foundDir = true;
 
-					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
-					{
-						if (checkForExclusion(files[i]) == false)
-						{
-							XALAN_USING_XALAN(XSLTInputSource)
-							XALAN_USING_XALAN(XSLTResultTarget)
+                    for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
+                    {
+                        if (checkForExclusion(files[i]) == false)
+                        {
+                            XALAN_USING_XALAN(XSLTInputSource)
+                            XALAN_USING_XALAN(XSLTResultTarget)
 
-							// Output file name to result log and console.
-							logFile.logTestCaseInit(files[i]);
-							cout << files[i] << endl;
+                            // Output file name to result log and console.
+                            logFile.logTestCaseInit(files[i]);
+                            cout << files[i] << endl;
 
-							const XalanDOMString  theXSLFile = h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
-							const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-							const XalanDOMString  theOutput =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
-							const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
+                            const XalanDOMString  theXSLFile = h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
+                            const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+                            const XalanDOMString  theOutput =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
+                            const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 
-							// Do a total end to end transform with no pre parsing of either xsl or xml files.
-							const XSLTResultTarget	theResultTarget(theOutputFile);
+                            // Do a total end to end transform with no pre parsing of either xsl or xml files.
+                            const XSLTResultTarget  theResultTarget(theOutputFile);
 
-							const XSLTInputSource	xslInputSource(theXSLFile);
-							const XSLTInputSource	xmlInputSource(theXMLFile);
+                            const XSLTInputSource   xslInputSource(theXSLFile);
+                            const XSLTInputSource   xmlInputSource(theXMLFile);
 
-							const int	theResult =
-									transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+                            const int   theResult =
+                                    transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
-							if(theResult != 0)
-							{
-								logFile.logTestCaseClose("Done","Fail");
-								cerr << "XalanError: \n" << transformEngine.getLastError();
-							}
-							else
-							{
-								logFile.logTestCaseClose("Done","Pass");
-							}
-						}
-					}
-				}
+                            if(theResult != 0)
+                            {
+                                logFile.logTestCaseClose("Done","Fail");
+                                cerr << "XalanError: \n" << transformEngine.getLastError();
+                            }
+                            else
+                            {
+                                logFile.logTestCaseClose("Done","Pass");
+                            }
+                        }
+                    }
+                }
 
-				// Check to see if -sub cmd-line directory was processed correctly.
-				if (!foundDir)
-				{
-					cout << "Specified test directory: \"" << h.args.sub << "\" not found" << endl;
-				}
+                // Check to see if -sub cmd-line directory was processed correctly.
+                if (!foundDir)
+                {
+                    cout << "Specified test directory: \"" << h.args.sub << "\" not found" << endl;
+                }
 
-				logFile.logTestFileClose("Memory Testing: ", "Done");
-				logFile.close();
-			}
-			catch(...)
-			{
-				cerr << "Exception caught!!!" << endl << endl;
+                logFile.logTestFileClose("Memory Testing: ", "Done");
+                logFile.close();
+            }
+            catch(...)
+            {
+                cerr << "Exception caught!!!" << endl << endl;
 
-				theResult  = -1;
-			}
-		}
-	}
-	catch(...)
-	{
-		cerr << "Initialization of testing harness failed!" << endl << endl;
+                theResult  = -1;
+            }
+        }
+    }
+    catch(...)
+    {
+        cerr << "Initialization of testing harness failed!" << endl << endl;
 
-		theResult  = -1;
-	}
+        theResult  = -1;
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 int
 main(
-			int		argc,
-			char*	argv[])
+            int     argc,
+            char*   argv[])
 {
 #if !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+    _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	int	theResult = 0;
+    int theResult = 0;
 
-	try
-	{
-		XALAN_USING_XERCES(XMLPlatformUtils)
+    try
+    {
+        XALAN_USING_XERCES(XMLPlatformUtils)
 
-		XALAN_USING_XALAN(XalanTransformer)
+        XALAN_USING_XALAN(XalanTransformer)
 
-		// Call the static initializers for xerces and xalan, and create a transformer
-		//
-		XMLPlatformUtils::Initialize();
+        // Call the static initializers for xerces and xalan, and create a transformer
+        //
+        XMLPlatformUtils::Initialize();
 
-		XalanTransformer::initialize();
+        XalanTransformer::initialize();
 
-		theResult = runTests(argc, argv);
+        theResult = runTests(argc, argv);
 
-		XalanTransformer::terminate();
+        XalanTransformer::terminate();
 
-		XMLPlatformUtils::Terminate();
+        XMLPlatformUtils::Terminate();
 
-		XalanTransformer::ICUCleanUp();
-	}
-	catch(...)
-	{
-		cerr << "Initialization failed!" << endl << endl;
+        XalanTransformer::ICUCleanUp();
+    }
+    catch(...)
+    {
+        cerr << "Initialization failed!" << endl << endl;
 
-		theResult = -1;
-	}
+        theResult = -1;
+    }
 
-	return theResult;
+    return theResult;
 }

@@ -50,58 +50,58 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMException : public XalanDOMExcep
 {
 public:
 
-	/** @name Constructors and assignment operator */
-	//@{
+    /** @name Constructors and assignment operator */
+    //@{
 
-	/**
-	  * Constructor which takes an error code.
-	  *
-	  * @param code The error code which indicates the exception
-	  */
-	explicit
-	XercesDOMException(ExceptionCode 	code = UNKNOWN_ERR);
+    /**
+      * Constructor which takes an error code.
+      *
+      * @param code The error code which indicates the exception
+      */
+    explicit
+    XercesDOMException(ExceptionCode    code = UNKNOWN_ERR);
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
-	/**
-	  * This constructor is deprecated.
-	  * 
-	  * Constructor which takes a Xerces exception and
-	  * translates it into a XercesDOMException.
-	  * 
-	  * @deprecated The Xerces DOM bridge is deprecated.
-	  * @param code The Xerces DOM_DOMException instance.
-	  */
-	XercesDOMException(const DOM_DOMExceptionType&	theException);
+    /**
+      * This constructor is deprecated.
+      * 
+      * Constructor which takes a Xerces exception and
+      * translates it into a XercesDOMException.
+      * 
+      * @deprecated The Xerces DOM bridge is deprecated.
+      * @param code The Xerces DOM_DOMException instance.
+      */
+    XercesDOMException(const DOM_DOMExceptionType&  theException);
 #endif
 
 #if XERCES_VERSION_MAJOR >= 2
-	/**
-	  * Constructor which takes a Xerces exception and
-	  * translates it into a XercesDOMException.
-	  *
-	  * @param code The Xerces DOMException instance.
-	  */
-	XercesDOMException(const DOMExceptionType&	theException);
+    /**
+      * Constructor which takes a Xerces exception and
+      * translates it into a XercesDOMException.
+      *
+      * @param code The Xerces DOMException instance.
+      */
+    XercesDOMException(const DOMExceptionType&  theException);
 
 #endif
 
-	/**
-	  * Copy constructor.
-	  *
-	  * @param other The object to be copied.
-	  */
-	XercesDOMException(const XercesDOMException&	theSource);
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    XercesDOMException(const XercesDOMException&    theSource);
 
-	//@}
-	/** @name Destructor. */
-	//@{
+    //@}
+    /** @name Destructor. */
+    //@{
 
-	 /**
-	  * Destructor for XercesDOMException.
-	  */
-	virtual
-	~XercesDOMException();
-	//@}
+     /**
+      * Destructor for XercesDOMException.
+      */
+    virtual
+    ~XercesDOMException();
+    //@}
 
 private:
 };
@@ -112,4 +112,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESDOMEXCEPTION_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESDOMEXCEPTION_HEADER_GUARD_1357924680)

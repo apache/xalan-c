@@ -49,104 +49,104 @@ class XALAN_XSLT_EXPORT ProblemListenerDefault : public ProblemListener
 {
 public:
 
-	ProblemListenerDefault(
+    ProblemListenerDefault(
             MemoryManager&  theManager, 
             PrintWriter*    pw = 0);
 
-	virtual
-	~ProblemListenerDefault();
+    virtual
+    ~ProblemListenerDefault();
 
 
     // These methods are inherited from ProblemListener ...
 
-	virtual void
-	setPrintWriter(PrintWriter*		pw);
+    virtual void
+    setPrintWriter(PrintWriter*     pw);
 
-	virtual void
-	problem(
-            eSource                 source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode);
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode);
-
-	virtual void
-	problem(
-            eSource                     source,
-			eClassification				classification, 
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset);
-
-	// These methods are new...
-
-	PrintWriter*
-	getPrintWriter() const
-	{
-		return m_pw;
-	}
-
-	static void
-	defaultFormat(
-            PrintWriter&            pw,
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
-	{
-		ProblemListenerBase::defaultFormat(
-			pw,
-			source,
-			classification,
-			msg,
-			locator,
-			sourceNode);
-	}
+            const XalanNode*        sourceNode);
 
-	static void
-	defaultFormat(
-            PrintWriter&            pw,
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
-	{
-		ProblemListenerBase::defaultFormat(
-			pw,
-			source,
-			classification,
-			msg,
-			sourceNode);
-	}
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode);
 
-	static void
-	defaultFormat(
-			PrintWriter&		        pw,
+    virtual void
+    problem(
             eSource                     source,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset);
+            eClassification             classification, 
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset);
+
+    // These methods are new...
+
+    PrintWriter*
+    getPrintWriter() const
+    {
+        return m_pw;
+    }
+
+    static void
+    defaultFormat(
+            PrintWriter&            pw,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode)
+    {
+        ProblemListenerBase::defaultFormat(
+            pw,
+            source,
+            classification,
+            msg,
+            locator,
+            sourceNode);
+    }
+
+    static void
+    defaultFormat(
+            PrintWriter&            pw,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
+    {
+        ProblemListenerBase::defaultFormat(
+            pw,
+            source,
+            classification,
+            msg,
+            sourceNode);
+    }
+
+    static void
+    defaultFormat(
+            PrintWriter&                pw,
+            eSource                     source,
+            eClassification             classification,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset);
 
 private:
 
     MemoryManager&  m_memoryManager;
 
-	PrintWriter*	m_pw;
+    PrintWriter*    m_pw;
 };
 
 
@@ -155,4 +155,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_PROBLEMLISTENERDEFAULT_HEADER_GUARD
+#endif  // XALAN_PROBLEMLISTENERDEFAULT_HEADER_GUARD

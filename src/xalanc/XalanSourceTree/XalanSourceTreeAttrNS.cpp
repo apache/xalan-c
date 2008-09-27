@@ -28,21 +28,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeAttrNS::XalanSourceTreeAttrNS(
-			const XalanDOMString&		theName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			const XalanDOMString&		theValue,
-			XalanSourceTreeElement*		theOwnerElement,
-			IndexType					theIndex) :
-	XalanSourceTreeAttr(
-		theName,
-		theValue,
-		theOwnerElement,
-		theIndex),
-	m_localName(theLocalName),
-	m_prefix(thePrefix),
-	m_namespaceURI(theNamespaceURI)
+            const XalanDOMString&       theName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            const XalanDOMString&       theValue,
+            XalanSourceTreeElement*     theOwnerElement,
+            IndexType                   theIndex) :
+    XalanSourceTreeAttr(
+        theName,
+        theValue,
+        theOwnerElement,
+        theIndex),
+    m_localName(theLocalName),
+    m_prefix(thePrefix),
+    m_namespaceURI(theNamespaceURI)
 {
 }
 
@@ -56,7 +56,7 @@ XalanSourceTreeAttrNS::~XalanSourceTreeAttrNS()
 const XalanDOMString&
 XalanSourceTreeAttrNS::getNamespaceURI() const
 {
-	return m_namespaceURI;
+    return m_namespaceURI;
 }
 
 
@@ -64,7 +64,7 @@ XalanSourceTreeAttrNS::getNamespaceURI() const
 const XalanDOMString&
 XalanSourceTreeAttrNS::getPrefix() const
 {
-	return m_prefix;
+    return m_prefix;
 }
 
 
@@ -72,7 +72,7 @@ XalanSourceTreeAttrNS::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeAttrNS::getLocalName() const
 {
-	return m_localName;
+    return m_localName;
 }
 
 

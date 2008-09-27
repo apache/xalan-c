@@ -78,7 +78,7 @@ XalanCProcessor::init()
 {
     m_transformer = new XalanTransformer();
 
-	m_resultOptionsMap[XalanDOMString("")] = &m_fileResult;
+    m_resultOptionsMap[XalanDOMString("")] = &m_fileResult;
     m_resultOptionsMap[XalanDOMString("file")] = &m_fileResult;
     m_resultOptionsMap[XalanDOMString("xst")] = &m_xalanSourceTreeResult;
     m_resultOptionsMap[XalanDOMString("xerces-dom")] = &m_xercesDOMResult;
@@ -145,7 +145,7 @@ XalanCProcessor::getResultOption(
 
 CompiledStylesheetType 
 XalanCProcessor::compileStylesheet(
-	const XalanDOMString& fileName,
+    const XalanDOMString& fileName,
     const XalanNode* /* compileOptions */)
 {     
     CompiledStylesheetType theCompiledStylesheet= 0;
@@ -159,7 +159,7 @@ XalanCProcessor::compileStylesheet(
 
 CompiledStylesheetType 
 XalanCProcessor::compileStylesheet(
-	StreamType& stream,
+    StreamType& stream,
     const XalanNode* /* compileOptions */)
 {
     CompiledStylesheetType theCompiledStylesheet = 0;
@@ -175,12 +175,12 @@ XalanCProcessor::releaseStylesheet(CompiledStylesheetType stylesheet)
     m_transformer->destroyStylesheet(stylesheet);
 }
 
-	
+    
 
 ParsedInputSourceType
 XalanCProcessor::parseInputSource(
-	const XalanDOMString& fileName,
-	const XalanNode* parseOptions )
+    const XalanDOMString& fileName,
+    const XalanNode* parseOptions )
 {
     ParsedInputSourceType theParsedSource = 0;
     
@@ -210,8 +210,8 @@ XalanCProcessor::parseInputSource(
 
 ParsedInputSourceType 
 XalanCProcessor::parseInputSource(
-	StreamType& stream,
-	const XalanNode* parseOptions)
+    StreamType& stream,
+    const XalanNode* parseOptions)
 {
     ParsedInputSourceType theParsedSource = 0;
     switch(getParseOption(parseOptions))
@@ -242,7 +242,7 @@ XalanCProcessor::releaseInputSource(ParsedInputSourceType inputSource)
 ResultTargetType
 XalanCProcessor::createResultTarget(
     const XalanDOMString& resultFileName,
-	const XalanNode* resultOptions)
+    const XalanNode* resultOptions)
 {
     return getResultOption(resultFileName, resultOptions);
 }
@@ -260,9 +260,9 @@ XalanCProcessor::releaseResultTarget(ResultTargetType resultTarget)
 
 void 
 XalanCProcessor::transform(
-	const CompiledStylesheetType&   compiledStylesheet,
-	const ParsedInputSourceType&	parsedInputSourceType,
-	const ResultTargetType&	        resultTargetType,
+    const CompiledStylesheetType&   compiledStylesheet,
+    const ParsedInputSourceType&    parsedInputSourceType,
+    const ResultTargetType&         resultTargetType,
     const XalanNode* /* transformOptions */)
 {
     m_transformer->transform(*parsedInputSourceType, compiledStylesheet, resultTargetType->resultTarget);

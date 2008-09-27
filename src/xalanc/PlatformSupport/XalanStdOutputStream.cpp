@@ -78,7 +78,7 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 
 XalanStdOutputStream*
 XalanStdOutputStream::create(
-			StreamType&		theOutputStream,
+            StreamType&     theOutputStream,
             MemoryManager&  theManager)
 {
     typedef XalanStdOutputStream ThisType;
@@ -137,7 +137,7 @@ XalanStdOutputStream::doFlush()
 #if defined(XALAN_STRICT_ANSI_HEADERS)
             using namespace std;
 #endif
-            XalanDOMString	thebuffer(getMemoryManager());
+            XalanDOMString  thebuffer(getMemoryManager());
 
             throw XalanStdOutputStreamWriteException(errno, thebuffer);
         }
@@ -160,7 +160,7 @@ XalanStdOutputStream::writeData(
 #if defined(XALAN_STRICT_ANSI_HEADERS)
         using namespace std;
 #endif
-        XalanDOMString	thebuffer(getMemoryManager());
+        XalanDOMString  thebuffer(getMemoryManager());
 
         throw XalanStdOutputStreamWriteException(errno, thebuffer);
     }

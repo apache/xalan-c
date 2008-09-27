@@ -62,10 +62,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(
             MemoryManager&  theManager,
-            XSLTProcessor*	theProcessor) :
-	XSLTProcessorEnvSupport(),
-	m_defaultSupport(theManager),
-	m_processor(theProcessor)
+            XSLTProcessor*  theProcessor) :
+    XSLTProcessorEnvSupport(),
+    m_defaultSupport(theManager),
+    m_processor(theProcessor)
 {
 }
 
@@ -73,49 +73,49 @@ XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(
 
 XSLTProcessorEnvSupportDefault::~XSLTProcessorEnvSupportDefault()
 {
-	reset();
+    reset();
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName,
-			const Function&			function)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName,
+            const Function&         function)
 {
-	XPathEnvSupportDefault::installExternalFunctionGlobal(theNamespace, functionName, function);
+    XPathEnvSupportDefault::installExternalFunctionGlobal(theNamespace, functionName, function);
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName)
 {
-	XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespace, functionName);
+    XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespace, functionName);
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::installExternalFunctionLocal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName,
-			const Function&			function)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName,
+            const Function&         function)
 {
-	m_defaultSupport.installExternalFunctionLocal(theNamespace, functionName, function);
+    m_defaultSupport.installExternalFunctionLocal(theNamespace, functionName, function);
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::uninstallExternalFunctionLocal(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName)
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName)
 {
-	m_defaultSupport.uninstallExternalFunctionLocal(theNamespace, functionName);
+    m_defaultSupport.uninstallExternalFunctionLocal(theNamespace, functionName);
 }
 
 
@@ -123,7 +123,7 @@ XSLTProcessorEnvSupportDefault::uninstallExternalFunctionLocal(
 void
 XSLTProcessorEnvSupportDefault::reset()
 {
-	m_defaultSupport.reset();
+    m_defaultSupport.reset();
 }
 
 
@@ -131,40 +131,40 @@ XSLTProcessorEnvSupportDefault::reset()
 XalanDocument*
 XSLTProcessorEnvSupportDefault::parseXML(
             MemoryManager&          theManager,
-		    const XalanDOMString&	urlString,
-		    const XalanDOMString&	base,
+            const XalanDOMString&   urlString,
+            const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler)
 {
-	if (m_processor == 0)
-	{
-		return m_defaultSupport.parseXML(
+    if (m_processor == 0)
+    {
+        return m_defaultSupport.parseXML(
                 theManager,
                 urlString,
                 base,
                 theErrorHandler);
-	}
-	else
-	{
-		typedef URISupport::URLAutoPtrType	URLAutoPtrType;
+    }
+    else
+    {
+        typedef URISupport::URLAutoPtrType  URLAutoPtrType;
 
-		// $$$ ToDo: we should re-work this code to only use
-		// XMLRUL when necessary.
-		const URLAutoPtrType	xslURL =
-			URISupport::getURLFromString(urlString, base, theManager);
+        // $$$ ToDo: we should re-work this code to only use
+        // XMLRUL when necessary.
+        const URLAutoPtrType    xslURL =
+            URISupport::getURLFromString(urlString, base, theManager);
 
-		const XalanDOMString	urlText(xslURL->getURLText(), theManager);
+        const XalanDOMString    urlText(xslURL->getURLText(), theManager);
 
-		// First see if it's already been parsed...
-		XalanDocument*		theDocument =
-			getSourceDocument(urlText);
+        // First see if it's already been parsed...
+        XalanDocument*      theDocument =
+            getSourceDocument(urlText);
 
-		if (theDocument == 0)
-		{
-			XMLParserLiaison&	parserLiaison =
-				m_processor->getXMLParserLiaison();
+        if (theDocument == 0)
+        {
+            XMLParserLiaison&   parserLiaison =
+                m_processor->getXMLParserLiaison();
 
-			EntityResolver* const   theResolver = 
-				parserLiaison.getEntityResolver();
+            EntityResolver* const   theResolver = 
+                parserLiaison.getEntityResolver();
 
             XMLEntityResolver* const    theXMLResolver = 
                 parserLiaison.getXMLEntityResolver();
@@ -200,108 +200,108 @@ XSLTProcessorEnvSupportDefault::parseXML(
                     theErrorHandler);
             }
 
-		    if (resolverInputSource.get() != 0)
-			{
-				theDocument = parserLiaison.parseXMLStream(
+            if (resolverInputSource.get() != 0)
+            {
+                theDocument = parserLiaison.parseXMLStream(
                                 *resolverInputSource.get(),
                                 theEmptyString);
-			}
-			else
-			{
-				const XSLTInputSource	inputSource(urlText.c_str(), theManager);
+            }
+            else
+            {
+                const XSLTInputSource   inputSource(urlText.c_str(), theManager);
 
-				theDocument = parserLiaison.parseXMLStream(
+                theDocument = parserLiaison.parseXMLStream(
                                 inputSource,
                                 theEmptyString);
-			}
+            }
 
-			if (theDocument != 0)
-			{
-				setSourceDocument(urlText, theDocument);
-			}
-		}
+            if (theDocument != 0)
+            {
+                setSourceDocument(urlText, theDocument);
+            }
+        }
 
-		return theDocument;
-	}
+        return theDocument;
+    }
 }
 
 
 
 XalanDocument*
-XSLTProcessorEnvSupportDefault::getSourceDocument(const XalanDOMString&		theURI) const
+XSLTProcessorEnvSupportDefault::getSourceDocument(const XalanDOMString&     theURI) const
 {
-	return m_defaultSupport.getSourceDocument(theURI);
+    return m_defaultSupport.getSourceDocument(theURI);
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::setSourceDocument(
-			const XalanDOMString&	theURI,
-			XalanDocument*			theDocument)
+            const XalanDOMString&   theURI,
+            XalanDocument*          theDocument)
 {
-	m_defaultSupport.setSourceDocument(theURI, theDocument);
+    m_defaultSupport.setSourceDocument(theURI, theDocument);
 }
 
 
 
 const XalanDOMString&
-XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
+XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*     owner) const
 {
-	return m_defaultSupport.findURIFromDoc(owner);
+    return m_defaultSupport.findURIFromDoc(owner);
 }
 
 
 
 bool
 XSLTProcessorEnvSupportDefault::elementAvailable(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName) const
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName) const
 {
-	return m_defaultSupport.elementAvailable(theNamespace,
-											 functionName);
+    return m_defaultSupport.elementAvailable(theNamespace,
+                                             functionName);
 }
 
 
 
 bool
 XSLTProcessorEnvSupportDefault::functionAvailable(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	functionName) const
+            const XalanDOMString&   theNamespace,
+            const XalanDOMString&   functionName) const
 {
-	return m_defaultSupport.functionAvailable(theNamespace,
-											  functionName);
+    return m_defaultSupport.functionAvailable(theNamespace,
+                                              functionName);
 }
 
 
 
 XObjectPtr
 XSLTProcessorEnvSupportDefault::extFunction(
-			XPathExecutionContext&			executionContext,
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			functionName,
-			XalanNode*						context,
-			const XObjectArgVectorType&		argVec,
-			const LocatorType*				locator) const
+            XPathExecutionContext&          executionContext,
+            const XalanDOMString&           theNamespace,
+            const XalanDOMString&           functionName,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     argVec,
+            const LocatorType*              locator) const
 {
-	return m_defaultSupport.extFunction(
-			executionContext,
-			theNamespace,
-			functionName,
-			context,
-			argVec,
-			locator);
+    return m_defaultSupport.extFunction(
+            executionContext,
+            theNamespace,
+            functionName,
+            context,
+            argVec,
+            locator);
 }
 
 
 
 void
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode)
+            const XalanNode*        sourceNode)
 {
     m_processor->problem(
         source,
@@ -315,10 +315,10 @@ XSLTProcessorEnvSupportDefault::problem(
 
 void
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode)
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode)
 {
     m_processor->problem(
         source,

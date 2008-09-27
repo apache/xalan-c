@@ -54,10 +54,10 @@ class XALAN_XSLT_EXPORT XSLTInit
 {
 public:
 
-	explicit
-	XSLTInit(MemoryManager&      theManager);
+    explicit
+    XSLTInit(MemoryManager&      theManager);
 
-	~XSLTInit();
+    ~XSLTInit();
 
     static XSLTInit*
     create(MemoryManager&      theManager);
@@ -68,30 +68,30 @@ public:
 
 private:
 
-	// Not implemented...
-	XSLTInit(const XSLTInit&);
+    // Not implemented...
+    XSLTInit(const XSLTInit&);
 
-	XSLTInit&
-	operator=(const XSLTInit&);
+    XSLTInit&
+    operator=(const XSLTInit&);
 
-	
-	static void
-	initialize(MemoryManager&      theManager);
+    
+    static void
+    initialize(MemoryManager&      theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const PlatformSupportInit	m_platformSupportInit;
+    const PlatformSupportInit   m_platformSupportInit;
 
-	const DOMSupportInit		m_domSupportInit;
+    const DOMSupportInit        m_domSupportInit;
 
-	const XMLSupportInit		m_xmlSupportInit;
+    const XMLSupportInit        m_xmlSupportInit;
 
-	const XalanSourceTreeInit	m_xalanSourceTreeInit;
+    const XalanSourceTreeInit   m_xalanSourceTreeInit;
 
-	const XPathInit				m_xpathInit;
+    const XPathInit             m_xpathInit;
 
-	static unsigned long		s_initCounter;
+    static unsigned long        s_initCounter;
 };
 
 
@@ -100,4 +100,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XSLTINIT_INCLUDE_GUARD_1357924680)
+#endif  // !defined(XSLTINIT_INCLUDE_GUARD_1357924680)

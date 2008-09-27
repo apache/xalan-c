@@ -50,173 +50,173 @@ class XALAN_XSLT_EXPORT OutputContextStack
 {
 public:
 
-	struct OutputContext
-	{
-		OutputContext(MemoryManager&      theManager,
-                    FormatterListener*	theListener = 0) :
-			m_flistener(theListener),
-			m_pendingAttributes(theManager),
-			m_pendingElementName(theManager),
-			m_hasPendingStartDocument(false),
-			m_mustFlushPendingStartDocument(false)
-		{
-		}
+    struct OutputContext
+    {
+        OutputContext(MemoryManager&      theManager,
+                    FormatterListener*  theListener = 0) :
+            m_flistener(theListener),
+            m_pendingAttributes(theManager),
+            m_pendingElementName(theManager),
+            m_hasPendingStartDocument(false),
+            m_mustFlushPendingStartDocument(false)
+        {
+        }
 
-		OutputContext( const OutputContext&		other, 
-			MemoryManager&      theManager) :
-			m_flistener(other.m_flistener),
-			m_pendingAttributes(other.m_pendingAttributes , theManager),
-			m_pendingElementName(other.m_pendingElementName , theManager),
-			m_hasPendingStartDocument(other.m_hasPendingStartDocument),
-			m_mustFlushPendingStartDocument(other.m_mustFlushPendingStartDocument)
-		{
-		}
+        OutputContext( const OutputContext&     other, 
+            MemoryManager&      theManager) :
+            m_flistener(other.m_flistener),
+            m_pendingAttributes(other.m_pendingAttributes , theManager),
+            m_pendingElementName(other.m_pendingElementName , theManager),
+            m_hasPendingStartDocument(other.m_hasPendingStartDocument),
+            m_mustFlushPendingStartDocument(other.m_mustFlushPendingStartDocument)
+        {
+        }
 
-		~OutputContext()
-		{
-		}
+        ~OutputContext()
+        {
+        }
 
-		void
-		reset()
-		{
-			m_flistener = 0;
+        void
+        reset()
+        {
+            m_flistener = 0;
 
-			m_pendingAttributes.clear();
+            m_pendingAttributes.clear();
 
-			m_pendingElementName.clear();
+            m_pendingElementName.clear();
 
-			m_hasPendingStartDocument = false;
+            m_hasPendingStartDocument = false;
 
-			m_mustFlushPendingStartDocument = false;
-		}
+            m_mustFlushPendingStartDocument = false;
+        }
 
-		FormatterListener*	m_flistener;
+        FormatterListener*  m_flistener;
 
-		AttributeListImpl	m_pendingAttributes;
+        AttributeListImpl   m_pendingAttributes;
 
-		XalanDOMString		m_pendingElementName;
+        XalanDOMString      m_pendingElementName;
 
-		bool				m_hasPendingStartDocument;
+        bool                m_hasPendingStartDocument;
 
-		bool				m_mustFlushPendingStartDocument;
-	};
+        bool                m_mustFlushPendingStartDocument;
+    };
 
-	typedef XalanDeque<OutputContext,  ConstructWithMemoryManagerTraits<OutputContext> >	OutputContextStackType;
+    typedef XalanDeque<OutputContext,  ConstructWithMemoryManagerTraits<OutputContext> >    OutputContextStackType;
 
-	typedef OutputContextStackType::size_type	size_type;
+    typedef OutputContextStackType::size_type   size_type;
 
-	explicit
-	OutputContextStack(MemoryManager& theManager);
+    explicit
+    OutputContextStack(MemoryManager& theManager);
 
-	~OutputContextStack();
+    ~OutputContextStack();
 
-	void
-	pushContext(FormatterListener*	theListener = 0);
+    void
+    pushContext(FormatterListener*  theListener = 0);
 
-	void
-	popContext();
+    void
+    popContext();
 
-	FormatterListener*
-	getFormatterListener() const
-	{
-		return (*m_stackPosition).m_flistener;
-	}
+    FormatterListener*
+    getFormatterListener() const
+    {
+        return (*m_stackPosition).m_flistener;
+    }
 
-	FormatterListener*&
-	getFormatterListener()
-	{
-		return (*m_stackPosition).m_flistener;
-	}
+    FormatterListener*&
+    getFormatterListener()
+    {
+        return (*m_stackPosition).m_flistener;
+    }
 
-	const AttributeListImpl&
-	getPendingAttributes() const
-	{
-		return (*m_stackPosition).m_pendingAttributes;
-	}
+    const AttributeListImpl&
+    getPendingAttributes() const
+    {
+        return (*m_stackPosition).m_pendingAttributes;
+    }
 
-	AttributeListImpl&
-	getPendingAttributes()
-	{
-		return (*m_stackPosition).m_pendingAttributes;
-	}
+    AttributeListImpl&
+    getPendingAttributes()
+    {
+        return (*m_stackPosition).m_pendingAttributes;
+    }
 
-	const XalanDOMString&
-	getPendingElementName() const
-	{
-		return (*m_stackPosition).m_pendingElementName;
-	}
+    const XalanDOMString&
+    getPendingElementName() const
+    {
+        return (*m_stackPosition).m_pendingElementName;
+    }
 
-	XalanDOMString&
-	getPendingElementName()
-	{
-		return (*m_stackPosition).m_pendingElementName;
-	}
+    XalanDOMString&
+    getPendingElementName()
+    {
+        return (*m_stackPosition).m_pendingElementName;
+    }
 
-	const bool&
-	getHasPendingStartDocument() const
-	{
-		return (*m_stackPosition).m_hasPendingStartDocument;
-	}
+    const bool&
+    getHasPendingStartDocument() const
+    {
+        return (*m_stackPosition).m_hasPendingStartDocument;
+    }
 
-	bool&
-	getHasPendingStartDocument()
-	{
-		return (*m_stackPosition).m_hasPendingStartDocument;
-	}
+    bool&
+    getHasPendingStartDocument()
+    {
+        return (*m_stackPosition).m_hasPendingStartDocument;
+    }
 
-	const bool&
-	getMustFlushPendingStartDocument() const
-	{
-		return (*m_stackPosition).m_mustFlushPendingStartDocument;
-	}
+    const bool&
+    getMustFlushPendingStartDocument() const
+    {
+        return (*m_stackPosition).m_mustFlushPendingStartDocument;
+    }
 
-	bool&
-	getMustFlushPendingStartDocument()
-	{
-		return (*m_stackPosition).m_mustFlushPendingStartDocument;
-	}
+    bool&
+    getMustFlushPendingStartDocument()
+    {
+        return (*m_stackPosition).m_mustFlushPendingStartDocument;
+    }
 
-	size_type
-	size() const
-	{
-		// Since we always keep one dummy entry at the beginning,
-		// subtract one from the size
-		assert(m_stackSize == size_type(OutputContextStackType::const_iterator(m_stackPosition) - m_stack.begin()));
+    size_type
+    size() const
+    {
+        // Since we always keep one dummy entry at the beginning,
+        // subtract one from the size
+        assert(m_stackSize == size_type(OutputContextStackType::const_iterator(m_stackPosition) - m_stack.begin()));
 
-		return m_stackSize;
-	}
+        return m_stackSize;
+    }
 
-	bool
-	empty() const
-	{
-		return size() == 0 ? true : false;
-	}
+    bool
+    empty() const
+    {
+        return size() == 0 ? true : false;
+    }
 
-	void
-	clear();
+    void
+    clear();
 
-	void
-	reset();
+    void
+    reset();
 
 private:
 
-	// not implemented
-	OutputContextStack(const OutputContextStack&);
+    // not implemented
+    OutputContextStack(const OutputContextStack&);
 
-	bool
-	operator==(const OutputContextStack&) const;
+    bool
+    operator==(const OutputContextStack&) const;
 
-	OutputContextStack&
-	operator=(const OutputContextStack&);
+    OutputContextStack&
+    operator=(const OutputContextStack&);
 
-	/**
-	 * A stack to hold the output contexts...
-	 */
-	OutputContextStackType				m_stack;
+    /**
+     * A stack to hold the output contexts...
+     */
+    OutputContextStackType              m_stack;
 
-	OutputContextStackType::iterator	m_stackPosition;
+    OutputContextStackType::iterator    m_stackPosition;
 
-	size_type							m_stackSize;
+    size_type                           m_stackSize;
 };
 
 
@@ -225,4 +225,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD
+#endif  // XALAN_RESULTNAMESPACESSTACK_HEADER_GUARD

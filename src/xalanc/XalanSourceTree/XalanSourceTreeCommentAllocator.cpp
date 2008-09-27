@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeCommentAllocator::XalanSourceTreeCommentAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanSourceTreeCommentAllocator::XalanSourceTreeCommentAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,27 +40,27 @@ XalanSourceTreeCommentAllocator::~XalanSourceTreeCommentAllocator()
 
 XalanSourceTreeCommentAllocator::ObjectType*
 XalanSourceTreeCommentAllocator::create(
-			const XalanDOMString&		theData,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			IndexType					theIndex)
+            const XalanDOMString&       theData,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode,
+            XalanNode*                  thePreviousSibling,
+            XalanNode*                  theNextSibling,
+            IndexType                   theIndex)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(
-						theData,
-						theOwnerDocument,
-						theParentNode,
-						thePreviousSibling,
-						theNextSibling,
-						theIndex);
+    new(theBlock) ObjectType(
+                        theData,
+                        theOwnerDocument,
+                        theParentNode,
+                        thePreviousSibling,
+                        theNextSibling,
+                        theIndex);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -68,7 +68,7 @@ XalanSourceTreeCommentAllocator::create(
 void 
 XalanSourceTreeCommentAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

@@ -36,62 +36,62 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementNANS : public XalanSour
 {
 public:
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theTagName The tag name of the element
-	 * @param theLocalName The local name of the attribute
-	 * @param theNamespaceURI The namespace URI of the attribute
-	 * @param thePrefix The namespace prefix of the attribute
-	 * @param theOwnerDocument The document that owns the instance
-	 * @param theParentNode The parent node, if any.
-	 * @param thePreviousSibling The previous sibling, if any.
-	 * @param theNextSibling The next sibling, if any.
-	 * @param theIndex The document-order index of the node.
-	 */
-	XalanSourceTreeElementNANS(
+    /**
+     * Constructor.
+     *
+     * @param theTagName The tag name of the element
+     * @param theLocalName The local name of the attribute
+     * @param theNamespaceURI The namespace URI of the attribute
+     * @param thePrefix The namespace prefix of the attribute
+     * @param theOwnerDocument The document that owns the instance
+     * @param theParentNode The parent node, if any.
+     * @param thePreviousSibling The previous sibling, if any.
+     * @param theNextSibling The next sibling, if any.
+     * @param theIndex The document-order index of the node.
+     */
+    XalanSourceTreeElementNANS(
             MemoryManager&              theManager,
-			const XalanDOMString&		theTagName,
-			const XalanDOMString&		theLocalName,
-			const XalanDOMString&		theNamespaceURI,
-			const XalanDOMString&		thePrefix,
-			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanNode*					theParentNode = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0,
-			IndexType					theIndex = 0);
+            const XalanDOMString&       theTagName,
+            const XalanDOMString&       theLocalName,
+            const XalanDOMString&       theNamespaceURI,
+            const XalanDOMString&       thePrefix,
+            XalanSourceTreeDocument*    theOwnerDocument,
+            XalanNode*                  theParentNode = 0,
+            XalanNode*                  thePreviousSibling = 0,
+            XalanNode*                  theNextSibling = 0,
+            IndexType                   theIndex = 0);
 
-	virtual
-	~XalanSourceTreeElementNANS();
+    virtual
+    ~XalanSourceTreeElementNANS();
 
 
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
+    virtual const XalanDOMString&
+    getNamespaceURI() const;
 
-	virtual const XalanDOMString&
-	getPrefix() const;
+    virtual const XalanDOMString&
+    getPrefix() const;
 
-	virtual const XalanDOMString&
-	getLocalName() const;
+    virtual const XalanDOMString&
+    getLocalName() const;
 
 private:
 
-	// Not implemented...
+    // Not implemented...
     XalanSourceTreeElementNANS(const XalanSourceTreeElementNANS&);
 
-	XalanSourceTreeElementNANS&
-	operator=(const XalanSourceTreeElementNANS&	theSource);
+    XalanSourceTreeElementNANS&
+    operator=(const XalanSourceTreeElementNANS& theSource);
 
-	bool
-	operator==(const XalanSourceTreeElementNANS&	theRHS) const;
+    bool
+    operator==(const XalanSourceTreeElementNANS&    theRHS) const;
 
 
-	// Data members...
-	const XalanDOMString&	m_localName;
+    // Data members...
+    const XalanDOMString&   m_localName;
 
-	const XalanDOMString&	m_prefix;
+    const XalanDOMString&   m_prefix;
 
-	const XalanDOMString&	m_namespaceURI;
+    const XalanDOMString&   m_namespaceURI;
 };
 
 
@@ -100,4 +100,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANSOURCETREEELEMENTNANS_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANSOURCETREEELEMENTNANS_HEADER_GUARD_1357924680)

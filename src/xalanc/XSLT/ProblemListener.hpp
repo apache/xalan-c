@@ -52,58 +52,58 @@ public:
     // A typedef for compatibility.
     typedef eSource    eProblemSource;
 
-	ProblemListener();
+    ProblemListener();
 
-	virtual
-	~ProblemListener();
+    virtual
+    ~ProblemListener();
 
     // These interfaces are inherited from ProblemListenerBase...
-	virtual void
-	setPrintWriter(PrintWriter*		pw) = 0;
+    virtual void
+    setPrintWriter(PrintWriter*     pw) = 0;
 
-	virtual void
-	problem(
-			eSource		            source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-            const Locator*          locator,
-			const XalanNode*		sourceNode) = 0;
-
-	virtual void
-	problem(
+    virtual void
+    problem(
             eSource                 source,
             eClassification         classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode) = 0;
+            const XalanDOMString&   msg,
+            const Locator*          locator,
+            const XalanNode*        sourceNode) = 0;
+
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode) = 0;
 
 
     // This interface is new to ProblemListenerBase...
     /**
- 	 * Function that is called when a problem event occurs.  This function
+     * Function that is called when a problem event occurs.  This function
      * is deprecated. Use the overload with the Locator parameter instead.
      * @deprecated
      *
      * @param   source         either eXMLPARSER, eXSLPROCESSOR, or eXPATH
      * @param   classification either eMESSAGE, eERROR or eWARNING
-	 * @param   sourceNode     source tree node where the problem occurred
-	 *                         (may be 0)
-	 * @param   styleNode      style tree node where the problem occurred
-	 *                         (may be 0)
-	 * @param   msg            string message explaining the problem.
-	 * @param   uri            the URI of the document where the problem occurred.  May be 0.
-	 * @param   lineNo         line number where the problem occurred.
-	 * @param   charOffset     character offset where the problem.
-	 */
-	virtual void
-	problem(
-			eSource				        source,
-			eClassification				classification,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode,
-			const XalanDOMString&		msg,
-			const XalanDOMChar*			uri,
-			XalanFileLoc				lineNo,
-			XalanFileLoc				charOffset) = 0;
+     * @param   sourceNode     source tree node where the problem occurred
+     *                         (may be 0)
+     * @param   styleNode      style tree node where the problem occurred
+     *                         (may be 0)
+     * @param   msg            string message explaining the problem.
+     * @param   uri            the URI of the document where the problem occurred.  May be 0.
+     * @param   lineNo         line number where the problem occurred.
+     * @param   charOffset     character offset where the problem.
+     */
+    virtual void
+    problem(
+            eSource                     source,
+            eClassification             classification,
+            const XalanNode*            sourceNode,
+            const ElemTemplateElement*  styleNode,
+            const XalanDOMString&       msg,
+            const XalanDOMChar*         uri,
+            XalanFileLoc                lineNo,
+            XalanFileLoc                charOffset) = 0;
 };
 
 
@@ -112,4 +112,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALAN_PROBLEMLISTENER_HEADER_GUARD
+#endif  // XALAN_PROBLEMLISTENER_HEADER_GUARD

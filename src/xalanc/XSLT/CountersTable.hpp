@@ -52,87 +52,87 @@ class StylesheetExecutionContext;
  */
 struct Counter
 {
-	typedef XalanSize_t     CountType;
+    typedef XalanSize_t     CountType;
 
-	typedef XalanVector<XalanNode*>			NodeVectorType;
+    typedef XalanVector<XalanNode*>         NodeVectorType;
 
-	/**
-	 * The start count from where m_countNodes counts 
-	 * from.  In other words, the count of a given node 
-	 * in the m_countNodes vector is node position + 
-	 * m_countNodesStartCount.
-	 */
-	CountType			m_countNodesStartCount;
+    /**
+     * The start count from where m_countNodes counts 
+     * from.  In other words, the count of a given node 
+     * in the m_countNodes vector is node position + 
+     * m_countNodesStartCount.
+     */
+    CountType           m_countNodesStartCount;
 
-	/**
-	 * A vector of all nodes counted so far.
-	 */
-	NodeVectorType		m_countNodes;
+    /**
+     * A vector of all nodes counted so far.
+     */
+    NodeVectorType      m_countNodes;
 
-	/**
-	 * The node from where the counting starts.  This is needed to 
-	 * find a counter if the node being counted is not immediatly
-	 * found in the m_countNodes vector.
-	 */
-	const XalanNode*	m_fromNode;
+    /**
+     * The node from where the counting starts.  This is needed to 
+     * find a counter if the node being counted is not immediatly
+     * found in the m_countNodes vector.
+     */
+    const XalanNode*    m_fromNode;
 
-	/**
-	 * The owning xsl:number element.
-	 */
-	const ElemNumber*	m_numberElem;
+    /**
+     * The owning xsl:number element.
+     */
+    const ElemNumber*   m_numberElem;
 
-	/**
-	 * Construct a counter object.
-	 */
-	Counter(
+    /**
+     * Construct a counter object.
+     */
+    Counter(
             MemoryManager&  theManager,
-			const ElemNumber*	numberElem,
-			NodeVectorType&		countNodes) :
-		m_countNodesStartCount(0),
-		m_countNodes(countNodes, theManager),
-		m_fromNode(0),
-		m_numberElem(numberElem)
-	{
-	}
+            const ElemNumber*   numberElem,
+            NodeVectorType&     countNodes) :
+        m_countNodesStartCount(0),
+        m_countNodes(countNodes, theManager),
+        m_fromNode(0),
+        m_numberElem(numberElem)
+    {
+    }
 
-	/**
-	 * Construct a counter object.
-	 */
-	Counter(MemoryManager& theManager, const ElemNumber*	numberElem = 0) :
-		m_countNodesStartCount(0),
-		m_countNodes(theManager),
-		m_fromNode(0),
-		m_numberElem(numberElem)
-	{
-	}
+    /**
+     * Construct a counter object.
+     */
+    Counter(MemoryManager& theManager, const ElemNumber*    numberElem = 0) :
+        m_countNodesStartCount(0),
+        m_countNodes(theManager),
+        m_fromNode(0),
+        m_numberElem(numberElem)
+    {
+    }
 
-	Counter(const Counter& other, MemoryManager& theManager) :
-		m_countNodesStartCount(other.m_countNodesStartCount),
-		m_countNodes(other.m_countNodes, theManager),
-		m_fromNode(other.m_fromNode),
-		m_numberElem(other.m_numberElem)
-	{
-	}
+    Counter(const Counter& other, MemoryManager& theManager) :
+        m_countNodesStartCount(other.m_countNodesStartCount),
+        m_countNodes(other.m_countNodes, theManager),
+        m_fromNode(other.m_fromNode),
+        m_numberElem(other.m_numberElem)
+    {
+    }
 
-	/**
-	 * Try to find a node that was previously counted. If found, return a
-	 * positive integer that corresponds to the count.
-	 * @param node The node to be counted.
-	 * @returns The count of the node, or 0 if not found.
-	 */
-	CountType
-	getPreviouslyCounted(
-			StylesheetExecutionContext&		support,
-			const XalanNode*				node) const;
+    /**
+     * Try to find a node that was previously counted. If found, return a
+     * positive integer that corresponds to the count.
+     * @param node The node to be counted.
+     * @returns The count of the node, or 0 if not found.
+     */
+    CountType
+    getPreviouslyCounted(
+            StylesheetExecutionContext&     support,
+            const XalanNode*                node) const;
 
-	/**
-	 * Get the last node in the list.
-	 */
-	XalanNode*
-	getLast() const
-	{
-		return m_countNodes.empty() == true ? 0 : m_countNodes.back();
-	}
+    /**
+     * Get the last node in the list.
+     */
+    XalanNode*
+    getLast() const
+    {
+        return m_countNodes.empty() == true ? 0 : m_countNodes.back();
+    }
 
 private:
     // Not implemented
@@ -142,10 +142,10 @@ private:
 
 XALAN_USES_MEMORY_MANAGER(Counter)
 
-typedef XalanVector<Counter>				CounterVectorTypeDecl;
+typedef XalanVector<Counter>                CounterVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(CounterVectorTypeDecl)
 
-typedef XalanVector<CounterVectorTypeDecl>	    ElemCounterVectorVectorTypeDecl;
+typedef XalanVector<CounterVectorTypeDecl>      ElemCounterVectorVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(ElemCounterVectorVectorTypeDecl)
 /**
  * <meta name="usage" content="internal"/>
@@ -158,82 +158,82 @@ class CountersTable
 {
 public:
 
-	typedef Counter::CountType	CountType;
+    typedef Counter::CountType  CountType;
 
-	typedef CounterVectorTypeDecl				CounterVectorType;
-	typedef ElemCounterVectorVectorTypeDecl	    ElemCounterVectorVectorType;
+    typedef CounterVectorTypeDecl               CounterVectorType;
+    typedef ElemCounterVectorVectorTypeDecl     ElemCounterVectorVectorType;
 
-	typedef Counter::NodeVectorType			    NodeVectorType;
+    typedef Counter::NodeVectorType             NodeVectorType;
 
-	/**
-	 * Construct a CountersTable.
-	 */
-	CountersTable(MemoryManager& theManager,
-                    unsigned long		theSize = 0) :
-		m_countersVector(theManager),
-		m_newFound(theManager)
-	{
-		resize(theSize);
-	};
+    /**
+     * Construct a CountersTable.
+     */
+    CountersTable(MemoryManager& theManager,
+                    unsigned long       theSize = 0) :
+        m_countersVector(theManager),
+        m_newFound(theManager)
+    {
+        resize(theSize);
+    };
 
-	~CountersTable()
-	{
-	}
+    ~CountersTable()
+    {
+    }
 
-	/**
-	 * Resize the table.  The must be done prior
-	 * to using the table, if the size was not past
-	 * in the constructor.
-	 *
-	 * @theSize The new size
-	 */
-	void
-	resize(unsigned long	theSize)
-	{
-		m_countersVector.resize(theSize);
-	}
+    /**
+     * Resize the table.  The must be done prior
+     * to using the table, if the size was not past
+     * in the constructor.
+     *
+     * @theSize The new size
+     */
+    void
+    resize(unsigned long    theSize)
+    {
+        m_countersVector.resize(theSize);
+    }
 
-	/**
-	 * Count forward until the given node is found, or until 
-	 * we have looked to the given amount.
-	 *
-	 * @executionContext The current execution context;
-	 * @numberElem The executing ElemNumber
-	 * @node The node to count.
-	 * @return The node count, or 0 if not found.
-	 */
-	CountType
-	countNode(
-			StylesheetExecutionContext&		executionContext,
-			const ElemNumber&				numberElem,
-			XalanNode*						node);
+    /**
+     * Count forward until the given node is found, or until 
+     * we have looked to the given amount.
+     *
+     * @executionContext The current execution context;
+     * @numberElem The executing ElemNumber
+     * @node The node to count.
+     * @return The node count, or 0 if not found.
+     */
+    CountType
+    countNode(
+            StylesheetExecutionContext&     executionContext,
+            const ElemNumber&               numberElem,
+            XalanNode*                      node);
 
-	/**
-	 * Clear all cached data from the table.
-	 */
-	void
-	reset()
-	{
-		m_newFound.clear();
+    /**
+     * Clear all cached data from the table.
+     */
+    void
+    reset()
+    {
+        m_newFound.clear();
 
-		m_countersVector.clear();
-	}
+        m_countersVector.clear();
+    }
 
 private:
     // not implemented
     CountersTable();
     CountersTable(const CountersTable&);
 
-	/**
-	 * A vector which holds counters for ElemNumber instances.
-	 */
-	ElemCounterVectorVectorType		m_countersVector;
+    /**
+     * A vector which holds counters for ElemNumber instances.
+     */
+    ElemCounterVectorVectorType     m_countersVector;
 
 
-	/**
-	 * A vector to use as a temporary buffer.
-	 */
-	NodeVectorType					m_newFound;
+    /**
+     * A vector to use as a temporary buffer.
+     */
+    NodeVectorType                  m_newFound;
 };
 
 
@@ -242,4 +242,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALAN_COUNTERSTABLE_HEADER_GUARD_1357924680)
+#endif  // !defined(XALAN_COUNTERSTABLE_HEADER_GUARD_1357924680)

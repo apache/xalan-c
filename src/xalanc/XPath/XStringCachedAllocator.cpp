@@ -27,8 +27,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XStringCachedAllocator::XStringCachedAllocator(
             MemoryManager&  theManager,
-            size_type	    theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+            size_type       theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -43,23 +43,23 @@ XStringCachedAllocator::~XStringCachedAllocator()
 XStringCachedAllocator::string_type*
 XStringCachedAllocator::createString(GetCachedString&   theValue) 
 {
-	string_type* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    string_type* const  theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-    string_type* const	theResult = new(theBlock) string_type(theValue, m_allocator.getMemoryManager());
+    string_type* const  theResult = new(theBlock) string_type(theValue, m_allocator.getMemoryManager());
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theResult;
+    return theResult;
 }
 
 
 
 
 bool 
-XStringCachedAllocator::destroy(string_type*	theString)
+XStringCachedAllocator::destroy(string_type*    theString)
 {
-	return m_allocator.destroyObject(theString);
+    return m_allocator.destroyObject(theString);
 }
 
 
@@ -67,7 +67,7 @@ XStringCachedAllocator::destroy(string_type*	theString)
 void 
 XStringCachedAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

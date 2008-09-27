@@ -43,79 +43,79 @@ class XALAN_XSLT_EXPORT XSLTProcessorEnvSupport : public XPathEnvSupport
 {
 public:
 
-	XSLTProcessorEnvSupport();
+    XSLTProcessorEnvSupport();
 
-	virtual
-	~XSLTProcessorEnvSupport();
+    virtual
+    ~XSLTProcessorEnvSupport();
 
 
-	// These interfaces are inherited from XPathEnvSupport...
+    // These interfaces are inherited from XPathEnvSupport...
 
-	virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
             const Locator*          locator,
-			const XalanNode*		sourceNode) = 0;
+            const XalanNode*        sourceNode) = 0;
 
-	virtual void
-	problem(
-			eSource					source,
-			eClassification			classification,
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode) = 0;
+    virtual void
+    problem(
+            eSource                 source,
+            eClassification         classification,
+            const XalanDOMString&   msg,
+            const XalanNode*        sourceNode) = 0;
 
-	virtual XalanDocument*
-	parseXML(
+    virtual XalanDocument*
+    parseXML(
             MemoryManager&          theManager,
-			const XalanDOMString&	urlString,
-			const XalanDOMString&	base,
+            const XalanDOMString&   urlString,
+            const XalanDOMString&   base,
             ErrorHandler*           theErrorHandler = 0) = 0;
 
-	virtual XalanDocument*
-	getSourceDocument(const XalanDOMString&		theURI) const = 0;
+    virtual XalanDocument*
+    getSourceDocument(const XalanDOMString&     theURI) const = 0;
 
-	virtual void
-	setSourceDocument(
-			const XalanDOMString&	theURI,
-			XalanDocument*			theDocument) = 0;
+    virtual void
+    setSourceDocument(
+            const XalanDOMString&   theURI,
+            XalanDocument*          theDocument) = 0;
 
-	virtual const XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner) const = 0;
+    virtual const XalanDOMString&
+    findURIFromDoc(const XalanDocument*     owner) const = 0;
 
-	virtual bool
-	elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const = 0;
+    virtual bool
+    elementAvailable(
+            const XalanDOMString&   theNamespace, 
+            const XalanDOMString&   elementName) const = 0;
 
-	virtual bool
-	functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const = 0;
+    virtual bool
+    functionAvailable(
+            const XalanDOMString&   theNamespace, 
+            const XalanDOMString&   functionName) const = 0;
 
-	virtual XObjectPtr
-	extFunction(
-			XPathExecutionContext&			executionContext,
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			functionName,
-			XalanNode*						context,
-			const XObjectArgVectorType&		argVec,
-			const LocatorType*				locator) const = 0;
+    virtual XObjectPtr
+    extFunction(
+            XPathExecutionContext&          executionContext,
+            const XalanDOMString&           theNamespace,
+            const XalanDOMString&           functionName,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     argVec,
+            const LocatorType*              locator) const = 0;
 
-	virtual void
-	reset() = 0;
+    virtual void
+    reset() = 0;
 
 private:
 
-	// These are not implemented...
-	XSLTProcessorEnvSupport(const XSLTProcessorEnvSupport&);
+    // These are not implemented...
+    XSLTProcessorEnvSupport(const XSLTProcessorEnvSupport&);
 
-	XSLTProcessorEnvSupport&
-	operator=(const XSLTProcessorEnvSupport&);
+    XSLTProcessorEnvSupport&
+    operator=(const XSLTProcessorEnvSupport&);
 
-	bool
-	operator==(const XSLTProcessorEnvSupport&) const;
+    bool
+    operator==(const XSLTProcessorEnvSupport&) const;
 };
 
 
@@ -124,4 +124,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XSLTPROCESSORENVSUPPORT_HEADER_GUARD_1357924680
+#endif  // XSLTPROCESSORENVSUPPORT_HEADER_GUARD_1357924680

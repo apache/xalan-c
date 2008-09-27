@@ -32,11 +32,11 @@ class  XALAN_XALANMSGLIB_EXPORT XalanMsgContainer{
 
 public:
 
-	static XalanSize_t
-	getMessageCount();
+    static XalanSize_t
+    getMessageCount();
 
-	static const XalanDOMChar*
-	getMessage(XalanSize_t  msgID);
+    static const XalanDOMChar*
+    getMessage(XalanSize_t  msgID);
 
 private:
 };

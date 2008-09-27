@@ -34,60 +34,60 @@ struct XALAN_PLATFORMSUPPORT_EXPORT XalanXMLChar
 
 public:
 
-	enum eType
-	{
-		XML_XX = 0,
-		XML_BC = 1,
-		XML_ID = 2,
-		XML_EX = 3,
-		XML_DI = 4,
-		XML_CC = 5,
-		XML_WS = 6
-	};
+    enum eType
+    {
+        XML_XX = 0,
+        XML_BC = 1,
+        XML_ID = 2,
+        XML_EX = 3,
+        XML_DI = 4,
+        XML_CC = 5,
+        XML_WS = 6
+    };
 
     static const char theUnicodeTable[];
 
-	static bool 
-	isBaseChar(XalanDOMChar c)
-	{
-		return theUnicodeTable[c] == char(XML_BC);
-	}
+    static bool 
+    isBaseChar(XalanDOMChar c)
+    {
+        return theUnicodeTable[c] == char(XML_BC);
+    }
 
-	static bool 
-	isIdeographic(XalanDOMChar c)
-	{
-		return theUnicodeTable[c] == char(XML_ID);
-	}
+    static bool 
+    isIdeographic(XalanDOMChar c)
+    {
+        return theUnicodeTable[c] == char(XML_ID);
+    }
 
-	static bool 
-	isExtender(XalanDOMChar c) 
-	{
-		return theUnicodeTable[c] == char(XML_EX);
-	}
+    static bool 
+    isExtender(XalanDOMChar c) 
+    {
+        return theUnicodeTable[c] == char(XML_EX);
+    }
 
-	static bool 
-	isDigit(XalanDOMChar c) 
-	{
-		return theUnicodeTable[c] == char(XML_DI);
-	}
+    static bool 
+    isDigit(XalanDOMChar c) 
+    {
+        return theUnicodeTable[c] == char(XML_DI);
+    }
 
-	static bool 
-	isCombiningChar(XalanDOMChar c) 
-	{
-		return theUnicodeTable[c] == char(XML_CC);
-	}
+    static bool 
+    isCombiningChar(XalanDOMChar c) 
+    {
+        return theUnicodeTable[c] == char(XML_CC);
+    }
 
-	static bool 
-	isWhitespace(XalanDOMChar c) 
-	{
-		return theUnicodeTable[c] == char(XML_WS);
-	}
+    static bool 
+    isWhitespace(XalanDOMChar c) 
+    {
+        return theUnicodeTable[c] == char(XML_WS);
+    }
 
-	static bool 
-	isLetter(XalanDOMChar c) 
-	{
-		return theUnicodeTable[c] == char(XML_BC) || theUnicodeTable[c] == char(XML_ID);
-	}
+    static bool 
+    isLetter(XalanDOMChar c) 
+    {
+        return theUnicodeTable[c] == char(XML_BC) || theUnicodeTable[c] == char(XML_ID);
+    }
 };
 
 
@@ -96,5 +96,5 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANXMLCHAR_HEADER_GUARD_1357924680
+#endif  // XALANXMLCHAR_HEADER_GUARD_1357924680
 

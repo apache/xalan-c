@@ -40,88 +40,88 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringPool
 {
 public:
 
-	enum { eDefaultBlockSize = 32,
-		   eDefaultBucketCount = XalanDOMStringHashTable::eDefaultBucketCount,
-		   eDefaultBucketSize = XalanDOMStringHashTable::eDefaultBucketSize };
+    enum { eDefaultBlockSize = 32,
+           eDefaultBucketCount = XalanDOMStringHashTable::eDefaultBucketCount,
+           eDefaultBucketSize = XalanDOMStringHashTable::eDefaultBucketSize };
 
-	typedef XalanDOMStringAllocator			AllocatorType;
+    typedef XalanDOMStringAllocator         AllocatorType;
 
-	typedef AllocatorType::size_type					block_size_type;
-	typedef size_t										bucket_count_type;
-	typedef XalanDOMStringHashTable::bucket_size_type	bucket_size_type;
+    typedef AllocatorType::size_type                    block_size_type;
+    typedef size_t                                      bucket_count_type;
+    typedef XalanDOMStringHashTable::bucket_size_type   bucket_size_type;
 
-	/**
-	 * Create a string pool.
-	 *
-	 * @param theBlockSize The block size for the allocator.
-	 * @param theBucketCount The number of buckets to use for the hash table.  This should be a prime number for best results.
-	 * @param theBucketSize The initial size of each bucket in the hash table.
-	 */
-	explicit
-	XalanDOMStringPool(
+    /**
+     * Create a string pool.
+     *
+     * @param theBlockSize The block size for the allocator.
+     * @param theBucketCount The number of buckets to use for the hash table.  This should be a prime number for best results.
+     * @param theBucketSize The initial size of each bucket in the hash table.
+     */
+    explicit
+    XalanDOMStringPool(
             MemoryManager&  theManager,
-			block_size_type		theBlockSize = eDefaultBlockSize,
-			bucket_count_type	theBucketCount = eDefaultBucketCount,
-			bucket_size_type	theBucketSize = eDefaultBucketSize);
+            block_size_type     theBlockSize = eDefaultBlockSize,
+            bucket_count_type   theBucketCount = eDefaultBucketCount,
+            bucket_size_type    theBucketSize = eDefaultBucketSize);
 
     static XalanDOMStringPool*
     create(
             MemoryManager&  theManager,
-			block_size_type		theBlockSize = eDefaultBlockSize,
-			bucket_count_type	theBucketCount = eDefaultBucketCount,
-			bucket_size_type	theBucketSize = eDefaultBucketSize);
+            block_size_type     theBlockSize = eDefaultBlockSize,
+            bucket_count_type   theBucketCount = eDefaultBucketCount,
+            bucket_size_type    theBucketSize = eDefaultBucketSize);
 
 
-	virtual
-	~XalanDOMStringPool();
+    virtual
+    ~XalanDOMStringPool();
 
-	/**
-	 * Clear the pool.
-	 *
-	 */
-	virtual void
-	clear();
+    /**
+     * Clear the pool.
+     *
+     */
+    virtual void
+    clear();
 
-	/**
-	 * Get the number of strings in the pool
-	 *
-	 * @return the size of the pool.
-	 */
-	virtual size_t
-	size() const;
+    /**
+     * Get the number of strings in the pool
+     *
+     * @return the size of the pool.
+     */
+    virtual size_t
+    size() const;
 
-	/**
-	 * Get a pooled string.  If the string is not pooled, it is added.
-	 *
-	 * @param theString The string to pool.
-	 * @return a const reference to the pooled string.
-	 */
-	virtual const XalanDOMString&
-	get(const XalanDOMString&	theString);
+    /**
+     * Get a pooled string.  If the string is not pooled, it is added.
+     *
+     * @param theString The string to pool.
+     * @return a const reference to the pooled string.
+     */
+    virtual const XalanDOMString&
+    get(const XalanDOMString&   theString);
 
-	/**
-	 * Get a pooled string.  If the string is not pooled, it is added.
-	 *
-	 * @param theString The string to pool.
-	 * @param theLength The length of the string.  If XalanDOMString::npos, the string is assumed to be null-terminated.
-	 * @return a const reference to the pooled string.
-	 */
-	virtual const XalanDOMString&
-	get(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+    /**
+     * Get a pooled string.  If the string is not pooled, it is added.
+     *
+     * @param theString The string to pool.
+     * @param theLength The length of the string.  If XalanDOMString::npos, the string is assumed to be null-terminated.
+     * @return a const reference to the pooled string.
+     */
+    virtual const XalanDOMString&
+    get(
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
-	/**
-	 * Get a reference to the pool's hash table.  Useful for diagnostic
-	 * purposes.
-	 *
-	 * @return a const reference to the hash table.
-	 */
-	const XalanDOMStringHashTable&
-	getHashTable() const
-	{
-		return m_hashTable;
-	}
+    /**
+     * Get a reference to the pool's hash table.  Useful for diagnostic
+     * purposes.
+     *
+     * @return a const reference to the hash table.
+     */
+    const XalanDOMStringHashTable&
+    getHashTable() const
+    {
+        return m_hashTable;
+    }
 
     MemoryManager&
     getMemoryManager()
@@ -137,23 +137,23 @@ public:
 
 private:
 
-	// Not implemented, for now...
-	XalanDOMStringPool(const XalanDOMStringPool&);
+    // Not implemented, for now...
+    XalanDOMStringPool(const XalanDOMStringPool&);
 
-	XalanDOMStringPool&
-	operator=(const XalanDOMStringPool&);
+    XalanDOMStringPool&
+    operator=(const XalanDOMStringPool&);
 
-	bool
-	operator==(const XalanDOMStringPool&) const;
+    bool
+    operator==(const XalanDOMStringPool&) const;
 
-	// Data members...
-	AllocatorType					m_stringAllocator;
+    // Data members...
+    AllocatorType                   m_stringAllocator;
 
-	size_t							m_stringCount;
+    size_t                          m_stringCount;
 
-	XalanDOMStringHashTable			m_hashTable;
+    XalanDOMStringHashTable         m_hashTable;
 
-	static const XalanDOMString		s_emptyString;
+    static const XalanDOMString     s_emptyString;
 };
 
 
@@ -162,4 +162,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XALANDOMSTRINGPOOL_HEADER_GUARD_1357924680)
+#endif  // !defined(XALANDOMSTRINGPOOL_HEADER_GUARD_1357924680)

@@ -29,22 +29,22 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XNumber::XNumber(
-            double	        val,
+            double          val,
             MemoryManager&  theMemoryManager) :
-	XNumberBase(theMemoryManager),
-	m_value(val),
-	m_cachedStringValue(theMemoryManager)
+    XNumberBase(theMemoryManager),
+    m_value(val),
+    m_cachedStringValue(theMemoryManager)
 {
 }
 
 
 
 XNumber::XNumber(
-            const XNumber&	source,
+            const XNumber&  source,
             MemoryManager&  theMemoryManager) :
-	XNumberBase(source, theMemoryManager),
-	m_value(source.m_value),
-	m_cachedStringValue(source.m_cachedStringValue, theMemoryManager)
+    XNumberBase(source, theMemoryManager),
+    m_value(source.m_value),
+    m_cachedStringValue(source.m_cachedStringValue, theMemoryManager)
 {
 }
 
@@ -58,7 +58,7 @@ XNumber::~XNumber()
 double
 XNumber::num(XPathExecutionContext&     /* executionContext */) const
 {
-	return m_value;
+    return m_value;
 }
 
 
@@ -67,11 +67,11 @@ const XalanDOMString&
 XNumber::str(XPathExecutionContext&     /* executionContext */) const
 {
     if (m_cachedStringValue.empty() == true)
-	{
-		NumberToDOMString(m_value, m_cachedStringValue);
-	}
+    {
+        NumberToDOMString(m_value, m_cachedStringValue);
+    }
 
-	return m_cachedStringValue;
+    return m_cachedStringValue;
 }
 
 
@@ -80,11 +80,11 @@ const XalanDOMString&
 XNumber::str() const
 {
     if (m_cachedStringValue.empty() == true)
-	{
-		NumberToDOMString(m_value, m_cachedStringValue);
-	}
+    {
+        NumberToDOMString(m_value, m_cachedStringValue);
+    }
 
-	return m_cachedStringValue;
+    return m_cachedStringValue;
 }
 
 
@@ -92,14 +92,14 @@ XNumber::str() const
 void
 XNumber::str(
             XPathExecutionContext&  executionContext,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    const XalanDOMString&	theValue = str(executionContext);
+    const XalanDOMString&   theValue = str(executionContext);
 
-	assert(theValue.length() == FormatterListener::size_type(theValue.length()));
+    assert(theValue.length() == FormatterListener::size_type(theValue.length()));
 
-	(formatterListener.*function)(
+    (formatterListener.*function)(
         theValue.c_str(),
         FormatterListener::size_type(theValue.length()));
 }
@@ -108,14 +108,14 @@ XNumber::str(
 
 void
 XNumber::str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-    const XalanDOMString&	theValue = str();
+    const XalanDOMString&   theValue = str();
 
-	assert(theValue.length() == FormatterListener::size_type(theValue.length()));
+    assert(theValue.length() == FormatterListener::size_type(theValue.length()));
 
-	(formatterListener.*function)(
+    (formatterListener.*function)(
         theValue.c_str(),
         FormatterListener::size_type(theValue.length()));
 }
@@ -125,16 +125,16 @@ XNumber::str(
 void
 XNumber::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
-		theBuffer.append(m_cachedStringValue);
-	}
-	else
-	{
-		NumberToDOMString(m_value, theBuffer);
-	}
+    {
+        theBuffer.append(m_cachedStringValue);
+    }
+    else
+    {
+        NumberToDOMString(m_value, theBuffer);
+    }
 }
 
 
@@ -143,13 +143,13 @@ void
 XNumber::str(XalanDOMString&    theBuffer) const
 {
     if (m_cachedStringValue.empty() == false)
-	{
-		theBuffer.append(m_cachedStringValue);
-	}
-	else
-	{
-		NumberToDOMString(m_value, theBuffer);
-	}
+    {
+        theBuffer.append(m_cachedStringValue);
+    }
+    else
+    {
+        NumberToDOMString(m_value, theBuffer);
+    }
 }
 
 
@@ -163,11 +163,11 @@ XNumber::stringLength(XPathExecutionContext&    executionContext) const
 
 
 void
-XNumber::set(double		theValue)
+XNumber::set(double     theValue)
 {
-	m_value = theValue;
+    m_value = theValue;
 
-	m_cachedStringValue.clear();
+    m_cachedStringValue.clear();
 }
 
 

@@ -38,28 +38,28 @@ class XALAN_PLATFORMSUPPORT_EXPORT PlatformSupportInit
 {
 public:
 
-	PlatformSupportInit(MemoryManager&      theManager);
+    PlatformSupportInit(MemoryManager&      theManager);
 
-	~PlatformSupportInit();
+    ~PlatformSupportInit();
 
 private:
 
-	// Not implemented...
-	PlatformSupportInit(const PlatformSupportInit&);
+    // Not implemented...
+    PlatformSupportInit(const PlatformSupportInit&);
 
-	PlatformSupportInit&
-	operator=(const PlatformSupportInit&);
+    PlatformSupportInit&
+    operator=(const PlatformSupportInit&);
 
-	
-	static void
-	initialize(MemoryManager&      theManager);
+    
+    static void
+    initialize(MemoryManager&      theManager);
 
-	static void
-	terminate();
+    static void
+    terminate();
 
-	const XalanDOMInit		m_xalanDOMInit;
+    const XalanDOMInit      m_xalanDOMInit;
 
-	static unsigned long	s_initCounter;
+    static unsigned long    s_initCounter;
 };
 
 
@@ -68,4 +68,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(ARENAALLOCATOR_INCLUDE_GUARD_1357924680)
+#endif  // !defined(ARENAALLOCATOR_INCLUDE_GUARD_1357924680)

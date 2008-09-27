@@ -27,17 +27,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNode&		theNode) :
-	XalanNodeList(),
-	m_node(&theNode)
+XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNode&     theNode) :
+    XalanNodeList(),
+    m_node(&theNode)
 {
 }
 
 
 
-XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNodeListSurrogate&	theSource) :
-	XalanNodeList(theSource),
-	m_node(theSource.m_node)
+XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNodeListSurrogate&    theSource) :
+    XalanNodeList(theSource),
+    m_node(theSource.m_node)
 {
 }
 
@@ -50,16 +50,16 @@ XalanNodeListSurrogate::~XalanNodeListSurrogate()
 
 
 XalanNode*
-XalanNodeListSurrogate::item(XalanSize_t	index) const
+XalanNodeListSurrogate::item(XalanSize_t    index) const
 {
-	XalanNode*	theCurrentChild = m_node->getFirstChild();
+    XalanNode*  theCurrentChild = m_node->getFirstChild();
 
-	for(XalanSize_t i = 0; i < index && theCurrentChild != 0; ++i)
-	{
-		theCurrentChild = theCurrentChild->getNextSibling();
-	}
+    for(XalanSize_t i = 0; i < index && theCurrentChild != 0; ++i)
+    {
+        theCurrentChild = theCurrentChild->getNextSibling();
+    }
 
-	return theCurrentChild;
+    return theCurrentChild;
 }
 
 
@@ -67,17 +67,17 @@ XalanNodeListSurrogate::item(XalanSize_t	index) const
 XalanSize_t
 XalanNodeListSurrogate::getLength() const
 {
-	XalanSize_t	    theLength = 0;
+    XalanSize_t     theLength = 0;
 
-	XalanNode*	theCurrentChild = m_node->getFirstChild();
+    XalanNode*  theCurrentChild = m_node->getFirstChild();
 
-	while(theCurrentChild != 0)
-	{
-		++theLength;
-		theCurrentChild = theCurrentChild->getNextSibling();
-	}
+    while(theCurrentChild != 0)
+    {
+        ++theLength;
+        theCurrentChild = theCurrentChild->getNextSibling();
+    }
 
-	return theLength;
+    return theLength;
 }
 
 

@@ -42,48 +42,48 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesLiaisonXalanDOMStringPool : public 
 {
 public:
 
-	typedef XalanDOMStringPool	ParentType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex			XMLMutexType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock		XMLMutexLockType;
+    typedef XalanDOMStringPool  ParentType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex         XMLMutexType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock     XMLMutexLockType;
 
-	explicit
-	XercesLiaisonXalanDOMStringPool(MemoryManager& theManager);
+    explicit
+    XercesLiaisonXalanDOMStringPool(MemoryManager& theManager);
 
     static XercesLiaisonXalanDOMStringPool*
     create(MemoryManager& theManager);
 
-	virtual
-	~XercesLiaisonXalanDOMStringPool();
+    virtual
+    ~XercesLiaisonXalanDOMStringPool();
 
-	// These are inherited from XalanDOMStringPool...
+    // These are inherited from XalanDOMStringPool...
 
-	virtual void
-	clear();
+    virtual void
+    clear();
 
-	virtual size_t
-	size() const;
+    virtual size_t
+    size() const;
 
-	virtual const XalanDOMString&
-	get(const XalanDOMString&	theString);
+    virtual const XalanDOMString&
+    get(const XalanDOMString&   theString);
 
-	virtual const XalanDOMString&
-	get(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+    virtual const XalanDOMString&
+    get(
+            const XalanDOMChar*         theString,
+            XalanDOMString::size_type   theLength = XalanDOMString::npos);
 
 private:
 
-	// Not implemented, for now...
-	XercesLiaisonXalanDOMStringPool(const XercesLiaisonXalanDOMStringPool&);
+    // Not implemented, for now...
+    XercesLiaisonXalanDOMStringPool(const XercesLiaisonXalanDOMStringPool&);
 
-	XercesLiaisonXalanDOMStringPool&
-	operator=(const XercesLiaisonXalanDOMStringPool&);
+    XercesLiaisonXalanDOMStringPool&
+    operator=(const XercesLiaisonXalanDOMStringPool&);
 
-	bool
-	operator==(const XercesLiaisonXalanDOMStringPool&) const;
+    bool
+    operator==(const XercesLiaisonXalanDOMStringPool&) const;
 
-	// Data members...
-	mutable XMLMutexType	m_mutex;
+    // Data members...
+    mutable XMLMutexType    m_mutex;
 };
 
 
@@ -92,4 +92,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESLIAISONXALANDOMSTRINGPOOL_HEADER_GUARD_1357924680)
+#endif  // !defined(XERCESLIAISONXALANDOMSTRINGPOOL_HEADER_GUARD_1357924680)

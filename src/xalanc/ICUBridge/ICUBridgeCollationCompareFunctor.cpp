@@ -69,23 +69,23 @@ ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 
 int
 ICUBridgeCollationCompareFunctor::operator()(
-			const XalanDOMChar*					theLHS,
-			const XalanDOMChar*					theRHS,
-			XalanCollationServices::eCaseOrder	theCaseOrder) const
+            const XalanDOMChar*                 theLHS,
+            const XalanDOMChar*                 theRHS,
+            XalanCollationServices::eCaseOrder  theCaseOrder) const
 {
-	return (*m_impl)(theLHS, theRHS, theCaseOrder);
+    return (*m_impl)(theLHS, theRHS, theCaseOrder);
 }
 
 
 
 int
 ICUBridgeCollationCompareFunctor::operator()(
-			const XalanDOMChar*					theLHS,
-			const XalanDOMChar*					theRHS,
-			const XalanDOMChar*					theLocale,
-			XalanCollationServices::eCaseOrder	theCaseOrder) const
+            const XalanDOMChar*                 theLHS,
+            const XalanDOMChar*                 theRHS,
+            const XalanDOMChar*                 theLocale,
+            XalanCollationServices::eCaseOrder  theCaseOrder) const
 {
-	return (*m_impl)(theLHS, theRHS, theLocale, theCaseOrder);
+    return (*m_impl)(theLHS, theRHS, theLocale, theCaseOrder);
 }
 
 

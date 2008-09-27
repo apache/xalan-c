@@ -25,8 +25,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeAttributeAllocator::XalanSourceTreeAttributeAllocator(MemoryManager&  theManager, size_type	theBlockCount) :
-	m_allocator(theManager, theBlockCount)
+XalanSourceTreeAttributeAllocator::XalanSourceTreeAttributeAllocator(MemoryManager&  theManager, size_type  theBlockCount) :
+    m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -40,23 +40,23 @@ XalanSourceTreeAttributeAllocator::~XalanSourceTreeAttributeAllocator()
 
 XalanSourceTreeAttributeAllocator::ObjectType*
 XalanSourceTreeAttributeAllocator::create(
-			const XalanDOMString&		theName,
-			const XalanDOMString&		theValue,
-			XalanSourceTreeElement*		theOwnerElement,
-			IndexType					theIndex)
+            const XalanDOMString&       theName,
+            const XalanDOMString&       theValue,
+            XalanSourceTreeElement*     theOwnerElement,
+            IndexType                   theIndex)
 {
-	ObjectType* const	theBlock = m_allocator.allocateBlock();
-	assert(theBlock != 0);
+    ObjectType* const   theBlock = m_allocator.allocateBlock();
+    assert(theBlock != 0);
 
-	new(theBlock) ObjectType(
-						theName,
-						theValue,
-						theOwnerElement,
-						theIndex);
+    new(theBlock) ObjectType(
+                        theName,
+                        theValue,
+                        theOwnerElement,
+                        theIndex);
 
-	m_allocator.commitAllocation(theBlock);
+    m_allocator.commitAllocation(theBlock);
 
-	return theBlock;
+    return theBlock;
 }
 
 
@@ -64,7 +64,7 @@ XalanSourceTreeAttributeAllocator::create(
 void 
 XalanSourceTreeAttributeAllocator::reset()
 {
-	m_allocator.reset();
+    m_allocator.reset();
 }
 
 

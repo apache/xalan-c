@@ -50,37 +50,37 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 inline const XalanDOMString*
-getSingleTextChildValue(const XalanDocumentFragment&	theRTreeFrag)
+getSingleTextChildValue(const XalanDocumentFragment&    theRTreeFrag)
 {
-	const XalanNode* const	theFirstChild = theRTreeFrag.getFirstChild();
+    const XalanNode* const  theFirstChild = theRTreeFrag.getFirstChild();
 
-	if (theFirstChild != 0 &&
-		theFirstChild->getNodeType() == XalanNode::TEXT_NODE &&
-		theFirstChild->getNextSibling() == 0)
-	{
-		return &theFirstChild->getNodeValue();
-	}
-	else
-	{
-		return 0;
-	}
+    if (theFirstChild != 0 &&
+        theFirstChild->getNodeType() == XalanNode::TEXT_NODE &&
+        theFirstChild->getNextSibling() == 0)
+    {
+        return &theFirstChild->getNodeValue();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
 
-const double	theBogusNumberValue = 123456789;
+const double    theBogusNumberValue = 123456789;
 
 
 
 XResultTreeFrag::XResultTreeFrag(
-            XalanDocumentFragment&	value,
+            XalanDocumentFragment&  value,
             MemoryManager&          theManager) :
-	XObject(eTypeResultTreeFrag, theManager),
-	m_value(&value),
-	m_singleTextChildValue(getSingleTextChildValue(value)),
-	m_executionContext(0),
-	m_cachedStringValue(theManager),
-	m_cachedNumberValue(theBogusNumberValue)
+    XObject(eTypeResultTreeFrag, theManager),
+    m_value(&value),
+    m_singleTextChildValue(getSingleTextChildValue(value)),
+    m_executionContext(0),
+    m_cachedStringValue(theManager),
+    m_cachedNumberValue(theBogusNumberValue)
 
 {
 }
@@ -88,16 +88,16 @@ XResultTreeFrag::XResultTreeFrag(
 
 
 XResultTreeFrag::XResultTreeFrag(
-			const XResultTreeFrag&	source,
+            const XResultTreeFrag&  source,
             MemoryManager&          theManager) :
-	XObject(source, theManager),
-	m_value(source.m_value),
-	m_singleTextChildValue(source.m_singleTextChildValue),
-	m_executionContext(0),
-	m_cachedStringValue(source.m_cachedStringValue, theManager),
-	m_cachedNumberValue(source.m_cachedNumberValue)
+    XObject(source, theManager),
+    m_value(source.m_value),
+    m_singleTextChildValue(source.m_singleTextChildValue),
+    m_executionContext(0),
+    m_cachedStringValue(source.m_cachedStringValue, theManager),
+    m_cachedNumberValue(source.m_cachedNumberValue)
 {
-	assert(m_value != 0);
+    assert(m_value != 0);
 }
 
 
@@ -111,7 +111,7 @@ XResultTreeFrag::~XResultTreeFrag()
 const XalanDOMString&
 XResultTreeFrag::getTypeString() const
 {
-	return s_resultTreeFragmentString;
+    return s_resultTreeFragmentString;
 }
 
 
@@ -119,15 +119,15 @@ XResultTreeFrag::getTypeString() const
 double
 XResultTreeFrag::num(XPathExecutionContext&     executionContext) const
 {
-	if (m_cachedNumberValue == theBogusNumberValue)
-	{
-		m_cachedNumberValue =
+    if (m_cachedNumberValue == theBogusNumberValue)
+    {
+        m_cachedNumberValue =
             DoubleSupport::toDouble(
                 str(executionContext),
                 getMemoryManager());
-	}
+    }
 
-	return m_cachedNumberValue;
+    return m_cachedNumberValue;
 }
 
 
@@ -135,15 +135,15 @@ XResultTreeFrag::num(XPathExecutionContext&     executionContext) const
 double
 XResultTreeFrag::num() const
 {
-	if (m_cachedNumberValue == theBogusNumberValue)
-	{
-		m_cachedNumberValue =
+    if (m_cachedNumberValue == theBogusNumberValue)
+    {
+        m_cachedNumberValue =
             DoubleSupport::toDouble(
                 str(),
                 getMemoryManager());
-	}
+    }
 
-	return m_cachedNumberValue;
+    return m_cachedNumberValue;
 }
 
 
@@ -151,8 +151,8 @@ XResultTreeFrag::num() const
 bool
 XResultTreeFrag::boolean(XPathExecutionContext&     /* executionContext */) const
 {
-	// Result tree fragments always evaluate to true.
-	return true;
+    // Result tree fragments always evaluate to true.
+    return true;
 }
 
 
@@ -168,21 +168,21 @@ XResultTreeFrag::str(XPathExecutionContext&     /* executionContext */) const
 const XalanDOMString&
 XResultTreeFrag::str() const
 {
-	if (m_singleTextChildValue != 0)
-	{
-		assert(m_value->getFirstChild() != 0 &&
-				m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
+    if (m_singleTextChildValue != 0)
+    {
+        assert(m_value->getFirstChild() != 0 &&
+                m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
 
-		return *m_singleTextChildValue;
-	}
+        return *m_singleTextChildValue;
+    }
     else if (m_cachedStringValue.empty() == true)
-	{
-		DOMServices::getNodeData(
+    {
+        DOMServices::getNodeData(
             *m_value,
             m_cachedStringValue);
-	}
+    }
 
-	return m_cachedStringValue;
+    return m_cachedStringValue;
 }
 
 
@@ -190,8 +190,8 @@ XResultTreeFrag::str() const
 void
 XResultTreeFrag::str(
             XPathExecutionContext&  /* executionContext */,
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
     XResultTreeFrag::str(formatterListener, function);
 }
@@ -200,27 +200,27 @@ XResultTreeFrag::str(
 
 void
 XResultTreeFrag::str(
-			FormatterListener&	    formatterListener,
-			MemberFunctionPtr	    function) const
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function) const
 {
-	if (m_singleTextChildValue != 0)
-	{
-		assert(m_value->getFirstChild() != 0 &&
-	           m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
+    if (m_singleTextChildValue != 0)
+    {
+        assert(m_value->getFirstChild() != 0 &&
+               m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
 
         XObject::string(*m_singleTextChildValue, formatterListener, function);
     }
-	else if (m_cachedStringValue.empty() == false)
-	{
+    else if (m_cachedStringValue.empty() == false)
+    {
         XObject::string(m_cachedStringValue, formatterListener, function);
-	}
-	else
-	{
-		DOMServices::getNodeData(
+    }
+    else
+    {
+        DOMServices::getNodeData(
             *m_value,
             formatterListener,
             function);
-	}
+    }
 }
 
 
@@ -228,7 +228,7 @@ XResultTreeFrag::str(
 void
 XResultTreeFrag::str(
             XPathExecutionContext&  /* executionContext */,
-            XalanDOMString&	        theBuffer) const
+            XalanDOMString&         theBuffer) const
 {
     XResultTreeFrag::str(theBuffer);
 }
@@ -238,20 +238,20 @@ XResultTreeFrag::str(
 void
 XResultTreeFrag::str(XalanDOMString&    theBuffer) const
 {
-	if (m_singleTextChildValue != 0)
-	{
-		theBuffer.append(*m_singleTextChildValue);
-	}
-	else if (m_cachedStringValue.empty() == false)
-	{
-		theBuffer.append(m_cachedStringValue);
-	}
-	else
-	{
-		DOMServices::getNodeData(
+    if (m_singleTextChildValue != 0)
+    {
+        theBuffer.append(*m_singleTextChildValue);
+    }
+    else if (m_cachedStringValue.empty() == false)
+    {
+        theBuffer.append(m_cachedStringValue);
+    }
+    else
+    {
+        DOMServices::getNodeData(
             *m_value,
             theBuffer);
-	}
+    }
 }
 
 
@@ -259,26 +259,26 @@ XResultTreeFrag::str(XalanDOMString&    theBuffer) const
 double
 XResultTreeFrag::stringLength(XPathExecutionContext&    executionContext) const
 {
-	if (m_singleTextChildValue != 0)
-	{
-		return static_cast<double>(m_singleTextChildValue->length());
-	}
+    if (m_singleTextChildValue != 0)
+    {
+        return static_cast<double>(m_singleTextChildValue->length());
+    }
     else if (m_cachedStringValue.empty() == false)
-	{
-		return static_cast<double>(m_cachedStringValue.length());
-	}
-	else
-	{
-		FormatterStringLengthCounter	theCounter;
+    {
+        return static_cast<double>(m_cachedStringValue.length());
+    }
+    else
+    {
+        FormatterStringLengthCounter    theCounter;
 
-		DOMServices::getNodeData(
+        DOMServices::getNodeData(
             *m_value,
             executionContext,
             theCounter,
             &FormatterListener::characters);
 
-		return static_cast<double>(theCounter.getCount());
-	}
+        return static_cast<double>(theCounter.getCount());
+    }
 }
 
 
@@ -286,17 +286,17 @@ XResultTreeFrag::stringLength(XPathExecutionContext&    executionContext) const
 const XalanDocumentFragment&
 XResultTreeFrag::rtree() const
 {
-	assert(m_value != 0);
+    assert(m_value != 0);
 
-	return *m_value;
+    return *m_value;
 }
 
 
 
 void
-XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject)
 {
-	theCallbackObject.ResultTreeFragment(
+    theCallbackObject.ResultTreeFragment(
         *this,
         rtree());
 }
@@ -304,9 +304,9 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 
 
 void
-XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObject) const
 {
-	theCallbackObject.ResultTreeFragment(
+    theCallbackObject.ResultTreeFragment(
         *this,
         rtree());
 }
@@ -316,29 +316,29 @@ XResultTreeFrag::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObje
 XalanDocumentFragment*
 XResultTreeFrag::release()
 {
-	m_singleTextChildValue = 0;
+    m_singleTextChildValue = 0;
 
-	m_cachedStringValue.clear();
+    m_cachedStringValue.clear();
 
-	m_cachedNumberValue = theBogusNumberValue;
+    m_cachedNumberValue = theBogusNumberValue;
 
-	XalanDocumentFragment* const	temp = m_value;
+    XalanDocumentFragment* const    temp = m_value;
 
-	m_value = 0;
+    m_value = 0;
 
-	return temp;
+    return temp;
 }
 
 
 
 void
-XResultTreeFrag::set(XalanDocumentFragment&		theValue)
+XResultTreeFrag::set(XalanDocumentFragment&     theValue)
 {
-	release();
+    release();
 
-	m_value = &theValue;
+    m_value = &theValue;
 
-	m_singleTextChildValue = getSingleTextChildValue(*m_value);
+    m_singleTextChildValue = getSingleTextChildValue(*m_value);
 }
 
 
@@ -346,14 +346,14 @@ XResultTreeFrag::set(XalanDocumentFragment&		theValue)
 void
 XResultTreeFrag::dereferenced()
 {
-	if (m_executionContext == 0 ||
-		// We're dead after we call this, if it returns true;
-		m_executionContext->returnXResultTreeFrag(this) == false)
-	{
-		delete m_value;
+    if (m_executionContext == 0 ||
+        // We're dead after we call this, if it returns true;
+        m_executionContext->returnXResultTreeFrag(this) == false)
+    {
+        delete m_value;
 
-		delete this;
-	}
+        delete this;
+    }
 }
 
 

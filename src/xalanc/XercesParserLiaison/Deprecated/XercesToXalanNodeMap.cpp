@@ -48,8 +48,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesToXalanNodeMap::XercesToXalanNodeMap() :
-	m_xalanMap(),
-	m_xercesMap()
+    m_xalanMap(),
+    m_xercesMap()
 {
 }
 
@@ -63,12 +63,12 @@ XercesToXalanNodeMap::~XercesToXalanNodeMap()
 
 void
 XercesToXalanNodeMap::addAssociation(
-			const DOM_NodeType&		theXercesNode,
-			XalanNode*				theXalanNode)
+            const DOM_NodeType&     theXercesNode,
+            XalanNode*              theXalanNode)
 {
-	NodeImplType* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
+    NodeImplType* const     theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
 
-	m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
+    m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
 }
 
 
@@ -76,31 +76,31 @@ XercesToXalanNodeMap::addAssociation(
 void
 XercesToXalanNodeMap::clear()
 {
-	m_xalanMap.clear();
-	m_xercesMap.clear();
+    m_xalanMap.clear();
+    m_xercesMap.clear();
 }
 
 
 
 XercesToXalanNodeMap::NodeImplType*
-XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
+XercesToXalanNodeMap::getNodeImpl(const XalanNode*  theXalanNode) const
 {
-	XALAN_USING_STD(find_if)
+    XALAN_USING_STD(find_if)
 
-	const XercesNodeMapType::const_iterator		i =
-		find_if(
-			m_xercesMap.begin(),
-			m_xercesMap.end(),
-			NameMapEqualsFunctor(theXalanNode));
+    const XercesNodeMapType::const_iterator     i =
+        find_if(
+            m_xercesMap.begin(),
+            m_xercesMap.end(),
+            NameMapEqualsFunctor(theXalanNode));
 
-	if (i != m_xercesMap.end())
-	{
-		return (*i).first;
-	}
-	else
-	{
-		return 0;
-	}
+    if (i != m_xercesMap.end())
+    {
+        return (*i).first;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 

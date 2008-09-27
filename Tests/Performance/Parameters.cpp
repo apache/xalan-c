@@ -86,82 +86,82 @@ Parameters::Parameters(
         const XalanDOMString&   runFileName,
         const XalanDOMString&   testDirectory,
         const XalanDOMString&   resultDirectory,
-		const XalanDOMString&   baselineDirectory,
-		const XalanDOMString&   reportDirectory,
-		XalanFileUtility&		fileUtility,
-		Logger&                 logger) :
-	m_name("default"),
-	m_description(""),
-	m_resultDirectory(resultDirectory),
-	m_resultFile("results"),
-	m_threshold("5"),
-	m_baselineDirectory(baselineDirectory),
-	m_baselineFile(""),
-	m_defaultTestCase(),
-	m_testDirectory(testDirectory),
-	m_goldDirectory(""),
-	m_reportDirectory(reportDirectory),
-	m_transformer(),
-	m_uniqId(),
-	m_initialized(false)
+        const XalanDOMString&   baselineDirectory,
+        const XalanDOMString&   reportDirectory,
+        XalanFileUtility&       fileUtility,
+        Logger&                 logger) :
+    m_name("default"),
+    m_description(""),
+    m_resultDirectory(resultDirectory),
+    m_resultFile("results"),
+    m_threshold("5"),
+    m_baselineDirectory(baselineDirectory),
+    m_baselineFile(""),
+    m_defaultTestCase(),
+    m_testDirectory(testDirectory),
+    m_goldDirectory(""),
+    m_reportDirectory(reportDirectory),
+    m_transformer(),
+    m_uniqId(),
+    m_initialized(false)
 {
-	fileUtility.generateUniqRunid(m_uniqId);
+    fileUtility.generateUniqRunid(m_uniqId);
 
-	if (parseConfigurationFile(runFileName, logger))
-	{
-		if (m_testDirectory.empty())
-		{
-			logger.error() << "No test directory specified on command line or in configuration file" << endl;
-		}
-		else
-		{
-			// configure directories
-			// result directory
-			if (m_resultDirectory.empty())
-			{
-				m_resultDirectory = getWorkingDirectory();
-			}
-			m_resultDirectory += getPathSep();
+    if (parseConfigurationFile(runFileName, logger))
+    {
+        if (m_testDirectory.empty())
+        {
+            logger.error() << "No test directory specified on command line or in configuration file" << endl;
+        }
+        else
+        {
+            // configure directories
+            // result directory
+            if (m_resultDirectory.empty())
+            {
+                m_resultDirectory = getWorkingDirectory();
+            }
+            m_resultDirectory += getPathSep();
 
-			// gold directory
-			if (m_goldDirectory.empty())
-			{
-				m_goldDirectory = m_testDirectory;
-				m_goldDirectory += XalanDOMString("-gold");
-			}
-			
-			// test directory
-			m_testDirectory += getPathSep();
+            // gold directory
+            if (m_goldDirectory.empty())
+            {
+                m_goldDirectory = m_testDirectory;
+                m_goldDirectory += XalanDOMString("-gold");
+            }
+            
+            // test directory
+            m_testDirectory += getPathSep();
 
-			if (readTestCases(fileUtility, logger))
-			{
-				m_initialized = true;
-			}
+            if (readTestCases(fileUtility, logger))
+            {
+                m_initialized = true;
+            }
 
-			// baseline directory
-			if (m_baselineDirectory.empty())
-			{
-				m_baselineDirectory = m_resultDirectory;
-			}
-			else
-			{
-				m_baselineDirectory += getPathSep();
-			}
+            // baseline directory
+            if (m_baselineDirectory.empty())
+            {
+                m_baselineDirectory = m_resultDirectory;
+            }
+            else
+            {
+                m_baselineDirectory += getPathSep();
+            }
 
-			if (m_baselineFile.empty())
-			{
-				m_baselineFile = m_resultFile;
-				m_baselineFile += XalanDOMString("_latest.xml");
-			}
+            if (m_baselineFile.empty())
+            {
+                m_baselineFile = m_resultFile;
+                m_baselineFile += XalanDOMString("_latest.xml");
+            }
 
-			// report directory
-			if (m_reportDirectory.empty())
-			{
-				m_reportDirectory = getWorkingDirectory();
-			}
-			m_reportDirectory += getPathSep();
-		}
-	}
+            // report directory
+            if (m_reportDirectory.empty())
+            {
+                m_reportDirectory = getWorkingDirectory();
+            }
+            m_reportDirectory += getPathSep();
+        }
+    }
 }
 
 
@@ -169,7 +169,7 @@ Parameters::Parameters(
 const TestCasesType& 
 Parameters::getTestCases()
 {
-	return m_testCases;
+    return m_testCases;
 }
 
 
@@ -177,49 +177,49 @@ Parameters::getTestCases()
 bool
 Parameters::parseConfigurationFile(
         const XalanDOMString&   runFileName,
-		Logger&                 logger)
+        Logger&                 logger)
 {
-	// parse the configuration file and get default settings
+    // parse the configuration file and get default settings
 
     const XalanParsedSource* theParsedSource;
 
     XSLTInputSource confFile(runFileName, m_transformer.getMemoryManager());
 
     if (m_transformer.parseSource(confFile, theParsedSource) < 0)
-	{
-		logger.error() << "Failed to parse: " 
-				<< runFileName.c_str() 
-				<< ", error: " 
-				<< m_transformer.getLastError() 
-				<< endl;
+    {
+        logger.error() << "Failed to parse: " 
+                << runFileName.c_str() 
+                << ", error: " 
+                << m_transformer.getLastError() 
+                << endl;
 
         return false;
-	}
+    }
 
     XalanDocument* document = theParsedSource->getDocument();
 
     XalanNode* runNode = document->getFirstChild();
 
-	while (runNode->getNodeType() != XalanNode::ELEMENT_NODE)
-	{
-		runNode = runNode->getNextSibling();
-		if (0 == runNode)
-		{
-			logger.error() << "Failed to parse: " 
-				<< runFileName.c_str() 
-				<< ", error: no <testconfig> found"
-				<< endl;
+    while (runNode->getNodeType() != XalanNode::ELEMENT_NODE)
+    {
+        runNode = runNode->getNextSibling();
+        if (0 == runNode)
+        {
+            logger.error() << "Failed to parse: " 
+                << runFileName.c_str() 
+                << ", error: no <testconfig> found"
+                << endl;
 
             return false;
-		}
-	}
+        }
+    }
 
     if(!(runNode->getNodeName() == XalanDOMString("testconfig")))
     {
-		logger.error() << "Invalid configuration file: "
-				<< runFileName.c_str()
-				<< ", error: Missing <testconfig> tag" 
-				<< endl;
+        logger.error() << "Invalid configuration file: "
+                << runFileName.c_str()
+                << ", error: Missing <testconfig> tag" 
+                << endl;
 
         return false;
     }
@@ -231,19 +231,19 @@ Parameters::parseConfigurationFile(
         XalanNode* nameAttribute = attributes->getNamedItem(XalanDOMString("name"));
 
         if (nameAttribute != 0 &&
-			!nameAttribute->getNodeValue().empty())
+            !nameAttribute->getNodeValue().empty())
         {
             m_name = nameAttribute->getNodeValue();
         }
-		else
-		{
-			logger.error() << "Invalid configuration file: "
-				<< runFileName.c_str()
-				<< ", error: Missing name attribute" 
-				<< endl;
+        else
+        {
+            logger.error() << "Invalid configuration file: "
+                << runFileName.c_str()
+                << ", error: Missing name attribute" 
+                << endl;
 
             return false;
-		}
+        }
     }
 
     XalanNode* currentNode = runNode->getFirstChild();
@@ -256,30 +256,30 @@ Parameters::parseConfigurationFile(
             continue;
         }
 
-		// description element 
+        // description element 
         if (currentNode->getNodeName() == XalanDOMString("description") &&
             currentNode->getFirstChild() != 0 &&
             currentNode->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE)
         {
             m_description = currentNode->getFirstChild()->getNodeValue();
         }
-		// results element
+        // results element
         else if (currentNode->getNodeName() == XalanDOMString("results"))
         {
-			// file-path
+            // file-path
             const XalanNamedNodeMap* resultAttributes = currentNode->getAttributes();
             XalanNode * attributeNode = resultAttributes->getNamedItem(XalanDOMString("file-path"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE)
             {
-				if (!m_resultDirectory.empty())
-				{
-					m_resultDirectory += getPathSep();
-				}
+                if (!m_resultDirectory.empty())
+                {
+                    m_resultDirectory += getPathSep();
+                }
                 m_resultDirectory += attributeNode->getNodeValue();
             }
 
-			// result report file name
+            // result report file name
             XalanNode * resultsNode = currentNode->getFirstChild();
             if (resultsNode != 0 
                 && resultsNode->getNodeType() == XalanNode::TEXT_NODE
@@ -288,38 +288,38 @@ Parameters::parseConfigurationFile(
                 m_resultFile = resultsNode->getNodeValue();
             }
         }
-		// baseline element
-		else if (currentNode->getNodeName() == XalanDOMString("baseline"))
-		{
-			const XalanNamedNodeMap* attributeParams = currentNode->getAttributes();
+        // baseline element
+        else if (currentNode->getNodeName() == XalanDOMString("baseline"))
+        {
+            const XalanNamedNodeMap* attributeParams = currentNode->getAttributes();
             XalanNode* attributeNode;
-			// threshold
+            // threshold
             attributeNode = attributeParams->getNamedItem(XalanDOMString("threshold"));
-			if (attributeNode != 0
-				&& !attributeNode->getNodeValue().empty())
-			{
-				m_threshold = attributeNode->getNodeValue().c_str();
-			}
-			// file-path
-			attributeNode = attributeParams->getNamedItem(XalanDOMString("file-path"));
-			if (attributeNode != 0)
-			{
-				if (!m_baselineDirectory.empty())
-				{
-					m_baselineDirectory += getPathSep();
-				}
-				m_baselineDirectory += attributeNode->getNodeValue();
-			}
-			// baseline file
-			XalanNode * baselineNode = currentNode->getFirstChild();
-			if (baselineNode != 0
-				&& baselineNode->getNodeType() == XalanNode::TEXT_NODE
-				&& !baselineNode->getNodeValue().empty())
-			{
-				m_baselineFile += baselineNode->getNodeValue();
-			}
-		}
-		// default parameters
+            if (attributeNode != 0
+                && !attributeNode->getNodeValue().empty())
+            {
+                m_threshold = attributeNode->getNodeValue().c_str();
+            }
+            // file-path
+            attributeNode = attributeParams->getNamedItem(XalanDOMString("file-path"));
+            if (attributeNode != 0)
+            {
+                if (!m_baselineDirectory.empty())
+                {
+                    m_baselineDirectory += getPathSep();
+                }
+                m_baselineDirectory += attributeNode->getNodeValue();
+            }
+            // baseline file
+            XalanNode * baselineNode = currentNode->getFirstChild();
+            if (baselineNode != 0
+                && baselineNode->getNodeType() == XalanNode::TEXT_NODE
+                && !baselineNode->getNodeValue().empty())
+            {
+                m_baselineFile += baselineNode->getNodeValue();
+            }
+        }
+        // default parameters
         else if (currentNode->getNodeName() == XalanDOMString("default-parameter-set"))
         {
             const XalanNamedNodeMap* attributeParams = currentNode->getAttributes();
@@ -331,7 +331,7 @@ Parameters::parseConfigurationFile(
             {
                 m_defaultTestCase.inputMode = attributeNode->getNodeValue(); 
             }
-			// number of iterations
+            // number of iterations
             attributeNode = attributeParams->getNamedItem(XalanDOMString("num-iterations"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE &&
@@ -339,7 +339,7 @@ Parameters::parseConfigurationFile(
             {
                 m_defaultTestCase.numIterations = WideStringToLong(attributeNode->getNodeValue().c_str()); 
             }
-			// minimum time to execute
+            // minimum time to execute
             attributeNode = attributeParams->getNamedItem(XalanDOMString("min-time-to-execute"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE &&
@@ -347,7 +347,7 @@ Parameters::parseConfigurationFile(
             {
                 m_defaultTestCase.minTimeToExecute = WideStringToLong(attributeNode->getNodeValue().c_str());
             }
-			// verify the result
+            // verify the result
             attributeNode = attributeParams->getNamedItem(XalanDOMString("verify-result"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE &&
@@ -405,55 +405,55 @@ Parameters::parseConfigurationFile(
                 options = options->getNextSibling();
             }
         }
-		else if (currentNode->getNodeName() == XalanDOMString("testcases"))
-		{
-			// file-path
+        else if (currentNode->getNodeName() == XalanDOMString("testcases"))
+        {
+            // file-path
             const XalanNamedNodeMap* testCasesAttributes = currentNode->getAttributes();
             XalanNode * attributeNode = testCasesAttributes->getNamedItem(XalanDOMString("file-path"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE)
             {
-				if (!m_testDirectory.empty())
-				{
-					m_testDirectory += getPathSep();
-				}
+                if (!m_testDirectory.empty())
+                {
+                    m_testDirectory += getPathSep();
+                }
                 m_testDirectory += attributeNode->getNodeValue();
             }
-			// gold file-path
+            // gold file-path
             attributeNode = testCasesAttributes->getNamedItem(XalanDOMString("gold-file-path"));
             if (attributeNode != 0 &&
                 attributeNode->getNodeType() == XalanNode::ATTRIBUTE_NODE)
             {
                 m_goldDirectory = attributeNode->getNodeValue();
             }
-		}
+        }
         currentNode = currentNode->getNextSibling();
     }
 
-	return true;
+    return true;
 }
 
 
 
 bool
 Parameters::readTestCases(
-	XalanFileUtility&	fileUtility,
-	Logger&				logger)
+    XalanFileUtility&   fileUtility,
+    Logger&             logger)
 {
     if (!fileUtility.checkDir(m_testDirectory))
     {
-		logger.error() << "Invalid test directory: " << m_testDirectory.c_str() << endl;
-		return false;
+        logger.error() << "Invalid test directory: " << m_testDirectory.c_str() << endl;
+        return false;
     }
 
-	if (m_goldDirectory.empty())
-	{
-		logger.message() << "No gold directory specified" << endl;
-		if (!fileUtility.checkDir(m_goldDirectory))
-		{
-			logger.warning() << "Invalid gold directory: " << m_goldDirectory.c_str() << endl;
-		}
-	}
+    if (m_goldDirectory.empty())
+    {
+        logger.message() << "No gold directory specified" << endl;
+        if (!fileUtility.checkDir(m_goldDirectory))
+        {
+            logger.warning() << "Invalid gold directory: " << m_goldDirectory.c_str() << endl;
+        }
+    }
 
     fileUtility.checkAndCreateDir(m_resultDirectory);
 
@@ -463,8 +463,8 @@ Parameters::readTestCases(
     fileUtility.getDirectoryNames(m_testDirectory, dirNames);
 
     FileNamesType::iterator dirIter = dirNames.begin();
-	
-	// for each test directory
+    
+    // for each test directory
     while (dirIter != dirNames.end())
     {
        
@@ -473,52 +473,52 @@ Parameters::readTestCases(
 
         FileNamesType::const_iterator xslIter = xslTestFiles.begin();
 
-		// for each stylesheet
+        // for each stylesheet
         while (xslIter != xslTestFiles.end())
         {
-			// configure the stylesheet
+            // configure the stylesheet
             TestCase testCase = m_defaultTestCase;
             testCase.stylesheet = m_testDirectory;
             testCase.stylesheet += *dirIter;
-			testCase.stylesheet += getPathSep();
-			testCase.stylesheet += *xslIter;
+            testCase.stylesheet += getPathSep();
+            testCase.stylesheet += *xslIter;
 
             
             bool status = true;
 
-			// configure the input document
+            // configure the input document
             fileUtility.generateFileName(testCase.stylesheet, "xml", testCase.inputDocument, &status);
             if (status != true)
             {
-				logger.warning() << "No matching input file for: " << testCase.stylesheet.c_str() << endl;
+                logger.warning() << "No matching input file for: " << testCase.stylesheet.c_str() << endl;
                 ++xslIter;
                 continue;
-			}
+            }
 
-			// configure result directory
+            // configure result directory
             testCase.resultDirectory = m_resultDirectory;
-			testCase.resultDirectory += *dirIter;
+            testCase.resultDirectory += *dirIter;
  
             // configure result document        
             XalanDOMString outFile = testCase.resultDirectory;
-			outFile += getPathSep();
-			outFile += *xslIter;
+            outFile += getPathSep();
+            outFile += *xslIter;
 
             fileUtility.generateFileName(outFile, "out", testCase.resultDocument);
 
-			// configure gold result
-			outFile = m_goldDirectory;
-			outFile += getPathSep();
-			outFile += *dirIter;
-			outFile += getPathSep();
-			outFile += *xslIter;
+            // configure gold result
+            outFile = m_goldDirectory;
+            outFile += getPathSep();
+            outFile += *dirIter;
+            outFile += getPathSep();
+            outFile += *xslIter;
 
-			status = true;
-			fileUtility.generateFileName(outFile, "out", testCase.goldResult, &status);
-			if (true == testCase.verifyResult && !status)
-			{
-				logger.warning() << "Verification on, but no matching gold file: " << testCase.goldResult.c_str() << endl;
-			}
+            status = true;
+            fileUtility.generateFileName(outFile, "out", testCase.goldResult, &status);
+            if (true == testCase.verifyResult && !status)
+            {
+                logger.warning() << "Verification on, but no matching gold file: " << testCase.goldResult.c_str() << endl;
+            }
 
             m_testCases.push_back(testCase);
             
@@ -528,5 +528,5 @@ Parameters::readTestCases(
         ++dirIter;
     }
 
-	return true;
+    return true;
 }

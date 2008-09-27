@@ -53,7 +53,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XalanAttr;
 class XalanDocument;
 
-typedef XalanVector<const XalanNode*> 				AttributeVectorTypeDecl;
+typedef XalanVector<const XalanNode*>               AttributeVectorTypeDecl;
 XALAN_USES_MEMORY_MANAGER(AttributeVectorTypeDecl)
 
 
@@ -61,81 +61,81 @@ class XALAN_DOMSUPPORT_EXPORT XalanDocumentPrefixResolver : public PrefixResolve
 {
 public:
 
-	typedef AttributeVectorTypeDecl				        AttributeVectorType;
-	typedef XalanMap<const XalanDOMString*,
-					AttributeVectorType>				NamespacesMapType;
+    typedef AttributeVectorTypeDecl                     AttributeVectorType;
+    typedef XalanMap<const XalanDOMString*,
+                    AttributeVectorType>                NamespacesMapType;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param theDocument The XalanDocument instance to use for namespace bindings.
-	 * @param theURI The base URI for the instance.  This is rarely needed, but can be provided if the URI for the XalanDocument instance is known.
-	 */
-	XalanDocumentPrefixResolver(
-			const XalanDocument*	theDocument,
-			const XalanDOMString&	theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+    /**
+     * Constructor.
+     *
+     * @param theDocument The XalanDocument instance to use for namespace bindings.
+     * @param theURI The base URI for the instance.  This is rarely needed, but can be provided if the URI for the XalanDocument instance is known.
+     */
+    XalanDocumentPrefixResolver(
+            const XalanDocument*    theDocument,
+            const XalanDOMString&   theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
             MemoryManager&      theManager XALAN_DEFAULT_MEMMGR);
 
-	virtual
-	~XalanDocumentPrefixResolver();
+    virtual
+    ~XalanDocumentPrefixResolver();
 
 
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+    virtual const XalanDOMString*
+    getNamespaceForPrefix(const XalanDOMString&     prefix) const;
 
-	virtual const XalanDOMString&
-	getURI() const;
+    virtual const XalanDOMString&
+    getURI() const;
 
-	/**
-	 * A utility class to walk the XalanDocument instance and look for attribute nodes that declare namespaces.
-	 */
-	class NamespaceNodesTreeWalker : public TreeWalker
-	{
-	public:
+    /**
+     * A utility class to walk the XalanDocument instance and look for attribute nodes that declare namespaces.
+     */
+    class NamespaceNodesTreeWalker : public TreeWalker
+    {
+    public:
 
-		NamespaceNodesTreeWalker(NamespacesMapType&		theMap);
+        NamespaceNodesTreeWalker(NamespacesMapType&     theMap);
 
-		virtual
-		~NamespaceNodesTreeWalker();
+        virtual
+        ~NamespaceNodesTreeWalker();
 
-	protected:
+    protected:
 
-		virtual bool
-		startNode(const XalanNode*	node);
+        virtual bool
+        startNode(const XalanNode*  node);
 
-		virtual bool
-		startNode(XalanNode*	node);
+        virtual bool
+        startNode(XalanNode*    node);
 
-		virtual bool
-		endNode(const XalanNode*	node);
+        virtual bool
+        endNode(const XalanNode*    node);
 
-		virtual bool
-		endNode(XalanNode*	node);
+        virtual bool
+        endNode(XalanNode*  node);
 
-	private:
+    private:
 
-		NamespacesMapType&	m_map;
-	};
+        NamespacesMapType&  m_map;
+    };
 
 
 protected:
 
-	/**
-	 * This function is called when more than one binding exists for a given prefix.
-	 * The default behavior uses the first binding, but a deriving class can change
-	 * that behavior by overriding.
-	 *
-	 * @param theVector The vector associated with the namespace prefix. 
-	 * @return A pointer to a const XalanDOMString containing the desired binding, or NULL.
-	 */
-	virtual const XalanDOMString*
-	duplicateBinding(const AttributeVectorType&		theVector) const;
+    /**
+     * This function is called when more than one binding exists for a given prefix.
+     * The default behavior uses the first binding, but a deriving class can change
+     * that behavior by overriding.
+     *
+     * @param theVector The vector associated with the namespace prefix. 
+     * @return A pointer to a const XalanDOMString containing the desired binding, or NULL.
+     */
+    virtual const XalanDOMString*
+    duplicateBinding(const AttributeVectorType&     theVector) const;
 
 private:
 
-	NamespacesMapType		m_namespaces;
+    NamespacesMapType       m_namespaces;
 
-	const XalanDOMString	m_uri;
+    const XalanDOMString    m_uri;
 };
 
 
@@ -144,4 +144,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XALANDOCUMENTPREFIXRESOLVER_HEADER_GUARD_1357924680
+#endif  // XALANDOCUMENTPREFIXRESOLVER_HEADER_GUARD_1357924680

@@ -41,61 +41,61 @@ class XALAN_XPATH_EXPORT FunctionConcat : public Function
 {
 public:
 
-	typedef Function	ParentType;
+    typedef Function    ParentType;
 
-	FunctionConcat();
+    FunctionConcat();
 
-	virtual
-	~FunctionConcat();	
+    virtual
+    ~FunctionConcat();  
 
-	// These methods are inherited from Function ...
+    // These methods are inherited from Function ...
 
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			const XObjectArgVectorType&		args,
-			const LocatorType*				locator) const;
+    virtual XObjectPtr
+    execute(
+            XPathExecutionContext&          executionContext,
+            XalanNode*                      context,
+            const XObjectArgVectorType&     args,
+            const LocatorType*              locator) const;
 
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			const XObjectPtr			arg1,
-			const XObjectPtr			arg2,
-			const LocatorType*			locator) const;
+    XObjectPtr
+    execute(
+            XPathExecutionContext&      executionContext,
+            XalanNode*                  context,
+            const XObjectPtr            arg1,
+            const XObjectPtr            arg2,
+            const LocatorType*          locator) const;
 
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			arg1,
-			const XObjectPtr			arg2,
-			const XObjectPtr			arg3,
-			const LocatorType*			locator) const;
+    XObjectPtr
+    execute(
+            XPathExecutionContext&      executionContext,
+            XalanNode*                  context,            
+            const XObjectPtr            arg1,
+            const XObjectPtr            arg2,
+            const XObjectPtr            arg3,
+            const LocatorType*          locator) const;
 
-	using ParentType::execute;
+    using ParentType::execute;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
+    virtual Function*
 #else
-	virtual FunctionConcat*
+    virtual FunctionConcat*
 #endif
-	clone(MemoryManager& theManager) const;
+    clone(MemoryManager& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+    virtual const XalanDOMString&
+    getError(XalanDOMString& theResult) const;
 
 private:
 
-	// Not implemented...
-	FunctionConcat&
-	operator=(const FunctionConcat&);
+    // Not implemented...
+    FunctionConcat&
+    operator=(const FunctionConcat&);
 
-	bool
-	operator==(const FunctionConcat&) const;
+    bool
+    operator==(const FunctionConcat&) const;
 };
 
 
@@ -104,4 +104,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// FUNCTIONCONCAT_HEADER_GUARD_1357924680
+#endif  // FUNCTIONCONCAT_HEADER_GUARD_1357924680

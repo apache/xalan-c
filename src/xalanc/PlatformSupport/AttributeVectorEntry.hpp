@@ -39,41 +39,41 @@ class XALAN_PLATFORMSUPPORT_EXPORT AttributeVectorEntry
 {
 public:
 
-	typedef XalanVector<XMLCh>		XMLChVectorType;
+    typedef XalanVector<XMLCh>      XMLChVectorType;
 
-	AttributeVectorEntry(
-			const XMLChVectorType&	theName,
-			const XMLChVectorType&	theValue,
-			const XMLChVectorType&	theType,
+    AttributeVectorEntry(
+            const XMLChVectorType&  theName,
+            const XMLChVectorType&  theValue,
+            const XMLChVectorType&  theType,
             MemoryManager&      theManager) :
-		m_Name(theName,theManager),
-		m_Value(theValue,theManager),
-		m_Type(theType,theManager)
-	{
-	}
+        m_Name(theName,theManager),
+        m_Value(theValue,theManager),
+        m_Type(theType,theManager)
+    {
+    }
 
-	AttributeVectorEntry(
-			const XMLCh*	        theName,
-			const XMLCh*	        theValue,
-			const XMLCh*	        theType,
+    AttributeVectorEntry(
+            const XMLCh*            theName,
+            const XMLCh*            theValue,
+            const XMLCh*            theType,
             MemoryManager&      theManager) :
-		m_Name(theName, theName + length(theName) + 1, theManager),
-		m_Value(theValue, theValue + length(theValue) + 1, theManager),
-		m_Type(theType, theType + length(theType) + 1, theManager)
-	{
-	}
+        m_Name(theName, theName + length(theName) + 1, theManager),
+        m_Value(theValue, theValue + length(theValue) + 1, theManager),
+        m_Type(theType, theType + length(theType) + 1, theManager)
+    {
+    }
 
-	AttributeVectorEntry(MemoryManager&      theManager) :
-		m_Name(theManager),
-		m_Value(theManager),
-		m_Type(theManager)
-	{
-	}
+    AttributeVectorEntry(MemoryManager&      theManager) :
+        m_Name(theManager),
+        m_Value(theManager),
+        m_Type(theManager)
+    {
+    }
 
     static AttributeVectorEntry*
-    create( const XMLCh*	theName,
-			const XMLCh*	theValue,
-			const XMLCh*	theType,
+    create( const XMLCh*    theName,
+            const XMLCh*    theValue,
+            const XMLCh*    theType,
             MemoryManager&      theManager)
     {
         typedef AttributeVectorEntry ThisType;
@@ -90,36 +90,36 @@ public:
     }
 
     virtual
-	~AttributeVectorEntry()
-	{
-	}
+    ~AttributeVectorEntry()
+    {
+    }
 
-	void
-	clear()
-	{
-		m_Name.clear();
-		m_Value.clear();
-		m_Type.clear();
-	}
+    void
+    clear()
+    {
+        m_Name.clear();
+        m_Value.clear();
+        m_Type.clear();
+    }
 
-	XMLChVectorType		m_Name;
-	XMLChVectorType		m_Value;
-	XMLChVectorType		m_Type;
+    XMLChVectorType     m_Name;
+    XMLChVectorType     m_Value;
+    XMLChVectorType     m_Type;
 
-	// A convenience function to find the length of a null-terminated
-	// array of XMLChs
-	static const XMLCh*
-	endArray(const XMLCh*	data)
-	{
-		assert(data != 0);
+    // A convenience function to find the length of a null-terminated
+    // array of XMLChs
+    static const XMLCh*
+    endArray(const XMLCh*   data)
+    {
+        assert(data != 0);
 
-		while(*data)
-		{
-			++data;
-		}
+        while(*data)
+        {
+            ++data;
+        }
 
-		return data;
-	}
+        return data;
+    }
 };
 
 
@@ -128,4 +128,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// ATTRIBUTEVECTORENTRY_HEADER_GUARD_1357924680
+#endif  // ATTRIBUTEVECTORENTRY_HEADER_GUARD_1357924680
