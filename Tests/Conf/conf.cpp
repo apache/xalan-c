@@ -98,15 +98,15 @@ setHelp(XalanFileUtility&   h)
          << "conf dir [-sub -out -gold -source (XST | XPL | DOM)]"
          << endl
          << endl
-         << "dir		(base directory for testcases)"
+         << "dir        (base directory for testcases)"
          << endl
-         << "-sub dir	(specific directory)"
+         << "-sub dir   (specific directory)"
          << endl
-         << "-out dir	(base directory for output)"
+         << "-out dir   (base directory for output)"
          << endl
-         << "-gold dir	(base directory for gold files)"
+         << "-gold dir  (base directory for gold files)"
          << endl
-         << "-source type	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
+         << "-source type   (parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
          << endl;
 }
 
@@ -202,6 +202,9 @@ static const char* const    excludeStylesheetsWithoutICU[] =
 
     // Excluded because it outputs BIG5, and not all platforms support this encoding.
     "output21.xsl",
+
+    // Excluded because it outputs EBCDIC-CP-IT, and not all platforms support this encoding.
+    "output22.xsl",
 
     // Excluded because it outputs ISO-2022-JP, and not all platforms support this encoding.
     "output23.xsl",
