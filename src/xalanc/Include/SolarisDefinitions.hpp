@@ -35,12 +35,11 @@
 #define XALAN_HAS_CPP_NAMESPACE
 #define XALAN_STRICT_ANSI_HEADERS
 
-// Standard allocators don't seem to work correctly with this compiler.
-// I don't know if this is their bug, or ours...
-#define XALAN_NO_STD_ALLOCATORS
 #define XALAN_RW_NO_CLASS_PARTIAL_SPEC
 
 #define XALAN_POSIX2_AVAILABLE
+#if defined(__sparc)
 #define XALAN_NO_STD_NUMERIC_LIMITS
+#endif
 
 #endif  // SOLARISDEFINITIONS_HEADER_GUARD_1357924680
