@@ -341,14 +341,14 @@ ifeq ($(PLATFORM), SOLARIS)
 
   else
 
-	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XSL_OBJ_DIR) -features=rtti -D${PLATFORM} -D_REENTRANT
+	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -features=rtti -D${PLATFORM} -D_REENTRANT
 
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
     CC4 = $(CC) $(CFLAGS) -KPIC -mt -xs -D${PLATFORM} -D_REENTRANT
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XSL_OBJ_DIR) ${LDFLAGS} 
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G ${LDFLAGS} 
     LINK_SONAME = -h ${SO_NAME} 
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
-	LINK = ${CXX} -D${PLATFORM} -ptr$(XSL_OBJ_DIR) ${LDFLAGS}
+	LINK = ${CXX} -D${PLATFORM} ${LDFLAGS}
 
     ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -lc -lgen
   endif
@@ -362,7 +362,7 @@ ifeq ($(PLATFORM), SOLARIS)
   	export LD_LIBRARY_PATH_64 := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LD_LIBRARY_PATH_64)
   endif
 
-  MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
+  MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G ${LDFLAGS} -h ${LOC_SONAME}
 
 endif
 
