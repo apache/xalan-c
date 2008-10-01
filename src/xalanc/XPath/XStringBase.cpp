@@ -142,10 +142,13 @@ XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&    theCallbackObjec
 const XalanDOMString&
 XStringBase::str() const
 {
-    XalanDOMString  theBuffer(*getMemoryManager().getExceptionMemoryManager());
+    MemoryManager&  theMemoryManager =
+        XalanMemoryManager::getExceptionMemoryManager(getMemoryManager());
+
+    XalanDOMString  theBuffer(theMemoryManager);
 
     throw XObjectInvalidConversionException(
-                theBuffer.getMemoryManager(),
+                theMemoryManager,
                 getTypeString(),
                 s_numberString,
                 theBuffer);

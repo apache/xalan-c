@@ -1302,14 +1302,13 @@ XObject::throwInvalidConversionException(const XalanDOMString&  theTargetType) c
 {
     assert(m_memoryManager != 0);
 
-    MemoryManager* const    theMemoryManager =
-        m_memoryManager->getExceptionMemoryManager();
-    assert(theMemoryManager != 0);
+    MemoryManager&  theMemoryManager =
+        XalanMemoryManager::getExceptionMemoryManager(*m_memoryManager);
 
-    XalanDOMString  theBuffer(*theMemoryManager);
+    XalanDOMString  theBuffer(theMemoryManager);
 
     throw XObjectInvalidConversionException(
-                *theMemoryManager,
+                theMemoryManager,
                 getTypeString(),
                 theTargetType,
                 theBuffer);

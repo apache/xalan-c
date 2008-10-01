@@ -24,6 +24,7 @@
 
 
 
+#include <cassert>
 #include <cstddef>
 #include <new>
 
@@ -70,6 +71,18 @@ public:
 
     virtual MemoryManager*
     getExceptionMemoryManager() = 0;
+
+    static MemoryManager&
+    getExceptionMemoryManager(MemoryManager&    theMemoryManager)
+    {
+#if XERCES_VERSION_MAJOR < 3
+        return theMemoryManager;
+#else
+        assert(theMemoryManager.getExceptionMemoryManager() != 0);
+
+        return *theMemoryManager.getExceptionMemoryManager();
+#endif
+    }
 
 protected:
 

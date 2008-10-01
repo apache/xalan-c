@@ -105,7 +105,7 @@ public:
     MemoryManager&
     getExceptionMemoryManager() const
     {
-        return *m_memoryManager.getExceptionMemoryManager();
+        return XalanMemoryManager::getExceptionMemoryManager(m_memoryManager);
     }
 
 protected:
