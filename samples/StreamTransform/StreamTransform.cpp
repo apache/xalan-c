@@ -20,6 +20,7 @@
 
 
 
+#include <cstring>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #include <strstream.h>

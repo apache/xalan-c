@@ -21,6 +21,7 @@
 
 
 #include <cmath>
+#include <cstring>
 #include <ctime>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>

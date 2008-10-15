@@ -19,9 +19,15 @@
 // Base header file.  Must be first.
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
+
+
 #include <xalanc/Include/XalanMemoryManagement.hpp>
 
+
+
 #include <cassert>
+#include <climits>
+#include <cstring>
 #include <ctime>
 
 

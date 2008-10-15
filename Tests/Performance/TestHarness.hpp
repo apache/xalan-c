@@ -23,6 +23,7 @@
 
 
 
+#include <climits>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <fstream.h>
 #else
