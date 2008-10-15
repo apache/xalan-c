@@ -63,6 +63,14 @@ XNumber::num(XPathExecutionContext&     /* executionContext */) const
 
 
 
+double
+XNumber::num() const
+{
+    return m_value;
+}
+
+
+
 const XalanDOMString&
 XNumber::str(XPathExecutionContext&     /* executionContext */) const
 {

@@ -63,6 +63,9 @@ public:
     virtual double
     num(XPathExecutionContext&  executionContext) const;
 
+    virtual double
+    num() const;
+
     virtual const XalanDOMString&
     str(XPathExecutionContext&  executionContext) const;
 

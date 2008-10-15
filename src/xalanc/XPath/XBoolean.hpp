@@ -71,6 +71,8 @@ public:
     virtual double
     num(XPathExecutionContext&  executionContext) const;
 
+    using ParentType::num;
+
     virtual bool
     boolean(XPathExecutionContext&  executionContext) const;
 

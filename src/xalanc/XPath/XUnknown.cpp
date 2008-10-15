@@ -20,6 +20,7 @@
 
 
 
+#include "xalanc/PlatformSupport/DoubleSupport.hpp"
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
@@ -113,7 +114,15 @@ XUnknown::getTypeString() const
 double
 XUnknown::num(XPathExecutionContext&    /* executionContext */) const
 {
-    return 0.0;
+    return DoubleSupport::getNaN();
+}
+
+
+
+double
+XUnknown::num() const
+{
+    return DoubleSupport::getNaN();
 }
 
 

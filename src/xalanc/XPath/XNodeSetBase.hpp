@@ -48,6 +48,8 @@ public:
 
     typedef NodeRefListBase::size_type  size_type;
 
+    typedef XObject     ParentType;
+
     virtual
     ~XNodeSetBase();
 
@@ -59,6 +61,8 @@ public:
 
     virtual double
     num(XPathExecutionContext&  executionContext) const;
+
+    using ParentType::num;
 
     virtual bool
     boolean(XPathExecutionContext&  executionContext) const;

@@ -61,6 +61,14 @@ XTokenNumberAdapter::num(XPathExecutionContext&     /* executionContext */) cons
 
 
 
+double
+XTokenNumberAdapter::num() const
+{
+    return m_value.num();
+}
+
+
+
 const XalanDOMString&
 XTokenNumberAdapter::str(XPathExecutionContext&     /* executionContext */) const
 {
