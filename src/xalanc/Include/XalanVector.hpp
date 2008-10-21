@@ -587,7 +587,8 @@ public:
     }
 
     void
-    resize( size_type           theSize,
+    resize(
+            size_type           theSize,
             const value_type&   theValue)
     {
         invariants();
@@ -974,28 +975,73 @@ private:
     }
 
     void
+    grow(const value_type&   data)
+    {
+        invariants();
+
+        assert(m_size != 0 && m_size == m_allocation);
+
+        const size_type     theNewSize = size_type((m_size * 1.6) + 0.5);
+        assert(theNewSize > m_size);
+
+        ThisType    theTemp(*this, *m_memoryManager, theNewSize);
+
+        theTemp.doPushBack(data);
+
+        swap(theTemp);
+
+        invariants();
+    }
+
+    void
+    construct_back(const value_type&    data)
+    {
+        invariants();
+
+        assert(m_size < m_allocation);
+
+        Constructor::construct(
+            endPointer(),
+            data,
+            *m_memoryManager);
+
+        ++m_size;
+
+        invariants();
+    }
+
+    void
+    init(const value_type&  data)
+    {
+        invariants();
+
+        assert(m_size == 0 && m_allocation == 0);
+
+        m_data = allocate(1);
+
+        m_allocation = 1;
+
+        construct_back(data);
+
+        invariants();
+    }
+
+    void
     doPushBack(const value_type&   data)
     {
         invariants();
 
         if (m_size < m_allocation)
         {
-            Constructor::construct(endPointer(), data, *m_memoryManager);
-
-            ++m_size;
+            construct_back(data);
+        }
+        else if (m_size == 0)
+        {
+            init(data);
         }
         else
         {
-            assert(m_size == m_allocation);
-
-            const size_type     theNewSize = m_size == 0 ? 1 : size_type((m_size * 1.6) + 0.5);
-            assert(theNewSize > m_size);
-
-            ThisType    theTemp(*this, *m_memoryManager, theNewSize);
-
-            theTemp.doPushBack(data);
-
-            swap(theTemp);
+            grow(data);
         }
 
         invariants();
