@@ -126,7 +126,7 @@ FormatterToDeprecatedXercesDOM::~FormatterToDeprecatedXercesDOM()
 
 
 void
-FormatterToDeprecatedXercesDOM::setDocumentLocator(const LocatorType* const /* locator */)
+FormatterToDeprecatedXercesDOM::setDocumentLocator(const Locator* const /* locator */)
 {
     // No action for the moment.
 }

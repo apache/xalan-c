@@ -159,7 +159,7 @@ public:
     }
 
     void
-    setDocumentLocator(const LocatorType* const /* locator */)
+    setDocumentLocator(const Locator* const     /* locator */)
     {
     }
 

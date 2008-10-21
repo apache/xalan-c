@@ -186,7 +186,7 @@ public:
             const XalanDOMString&           functionName, 
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     virtual void
     reset();

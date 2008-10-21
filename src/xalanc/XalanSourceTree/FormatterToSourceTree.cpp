@@ -93,7 +93,7 @@ FormatterToSourceTree::~FormatterToSourceTree()
 
 
 void
-FormatterToSourceTree::setDocumentLocator(const LocatorType* const  /* locator */)
+FormatterToSourceTree::setDocumentLocator(const Locator* const  /* locator */)
 {
 }
 

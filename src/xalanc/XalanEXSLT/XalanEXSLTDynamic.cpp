@@ -38,7 +38,7 @@ XalanEXSLTFunctionEvaluate::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     try
     {

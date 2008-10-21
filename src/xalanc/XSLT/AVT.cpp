@@ -81,7 +81,7 @@ typedef XPathConstructionContext::GetCachedString   GetCachedString;
  */
 AVT::AVT(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             const XalanDOMChar*             name,
             const XalanDOMChar*             stringedValue,
             const PrefixResolver&           resolver) :
@@ -351,7 +351,7 @@ AVT::doEvaluate(
 void
 AVT::nextToken(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             StringTokenizer&                tokenizer,
             XalanDOMString&                 token)
 {

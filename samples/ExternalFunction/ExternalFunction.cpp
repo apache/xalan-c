@@ -45,6 +45,7 @@
 
 
 XALAN_USING_XALAN(Function)
+XALAN_USING_XALAN(Locator)
 XALAN_USING_XALAN(XPathExecutionContext)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanNode)
@@ -75,7 +76,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
     {
         if (args.size() != 1)
         {
@@ -162,7 +163,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
     {
         if (args.size() != 1)
         {
@@ -249,7 +250,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
     {
         if (args.empty() == false)
         {

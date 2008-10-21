@@ -140,7 +140,7 @@ ElemTemplateElement::~ElemTemplateElement()
 
 
 
-const LocatorType*
+const Locator*
 ElemTemplateElement::getLocator() const
 {
     return &m_locatorProxy;
@@ -951,7 +951,7 @@ ElemTemplateElement::processSortElement(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     /* theStylesheet */,
             const AttributeListType&        /* atts */,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     error(
         constructionContext,

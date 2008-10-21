@@ -59,7 +59,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -124,7 +124,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -202,7 +202,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -269,7 +269,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -340,7 +340,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -370,7 +370,7 @@ protected:
     hexCharsToByte( 
             XPathExecutionContext&      executionContext,
             XalanNode*                  context,
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar          highHexChar,
             const XalanDOMChar          lowHexChar) const;
 

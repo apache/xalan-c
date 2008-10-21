@@ -136,7 +136,7 @@ XalanEXSLTFunctionObjectType::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     // Make sure nothing's happened to our strings and that
     // they were actually initialized...

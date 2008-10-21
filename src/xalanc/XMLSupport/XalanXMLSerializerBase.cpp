@@ -230,7 +230,7 @@ XalanXMLSerializerBase::throwInvalidXMLCharacterException(
 
 
 void
-XalanXMLSerializerBase::setDocumentLocator(const LocatorType* const     /* locator */)
+XalanXMLSerializerBase::setDocumentLocator(const Locator* const     /* locator */)
 {
 }
 

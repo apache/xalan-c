@@ -51,7 +51,7 @@ XObjectPtr
 FunctionString::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     if (context == 0)
     {
@@ -98,7 +98,7 @@ FunctionString::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              /* context */,          
             const XObjectPtr        arg1,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(arg1.null() == false);   
 

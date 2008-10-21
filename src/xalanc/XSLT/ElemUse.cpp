@@ -256,8 +256,8 @@ ElemUse::doExecute(
     {
         assert(canGenerateAttributes() == true);
 
-        const StylesheetRoot&       theStylesheetRoot = getStylesheet().getStylesheetRoot();
-        const LocatorType* const    theLocator = getLocator();
+        const StylesheetRoot&   theStylesheetRoot = getStylesheet().getStylesheetRoot();
+        const Locator* const    theLocator = getLocator();
 
         for(size_type i = 0; i < m_attributeSetsNamesCount; ++i)
         {

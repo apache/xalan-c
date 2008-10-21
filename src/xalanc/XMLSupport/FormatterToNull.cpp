@@ -38,7 +38,7 @@ FormatterToNull::~FormatterToNull()
 
 
 void
-FormatterToNull::setDocumentLocator(const LocatorType* const    /* locator */)
+FormatterToNull::setDocumentLocator(const Locator* const    /* locator */)
 {
 }
 

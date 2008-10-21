@@ -147,7 +147,7 @@ ElemForEach::processSortElement(
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     theStylesheet,
             const AttributeListType&        atts,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     const XalanFileLoc  lineNumber = XalanLocator::getLineNumber(locator);
     const XalanFileLoc  columnNumber = XalanLocator::getColumnNumber(locator);

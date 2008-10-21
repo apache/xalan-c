@@ -53,7 +53,7 @@ public:
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
             const XObjectPtr        arg,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual XObjectPtr
     execute(
@@ -61,7 +61,7 @@ public:
             XalanNode*              context,
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     using ParentType::execute;
 
@@ -86,7 +86,7 @@ private:
             const XObjectPtr&       arg,
             XalanDOMString*         base,
             int                     argCount,
-            const LocatorType*      locator,
+            const Locator*          locator,
             bool                    fNoRelativeURI = false) const;
 
     // Not implemented...

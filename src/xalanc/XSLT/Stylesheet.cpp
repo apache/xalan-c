@@ -228,7 +228,7 @@ Stylesheet::error(
 ElemTemplateElement*
 Stylesheet::initWrapperless(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     if (m_isWrapperless == true)
     {
@@ -269,7 +269,7 @@ void
 Stylesheet::processKeyElement(
             const PrefixResolver&           nsContext,
             const AttributeListType&        atts,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             StylesheetConstructionContext&  constructionContext)
 {
     const XalanQName*       theQName = 0;
@@ -1588,7 +1588,7 @@ void
 Stylesheet::processDecimalFormatElement(
             StylesheetConstructionContext&  constructionContext,
             const AttributeListType&        atts,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);

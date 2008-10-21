@@ -56,14 +56,14 @@ public:
     execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual XObjectPtr
     execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
             const XObjectPtr        arg1,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
     virtual Function*

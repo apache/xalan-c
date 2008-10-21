@@ -176,7 +176,7 @@ public:
         const XalanDecimalFormatSymbols*    theDFS,
         XalanDOMString&                     theResult,
         const XalanNode*                    context = 0,
-        const LocatorType*                  locator = 0) const;
+        const Locator*                      locator = 0) const;
     
 
     class UnlocalizePatternFunctor

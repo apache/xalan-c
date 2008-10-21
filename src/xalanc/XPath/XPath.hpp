@@ -159,7 +159,7 @@ public:
     /**
      * Construct an XPath.
      *
-     * @param theLocator The applicable LocatorType, if any.
+     * @param theLocator The applicable Locator, if any.
      */
     explicit
     XPath(
@@ -1014,14 +1014,14 @@ public:
         m_inStylesheet = fValue;
     }
 
-    const LocatorType*
+    const Locator*
     getLocator() const
     {
         return m_locator;
     }
 
     void
-    setLocator(const LocatorType*   theLocator)
+    setLocator(const Locator*   theLocator)
     {
         m_locator = theLocator;
     }
@@ -1045,7 +1045,7 @@ public:
             XPathConstructionContext&   theContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
-            const LocatorType*          theLocator = 0,
+            const Locator*          theLocator = 0,
             eMatchScore*                theMatchScore = 0);
 
         NodeTester(
@@ -1088,7 +1088,7 @@ public:
             XPathConstructionContext&   theConstructionContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
-            const LocatorType*          theLocator);
+            const Locator*          theLocator);
 
         eMatchScore
         initialize(
@@ -2646,9 +2646,9 @@ private:
     XPathExpression     m_expression;
 
     /**
-     * A LocatorType for reporting errors.
+     * A Locator for reporting errors.
      */
-    const LocatorType*  m_locator;
+    const Locator*      m_locator;
 
     /**
      * If true, the XPath can allocated XObjects in more

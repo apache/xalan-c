@@ -66,7 +66,7 @@ public:
             XalanNode*              context,            
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual XObjectPtr
     execute(
@@ -75,7 +75,7 @@ public:
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
             const XObjectPtr        arg3,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
     virtual Function*

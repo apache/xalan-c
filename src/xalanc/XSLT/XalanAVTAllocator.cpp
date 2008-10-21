@@ -41,7 +41,7 @@ XalanAVTAllocator::~XalanAVTAllocator()
 XalanAVTAllocator::data_type*
 XalanAVTAllocator::create(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             const XalanDOMChar*             name,
             const XalanDOMChar*             stringedValue,
             const PrefixResolver&           resolver)

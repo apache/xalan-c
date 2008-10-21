@@ -49,7 +49,7 @@ FunctionElementAvailable::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              /* context */,          
             const XObjectPtr        arg1,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false);
 

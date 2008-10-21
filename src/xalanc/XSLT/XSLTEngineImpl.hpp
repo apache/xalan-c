@@ -151,7 +151,7 @@ public:
         }
     };
 
-    typedef XalanVector<const LocatorType*>     LocatorStack;
+    typedef XalanVector<const Locator*>         LocatorStack;
     typedef XalanVector<TraceListener*>         TraceListenerVectorType;
     typedef XalanVector<const XalanDOMString*>  XalanDOMStringPointerVectorType;
 
@@ -483,7 +483,7 @@ public:
             const XalanDOMString&   aname,
             const XalanDOMString&   value,
             bool                    fromCopy = false,
-            const LocatorType*      locator = 0)
+            const Locator*          locator = 0)
     {
         addResultAttribute(
             attList,
@@ -509,7 +509,7 @@ public:
             const XalanDOMString&   aname,
             const XalanDOMChar*     value,
             bool                    fromCopy = false,
-            const LocatorType*      locator = 0)
+            const Locator*          locator = 0)
     {
         addResultAttribute(
             attList,
@@ -538,7 +538,7 @@ public:
             const XalanDOMChar*     value,
             size_type               theLength,
             bool                    fromCopy = false,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
 
     /**
      * Add attribute to pending attributes list, and if it is a namespace, add
@@ -554,7 +554,7 @@ public:
             const XalanDOMString&       aname,
             const XalanDOMChar*         value,
             bool                        fromCopy = false,
-            const LocatorType*          locator = 0)
+            const Locator*              locator = 0)
     {
         assert(m_outputContextStack.empty() == false);
 
@@ -580,7 +580,7 @@ public:
             const XalanDOMString&   aname,
             const XalanDOMString&   value,
             bool                    fromCopy = false,
-            const LocatorType*      locator = 0)
+            const Locator*          locator = 0)
     {
         assert(m_outputContextStack.empty() == false);
 
@@ -600,10 +600,10 @@ public:
     void
     reportDuplicateNamespaceNodeError(
             const XalanDOMString&   theName,
-            const LocatorType*      locator);
+            const Locator*          locator);
 
     void
-    setDocumentLocator(const LocatorType*   locator);
+    setDocumentLocator(const Locator*   locator);
 
     void
     startDocument();
@@ -747,7 +747,7 @@ public:
     cloneToResultTree(
             const XalanNode&    node,
             bool                cloneTextNodesOnly,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     /**
      * Clone a node to the result tree
@@ -766,7 +766,7 @@ public:
             bool                    overrideStrip,
             bool                    shouldCloneAttributes,
             bool                    cloneTextNodesOnly,
-            const LocatorType*      locator);
+            const Locator*          locator);
 
    /**
     * Output an object to the result tree by doing the right conversions.
@@ -779,7 +779,7 @@ public:
     outputToResultTree(
             const XObject&      value,
             bool                outputTextNodesOnly,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     /**
      * Given a result tree fragment, walk the tree and output it to the result
@@ -793,7 +793,7 @@ public:
     outputResultTreeFragment(
             const XObject&      theTree,
             bool                outputTextNodesOnly,
-            const LocatorType*  locator)
+            const Locator*      locator)
     {
         outputResultTreeFragment(
             theTree.rtree(),
@@ -813,7 +813,7 @@ public:
     outputResultTreeFragment(
             const XalanDocumentFragment&    theTree,
             bool                            outputTextNodesOnly,
-            const LocatorType*              locator);
+            const Locator*                  locator);
 
     /**
      * Retrieve the root stylesheet.
@@ -1209,7 +1209,7 @@ public:
      *
      * @return A pointer to the Locator, or 0 if there is nothing on the stack.
      */
-    const LocatorType*
+    const Locator*
     getLocatorFromStack() const
     {
         return m_stylesheetLocatorStack.empty() == true ? 0 : m_stylesheetLocatorStack.back();
@@ -1221,7 +1221,7 @@ public:
      * @param A pointer to the Locator to push.
      */
     void
-    pushLocatorOnStack(const LocatorType*   locator)
+    pushLocatorOnStack(const Locator*   locator)
     {
         m_stylesheetLocatorStack.push_back(locator);
     }
@@ -1420,7 +1420,7 @@ private:
     void
     warnCopyTextNodesOnly(
             const XalanNode*    sourceNode,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     /**
      * Clone a text node to the result tree
@@ -1523,7 +1523,7 @@ private:
     problem(
             const XalanDOMString&               msg, 
             ProblemListener::eClassification    classification,
-            const LocatorType&                  locator,
+            const Locator&                      locator,
             const XalanNode*                    sourceNode) const;
 
     void

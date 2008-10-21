@@ -156,7 +156,7 @@ StylesheetHandler::processSpaceAttr(
             const XalanDOMChar*         aname,
             const AttributeListType&    atts,
             XalanSize_t                 which,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool&                       fPreserve)
 {
     if (m_constructionContext.isXMLSpaceAttribute(aname, m_stylesheet, locator) == false)
@@ -201,7 +201,7 @@ bool
 StylesheetHandler::processSpaceAttr(
             const XalanDOMChar*         elementName,
             const AttributeListType&    atts,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool&                       fPreserve)
 {
     const XalanSize_t  len = atts.getLength();
@@ -251,7 +251,7 @@ StylesheetHandler::startElement(
 
         m_whiteSpaceElems.clear();
 
-        const LocatorType* const    locator = m_constructionContext.getLocatorFromStack();
+        const Locator* const    locator = m_constructionContext.getLocatorFromStack();
 
         // First push namespaces
         m_stylesheet.pushNamespaces(atts);
@@ -717,7 +717,7 @@ ElemTemplateElement*
 StylesheetHandler::initWrapperless(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     assert(m_pTemplate == 0);
 
@@ -779,7 +779,7 @@ StylesheetHandler::processTopLevelElement(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
             int                         xslToken,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool&                       fPreserveSpace,
             bool&                       fSpaceAttrProcessed)
 {
@@ -946,7 +946,7 @@ void
 StylesheetHandler::processStylesheet(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool&                       fPreserveSpace,
             bool&                       fSpaceAttrProcessed)
 {
@@ -1044,7 +1044,7 @@ StylesheetHandler::processExtensionElement(
             const XalanDOMChar*         /* name */,
             const XalanDOMString&       /* localName */,
             const AttributeListType&    /* atts */,
-            const LocatorType*          /* locator */)
+            const Locator*              /* locator */)
 {
 }
 
@@ -1053,7 +1053,7 @@ StylesheetHandler::processExtensionElement(
 void
 StylesheetHandler::checkForOrAddVariableName(
             const XalanQName&   theVariableName,
-            const LocatorType*  theLocator)
+            const Locator*      theLocator)
 {
     if (inExtensionElement() == true)
     {
@@ -1118,7 +1118,7 @@ void
 StylesheetHandler::processPreserveStripSpace(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator,
+            const Locator*              locator,
             int                         xslToken)
 {
     const XalanSize_t   nAttrs = atts.getLength();
@@ -1199,7 +1199,7 @@ StylesheetHandler::appendChildElementToParent(
 void
 StylesheetHandler::appendChildElementToParent(
             ElemTemplateElement*    elem,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     appendChildElementToParent(m_elemStack.back(), elem, locator);
 }
@@ -1210,7 +1210,7 @@ void
 StylesheetHandler::appendChildElementToParent(
             ElemTemplateElement*    parent,
             ElemTemplateElement*    elem,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(parent != 0 && elem != 0);
 
@@ -1282,7 +1282,7 @@ void
 StylesheetHandler::processImport(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     const XalanSize_t   nAttrs = atts.getLength();
 
@@ -1398,7 +1398,7 @@ void
 StylesheetHandler::processInclude(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     const XalanSize_t   nAttrs = atts.getLength();
 
@@ -1883,7 +1883,7 @@ void
 StylesheetHandler::illegalAttributeError(
             const XalanDOMChar*     theElementName,
             const XalanDOMChar*     theAttributeName,
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 
 {
     const GetCachedString   theGuard(m_constructionContext);

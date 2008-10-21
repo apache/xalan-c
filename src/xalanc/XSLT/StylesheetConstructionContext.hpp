@@ -534,7 +534,7 @@ public:
      */
     virtual const AVT*
     createAVT(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMChar*     name,
             const XalanDOMChar*     stringedValue,
             const PrefixResolver&   resolver) = 0;
@@ -563,7 +563,7 @@ public:
      */
     virtual const AVTPart*
     createAVTPart(
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar*         str,
             XalanDOMString::size_type   len,
             const PrefixResolver&       resolver) = 0;
@@ -601,7 +601,7 @@ public:
     createXalanQName(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false) = 0;
 
     /**
@@ -617,7 +617,7 @@ public:
     createXalanQName(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false) = 0;
 
     /**

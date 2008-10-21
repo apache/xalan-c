@@ -46,7 +46,7 @@ FunctionFormatNumber::execute(
             XalanNode*              context,
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false && arg2.null() == false);   
     
@@ -74,7 +74,7 @@ FunctionFormatNumber::execute(
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
             const XObjectPtr        arg3,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
     

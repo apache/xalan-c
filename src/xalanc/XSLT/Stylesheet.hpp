@@ -459,7 +459,7 @@ public:
     processDecimalFormatElement(
             StylesheetConstructionContext&  constructionContext,
             const AttributeListType&        atts,
-            const LocatorType*              locator = 0);
+            const Locator*                  locator = 0);
 
     /**
      * Retrieve the XalanDecimalFormatSymbols instance associated with
@@ -496,7 +496,7 @@ public:
     ElemTemplateElement*
     initWrapperless(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator);
+            const Locator*                  locator);
 
     /**
      * Retrieve the stack of who's including who
@@ -521,7 +521,7 @@ public:
     processKeyElement(
             const PrefixResolver&           nsContext,
             const AttributeListType&        atts,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             StylesheetConstructionContext&  constructionContext);
 
     /**

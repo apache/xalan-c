@@ -46,7 +46,7 @@ Function::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     const XObjectArgVectorType::size_type   theArgCount = args.size();
 
@@ -83,7 +83,7 @@ XObjectPtr
 Function::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,            
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     generalError(
         executionContext,
@@ -100,7 +100,7 @@ Function::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,            
             const XObjectPtr        /* arg1 */,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     generalError(
         executionContext,
@@ -118,7 +118,7 @@ Function::execute(
             XalanNode*              context,            
             const XObjectPtr        /* arg1 */,
             const XObjectPtr        /* arg2 */,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     generalError(
         executionContext,
@@ -137,7 +137,7 @@ Function::execute(
             const XObjectPtr        /* arg1 */,
             const XObjectPtr        /* arg2 */,
             const XObjectPtr        /* arg3 */,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     generalError(
         executionContext,

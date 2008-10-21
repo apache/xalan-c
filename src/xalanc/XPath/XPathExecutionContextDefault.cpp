@@ -322,7 +322,7 @@ XPathExecutionContextDefault::elementAvailable(const XalanQName&    theQName) co
 bool
 XPathExecutionContextDefault::elementAvailable(
             const XalanDOMString&   theName, 
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -348,7 +348,7 @@ XPathExecutionContextDefault::functionAvailable(const XalanQName&   theQName) co
 bool
 XPathExecutionContextDefault::functionAvailable(
             const XalanDOMString&   theName, 
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -367,7 +367,7 @@ XPathExecutionContextDefault::extFunction(
             const XalanDOMString&           functionName, 
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -445,7 +445,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
             XalanNode*              /* context */,
             const XalanQName&       /* qname */,
             const XalanDOMString&   /* ref */,
-            const LocatorType*      /* locator */,
+            const Locator* const    /* locator */,
             MutableNodeRefList&     /* nodelist */)
 {
 }
@@ -457,7 +457,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
             XalanNode*              /* context */,
             const XalanDOMString&   /* name */,
             const XalanDOMString&   /* ref */,
-            const LocatorType*      /* locator */,
+            const Locator* const    /* locator */,
             MutableNodeRefList&     /* nodelist */)
 {
 }
@@ -467,7 +467,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 const XObjectPtr
 XPathExecutionContextDefault::getVariable(
             const XalanQName&       name,
-            const LocatorType*      /* locator */)
+            const Locator* const    /* locator */)
 {
     assert(m_xobjectFactory != 0);
 
@@ -534,7 +534,7 @@ void
 XPathExecutionContextDefault::error(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -563,7 +563,7 @@ void
 XPathExecutionContextDefault::warn(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -581,7 +581,7 @@ void
 XPathExecutionContextDefault::message(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(m_xpathEnvSupport != 0);
 
@@ -622,7 +622,7 @@ void XPathExecutionContextDefault::formatNumber(
         const XalanDOMString&               pattern,
         XalanDOMString&                     theResult,
         const XalanNode*                    context,
-        const LocatorType*                  locator) 
+        const Locator*                      locator) 
 {
     doFormatNumber(number, pattern, 0, theResult, context, locator);
 }
@@ -635,7 +635,7 @@ void XPathExecutionContextDefault::formatNumber(
             const XalanDOMString&               /* dfsName */,
             XalanDOMString&                     theResult,
             const XalanNode*                    context,
-            const LocatorType*                  locator) 
+            const Locator*                      locator) 
 {
     doFormatNumber(number, pattern, 0, theResult, context, locator);
 }
@@ -648,7 +648,7 @@ void XPathExecutionContextDefault::doFormatNumber(
             const XalanDecimalFormatSymbols*    theDFS,
             XalanDOMString&                     theResult,
             const XalanNode*                    context,
-            const LocatorType*                  locator) 
+            const Locator*                      locator) 
 {
     if (DoubleSupport::isNaN(number) == true)
     {

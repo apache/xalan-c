@@ -158,7 +158,7 @@ ElemMessage::execute(StylesheetExecutionContext&    executionContext) const
             executionContext,
             theResult.get());
 
-    const LocatorType* const    theLocator = getLocator();
+    const Locator* const    theLocator = getLocator();
 
     executionContext.message(
             theString,

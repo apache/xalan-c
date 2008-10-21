@@ -123,7 +123,7 @@ public:
      * 
      * @return The Locator for the node.
      */
-    virtual const LocatorType*
+    virtual const Locator*
     getLocator() const;
 
     /** 
@@ -369,7 +369,7 @@ public:
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     theStylesheet,
             const AttributeListType&        atts,
-            const LocatorType*              locator = 0);
+            const Locator*                  locator = 0);
 
     /**
      * Sets a flag indicating this is the default template

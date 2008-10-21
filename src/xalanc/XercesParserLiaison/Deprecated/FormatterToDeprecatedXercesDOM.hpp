@@ -128,7 +128,7 @@ public:
     entityReference(const XMLCh* const  name);
 
     virtual void
-    setDocumentLocator(const LocatorType* const     locator);
+    setDocumentLocator(const Locator* const     locator);
 
     virtual void
     startDocument();

@@ -95,7 +95,7 @@ ICUFormatNumberFunctor::operator() (
         const XalanDecimalFormatSymbols*    theDFS,
         XalanDOMString&                     theResult,
         const XalanNode*                    context,
-        const LocatorType*                  locator) const 
+        const Locator*                      locator) const 
 {
     if (!doFormat(theNumber, thePattern, theResult, theDFS))
     {

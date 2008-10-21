@@ -290,19 +290,19 @@ public:
     isXMLSpaceAttribute(
             const XalanDOMChar*     theAttributeName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator = 0);
+            const Locator*          theLocator = 0);
 
     virtual bool
     isXSLUseAttributeSetsAttribute(
             const XalanDOMChar*     theAttributeName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator = 0);
+            const Locator*          theLocator = 0);
 
     virtual bool
     isValidQName(
             const XalanDOMChar*     theName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator = 0);
+            const Locator*          theLocator = 0);
 
     virtual eElementToken
     getElementToken(const XalanDOMString&   name) const;
@@ -321,7 +321,7 @@ public:
 
     virtual const AVT*
     createAVT(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMChar*     name,
             const XalanDOMChar*     stringedValue,
             const PrefixResolver&   resolver);
@@ -333,7 +333,7 @@ public:
 
     virtual const AVTPart*
     createAVTPart(
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar*         str,
             XalanDOMString::size_type   len,
             const PrefixResolver&       resolver);
@@ -348,14 +348,14 @@ public:
     createXalanQName(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     virtual const XalanQName*
     createXalanQName(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     virtual const XalanQName**
@@ -363,7 +363,7 @@ public:
             size_type&                  count,
             const XalanDOMChar*         qnameTokens,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     virtual ElemTemplateElement*
@@ -371,7 +371,7 @@ public:
             int                         token,
             Stylesheet&                 stylesheetTree,
             const AttributeListType&    atts,
-            const LocatorType*          locator = 0);
+            const Locator*              locator = 0);
 
     virtual ElemTemplateElement*
     createElement(
@@ -379,7 +379,7 @@ public:
             Stylesheet&                 stylesheetTree,
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator = 0);
+            const Locator*              locator = 0);
 
     virtual ElemTemplateElement*
     createElement(
@@ -388,7 +388,7 @@ public:
             XalanDOMString::size_type   length,
             bool                        preserveSpace,
             bool                        disableOutputEscaping,
-            const LocatorType*          locator = 0);
+            const Locator*              locator = 0);
 
     virtual ElemTemplateElement*
     createElement(
@@ -396,7 +396,7 @@ public:
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
             ExtensionNSHandler&         handler,
-            const LocatorType*          locator = 0);
+            const Locator*              locator = 0);
 
     virtual const XalanMatchPatternData*
     createXalanMatchPatternData(

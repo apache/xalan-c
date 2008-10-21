@@ -476,7 +476,7 @@ public:
     virtual void
     cloneToResultTree(
             const XalanNode&    node,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     virtual void
     cloneToResultTree(
@@ -484,14 +484,12 @@ public:
             XalanNode::NodeType     nodeType,
             bool                    overrideStrip,
             bool                    shouldCloneAttributes,
-            const LocatorType*      locator);
+            const Locator*          locator);
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
     virtual void
-    beginCreateXResultTreeFrag(
-            XalanNode*                  sourceNode);
+    beginCreateXResultTreeFrag(XalanNode*   sourceNode);
 
-    
     virtual const XObjectPtr
     endCreateXResultTreeFrag();
 
@@ -513,12 +511,12 @@ public:
     virtual void
     outputToResultTree(
             const XObject&      xobj,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     virtual void
     outputResultTreeFragment(
             const XObject&      theTree,
-            const LocatorType*  locator);
+            const Locator*      locator);
 
     virtual const XalanDOMString&
     getXSLNameSpaceURL() const;
@@ -723,7 +721,7 @@ public:
             const XalanDecimalFormatSymbols*    theDFS,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0) const = 0;
+            const Locator*                      locator = 0) const = 0;
     };
 
     virtual void
@@ -732,7 +730,7 @@ public:
             const XalanDOMString&   pattern,
             XalanDOMString&         theResult,
             const XalanNode*        context = 0,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
 
     virtual void
     formatNumber(
@@ -741,7 +739,7 @@ public:
             const XalanDOMString&   dfsName,
             XalanDOMString&         theResult,
             const XalanNode*        context = 0,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
 
 
     const FormatNumberFunctor* 
@@ -820,7 +818,7 @@ public:
     virtual bool
     elementAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual bool
     functionAvailable(const XalanQName&     theQName) const;
@@ -828,7 +826,7 @@ public:
     virtual bool
     functionAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual const XObjectPtr
     extFunction(
@@ -836,7 +834,7 @@ public:
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator);
+            const Locator*                  locator);
 
     virtual XalanDocument*
     parseXML(
@@ -916,7 +914,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist);
 
     virtual void
@@ -924,13 +922,13 @@ public:
             XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist);
 
     virtual const XObjectPtr
     getVariable(
             const XalanQName&   name,
-            const LocatorType*  locator = 0);
+            const Locator*      locator = 0);
 
     virtual const PrefixResolver*
     getPrefixResolver() const;

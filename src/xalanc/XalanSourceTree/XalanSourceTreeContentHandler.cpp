@@ -238,7 +238,7 @@ XalanSourceTreeContentHandler::processingInstruction(
 
 
 void
-XalanSourceTreeContentHandler::setDocumentLocator(const LocatorType* const  /* locator */)
+XalanSourceTreeContentHandler::setDocumentLocator(const Locator* const  /* locator */)
 {
 }
 

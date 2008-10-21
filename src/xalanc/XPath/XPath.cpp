@@ -63,15 +63,21 @@ const XalanDOMString    XPath::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XPath::XPath(MemoryManager& theManager, const LocatorType*      theLocator) :
+XPath::XPath(
+            MemoryManager&  theManager,
+            const Locator*  theLocator) :
     m_expression(theManager),
     m_locator(theLocator),
     m_inStylesheet(false)
 {
 }
 
+
+
 XPath*
-XPath::create(MemoryManager& theManager, const LocatorType* theLocator)
+XPath::create(
+            MemoryManager&  theManager,
+            const Locator*  theLocator)
 {
     typedef XPath Type;
 
@@ -4766,7 +4772,7 @@ XPath::NodeTester::NodeTester(
             XPathConstructionContext&   theConstructionContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
-            const LocatorType*          theLocator,
+            const Locator*              theLocator,
             eMatchScore*                theMatchScore) :
     m_executionContext(0),
     m_targetNamespace(0),
@@ -4815,7 +4821,7 @@ XPath::NodeTester::initialize(
             XPathConstructionContext&   theConstructionContext,
             const XalanDOMString&       theNameTest,
             const PrefixResolver&       thePrefixResolver,
-            const LocatorType*          theLocator)
+            const Locator*              theLocator)
 {
     const XalanDOMString::size_type     theLength =
                 theNameTest.length();

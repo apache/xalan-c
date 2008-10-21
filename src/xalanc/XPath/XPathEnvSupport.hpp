@@ -165,7 +165,7 @@ public:
      * @param theNamespace  namespace of function    
      * @param functionName extension function name
      * @param argVec        vector of arguments to function
-     * @param locator A LocatorType instance for error reporting.
+     * @param locator A Locator instance for error reporting.
      * @return pointer to XObject result
      */
     virtual XObjectPtr
@@ -175,7 +175,7 @@ public:
             const XalanDOMString&           functionName, 
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) const = 0;
+            const Locator*                  locator) const = 0;
 
     /**
      * Reset the instance.

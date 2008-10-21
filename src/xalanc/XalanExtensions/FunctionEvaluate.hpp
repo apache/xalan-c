@@ -57,7 +57,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
     virtual Function*

@@ -49,7 +49,7 @@ FunctionConcat::execute(
             XalanNode*              /* context */,          
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(arg1.null() == false && arg2.null() == false);   
 
@@ -72,7 +72,7 @@ FunctionConcat::execute(
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
             const XObjectPtr        arg3,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);   
 
@@ -94,7 +94,7 @@ FunctionConcat::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      /* context */,
             const XObjectArgVectorType&     args,
-            const LocatorType*              /* locator */) const
+            const Locator*                  /* locator */) const
 {
     const XObjectArgVectorType::const_iterator  theEnd = args.end();
 

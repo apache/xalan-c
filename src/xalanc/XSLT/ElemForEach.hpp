@@ -90,7 +90,7 @@ public:
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     theStylesheet,
             const AttributeListType&        atts,
-            const LocatorType*              locator = 0);
+            const Locator*                  locator = 0);
 
     virtual void
     postConstruction(

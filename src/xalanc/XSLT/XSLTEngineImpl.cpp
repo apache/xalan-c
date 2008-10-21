@@ -1113,7 +1113,7 @@ XSLTEngineImpl::setQuietConflictWarnings(bool   b)
 
 
 void
-XSLTEngineImpl::setDocumentLocator(const LocatorType*   /* locator */)
+XSLTEngineImpl::setDocumentLocator(const Locator*   /* locator */)
 {
     // Do nothing for now
 }
@@ -1249,7 +1249,7 @@ XSLTEngineImpl::addResultAttribute(
             const XalanDOMChar*     value,
             size_type               theLength,
             bool                    fromCopy,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(value != 0);
 
@@ -1356,7 +1356,7 @@ XSLTEngineImpl::addResultAttribute(
 void
 XSLTEngineImpl::reportDuplicateNamespaceNodeError(
             const XalanDOMString&   theName,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(m_executionContext != 0);
 
@@ -1943,7 +1943,7 @@ XSLTEngineImpl::checkDefaultNamespace(
 void
 XSLTEngineImpl::warnCopyTextNodesOnly(
             const XalanNode*    sourceNode,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     assert(m_executionContext != 0);
 
@@ -1987,7 +1987,7 @@ void
 XSLTEngineImpl::cloneToResultTree(
             const XalanNode&    node,
             bool                cloneTextNodesOnly,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     XalanNode::NodeType     posNodeType = node.getNodeType();
 
@@ -2142,7 +2142,7 @@ XSLTEngineImpl::cloneToResultTree(
             bool                    overrideStrip,
             bool                    shouldCloneAttributes,
             bool                    cloneTextNodesOnly,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(nodeType == node.getNodeType());
     assert(m_executionContext != 0);
@@ -2279,7 +2279,7 @@ void
 XSLTEngineImpl::outputToResultTree(
             const XObject&      value,
             bool                outputTextNodesOnly,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     const XObject::eObjectType  type = value.getType();
 
@@ -2392,7 +2392,7 @@ void
 XSLTEngineImpl::outputResultTreeFragment(
             const XalanDocumentFragment&    theTree,
             bool                            outputTextNodesOnly,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     for(XalanNode* child = theTree.getFirstChild(); child != 0; child = child->getNextSibling())
     {

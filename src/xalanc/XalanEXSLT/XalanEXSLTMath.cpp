@@ -128,7 +128,7 @@ XalanEXSLTFunctionHighest::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -176,7 +176,7 @@ XalanEXSLTFunctionLowest::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -278,7 +278,7 @@ XalanEXSLTFunctionMin::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -324,7 +324,7 @@ XalanEXSLTFunctionMax::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -370,7 +370,7 @@ XalanEXSLTFunctionAbs::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -416,7 +416,7 @@ XalanEXSLTFunctionRandom::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.empty() == false)
     {
@@ -472,7 +472,7 @@ XalanEXSLTFunctionAcos::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -521,7 +521,7 @@ XalanEXSLTFunctionAsin::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -569,7 +569,7 @@ XalanEXSLTFunctionAtan::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -618,7 +618,7 @@ XalanEXSLTFunctionAtan2::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 2)
     {
@@ -1029,7 +1029,7 @@ XalanEXSLTFunctionConstant::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 2)
     {
@@ -1127,7 +1127,7 @@ XalanEXSLTFunctionCos::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -1174,7 +1174,7 @@ XalanEXSLTFunctionExp::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -1221,7 +1221,7 @@ XalanEXSLTFunctionLog::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -1270,7 +1270,7 @@ XalanEXSLTFunctionPower::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 2)
     {
@@ -1320,7 +1320,7 @@ XalanEXSLTFunctionSin::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -1369,7 +1369,7 @@ XalanEXSLTFunctionSqrt::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -1416,7 +1416,7 @@ XalanEXSLTFunctionTan::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {

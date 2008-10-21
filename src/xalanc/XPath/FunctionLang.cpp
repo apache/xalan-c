@@ -64,7 +64,7 @@ FunctionLang::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
             const XObjectPtr        arg1,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(arg1.null() == false);   
 

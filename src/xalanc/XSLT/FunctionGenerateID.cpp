@@ -77,7 +77,7 @@ XObjectPtr
 FunctionGenerateID::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     if (context == 0)
     {
@@ -114,7 +114,7 @@ FunctionGenerateID::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              /* context */,
             const XObjectPtr        arg1,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false);
 

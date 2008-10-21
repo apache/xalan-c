@@ -39,7 +39,7 @@ FormatterStringLengthCounter::~FormatterStringLengthCounter()
 
 
 void
-FormatterStringLengthCounter::setDocumentLocator(const LocatorType* const   /* locator */)
+FormatterStringLengthCounter::setDocumentLocator(const Locator* const   /* locator */)
 {
 }
 

@@ -106,7 +106,7 @@ FormatterToXercesDOM::~FormatterToXercesDOM()
 
 
 void
-FormatterToXercesDOM::setDocumentLocator(const LocatorType* const   /* locator */)
+FormatterToXercesDOM::setDocumentLocator(const Locator* const   /* locator */)
 {
     // No action for the moment.
 }

@@ -58,7 +58,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -111,7 +111,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -164,7 +164,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -217,7 +217,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -270,7 +270,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -323,7 +323,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -376,7 +376,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -452,7 +452,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -505,7 +505,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -558,7 +558,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -611,7 +611,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -664,7 +664,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -717,7 +717,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -770,7 +770,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -823,7 +823,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -876,7 +876,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -929,7 +929,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 
@@ -982,7 +982,7 @@ public:
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const;
+            const Locator*                  locator) const;
 
     using ParentType::execute;
 

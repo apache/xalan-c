@@ -58,7 +58,7 @@ XalanSpaceNodeTester::XalanSpaceNodeTester(
             StylesheetConstructionContext&  theConstructionContext,
             const XalanDOMString&           theNameTest,
             const PrefixResolver&           thePrefixResolver,
-            const LocatorType*              theLocator) :
+            const Locator*                  theLocator) :
     NodeTester(),
     m_matchScore(XPath::eMatchScoreNone),
     m_type(theType)

@@ -205,7 +205,7 @@ getDoc(
             const XalanDOMString&               base,
             BorrowReturnMutableNodeRefList&     mnl,
             const XalanNode*                    sourceNode,
-            const LocatorType*                  locator)
+            const Locator*                      locator)
 {
     XalanDocument*  newDoc = executionContext.getSourceDocument(uri);
 
@@ -243,7 +243,7 @@ getDoc(
             const XalanDOMString&               uri,
             BorrowReturnMutableNodeRefList&     mnl,
             const XalanNode*                    sourceNode,
-            const LocatorType*                  locator)
+            const Locator*                      locator)
 {
     getDoc(
         executionContext,
@@ -262,7 +262,7 @@ getDoc(
             const XalanDOMString&               uri,
             const XalanNode*                    resolver,
             BorrowReturnMutableNodeRefList&     mnl,
-            const LocatorType*                  locator)
+            const Locator*                      locator)
 {
     assert(resolver != 0);
 
@@ -286,7 +286,7 @@ FunctionDocument::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,            
             const XObjectPtr        arg1,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false);
 
@@ -316,7 +316,7 @@ FunctionDocument::execute(
             XalanNode*              context,            
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      locator) const
+            const Locator*          locator) const
 {
     assert(arg1.null() == false && arg2.null() == false);
 

@@ -142,7 +142,7 @@ FormatterToText::clearEncoding()
 
 
 void
-FormatterToText::setDocumentLocator(const LocatorType* const    /* locator */)
+FormatterToText::setDocumentLocator(const Locator* const    /* locator */)
 {
     // No action for the moment.
 }

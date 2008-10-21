@@ -52,7 +52,7 @@ public:
             XalanNode*              context,            
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual XObjectPtr
     execute(
@@ -61,7 +61,7 @@ public:
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
             const XObjectPtr        arg3,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     using ParentType::execute;
 

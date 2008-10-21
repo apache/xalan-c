@@ -191,7 +191,7 @@ void
 XalanQNameByValue::set(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     initialize(
@@ -208,7 +208,7 @@ void
 XalanQNameByValue::set(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     assert(qname != 0);
@@ -227,7 +227,7 @@ void
 XalanQNameByValue::set(
             const XalanDOMString&   qname,
             const PrefixResolver*   theResolver,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     resolvePrefix(
         qname.c_str(),
@@ -242,7 +242,7 @@ void
 XalanQNameByValue::set(
             const XalanDOMChar*     qname,
             const PrefixResolver*   theResolver,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(qname != 0);
 
@@ -382,7 +382,7 @@ XalanQNameByValue::resolvePrefix(
             const XalanDOMChar*         qname,
             XalanDOMString::size_type   theLength,
             const PrefixResolver*       theResolver,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     const XalanDOMString::size_type     indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 

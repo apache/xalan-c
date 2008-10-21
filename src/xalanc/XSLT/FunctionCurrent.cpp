@@ -47,7 +47,7 @@ XObjectPtr
 FunctionCurrent::execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              /* context */,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(executionContext.getCurrentNode() != 0);
 

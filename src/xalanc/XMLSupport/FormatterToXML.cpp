@@ -1038,7 +1038,7 @@ FormatterToXML::flushWriter()
 
 
 void
-FormatterToXML::setDocumentLocator(const LocatorType* const     /* locator */)
+FormatterToXML::setDocumentLocator(const Locator* const     /* locator */)
 {
     // I don't do anything with this yet.
 }

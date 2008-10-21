@@ -481,7 +481,7 @@ StylesheetRoot::processOutputSpec(
 {
     const XalanSize_t   nAttrs = atts.getLength();
 
-    const LocatorType* const    theLocator = constructionContext.getLocatorFromStack();
+    const Locator* const    theLocator = constructionContext.getLocatorFromStack();
 
     for (XalanSize_t i = 0; i < nAttrs; i++)
     {
@@ -818,7 +818,7 @@ StylesheetRoot::getNodeSetByKey(
             const PrefixResolver&           resolver,
             MutableNodeRefList&             nodelist,
             StylesheetExecutionContext&     executionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             KeyTablesTableType&             theKeysTable) const
 {
     assert(
@@ -940,7 +940,7 @@ StylesheetRoot::getAttributeSet(
             StylesheetExecutionContext&     executionContext,
             const XalanQName&               theQName,
             size_type                       matchingIndex,
-            const LocatorType*              theLocator) const
+            const Locator*                  theLocator) const
 {
     const AttributeSetMapType::const_iterator   i =
         m_attributeSetsMap.find(&theQName);
@@ -979,7 +979,7 @@ void
 StylesheetRoot::executeAttributeSet(
             StylesheetExecutionContext&     theExecutionContext,
             const XalanQName&               theQName,
-            const LocatorType*              theLocator) const
+            const Locator*                  theLocator) const
 {
     const AttributeSetMapType::const_iterator   i =
         m_attributeSetsMap.find(&theQName);

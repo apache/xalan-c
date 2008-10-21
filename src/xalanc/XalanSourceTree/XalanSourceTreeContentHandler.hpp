@@ -53,6 +53,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(Locator)
+
+
+
 typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes       AttributesType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler   ContentHandlerType;
@@ -119,7 +123,7 @@ public:
         const XMLCh* const  data);
 
     virtual void
-    setDocumentLocator(const LocatorType* const     locator);
+    setDocumentLocator(const Locator* const     locator);
 
     virtual void
     startDocument();

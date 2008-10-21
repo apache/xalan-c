@@ -62,7 +62,7 @@ doExecute(
             XalanNode*                      context,
             const XalanDOMString&           expression,
             const PrefixResolver&           resolver,
-            const Function::LocatorType*    locator)
+            const Locator*                  locator)
 {
     // $$$ ToDo: Consider moving all of this into a member function of
     // XPathExecutionContext.
@@ -90,7 +90,7 @@ doExecute(
             XalanNode*                      context,
             const XalanDOMString&           expression,
             const XalanNode*                resolver,
-            const Function::LocatorType*    locator)
+            const Locator*                  locator)
 {
     assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
 
@@ -107,7 +107,7 @@ FunctionEvaluate::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {

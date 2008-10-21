@@ -49,7 +49,7 @@ FunctionStartsWith::execute(
             XalanNode*              /* context */,
             const XObjectPtr        arg1,
             const XObjectPtr        arg2,
-            const LocatorType*      /* locator */) const
+            const Locator* const    /* locator */) const
 {
     assert(arg1.null() == false && arg2.null() == false);   
 

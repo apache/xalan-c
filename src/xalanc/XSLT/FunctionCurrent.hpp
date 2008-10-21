@@ -57,7 +57,7 @@ public:
     execute(
             XPathExecutionContext&  executionContext,
             XalanNode*              context,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     using ParentType::execute;
 

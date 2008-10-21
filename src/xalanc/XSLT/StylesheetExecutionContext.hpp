@@ -1080,7 +1080,7 @@ public:
     virtual void
     cloneToResultTree(
             const XalanNode&    node,
-            const LocatorType*  locator) = 0;
+            const Locator*      locator) = 0;
 
     /**
      * Clone a node to the result tree
@@ -1097,7 +1097,7 @@ public:
             XalanNode::NodeType     nodeType,
             bool                    overrideStrip,
             bool                    shouldCloneAttributes,
-            const LocatorType*      locator) = 0;
+            const Locator*          locator) = 0;
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)  
     /**
@@ -1154,7 +1154,7 @@ public:
     virtual void
     outputToResultTree(
             const XObject&      xobj,
-            const LocatorType*  locator) = 0;
+            const Locator*      locator) = 0;
 
     /**
      * Given a result tree fragment, walk the tree and
@@ -1166,7 +1166,7 @@ public:
     virtual void
     outputResultTreeFragment(
             const XObject&      theTree,
-            const LocatorType*  locator) = 0;
+            const Locator*      locator) = 0;
 
     /**
      * Determine the full XSLT Namespace URI.
@@ -1827,14 +1827,14 @@ public:
      * a string to a QName.
      *
      * @param theName The name of the element
-     * @param locator A LocatorType instance for error reporting
+     * @param locator A Locator instance for error reporting
      *
      * @return whether the given element is available or not
      */
     virtual bool
     elementAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const = 0;
+            const Locator*          locator) const = 0;
 
     /**
      * Determine if a function is available.
@@ -1850,14 +1850,14 @@ public:
      * Determine if a function is available.
      *
      * @param theName The name of the function
-     * @param locator A LocatorType instance for error reporting
+     * @param locator A Locator instance for error reporting
      *
      * @return whether the function is available or not
      */
     virtual bool
     functionAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const = 0;
+            const Locator*          locator) const = 0;
 
     virtual const XObjectPtr
     extFunction(
@@ -1865,7 +1865,7 @@ public:
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) = 0;
+            const Locator*                  locator) = 0;
 
     virtual XalanDocument*
     parseXML(
@@ -1943,7 +1943,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist) = 0;
 
     virtual void
@@ -1951,13 +1951,13 @@ public:
             XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist) = 0;
 
     virtual const XObjectPtr
     getVariable(
             const XalanQName&   name,
-            const LocatorType*  locator = 0) = 0;
+            const Locator*      locator = 0) = 0;
 
     virtual const PrefixResolver*
     getPrefixResolver() const = 0;
@@ -1993,7 +1993,7 @@ public:
             const XalanDOMString&   pattern,
             XalanDOMString&         theResult,
             const XalanNode*        context = 0,
-            const LocatorType*      locator = 0) = 0;
+            const Locator*          locator = 0) = 0;
 
     virtual void
     formatNumber(
@@ -2002,7 +2002,7 @@ public:
             const XalanDOMString&   dfsName,
             XalanDOMString&         theResult,
             const XalanNode*        context = 0,
-            const LocatorType*      locator = 0) = 0;
+            const Locator*          locator = 0) = 0;
 
     // These interfaces are inherited from ExecutionContext...
 

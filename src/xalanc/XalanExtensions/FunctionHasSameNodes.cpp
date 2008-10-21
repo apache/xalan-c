@@ -49,7 +49,7 @@ FunctionHasSameNodes::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 2)
     {

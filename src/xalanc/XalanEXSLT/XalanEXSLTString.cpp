@@ -69,7 +69,7 @@ XalanEXSLTFunctionAlign::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     const XObjectArgVectorType::size_type   theSize = args.size();
 
@@ -176,7 +176,7 @@ XalanEXSLTFunctionConcat::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     if (args.size() != 1)
     {
@@ -227,7 +227,7 @@ XalanEXSLTFunctionPadding::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     assert(m_space == s_spaceString);
 
@@ -336,7 +336,7 @@ XalanEXSLTFunctionEncodeURI::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     const XObjectArgVectorType::size_type   theSize = args.size();
 
@@ -470,7 +470,7 @@ XalanEXSLTFunctionDecodeURI::execute(
             XPathExecutionContext&          executionContext,
             XalanNode*                      context,
             const XObjectArgVectorType&     args,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     const XObjectArgVectorType::size_type   theSize = args.size();
 
@@ -609,7 +609,7 @@ XalanDOMChar
 XalanEXSLTFunctionDecodeURI::hexCharsToByte(
             XPathExecutionContext&      executionContext,
             XalanNode*                  context,
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar          highHexChar,
             const XalanDOMChar          lowHexChar) const
 {

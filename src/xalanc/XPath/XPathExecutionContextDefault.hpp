@@ -174,7 +174,7 @@ public:
             const XalanDecimalFormatSymbols*    theDFS,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0);
+            const Locator*                      locator = 0);
 
     // These interfaces are inherited from XPathExecutionContext...
 
@@ -216,7 +216,7 @@ public:
     virtual bool
     elementAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual bool
     functionAvailable(const XalanQName&     theQName) const;
@@ -224,7 +224,7 @@ public:
     virtual bool
     functionAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const;
+            const Locator*          locator) const;
 
     virtual const XObjectPtr
     extFunction(
@@ -232,7 +232,7 @@ public:
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator);
+            const Locator*                  locator);
 
     virtual XalanDocument*
     parseXML(
@@ -261,7 +261,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist);
 
     virtual void
@@ -269,13 +269,13 @@ public:
             XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist);
 
     virtual const XObjectPtr
     getVariable(
             const XalanQName&   name,
-            const LocatorType*  locator = 0);
+            const Locator*      locator = 0);
 
     virtual const PrefixResolver*
     getPrefixResolver() const;
@@ -307,7 +307,7 @@ public:
             const XalanDOMString&               pattern,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0);
+            const Locator*                      locator = 0);
 
     virtual void formatNumber(
             double                              number,
@@ -315,7 +315,7 @@ public:
             const XalanDOMString&               dfsName,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0);
+            const Locator*                      locator = 0);
 
 
     // These interfaces are inherited from ExecutionContext...
@@ -339,19 +339,19 @@ public:
     error(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const;
+            const Locator*          locator = 0) const;
 
     virtual void
     warn(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const;
+            const Locator*          locator = 0) const;
 
     virtual void
     message(
             const XalanDOMString&   msg,
             const XalanNode*        sourceNode = 0,
-            const LocatorType*      locator = 0) const;
+            const Locator*          locator = 0) const;
 
     virtual bool
     shouldStripSourceNode(const XalanText&  node);

@@ -405,7 +405,7 @@ StylesheetConstructionContextDefault::getXSLTNamespaceURI() const
 
 XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMString&   str,
             const PrefixResolver&   resolver,
             bool                    allowVariableReferences,
@@ -438,7 +438,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMChar*     str,
             const PrefixResolver&   resolver,
             bool                    allowVariableReferences,
@@ -460,7 +460,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMString&   str,
             const PrefixResolver&   resolver,
             bool                    allowVariableReferences,
@@ -493,7 +493,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
-            const LocatorType*      locator,
+            const Locator*          locator,
             const XalanDOMChar*     str,
             const PrefixResolver&   resolver,
             bool                    allowVariableReferences,
@@ -515,7 +515,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar*         str,
             XalanDOMString::size_type   len,
             const PrefixResolver&       resolver,
@@ -536,7 +536,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 
 
-const LocatorType*
+const Locator*
 StylesheetConstructionContextDefault::getLocatorFromStack() const
 {
     return m_processor.getLocatorFromStack();
@@ -545,7 +545,7 @@ StylesheetConstructionContextDefault::getLocatorFromStack() const
 
 
 void
-StylesheetConstructionContextDefault::pushLocatorOnStack(const LocatorType*     locator)
+StylesheetConstructionContextDefault::pushLocatorOnStack(const Locator*     locator)
 {
     m_processor.pushLocatorOnStack(locator);
 }
@@ -588,7 +588,7 @@ bool
 StylesheetConstructionContextDefault::isXMLSpaceAttribute(
             const XalanDOMChar*     theAttributeName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator)
+            const Locator*          theLocator)
 {
     assert(theAttributeName != 0);
 
@@ -607,7 +607,7 @@ bool
 StylesheetConstructionContextDefault::isXSLUseAttributeSetsAttribute(
             const XalanDOMChar*     theAttributeName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator)
+            const Locator*          theLocator)
 {
     assert(theAttributeName != 0);
 
@@ -626,7 +626,7 @@ bool
 StylesheetConstructionContextDefault::isValidQName(
             const XalanDOMChar*     theName,
             const Stylesheet&       theStylesheet,
-            const LocatorType*      theLocator)
+            const Locator*          theLocator)
 {
     assert(theName != 0);
 
@@ -675,7 +675,7 @@ StylesheetConstructionContextDefault::createElement(
             int                         token,
             Stylesheet&                 stylesheetTree,
             const AttributeListType&    atts,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);
@@ -999,7 +999,7 @@ StylesheetConstructionContextDefault::createElement(
             Stylesheet&                 stylesheetTree,
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     const XalanFileLoc  lineNumber =
         XalanLocator::getLineNumber(locator);
@@ -1063,7 +1063,7 @@ StylesheetConstructionContextDefault::createElement(
             const XalanDOMChar*         name,
             const AttributeListType&    atts,
             ExtensionNSHandler&         handler,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     m_allocatedElements.push_back(0);
 
@@ -1089,7 +1089,7 @@ StylesheetConstructionContextDefault::createElement(
             XalanDOMString::size_type   length,
             bool                        preserveSpace,
             bool                        disableOutputEscaping,
-            const LocatorType*          locator)
+            const Locator*              locator)
 {
     return m_elemTextLiteralAllocator.create(
             *this,
@@ -1252,7 +1252,7 @@ StylesheetConstructionContextDefault::allocateXalanDOMCharVector(
 
 const AVT*
 StylesheetConstructionContextDefault::createAVT(
-            const LocatorType*              locator,
+            const Locator*                  locator,
             const XalanDOMChar*             name,
             const XalanDOMChar*             stringedValue,
             const PrefixResolver&           resolver)
@@ -1282,7 +1282,7 @@ StylesheetConstructionContextDefault::createAVTPart(
 
 const AVTPart*
 StylesheetConstructionContextDefault::createAVTPart(
-            const LocatorType*          locator,
+            const Locator*              locator,
             const XalanDOMChar*         str,
             XalanDOMString::size_type   len,
             const PrefixResolver&       resolver)
@@ -1321,7 +1321,7 @@ const XalanQName*
 StylesheetConstructionContextDefault::createXalanQName(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     return  m_xalanQNameByValueAllocator.create(
@@ -1337,7 +1337,7 @@ const XalanQName*
 StylesheetConstructionContextDefault::createXalanQName(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     return  m_xalanQNameByValueAllocator.create(
@@ -1354,7 +1354,7 @@ StylesheetConstructionContextDefault::tokenizeQNames(
             size_type&                  count,
             const XalanDOMChar*         qnameTokens,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault)
 {
     assert(qnameTokens != 0);

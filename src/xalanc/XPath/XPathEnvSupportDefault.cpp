@@ -403,7 +403,7 @@ XPathEnvSupportDefault::extFunction(
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     const Function* const   theFunction = findFunction(theNamespace, functionName);
 

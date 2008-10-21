@@ -402,7 +402,7 @@ public:
             const PrefixResolver&           resolver,
             MutableNodeRefList&             nodelist,
             StylesheetExecutionContext&     executionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             KeyTablesTableType&             theKeysTable) const;
 
     unsigned long
@@ -459,13 +459,13 @@ public:
             StylesheetExecutionContext&     theExecutionContext,
             const XalanQName&               theQName,
             size_type                       matchingIndex,
-            const LocatorType*              theLocator) const;
+            const Locator*                  theLocator) const;
 #else
     void
     executeAttributeSet(
             StylesheetExecutionContext&     theExecutionContext,
             const XalanQName&               theQName,
-            const LocatorType*              theLocator) const;
+            const Locator*                  theLocator) const;
 #endif
 
 

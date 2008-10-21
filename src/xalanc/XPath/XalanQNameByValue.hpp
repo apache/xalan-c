@@ -198,7 +198,7 @@ public:
     set(
             const XalanDOMString&       qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     /**
@@ -215,7 +215,7 @@ public:
     set(
             const XalanDOMChar*         qname,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        fUseDefault = false);
 
     /**
@@ -231,7 +231,7 @@ public:
     set(
             const XalanDOMString&   qname,
             const PrefixResolver*   theResolver = 0,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
 
     /**
      * Set the local part and namespace URI of a XalanQNameByValue from
@@ -246,7 +246,7 @@ public:
     set(
             const XalanDOMChar*     qname,
             const PrefixResolver*   theResolver = 0,
-            const LocatorType*      locator = 0);
+            const Locator*          locator = 0);
     /**
      * Clear the instance.
      */
@@ -283,7 +283,7 @@ private:
             const XalanDOMChar*         qname,
             XalanDOMString::size_type   len,
             const NamespacesStackType&  namespaces,
-            const LocatorType*          locator,
+            const Locator*              locator,
             bool                        fUseDefault);
 
     void
@@ -291,13 +291,13 @@ private:
             const XalanDOMChar*         qname,
             XalanDOMString::size_type   theLength,
             const PrefixResolver*       theResolver,
-            const LocatorType*          locator);
+            const Locator*              locator);
 
     void
     validate(
             const XalanDOMChar*         qname,
             XalanDOMString::size_type   theLength,
-            const LocatorType*          locator);
+            const Locator*              locator);
 
     // Data members...
     XalanDOMString  m_namespace;

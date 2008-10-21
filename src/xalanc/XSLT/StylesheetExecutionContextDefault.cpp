@@ -1041,7 +1041,7 @@ StylesheetExecutionContextDefault::flushPending()
 void
 StylesheetExecutionContextDefault::cloneToResultTree(
             const XalanNode&    node,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     m_xsltProcessor->cloneToResultTree(node, getCopyTextNodesOnly(), locator);
 }
@@ -1054,7 +1054,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
             XalanNode::NodeType     nodeType,
             bool                    overrideStrip,
             bool                    shouldCloneAttributes,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     assert(m_xsltProcessor != 0);
 
@@ -1200,7 +1200,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 void
 StylesheetExecutionContextDefault::outputToResultTree(
             const XObject&      xobj,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     assert(m_xsltProcessor != 0);
 
@@ -1212,7 +1212,7 @@ StylesheetExecutionContextDefault::outputToResultTree(
 void
 StylesheetExecutionContextDefault::outputResultTreeFragment(
             const XObject&      theTree,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     assert(m_xsltProcessor != 0);
 
@@ -1288,7 +1288,7 @@ StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplat
 
     if (findOnElementRecursionStack(theElement) == true)
     {
-        const LocatorType* const    theLocator = theElement->getLocator();
+        const Locator* const    theLocator = theElement->getLocator();
 
         const GetCachedString   theGuard(*this);
 
@@ -1734,7 +1734,7 @@ StylesheetExecutionContextDefault::formatNumber(
             const XalanDOMString&               pattern,
             XalanDOMString&                     theResult,
             const XalanNode*                    context,
-            const LocatorType*                  locator)
+            const Locator*                      locator)
 {
     const XalanDecimalFormatSymbols * theDFS = getDecimalFormatSymbols(theEmptyQName);
 
@@ -1770,7 +1770,7 @@ StylesheetExecutionContextDefault::formatNumber(
             const XalanDOMString&   dfsName,
             XalanDOMString&         theResult,
             const XalanNode*        context,
-            const LocatorType*      locator)
+            const Locator*          locator)
 {
     XalanQNameByValue&  theDFSQName = m_xpathExecutionContextDefault.getScratchQName();
 
@@ -2006,7 +2006,7 @@ StylesheetExecutionContextDefault::elementAvailable(const XalanQName&   theQName
 bool
 StylesheetExecutionContextDefault::elementAvailable(
             const XalanDOMString&   theName, 
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     XalanQNameByValue&  theQName = m_xpathExecutionContextDefault.getScratchQName();
 
@@ -2028,7 +2028,7 @@ StylesheetExecutionContextDefault::functionAvailable(const XalanQName&  theQName
 bool
 StylesheetExecutionContextDefault::functionAvailable(
             const XalanDOMString&   theName, 
-            const LocatorType*      theLocator) const
+            const Locator*          theLocator) const
 {
     return m_xpathExecutionContextDefault.functionAvailable(theName, theLocator);
 }
@@ -2041,7 +2041,7 @@ StylesheetExecutionContextDefault::extFunction(
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator)
+            const Locator*                  locator)
 {
     assert(m_xpathExecutionContextDefault.getXPathEnvSupport() != 0);
 
@@ -2133,7 +2133,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist)
 {
     assert(m_stylesheetRoot != 0);
@@ -2156,7 +2156,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
             XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist)
 {
     assert(m_stylesheetRoot != 0);
@@ -2186,7 +2186,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 const XObjectPtr
 StylesheetExecutionContextDefault::getVariable(
             const XalanQName&   name,
-            const LocatorType*  locator)
+            const Locator*      locator)
 {
     bool                fFound;
 

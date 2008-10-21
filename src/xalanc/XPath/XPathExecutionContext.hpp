@@ -246,14 +246,14 @@ public:
      * a string to a QName.
      *
      * @param theName The name of the element
-     * @param locator A LocatorType instance for error reporting
+     * @param locator A Locator instance for error reporting
      *
      * @return whether the given element is available or not
      */
     virtual bool
     elementAvailable(
             const XalanDOMString&   theName,
-            const LocatorType*      locator) const = 0;
+            const Locator*          locator) const = 0;
 
     /**
      * Determine if a function is available.
@@ -269,7 +269,7 @@ public:
      * Determine if a function is available.
      *
      * @param theName The name of the function
-     * @param locator A LocatorType instance for error reporting
+     * @param locator A Locator instance for error reporting
      *
      * @return whether the function is available or not
      */
@@ -285,7 +285,7 @@ public:
      * @param functionName extension function name
      * @param context The context node
      * @param argVec vector of arguments to function
-     * @param locator A LocatorType instance for error reporting
+     * @param locator A Locator instance for error reporting
      * @return pointer to XObject result
      */
     virtual const XObjectPtr
@@ -517,7 +517,7 @@ public:
      *                         attribute on xsl:key
      * @param ref              value that must match the value found by the
      *                         'match' attribute on xsl:key
-     * @param locator          The LocatorType to use for error reporting.  Can be 0.
+     * @param locator          The Locator to use for error reporting.  Can be 0.
      * @param nodelist         A node list to contain the nodes found
      */
     virtual void
@@ -525,7 +525,7 @@ public:
             XalanNode*              context,
             const XalanQName&       qname,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist) = 0;
 
     /**
@@ -537,7 +537,7 @@ public:
      *                         qname using the provided resolver.
      * @param ref              value that must match the value found by the
      *                         'match' attribute on xsl:key
-     * @param locator          The LocatorType to use for error reporting.  Can be 0.
+     * @param locator          The Locator to use for error reporting.  Can be 0.
      * @param nodelist         A node list to contain the nodes found
      */
     virtual void
@@ -545,7 +545,7 @@ public:
             XalanNode*              context,
             const XalanDOMString&   name,
             const XalanDOMString&   ref,
-            const LocatorType*      locator,
+            const Locator*          locator,
             MutableNodeRefList&     nodelist) = 0;
 
     /**
@@ -559,7 +559,7 @@ public:
     virtual const XObjectPtr
     getVariable(
             const XalanQName&   name,
-            const LocatorType*  locator = 0) = 0;
+            const Locator*      locator = 0) = 0;
 
     /**
      * Retrieve the resolver for namespaces.
@@ -679,7 +679,7 @@ public:
             const XalanDOMString&               pattern,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0) = 0;
+            const Locator*                      locator = 0) = 0;
 
     /**
      * Formats a number according to the specified pattern.
@@ -698,7 +698,7 @@ public:
             const XalanDOMString&               dfsName,
             XalanDOMString&                     theResult,
             const XalanNode*                    context = 0,
-            const LocatorType*                  locator = 0) = 0;
+            const Locator*                      locator = 0) = 0;
 
     // These interfaces are inherited from ExecutionContext...
 

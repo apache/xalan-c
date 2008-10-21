@@ -282,7 +282,7 @@ XSLTProcessorEnvSupportDefault::extFunction(
             const XalanDOMString&           functionName,
             XalanNode*                      context,
             const XObjectArgVectorType&     argVec,
-            const LocatorType*              locator) const
+            const Locator*                  locator) const
 {
     return m_defaultSupport.extFunction(
             executionContext,

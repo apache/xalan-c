@@ -36,6 +36,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+XALAN_USING_XERCES(Locator)
 
 
 
@@ -74,7 +75,7 @@ public:
      */
     AVT(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             const XalanDOMChar*             name,
             const XalanDOMChar*             stringedValue,
             const PrefixResolver&           resolver);
@@ -159,7 +160,7 @@ private:
     void
     nextToken(
             StylesheetConstructionContext&  constructionContext,
-            const LocatorType*              locator,
+            const Locator*                  locator,
             StringTokenizer&                tokenizer,
             XalanDOMString&                 token);
 

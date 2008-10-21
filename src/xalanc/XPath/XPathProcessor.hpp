@@ -39,6 +39,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XALAN_USING_XERCES(Locator)
+
+
+
 class Function;
 class PrefixResolver;
 class XPath;
@@ -66,7 +70,7 @@ public:
      * @param constructionContext The construction context
      * @param expression     expression that will be evaluated
      * @param resolver       prefix resolver to use
-     * @param locator        the LocatorType to use for error report. May be null
+     * @param locator        the Locator to use for error report. May be null
      * @param allowVariableReferences If true, variable references are allowed.
      * @param allowKeyFunction If true, calls to the key() function are allowed.
      */
@@ -76,7 +80,7 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true) = 0;
 
@@ -87,7 +91,7 @@ public:
      * @param constructionContext The construction context
      * @param expression     expression that will be evaluated
      * @param resolver       prefix resolver to use
-     * @param locator        the LocatorType to use for error report. May be null
+     * @param locator        the Locator to use for error report. May be null
      * @param allowVariableReferences If true, variable references are allowed.
      * @param allowKeyFunction If true, calls to the key() function are allowed.
      */
@@ -97,7 +101,7 @@ public:
             XPathConstructionContext&   constructionContext,
             const XalanDOMString&       expression,
             const PrefixResolver&       resolver,
-            const LocatorType*          locator = 0,
+            const Locator*              locator = 0,
             bool                        allowVariableReferences = true,
             bool                        allowKeyFunction = true) = 0;
 
