@@ -1051,7 +1051,10 @@ XalanFileUtility::fileCompare(
     // Start file comparison,  line by line..
     while(!feof(result) && !feof(gold))
     {
-        fgets(gline, sizeof(gline), gold );
+		gline[0] = '\0';
+		rline[0] = '\0';
+
+		fgets(gline, sizeof(gline), gold );
         fgets(rline, sizeof(rline), result );
         sprintf(temp,"%d",lineNum);
 
