@@ -29,7 +29,7 @@
 !MESSAGE Used BITS 	= $(BITS)
 !ENDIF
 
-!IF "$(CFG)" != "Debug" && "$(CFG)" != "Release" && "$(CFG)" != "Release.symbols"
+!IF "$(CFG)" != "Debug" && "$(CFG)" != "Debug.ICU" && "$(CFG)" != "Release" && "$(CFG)" != "Release.ICU"
 !	ERROR Invalid configuration CFG="$(CFG)" specified. 
 !ELSE
 !MESSAGE Used CFG 	= $(CFG)
@@ -43,7 +43,7 @@
 !ENDIF
 
 !IF "$(TYPE)" == ""
-!	ERROR Localization type must be defined.Possible values are "inmem" and "icu"
+!	ERROR Localization type must be defined.  Possible values are "inmem" and "icu"
 !ENDIF
 
 !IF "$(TYPE)" != "inmem" && "$(TYPE)" != "icu"
@@ -69,10 +69,8 @@ include ..\..\..\..\..\version.incl
 MKDIR=mkdir
 MOVE=move
 
-!IF "$(CFG)" == "Debug"
+!IF "$(CFG)" == "Debug" || "$(CFG)" == "Debug.ICU"
 PKGNAME=$(LIBNAME)_$(MS_VER)D
-!ELSEIF "$(CFG)" == "Release.symbols" 
-PKGNAME=$(LIBNAME)_$(MS_VER)S
 !ELSE
 PKGNAME=$(LIBNAME)_$(MS_VER)
 !ENDIF
@@ -141,7 +139,7 @@ PREPARE:
 CLEAN : 
 	$(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" CLEAN
 	$(MAKE) /NOLOGO /f ..\XalanMsgLib\XalanMsgLib.mak CFG="XalanMsgLib - $(BITS) $(CFG)" CLEAN	
-	-@erase $(TMPINCLUDESDIR)\XalanMsgIndex.hpp
+	-@erase $(TMPINCLUDESDIR)\LocalMsgIndex.hpp
 	-@erase	$(TMPINCLUDESDIR)\LocalMsgData.hpp
 !IF "$(TYPE)" == "icu"
 	$(ICUPATH)\$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -k --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt

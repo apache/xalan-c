@@ -70,7 +70,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\MsgCreator.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MsgCreator.pdb" /machine:I386  $(XERCESLIBRELEASE) /out:"..\..\..\..\..\Build\Win32\VC6\$(RELEASE)\MsgCreator.exe" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MsgCreator.pdb" /machine:I386  $(XERCESLIBRELEASE) /out:"..\..\..\..\..\Build\Win32\VC6\$(RELEASE)\MsgCreator.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\ICUResHandler.obj" \
 	"$(INTDIR)\InMemHandler.obj" \
@@ -135,7 +135,7 @@ BSC32_SBRS= \
 <<
 
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MsgCreator.pdb" /debug /machine:I386  $(XERCESLIBDEBUG) /out:"..\..\..\..\..\Build\Win32\VC6\Debug\MsgCreator.exe" /pdbtype:sept 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /nologo /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MsgCreator.pdb" /debug /machine:I386  $(XERCESLIBDEBUG) /out:"..\..\..\..\..\Build\Win32\VC6\Debug\MsgCreator.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\ICUResHandler.obj" \
 	"$(INTDIR)\InMemHandler.obj" \
@@ -200,7 +200,7 @@ BSC32_SBRS= \
 <<
 
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /nologo /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MsgCreator.pdb" /debug /machine:IX86 $(XERCESLIBDEBUG) /out:"..\..\..\..\..\Build\Win64\VC6\Debug\MsgCreator.exe" /pdbtype:sept /machine:IA64
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3D.lib /nologo /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MsgCreator.pdb" /debug /machine:IX86 $(XERCESLIBDEBUG) /out:"..\..\..\..\..\Build\Win64\VC6\Debug\MsgCreator.exe" /pdbtype:sept /machine:IA64
 LINK32_OBJS= \
 	"$(INTDIR)\ICUResHandler.obj" \
 	"$(INTDIR)\InMemHandler.obj" \
@@ -239,7 +239,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\MsgCreator.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MsgCreator.pdb" /machine:IX86 $(XERCESLIBRELEASE) /out:"..\..\..\..\..\Build\Win64\VC6\Release\MsgCreator.exe" /machine:IA64
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_3.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MsgCreator.pdb" /machine:IX86 $(XERCESLIBRELEASE) /out:"..\..\..\..\..\Build\Win64\VC6\Release\MsgCreator.exe" /machine:IA64
 LINK32_OBJS= \
 	"$(INTDIR)\ICUResHandler.obj" \
 	"$(INTDIR)\InMemHandler.obj" \

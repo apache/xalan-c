@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
 				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_10.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_10D.lib icuucd.lib icuind.lib"
+				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib icuucd.lib icuind.lib"
 				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_10D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -181,7 +181,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_10S.lib icuuc.lib icuin.lib"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10S.lib icuuc.lib icuin.lib"
 				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_10S.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

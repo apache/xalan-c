@@ -4,7 +4,7 @@ CFG=XalanMsgLib - Win32 Debug
 !MESSAGE No configuration specified. Defaulting to XalanMsgLib - Win32 Debug.
 !ENDIF 
 
-!IF "$(CFG)" != "XalanMsgLib - Win32 Release" && "$(CFG)" != "XalanMsgLib - Win32 Debug" && "$(CFG)" != "XalanMsgLib - Win32 Release.symbols" && "$(CFG)" != "XalanMsgLib - Win64 Release" && "$(CFG)" != "XalanMsgLib - Win64 Debug"
+!IF "$(CFG)" != "XalanMsgLib - Win32 Release" && "$(CFG)" != "XalanMsgLib - Win32 Release.ICU" && "$(CFG)" != "XalanMsgLib - Win32 Debug" && "$(CFG)" != "XalanMsgLib - Win32 Debug.ICU" && "$(CFG)" != "XalanMsgLib - Win64 Release" && "$(CFG)" != "XalanMsgLib - Win64 Debug"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
@@ -14,8 +14,9 @@ CFG=XalanMsgLib - Win32 Debug
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "XalanMsgLib - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "XalanMsgLib - Win32 Release.ICU" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XalanMsgLib - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "XalanMsgLib - Win32 Release.symbols" (based on "Win64 (x86) Console Application")
+!MESSAGE "XalanMsgLib - Win32 Debug.ICU" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XalanMsgLib - Win64 Release" (based on "Win64 (x86) Console Application")
 !MESSAGE "XalanMsgLib - Win64 Debug" (based on "Win64 (x86) Console Application")
 !MESSAGE 
@@ -44,11 +45,11 @@ LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj" \
 	"$(INTDIR)\Localization.res"
 
-!IF  "$(CFG)" == "XalanMsgLib - Win32 Release.symbols"
+!IF  "$(CFG)" == "XalanMsgLib - Win32 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7.1\Release.symbols
-OUTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
-INTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7.1\Release
+OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
+INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
 ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
@@ -60,27 +61,28 @@ CLEAN :
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).lib"
-	-@erase "$(BUILDRESDIR)\$(DLLNAME).pdb"	
-	-@erase "$(INTDIR)\VC70.pdb"
-	-@erase "$(INTDIR)\VC70.idb"	
+
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP_PROJ=/nologo /MD /W4 /GX /Zi /O2 $(XERCESINCLUDE) /I "..\..\..\..\..\src" /I ".\$(BUILDRESDIR)\Nls\Include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALANMSGLIB_EXPORTS" /D "XALAN_XALANMSGLIB_BUILD_DLL" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MD /W4 /GX /O2 $(XERCESINCLUDE) /I "..\..\..\..\..\src" /I ".\$(BUILDRESDIR)\Nls\Include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALANMSGLIB_EXPORTS" /D "XALAN_XALANMSGLIB_BUILD_DLL" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /win32 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\$(DLLNAME).bsc" 
 BSC32_SBRS= \
 	
-LINK32_FLAGS= /nologo /dll /incremental:no /pdb:"$(OUTDIR)\XalanMsgLib.pdb" /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBRELEASE) 
+
+LINK32_FLAGS=/nologo /dll /incremental:no /pdb:none /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBRELEASE)
+
 
 "$(BUILDRESDIR)\$(DLLNAME).dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
-!ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7.1\Release
+!ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Release.ICU"
+
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7.1\Release.ICU
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -149,6 +151,44 @@ LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:I386 /out:"$(BUILDRESDIR)\$
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
+
+!ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Debug.ICU"
+
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7.1\Debug.ICU
+OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
+INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
+# Begin Custom Macros
+OutDir=.\$(BUILDRESDIR)\Util\XalanMsgLib
+# End Custom Macros
+
+ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
+
+
+CLEAN :
+	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC70.pdb"
+	-@erase "$(INTDIR)\XalanMsgLib.obj"
+	-@erase "$(INTDIR)\Localization.res"	
+	-@erase "$(INTDIR)\XalanMsgLib.sbr"
+	-@erase "$(OUTDIR)\XalanMsgLib.bsc"
+	-@erase "$(OUTDIR)\XalanMsgLib.exp"
+	-@erase "$(OUTDIR)\$(DLLNAME).lib"
+	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+CPP_PROJ=/nologo /MDd /W4 /Gm /GX /ZI /Od $(XERCESINCLUDE) /I "..\..\..\..\..\src" /I ".\$(BUILDRESDIR)\Nls\Include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALANMSGLIB_EXPORTS" /D "XALAN_XALANMSGLIB_BUILD_DLL" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+MTL_PROJ=/D "_DEBUG" /win32 
+
+LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBDEBUG)
+
+
+"$(BUILDRESDIR)\$(DLLNAME).dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win64 Release"
 
 BUILDRESDIR=.\..\..\..\..\..\Build\Win64\VC7.1\Release
@@ -263,10 +303,10 @@ SOURCE=..\..\..\..\..\src\xalanc\Utils\XalanMsgLib\XalanMsgLib.cpp
 
 RCSSOURCE=..\..\..\..\..\Projects\Win32\Res\Localization\Localization.rc
 
-!IF  "$(CFG)" == "XalanMsgLib - Win32 Release" || "$(CFG)" == "XalanMsgLib - Win32 Release.symbols" || "$(CFG)" == "XalanMsgLib - Win64 Release"
+!IF  "$(CFG)" == "XalanMsgLib - Win32 Release" || "$(CFG)" == "XalanMsgLib - Win32 Release.ICU" || "$(CFG)" == "XalanMsgLib - Win64 Release"
 
 !IF ! EXIST( "$(BUILDRESDIR)\Nls\Include\LocalMsgIndex.hpp" )
-!MESSAGE Can't find a file: $(BUILDRESDIR)\ls\include\LocalMsgIndex.hpp  , it should be created by the build process, after running MsgCreator.exe application
+!MESSAGE Can't find a file: $(BUILDRESDIR)\nls\include\LocalMsgIndex.hpp  , it should be created by the build process, after running MsgCreator.exe application
 !ENDIF
 
 "$(INTDIR)\XalanMsgLib.obj" : $(SOURCE) "$(INTDIR)"
@@ -276,10 +316,10 @@ RCSSOURCE=..\..\..\..\..\Projects\Win32\Res\Localization\Localization.rc
 	$(RSC) /l 0x409 /fo"$(INTDIR)\Localization.res" /i "..\..\..\..\..\Projects\Win32\Res\Localization" /d "NDEBUG" $(RCSSOURCE)
 
 
-!ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Debug" || "$(CFG)" == "XalanMsgLib - Win64 Debug"
+!ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Debug" || "$(CFG)" == "XalanMsgLib - Win32 Debug.ICU" || "$(CFG)" == "XalanMsgLib - Win64 Debug"
 
 !IF ! EXIST( "$(BUILDRESDIR)\Nls\Include\LocalMsgIndex.hpp" )
-!ERROR Can't find a file: $(BUILDRESDIR)\ls\include\LocalMsgIndex.hpp  , it should be created by the build process, after running MsgCreator.exe application
+!ERROR Can't find a file: $(BUILDRESDIR)\nls\include\LocalMsgIndex.hpp  , it should be created by the build process, after running MsgCreator.exe application
 !ENDIF
 
 "$(INTDIR)\XalanMsgLib.obj"	"$(INTDIR)\XalanMsgLib.sbr" : $(SOURCE) "$(INTDIR)"

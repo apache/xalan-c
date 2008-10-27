@@ -34,9 +34,37 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US"
-				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US /a"
-				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US CLEAN"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  CFG=Release TYPE=inmem LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  CFG=Release  LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  CFG=Release TYPE=inmem LOCALE=en_US CLEAN"
+				Output="Localization"/>
+		</Configuration>
+		<Configuration
+			Name="Debug with ICU|Win32"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Debug.ICU"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug.ICU TYPE=inmem LOCALE=en_US"
+				ReBuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug.ICU TYPE=inmem LOCALE=en_US /a"
+				CleanCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug.ICU TYPE=inmem LOCALE=en_US CLEAN"
+				Output="Localization"/>
+		</Configuration>
+		<Configuration
+			Name="Release with ICU|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  CFG=Release.ICU TYPE=inmem LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot; CFG=Release.ICU TYPE=inmem LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  CFG=Release.ICU TYPE=inmem LOCALE=en_US CLEAN"
 				Output="Localization"/>
 		</Configuration>
 	</Configurations>

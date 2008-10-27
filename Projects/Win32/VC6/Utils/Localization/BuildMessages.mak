@@ -141,7 +141,7 @@ PREPARE:
 CLEAN : 
 	$(MAKE) /f ..\MsgCreator\MsgCreator.mak CFG="MsgCreator - $(BITS) $(CFG)" CLEAN
 	$(MAKE) /NOLOGO /f ..\XalanMsgLib\XalanMsgLib.mak CFG="XalanMsgLib - $(BITS) $(CFG)" CLEAN	
-	-@erase $(TMPINCLUDESDIR)\XalanMsgIndex.hpp
+	-@erase $(TMPINCLUDESDIR)\LocalMsgIndex.hpp
 	-@erase	$(TMPINCLUDESDIR)\LocalMsgData.hpp
 !IF "$(TYPE)" == "icu"
 	$(ICUPATH)\$(PKGDATA) --name $(PKGNAME) -T $(INTDIR)\Icu -v -k --mode dll -d $(OUTPUTDIR) $(INTDIR)\Icu\res-file-list.txt

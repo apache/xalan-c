@@ -20,17 +20,19 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\Build\Win32\VC7.1\Release\Nls\Include,$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
+				EnableFiberSafeOptimizations="TRUE"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src;$(OutDir)\Nls\Include"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release\TestXPath/TestXPath.pch"
-				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release\TestXPath/"
-				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release\TestXPath/"
-				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\TestXPath/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
@@ -40,13 +42,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Release/TestXPath.exe"
+				AdditionalDependencies="xerces-c_3.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release"
-				GenerateDebugInformation="TRUE"
-				SubSystem="1"/>
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
+				GenerateDebugInformation="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release/TestXPath.tlb"/>
@@ -82,16 +82,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\Build\Win32\VC7.1\Debug\Nls\Include,$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
 				PreprocessorDefinitions=""
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="TRUE"
+				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\TestXPath/TestXPath.pch"
-				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Debug\TestXPath/"
-				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\TestXPath/"
-				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Debug\TestXPath/"
+				PrecompiledHeaderThrough=""
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
@@ -101,14 +100,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Debug/TestXPath.exe"
+				AdditionalDependencies="xerces-c_3D.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Debug/TestXPath.pdb"
-				SubSystem="1"/>
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib"
+				GenerateDebugInformation="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Debug/TestXPath.tlb"/>
@@ -121,6 +117,125 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug with ICU|Win32"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Debug.ICU"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Debug.ICU\TestXPath"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;$(OutDir)\Nls\Include"
+				PreprocessorDefinitions=""
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="TRUE"
+				ForceConformanceInForLoopScope="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough=""
+				WarningLevel="4"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="xerces-c_3D.lib"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib"
+				GenerateDebugInformation="TRUE"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Debug/TestXPath.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release with ICU|Win32"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.ICU"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.ICU\TestXPath"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
+				EnableFiberSafeOptimizations="TRUE"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src;$(OutDir)\Nls\Include"
+				PreprocessorDefinitions="NDEBUG"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="4"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="xerces-c_3.lib"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
+				GenerateDebugInformation="TRUE"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release/TestXPath.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>

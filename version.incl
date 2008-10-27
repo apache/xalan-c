@@ -18,9 +18,8 @@
 ###################################################################
 
 PROJECT_NAME = xalan-c
-LIB_MAJOR_VER = 110
-LIB_MAJOR_DOT_VER = 1.10
+LIB_MAJOR_VER = 111
+LIB_MAJOR_DOT_VER = 1.11
 LIB_MINOR_VER = 0
-VER = 1_10_0
-MS_VER = 1_10
-
+VER = 1_11_0
+MS_VER = 1_11
