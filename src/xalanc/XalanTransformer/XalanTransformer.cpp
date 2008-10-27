@@ -1329,7 +1329,7 @@ XalanTransformer::doTransform(
     }
     catch(const XSLException&   e)
     {
-        if (theErrorMessage.empty() == false)
+        if (theErrorMessage.empty() == true)
         {
             e.defaultFormat(theErrorMessage);
         }
