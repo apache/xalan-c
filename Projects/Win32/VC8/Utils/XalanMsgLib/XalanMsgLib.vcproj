@@ -69,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
@@ -229,7 +229,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 			/>
@@ -311,7 +311,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				TargetMachine="17"
@@ -390,7 +390,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
@@ -468,7 +468,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
@@ -550,7 +550,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 			/>
@@ -632,7 +632,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				TargetMachine="17"
@@ -699,6 +699,14 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\..\..\Res\Localization\Localization.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Res\Localization\resource.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

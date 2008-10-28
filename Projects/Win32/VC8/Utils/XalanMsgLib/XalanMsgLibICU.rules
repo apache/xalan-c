@@ -18,8 +18,8 @@
 		<CustomBuildRule
 			Name="TXT rule"
 			DisplayName="TXT rule"
-			CommandLine="$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_10 --destdir $(IntDir)  $(OutDir)\Nls\Include\en_US.txt"
-			Outputs="$(IntDir)\XalanMessages_1_10_en_US.res"
+			CommandLine="$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_11 --destdir $(IntDir)  $(OutDir)\Nls\Include\en_US.txt"
+			Outputs="$(IntDir)\XalanMessages_1_11_en_US.res"
 			FileExtensions="*.txt"
 			ExecutionDescription="Processing ICU resource file"
 			>
@@ -40,8 +40,8 @@
 		<CustomBuildRule
 			Name="LST rule"
 			DisplayName="LST rule"
-			CommandLine="$(ICUROOT)\bin\pkgdata --name XalanMessages_1_10 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(INTDIR)\$(InputName).lst"
-			Outputs="$(OutDir)\XalanMessages_1_10.dll,$(OutDir)\XalanMessages_1_10.lib,$(OutDir)\XalanMessages_1_10.dat,$(OutDir)\XalanMessages_1_10.exp"
+			CommandLine="$(ICUROOT)\bin\pkgdata --name XalanMessages_1_11 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(INTDIR)\$(InputName).lst"
+			Outputs="$(OutDir)\XalanMessages_1_11.dll,$(OutDir)\XalanMessages_1_11.lib,$(OutDir)\XalanMessages_1_11.dat,$(OutDir)\XalanMessages_1_11.exp"
 			FileExtensions="*.lst"
 			ExecutionDescription="Building resource DLL"
 			>

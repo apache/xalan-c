@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -228,7 +228,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
@@ -309,7 +309,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
@@ -391,7 +391,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
@@ -472,7 +472,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
@@ -550,7 +550,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -627,7 +627,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_10D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
 				LinkTimeCodeGeneration="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

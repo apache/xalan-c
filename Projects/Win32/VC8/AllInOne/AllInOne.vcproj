@@ -71,8 +71,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -159,8 +159,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -248,8 +248,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -340,8 +340,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -429,8 +429,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib icuucd.lib icuind.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(ICUROOT)\lib;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -517,8 +517,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10D.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib icuucd.lib icuind.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(ICUROOT64)\lib;$(ICUROOT)\lib;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -606,8 +606,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib icuuc.lib icuin.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(ICUROOT)\lib;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -698,8 +698,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib icuuc.lib icuin.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(ICUROOT64)\lib;$(ICUROOT)\lib;$(OutDir)"
 				GenerateDebugInformation="true"

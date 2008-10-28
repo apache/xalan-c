@@ -180,34 +180,6 @@
 			ParseFiles="false"
 			>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\nls\include\en_US.txt"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="TXT rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\build\win64\vc8\debug\nls\include\en_US.txt"
 				>
 				<FileConfiguration
@@ -292,117 +264,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.lst"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="LST rule"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win32\VC8\Release\nls\include\en_US.txt"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -425,12 +287,60 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="RES rule"
+						Name="TXT rule"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -458,7 +368,35 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="RES rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -486,18 +424,66 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_10_en_US.res"
+				RelativePath="..\..\..\..\..\build\win32\vc8\debug\utils\xalanmsglibicu\XalanMessages_1_11_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="RES rule"
+						Name="LST rule"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_11_en_US.lst"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="LST rule"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_11_en_US.res"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -509,41 +495,13 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
+						Name="RES rule"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xalanc\NLS\en_US\XalanMsg_en_US.xlf"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="XLF rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="XLF rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="XLF rule"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="XLF rule"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

@@ -72,8 +72,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_11.lib icuucd.lib icuind.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -159,8 +159,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_10.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10D.dll"
+				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_11.lib icuucd.lib icuind.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -247,8 +247,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_11.lib icuuc.lib icuin.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -338,8 +338,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_10.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_10.dll"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_11.lib icuuc.lib icuin.lib"
+				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -768,6 +768,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp"
 				>
 			</File>
 			<File
