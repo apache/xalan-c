@@ -114,6 +114,42 @@ XSL_BUILD_OPTIONS += -DXALAN_INMEM_MSG_LOADER
 LOCAL_LIB = -L${XSL_LIB_DIR} -l$(LOC_PROJECT_NAME)
 endif
 
+#=============== MINGW SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), MINGW)
+
+  SUPPORTED = TRUE
+  ALLLIBS = $(LIBS)
+  SHLIBSUFFIX = .dll
+  LINK_SONAME =  
+  EXT=.exe
+
+   LOC_LIB = ${LOC_LIBNAME}${VER}$(SHLIBSUFFIX)
+
+    MESSAGELIB = ${XSL_LIB_DIR}/$(LOC_LIB)
+    LIB = $(LIB_NAME)$(VER)$(SHLIBSUFFIX)
+    SONAME = $(LIB_NAME)$(MS_VER)$(SHLIBSUFFIX)
+    PLATFORM_COMPILE_OPTIONS = -DWIN32 -D_WINDOWS -D__MINGW__ -D${PLATFORM} -fexceptions
+
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC1)
+  LDFLAGS += -Wl,--allow-multiple-definition
+  LINK = $(CXX) -D${PLATFORM} ${LDFLAGS}
+
+    MAKE_SHARED = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS} -o $(XSL_LIB_DIR)/$(LIBNAME)
+
+    MAKE_SHARED_LOC = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS} -o $(XSL_LIB_DIR)/$(LOC_LIB)
+
+  LOC_OTHER_LINK_PARAMETERS = $(XERCES_LIB)
+  
+  OTHER_LINK_PARAMETERS = $(XALAN_LIB) $(ALLLIBS)
+  
+  OTHER_LINK_LIB_PARAMERES = $(ALLLIBS)
+   
+  export PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(PATH)
+ 
+endif
+
 #=============== CYGWIN SPECIFIC OPTIONS =========================
 
 ifeq ($(PLATFORM), CYGWIN)
@@ -569,7 +605,7 @@ endif
 
 ifndef SUPPORTED
   nogood:
-	  @echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, and HP-UX are the only platforms supported.
+	  @echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, HP-UX, NETBSD, FREEBSD, CYGWIN, and MINGW are the only platforms supported.
 endif
 
 

@@ -547,7 +547,7 @@ void XalanFileUtility::checkAndCreateDir(const XalanDOMString&   directory)
     if (chdir(theDir))
     {
         //cout << "Couldn't change to " << directory << ", will create it." << endl;
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_WINDOWS_DIR_FUNCTIONS)
         if (!mkdir(theDir))
 #else
         if (!mkdir(theDir, DIR_MODE_BITS))

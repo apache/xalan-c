@@ -153,14 +153,14 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris' 'solaris-x86',
-            'hp-10', 'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os390', 'os400', 'cygwin')"
+            'hp-10', 'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os390', 'os400', 'cygwin' 'mingw-msys')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -t <transcoder> can be 'icu' (everything else means default)"
     echo "       -m <msg locale system> (accepts 'inmem', 'icu','nls')" 
     echo "       -M <locale> (example: 'fr_FR'. Default: 'en_US')"     
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
+    echo "       -r <thread option> can be 'pthread' or 'none' (Default: pthread)"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -P <install-prefix>"
     echo "       -l <extra linker options>"
@@ -195,8 +195,9 @@ fi
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
 transcoder=default       # by default use default transcoder
-localSys=inmem 	         # by default use inmem locale system
+localSys=inmem           # by default use inmem locale system
 locale=en_US             # by default use US locale
+thread=pthread           # by default, use pthread
 
 # Get the command line parameters
 if test -x /bin/getopt -o -x /usr/bin/getopt; then
@@ -228,13 +229,13 @@ while [ $# -gt 0 ]
         
    -m)
 
- 	localSys=$2; shift 2;;
- 	
+    localSys=$2; shift 2;;
+    
 
    -M)
 
-    	locale=$2; shift 2;;
-    	
+        locale=$2; shift 2;;
+        
    -r) 
         thread=$2; shift 2;;
 
@@ -271,7 +272,7 @@ while getopts "C:p:P:c:x:dm:n:t:m:M:r:b:l:z:h" switch;
    do
    case $switch in
    p)
-	platform=$OPTARG;;
+    platform=$OPTARG;;
 
    c)
         ccompiler=$OPTARG;;
@@ -340,7 +341,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | freebsd | netbsd | solaris | solaris-x86 | hp-11 | hp-11-ia64 | irix | tru64 | macosx | os390 | os400 | cygwin)
+   aix | linux | freebsd | netbsd | solaris | solaris-x86 | hp-11 | hp-11-ia64 | irix | tru64 | macosx | os390 | os400 | cygwin | mingw-msys)
        # platform has been recognized
        ;;
    *)
@@ -360,11 +361,11 @@ if test $debug = "off"; then
     elif test $platform = "os390"; then
         debugflag="-DNDEBUG";
     elif test $platform = "linux"; then
-		if test $cppcompiler = "icpc"; then
-			debugflag="-O3 -DNDEBUG";
-		else
-			debugflag="-O2 -DNDEBUG";
-		fi
+        if test $cppcompiler = "icpc"; then
+            debugflag="-O3 -DNDEBUG";
+        else
+            debugflag="-O2 -DNDEBUG";
+        fi
     else
         debugflag="-O -DNDEBUG";
     fi
@@ -400,7 +401,7 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
               bitstobuildLink=" +DA2.0W " ;;
            hp-11-ia64)
-	          bitstobuildDefines=" $bitstobuildDefines +DD64 "
+              bitstobuildDefines=" $bitstobuildDefines +DD64 "
               bitstobuildLink=" +DD64 " ;;
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
@@ -414,18 +415,15 @@ elif test $bitsToBuild = 32; then
     if test $platform; then
         case $platform in
            solaris)
-		      ;;
+              ;;
            aix)
-		      ;;
+              ;;
            hp-11)
               bitstobuildDefines="+DAportable "
-			  ;;
+              ;;
            hp-11-ia64)
               bitstobuildDefines="+DD32 "
-			  ;;
-           hp-11-ia64)
-              bitstobuildDefines=" $bitstobuildDefines +DD32 "
-                        ;;
+              ;;
            linux)
               ;;
            *)
@@ -450,21 +448,21 @@ TRANSCODER=
 if test $transcoder; then
     case $transcoder in
         icu)
-	    if test ${ICUROOT}o = "o"; then
-		    echo '***Error*** ICUROOT environment variable not defined. Exiting...';
-		    exit ${ERROR_EXIT_CODE};
+        if test ${ICUROOT}o = "o"; then
+            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+            exit ${ERROR_EXIT_CODE};
             fi
-	    transcodingDefines="-I${ICUROOT}/include";
+        transcodingDefines="-I${ICUROOT}/include";
             if test $platform != "os390"; then
-	            transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+                transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
             fi
 	    TRANSCODER=icu;;
 
-	default)
-	    ;;
-	*)
-	    echo "Unknown transcoder '$transcoder'. Using default."
-	    ;;
+    default)
+        ;;
+    *)
+        echo "Unknown transcoder '$transcoder'. Using default."
+        ;;
     esac
 fi
 
@@ -474,26 +472,26 @@ export TRANSCODER
 XALAN_LOCALE_SYSTEM=
 
 if test $localSys; then
-	case $localSys in
-		icu)
-			if test ${ICUROOT}o = "o"; then
-			      echo '***Error*** ICUROOT environment variable not defined. Exiting...'
-	              exit ${ERROR_EXIT_CODE};
-	        fi
-			XALAN_LOCALE_SYSTEM=icu;;
+    case $localSys in
+        icu)
+            if test ${ICUROOT}o = "o"; then
+                  echo '***Error*** ICUROOT environment variable not defined. Exiting...'
+                  exit ${ERROR_EXIT_CODE};
+            fi
+            XALAN_LOCALE_SYSTEM=icu;;
 
-		inmem)
-			XALAN_LOCALE_SYSTEM=inmem;;
+        inmem)
+            XALAN_LOCALE_SYSTEM=inmem;;
 
-		nls)
-			XALAN_LOCALE_SYSTEM=nls;;
+        nls)
+            XALAN_LOCALE_SYSTEM=nls;;
 
-		default)
-			XALAN_LOCALE_SYSTEM=inmem;;
+        default)
+            XALAN_LOCALE_SYSTEM=inmem;;
 
-		*)
-			echo "Unknown locale '$localSys'. Using default."
-	esac
+        *)
+            echo "Unknown locale '$localSys'. Using default."
+    esac
 fi
 
 export XALAN_LOCALE_SYSTEM
@@ -503,58 +501,60 @@ XALAN_LOCALE=$locale
 export XALAN_LOCALE 
 
 #
-# Check for the threading option
-#
-
-threadingLibs="-lpthread"
-if test $platform = "hp-11"; then
-    if test $thread; then
-    case $thread in
-       pthread)
-           ;;
-    
-       dce)
-           threadingLibs="-lcma";
-           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
-    
-       *)
-           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-           exit ${ERROR_EXIT_CODE};;
-    esac
-    fi
-elif test $platform = "aix"; then
-    threadingLibs="-lpthreads"
-elif test $platform = "freebsd"; then
-    if test -n "${PTHREAD_LIBS}" ; then
-      threadingLibs="${PTHREAD_LIBS}"
-      threadingDefines="${PTHREAD_CFLAGS}"
-    else
-      threadingLibs="-lpthread"
-      threadingDefines=""
-    fi
-elif test $platform = "netbsd"; then
-    threadingLibs="-pthread -lpthread"
-elif test $platform = "os400"; then
-    threadingLibs=""
-elif test $platform = "os390"; then
-     threadingLibs=""
-     threadingDefines="-D_OPEN_THREADS"
-fi
-
-
-
-
-#
 # Set the C compiler and C++ compiler environment variables
 #
 
-case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r | g++ | c++ | cc | CC | aCC | cxx | icpc | icc)
-      ;;
+case $ccompiler in
+    gcc | icc)
+        ;;
 
-   *)
-      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..." 
-      ;;
+    cc)
+        if test $platform = "aix"; then
+            echo "Please use xlc instead of cc to build on AIX."
+            exit ${ERROR_EXIT_CODE}
+        fi
+        ;;
+
+    xlc)
+        if test $cppcompiler != "xlC"; then
+            echo "Please use xlC as the C++ compiler when using xlc."
+            exit ${ERROR_EXIT_CODE}
+        fi
+        ;;
+
+    xlc_r)
+        if test $cppcompiler != "xlC_r"; then
+            echo "Please use xlC_r as the C++ compiler when using xlc_r."
+            exit ${ERROR_EXIT_CODE}
+        fi
+        ;;
+
+    *)
+        echo "I do not recognize the C compiler '$ccompiler'. Continuing anyway ..." 
+        ;;
+esac
+
+case $cppcompiler in
+    g++ | c++ | CC | aCC | cxx | icpc | icc)
+        ;;
+
+    xlC)
+        if test $ccompiler != "xlc"; then
+            echo "Please use xlc as the C compiler when using xlC."
+            exit ${ERROR_EXIT_CODE}
+        fi
+        ;;
+
+    xlC_r)
+        if test $compiler != "xlc_r"; then
+            echo "Please use xlc_r as the C compiler when using xlC_r."
+            exit ${ERROR_EXIT_CODE}
+        fi
+        ;;
+
+    *)
+        echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..." 
+        ;;
 esac
 
 CC="$ccompiler"
@@ -563,6 +563,109 @@ export CC
 CXX="$cppcompiler"
 export CXX
 
+
+#
+# Check for the threading option
+#
+
+threadingLibs=""
+threadingDefines=""
+gccThreadingDefines="-pthread -D_REENTRANT"
+gccThreadingLibs="-lpthread"
+
+if test $thread = "none"; then
+    case $platform in
+        aix)
+            if test $ccompiler = "xlc_r"; then
+                echo "Please use xlc instead of xlc_r to build without threads."
+                exit ${ERROR_EXIT_CODE}
+            fi
+
+            if test $cppcompiler = "xlC_r"; then
+                echo "Please use xlC instead of xlC_r to build without threads."
+                exit ${ERROR_EXIT_CODE}
+            fi
+        ;;
+
+        *)
+        ;;
+
+    esac
+elif test $thread != "pthread"; then
+    echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE}
+else
+    case $platform in
+        aix)
+            if test $ccompiler = "xlc"; then
+                echo "Please use xlc_r instead of xlc to build with threads."
+                exit ${ERROR_EXIT_CODE}
+            elif $ccompiler = "gcc"; then
+                threadingDefines=$gccThreadingDefines
+                threadingLibs=$gccThreadingLibs
+            fi
+
+            if test $cppcompiler = "xlC"; then
+                echo "Please use xlC_r instead of xlC to build with threads."
+                exit ${ERROR_EXIT_CODE}
+            fi
+            ;;
+
+        freebsd)
+            if test -n "${PTHREAD_LIBS}" ; then
+                threadingLibs="${PTHREAD_LIBS}"
+                threadingDefines="${PTHREAD_CFLAGS}"
+            else
+                threadingDefines=$gccThreadingDefines
+                threadingLibs=$gccThreadingLibs
+            fi
+            ;;
+
+        os400)
+            threadingDefines="-D_MULTI_THREADED"
+            ;;
+
+        os390)
+            threadingDefines="-D_OPEN_THREADS"
+            ;;
+
+        solaris)
+            if test $ccompiler = "gcc"; then
+                # GCC on Solaris uses "-pthreads" instead of
+                # "-pthread"
+                threadingDefines="-pthreads -D_REENTRANT"
+                threadingLibs=$gccThreadingLibs
+            else
+                threadingDefines="-mt"
+                threadingLibs="-lpthread"
+            fi
+            ;;
+
+        hp-11*)
+            if test $ccompiler = "gcc"; then
+                threadingDefines=$gccThreadingDefines
+                threadingLibs=$gccThreadingLibs
+            else
+                threadingDefines="-mt"   
+            fi
+            ;;
+
+        cygwin)
+            threadingLibs=""
+            threadingDefines=""
+            ;;
+
+        mingw-msys)
+            threadingLibs="-mthreads"
+            threadingDefines="-mthreads"
+            ;;
+
+        *)
+            threadingDefines=$gccThreadingDefines
+            threadingLibs=$gccThreadingLibs
+        ;;
+    esac
+fi
 
 #
 # Set the extra C and C++ compiler flags
@@ -574,7 +677,7 @@ export CXXFLAGS
 CFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
 export CFLAGS
 
-LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink"
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink $threadingDefines"
 export LDFLAGS
 
 LIBS="$transcodingLibs $threadingLibs "

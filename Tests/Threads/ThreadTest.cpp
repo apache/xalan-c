@@ -53,7 +53,7 @@
 
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 
 #include <csignal>
 #include <process.h>
@@ -93,7 +93,7 @@ XALAN_USING_STD(endl)
     
     
     // This is here for memory leak testing.
-#if defined(_DEBUG)
+#if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
@@ -215,7 +215,7 @@ const XalanDOMChar*             theStylesheetFileName = 0;
 const XalanDOMChar*             theSourceFileName = 0;
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 static BOOL __stdcall
 signalHandler(DWORD     theSignalType)
 {
@@ -246,7 +246,7 @@ signalHandler(int)
 
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 
 extern "C"
 {
@@ -325,7 +325,7 @@ thePreparsedThreadRoutine(void*     param)
 
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 
 extern "C" void theUnparsedThreadRoutine(void* param);
 
@@ -400,7 +400,7 @@ theUnparsedThreadRoutine(void*      param)
 inline void
 doSleep(unsigned int    theMilliseconds)
 {
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
     Sleep(theMilliseconds);
 #elif defined(XALAN_POSIX2_AVAILABLE)
     usleep(theMilliseconds * 10);
@@ -418,7 +418,7 @@ createThread(
 {
     theThreadInfo.m_done = false;
 
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 
     const unsigned long     theThreadID =
             _beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
@@ -565,7 +565,7 @@ doThreads(
 {
     if (fContinuous == true)
     {
-#if defined(XALAN_WINDOWS)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
         SetConsoleCtrlHandler(
                 signalHandler,
                 TRUE);

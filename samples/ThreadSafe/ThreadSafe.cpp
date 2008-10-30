@@ -45,18 +45,18 @@
 
 
 //This is here for the Windows threads.
-#if defined(_MSC_VER)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
 #define THREADFUNCTIONRETURN DWORD WINAPI
-    typedef   DWORD      theThreadIDType;
-    typedef   HANDLE     theThreadType;
+typedef   DWORD      theThreadIDType;
+typedef   HANDLE     theThreadType;
 
 //This is here for Unix threads
 #elif defined(XALAN_POSIX2_AVAILABLE)
 
-    // This is a workaround for a Tru64 compiler bug...
+// This is a workaround for a Tru64 compiler bug...
 #if defined(TRU64)
 #if  defined(XALAN_STRICT_ANSI_HEADERS)
 #include <csetjmp>
@@ -110,8 +110,8 @@ int                             glbError = 0;
 // beginning and end of the entire operation.
 void
 outputMessage(
-              theThreadIDType  id,
-            const char  msg[])
+            theThreadIDType    id,
+            const char         msg[])
 {
     ostrstream threadMsg;
     
@@ -127,7 +127,7 @@ outputMessage(
 }
 
 
-#if defined(_MSC_VER)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
 #elif defined(XALAN_POSIX2_AVAILABLE)
@@ -142,7 +142,7 @@ theThread(LPVOID    param)
   
     const size_t    number = reinterpret_cast<size_t>(param);
 
-#if defined(_MSC_VER)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
 
 #elif defined(XALAN_POSIX2_AVAILABLE)
@@ -184,12 +184,12 @@ theThread(LPVOID    param)
     }
 
     outputMessage(theThreadID, "Finishing");
-  
-  #if defined(_MSC_VER)
-    return (theResult);
-  #elif defined(XALAN_POSIX2_AVAILABLE)
-        return 0;
-  #endif
+
+#if defined(WINDOWS_THREAD_FUNCTION)
+    return theResult;
+#elif defined(XALAN_POSIX2_AVAILABLE)
+    return 0;
+#endif
 }
 
 
@@ -209,7 +209,7 @@ doThreads(size_t    nThreads)
 
     hThreads.reserve(nThreads);
 
-#if defined(_MSC_VER)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
 
     for (; i < nThreads; ++i)
     {

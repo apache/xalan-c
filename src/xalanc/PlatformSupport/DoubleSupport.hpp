@@ -79,7 +79,7 @@ public:
     {
 #if defined(_MSC_VER)
         return _isnan(theNumber) != 0;
-#elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN)
+#elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
         return isnan(theNumber) != 0;
 #else
         return s_NaN == theNumber;

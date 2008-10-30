@@ -66,6 +66,8 @@ typedef UINT64 XALAN_UINT64;
 typedef INT64  XALAN_INT64;
 
 #define XALAN_WINDOWS
+#define XALAN_WINDOWS_DIR_FUNCTIONS
+#define WINDOWS_THREAD_FUNCTIONS
 
 #if defined(_DEBUG) && defined(NDEBUG)
 #error NDEBUG must not be defined when _DEBUG is defined.
