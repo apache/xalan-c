@@ -1016,6 +1016,8 @@ XalanFileUtility::fileCompare(
             const char*     goldFile,
             const char*     outputFile)
 {
+    bool    retValue = true;
+
     const unsigned long     maxBuffer = 132;
 
     char rline[maxBuffer];  // declare buffers to hold single line from file
@@ -1032,94 +1034,96 @@ XalanFileUtility::fileCompare(
     FILE* const     result = fopen(outputFile, "r");
     FILE* const     gold = fopen(goldFile, "r");
 
-    // If the result file fails to open report this as a failure.
     if (!result)
     {
+        // If the result file fails to open report this as a failure.
         data.msg = "No Result (Transform failed)";
         data.fail += 1;
-        return false;
+        retValue = false;
     }
-
-    // If the gold file fails to open report this as ambiguous.
-    if (!gold)
+    else if (!gold)
     {
+        // If the gold file fails to open report this as ambiguous.
         data.msg = "No Gold file";
         data.nogold += 1;
-        return false;
+        retValue = false;
     }
-
-    // Start file comparison,  line by line..
-    while(!feof(result) && !feof(gold))
+    else
     {
-		gline[0] = '\0';
-		rline[0] = '\0';
-
-		fgets(gline, sizeof(gline), gold );
-        fgets(rline, sizeof(rline), result );
-        sprintf(temp,"%d",lineNum);
-
-        if (ferror(gold) || ferror(result))
+        // Start file comparison,  line by line..
+        while(!feof(result) && !feof(gold) && retValue == true)
         {
-            data.msg = "Read Error - Gold/Result file";
-            data.currentNode = XalanDOMString("Line: ", getMemoryManager());
-            data.currentNode += XalanDOMString(temp, getMemoryManager());
-            return false;
-        }
+		    gline[0] = '\0';
+		    rline[0] = '\0';
 
-        // Compare the lines character by charcter ....
-        XalanSize_t     i = 0;
-        while(i < strlen(gline)) 
-        {
-            if (gline[i] == rline[i]) 
+		    fgets(gline, sizeof(gline), gold );
+            fgets(rline, sizeof(rline), result );
+            sprintf(temp,"%d",lineNum);
+
+            if (ferror(gold) || ferror(result))
             {
-                i++;
-            }
-            else
-            {   // If there is a mismatch collect up the fail data and return false.  To ensure that 
-                // the results can be seen in the browser enclose the actual/expected in CDATA Sections.
-
-                data.msg = "Text based comparison failure";
-
-                try
-                {
-                    data.expected += XalanDOMString(gline, getMemoryManager());
-                }
-                catch(const XalanDOMString::TranscodingError&)
-                {
-                    data.expected +=
-                        XalanDOMString(
-                            "Unable to transcode expected data.",
-                            getMemoryManager());
-                }
-
-                try
-                {
-                    data.actual += XalanDOMString(rline, getMemoryManager());
-                }
-                catch(const XalanDOMString::TranscodingError&)
-                {
-                    data.actual +=
-                        XalanDOMString(
-                            "Unable to transcode actual data.",
-                            getMemoryManager());
-                }
-
+                data.msg = "Read Error - Gold/Result file";
                 data.currentNode = XalanDOMString("Line: ", getMemoryManager());
                 data.currentNode += XalanDOMString(temp, getMemoryManager());
-                data.fail += 1;
-                fclose(result);
-                fclose(gold);
-                return false;
+                retValue = false;
+            }
+            else
+            {
+                // Compare the lines character by charcter ....
+                XalanSize_t     i = 0;
+                while(i < strlen(gline) && retValue == true) 
+                {
+                    if (gline[i] == rline[i]) 
+                    {
+                        ++i;
+                    }
+                    else
+                    {   // If there is a mismatch collect up the fail data and return false.  To ensure that 
+                        // the results can be seen in the browser enclose the actual/expected in CDATA Sections.
+
+                        data.msg = "Text based comparison failure";
+
+                        try
+                        {
+                            data.expected += XalanDOMString(gline, getMemoryManager());
+                        }
+                        catch(const XalanDOMString::TranscodingError&)
+                        {
+                            data.expected +=
+                                XalanDOMString(
+                                    "Unable to transcode expected data.",
+                                    getMemoryManager());
+                        }
+
+                        try
+                        {
+                            data.actual += XalanDOMString(rline, getMemoryManager());
+                        }
+                        catch(const XalanDOMString::TranscodingError&)
+                        {
+                            data.actual +=
+                                XalanDOMString(
+                                    "Unable to transcode actual data.",
+                                    getMemoryManager());
+                        }
+
+                        data.currentNode = XalanDOMString("Line: ", getMemoryManager());
+                        data.currentNode += XalanDOMString(temp, getMemoryManager());
+                        data.fail += 1;
+
+                        retValue = false;
+                    }
+                }
+
+                ++lineNum;
             }
         }
-
-        lineNum += 1;
     }
 
     fclose(result);
     fclose(gold);
 
-    return true;
+    return retValue;
 }
 
 
