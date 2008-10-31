@@ -185,7 +185,7 @@ theThread(LPVOID    param)
 
     outputMessage(theThreadID, "Finishing");
 
-#if defined(WINDOWS_THREAD_FUNCTION)
+#if defined(WINDOWS_THREAD_FUNCTIONS)
     return theResult;
 #elif defined(XALAN_POSIX2_AVAILABLE)
     return 0;
