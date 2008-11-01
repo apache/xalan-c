@@ -826,6 +826,8 @@ transform(
 
 #if defined(XALAN_WINDOWS)
 
+XALAN_USING_XERCES(MemoryManager)
+
 class WindowsMemoryManager : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
 public:

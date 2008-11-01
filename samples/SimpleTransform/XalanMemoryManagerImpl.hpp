@@ -41,6 +41,8 @@
 #include <stdlib.h>
 
 
+XALAN_USING_XERCES(MemoryManager)
+
 class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
 public:

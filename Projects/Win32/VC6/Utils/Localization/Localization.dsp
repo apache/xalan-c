@@ -8,18 +8,17 @@ CFG=Localization - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "BuildMessages.mak".
+!MESSAGE NMAKE /f "Localization.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "BuildMessages.mak" CFG="Localization - Win32 Release"
+!MESSAGE NMAKE /f "Localization.mak" CFG="Localization - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "Localization - Win32 Release" (based on "Win32 (x86) External Target")
 !MESSAGE "Localization - Win32 Debug" (based on "Win32 (x86) External Target")
-!MESSAGE "Localization - Win32 Release with symbols" (based on "Win32 (x86) External Target")
 !MESSAGE "Localization - Win64 Release" (based on "Win64 (x86) External Target")
 !MESSAGE "Localization - Win64 Debug" (based on "Win64 (x86) External Target")
 !MESSAGE 
@@ -50,20 +49,6 @@ CFG=Localization - Win32 Release
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Cmd_Line "nmake    /f "BuildMessages.mak" /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US"
-# PROP Rebuild_Opt "/a"
-# PROP Target_File "Localization"
-
-!ELSEIF  "$(CFG)" == "Localization - Win32 Release with symbols"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=inmem LOCALE=en_US"
-# PROP BASE Rebuild_Opt "/a"
-# PROP BASE Target_File "Localization"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=inmem CFG=Release.symbols LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "Localization"
 
@@ -101,19 +86,12 @@ CFG=Localization - Win32 Release
 
 # Name "Localization - Win32 Release"
 # Name "Localization - Win32 Debug"
-# Name "Localization - Win32 Release with symbols"
 # Name "Localization - Win64 Release"
 # Name "Localization - Win64 Debug"
 
 !IF  "$(CFG)" == "Localization - Win32 Release"
 
 !ELSEIF  "$(CFG)" == "Localization - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "Localization - Win32 Release with symbols"
-
-!ELSEIF  "$(CFG)" == "Localization - Win64 Release"
-
-!ELSEIF  "$(CFG)" == "Localization - Win64 Debug"
 
 !ENDIF 
 
