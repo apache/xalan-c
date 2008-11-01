@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386 /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_3.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:I386 /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
 
 !ELSEIF  "$(CFG)" == "perf - Win32 Debug"
 
@@ -77,7 +77,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_3D.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
 # SUBTRACT LINK32 /incremental:no
 
 !ELSEIF  "$(CFG)" == "perf - Win32 Release with symbols"
@@ -104,7 +104,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /subsystem:console /pdb:none /machine:I386 /libpath:"..\Harness\Release\\"
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /fixed:no
+# ADD LINK32 xerces-c_3.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:I386 /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /fixed:no
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "perf - Win64 Release"
@@ -129,7 +129,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:IX86 /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
+# ADD LINK32 xerces-c_3.lib /nologo /stack:0x1f4000 /subsystem:console /pdb:none /machine:IX86 /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "perf - Win64 Debug"
 
@@ -154,7 +154,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
+# ADD LINK32 xerces-c_3D.lib /nologo /stack:0x1f4000 /subsystem:console /debug /machine:IX86 /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 # SUBTRACT LINK32 /incremental:no
 
 !ENDIF 
