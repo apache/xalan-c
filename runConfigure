@@ -192,6 +192,8 @@ if test $1 = "-h"; then
 fi
 
 # Set up the default values for each parameter
+ccompiler=gcc            # Use GCC as the default compiler
+cppcompiler=g++          # Use GCC as the default compiler
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
 transcoder=default       # by default use default transcoder
@@ -361,11 +363,9 @@ if test $debug = "off"; then
     elif test $platform = "os390"; then
         debugflag="-DNDEBUG";
     elif test $platform = "linux"; then
-        if test $cppcompiler = "icpc"; then
-            debugflag="-O3 -DNDEBUG";
-        else
-            debugflag="-O2 -DNDEBUG";
-        fi
+        debugflag="-O3 -DNDEBUG";
+    elif test $cppcompiler = "aCC"; then
+        debugflag="+O3 -DNDEBUG";
     else
         debugflag="-O -DNDEBUG";
     fi
