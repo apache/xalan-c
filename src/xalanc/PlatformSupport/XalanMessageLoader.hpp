@@ -76,9 +76,9 @@ public:
                     MemoryManager&          theManager,
                     XalanMessageLoader*     p)
         {
-            assert (p != 0);
+            assert(p != 0);
 
-            XalanDestroy(theManager, p);
+            XalanDestroy(theManager, *p);
         }
     };
 

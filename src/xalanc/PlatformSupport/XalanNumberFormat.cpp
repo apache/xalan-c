@@ -194,7 +194,7 @@ XalanNumberFormat::applyGrouping(
             XalanDOMChar*   p = &theGuard.back();
 
             // Leave a null-terminator.
-            --p;
+            *p-- = 0;
 
             for (XalanDOMString::size_type i = 0, ix = len - 1; i < len && p > buffer; i++, ix--)
             {

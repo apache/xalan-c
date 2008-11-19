@@ -145,6 +145,9 @@ static const char* const    excludeStylesheets[] =
     "output22.xsl",
 #endif
 
+    // Excluded because it outputs ISO-2022-JP, and not all platforms support this encoding.
+    "output23.xsl",
+
     // These sort tests are disabled because the ICU implements a more recent version of the
     // the Unicode collation algorithm, so we won't match the Java results.
     "sort08.xsl",
@@ -205,9 +208,6 @@ static const char* const    excludeStylesheetsWithoutICU[] =
 
     // Excluded because it outputs EBCDIC-CP-IT, and not all platforms support this encoding.
     "output22.xsl",
-
-    // Excluded because it outputs ISO-2022-JP, and not all platforms support this encoding.
-    "output23.xsl",
 
     // Excluded because it outputs HTML, which cannot be parsed.  Text comparison fails because
     // it try to use SHIFT_JIS for the output encoding, which not all platforms support.

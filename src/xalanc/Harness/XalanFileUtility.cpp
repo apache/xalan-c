@@ -855,7 +855,7 @@ XalanFileUtility::checkDOMResults(
 
     XalanDestroy(
         getMemoryManager(),
-        theFormatter);
+        *theFormatter);
 
     XalanSourceTreeDOMSupport       domSupport;
     XalanSourceTreeParserLiaison    parserLiaison(domSupport, getMemoryManager());

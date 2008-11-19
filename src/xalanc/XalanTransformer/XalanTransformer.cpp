@@ -182,7 +182,7 @@ XalanTransformer::~XalanTransformer()
 
     XalanDestroy(
         m_memoryManager,
-        m_stylesheetExecutionContext);
+        *m_stylesheetExecutionContext);
 }
 
 
