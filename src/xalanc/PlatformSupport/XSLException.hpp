@@ -135,10 +135,10 @@ public:
         return m_memoryManager;
     }
 
-    void
+    XalanDOMString&
     defaultFormat(XalanDOMString&   theBuffer) const;
 
-    static void
+    static XalanDOMString&
     defaultFormat(
             const XalanDOMString&   theMessage,
             const XalanDOMString&   theURI,
@@ -147,19 +147,19 @@ public:
             const XalanDOMChar*     theType,
             XalanDOMString&         theBuffer)
     {
-        defaultFormat(
-            theMessage.c_str(),
-            theMessage.size(),
-            theURI.c_str(),
-            theURI.size(),
-            theLineNumber,
-            theColumnNumber,
-            theType,
-            XalanDOMString::length(theType),
-            theBuffer);
+        return defaultFormat(
+                    theMessage.c_str(),
+                    theMessage.size(),
+                    theURI.c_str(),
+                    theURI.size(),
+                    theLineNumber,
+                    theColumnNumber,
+                    theType,
+                    XalanDOMString::length(theType),
+                    theBuffer);
     }
 
-    static void
+    static XalanDOMString&
     defaultFormat(
             const XalanDOMChar*     theMessage,
             const XalanDOMChar*     theURI,
@@ -170,19 +170,19 @@ public:
     {
         assert(theMessage != 0);
 
-        defaultFormat(
-            theMessage,
-            XalanDOMString::length(theMessage),
-            theURI,
-            theURI == 0 ? 0 : XalanDOMString::length(theURI),
-            theLineNumber,
-            theColumnNumber,
-            theType,
-            theType == 0 ? 0 : XalanDOMString::length(theType),
-            theBuffer);
+        return defaultFormat(
+                    theMessage,
+                    XalanDOMString::length(theMessage),
+                    theURI,
+                    theURI == 0 ? 0 : XalanDOMString::length(theURI),
+                    theLineNumber,
+                    theColumnNumber,
+                    theType,
+                    theType == 0 ? 0 : XalanDOMString::length(theType),
+                    theBuffer);
     }
 
-    static void
+    static XalanDOMString&
     defaultFormat(
             const XalanDOMChar*                 theMessage,
             const XalanDOMString::size_type     theMessageLength,

@@ -167,8 +167,12 @@ main(
         }
         catch(const XSLException&   theException)
         {
+            XALAN_USING_XALAN(XalanDOMString)
+
+            XalanDOMString  theError;
+
             cerr << "XSL exception: "
-                 << theException.getMessage()
+                 << theException.defaultFormat(theError)
                  << endl;
 
             theResult = -1;

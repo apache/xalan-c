@@ -46,6 +46,7 @@
 
 
 
+#include "XalanXPathException.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
 #include "XPath.hpp"
@@ -467,6 +468,14 @@ XPathEnvSupportDefault::problem(
             locator,
             sourceNode);
     }
+
+    if (classification == eError)
+    {
+        throw XalanXPathException(
+                msg,
+                getMemoryManager(),
+                locator);
+    }
 }
 
 
@@ -486,6 +495,14 @@ XPathEnvSupportDefault::problem(
             classification,
             msg,
             sourceNode);
+    }
+
+    if (classification == eError)
+    {
+        throw XalanXPathException(
+                msg,
+                getMemoryManager(),
+                0);
     }
 }
 

@@ -86,7 +86,7 @@ XSLException::~XSLException()
 
 
 
-void
+XalanDOMString&
 XSLException::defaultFormat(XalanDOMString&     theBuffer) const
 {
     if (m_formatted == true)
@@ -103,10 +103,13 @@ XSLException::defaultFormat(XalanDOMString&     theBuffer) const
             getType(),
             theBuffer);
     }
+
+    return theBuffer;
 }
 
 
-void
+
+XalanDOMString&
 XSLException::defaultFormat(
             const XalanDOMChar*                 theMessage,
             const XalanDOMString::size_type     theMessageLength,
@@ -183,6 +186,8 @@ XSLException::defaultFormat(
 
     theBuffer.append(theMessageBuffer);
     theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
+
+    return theBuffer;
 }
 
 

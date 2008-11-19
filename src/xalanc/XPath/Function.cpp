@@ -21,6 +21,7 @@
 
 
 
+#include "XalanXPathException.hpp"
 #include "XObjectFactory.hpp"
 
 
@@ -157,12 +158,19 @@ Function::generalError(
 {
     const GetCachedString   theGuard(executionContext);
 
+    XalanDOMString&     theErrorString = theGuard.get();
+
     executionContext.problem(
         XPathExecutionContext::eXPath,
         XPathExecutionContext::eError,
-        getError(theGuard.get()),
+        getError(theErrorString),
         locator,
         context);
+
+    throw XalanXPathException(
+            theErrorString,
+            theErrorString.getMemoryManager(),
+            locator);
 }
 
 
