@@ -69,7 +69,7 @@ XPathEvaluator::terminate()
 
 XPathEvaluator::XPathEvaluator(MemoryManager& theManager) :
     m_xobjectFactory(theManager, XObjectFactoryDefault::create(theManager)),
-    m_xpathFactory(theManager, XPathFactoryDefault::createXPathFactoryDefault(theManager)),
+    m_xpathFactory(theManager, XPathFactoryDefault::create(theManager)),
     m_constructionContext(theManager, XPathConstructionContextDefault::create(theManager)),
     m_executionContext(theManager, XPathExecutionContextDefault::create(theManager)),
     m_memoryManager(theManager)

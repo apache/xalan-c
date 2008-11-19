@@ -50,21 +50,23 @@ XSLTInit::XSLTInit(MemoryManager&      theManager) :
     }
 }
 
+
+
 XSLTInit*
 XSLTInit::create(MemoryManager&      theManager)
 {
-        typedef XSLTInit ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XSLTInit    ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
-        theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
+
 
 
 XSLTInit::~XSLTInit()
@@ -77,13 +79,17 @@ XSLTInit::~XSLTInit()
     }
 }
 
+
+
 MemoryManager&
 XSLTInit::getMemoryManager()
 {
-    assert( s_staticMemoryManager !=0);
+    assert(s_staticMemoryManager != 0);
 
     return *s_staticMemoryManager;
 }
+
+
 
 void
 XSLTInit::initialize(MemoryManager&  theManager)
@@ -96,7 +102,7 @@ XSLTInit::initialize(MemoryManager&  theManager)
 
     StylesheetHandler::initialize(theManager);
 
-    s_staticMemoryManager = & theManager;
+    s_staticMemoryManager = &theManager;
 
 }
 
@@ -114,7 +120,6 @@ XSLTInit::terminate()
     Constants::terminate();
 
     s_staticMemoryManager = 0;
-
 }
 
 

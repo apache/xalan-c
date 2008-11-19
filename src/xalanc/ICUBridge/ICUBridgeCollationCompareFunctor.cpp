@@ -23,7 +23,6 @@
 #include "ICUBridge.hpp"
 #include "ICUBridgeCollationCompareFunctorImpl.hpp"
 
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN

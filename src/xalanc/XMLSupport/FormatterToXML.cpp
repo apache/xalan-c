@@ -323,47 +323,50 @@ FormatterToXML::FormatterToXML(
     initCharsMap();
 }
 
+
+
 FormatterToXML*
 FormatterToXML::create(
-                       MemoryManager&      theManager,
+                       MemoryManager&           theManager,
                        Writer&                  writer,
                        const XalanDOMString&    version,
-                       bool                     doIndent ,
-                       int                      indent ,
-                       const XalanDOMString&    encoding ,
-                       const XalanDOMString&    mediaType ,
-                       const XalanDOMString&    doctypeSystem ,
-                       const XalanDOMString&    doctypePublic ,
-                       bool                     xmlDecl ,
-                       const XalanDOMString&    standalone ,
+                       bool                     doIndent,
+                       int                      indent,
+                       const XalanDOMString&    encoding,
+                       const XalanDOMString&    mediaType,
+                       const XalanDOMString&    doctypeSystem,
+                       const XalanDOMString&    doctypePublic,
+                       bool                     xmlDecl,
+                       const XalanDOMString&    standalone,
                        eFormat                  format,
-                       bool                     fBufferData )
+                       bool                     fBufferData)
 {
-    typedef FormatterToXML ThisType;
+    typedef FormatterToXML  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(   writer,
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                writer,
                                 version,
-                                doIndent ,
-                                indent ,
-                                encoding ,
-                                mediaType ,
-                                doctypeSystem ,
-                                doctypePublic ,
-                                xmlDecl ,
-                                standalone ,
+                                doIndent,
+                                indent,
+                                encoding,
+                                mediaType,
+                                doctypeSystem,
+                                doctypePublic,
+                                xmlDecl,
+                                standalone,
                                 format,
                                 fBufferData,
                                 theManager);
-
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 FormatterToXML::~FormatterToXML()
 {

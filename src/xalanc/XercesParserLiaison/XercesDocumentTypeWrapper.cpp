@@ -52,23 +52,29 @@ XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
     assert(theXercesDOMDocumentType != 0);
 }
 
+
+
 XercesDocumentTypeWrapper*
-XercesDocumentTypeWrapper::create( MemoryManager& theManager,
+XercesDocumentTypeWrapper::create(
+            MemoryManager&                  theManager,
             const DOMDocumentType_Type*     theXercesDOMDocumentType,
             const XercesWrapperNavigator&   theNavigator)
 {
-    typedef XercesDocumentTypeWrapper ThisType;
+    typedef XercesDocumentTypeWrapper   ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theXercesDOMDocumentType, theNavigator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theXercesDOMDocumentType,
+                                theNavigator);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesDocumentTypeWrapper::~XercesDocumentTypeWrapper()
 {

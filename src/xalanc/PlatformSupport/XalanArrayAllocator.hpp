@@ -28,7 +28,7 @@
 #include <utility>
 
 
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
+
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanList.hpp>
 

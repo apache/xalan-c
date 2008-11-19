@@ -31,8 +31,6 @@
 #include <xercesc/sax/SAXParseException.hpp>
 
 
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
-
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
 
@@ -134,11 +132,11 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
 #if defined(XALAN_USE_ICU)
     // Create a collation function for the ICU, and have it
     // cache collators...
-    XalanMemMgrAutoPtr<ICUBridgeCollationCompareFunctor, true>  theICUFunctor(m_memoryManager, ICUBridgeCollationCompareFunctor::create(m_memoryManager, true));
+    XalanMemMgrAutoPtr<ICUBridgeCollationCompareFunctor>  theICUFunctor(m_memoryManager, ICUBridgeCollationCompareFunctor::create(m_memoryManager, true));
 
     m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor.get());
 
-    XalanMemMgrAutoPtr<ICUFormatNumberFunctor, true>  theFormatNumberFunctor(m_memoryManager, ICUFormatNumberFunctor::create(m_memoryManager));
+    XalanMemMgrAutoPtr<ICUFormatNumberFunctor>  theFormatNumberFunctor(m_memoryManager, ICUFormatNumberFunctor::create(m_memoryManager));
     m_stylesheetExecutionContext->installFormatNumberFunctor(theFormatNumberFunctor.get());
     theICUFunctor.release();
     theFormatNumberFunctor.release();
@@ -172,14 +170,19 @@ XalanTransformer::~XalanTransformer()
 
 #if defined(XALAN_USE_ICU)
     // Uninstall the ICU collation compare functor, and destroy it...
+    XalanDestroy(
+        m_memoryManager,
+        m_stylesheetExecutionContext->uninstallCollationCompareFunctor());
 
-    destroyObjWithMemMgr( m_stylesheetExecutionContext->uninstallCollationCompareFunctor(), m_memoryManager);
-    destroyObjWithMemMgr( m_stylesheetExecutionContext->uninstallFormatNumberFunctor(), m_memoryManager);
+    // Uninstall the ICU format number functor, and destroy it...
+    XalanDestroy(
+        m_memoryManager,
+        m_stylesheetExecutionContext->uninstallFormatNumberFunctor());
 #endif
 
-    destroyObjWithMemMgr(
-        m_stylesheetExecutionContext,
-        m_memoryManager);
+    XalanDestroy(
+        m_memoryManager,
+        m_stylesheetExecutionContext);
 }
 
 
@@ -188,7 +191,7 @@ void
 XalanTransformer::initialize(MemoryManager&     theManager)
 {
     // Initialize Xalan. 
-    XalanMemMgrAutoPtr<XSLTInit, true>          initGuard(theManager, XSLTInit::create(theManager));
+    XalanMemMgrAutoPtr<XSLTInit>    initGuard(theManager, XSLTInit::create(theManager));
     XalanAutoPtr<XSLTInputSource>   inputSourceGuard(new (&theManager) XSLTInputSource(theManager));
     EnsureFunctionsInstallation     instalGuard(theManager); 
 
@@ -206,7 +209,7 @@ XalanTransformer::initialize(MemoryManager&     theManager)
 void
 XalanTransformer::terminate()
 {
-    assert( s_initMemoryManager!= 0 );
+    assert(s_initMemoryManager != 0);
 
     {
         const EnsureFunctionsInstallation   uninstallGuard(*s_initMemoryManager);
@@ -214,7 +217,9 @@ XalanTransformer::terminate()
 
     delete s_emptyInputSource;
 
-    destroyObjWithMemMgr(s_xsltInit, *s_initMemoryManager);
+    XalanDestroy(
+        *s_initMemoryManager,
+        const_cast<XSLTInit*>(s_xsltInit));
 
     s_emptyInputSource = 0;
     s_xsltInit = 0;
@@ -719,9 +724,9 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*  theStyleshee
     {
         m_compiledStylesheets.erase(i);
 
-        destroyObjWithMemMgr(
-            theStylesheet,
-            m_memoryManager);
+        XalanDestroy(
+            m_memoryManager,
+            const_cast<XalanCompiledStylesheet*>(theStylesheet));
 
         return 0;
     }
@@ -848,9 +853,9 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*  theParsedSource)
 
         assert(theParsedSource != 0);
 
-        destroyObjWithMemMgr(
-            theParsedSource,
-            m_memoryManager);
+        XalanDestroy(
+            m_memoryManager,
+            const_cast<XalanParsedSource*>(theParsedSource));
 
         return 0;
     }
@@ -1181,7 +1186,7 @@ XalanTransformer::doTransform(
         assert(theSourceDocument != 0);
 
         // Create the helper object that is necessary for running the processor...
-        XalanMemMgrAutoPtr<XalanParsedSourceHelper, true>   theHelper(m_memoryManager, theParsedXML.createHelper(m_memoryManager));
+        XalanMemMgrAutoPtr<XalanParsedSourceHelper>   theHelper(m_memoryManager, theParsedXML.createHelper(m_memoryManager));
 
         assert(theHelper.get() != 0);
 

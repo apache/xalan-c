@@ -101,7 +101,7 @@ XalanDOMString::XalanDOMString(
 XalanDOMString*
 XalanDOMString::clone(MemoryManager&  theManager)
 {
-    typedef XalanDOMString ThisType;
+    typedef XalanDOMString  ThisType;
 
     XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 

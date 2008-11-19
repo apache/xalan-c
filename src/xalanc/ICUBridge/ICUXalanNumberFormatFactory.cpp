@@ -45,17 +45,9 @@ ICUXalanNumberFormatFactory::~ICUXalanNumberFormatFactory()
 XalanNumberFormat*
 ICUXalanNumberFormatFactory::create()
 {
-    typedef ICUXalanNumberFormatProxy ThisType;
+    ICUXalanNumberFormatProxy*  theInstance;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( m_memoryManager , (ThisType*)m_memoryManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(m_memoryManager);
-
-   theGuard.release();
-
-   return theResult;
+    return XalanConstruct(m_memoryManager, theInstance, m_memoryManager);
 }
 
 

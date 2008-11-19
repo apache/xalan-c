@@ -104,29 +104,36 @@ XalanDefaultParsedSourceDOMSupport::isNodeAfter(
 
 
 
-XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&     theSourceDOMSupport,
-                                                               MemoryManager&                   theManager) :
+XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(
+            const XalanSourceTreeDOMSupport&    theSourceDOMSupport,
+            MemoryManager&                      theManager) :
     m_parserLiaison(theManager),
     m_domSupport(m_parserLiaison, theSourceDOMSupport)
 {
 }
 
+
+
 XalanDefaultParsedSourceHelper*
-XalanDefaultParsedSourceHelper::create(const XalanSourceTreeDOMSupport&     theSourceDOMSupport,
-                                       MemoryManager&                   theManager)
+XalanDefaultParsedSourceHelper::create(
+            const XalanSourceTreeDOMSupport&    theSourceDOMSupport,
+            MemoryManager&                      theManager)
 {
-    typedef XalanDefaultParsedSourceHelper ThisType;
+    typedef XalanDefaultParsedSourceHelper  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theSourceDOMSupport,
+                                theManager);
 
-    new (theResult) ThisType(theSourceDOMSupport, theManager);
-                             
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XalanDefaultParsedSourceHelper::~XalanDefaultParsedSourceHelper()
 {

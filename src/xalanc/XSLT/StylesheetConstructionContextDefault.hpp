@@ -444,7 +444,7 @@ private:
 
     XPathFactory&                           m_xpathFactory;
 
-    typedef XalanMemMgrAutoPtr<XPathProcessor, true>    XPathProcessAutoPtr;
+    typedef XalanMemMgrAutoPtr<XPathProcessor>  XPathProcessAutoPtr;
 
     XPathProcessAutoPtr                     m_xpathProcessor;
 

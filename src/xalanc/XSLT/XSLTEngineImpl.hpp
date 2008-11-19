@@ -177,13 +177,13 @@ public:
         const XalanDOMString&   m_string;
     };
 
-    typedef XalanMemMgrAutoPtr<XPathProcessor, true>                XPathProcessorPtrType;
-    typedef Function::XObjectArgVectorType              XObjectArgVectorType;
-    typedef StylesheetExecutionContext::ParamVectorType ParamVectorType;
-    typedef XPathConstructionContext::GetCachedString   CCGetCachedString;
-    typedef XPathExecutionContext::GetCachedString      ECGetCachedString;
+    typedef XalanMemMgrAutoPtr<XPathProcessor>              XPathProcessorPtrType;
+    typedef Function::XObjectArgVectorType                  XObjectArgVectorType;
+    typedef StylesheetExecutionContext::ParamVectorType     ParamVectorType;
+    typedef XPathConstructionContext::GetCachedString       CCGetCachedString;
+    typedef XPathExecutionContext::GetCachedString          ECGetCachedString;
 
-    typedef XalanMap<XalanDOMString, XalanParamHolder>  ParamMapType;
+    typedef XalanMap<XalanDOMString, XalanParamHolder>      ParamMapType;
 
     // Public members
     //---------------------------------------------------------------------

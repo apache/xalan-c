@@ -179,7 +179,7 @@ ElemNumber::ElemNumber(
 
 ElemNumber*
 ElemNumber::create(
-            MemoryManager&              theManager,
+            MemoryManager&                  theManager,
             StylesheetConstructionContext&  constructionContext,
             Stylesheet&                     stylesheetTree,
             const AttributeListType&        atts,
@@ -187,18 +187,18 @@ ElemNumber::create(
             XalanFileLoc                    columnNumber,
             unsigned long                   id)
 {
-    typedef ElemNumber ThisType;
+    typedef ElemNumber  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(constructionContext,
-        stylesheetTree,
-        atts,
-        lineNumber,
-        columnNumber,
-        id);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                constructionContext,
+                                stylesheetTree,
+                                atts,
+                                lineNumber,
+                                columnNumber,
+                                id);
 
     theGuard.release();
 
@@ -845,7 +845,7 @@ ElemNumber::getNumberFormatter(StylesheetExecutionContext&  executionContext) co
 {
     // Helper to format local specific numbers to strings.
 
-    XalanMemMgrAutoPtr<XalanNumberFormat, true>     formatter(executionContext.createXalanNumberFormat());
+    XalanMemMgrAutoPtr<XalanNumberFormat>   formatter(executionContext.createXalanNumberFormat());
 
     typedef XPathExecutionContext::GetCachedString  GetCachedString;
 

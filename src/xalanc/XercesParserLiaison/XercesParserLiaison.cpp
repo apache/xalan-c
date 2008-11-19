@@ -272,8 +272,9 @@ XercesParserLiaison::destroyDocument(XalanDocument*     theDocument)
 
     if (i != m_documentMap.end())
     {
-        const XalanMemMgrAutoPtr<XalanDocument, true>   theGuard(m_documentMap.getMemoryManager(),
-                                                                 theDocument);
+        const XalanMemMgrAutoPtr<XalanDocument>     theGuard(
+                                                        m_documentMap.getMemoryManager(),
+                                                        theDocument);
 
         m_documentMap.erase(i);
     }

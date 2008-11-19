@@ -48,24 +48,29 @@ XercesNotationWrapper::XercesNotationWrapper(
     assert(theXercesDOMNotation != 0);
 }
 
+
+
 XercesNotationWrapper*
-XercesNotationWrapper::create( MemoryManager& theManager,
+XercesNotationWrapper::create(
+            MemoryManager&                  theManager,
             const DOMNotationType*          theXercesDOMNotation,
             const XercesWrapperNavigator&   theNavigator)
 
 {
-    typedef XercesNotationWrapper ThisType;
+    typedef XercesNotationWrapper   ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theXercesDOMNotation, theNavigator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theXercesDOMNotation,
+                                theNavigator);
 
     theGuard.release();
 
     return theResult;
 }
+
 
 
 XercesNotationWrapper::~XercesNotationWrapper()

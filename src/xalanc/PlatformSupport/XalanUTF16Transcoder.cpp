@@ -28,26 +28,28 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManager& theManager) :
+XalanUTF16Transcoder::XalanUTF16Transcoder(MemoryManager&   theManager) :
     XalanOutputTranscoder(theManager)
 {
 }
 
+
+
 XalanUTF16Transcoder*
 XalanUTF16Transcoder::create(MemoryManager& theManager)
 {
-        typedef XalanUTF16Transcoder ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XalanUTF16Transcoder    ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
-        theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
+
 
 
 XalanUTF16Transcoder::~XalanUTF16Transcoder()

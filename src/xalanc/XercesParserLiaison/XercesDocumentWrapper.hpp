@@ -465,37 +465,37 @@ private:
     // This is a private helper class for building the tree...
     friend class BuildWrapperTreeWalker;
 
-    const DOMDocument_Type* const           m_xercesDocument;
+    const DOMDocument_Type* const                   m_xercesDocument;
 
-    XalanElement*                           m_documentElement;
+    XalanElement*                                   m_documentElement;
 
-    mutable XercesWrapperToXalanNodeMap     m_nodeMap;
+    mutable XercesWrapperToXalanNodeMap             m_nodeMap;
 
-    mutable XercesWrapperNavigatorAllocator m_navigatorAllocator;
+    mutable XercesWrapperNavigatorAllocator         m_navigatorAllocator;
 
     // Our navigator will be the first entry in m_navigators,
     // but we'll cache this so access is faster...
-    XercesWrapperNavigator*                 m_navigator;
+    XercesWrapperNavigator*                         m_navigator;
 
-    XercesNodeListWrapper                   m_children;
+    XercesNodeListWrapper                           m_children;
 
-    mutable NodeVectorType                  m_nodes;
+    mutable NodeVectorType                          m_nodes;
 
-    mutable XercesDocumentTypeWrapper*      m_doctype;
+    mutable XercesDocumentTypeWrapper*              m_doctype;
 
-    bool                                    m_mappingMode;
+    bool                                            m_mappingMode;
 
-    bool                                    m_indexValid;
+    bool                                            m_indexValid;
 
-    const bool                              m_buildMaps;
+    const bool                                      m_buildMaps;
 
-    mutable XercesElementWrapperAllocator   m_elementAllocator;
+    mutable XercesElementWrapperAllocator           m_elementAllocator;
 
-    mutable XercesTextWrapperAllocator      m_textAllocator;
+    mutable XercesTextWrapperAllocator              m_textAllocator;
 
-    mutable XercesAttrWrapperAllocator      m_attributeAllocator;
+    mutable XercesAttrWrapperAllocator              m_attributeAllocator;
 
-    const XalanMemMgrAutoPtr<XalanDOMStringPool,true>  m_stringPool;
+    const XalanMemMgrAutoPtr<XalanDOMStringPool>    m_stringPool;
 };
 
 

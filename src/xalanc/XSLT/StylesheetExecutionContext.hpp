@@ -1518,7 +1518,7 @@ public:
     };
 #endif
 
-    typedef XalanMemMgrAutoPtr<XalanNumberFormat,true>      XalanNumberFormatAutoPtr;
+    typedef XalanMemMgrAutoPtr<XalanNumberFormat>   XalanNumberFormatAutoPtr;
 
     /**
      * Create a new XalanNumberFormat instance.

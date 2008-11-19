@@ -60,13 +60,12 @@ ICUFormatNumberFunctor::ICUFormatNumberFunctor(MemoryManager& theManager) :
 ICUFormatNumberFunctor*
 ICUFormatNumberFunctor::create(MemoryManager& theManager) 
 {
-    typedef ICUFormatNumberFunctor ThisType;
+    typedef ICUFormatNumberFunctor  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
     theGuard.release();
 

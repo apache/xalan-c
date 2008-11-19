@@ -75,7 +75,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentWrapper::XercesDocumentWrapper(
-            MemoryManager&          theManager,
+            MemoryManager&              theManager,
             const DOMDocument_Type*     theXercesDocument,
             bool                        threadSafe,
             bool                        buildWrapper,
@@ -117,30 +117,34 @@ XercesDocumentWrapper::XercesDocumentWrapper(
     }
 }
 
+
+
 XercesDocumentWrapper*
 XercesDocumentWrapper::create( 
-            MemoryManager&          theManager,
+            MemoryManager&              theManager,
             const DOMDocument_Type*     theXercesDocument,
             bool                        threadSafe,
             bool                        buildWrapper,
             bool                        buildMaps)
 {
-    typedef XercesDocumentWrapper ThisType;
+    typedef XercesDocumentWrapper   ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                theXercesDocument,
+                                threadSafe,
+                                buildWrapper,
+                                buildMaps);
 
-    new (theResult) ThisType(theManager,
-                            theXercesDocument,
-                            threadSafe,
-                            buildWrapper,
-                            buildMaps);
-        
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesDocumentWrapper::~XercesDocumentWrapper()
 {

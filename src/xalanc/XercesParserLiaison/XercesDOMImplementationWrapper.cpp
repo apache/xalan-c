@@ -56,21 +56,25 @@ XercesDOMImplementationWrapper::XercesDOMImplementationWrapper(const XercesDOMIm
 {
 }
 
+
+
 XercesDOMImplementationWrapper*
-XercesDOMImplementationWrapper::create(MemoryManager& theManager, DOMImplementationType*    theXercesDOMImplementation)
+XercesDOMImplementationWrapper::create(
+            MemoryManager&          theManager,
+            DOMImplementationType*  theXercesDOMImplementation)
 {
-        typedef XercesDOMImplementationWrapper ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XercesDOMImplementationWrapper  ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theXercesDOMImplementation);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theXercesDOMImplementation);
 
-        theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
+
 
 
 bool

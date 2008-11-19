@@ -96,18 +96,18 @@ ElemForwardCompatible::create(
             XalanFileLoc                    lineNumber, 
             XalanFileLoc                    columnNumber)
 {
-    typedef ElemForwardCompatible ThisType;
+    typedef ElemForwardCompatible   ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(constructionContext,
-        stylesheetTree,
-        name,
-        atts,
-        lineNumber,
-        columnNumber);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                constructionContext,
+                                stylesheetTree,
+                                name,
+                                atts,
+                                lineNumber,
+                                columnNumber);
 
     theGuard.release();
 

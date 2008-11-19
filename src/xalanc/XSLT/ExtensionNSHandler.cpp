@@ -75,39 +75,46 @@ struct XSLProcessorContext
  * 
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
-ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&    namespaceUri,
-                                       MemoryManager& theManager) :
+ExtensionNSHandler::ExtensionNSHandler(
+            const XalanDOMString&   namespaceUri,
+            MemoryManager&          theManager) :
     ExtensionFunctionHandler(namespaceUri, theManager),
     m_elements(theManager),
     m_componentDescLoaded(false)
 {
 }
 
+
+
 ExtensionNSHandler*
-ExtensionNSHandler::create(const XalanDOMString&    namespaceUri,
-                           MemoryManager&       theManager)
+ExtensionNSHandler::create(
+            const XalanDOMString&   namespaceUri,
+            MemoryManager&          theManager)
 {
-    typedef ExtensionNSHandler ThisType;
+    typedef ExtensionNSHandler  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(namespaceUri, theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                namespaceUri,
+                                theManager);
 
     theGuard.release();
 
     return theResult;
 }
 
+
+
 ExtensionNSHandler::ExtensionNSHandler (
-            MemoryManager&    theManager,
-            const XalanDOMString& namespaceUri,
-            const XalanDOMString& elemNames,
-            const XalanDOMString& funcNames,
-            const XalanDOMString& lang,
-            const XalanDOMString& srcURL,
-            const XalanDOMString& src) :
+            MemoryManager&          theManager,
+            const XalanDOMString&   namespaceUri,
+            const XalanDOMString&   elemNames,
+            const XalanDOMString&   funcNames,
+            const XalanDOMString&   lang,
+            const XalanDOMString&   srcURL,
+            const XalanDOMString&   src) :
     ExtensionFunctionHandler(theManager, namespaceUri, funcNames, lang, srcURL, src),
     m_elements(theManager),
     m_componentDescLoaded(true)

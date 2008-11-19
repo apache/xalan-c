@@ -54,7 +54,6 @@ class XALAN_XSLT_EXPORT XSLTInit
 {
 public:
 
-    explicit
     XSLTInit(MemoryManager&      theManager);
 
     ~XSLTInit();
@@ -62,9 +61,8 @@ public:
     static XSLTInit*
     create(MemoryManager&      theManager);
 
-    inline MemoryManager&
+    MemoryManager&
     getMemoryManager();
-
 
 private:
 

@@ -198,27 +198,32 @@ KeyTable::KeyTable(
     }   
 } // end constructor
 
+
+
 KeyTable*
-KeyTable::create(MemoryManager& theManager,
+KeyTable::create(
+            MemoryManager&                      theManager,
             XalanNode*                          startNode,
             const PrefixResolver&               resolver,
             const KeyDeclarationVectorType&     keyDeclarations,
             StylesheetExecutionContext&         executionContext)
 {
-    typedef KeyTable ThisType;
+    typedef KeyTable    ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType( startNode,
-                               resolver,
-                               keyDeclarations,
-                              executionContext);
-   theGuard.release();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                startNode,
+                                resolver,
+                                keyDeclarations,
+                                executionContext);
+    theGuard.release();
 
     return theResult;
 }
+
+
 
 KeyTable::~KeyTable()
 {

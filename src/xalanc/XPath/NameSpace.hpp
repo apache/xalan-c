@@ -58,7 +58,7 @@ public:
     NameSpace(
             const XalanDOMString&   prefix,
             const XalanDOMString&   uri,
-            MemoryManager&      theManager) :
+            MemoryManager&          theManager) :
         m_prefix(prefix, theManager),
         m_uri(uri, theManager)
     {
@@ -68,22 +68,26 @@ public:
     create(
             const XalanDOMString&   prefix,
             const XalanDOMString&   uri,
-            MemoryManager&      theManager)
+            MemoryManager&          theManager)
     {
-        typedef NameSpace ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-        
-        ThisType* theResult = theGuard.get();
-        
-        new (theResult) ThisType(prefix, uri, theManager);
-        
+        typedef NameSpace   ThisType;
+
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
+
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(
+                                    prefix,
+                                    uri,
+                                    theManager);
+
         theGuard.release();
-        
+
         return theResult;
     }
-    NameSpace( const NameSpace&     other,
-        MemoryManager&      theManager) :
+
+    NameSpace(
+            const NameSpace&    other,
+            MemoryManager&      theManager) :
         m_prefix(other.m_prefix, theManager),
         m_uri(other.m_uri, theManager)        
     {

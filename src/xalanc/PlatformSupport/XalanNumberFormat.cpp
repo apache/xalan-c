@@ -19,9 +19,6 @@
 
 
 
-#include <xalanc/Include/XalanMemMngArrayAllocate.hpp>
-
-
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -189,18 +186,15 @@ XalanNumberFormat::applyGrouping(
             // Add two, so we leave one byte at the beginning as empty space
             const XalanDOMString::size_type     bufsize = len + len / m_groupingSize + 2;
 
-            typedef XalanMemMngArrayAllocate<XalanDOMChar> XalanDOMCharHeapAllocator;
+            XalanVector<XalanDOMChar>   theGuard(result.getMemoryManager());
 
-            XalanDOMChar* const     buffer = XalanDOMCharHeapAllocator::allocate( bufsize, 
-                                                                                 result.getMemoryManager());
+            theGuard.resize(bufsize);
 
-            XalanMemMgrAutoPtrArray<XalanDOMChar>       theGuard(result.getMemoryManager(),
-                                                                  buffer,
-                                                                  bufsize);
+            XalanDOMChar* const     buffer = &*theGuard.begin();
+            XalanDOMChar*   p = &theGuard.back();
 
-            XalanDOMChar*           p = buffer + bufsize - 1;
-
-            *p-- = 0;   // null terminate
+            // Leave a null-terminator.
+            --p;
 
             for (XalanDOMString::size_type i = 0, ix = len - 1; i < len && p > buffer; i++, ix--)
             {

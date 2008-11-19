@@ -66,7 +66,7 @@ FormatterToHTML::FormatterToHTML(
             int                     indent,
             bool                    escapeURLs,
             bool                    omitMetaTag,
-            MemoryManager&      theManager) :
+            MemoryManager&          theManager) :
     FormatterToXML(
             writer,
             s_emptyString,
@@ -105,7 +105,7 @@ FormatterToHTML::FormatterToHTML(
 
 FormatterToHTML*
 FormatterToHTML::create(
-            MemoryManager&      theManager,
+            MemoryManager&          theManager,
             Writer&                 writer,
             const XalanDOMString&   encoding, 
             const XalanDOMString&   mediaType,
@@ -116,25 +116,24 @@ FormatterToHTML::create(
             bool                    escapeURLs,
             bool                    omitMetaTag) 
 {
-    typedef FormatterToHTML ThisType;
+    typedef FormatterToHTML     ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                writer,
+                                encoding, 
+                                mediaType,
+                                doctypeSystem,
+                                doctypePublic,
+                                doIndent,
+                                indent,
+                                escapeURLs,
+                                omitMetaTag,
+                                theManager);
 
-    new (theResult) ThisType(           
-                        writer,
-                        encoding, 
-                        mediaType,
-                        doctypeSystem,
-                        doctypePublic,
-                        doIndent,
-                        indent,
-                        escapeURLs,
-                        omitMetaTag,
-                        theManager);
-
-   theGuard.release();
+    theGuard.release();
 
     return theResult;
 }

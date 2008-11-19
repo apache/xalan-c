@@ -37,27 +37,35 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&    theTranscoder) :
+XalanToXercesTranscoderWrapper::XalanToXercesTranscoderWrapper(
+            MemoryManager&      theManager,
+            XMLTranscoderType&  theTranscoder) :
     XalanOutputTranscoder(theManager),
     m_transcoder(&theTranscoder)
 {
 }
 
+
+
 XalanToXercesTranscoderWrapper*
-XalanToXercesTranscoderWrapper::create(MemoryManager& theManager, XMLTranscoderType&    theTranscoder)
+XalanToXercesTranscoderWrapper::create(
+            MemoryManager&      theManager,
+            XMLTranscoderType&  theTranscoder)
 {
-    typedef XalanToXercesTranscoderWrapper ThisType;
+    typedef XalanToXercesTranscoderWrapper  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                        theManager,
+                        theTranscoder);
 
-    new (theResult) ThisType(theManager, theTranscoder);
-
-   theGuard.release();
+    theGuard.release();
 
     return theResult;
 }
+
 
 
 XalanToXercesTranscoderWrapper::~XalanToXercesTranscoderWrapper()

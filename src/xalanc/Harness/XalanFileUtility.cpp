@@ -853,7 +853,9 @@ XalanFileUtility::checkDOMResults(
 
     theTreeWalker.traverse(dom);
 
-    destroyObjWithMemMgr(theFormatter, getMemoryManager());
+    XalanDestroy(
+        getMemoryManager(),
+        theFormatter);
 
     XalanSourceTreeDOMSupport       domSupport;
     XalanSourceTreeParserLiaison    parserLiaison(domSupport, getMemoryManager());

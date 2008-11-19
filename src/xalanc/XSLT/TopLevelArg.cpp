@@ -25,56 +25,67 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 TopLevelArg::TopLevelArg(
-        MemoryManager&      theManager,
-        const XalanQName&       name,
-        const XalanDOMString&   expr) :
+            MemoryManager&          theManager,
+            const XalanQName&       name,
+            const XalanDOMString&   expr) :
     m_qname(name, theManager),
     m_expression(expr, theManager),
     m_xobject(0)
 {
 }
+
+
+
 TopLevelArg*
 TopLevelArg::create(
-        MemoryManager&      theManager,
-        const XalanQName&       name,
-        const XalanDOMString&   expr)
+            MemoryManager&          theManager,
+            const XalanQName&       name,
+            const XalanDOMString&   expr)
 {
     typedef TopLevelArg ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager, name, expr);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                name,
+                                expr);
 
     theGuard.release();
 
     return theResult;
 }
 
+
+
 TopLevelArg::TopLevelArg(
-        MemoryManager&  theManager,
-        const XalanQName&   name,
-        const XObjectPtr    variable) :
+            MemoryManager&      theManager,
+            const XalanQName&   name,
+            const XObjectPtr    variable) :
     m_qname(name, theManager),
     m_expression(theManager),
     m_xobject(variable)
 {
 }
 
+
+
 TopLevelArg*
 TopLevelArg::create(
-        MemoryManager&      theManager,
-        const XalanQName&       name,
-        const XObjectPtr        variable)
+            MemoryManager&      theManager,
+            const XalanQName&   name,
+            const XObjectPtr    variable)
 {
     typedef TopLevelArg ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager, name, variable);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                name,
+                                variable);
 
     theGuard.release();
 
@@ -82,8 +93,10 @@ TopLevelArg::create(
 }
 
 
-TopLevelArg::TopLevelArg(const TopLevelArg&     theSource,
-                         MemoryManager&     theManager) :
+
+TopLevelArg::TopLevelArg(
+            const TopLevelArg&  theSource,
+            MemoryManager&      theManager) :
     m_qname(theSource.m_qname, theManager),
     m_expression(theSource.m_expression, theManager),
     m_xobject(theSource.m_xobject)

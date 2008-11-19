@@ -50,7 +50,7 @@ public:
     ~XPathFactoryDefault();
 
     static XPathFactoryDefault*
-    createXPathFactoryDefault(MemoryManager& theManager);
+    create(MemoryManager&   theManager);
 
     // Inherited from XPathFactory...
     virtual void

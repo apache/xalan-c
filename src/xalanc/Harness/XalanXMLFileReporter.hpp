@@ -33,7 +33,6 @@
 
 
 #include "xalanc/Include/XalanAutoPtr.hpp"
-#include "xalanc/Include/XalanMemMgrHelper.hpp"
 #include "xalanc/Include/XalanMap.hpp"
 #include "xalanc/Include/XalanVector.hpp"
 

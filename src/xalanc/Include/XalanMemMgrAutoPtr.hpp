@@ -42,9 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XALAN_USING_XERCES(MemoryManager)
 
 // An auto_ptr-like class that supports the MemoryManager class.
-template<
-            class   Type, 
-            bool    toCallDestructor = true>
+template<class   Type>
 class XalanMemMgrAutoPtr
 {
 public:
@@ -54,6 +52,7 @@ public:
     class MemMgrAutoPtrData : public AutoPtrPairType
     {
     public:
+
         MemMgrAutoPtrData():
             AutoPtrPairType(0,0)
         {
@@ -66,7 +65,7 @@ public:
         {
             invariants();
         }
-        
+
         bool
         isInitilized()const
         {
@@ -78,12 +77,9 @@ public:
         {
             invariants();
 
-            if ( isInitilized() )
+            if (isInitilized())
             {       
-                if ( toCallDestructor ) 
-                {
-                    this->second->~Type();
-                }
+                this->second->~Type();
 
                 this->first->deallocate(this->second);
             }
@@ -91,8 +87,8 @@ public:
 
         void 
         reset(
-                MemoryManager*      memoryManager ,
-                Type*               dataPointer)
+                MemoryManager*  memoryManager,
+                Type*           dataPointer)
         {   
             invariants();
 
@@ -127,13 +123,13 @@ public:
     {
     }
 
-    XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type, toCallDestructor>&    theSource) :
-        m_pointerInfo(((XalanMemMgrAutoPtr<Type>&)theSource).release())
+    XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type>&    theSource) :
+        m_pointerInfo(const_cast<XalanMemMgrAutoPtr<Type>&>(theSource).release())
     {
     }
 
-    XalanMemMgrAutoPtr<Type,toCallDestructor>&
-    operator=(XalanMemMgrAutoPtr<Type,toCallDestructor>&    theRHS)
+    XalanMemMgrAutoPtr<Type>&
+    operator=(XalanMemMgrAutoPtr<Type>&    theRHS)
     {       
         if (this != &theRHS)
         {

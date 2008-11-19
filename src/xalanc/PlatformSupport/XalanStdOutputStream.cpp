@@ -81,13 +81,14 @@ XalanStdOutputStream::create(
             StreamType&     theOutputStream,
             MemoryManager&  theManager)
 {
-    typedef XalanStdOutputStream ThisType;
+    typedef XalanStdOutputStream    ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theOutputStream, theManager);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                        theOutputStream,
+                        theManager);
 
     theGuard.release();
 

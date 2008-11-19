@@ -45,7 +45,7 @@ public:
             const XMLChVectorType&  theName,
             const XMLChVectorType&  theValue,
             const XMLChVectorType&  theType,
-            MemoryManager&      theManager) :
+            MemoryManager&          theManager) :
         m_Name(theName,theManager),
         m_Value(theValue,theManager),
         m_Type(theType,theManager)
@@ -53,10 +53,10 @@ public:
     }
 
     AttributeVectorEntry(
-            const XMLCh*            theName,
-            const XMLCh*            theValue,
-            const XMLCh*            theType,
-            MemoryManager&      theManager) :
+            const XMLCh*    theName,
+            const XMLCh*    theValue,
+            const XMLCh*    theType,
+            MemoryManager&  theManager) :
         m_Name(theName, theName + length(theName) + 1, theManager),
         m_Value(theValue, theValue + length(theValue) + 1, theManager),
         m_Type(theType, theType + length(theType) + 1, theManager)
@@ -71,22 +71,21 @@ public:
     }
 
     static AttributeVectorEntry*
-    create( const XMLCh*    theName,
+    create(
+            const XMLCh*    theName,
             const XMLCh*    theValue,
             const XMLCh*    theType,
-            MemoryManager&      theManager)
+            MemoryManager&  theManager)
     {
-        typedef AttributeVectorEntry ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        AttributeVectorEntry*  theInstance;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theName, theValue, theType, theManager);
-
-        theGuard.release();
-
-        return theResult;
+        return XalanConstruct(
+                theManager,
+                theInstance,
+                theName,
+                theValue,
+                theType,
+                theManager);
     }
 
     virtual

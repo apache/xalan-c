@@ -153,15 +153,14 @@ public:
 #endif
     clone(MemoryManager& theManager) const
     {
-        typedef  XalanEXSLTFunctionObjectType Type;
+        typedef XalanEXSLTFunctionObjectType    ThisType;
 
-        XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        Type* theResult = theGuard.get();
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(theManager);
 
-        new (theResult) Type(theManager);
-
-         theGuard.release();
+        theGuard.release();
 
         return theResult;
     }

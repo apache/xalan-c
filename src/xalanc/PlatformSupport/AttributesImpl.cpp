@@ -59,8 +59,9 @@ AttributesImpl::~AttributesImpl()
 
 
 
-AttributesImpl::AttributesImpl(const AttributesImpl&    theSource,
-                               MemoryManager&      theManager) :
+AttributesImpl::AttributesImpl(
+            const AttributesImpl&   theSource,
+            MemoryManager&          theManager) :
     AttributesType(),
     m_attributesVector(theManager),
     m_cacheVector(theManager)
@@ -495,7 +496,7 @@ AttributesImpl::addAttribute(
         m_attributesVector.reserve(eDefaultVectorSize);
     }
 
-    typedef XalanMemMgrAutoPtr<AttributeVectorEntryExtended,true> AutoPtr;
+    typedef XalanMemMgrAutoPtr<AttributeVectorEntryExtended>    AutoPtr;
 
     AutoPtr theEntry(getMemoryManager(), getNewEntry(name, type, value, uri, localName));
 

@@ -47,20 +47,20 @@ XalanFStreamOutputStream::XalanFStreamOutputStream(
     
 XalanFStreamOutputStream*
 XalanFStreamOutputStream::create(
-            FILE*               theFileHandle,
+            FILE*           theFileHandle,
             MemoryManager&  theManager,
-            size_type           theBufferSize)
+            size_type       theBufferSize)
 {
-    typedef XalanFStreamOutputStream ThisType;
+    typedef XalanFStreamOutputStream    ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                        theFileHandle,
+                        theManager,
+                        theBufferSize);
 
-    new (theResult) ThisType(theFileHandle,
-                             theManager,
-                             theBufferSize);
-                             
     theGuard.release();
 
     return theResult;

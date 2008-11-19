@@ -114,21 +114,23 @@ ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(Memor
     }
 }
 
+
+    
 ICUBridgeCollationCompareFunctorImpl*
-ICUBridgeCollationCompareFunctorImpl::create (MemoryManager& theManager , bool  fCacheCollators) 
+ICUBridgeCollationCompareFunctorImpl::create(
+            MemoryManager&  theManager,
+            bool            fCacheCollators) 
 {
-    typedef ICUBridgeCollationCompareFunctorImpl ThisType;
+    ICUBridgeCollationCompareFunctorImpl*   theInstance;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager, fCacheCollators);
-
-   theGuard.release();
-
-    return theResult;
+    return XalanConstruct(
+                theManager,
+                theInstance,
+                theManager,
+                fCacheCollators);
 }
+
+
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {

@@ -46,25 +46,31 @@ XalanOutputStreamPrintWriter::XalanOutputStreamPrintWriter(
     m_flushWideChars(false)
 {
 }
+
+
+
 XalanOutputStreamPrintWriter*
 XalanOutputStreamPrintWriter::create(
             XalanOutputStream&  theOutputStream,
             bool                fAutoFlush) 
 {
-    typedef XalanOutputStreamPrintWriter ThisType;
+    typedef XalanOutputStreamPrintWriter    ThisType;
 
-    MemoryManager& theManager = theOutputStream.getMemoryManager();
+    MemoryManager&  theManager = theOutputStream.getMemoryManager();
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theOutputStream, fAutoFlush);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                        theOutputStream,
+                        fAutoFlush);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XalanOutputStreamPrintWriter::~XalanOutputStreamPrintWriter()
 {

@@ -73,7 +73,7 @@ FormatterToText::FormatterToText(
             const XalanDOMString&   encoding,
             bool                    normalizeLinefeed,
             bool                    handleIgnorableWhitespace,
-            MemoryManager&      theManager ) :
+            MemoryManager&          theManager) :
     FormatterListener(OUTPUT_METHOD_TEXT),
     m_writer(&writer),
     m_maxCharacter(0),
@@ -96,9 +96,11 @@ FormatterToText::FormatterToText(
     update(false);
 }
 
+
+
 FormatterToText*
 FormatterToText::create(
-            MemoryManager&      theManager,
+            MemoryManager&          theManager,
             Writer&                 writer,
             const XalanDOMString&   encoding,
             bool                    normalizeLinefeed,
@@ -106,21 +108,21 @@ FormatterToText::create(
 {
     typedef FormatterToText ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(
-                        writer,
-                        encoding,
-                        normalizeLinefeed,
-                        handleIgnorableWhitespace,
-                        theManager); 
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                writer,
+                                encoding, 
+                                normalizeLinefeed,
+                                handleIgnorableWhitespace,
+                                theManager);
 
     theGuard.release();
 
     return theResult;
 }
+
 
 
 FormatterToText::~FormatterToText()

@@ -115,24 +115,28 @@ StylesheetRoot::StylesheetRoot(
 }               
 
 
+
 StylesheetRoot*
 StylesheetRoot::create(
-                           MemoryManager&              theManager,
-                           const XalanDOMString&            baseIdentifier,
-                           StylesheetConstructionContext&   constructionContext)
+            MemoryManager&                   theManager,
+            const XalanDOMString&            baseIdentifier,
+            StylesheetConstructionContext&   constructionContext)
 {
-    typedef StylesheetRoot ThisType;
+    typedef StylesheetRoot  ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                baseIdentifier,
+                                constructionContext);
 
-    new (theResult) ThisType(baseIdentifier, constructionContext);
-                             
     theGuard.release();
 
     return theResult;
 }
+
+
 
 StylesheetRoot::~StylesheetRoot()
 {

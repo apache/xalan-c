@@ -35,11 +35,14 @@
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
 
-#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
+
+#include "xalanc/Include/XalanMemoryManagement.hpp"
 
 
 XALAN_USING_STD(istrstream)
 
+XALAN_USING_XALAN(XalanAllocationGuard)
 XALAN_USING_XALAN(XalanCompiledStylesheet)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanParsedSource)
@@ -106,16 +109,14 @@ CreateXalanTransformer()
     // Create a XalanTransformer object.
     typedef XalanTransformer ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(theManager);
 
-    new (theResult) ThisType(theManager);
+    theGuard.release();
 
-     theGuard.release();
-
-    return (XalanHandle)theResult;
-
+    return theResult;
 }
 
 

@@ -23,10 +23,14 @@
 #include "xalanc/PlatformSupport/PlatformSupportDefinitions.hpp"
 
 
-#include "xalanc/XalanDOM/XalanDOMString.hpp"
 
 #include "xalanc/Include/XalanMemMgrAutoPtr.hpp"
-#include "xalanc/Include/XalanMemMgrHelper.hpp"
+
+
+
+#include "xalanc/XalanDOM/XalanDOMString.hpp"
+
+
 
 #include "LocalMsgIndex.hpp"
 
@@ -49,14 +53,14 @@ public:
     class XalanMessageLoaderCreateFunct
     {
     public:
+
         Type*
         operator()(MemoryManager&   theManager)
         {
-            XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+            XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(Type)));
 
-            Type* theResult = theGuard.get();
-
-            new (theResult) Type(theManager);
+            Type* const     theResult =
+                    new (theGuard.get()) Type(theManager);
 
             theGuard.release();
 
@@ -71,10 +75,10 @@ public:
         operator()(
                     MemoryManager&          theManager,
                     XalanMessageLoader*     p)
-        {        
-            assert ( p != 0);
+        {
+            assert (p != 0);
 
-            destroyObjWithMemMgr(p, theManager);
+            XalanDestroy(theManager, p);
         }
     };
 

@@ -392,7 +392,7 @@ AttributeListImpl::addAttribute(
             m_AttributeVector.reserve(eDefaultVectorSize);
         }
         
-        typedef XalanMemMgrAutoPtr<AttributeVectorEntry,true> AutoPtr;
+        typedef XalanMemMgrAutoPtr<AttributeVectorEntry>    AutoPtr;
 
         AutoPtr theEntry(getMemoryManager(), getNewEntry(name, type, value));
 

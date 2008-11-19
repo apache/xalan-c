@@ -30,7 +30,6 @@
 
 
 #include <xalanc/Include/STLHelper.hpp>
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 
@@ -154,7 +153,7 @@ Stylesheet::Stylesheet(
     
 Stylesheet*
 Stylesheet::create(
-            MemoryManager&              theManager,
+            MemoryManager&                  theManager,
             StylesheetRoot&                 root,
             const XalanDOMString&           baseIdentifier,
             StylesheetConstructionContext&  constructionContext)
@@ -1401,8 +1400,11 @@ Stylesheet::processExtensionNamespace(
             StylesheetConstructionContext&  theConstructionContext,
             const XalanDOMString&           uri)
 {
-    XalanMemMgrAutoPtr<ExtensionNSHandler, true>    theGuard(   theConstructionContext.getMemoryManager(),
-                                                                ExtensionNSHandler::create(uri, theConstructionContext.getMemoryManager()));
+    XalanMemMgrAutoPtr<ExtensionNSHandler>  theGuard(
+                                                theConstructionContext.getMemoryManager(),
+                                                ExtensionNSHandler::create(
+                                                    uri,
+                                                    theConstructionContext.getMemoryManager()));
 
     m_extensionNamespaces.insert(uri, theGuard.get());
 

@@ -255,7 +255,7 @@ private:
 
     const DFAutoPtrType                 m_defaultDecimalFormat;
 
-    MemoryManager&                  m_memoryManager;
+    MemoryManager&                      m_memoryManager;
 };
 
 

@@ -79,18 +79,21 @@ XPath::create(
             MemoryManager&  theManager,
             const Locator*  theLocator)
 {
-    typedef XPath Type;
+    typedef XPath   ThisType;
 
-    XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    Type* theResult = theGuard.get();
-
-    new (theResult) Type(theManager, theLocator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                theLocator);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XPath::~XPath()
 {

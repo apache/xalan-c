@@ -50,24 +50,30 @@ XercesEntityWrapper::XercesEntityWrapper(
     assert(theXercesDOMEntity != 0);
 }
 
+
+    
 XercesEntityWrapper*
-XercesEntityWrapper::create( MemoryManager& theManager,
+XercesEntityWrapper::create(
+            MemoryManager&                  theManager,
             const DOMEntityType*            theXercesDOMEntity,
             const XercesWrapperNavigator&   theNavigator)
 
 {
-    typedef XercesEntityWrapper ThisType;
+    typedef XercesEntityWrapper     ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theXercesDOMEntity, theNavigator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theXercesDOMEntity,
+                                theNavigator);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesEntityWrapper::~XercesEntityWrapper()
 {

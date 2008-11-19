@@ -48,24 +48,30 @@ XercesCommentWrapper::XercesCommentWrapper(
     assert(theXercesComment != 0);
 }
 
+
+
 XercesCommentWrapper*
-XercesCommentWrapper::create( MemoryManager& theManager,
-                             const DOMCommentType*          theXercesComment,
-                             const XercesWrapperNavigator&  theNavigator)
+XercesCommentWrapper::create(
+            MemoryManager&                  theManager,
+            const DOMCommentType*          theXercesComment,
+            const XercesWrapperNavigator&  theNavigator)
 
 {
-    typedef XercesCommentWrapper ThisType;
+    typedef XercesCommentWrapper    ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theXercesComment, theNavigator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theXercesComment,
+                                theNavigator);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesCommentWrapper::~XercesCommentWrapper()
 {

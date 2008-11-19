@@ -29,7 +29,6 @@
 
 
 #include <xalanc/Include/STLHelper.hpp>
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 
@@ -1351,7 +1350,8 @@ StylesheetHandler::processImport(
             
             // This will take care of cleaning up the stylesheet if an exception
             // is thrown.
-            typedef XalanMemMgrAutoPtr<Stylesheet, true> AutpPtr;
+            typedef XalanMemMgrAutoPtr<Stylesheet>  AutpPtr;
+
             AutpPtr importedStylesheet( 
                 m_constructionContext.getMemoryManager(),
                 m_constructionContext.create(

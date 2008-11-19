@@ -43,10 +43,18 @@ public:
             const XMLChVectorType&  theType,
             const XMLChVectorType&  theURI ,
             const XMLChVectorType&  theLocalName,
-            MemoryManager&      theManager) :
-        AttributeVectorEntry(theName, theValue, theType, theManager),
-        m_uri(theURI, theManager),
-        m_localName(theLocalName, theManager)
+            MemoryManager&          theManager) :
+        AttributeVectorEntry(
+            theName,
+            theValue,
+            theType,
+            theManager),
+        m_uri(
+            theURI,
+            theManager),
+        m_localName(
+            theLocalName,
+            theManager)
     {
     }
 
@@ -56,10 +64,20 @@ public:
             const XMLCh*    theType,
             const XMLCh*    theURI,
             const XMLCh*    theLocalName,
-            MemoryManager&      theManager) :
-        AttributeVectorEntry(theName, theValue, theType, theManager),
-        m_uri(theURI, theURI + length(theURI) + 1, theManager),
-        m_localName(theLocalName, theLocalName + length(theLocalName) + 1,theManager)
+            MemoryManager&  theManager) :
+        AttributeVectorEntry(
+            theName,
+            theValue,
+            theType,
+            theManager),
+        m_uri(
+            theURI,
+            theURI + length(theURI) + 1,
+            theManager),
+        m_localName(
+            theLocalName,
+            theLocalName + length(theLocalName) + 1,
+            theManager)
     {
     }
 
@@ -68,13 +86,16 @@ public:
             const XMLCh*    theValue,
             const XMLCh*    theType,
             MemoryManager&      theManager) :
-        AttributeVectorEntry(theName, theValue, theType,theManager),
+        AttributeVectorEntry(
+            theName,
+            theValue,
+            theType,theManager),
         m_uri(theManager),
         m_localName(theManager)
     {
     }
 
-    AttributeVectorEntryExtended(MemoryManager&      theManager) :
+    AttributeVectorEntryExtended(MemoryManager&     theManager) :
         AttributeVectorEntry(theManager),
         m_uri(theManager),
         m_localName(theManager)
@@ -88,19 +109,19 @@ public:
             const XMLCh*    theType,
             const XMLCh*    theURI,
             const XMLCh*    theLocalName,
-            MemoryManager&      theManager)
+            MemoryManager&  theManager)
     {
-        typedef AttributeVectorEntryExtended ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        AttributeVectorEntryExtended*   theInstance;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theName, theValue, theType, theURI, theLocalName, theManager);
-
-        theGuard.release();
-
-        return theResult;
+        return XalanConstruct(
+                theManager,
+                theInstance,
+                theName,
+                theValue,
+                theType,
+                theURI,
+                theLocalName,
+                theManager);
     }
 
     virtual

@@ -54,7 +54,7 @@ bool    XalanSourceTreeDocument::s_poolAllTextNodes = false;
 
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
-            MemoryManager&  theManager,
+            MemoryManager&      theManager,
             bool                fPoolAllText,
             block_size_type     theNamesStringPoolBlockSize,
             bucket_count_type   theNamesStringPoolBucketCount,
@@ -87,35 +87,40 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 {
 }
 
+
+
 XalanSourceTreeDocument*
 XalanSourceTreeDocument::create( 
-            MemoryManager&  theManager,
+            MemoryManager&      theManager,
             bool                fPoolAllText,
-            block_size_type     theNamesStringPoolBlockSize ,
+            block_size_type     theNamesStringPoolBlockSize,
             bucket_count_type   theNamesStringPoolBucketCount,
             bucket_size_type    theNamesStringPoolBucketSize,
             block_size_type     theValuesStringPoolBlockSize,
             bucket_count_type   theValuesStringPoolBucketCount,
             bucket_size_type    theValuesStringPoolBucketSize)
 {
-        typedef XalanSourceTreeDocument ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XalanSourceTreeDocument     ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theManager,
-                                 fPoolAllText,
-                                 theNamesStringPoolBlockSize,
-                                 theNamesStringPoolBucketCount,
-                                 theNamesStringPoolBucketSize,
-                                 theValuesStringPoolBlockSize,
-                                 theValuesStringPoolBucketCount,
-                                 theValuesStringPoolBucketSize); 
-        theGuard.release();
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                fPoolAllText,
+                                theNamesStringPoolBlockSize,
+                                theNamesStringPoolBucketCount,
+                                theNamesStringPoolBucketSize,
+                                theValuesStringPoolBlockSize,
+                                theValuesStringPoolBucketCount,
+                                theValuesStringPoolBucketSize);
 
-        return theResult;
+    theGuard.release();
+
+    return theResult;
 }
+
+
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
             MemoryManager&      theManager,

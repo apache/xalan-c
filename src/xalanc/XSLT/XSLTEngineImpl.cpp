@@ -838,7 +838,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
             }
         }
 
-        if(nl.getLength() == 0)
+        if (nl.getLength() == 0)
         {
             const CCGetCachedString     theGuard(constructionContext);
 
@@ -853,11 +853,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
         XalanNode* const    frag = nl.item(0);
 
-        if(XalanNode::ELEMENT_NODE == frag->getNodeType())
+        if (XalanNode::ELEMENT_NODE == frag->getNodeType())
         {
-            XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
+            XalanMemMgrAutoPtr<Stylesheet>  theGuard;
 
-            if(isRoot)
+            if (isRoot)
             {
                 StylesheetRoot* const   theLocalRoot =
                     constructionContext.create(stringHolder);
@@ -902,7 +902,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
     }
     else
     {
-        XalanMemMgrAutoPtr<Stylesheet, true>    theGuard;
+        XalanMemMgrAutoPtr<Stylesheet>  theGuard;
 
         const XalanDocument* const  theOwnerDocument =
                 fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?

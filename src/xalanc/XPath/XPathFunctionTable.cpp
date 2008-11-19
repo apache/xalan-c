@@ -65,13 +65,12 @@ public:
     virtual Function*
     clone(MemoryManager& theManager) const
     {
-        typedef FunctionNotImplemented Type;
+        typedef FunctionNotImplemented  ThisType;
 
-        XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
+        XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        Type* theResult = theGuard.get();
-
-        new (theResult) Type(m_name);
+        ThisType* const     theResult =
+            new (theGuard.get()) ThisType(m_name);
 
         theGuard.release();
 

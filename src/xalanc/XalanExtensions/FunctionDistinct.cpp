@@ -21,7 +21,6 @@
 
 #include <xalanc/Include/XalanSet.hpp>
 
-#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>

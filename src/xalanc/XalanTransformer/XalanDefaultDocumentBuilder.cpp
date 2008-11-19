@@ -42,21 +42,28 @@ XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManager&     theM
     m_domSupport.setParserLiaison(&m_parserLiaison);
 }
 
+
+
 XalanDefaultDocumentBuilder*
-XalanDefaultDocumentBuilder::create(MemoryManager& theManager, const XalanDOMString&    theURI)
+XalanDefaultDocumentBuilder::create(
+            MemoryManager&          theManager,
+            const XalanDOMString&   theURI)
 {
-        typedef XalanDefaultDocumentBuilder ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    typedef XalanDefaultDocumentBuilder     ThisType;
 
-        ThisType* theResult = theGuard.get();
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-        new (theResult) ThisType(theManager, theURI);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theManager,
+                                theURI);
 
-         theGuard.release();
+    theGuard.release();
 
-        return theResult;
+    return theResult;
 }
+
+
 
 XalanDefaultDocumentBuilder::~XalanDefaultDocumentBuilder()
 {

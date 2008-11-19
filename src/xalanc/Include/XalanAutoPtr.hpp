@@ -47,7 +47,7 @@ public:
     }
 
     XalanAutoPtr(const XalanAutoPtr<Type>&  theSource) :
-        m_pointer(((XalanAutoPtr<Type>&)theSource).release())
+        m_pointer(const_cast<XalanAutoPtr<Type>&>(theSource).release())
     {
     }
 

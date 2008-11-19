@@ -416,14 +416,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp"
 				>
 			</File>

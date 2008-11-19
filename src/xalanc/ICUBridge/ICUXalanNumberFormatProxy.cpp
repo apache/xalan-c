@@ -30,8 +30,6 @@ U_NAMESPACE_USE
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
-#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
-
 
 #include "ICUBridge.hpp"
 
@@ -41,7 +39,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManager& theManager) :
+ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy(MemoryManager&     theManager) :
     XalanNumberFormat(theManager),
     m_decimalFormat(0)
 {

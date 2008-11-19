@@ -298,6 +298,74 @@ template<
     class Type,
     class Param1Type,
     class Param2Type,
+    class Param3Type,
+    class Param4Type>
+Type*
+XalanConstruct(
+            MemoryManager&      theMemoryManager,
+            Type*&              theInstance,
+            const Param1Type*   theParam1,
+            const Param2Type*   theParam2,
+            const Param3Type*   theParam3,
+            Param4Type&         theParam4)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1, theParam2, theParam3, theParam4);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type,
+    class Param3Type,
+    class Param4Type,
+    class Param5Type,
+    class Param6Type>
+Type*
+XalanConstruct(
+            MemoryManager&      theMemoryManager,
+            Type*&              theInstance,
+            const Param1Type*   theParam1,
+            const Param2Type*   theParam2,
+            const Param3Type*   theParam3,
+            const Param4Type*   theParam4,
+            const Param5Type*   theParam5,
+            Param6Type&         theParam6)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(
+                                theParam1,
+                                theParam2,
+                                theParam3,
+                                theParam4,
+                                theParam5,
+                                theParam6);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type,
     class Param3Type>
 Type*
 XalanConstruct(

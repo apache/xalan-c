@@ -52,24 +52,30 @@ XercesCDATASectionWrapper::XercesCDATASectionWrapper(
     assert(theXercesCDATASection != 0);
 }
 
+
+    
 XercesCDATASectionWrapper*
-XercesCDATASectionWrapper::create( MemoryManager& theManager,
+XercesCDATASectionWrapper::create(
+            MemoryManager&                  theManager,
             const DOMCDATASectionType*      theXercesCDATASection,
             const XercesWrapperNavigator&   theNavigator)
 
 {
-    typedef XercesCDATASectionWrapper ThisType;
+    typedef XercesCDATASectionWrapper   ThisType;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theXercesCDATASection, theNavigator);
+    ThisType* const     theResult =
+        new (theGuard.get()) ThisType(
+                                theXercesCDATASection,
+                                theNavigator);
 
     theGuard.release();
 
     return theResult;
 }
+
+
 
 XercesCDATASectionWrapper::~XercesCDATASectionWrapper()
 {
