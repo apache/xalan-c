@@ -237,9 +237,9 @@ ifeq ($(PLATFORM), OS390)
 	mv *.x  ${XSL_LIB_DIR}        
 else
 	rm -f $(XSL_LIB_DIR)/$(LINK_NAME) && \
-		$(LN) -fs $(XSL_LIB_DIR)/$(LIB) $(XSL_LIB_DIR)/$(LINK_NAME)
+		$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(LINK_NAME)
 	rm -f $(XSL_LIB_DIR)/$(SO_NAME) && \
-		$(LN) -fs $(XSL_LIB_DIR)/$(LIB) $(XSL_LIB_DIR)/$(SO_NAME)
+		$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(SO_NAME)
 endif ## OS390                                
 endif ## OS390BATCH
 
@@ -254,9 +254,9 @@ install: lib XalanExe
 	$(INSTALL_PROGRAM) $(XSL_LIB_DIR)/$(LIB) $(DESTDIR)/$(libdir)
 ifneq ($(PLATFORM), OS390)
 	rm -f $(DESTDIR)/$(libdir)/$(LINK_NAME) && \
-		$(LN) -fs $(XSL_LIB_DIR)/$(LIB) $(DESTDIR)/$(libdir)/$(LINK_NAME)
+		$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(LINK_NAME)
 	rm -f $(DESTDIR)/$(libdir)/$(SO_NAME) && \
-		$(LN) -fs $(XSL_LIB_DIR)/$(LIB) $(DESTDIR)/$(libdir)/$(SO_NAME)
+		$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(SO_NAME)
 endif ## OS390
 	$(MKINSTALLDIRS) $(DESTDIR)/$(includedir)/xalanc
 	for hdir in $(ALL_HEADERS_DIRS); do \
