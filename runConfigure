@@ -385,26 +385,24 @@ fi
 #  freebsd | netbsd | openbsd | irix | os390 | os400 | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
-    bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
-    bitstobuildLink=" "
+    bitstobuildDefines=""
+    bitstobuildLink=""
     if test $platform; then
         case $platform in
            solaris)
-              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
+              bitstobuildDefines=" -xarch=v9 "
               bitstobuildLink=" -xarch=v9 " ;;
            solaris-x86)
-              bitstobuildDefines=" $bitstobuildDefines -m64 "
+              bitstobuildDefines=" -m64 "
               bitstobuildLink=" -m64 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+              bitstobuildDefines=" -q64 -qwarn64 " ;;
            hp-11)
-              bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
+              bitstobuildDefines=" +DA2.0W "
               bitstobuildLink=" +DA2.0W " ;;
            hp-11-ia64)
-              bitstobuildDefines=" $bitstobuildDefines +DD64 "
+              bitstobuildDefines=" +DD64 "
               bitstobuildLink=" +DD64 " ;;
-           linux)
-              bitstobuildDefines=" $bitstobuildDefines " ;;
            *)
             ;;
         esac
@@ -412,24 +410,6 @@ if test $bitsToBuild = 64; then
 elif test $bitsToBuild = 32; then
     bitstobuildDefines=""
     bitstobuildLink=""
-    if test $platform; then
-        case $platform in
-           solaris)
-              ;;
-           aix)
-              ;;
-           hp-11)
-              bitstobuildDefines="+DAportable "
-              ;;
-           hp-11-ia64)
-              bitstobuildDefines="+DD32 "
-              ;;
-           linux)
-              ;;
-           *)
-            ;;
-        esac
-    fi
 else
     echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
     exit ${ERROR_EXIT_CODE};
@@ -629,7 +609,7 @@ else
             threadingDefines="-D_OPEN_THREADS"
             ;;
 
-        solaris)
+        solaris*)
             if test $ccompiler = "gcc"; then
                 # GCC on Solaris uses "-pthreads" instead of
                 # "-pthread"
@@ -637,7 +617,6 @@ else
                 threadingLibs=$gccThreadingLibs
             else
                 threadingDefines="-mt"
-                threadingLibs="-lpthread"
             fi
             ;;
 
