@@ -365,7 +365,11 @@ if test $debug = "off"; then
     elif test $platform = "linux"; then
         debugflag="-O3 -DNDEBUG";
     elif test $cppcompiler = "aCC"; then
-        debugflag="+O3 -DNDEBUG";
+        if test $platform = "hp-11-ia64"; then
+           debugflag="+O3 -DNDEBUG";
+        else
+           debugflag="+O2 -DNDEBUG";
+        fi
     else
         debugflag="-O -DNDEBUG";
     fi
