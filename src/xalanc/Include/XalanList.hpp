@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-/**
- * @author Matthew Hoyt (mhoyt@ca.ibm.com)
- */
-
 #if !defined(XALANLIST_HEADER_GUARD_1357924680)
 #define XALANLIST_HEADER_GUARD_1357924680
 
@@ -188,24 +184,33 @@ public:
     };
 
     typedef XalanListIteratorBase<XalanListIteratorTraits<value_type>, Node>        iterator;
-    
     typedef XalanListIteratorBase<XalanListConstIteratorTraits<value_type>, Node>   const_iterator;
-            
+
 #if defined(XALAN_HAS_STD_ITERATORS)
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>  reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
 #elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
+    typedef typename iterator::iterator_category    iterator_category;
+
+    // This is a specific case for the Rogue Wave STL on Solaris.
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         iterator,
-        XALAN_STD_QUALIFIER bidirectional_iterator_tag,
-        value_type> reverse_iterator_;
+        iterator_category,
+        value_type>         reverse_iterator_;
+
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         const_iterator,
-        XALAN_STD_QUALIFIER bidirectional_iterator_tag,
-        const value_type> const_reverse_iterator_;
+        iterator_category,
+        const value_type>   const_reverse_iterator_;
 #else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>                          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>   const_reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        iterator,
+        value_type>         reverse_iterator_;
+
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        const_iterator,
+        value_type,
+        const_reference>    const_reverse_iterator_;
 #endif
 
     typedef reverse_iterator_           reverse_iterator;
