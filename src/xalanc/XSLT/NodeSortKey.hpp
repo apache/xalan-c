@@ -19,14 +19,6 @@
 #if !defined(XALAN_NODESORTKEY_HEADER_GUARD)
 #define XALAN_NODESORTKEY_HEADER_GUARD
 
-/**
- * 
- * @author Scott Boag (scott_boag@lotus.com)
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
-
-
-
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 

@@ -15,13 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- * @author Scott Boag (scott_boag@lotus.com)
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
-
-
 
 // Class header file.
 #include "NodeSorter.hpp"

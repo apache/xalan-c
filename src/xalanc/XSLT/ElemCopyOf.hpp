@@ -18,11 +18,6 @@
 #if !defined(XALAN_ELEMCOPYOF_HEADER_GUARD)
 #define XALAN_ELEMCOPYOF_HEADER_GUARD 
 
-/**
- * @author David Bertoni (david_n_bertoni@us.ibm.com)
- * @author Matthew Hoyt (mhoyt@ca.ibm.com)
- */
-
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 

@@ -18,12 +18,6 @@
 #if !defined(XALAN_NODESORTER_HEADER_GUARD)
 #define XALAN_NODESORTER_HEADER_GUARD
 
-/**
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
-
- 
-
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 

@@ -54,8 +54,6 @@ class XObjectPtr;
 /**
  * Class handling an extension namespace for XPath. Provides functions
  * to test a function's existence and call a function
- *
- * @author Sanjiva Weerawarana (sanjiva@watson.ibm.com)
  */
 class XALAN_XSLT_EXPORT ExtensionFunctionHandler 
 {
