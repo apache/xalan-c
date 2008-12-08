@@ -155,6 +155,12 @@ public:
         m_verbose = flag;
     }
 
+    int
+    getFailureCount() const
+    {
+        return data.fail;
+    }
+
     /** 
     * Utility method used to get test files from a specific directory.
     * @returns a vector containing test files.
@@ -231,7 +237,6 @@ public:
     XalanDOMString&
     getXercesVersion(XalanDOMString& theResult);
 
-
     void
     checkResults(
             const XalanDOMString&   outputFile, 
@@ -255,7 +260,7 @@ public:
             const char*             actual,
             const char*             expected,
             const char*             msg,
-            XalanXMLFileReporter&        logfile,
+            XalanXMLFileReporter&   logfile,
             const XalanDOMString&   outputFile,
             const XalanDOMString&   goldFile,
             MemoryManager&          /* theManager */,
@@ -302,17 +307,18 @@ public:
             const XalanCompiledStylesheet*  compiledSS,
             const XalanSourceTreeDocument*  dom,
             const XSLTInputSource&          goldInputSource,
-            XalanXMLFileReporter&                logfile);
+            XalanXMLFileReporter&           logfile);
 
     bool
     compareSerializedResults(
             const XalanDOMString&   transformResult,
             const XalanDOMString&   goldInputSource);
+
     /**
-    * Utility method used to create a FormatterToXML FormatterListener.
-    * This is required to DOM comparisions. 
-    * @returns a pointer to a FormatterListener.
-    */
+     * Utility method used to create a FormatterToXML FormatterListener.
+     * This is required to DOM comparisions. 
+     * @returns a pointer to a FormatterListener.
+     */
     FormatterListener* 
     getXMLFormatter(
             PrintWriter&            resultWriter,

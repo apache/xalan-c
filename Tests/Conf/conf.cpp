@@ -596,6 +596,8 @@ runTests(
             logFile.close();
 
             h.analyzeResults(xalan, resultsFile);
+
+            theResult = h.getFailureCount();
         }
     }
     catch(const XalanDiagnosticMemoryManager::LockException&)

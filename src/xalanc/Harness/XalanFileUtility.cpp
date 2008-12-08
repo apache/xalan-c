@@ -810,7 +810,6 @@ XalanFileUtility::checkAPIResults(
 
         // Todo: Need to determine if I should check for missing gold in these cases.
         logfile.logCheckFail(data.testOrFile, actexp);
-
     }
 }
 
