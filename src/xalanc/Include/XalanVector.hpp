@@ -93,17 +93,25 @@ public:
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
 #elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
+    typedef XALAN_STD_QUALIFIER random_access_iterator_tag  iterator_category;
+
+    // This is a specific case for the Rogue Wave STL on Solaris.
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         iterator,
-        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        iterator_category,
         value_type> reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         const_iterator,
-        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        iterator_category,
         const value_type> const_reverse_iterator_;
 #else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>                          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>   const_reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        iterator,
+        value_type>         reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        const_iterator,
+        value_type,
+        const_reference>    const_reverse_iterator_;
 #endif
 
     typedef reverse_iterator_           reverse_iterator;
@@ -818,6 +826,8 @@ public:
                 }
                 else if (m_size < theRHS.m_size)
                 {
+                    // Insert the portion of theRHS that won't fit
+                    // at the end...
                     theRHSCopyEnd =
                         theRHS.begin() + m_size;
 
