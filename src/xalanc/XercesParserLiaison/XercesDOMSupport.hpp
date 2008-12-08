@@ -46,12 +46,10 @@ public:
     virtual
     ~XercesDOMSupport();
 
-    // These interfaces are inherited from Resettable...
+    // These interfaces are inherited from DOMSupport...
 
     virtual void
     reset();
-
-    // These interfaces are inherited from DOMSupport...
 
     virtual const XalanDOMString&
     getUnparsedEntityURI(
