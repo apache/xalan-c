@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 
-/**
- * @author Matthew Hoyt (mhoyt@ca.ibm.com)
- */
-
 #if !defined(XALANDEQUE_HEADER_GUARD_1357924680)
 #define XALANDEQUE_HEADER_GUARD_1357924680
 
@@ -57,107 +53,144 @@ struct XalanDequeConstIteratorTraits
     typedef const Value&    const_reference;
 };
 
-template <class XalanDequeTraits, class XalanDeque>
-struct  XalanDequeIterator
+template <class Traits, class XalanDeque>
+class XalanDequeIterator
 {
-    typedef size_t  size_type;
-    typedef typename XalanDequeTraits::value_type       value_type;
-    typedef typename XalanDequeTraits::reference        reference;
-    typedef typename XalanDequeTraits::pointer          pointer;
-    typedef typename XalanDequeTraits::const_reference  const_reference;
-    typedef ptrdiff_t                                   difference_type;
+public:
 
-    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, XalanDeque> Iterator;
+    typedef size_t                              size_type;
+    typedef typename Traits::value_type         value_type;
+    typedef typename Traits::reference          reference;
+    typedef typename Traits::pointer            pointer;
+    typedef typename Traits::const_reference    const_reference;
+    typedef ptrdiff_t                           difference_type;
 
-    typedef XALAN_STD_QUALIFIER random_access_iterator_tag iterator_category;
+    typedef XALAN_STD_QUALIFIER random_access_iterator_tag  iterator_category;
 
-    XalanDequeIterator(XalanDeque*  deque,
-                       size_type    pos) :
+    // The non-const iterator type.  In the case of the non-const instatiation, this
+    // is the same type.
+    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, XalanDeque>    Iterator;
+
+    // The const version needs access to our private data members for copy construction and
+    // assignment.  For the const instantiation, this is a superfluous friend declaration,
+    // since it's the same type as the class itself.
+    friend class XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, XalanDeque>;
+
+    XalanDequeIterator(
+                XalanDeque*     deque,
+                size_type       pos) :
         m_deque(deque),
         m_pos(pos)
     {
     }
 
-    XalanDequeIterator(const Iterator & iterator) :
+    // The is standard copy-construction for the non-const iterator type.  For the
+    // const iterator type, this is copy construction from the non-const type, and the
+    // compiler will generate the standard copy constructor.
+    XalanDequeIterator(const Iterator&  iterator) :
         m_deque(iterator.m_deque),
         m_pos(iterator.m_pos)
     {
     }
 
-    XalanDequeIterator& operator=(const Iterator & iterator)
+    // The is the standard assignment operator for the non-const iterator type.
+    // For the const iterator type, this is the assignment operator from the
+    // non-const type, and the compiler will generate the standard assignment
+    // operator.
+    XalanDequeIterator&
+    operator=(const Iterator&   iterator)
     {
         m_deque = iterator.m_deque;
         m_pos = iterator.m_pos;
+
         return *this;
     }
 
-    XalanDequeIterator& operator++()
+    XalanDequeIterator&
+    operator++()
     {
         ++m_pos;
+
         return *this;
     }
 
-    XalanDequeIterator operator++(int)
+    XalanDequeIterator
+    operator++(int)
     {
         XalanDequeIterator temp = *this;
         ++m_pos;
+
         return temp;
     }
 
-    XalanDequeIterator& operator--()
+    XalanDequeIterator&
+    operator--()
     {   
         --m_pos;
+
         return *this;
     }
 
-    pointer operator->()
+    pointer
+    operator->()
     {
         return &(*m_deque[m_pos]);
     }
 
-    reference operator*()
+    reference
+    operator*()
     {
         return (*m_deque)[m_pos];
     }
 
-    const_reference operator*() const
+    const_reference
+    operator*() const
     {
         return (*m_deque)[m_pos];
     }
 
-    XalanDequeIterator operator+(difference_type difference) const
+    XalanDequeIterator
+    operator+(difference_type   difference) const
     {
         return XalanDequeIterator(m_deque, m_pos + difference);
     }
 
-    XalanDequeIterator operator-(difference_type difference) const
+    XalanDequeIterator
+    operator-(difference_type   difference) const
     {
         return XalanDequeIterator(m_deque, m_pos - difference);
     }
 
-    difference_type operator-(const XalanDequeIterator &theRhs) const
+    difference_type
+    operator-(const XalanDequeIterator&     theRHS) const
     {
-        return m_pos - theRhs.m_pos;
+        return m_pos - theRHS.m_pos;
     }
 
-    bool operator==(const XalanDequeIterator & theRhs) const
+    bool
+    operator==(const XalanDequeIterator&    theRHS) const
     {
-        return (theRhs.m_deque == m_deque)
-            &&  theRhs.m_pos == m_pos;
+        return theRHS.m_deque == m_deque &&
+               theRHS.m_pos == m_pos;
     }
 
-    bool operator!=(const XalanDequeIterator & theRhs) const
+    bool
+    operator!=(const XalanDequeIterator&   theRHS) const
     {
-        return !(theRhs == *this);
+        return !(theRHS == *this);
     }
 
-    bool operator<(const XalanDequeIterator & theRhs) const
+    bool
+    operator<(const XalanDequeIterator&     theRHS) const
     {
-        return m_pos < theRhs.m_pos;
+        return m_pos < theRHS.m_pos;
     }
 
-    XalanDeque* m_deque;
-    size_type   m_pos;
+private:
+
+    XalanDeque*     m_deque;
+
+    size_type       m_pos;
 };
 
 /**
@@ -168,77 +201,98 @@ class XalanDeque
 {
 public:
 
- 
     typedef size_t  size_type;
 
     typedef Type            value_type;
     typedef Type&           reference;
     typedef const Type&     const_reference;
 
-    typedef XalanVector<Type, ConstructionTraits>       BlockType;
+    typedef XalanVector<Type, ConstructionTraits>   BlockType;
+    typedef XalanVector<BlockType*>                 BlockIndexType;
 
-    typedef XalanVector<BlockType*> BlockIndexType;
+    typedef XalanDeque<Type, ConstructionTraits>    ThisType;
 
-    typedef XalanDeque<Type, ConstructionTraits>                            ThisType;       
-    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType>      iterator;
+    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType>          iterator;
     typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, ThisType>     const_iterator;
 
 #if defined(XALAN_HAS_STD_ITERATORS)
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
 #elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
+    typedef typename iterator::iterator_category    iterator_category;
+
+    // This is a specific case for the Rogue Wave STL on Solaris.
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         iterator,
-        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        iterator_category,
         value_type> reverse_iterator_;
+
     typedef XALAN_STD_QUALIFIER reverse_iterator<
         const_iterator,
-        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        iterator_category,
         const value_type> const_reverse_iterator_;
 #else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>                          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>   const_reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        iterator,
+        value_type>        reverse_iterator_;
+
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        const_iterator,
+        value_type,
+        const_reference>   const_reverse_iterator_;
 #endif
 
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;
 
     typedef typename ConstructionTraits::Constructor    Constructor;
-    typedef typename Constructor::ConstructableType     ConstructibleType;
+    typedef typename Constructor::ConstructableType     ConstructableType;
 
     XalanDeque(
-            MemoryManager& memoryManager,
-            size_type initialSize = 0,
-            size_type blockSize = 10) :
+            MemoryManager&  memoryManager,
+            size_type       initialSize = 0,
+            size_type       blockSize = 10) :
         m_memoryManager(&memoryManager),
         m_blockSize(blockSize),
         m_blockIndex(memoryManager,
                     initialSize / blockSize + (initialSize % blockSize == 0 ? 0 : 1)),                    
         m_freeBlockVector(memoryManager)
     {
-        typename Constructor::ConstructableType  defaultValue(*m_memoryManager);
+        const ConstructableType     defaultValue(*m_memoryManager);
 
-        XALAN_STD_QUALIFIER fill_n(XALAN_STD_QUALIFIER back_inserter(*this), initialSize, defaultValue.value);
+        XALAN_USING_STD(fill_n)
+        XALAN_USING_STD(back_inserter)
+
+        fill_n(
+            back_inserter(*this),
+            initialSize, 
+            defaultValue.value);
     }
 
-    XalanDeque(const XalanDeque& theRhs, MemoryManager& memoryManager) :
-        m_memoryManager(&memoryManager),
-        m_blockSize(theRhs.m_blockSize),
-        m_blockIndex(*theRhs.m_memoryManager,
-                    theRhs.size() / theRhs.m_blockSize + (theRhs.size() % theRhs.m_blockSize == 0 ? 0 : 1)),
-        m_freeBlockVector(memoryManager)
+    XalanDeque(
+                const XalanDeque&   theRHS,
+                MemoryManager&      theMemoryManager) :
+        m_memoryManager(&theMemoryManager),
+        m_blockSize(theRHS.m_blockSize),
+        m_blockIndex(*theRHS.m_memoryManager,
+                    theRHS.size() / theRHS.m_blockSize + (theRHS.size() % theRHS.m_blockSize == 0 ? 0 : 1)),
+        m_freeBlockVector(theMemoryManager)
     {
-        XALAN_STD_QUALIFIER copy(theRhs.begin(), theRhs.end(), XALAN_STD_QUALIFIER back_inserter(*this));
+        XALAN_USING_STD(copy)
+        XALAN_USING_STD(back_inserter)
+
+        copy(
+            theRHS.begin(),
+            theRHS.end(), 
+            back_inserter(*this));
     }
-    
+
    static XalanDeque*
    create(
             MemoryManager&  theManager,
             size_type       initialSize = 0,
             size_type       blockSize = 10)
     {
-        typedef XalanDeque ThisType;
-
         XalanAllocationGuard    theGuard(theManager, theManager.allocate(sizeof(ThisType)));
 
         ThisType* const     theResult =
@@ -256,42 +310,50 @@ public:
         destroyBlockList(m_blockIndex);
     }
 
-    iterator begin()
+    iterator
+    begin()
     {
         return iterator(this, 0);
     }
 
-    const_iterator begin() const
+    const_iterator
+    begin() const
     {
         return const_iterator(const_cast<XalanDeque*>(this), 0);
     }
 
-    iterator end()
+    iterator
+    end()
     {
         return iterator(this, size());
     }
 
-    const_iterator end() const
+    const_iterator 
+    end() const
     {
          return const_iterator(const_cast<XalanDeque*>(this), size());
     }
 
-    const_reverse_iterator rbegin() const
+    const_reverse_iterator 
+    rbegin() const
     {
         return const_reverse_iterator(end());
     }
 
-    const_reverse_iterator rend() const
+    const_reverse_iterator 
+    rend() const
     {
         return const_reverse_iterator(begin());
     }
 
-    bool empty() const
+    bool 
+    empty() const
     {
         return m_blockIndex.empty();
     }
 
-    size_type size() const
+    size_type 
+    size() const
     {
        if (m_blockIndex.empty())
        {
@@ -304,26 +366,32 @@ public:
        }
     }
 
-    value_type& back()
+    value_type&
+    back()
     {
         return m_blockIndex.back()->back();
     }
 
-    value_type& operator[](size_type index)
+    value_type&
+    operator[](size_type    index)
     {
-        BlockType & block = *(m_blockIndex[index / m_blockSize]);
+        BlockType&  block = *m_blockIndex[index / m_blockSize];
+
         return block[index % m_blockSize];
     }
 
-    const value_type& operator[](size_type index) const
+    const value_type&
+    operator[](size_type    index) const
     {
-        BlockType & block = *(m_blockIndex[index / m_blockSize]);
+        BlockType&  block = *m_blockIndex[index / m_blockSize];
+
         return block[index % m_blockSize];
     }
 
-    void clear()
+    void
+    clear()
     {
-        typename BlockIndexType::iterator iter = m_blockIndex.begin();
+        typename BlockIndexType::iterator   iter = m_blockIndex.begin();
 
         m_freeBlockVector.reserve(m_freeBlockVector.size() + m_blockIndex.size());
 
@@ -333,25 +401,30 @@ public:
             m_freeBlockVector.push_back(*iter);
             ++iter;
         }
-        
+
         m_blockIndex.clear();
     }
 
-    void push_back(const value_type & value)
+    void
+    push_back(const value_type&     value)
     {
         if (m_blockIndex.empty() ||
             m_blockIndex.back()->size() >= m_blockSize)
         {
-            m_blockIndex.push_back(getNewBlock());
+            pushNewIndexBlock();
         }
 
         m_blockIndex.back()->push_back(value);
     }
 
-    void pop_back()
+    void
+    pop_back()
     {
-        BlockType & lastBlock = *(m_blockIndex.back());
+        assert(!empty());
+
+        BlockType&  lastBlock = *m_blockIndex.back();
         lastBlock.pop_back();
+
         if (lastBlock.empty())
         {
             m_freeBlockVector.push_back(&lastBlock);
@@ -359,9 +432,10 @@ public:
         }
     }
 
-    void resize(size_type newSize)
+    void
+    resize(size_type    newSize)
     {
-        typename Constructor::ConstructableType  defaultValue(*m_memoryManager);
+        const ConstructableType     defaultValue(*m_memoryManager);
 
         if (newSize > size())
         {
@@ -379,20 +453,33 @@ public:
         }
     }
 
-    void swap(XalanDeque& theRhs)
+    void
+    swap(XalanDeque&    theRHS)
     {
-        MemoryManager* tempMemoryManager = m_memoryManager;
-        m_memoryManager = theRhs.m_memoryManager;
-        theRhs.m_memoryManager = tempMemoryManager;
+        XALAN_USING_STD(swap)
 
-        theRhs.m_blockIndex.swap(m_blockIndex);
-        theRhs.m_freeBlockVector.swap(m_freeBlockVector);
+        swap(m_memoryManager, theRHS.m_memoryManager);
+
+        theRHS.m_blockIndex.swap(m_blockIndex);
+        theRHS.m_freeBlockVector.swap(m_freeBlockVector);
     }
 
-    XalanDeque & operator=(const XalanDeque & theRhs) 
+    XalanDeque&
+    operator=(const XalanDeque&     theRHS) 
     {
-        clear();
-        XALAN_STD_QUALIFIER copy(theRhs.begin(), theRhs.end(), XALAN_STD_QUALIFIER back_inserter(*this));
+        if (this != &theRHS)
+        {
+            XALAN_USING_STD(copy)
+            XALAN_USING_STD(back_inserter)
+
+            clear();
+
+            copy(
+                theRHS.begin(),
+                theRHS.end(),
+                back_inserter(*this));
+        }
+
         return *this;
     }
 
@@ -404,38 +491,34 @@ public:
         return *m_memoryManager;
     }
 
-protected:
+private:
 
-    BlockType* getNewBlock()
+    void
+    pushNewIndexBlock()
     {
-        BlockType * newBlock;
+        // Allocate space first, so we don't have to worry
+        // about an out-of-memory error once we've constructed
+        // the new block.
+        m_blockIndex.push_back(0);
 
         if (m_freeBlockVector.empty())
         {
-            newBlock = allocate(1);
-            new (&*newBlock) BlockType(*m_memoryManager, m_blockSize);
+            XalanConstruct(
+                *m_memoryManager,
+                m_blockIndex.back(),
+                *m_memoryManager,
+                m_blockSize);
         }
         else
         {
-            newBlock = m_freeBlockVector.back();
+            m_blockIndex.back() = m_freeBlockVector.back();
+
+            // Now that ownership has been transfered, pop
+            // it off the free list.
             m_freeBlockVector.pop_back();
         }
 
-        assert (newBlock != 0);
-
-        return newBlock;
-    }
-
-    BlockType*
-    allocate(size_type  size)
-    {
-        const size_type     theBytesNeeded = size * sizeof(BlockType);
-
-        BlockType* pointer = (BlockType*)m_memoryManager->allocate(theBytesNeeded);
-        
-        assert(pointer != 0);
-        
-        return pointer;
+        assert(m_blockIndex.back() != 0);
     }
 
     void
@@ -446,7 +529,7 @@ protected:
 
         while (iter != theBlockIndex.end())
         {
-            XalanDestroy(*m_memoryManager, *(*iter));
+            XalanDestroy(*m_memoryManager, *iter);
 
             ++iter;
         }
@@ -458,13 +541,13 @@ protected:
         m_memoryManager->deallocate(pointer);
     }
 
-    MemoryManager*  m_memoryManager;
+    MemoryManager*      m_memoryManager;
+
     const size_type     m_blockSize;
 
     BlockIndexType     m_blockIndex; 
     BlockIndexType     m_freeBlockVector;
 
-private:
 
     // These are not implemented
     XalanDeque();
