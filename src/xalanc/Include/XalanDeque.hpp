@@ -529,7 +529,7 @@ private:
 
         while (iter != theBlockIndex.end())
         {
-            XalanDestroy(*m_memoryManager, *iter);
+            XalanDestroy(*m_memoryManager, **iter);
 
             ++iter;
         }
@@ -545,8 +545,8 @@ private:
 
     const size_type     m_blockSize;
 
-    BlockIndexType     m_blockIndex; 
-    BlockIndexType     m_freeBlockVector;
+    BlockIndexType		m_blockIndex; 
+    BlockIndexType		m_freeBlockVector;
 
 
     // These are not implemented
