@@ -535,18 +535,12 @@ private:
         }
     }
 
-    void
-    deallocate(BlockType*  pointer)
-    {
-        m_memoryManager->deallocate(pointer);
-    }
-
     MemoryManager*      m_memoryManager;
 
     const size_type     m_blockSize;
 
-    BlockIndexType		m_blockIndex; 
-    BlockIndexType		m_freeBlockVector;
+    BlockIndexType	    m_blockIndex; 
+    BlockIndexType	    m_freeBlockVector;
 
 
     // These are not implemented
