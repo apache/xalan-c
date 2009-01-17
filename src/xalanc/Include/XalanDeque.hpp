@@ -84,7 +84,7 @@ public:
     {
     }
 
-    // The is standard copy-construction for the non-const iterator type.  For the
+    // This is standard copy-construction for the non-const iterator type.  For the
     // const iterator type, this is copy construction from the non-const type, and the
     // compiler will generate the standard copy constructor.
     XalanDequeIterator(const Iterator&  iterator) :
@@ -93,7 +93,7 @@ public:
     {
     }
 
-    // The is the standard assignment operator for the non-const iterator type.
+    // This is the standard assignment operator for the non-const iterator type.
     // For the const iterator type, this is the assignment operator from the
     // non-const type, and the compiler will generate the standard assignment
     // operator.
@@ -529,7 +529,15 @@ private:
 
         while (iter != theBlockIndex.end())
         {
-            XalanDestroy(*m_memoryManager, **iter);
+            // Normally, we should be able to just call
+            // the version of XalanDestroy() that accepts
+            // a pointer, but Visual Studio 6 has issues
+            // with partial ordering, so we're stuck with
+            // this for now.
+            if (*iter != 0)
+            {
+                XalanDestroy(*m_memoryManager, **iter);
+            }
 
             ++iter;
         }
