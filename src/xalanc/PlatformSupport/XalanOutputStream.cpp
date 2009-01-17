@@ -62,8 +62,6 @@ const XalanDOMString::size_type     XalanOutputStream::s_nlCRStringLength =
 
 
 
-
-
 XalanOutputStream::XalanOutputStream(
             MemoryManager&      theManager,
             size_type               theBufferSize,
@@ -138,15 +136,17 @@ XalanOutputStream::transcode(
         {
             if (m_throwTranscodeException == true)
             {
-                XalanDOMString theBuffer(theDestination.getMemoryManager());
+                XalanDOMString  theExceptionBuffer(theDestination.getMemoryManager());
 
-                throw TranscodingException(theBuffer, 0);
+                throw TranscodingException(
+                        theExceptionBuffer,
+                        0);
             }
         }
     }
     else
     {
-        bool                    fDone = false;
+        bool    fDone = false;
 
         // Keep track of the total bytes we've added to the
         // destination vector, and the total bytes we've
@@ -190,9 +190,11 @@ XalanOutputStream::transcode(
             {
                 if (m_throwTranscodeException == true)
                 {
-                    XalanDOMString theBuffer(theDestination.getMemoryManager());
+                    XalanDOMString  theExceptionBuffer(theDestination.getMemoryManager());
 
-                    throw TranscodingException(theBuffer, 0);
+                    throw TranscodingException(
+                            theExceptionBuffer,
+                            0);
                 }
             }
 
@@ -262,13 +264,13 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&  theEncoding)
         if (theCode == XalanTranscodingServices::UnsupportedEncoding ||
             theCode == XalanTranscodingServices::SupportFilesNotFound)
         {
-            XalanDOMString theBuffer(getMemoryManager());
+            XalanDOMString  theBuffer(getMemoryManager());
 
             throw UnsupportedEncodingException(theEncoding, theBuffer, 0);
         }
         else if (theCode != XalanTranscodingServices::OK)
         {
-            XalanDOMString theBuffer(getMemoryManager());
+            XalanDOMString  theBuffer(getMemoryManager());
 
             throw TranscoderInternalFailureException(theEncoding, theBuffer, 0);
         }
@@ -724,6 +726,33 @@ XalanOutputStream::TranscodingException::getType() const
 
     return s_type;
 }
+
+
+
+XalanDOMString&
+XalanOutputStream::formatMessage(
+            const XalanDOMString&   theMessage,
+            int                     theErrorCode,
+            XalanDOMString&         theBuffer)
+{
+    XalanDOMString  strErrorCode(theBuffer.getMemoryManager());
+
+    XalanDOMString  strErrorMsg(theBuffer.getMemoryManager());
+
+    NumberToDOMString(theErrorCode, strErrorCode);
+
+    theBuffer.assign(theMessage);
+
+    XalanMessageLoader::getMessage(
+        strErrorMsg,
+        XalanMessages::SystemErrorCode_1Param,
+        strErrorCode);
+
+    theBuffer.append(strErrorMsg);
+
+    return theBuffer;
+}
+
 
 
 

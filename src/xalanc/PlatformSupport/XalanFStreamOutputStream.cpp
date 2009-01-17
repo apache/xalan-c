@@ -94,37 +94,14 @@ XalanFStreamOutputStream::writeData(
 
     if (theBytesWritten != theBufferLength)
     {
-        XalanDOMString theBuffer(getMemoryManager());
+        XalanDOMString theExceptionBuffer(getMemoryManager());
 
-        throw XalanFStreamOutputStreamWriteException(errno, theBuffer);
+        throw XalanFStreamOutputStreamWriteException(
+                errno,
+                theExceptionBuffer);
     }
 }
 
-
-
-XalanDOMString&
-FormatMessageLocal(
-            const XalanDOMString&   theMessage,
-            int                     theErrorCode,
-            XalanDOMString&         theResult)
-{
-    XalanDOMString strErrorCode(theResult.getMemoryManager());
-
-    XalanDOMString strErrorMsg(theResult.getMemoryManager());
-
-    NumberToDOMString(theErrorCode, strErrorCode);
-
-    theResult.assign(theMessage);
-
-    XalanMessageLoader::getMessage(
-        strErrorMsg,
-        XalanMessages::SystemErrorCode_1Param,
-        strErrorCode);
-
-    theResult.append(strErrorMsg);
-
-    return theResult;
-}
 
 
 const XalanDOMChar  XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::m_type[] = 
@@ -171,7 +148,7 @@ XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOu
             int                 theErrorCode,
             XalanDOMString&     theBuffer) :                                                                                                         
     XalanOutputStreamException(
-        FormatMessageLocal(
+        formatMessage(
             XalanMessageLoader::getMessage(
                 theBuffer,
                 XalanMessages::ErrorWritingFile_1Param,
