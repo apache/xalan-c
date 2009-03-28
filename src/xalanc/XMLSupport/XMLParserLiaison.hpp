@@ -114,8 +114,8 @@ public:
      * can be recognized if the parse fails.
      *
      * The liaison owns the XalanDocument instance, and will delete it when
-     * when asked (see DestroyDocument()), or when the liaison is reset, or
-     * goes out of scope.
+     * asked (see DestroyDocument()), or when the liaison is reset, or goes
+     * out of scope.
      *
      * This function is not reentrant, so you cannot call it again until
      * the current call exits.
