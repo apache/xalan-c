@@ -627,8 +627,9 @@ public:
          * 
          * @param theOpCode operation code that caused the exception
          */
-        InvalidOpCodeException(OpCodeMapValueType   theOpCode,
-                                XalanDOMString&     theResult);
+        InvalidOpCodeException(
+                    OpCodeMapValueType  theOpCode,
+                    XalanDOMString&     theBuffer);
 
         virtual~
         InvalidOpCodeException();
@@ -636,8 +637,9 @@ public:
     private:
 
         static XalanDOMString&
-        FormatErrorMessage(OpCodeMapValueType   theOpCode,
-                            XalanDOMString&     theResult);
+        FormatErrorMessage(
+                OpCodeMapValueType  theOpCode,
+                XalanDOMString&     theBuffer);
     };
 
     /**
@@ -659,7 +661,7 @@ public:
             OpCodeMapValueType  theOpCode,
             OpCodeMapValueType  theExpectedCount,
             OpCodeMapValueType  theSuppliedCount,
-            XalanDOMString&     theResult);
+            XalanDOMString&     theBuffer);
 
         virtual~
         InvalidArgumentCountException();
@@ -671,7 +673,7 @@ public:
             OpCodeMapValueType  theOpCode,
             OpCodeMapValueType  theExpectedCount,
             OpCodeMapValueType  theSuppliedCount,
-            XalanDOMString&     theResult);
+            XalanDOMString&     theBuffer);
     };
 
     /**
@@ -690,7 +692,7 @@ public:
         InvalidArgumentException(
             OpCodeMapValueType  theOpCode,
             OpCodeMapValueType  theValue,
-            XalanDOMString&     theResult);
+            XalanDOMString&     theBuffer);
 
         virtual~
         InvalidArgumentException();
@@ -701,7 +703,7 @@ public:
         FormatErrorMessage(
                 OpCodeMapValueType  theOpCode,
                 OpCodeMapValueType  theValue,
-                XalanDOMString&     theResult);
+                XalanDOMString&     theBuffer);
     };
 
 
