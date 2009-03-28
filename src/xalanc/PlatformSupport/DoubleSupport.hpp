@@ -28,7 +28,7 @@
 #if defined(_MSC_VER)
 #include <float.h>
 #endif
-#include <cmath>
+#include <math.h>
 #include <functional>
 
 

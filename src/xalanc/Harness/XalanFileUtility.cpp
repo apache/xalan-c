@@ -58,6 +58,21 @@
 
 
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::fclose;
+using std::feof;
+using std::ferror;
+using std::fgets;
+using std::fopen;
+using std::localtime;
+using std::sprintf;
+using std::strftime;
+using std::tm;
+using std::time;
+#endif
+
+
+
 #include "xercesc/sax/ErrorHandler.hpp"
 #include "xercesc/sax/SAXException.hpp"
 #include "xercesc/sax/SAXParseException.hpp"
@@ -628,13 +643,6 @@ XalanFileUtility::generateFileName(
 XalanDOMString&
 XalanFileUtility::generateUniqRunid(XalanDOMString& theResult)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::tm;
-    using std::time;
-    using std::localtime;
-    using std::strftime;
-#endif
-
     struct tm *newtime;
     time_t long_time;
     char tmpbuf[10];

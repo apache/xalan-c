@@ -168,6 +168,10 @@ openFile(
         }
     }
 #else
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fopen;
+#endif
+
     CharVectorType  theResult(theManager);
     TranscodeToLocalCodePage(theFileName, theResult, true);
 
@@ -257,6 +261,10 @@ XalanFileOutputStream::~XalanFileOutputStream()
         CloseHandle(m_handle);
     }
 #else
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fclose;
+#endif
+
     if (m_handle != 0)
     {
         fclose(m_handle);
@@ -270,9 +278,14 @@ void
 XalanFileOutputStream::doFlush()
 {
 #if !defined(XALAN_WINDOWS)
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fflush;
+#endif
+
     if (fflush(m_handle) != 0)
     {
-            XalanDOMString theBuffer(getMemoryManager());
+        XalanDOMString theBuffer(getMemoryManager());
+
         throw XalanFileOutputStreamWriteException(
             m_fileName,
             errno,
@@ -304,6 +317,10 @@ XalanFileOutputStream::writeData(
                 theExceptionBuffer);
     }
 #else
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::fwrite;
+#endif
+
     const size_t    theBytesWritten =
         fwrite(theBuffer,
                1,

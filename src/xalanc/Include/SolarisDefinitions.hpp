@@ -35,7 +35,12 @@
 #define XALAN_HAS_CPP_NAMESPACE
 #define XALAN_STRICT_ANSI_HEADERS
 
+#if defined(_STLP_CONFIG_H)
+#define XALAN_HAS_STD_ITERATORS
+#define XALAN_HAS_STD_DISTANCE
+#else
 #define XALAN_RW_NO_CLASS_PARTIAL_SPEC
+#endif
 
 #define XALAN_POSIX2_AVAILABLE
 #if defined(__sparc)

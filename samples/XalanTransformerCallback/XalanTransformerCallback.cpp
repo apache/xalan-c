@@ -34,6 +34,16 @@
 
 
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::FILE;
+using std::fclose;
+using std::fflush;
+using std::fopen;
+using std::fwrite;
+#endif
+
+
+
 // This is a simple class that illustrates how XalanTransformer's "callback" API
 // is used.  This example just abstracts writing data to a FILE*, but other
 // actions are possible.

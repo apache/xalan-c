@@ -36,7 +36,9 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::FILE;
+#endif
 
 class XALAN_PLATFORMSUPPORT_EXPORT XalanFStreamOutputStream : public XalanOutputStream
 {

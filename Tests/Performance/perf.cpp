@@ -30,6 +30,12 @@
 
 
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::strcmp;
+#endif
+
+
+
 #include <xercesc/util/PlatformUtils.hpp>
 
 

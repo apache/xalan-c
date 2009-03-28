@@ -37,6 +37,17 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::fclose;
+using std::fflush;
+using std::fopen;
+using std::fprintf;
+using std::fputs;
+using std::sprintf;
+#endif
+
+
+
 XalanOutputTranscoder*
 makeNewUTF8Transcoder(MemoryManager&    theMemoryManager)
 {
@@ -921,14 +932,6 @@ XalanXMLFileReporter::printToFile(const XalanDOMString&  output)
 XalanDOMString &
 XalanXMLFileReporter::getDateTimeString(XalanDOMString& theResult) 
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::tm;
-    using std::time;
-    using std::localtime;
-    using std::asctime;
-    using std::strlen;
-#endif
-
     struct tm *tmNow;
     time_t time_tNow;
 
