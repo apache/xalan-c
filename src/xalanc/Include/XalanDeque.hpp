@@ -456,9 +456,9 @@ public:
     void
     swap(XalanDeque&    theRHS)
     {
-        XALAN_USING_STD(swap)
-
-        swap(m_memoryManager, theRHS.m_memoryManager);
+        MemoryManager* const temp = m_memoryManager;
+        m_memoryManager = theRHS.m_memoryManager;
+        theRHS.m_memoryManager = temp;
 
         theRHS.m_blockIndex.swap(m_blockIndex);
         theRHS.m_freeBlockVector.swap(m_freeBlockVector);

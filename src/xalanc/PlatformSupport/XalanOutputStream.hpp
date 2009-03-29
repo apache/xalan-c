@@ -399,6 +399,12 @@ public :
         getType() const;
     };
 
+    static XalanDOMString&
+    formatMessage(
+            const XalanDOMString&   theMessage,
+            int                     theErrorCode,
+            XalanDOMString&         theBuffer);
+
 protected:
 
     /**
@@ -436,12 +442,6 @@ protected:
 
     static const XalanDOMString::size_type  s_nlStringLength;
     static const XalanDOMString::size_type  s_nlCRStringLength;
-
-    static XalanDOMString&
-    formatMessage(
-            const XalanDOMString&   theMessage,
-            int                     theErrorCode,
-            XalanDOMString&         theBuffer);
 
 private:
 

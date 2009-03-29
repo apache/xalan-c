@@ -54,15 +54,16 @@ public :
      * @param theBufferSize The size of the transcoding buffer
      */
     XalanFStreamOutputStream(
-            FILE*               theFileHandle,
+            FILE*           theFileHandle,
             MemoryManager&  theManager,
-            size_type           theBufferSize = eDefaultBufferSize);
+            size_type       theBufferSize = eDefaultBufferSize);
 
     static XalanFStreamOutputStream*
     create(
-            FILE*               theFileHandle,
+            FILE*           theFileHandle,
             MemoryManager&  theManager,
-            size_type           theBufferSize = eDefaultBufferSize);
+            size_type       theBufferSize = eDefaultBufferSize);
+
     virtual
     ~XalanFStreamOutputStream();
 
@@ -76,8 +77,9 @@ public :
          * 
          * @param theErrorCode number of error encountered
          */
-        XalanFStreamOutputStreamWriteException(int  theErrorCode,
-                                                XalanDOMString& theBuffer);
+        XalanFStreamOutputStreamWriteException(
+            int                 theErrorCode,
+            XalanDOMString&     theBuffer);
 
         virtual
         ~XalanFStreamOutputStreamWriteException();
