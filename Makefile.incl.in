@@ -124,27 +124,27 @@ ifeq ($(PLATFORM), MINGW)
   LINK_SONAME =  
   EXT=.exe
 
-   LOC_LIB = ${LOC_LIBNAME}${VER}$(SHLIBSUFFIX)
+  LOC_LIB = ${LOC_LIBNAME}${VER}$(SHLIBSUFFIX)
 
-    MESSAGELIB = ${XSL_LIB_DIR}/$(LOC_LIB)
-    LIB = $(LIB_NAME)$(VER)$(SHLIBSUFFIX)
-    SONAME = $(LIB_NAME)$(MS_VER)$(SHLIBSUFFIX)
-    PLATFORM_COMPILE_OPTIONS = -DWIN32 -D_WINDOWS -D__MINGW__ -D${PLATFORM} -fexceptions
+  MESSAGELIB = ${XSL_LIB_DIR}/$(LOC_LIB)
+  LIB = $(LIB_NAME)$(VER)$(SHLIBSUFFIX)
+  SONAME = $(LIB_NAME)$(MS_VER)$(SHLIBSUFFIX)
+  PLATFORM_COMPILE_OPTIONS = -DWIN32 -D_WINDOWS -D__MINGW__ -D${PLATFORM} -fexceptions
 
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC1)
   LDFLAGS += -Wl,--allow-multiple-definition
   LINK = $(CXX) -D${PLATFORM} ${LDFLAGS}
 
-    MAKE_SHARED = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS} -o $(XSL_LIB_DIR)/$(LIBNAME)
+  MAKE_SHARED = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS}
 
-    MAKE_SHARED_LOC = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS} -o $(XSL_LIB_DIR)/$(LOC_LIB)
+  MAKE_SHARED_LOC = dllwrap --export-all-symbols --driver-name c++ ${LDFLAGS}
 
   LOC_OTHER_LINK_PARAMETERS = $(XERCES_LIB)
   
   OTHER_LINK_PARAMETERS = $(XALAN_LIB) $(ALLLIBS)
   
-  OTHER_LINK_LIB_PARAMERES = $(ALLLIBS)
+  OTHER_LINK_LIB_PARAMETERS = $(ALLLIBS)
    
   export PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(PATH)
  
@@ -183,7 +183,7 @@ ifeq ($(PLATFORM), CYGWIN)
   
   OTHER_LINK_PARAMETERS = $(XALAN_LIB) $(ALLLIBS)
   
-  OTHER_LINK_LIB_PARAMERES = $(ALLLIBS)
+  OTHER_LINK_LIB_PARAMETERS = $(ALLLIBS)
    
   export PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(PATH)
  
