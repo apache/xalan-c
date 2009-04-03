@@ -1279,8 +1279,8 @@ XSLTEngineImpl::addResultAttribute(
                 }
                 else
                 {
-                    if (fromCopy == false /* ||
-                        m_resultNamespacesStack.prefixIsPresentLocal(s_emptyString) == false */)
+                    if (fromCopy == false ||
+                        m_resultNamespacesStack.prefixIsPresentLocal(s_emptyString) == false)
                     {
                         addResultNamespaceDecl(s_emptyString, value, theLength);
                     }
