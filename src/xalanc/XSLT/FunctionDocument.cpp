@@ -86,7 +86,35 @@ doWarn(
         base);
 
     executionContext.problem(
-        XPathExecutionContext::eXPath,
+        XPathExecutionContext::eXSLTProcessor,
+        XPathExecutionContext::eWarning,
+        theMessage,
+        locator,
+        sourceNode);
+}
+
+
+
+inline void
+doWarnFragID(
+            XPathExecutionContext&  executionContext,
+            const XalanDOMString&   uri,
+            const XalanDOMString&   fragID,
+            const XalanNode*        sourceNode,
+            const Locator*          locator)
+{
+    const GetCachedString   theGuard(executionContext);
+
+    XalanDOMString&     theMessage = theGuard.get();
+
+    XalanMessageLoader::getMessage(
+        theMessage,
+        XalanMessages::CannotFindFragment_2Param,
+        uri,
+        fragID);
+
+    executionContext.problem(
+        XPathExecutionContext::eXSLTProcessor,
         XPathExecutionContext::eWarning,
         theMessage,
         locator,
@@ -207,13 +235,32 @@ getDoc(
             const XalanNode*                    sourceNode,
             const Locator*                      locator)
 {
-    XalanDocument*  newDoc = executionContext.getSourceDocument(uri);
+    const XalanDOMString::size_type fragIndex =
+        indexOf(uri, XalanUnicode::charNumberSign);
+
+    const GetCachedString   theGuard1(executionContext);
+    const GetCachedString   theGuard2(executionContext);
+
+    XalanDOMString&     newURI = theGuard1.get();
+    XalanDOMString&     fragID = theGuard2.get();
+
+    if (fragIndex == uri.length())
+    {
+        newURI = uri;
+    }
+    else
+    {
+        substring(uri, newURI, 0, fragIndex);
+        substring(uri, fragID, fragIndex + 1);
+    }
+
+    XalanDocument*  newDoc = executionContext.getSourceDocument(newURI);
 
     if (newDoc == 0)
     {
-        if (uri.length() != 0)
+        if (newURI.length() != 0)
         {
-            newDoc = parseDoc(executionContext, uri, base, sourceNode, locator);
+            newDoc = parseDoc(executionContext, newURI, base, sourceNode, locator);
         }
         else
         {
@@ -231,7 +278,23 @@ getDoc(
 
     if (newDoc != 0)
     {
-        mnl->addNodeInDocOrder(newDoc, executionContext);
+        if (fragID.length() == 0)
+        {
+            mnl->addNodeInDocOrder(newDoc, executionContext);
+        }
+        else
+        {
+            XalanNode* const    theNode = newDoc->getElementById(fragID);
+
+            if (theNode != 0)
+            {
+                mnl->addNodeInDocOrder(theNode, executionContext);
+            }
+            else
+            {
+                doWarnFragID(executionContext, fragID, newURI, sourceNode, locator);
+            }
+        }
     }
 }
 
@@ -331,7 +394,7 @@ FunctionDocument::execute(
         const GetCachedString   theGuard1(executionContext);
 
         executionContext.problem(
-            XPathExecutionContext::eXPath,
+            XPathExecutionContext::eXSLTProcessor,
             XPathExecutionContext::eError,
             XalanMessageLoader::getMessage(
                 theGuard1.get(),
@@ -349,7 +412,7 @@ FunctionDocument::execute(
             const GetCachedString   theGuard1(executionContext);
 
             executionContext.problem(
-                XPathExecutionContext::eXPath,
+                XPathExecutionContext::eXSLTProcessor,
                 XPathExecutionContext::eError,
                 XalanMessageLoader::getMessage(
                     theGuard1.get(),
@@ -481,7 +544,7 @@ FunctionDocument::doExecute(
                     const GetCachedString   theGuard(executionContext);
 
                     executionContext.problem(
-                        XPathExecutionContext::eXPath,
+                        XPathExecutionContext::eXSLTProcessor,
                         XPathExecutionContext::eWarning,
                         XalanMessageLoader::getMessage(
                             theGuard.get(),

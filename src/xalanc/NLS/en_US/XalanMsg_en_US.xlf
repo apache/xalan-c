@@ -720,8 +720,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="CantFindFragment_1Param">
-		<source>Could not find the fragment '{0}'</source>
-		<target>Could not find the fragment '{0}'</target>
+		<source>The fragment '{0}' was not found.</source>
+		<target>The fragment '{0}' was not found.</target>
 </trans-unit>
 
 <trans-unit id="NodePointedByFragment_1Param">
@@ -1036,6 +1036,11 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 <trans-unit id="CannotSwitchToHTMLOutputMethod">
         <source>The processor cannot use the HTML output method because the current extension output method does not support it.</source>
         <target>The processor cannot use the HTML output method because the current extension output method does not support it.</target>
+</trans-unit>
+
+<trans-unit id="CannotFindFragment_2Param">
+        <source>The fragment '{0}' was not found in the document '{1}'.</source>
+        <target>The fragment '{0}' was not found in the document '{1}'.</target>
 </trans-unit>
 
     </body>
