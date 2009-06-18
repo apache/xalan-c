@@ -144,7 +144,7 @@ getParams(
     // Get the rest of the arguments in any order.
     for (int i = 2; i < argc && fSuccess == true; ++i)
     {
-        if(!stricmp("-out", argv[i]))
+        if(!strcmp("-out", argv[i]))
         {
             ++i;
             if(i < argc && argv[i][0] != '-')
