@@ -42,7 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XALAN_USING_XERCES(MemoryManager)
 
 // An auto_ptr-like class that supports the MemoryManager class.
-template<class   Type>
+template<class Type>
 class XalanMemMgrAutoPtr
 {
 public:
@@ -54,7 +54,7 @@ public:
     public:
 
         MemMgrAutoPtrData():
-            AutoPtrPairType(0,0)
+            AutoPtrPairType()
         {
         }
 
@@ -67,7 +67,7 @@ public:
         }
 
         bool
-        isInitilized()const
+        isInitialized()const
         {
             return this->first != 0 && this->second != 0;
         }
@@ -77,7 +77,7 @@ public:
         {
             invariants();
 
-            if (isInitilized())
+            if (isInitialized())
             {       
                 this->second->~Type();
 
@@ -105,7 +105,7 @@ public:
         invariants() const
         {
             assert(
-                isInitilized() ||
+                isInitialized() ||
                 (this->first == 0 && this->second == 0));
         }
     };
