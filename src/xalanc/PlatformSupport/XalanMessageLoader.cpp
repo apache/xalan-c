@@ -39,13 +39,9 @@
 #error You must provide a message loader
 #endif
 
-
 XALAN_CPP_NAMESPACE_BEGIN
 
-
-
-#define MAX_MESSAGE_LEN 1024
-
+static const size_t kMaxMessageLength = 1024;
 
 XalanMessageLoader*     XalanMessageLoader::s_msgLoader = 0;
 
@@ -105,13 +101,13 @@ XalanMessageLoader::getMessage(
 {
     assert(s_msgLoader != 0);
 
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->load(
         msgToLoad,
         theResultMessage.getMemoryManager(),
         sBuffer,
-        MAX_MESSAGE_LEN,
+        kMaxMessageLength,
         repText1.c_str());
 
     theResultMessage.assign(sBuffer);
@@ -130,13 +126,13 @@ XalanMessageLoader::getMessage(
 {
     assert(s_msgLoader != 0);
 
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->load(
         msgToLoad,
         theResultMessage.getMemoryManager(),
         sBuffer,
-        MAX_MESSAGE_LEN,
+        kMaxMessageLength,
         repText1.c_str(),
         repText2.c_str());
 
@@ -157,13 +153,13 @@ XalanMessageLoader::getMessage(
 {
     assert(s_msgLoader != 0);
 
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->load(
         msgToLoad,
         theResultMessage.getMemoryManager(),
         sBuffer,
-        MAX_MESSAGE_LEN,
+        kMaxMessageLength,
         repText1.c_str(),
         repText2.c_str(),
         repText3.c_str());
@@ -183,11 +179,11 @@ XalanMessageLoader::getMessage(
 {
     assert(s_msgLoader != 0);
 
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->loadMsg(msgToLoad,
                             sBuffer,
-                            MAX_MESSAGE_LEN) ;
+                            kMaxMessageLength) ;
 
     theResultMessage.assign(sBuffer);
 
@@ -237,13 +233,13 @@ XalanMessageLoader::getMessage(
             const char*             repText3,
             const char*             repText4)
 {
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->load(
         msgToLoad,
         theResultMessage.getMemoryManager(),
         sBuffer,
-        MAX_MESSAGE_LEN,
+        kMaxMessageLength,
         repText1,
         repText2,
         repText3,
@@ -265,13 +261,13 @@ XalanMessageLoader::getMessage(
             const XalanDOMChar*     repText3,
             const XalanDOMChar*     repText4)
 {
-    XalanDOMChar    sBuffer[MAX_MESSAGE_LEN];
+    XalanDOMChar    sBuffer[kMaxMessageLength + 1];
 
     s_msgLoader->load(
         msgToLoad,
         theResultMessage.getMemoryManager(),
         sBuffer,
-        MAX_MESSAGE_LEN,
+        kMaxMessageLength,
         repText1,
         repText2,
         repText3,
