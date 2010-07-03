@@ -526,7 +526,7 @@ protected:
      * @param theNumber the number to write.
      */
     void
-    writeNumberedEntityReference(unsigned long  theNumber);
+    writeNumberedEntityReference(XalanUnicodeChar   theNumber);
 
     /**
      * Write an attribute string.

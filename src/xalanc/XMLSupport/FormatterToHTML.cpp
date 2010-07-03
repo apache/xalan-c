@@ -88,7 +88,6 @@ FormatterToHTML::FormatterToHTML(
     m_inScriptElemStack(theManager),
     m_escapeURLs(escapeURLs),
     m_isFirstElement(false),
-    m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
     m_elementLevel(0),
     m_hasNamespaceStack(theManager),
     m_omitMetaTag(omitMetaTag),
@@ -730,26 +729,23 @@ FormatterToHTML::writeCharacters(
 
             if (accumDefaultEntity(ch, true) == false)
             {
-                if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
+                if (0xd800 <= ch && ch < 0xdc00)
                 {
                     // UTF-16 surrogate
-                    XalanDOMChar    next = 0;
-
                     if (i + 1 >= theLength) 
                     {
                         throwInvalidUTF16SurrogateException(ch, getMemoryManager());
                     }
-                    else
+
+                    XalanUnicodeChar    next = theString[++i];
+
+                    if (!(0xdc00 <= next && next < 0xe000))
                     {
-                        next = theString[++i];
-
-                        if (!(0xdc00 <= next && next < 0xe000))
-                        {
-                            throwInvalidUTF16SurrogateException(ch, next, getMemoryManager());
-                        }
-
-                        next = XalanDOMChar(((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
+                        throwInvalidUTF16SurrogateException(ch, static_cast<XalanDOMChar>(next),
+                                                            getMemoryManager());
                     }
+
+                    next = ((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
 
                     writeNumberedEntityReference(next);
                 }

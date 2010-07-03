@@ -311,11 +311,6 @@ private:
     bool                    m_isFirstElement;
 
     /**
-     * A flag so we know whether or not we're writing utf-8.
-     */
-    bool                    m_isUTF8;
-
-    /**
      * A counter so we can tell if we're inside the document element.
      */
     int                     m_elementLevel;

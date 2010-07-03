@@ -1530,25 +1530,24 @@ FormatterToXML::writeNormalizedChars(
             else if (0xd800 <= c && c < 0xdc00)
             {
                 // UTF-16 surrogate
-                XalanDOMChar    next = 0;
-
                 if (i + 1 >= end) 
                 {
                     throwInvalidUTF16SurrogateException(c, getMemoryManager());
                 }
                 else
                 {
-                    next = ch[++i];
+                    XalanUnicodeChar    next = ch[++i];
 
                     if (!(0xdc00 <= next && next < 0xe000))
                     {
-                        throwInvalidUTF16SurrogateException(c, next, getMemoryManager());
+                        throwInvalidUTF16SurrogateException(c, static_cast<XalanDOMChar>(next),
+                                                            getMemoryManager());
                     }
 
-                    next = XalanDOMChar(((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
-                }
+                    next = ((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
 
-                writeNumberedEntityReference(next);
+                    writeNumberedEntityReference(next);
+                }
             }
             else
             {
@@ -1561,7 +1560,7 @@ FormatterToXML::writeNormalizedChars(
 
 
 void
-FormatterToXML::writeNumberedEntityReference(unsigned long  theNumber)
+FormatterToXML::writeNumberedEntityReference(XalanUnicodeChar   theNumber)
 {
     accumContent(XalanUnicode::charAmpersand);
     accumContent(XalanUnicode::charNumberSign);
