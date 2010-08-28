@@ -61,7 +61,8 @@ XObjectFactoryDefault::XObjectFactoryDefault(
     m_xnodesetCache(theManager),
     m_xstringCache(theManager),
     m_xbooleanFalse(false, theManager),
-    m_xbooleanTrue(true, theManager)
+    m_xbooleanTrue(true, theManager),
+    m_references(theManager)
 {
 }
 
@@ -470,8 +471,18 @@ XObjectFactoryDefault::createString(GetCachedString&    theValue)
 
 
 void
+XObjectFactoryDefault::holdReference(XObjectPtr    theValue)
+{
+    m_references.push_back(theValue);
+}
+
+
+
+void
 XObjectFactoryDefault::reset()
 {
+    m_references.clear();
+
     m_xstringAdapterAllocator.reset();
 
     m_xstringAllocator.reset();

@@ -148,10 +148,13 @@ FunctionNodeSet::execute(
     if (theType == XObject::eTypeResultTreeFrag ||
         (theType == XObject::eTypeString && m_convertString == true))
     {
-        return XObjectPtr(
-                    XalanDocumentFragmentXNodeSetBaseProxy::create(
-                        executionContext,
-                        args[0]));
+        const XObjectPtr    theResult(
+                        XalanDocumentFragmentXNodeSetBaseProxy::create(
+                            executionContext,
+                            args[0]));
+        executionContext.getXObjectFactory().holdReference(theResult);
+
+        return theResult;
     }
     else
     {

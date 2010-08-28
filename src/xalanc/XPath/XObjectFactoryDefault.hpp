@@ -154,6 +154,9 @@ public:
     virtual const XObjectPtr
     createUnknown(const XalanDOMString&     theValue);
 
+    virtual void
+    holdReference(XObjectPtr    theValue);
+
     typedef XalanVector<XObject*>       XObjectCollectionType;
     typedef XalanVector<XNumber*>       XNumberCacheType;
     typedef XalanVector<XNodeSet*>      XNodeSetCacheType;
@@ -211,6 +214,8 @@ private:
     XBoolean                        m_xbooleanFalse;
 
     XBoolean                        m_xbooleanTrue;
+
+    XalanVector<XObjectPtr>         m_references;
 };
 
 

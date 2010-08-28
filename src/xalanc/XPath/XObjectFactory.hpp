@@ -223,6 +223,17 @@ public:
     createUnknown(const XalanDOMString&     theValue) = 0;
 
     /**
+     * Hold a reference to an XObject instance until the
+     * factory is reset. This is needed in a very few cases
+     * when the object lifetime needs to extend after the
+     * execution of an XPath expression.
+     * 
+     * @param theValue  The XObjectPtr instance.
+     */
+    virtual void
+    holdReference(XObjectPtr    theValue) = 0;
+
+    /**
      *
      * A public functor for use with stl algorithms.
      *
