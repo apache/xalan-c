@@ -110,7 +110,7 @@ public:
 
 protected:
 
-    mutable MemoryManager&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 
     bool                    m_hasPreserveOrStripConditions;
 };

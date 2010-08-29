@@ -200,7 +200,7 @@ public:
 
 private:
 
-    mutable MemoryManager&  m_memoryManager;
+    MemoryManager&  m_memoryManager;
 };
 
 

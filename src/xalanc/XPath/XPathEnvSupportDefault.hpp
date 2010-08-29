@@ -277,7 +277,7 @@ private:
 
     NamespaceFunctionTablesType             m_externalFunctions;
 
-    mutable MemoryManager&                  m_memoryManager;
+    MemoryManager&                          m_memoryManager;
 
     PrintWriter*                            m_pw;
 
