@@ -55,7 +55,7 @@ class XPathEnvSupport;
 
 
 /**
- * Class to represent a qualified name: "The name of an internal XSLT object, 
+ * Class to represent a qualified name. The name of an internal XSLT object, 
  * specifically a named template (see [7 Named Templates]), a mode (see [6.7 Modes]), 
  * an attribute set (see [8.1.4 Named Attribute Sets]), a key (see [14.2 Keys]), 
  * a locale (see [14.3 Number Formatting]), a variable or a parameter (see 
@@ -64,7 +64,7 @@ class XPathEnvSupport;
  * in effect on the attribute in which the name occurs. The expanded name 
  * consisting of the local part of the name and the possibly null URI reference 
  * is used as the name of the object. The default namespace is not used for 
- * unprefixed names."
+ * unprefixed names.
  */
 
 class XALAN_XPATH_EXPORT XalanQName
