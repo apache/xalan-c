@@ -32,7 +32,7 @@ CreateXPath(
             const char*                 theXPathExpression,
             XalanXPathHandle*           theXPathHandle)
 {
-    int                 theResult = 0;
+    int     theResult = 0;
 
     assert(theXalanHandle);
     assert(theXPathHandle);
@@ -54,13 +54,13 @@ DestroyXPath(
             XalanXPathEvaluatorHandle   theXalanHandle,
             XalanXPathHandle            theXPathHandle)
 {
-    int                 theResult = 0;
+    int     theResult = 0;
 
     theResult = XalanDestroyXPath(theXalanHandle, theXPathHandle);
 
     if (theResult != XALAN_XPATH_API_SUCCESS)
     {
-        fprintf(stderr, "Error creating XPath.  Error code was %d.\n", theResult);
+        fprintf(stderr, "Error destroying XPath.  Error code was %d.\n", theResult);
     }
 
     return theResult;
@@ -71,7 +71,7 @@ DestroyXPath(
 char*
 ReadFile(const char*    theXMLFileName)
 {
-    char*   theBuffer = 0;
+    char*   theBuffer = NULL;
     FILE*   theFile = fopen(theXMLFileName, "rb");
 
     if (theFile == 0)
@@ -83,7 +83,7 @@ ReadFile(const char*    theXMLFileName)
         fseek(theFile, 0, SEEK_END);
 
         {
-            const int   theSize = ftell(theFile);
+            const long  theSize = ftell(theFile);
 
             if (theSize == -1)
             {
