@@ -83,7 +83,7 @@ public:
 #if defined(XALAN_NO_STD_NAMESPACE)
     struct DeleteXPathFunctor : public unary_function<const XPath*, void>
 #else
-    struct DeleteXPathFunctor : public std::unary_function<const XPath*, void>
+    struct DeleteXPathFunctor : public std::unary_function<const XPath*, bool>
 #endif
     {
     public:
@@ -101,12 +101,12 @@ public:
         {
             if (m_fInReset == true)
             {
-                m_factoryInstance.doReturnObject(theXPath,
-                                                 true);
+                return m_factoryInstance.doReturnObject(theXPath,
+                                                        true);
             }
             else
             {
-                m_factoryInstance.returnObject(theXPath);
+                return m_factoryInstance.returnObject(theXPath);
             }
         }
 

@@ -125,7 +125,7 @@ struct DeleteFunctor : public std::unary_function<const Type*, void>
     result_type
     operator()(argument_type    thePointer) const
     {
-        makeXalanDestroyFunctor(thePointer)(thePointer, m_memoryManager);
+        return makeXalanDestroyFunctor(thePointer)(thePointer, m_memoryManager);
     }
 
 private:
@@ -243,7 +243,7 @@ struct ClearFunctor : public std::unary_function<Type, void>
     result_type
     operator()(argument_type&   theArg) const
     {
-        theArg.clear();
+        return theArg.clear();
     }
 };
 
@@ -282,7 +282,7 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
     result_type
     operator()(argument_type    thePair) const
     {
-        makeXalanDestroyFunctor(thePair.second)(thePair.second, m_memoryManager);
+        return makeXalanDestroyFunctor(thePair.second)(thePair.second, m_memoryManager);
     }
 
 private:

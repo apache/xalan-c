@@ -241,7 +241,7 @@ public:
 #if defined(XALAN_NO_STD_NAMESPACE)
     struct DeleteXObjectFunctor : public unary_function<XObject*, void>
 #else
-    struct DeleteXObjectFunctor : public std::unary_function<XObject*, void>
+    struct DeleteXObjectFunctor : public std::unary_function<XObject*, bool>
 #endif
     {
     public:
@@ -259,13 +259,13 @@ public:
         {
             if (m_fInReset == true)
             {
-                m_factoryInstance.doReturnObject(
-                    theXObject,
-                    true);
+                return m_factoryInstance.doReturnObject(
+                        theXObject,
+                        true);
             }
             else
             {
-                m_factoryInstance.returnObject(theXObject);
+                return m_factoryInstance.returnObject(theXObject);
             }
         }
 
