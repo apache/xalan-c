@@ -152,6 +152,8 @@ private:
     KeysMapType                         m_keys;
 
     static const MutableNodeRefList     s_dummyList;
+
+    KeyDeclarationVectorType m_allKeys;
 };
 
 

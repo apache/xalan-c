@@ -66,6 +66,8 @@ KeyTable::KeyTable(
 {
     XalanNode*  pos = startNode;
 
+	m_allKeys=keyDeclarations;
+
     const KeyDeclarationVectorType::size_type   nDeclarations =
             keyDeclarations.size();
 
@@ -251,6 +253,17 @@ KeyTable::getNodeSetByKey(
         else
         {
             return &s_dummyList;
+        }
+    }
+    else
+    {
+        size_type nDeclarations=m_allKeys.size();
+        for (KeyDeclarationVectorType::size_type i = 0; i < nDeclarations; ++i)
+        {
+            if (*m_allKeys[i].getQName()==qname)
+            {
+                return &s_dummyList;
+            }
         }
     }
 
