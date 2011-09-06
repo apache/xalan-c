@@ -80,7 +80,7 @@
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="Xalan-C_1D.lib"
+				ImportLibrary="$(TargetDir)\Xalan-C_1D.lib"
 				TargetMachine="1"
 			/>
 			<Tool
