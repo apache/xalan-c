@@ -116,7 +116,7 @@ public:
             const value_type*   theChars,
             size_type           theLength)
     {
-        if (theLength > sizeof(m_buffer))
+        if (theLength > kBufferSize)
         {
             flushBuffer();
     
