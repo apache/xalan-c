@@ -15,10 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #if !defined(XALANTRANSFORMER_HEADER_GUARD)
 #define XALANTRANSFORMER_HEADER_GUARD
-
-
 
 // Base include file.  Must be first.
 #include <xalanc/XalanTransformer/XalanTransformerDefinitions.hpp>
@@ -37,7 +36,10 @@ class ostream;
 
 #include <xalanc/Include/XalanVector.hpp>
 
-
+#include <xalanc/XalanDOM/XalanNode.hpp>
+#include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/XSLT/XalanParamHolder.hpp>
+#include <xalanc/XPath/XObjectFactoryDefault.hpp>
 
 #include <xalanc/XPath/XalanQNameByValue.hpp>
 
@@ -77,7 +79,8 @@ class XalanCompiledStylesheet;
 class XalanParsedSource;
 class XalanTransformerOutputStream;
 
-
+class XObjectFactoryDefault;
+class XalanNode;
 
 /**
  * This is a simple C++ interface for some common usage patterns. It's 
@@ -95,6 +98,14 @@ public:
 #else
     typedef std::ostream    StreamType;
 #endif
+
+    typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
+    typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;
+
+    typedef XalanMap<XalanDOMString, XalanParamHolder>    ParamMapType;
+
+    typedef XalanMap<XalanQNameByValue, Function*>  FunctionMapType;
+    typedef XalanVector<TraceListener*>             TraceListenerVectorType;
 
     XalanTransformer(MemoryManager&     theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
@@ -481,19 +492,16 @@ public:
             const XalanDOMString&   functionName);
 
     /**
-     * Set a top-level parameter, which the stylesheet can access
-     * with a top-level xsl:param.  Top-level params are "sticky,"
-     * and must be removed with a call to clearStylesheetParams().
-     *
-     * @param key name of the param
-     * @param expression expression that will be evaluated
+     * Retrieve the factory object for creating XObjects.
+     * 
+     * @return factory object instance
      */
-    void
-    setStylesheetParam(
-            const XalanDOMString&   qname,
-            const XalanDOMString&   expression)
+    XObjectFactory&
+    getXObjectFactory() const
     {
-        m_params[qname] = expression;
+        assert(m_topXObjectFactory != 0);
+
+        return *m_topXObjectFactory;
     }
 
     /**
@@ -506,8 +514,99 @@ public:
      */
     void
     setStylesheetParam(
-            const char*     qname,
+            const XalanDOMString&   key,
+            const XalanDOMString&   expression);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param expression expression that will be evaluated
+     */
+    void
+    setStylesheetParam(
+            const char*     key,
             const char*     expression);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param number value to be evaluated
+     */
+    void
+    setStylesheetParam(
+            const char*     key,
+            double          number);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param number value to be evaluated
+     */
+    void
+    setStylesheetParam(
+            const XalanDOMString&       key,
+            double                      number);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param nodeset XML nodeset that will be evaulated
+     */
+    void
+    setStylesheetParam(
+            const char*               key,
+            XalanNode*          nodeset);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param nodeset XML nodeset that will be evaluated
+     */
+    void
+    setStylesheetParam(
+            const XalanDOMString&     key,
+            XalanNode*          nodeset);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param object any XObject owned by the transformer
+     */
+    void
+    setStylesheetParam(
+            const char*               key,
+            XObjectPtr                object);
+
+    /**
+     * Set a top-level parameter, which the stylesheet can access
+     * with a top-level xsl:param.  Top-level params are "sticky,"
+     * and must be removed with a call to clearStylesheetParams().
+     *
+     * @param key name of the param
+     * @param object any XObject owned by the transformer
+     */
+    void
+    setStylesheetParam(
+            const XalanDOMString&     key,
+            XObjectPtr                object);
 
     /**
      * Clear any stylesheet params.
@@ -516,6 +615,7 @@ public:
     clearStylesheetParams()
     {
         m_params.clear();
+        m_topXObjectFactory->reset();
     }
 
     /**
@@ -926,14 +1026,6 @@ public:
     bool
     getICUAvailable() const;
 
-    typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
-    typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;
-
-    typedef XalanMap<XalanDOMString, XalanDOMString>    ParamMapType;
-
-    typedef XalanMap<XalanQNameByValue, Function*>  FunctionMapType;
-    typedef XalanVector<TraceListener*>             TraceListenerVectorType;
-
     class EnsureFunctionsInstallation
     {
     public:
@@ -1101,6 +1193,8 @@ private:
     XalanDOMString                          m_outputEncoding;
 
     bool                                    m_poolAllTextNodes;
+
+    XObjectFactoryDefault*                  m_topXObjectFactory;
 
     // This should always be the latest data member!!!
     StylesheetExecutionContextDefault*      m_stylesheetExecutionContext;

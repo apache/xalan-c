@@ -17,8 +17,6 @@
  */
 #include "XalanTransformer.hpp"
 
-
-
 #include <algorithm>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
@@ -127,6 +125,7 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
     m_warningStream(&std::cerr),
 #endif
     m_outputEncoding(m_memoryManager),
+    m_topXObjectFactory(XObjectFactoryDefault::create(m_memoryManager)),
     m_stylesheetExecutionContext(StylesheetExecutionContextDefault::create(m_memoryManager))
 {
 #if defined(XALAN_USE_ICU)
@@ -148,6 +147,9 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
 
 XalanTransformer::~XalanTransformer()
 {
+    // Clean up Top-Level Parameters
+    clearStylesheetParams();
+
     XALAN_USING_STD(for_each)
 
     // Clean up the XalanCompiledStylesheet vector.
@@ -861,7 +863,32 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*  theParsedSource)
     }
 }
 
+void
+XalanTransformer::setStylesheetParam(
+            const XalanDOMString&    qname,
+            const XalanDOMString&    expression)
+{
+    m_params[qname].m_expression = expression;
+}
 
+void
+XalanTransformer::setStylesheetParam(
+            const XalanDOMString&    qname,
+            XObjectPtr               object)
+{
+    m_params[qname].m_value = object;
+}
+
+
+void
+XalanTransformer::setStylesheetParam(
+            const char*      qname,
+            XObjectPtr       object)
+{
+    setStylesheetParam(
+        XalanDOMString(qname, m_memoryManager),
+        object);
+}
 
 void
 XalanTransformer::setStylesheetParam(
@@ -869,15 +896,49 @@ XalanTransformer::setStylesheetParam(
             const char*     expression)
 {
     setStylesheetParam(
-        XalanDOMString(
-            qname,
-            m_memoryManager),
-        XalanDOMString(
-            expression,
-            m_memoryManager));
+        XalanDOMString(qname, m_memoryManager),
+        XalanDOMString(expression, m_memoryManager));
 }
 
+void
+XalanTransformer::setStylesheetParam(
+            const char*     qname,
+            double          number)
+{
+    setStylesheetParam(
+        XalanDOMString(qname, m_memoryManager),
+        m_topXObjectFactory->createNumber(number));
+}
 
+void
+XalanTransformer::setStylesheetParam(
+            const XalanDOMString&   qname,
+            double                  number)
+{
+    setStylesheetParam(
+        qname,
+        m_topXObjectFactory->createNumber(number));
+}
+
+void
+XalanTransformer::setStylesheetParam(
+            const char*             qname,
+            XalanNode*        nodeset)
+{
+    setStylesheetParam(
+        XalanDOMString(qname, m_memoryManager),
+        m_topXObjectFactory->createNodeSet(nodeset));
+}
+
+void
+XalanTransformer::setStylesheetParam(
+            const XalanDOMString&   qname,
+            XalanNode*        nodeset)
+{
+    setStylesheetParam(
+        qname,
+        m_topXObjectFactory->createNodeSet(nodeset));
+}
 
 bool
 XalanTransformer::removeTraceListener(TraceListener*    theTraceListener)
@@ -1044,7 +1105,6 @@ XalanTransformer::getEscapeURLs() const
 }
 
 
-
 void
 XalanTransformer::setEscapeURLs(eEscapeURLs     value)
 {
@@ -1147,7 +1207,21 @@ XalanTransformer::reset()
 
         m_stylesheetExecutionContext->reset();
 
-        clearStylesheetParams();
+// JIRA-451 Preserve top-level parameters across reset()
+// The reset() is done to prepare for a new transformation
+// by reusing the m_stylesheetExecutionContext.
+//
+// Absense of clearStylesheetParams() makes the top-level params
+// sticky across transformations. The clearStylesheetParams()
+// purges the top-level parameters from the XalanTransformer
+// instance.
+//
+// Presence of clearStylesheetParams() will require the application
+// to submit a new set of top-level parameters to the XalanTransformer
+// if needed for the next doTransform() operation.
+//
+//      clearStylesheetParams();
+
     }
     catch(...)
     {
@@ -1276,9 +1350,19 @@ XalanTransformer::doTransform(
                     i != m_params.end();
                         ++i)
             {
-                theProcessor.setStylesheetParam(
-                        (*i).first,
-                        (*i).second);
+                const XalanDOMString&      theName = (*i).first;
+                const XalanParamHolder&    theCurrent= (*i).second;
+                const XalanDOMString&      theExpression = theCurrent.m_expression;
+                XObjectPtr                 theObject = theCurrent.m_value;
+
+                if (theExpression.length() > 0)
+                {
+                    theProcessor.setStylesheetParam(theName, theExpression);
+                }
+                else
+                {
+                    theProcessor.setStylesheetParam(theName, theObject);
+                }
             }
         }
 
