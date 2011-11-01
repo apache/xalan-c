@@ -1626,7 +1626,7 @@ XSLTEngineImpl::characters(
     assert(getFormatterListenerImpl() != 0);
     assert(ch != 0);
     assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
-    assert(length != 0);
+//    assert(length != 0);
 
     doFlushPending();
 
@@ -1975,7 +1975,7 @@ XSLTEngineImpl::cloneToResultTree(
         m_executionContext->shouldStripSourceNode(node) == false)
     {
         const XalanDOMString&   data = node.getData();
-        assert(data.empty() == false);
+//        assert(data.empty() == false);
 
         characters(data.c_str(), 0, data.length());
     }

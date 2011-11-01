@@ -900,7 +900,11 @@ StylesheetRoot::internalShouldStripSourceNode(const XalanText&  textNode) const
         hasPreserveOrStripSpaceElements() == true);
 
     const XalanNode* const  parent = textNode.getParentNode();
-    assert(parent != 0);
+
+//  assert(parent != 0);
+//  Constructed nodesets may not have parents - see xalan:nodeset()
+    if (parent == 0)
+        return false;
 
     if (parent->getNodeType() == XalanNode::ELEMENT_NODE)
     {

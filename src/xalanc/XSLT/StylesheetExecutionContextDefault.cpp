@@ -2263,7 +2263,7 @@ bool
 StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanText&   node)
 {
     assert(m_stylesheetRoot != 0);
-    assert(node.getData().length() != 0);
+//    assert(node.getData().length() != 0);
 
     return m_stylesheetRoot->shouldStripSourceNode(node);
 }
