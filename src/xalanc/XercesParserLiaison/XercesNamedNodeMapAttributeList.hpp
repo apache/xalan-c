@@ -83,7 +83,7 @@ private:
     // Data members...
     const DOMNamedNodeMapType* const    m_nodeMap;
 
-    const XalanSize_t                   m_lastIndex;
+    const XalanSize_t                   m_attrCount;
 
     static const XMLCh  s_typeString[];
 };
