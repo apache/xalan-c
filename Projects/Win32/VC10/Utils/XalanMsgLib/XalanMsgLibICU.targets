@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="XLF_rule">
+      <Targets>_XLF_rule</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="TXT_rule">
+      <Targets>_TXT_rule</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="RES_rule">
+      <Targets>_RES_rule</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="LST_rule">
+      <Targets>_LST_rule</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="XLF_rule"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="TXT_rule"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="RES_rule"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="LST_rule"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_XLF_rule"
+    BeforeTargets="$(XLF_ruleBeforeTargets)"
+    AfterTargets="$(XLF_ruleAfterTargets)"
+    Condition="'@(XLF_rule)' != ''"
+    DependsOnTargets="$(XLF_ruleDependsOn);ComputeXLF_ruleOutput"
+    Outputs="@(XLF_rule-&gt;Metadata('Outputs')-&gt;Distinct())"
+    Inputs="@(XLF_rule);%(XLF_rule.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <XLF_rule
+        Remove="@(XLF_rule)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <XLF_rule_tlog
+        Include="%(XLF_rule.Outputs)"
+        Condition="'%(XLF_rule.Outputs)' != '' and '%(XLF_rule.ExcludedFromBuild)' != 'true'">
+        <Source>@(XLF_rule, '|')</Source>
+      </XLF_rule_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(XLF_rule.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(XLF_rule_tlog)' != '' and '%(XLF_rule_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(XLF_rule_tlog.Source);@(XLF_rule_tlog-&gt;'%(Fullpath)')" />
+    <XLF_rule
+      Condition="'@(XLF_rule)' != '' and '%(XLF_rule.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(XLF_rule.CommandLineTemplate)"
+      AdditionalOptions="%(XLF_rule.AdditionalOptions)"
+      Inputs="@(XLF_rule)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeXLF_ruleOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeXLF_ruleOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeXLF_ruleOutput"
+    Condition="'@(XLF_rule)' != ''">
+    <ItemGroup>
+      <XLF_ruleDirsToMake
+        Condition="'@(XLF_rule)' != '' and '%(XLF_rule.ExcludedFromBuild)' != 'true'"
+        Include="%(XLF_rule.Outputs)" />
+      <Link
+        Include="%(XLF_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(XLF_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(XLF_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(XLF_ruleDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_TXT_rule"
+    BeforeTargets="$(TXT_ruleBeforeTargets)"
+    AfterTargets="$(TXT_ruleAfterTargets)"
+    Condition="'@(TXT_rule)' != ''"
+    DependsOnTargets="$(TXT_ruleDependsOn);ComputeTXT_ruleOutput"
+    Outputs="@(TXT_rule-&gt;Metadata('Outputs')-&gt;Distinct())"
+    Inputs="@(TXT_rule);%(TXT_rule.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <TXT_rule
+        Remove="@(TXT_rule)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <TXT_rule_tlog
+        Include="%(TXT_rule.Outputs)"
+        Condition="'%(TXT_rule.Outputs)' != '' and '%(TXT_rule.ExcludedFromBuild)' != 'true'">
+        <Source>@(TXT_rule, '|')</Source>
+      </TXT_rule_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(TXT_rule.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(TXT_rule_tlog)' != '' and '%(TXT_rule_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(TXT_rule_tlog.Source);@(TXT_rule_tlog-&gt;'%(Fullpath)')" />
+    <TXT_rule
+      Condition="'@(TXT_rule)' != '' and '%(TXT_rule.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(TXT_rule.CommandLineTemplate)"
+      AdditionalOptions="%(TXT_rule.AdditionalOptions)"
+      Inputs="@(TXT_rule)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeTXT_ruleOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeTXT_ruleOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeTXT_ruleOutput"
+    Condition="'@(TXT_rule)' != ''">
+    <ItemGroup>
+      <TXT_ruleDirsToMake
+        Condition="'@(TXT_rule)' != '' and '%(TXT_rule.ExcludedFromBuild)' != 'true'"
+        Include="%(TXT_rule.Outputs)" />
+      <Link
+        Include="%(TXT_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(TXT_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(TXT_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(TXT_ruleDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_RES_rule"
+    BeforeTargets="$(RES_ruleBeforeTargets)"
+    AfterTargets="$(RES_ruleAfterTargets)"
+    Condition="'@(RES_rule)' != ''"
+    DependsOnTargets="$(RES_ruleDependsOn);ComputeRES_ruleOutput"
+    Outputs="%(RES_rule.Outputs)"
+    Inputs="%(RES_rule.Identity);%(RES_rule.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <RES_rule
+        Remove="@(RES_rule)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <RES_rule_tlog
+        Include="%(RES_rule.Outputs)"
+        Condition="'%(RES_rule.Outputs)' != '' and '%(RES_rule.ExcludedFromBuild)' != 'true'">
+        <Source>@(RES_rule, '|')</Source>
+      </RES_rule_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(RES_rule.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(RES_rule_tlog)' != '' and '%(RES_rule_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(RES_rule_tlog.Source);@(RES_rule_tlog-&gt;'%(Fullpath)')" />
+    <RES_rule
+      Condition="'@(RES_rule)' != '' and '%(RES_rule.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(RES_rule.CommandLineTemplate)"
+      AdditionalOptions="%(RES_rule.AdditionalOptions)"
+      Inputs="%(RES_rule.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeRES_ruleOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeRES_ruleOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeRES_ruleOutput"
+    Condition="'@(RES_rule)' != ''">
+    <ItemGroup>
+      <RES_ruleDirsToMake
+        Condition="'@(RES_rule)' != '' and '%(RES_rule.ExcludedFromBuild)' != 'true'"
+        Include="%(RES_rule.Outputs)" />
+      <Link
+        Include="%(RES_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(RES_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(RES_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(RES_ruleDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_LST_rule"
+    BeforeTargets="$(LST_ruleBeforeTargets)"
+    AfterTargets="$(LST_ruleAfterTargets)"
+    Condition="'@(LST_rule)' != ''"
+    DependsOnTargets="$(LST_ruleDependsOn);ComputeLST_ruleOutput"
+    Outputs="@(LST_rule-&gt;Metadata('Outputs')-&gt;Distinct())"
+    Inputs="@(LST_rule);%(LST_rule.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <LST_rule
+        Remove="@(LST_rule)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <LST_rule_tlog
+        Include="%(LST_rule.Outputs)"
+        Condition="'%(LST_rule.Outputs)' != '' and '%(LST_rule.ExcludedFromBuild)' != 'true'">
+        <Source>@(LST_rule, '|')</Source>
+      </LST_rule_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(LST_rule.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(LST_rule_tlog)' != '' and '%(LST_rule_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(LST_rule_tlog.Source);@(LST_rule_tlog-&gt;'%(Fullpath)')" />
+    <LST_rule
+      Condition="'@(LST_rule)' != '' and '%(LST_rule.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(LST_rule.CommandLineTemplate)"
+      AdditionalOptions="%(LST_rule.AdditionalOptions)"
+      Inputs="@(LST_rule)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeLST_ruleOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeLST_ruleOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeLST_ruleOutput"
+    Condition="'@(LST_rule)' != ''">
+    <ItemGroup>
+      <LST_ruleDirsToMake
+        Condition="'@(LST_rule)' != '' and '%(LST_rule.ExcludedFromBuild)' != 'true'"
+        Include="%(LST_rule.Outputs)" />
+      <Link
+        Include="%(LST_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(LST_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(LST_ruleDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(LST_ruleDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>

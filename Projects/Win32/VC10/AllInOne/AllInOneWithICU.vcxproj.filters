@@ -1,0 +1,2388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{33df3afe-f33a-41bb-9376-bb021c3d8fcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XalanDOM">
+      <UniqueIdentifier>{6acbb5aa-04a1-4c0f-9f15-1c033690ab6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="PlatformSupport">
+      <UniqueIdentifier>{7eabf6ba-7231-4b56-b716-762fe5787cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DOMSupport">
+      <UniqueIdentifier>{6f487667-73c3-41ab-819c-a9bcf6640f7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XPath">
+      <UniqueIdentifier>{4dc8ba8c-e93c-4afc-8611-5c7f7b31f3f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XPathCAPI">
+      <UniqueIdentifier>{31862955-4de0-4a0a-85a6-8f60fee33e74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XMLSupport">
+      <UniqueIdentifier>{23dc806d-86f1-4cb7-9a76-d69ff4ed6e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XercesParserLiaison">
+      <UniqueIdentifier>{b57cf2b0-2d02-4090-9ce8-5d9a48d78c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XalanSourceTree">
+      <UniqueIdentifier>{a4c2fe43-2815-4c7d-b46d-cc9cb190be69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XSLT">
+      <UniqueIdentifier>{4a48b6de-d754-4192-aef8-42c777eba4b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XalanExtensions">
+      <UniqueIdentifier>{9a291acf-c71c-48b5-a48a-05b4346715d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XalanEXSLT">
+      <UniqueIdentifier>{98a459eb-cc92-4fec-9a79-0e8b6de70c12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XalanTransformer">
+      <UniqueIdentifier>{5a9aed63-45b1-43cc-94ad-d115fc08b514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Harness">
+      <UniqueIdentifier>{cc261424-337a-4237-8840-ac62e3850a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ICUBridge">
+      <UniqueIdentifier>{bdab164a-1dc5-4cca-9259-579256d77402}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\PlatformDefinitions.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\STLHelper.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\VCPPDefinitions.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanDeque.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanList.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMap.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanSet.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVector.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVersion.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDATASection.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanComment.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocument.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMDefinitions.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanElement.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntity.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNode.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNotation.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanText.hpp">
+      <Filter>XalanDOM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Res\AllInOne\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlockBase.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntry.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntryExtended.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DirectoryEnumerator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportDefinitions.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaBlock.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\URISupport.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\Writer.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanArrayAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanCollationServices.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanICUMessageLoader.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNamespace.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUnicode.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XSLException.hpp">
+      <Filter>PlatformSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMServices.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupport.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefinitions.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\TreeWalker.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.hpp">
+      <Filter>DOMSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\Function.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionConcat.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionContains.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionID.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionLang.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionStartsWith.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionString.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstring.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionTranslate.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\MutableNodeRefList.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NameSpace.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NodeRefList.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NodeRefListBase.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQName.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByReference.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValue.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanXPathException.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XBoolean.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSet.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetBase.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumber.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumberAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumberBase.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObject.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectFactory.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPath.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContext.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathDefinitions.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupport.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEvaluator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContext.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExpression.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactory.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFunctionTable.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathInit.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathParserException.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathProcessor.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XString.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAdapter.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringBase.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringCached.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringReference.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XToken.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XUnknown.hpp">
+      <Filter>XPath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.h">
+      <Filter>XPathCAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToText.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanDummyIndentWriter.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanIndentWriter.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanOtherEncodingWriter.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportDefinitions.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.hpp">
+      <Filter>XMLSupport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDefinitions.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVT.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPart.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPartSimple.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPartXPath.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\Constants.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\CountersTable.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\DecimalToRoman.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemApplyImport.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemAttribute.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemChoose.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemComment.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCopy.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCopyOf.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemElement.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemEmpty.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemFallback.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemForEach.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemIf.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemMessage.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemNumber.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemOtherwise.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemParam.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemPI.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemSort.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTemplate.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemText.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemUse.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemValueOf.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemVariable.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemWhen.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemWithParam.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionCurrent.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionDocument.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionKey.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\GenerateEvent.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\KeyDeclaration.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\KeyTable.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NamespacesHandler.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NodeSorter.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NodeSortKey.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\OutputContextStack.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ProblemListener.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\SelectionEvent.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\Stylesheet.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetHandler.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetRoot.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TopLevelArg.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TraceListener.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TracerEvent.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\VariablesStack.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanParamHolder.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTDefinitions.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTInit.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTInputSource.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessor.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.hpp">
+      <Filter>XSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensionsDefinitions.hpp">
+      <Filter>XalanExtensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommonImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTimeImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamicImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMathImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSetImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTStringImpl.hpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.h">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheet.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDocumentBuilder.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerDefinitions.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.hpp">
+      <Filter>XalanTransformer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.hpp">
+      <Filter>Harness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanFileUtility.hpp">
+      <Filter>Harness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanHarnessDefinitions.hpp">
+      <Filter>Harness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.hpp">
+      <Filter>Harness</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridge.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeDefinitions.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.hpp">
+      <Filter>ICUBridge</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDataSection.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanComment.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocument.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanElement.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntity.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNode.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanText.cpp">
+      <Filter>XalanDOM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\URISupport.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\Writer.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanICUMessageLoader.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XSLException.cpp">
+      <Filter>PlatformSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMServices.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupport.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\TreeWalker.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.cpp">
+      <Filter>DOMSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\Function.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionConcat.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionContains.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionID.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionLang.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionStartsWith.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionString.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstring.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionTranslate.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\MutableNodeRefList.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\NodeRefList.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\NodeRefListBase.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQName.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByReference.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValue.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanXPathException.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XBoolean.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSet.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetBase.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumber.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumberAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumberBase.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObject.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectFactory.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPath.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContext.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupport.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEvaluator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContext.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExpression.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactory.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFunctionTable.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathInit.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathParserException.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathProcessor.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XString.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAdapter.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringBase.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringCached.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringReference.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XToken.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XUnknown.cpp">
+      <Filter>XPath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.cpp">
+      <Filter>XPathCAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToText.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.cpp">
+      <Filter>XMLSupport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp">
+      <Filter>XercesParserLiaison</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp">
+      <Filter>XalanSourceTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVT.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPart.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPartSimple.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPartXPath.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\Constants.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\CountersTable.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemApplyImport.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemAttribute.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemChoose.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemComment.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCopy.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCopyOf.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemElement.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemEmpty.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemFallback.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemForEach.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemIf.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemMessage.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemNumber.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemOtherwise.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemParam.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemPI.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemSort.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTemplate.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemText.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemUse.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemValueOf.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemVariable.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemWhen.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemWithParam.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionCurrent.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionDocument.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionKey.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\GenerateEvent.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\KeyTable.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NamespacesHandler.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NodeSorter.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NodeSortKey.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\OutputContextStack.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ProblemListener.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\SelectionEvent.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\Stylesheet.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetHandler.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetRoot.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TopLevelArg.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TraceListener.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TracerEvent.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\VariablesStack.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTInit.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTInputSource.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessor.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.cpp">
+      <Filter>XSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.cpp">
+      <Filter>XalanExtensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.cpp">
+      <Filter>XalanEXSLT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.cpp">
+      <Filter>XalanTransformer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.cpp">
+      <Filter>Harness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanFileUtility.cpp">
+      <Filter>Harness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.cpp">
+      <Filter>Harness</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridge.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.cpp">
+      <Filter>ICUBridge</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Res\AllInOne\AllInOne.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

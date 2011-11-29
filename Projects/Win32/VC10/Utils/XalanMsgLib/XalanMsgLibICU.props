@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(XLF_ruleBeforeTargets)' == '' and '$(XLF_ruleAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <XLF_ruleBeforeTargets>Midl</XLF_ruleBeforeTargets>
+    <XLF_ruleAfterTargets>CustomBuild</XLF_ruleAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <XLF_ruleDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(XLF_ruleDependsOn)</XLF_ruleDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <XLF_rule>
+      <CommandLineTemplate>$(OutDir)MsgCreator  [inputs] -TYPE icu -LOCALE en_US -OUTDIR $(OutDir)Nls\Include</CommandLineTemplate>
+      <Outputs>$(OutDir)Nls\Include\en_US.txt; $(OutDir)Nls\Include\LocalMsgIndex.hpp</Outputs>
+      <ExecutionDescription>Processing XLIFF file</ExecutionDescription>
+    </XLF_rule>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(TXT_ruleBeforeTargets)' == '' and '$(TXT_ruleAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <TXT_ruleBeforeTargets>Midl</TXT_ruleBeforeTargets>
+    <TXT_ruleAfterTargets>CustomBuild</TXT_ruleAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TXT_ruleDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(TXT_ruleDependsOn)</TXT_ruleDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <TXT_rule>
+      <CommandLineTemplate>$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_11 --destdir $(IntDir)  $(OutDir)Nls\Include\en_US.txt</CommandLineTemplate>
+      <Outputs>$(IntDir)XalanMessages_1_11_en_US.res</Outputs>
+      <ExecutionDescription>Processing ICU resource file</ExecutionDescription>
+    </TXT_rule>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(RES_ruleBeforeTargets)' == '' and '$(RES_ruleAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <RES_ruleBeforeTargets>Midl</RES_ruleBeforeTargets>
+    <RES_ruleAfterTargets>CustomBuild</RES_ruleAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RES_ruleDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(RES_ruleDependsOn)</RES_ruleDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <RES_rule>
+      <CommandLineTemplate>echo $(IntDir)%(Filename).res &gt;$(IntDir)%(Filename).lst</CommandLineTemplate>
+      <Outputs>$(IntDir)%(Filename).lst</Outputs>
+      <ExecutionDescription>Creating resource list</ExecutionDescription>
+    </RES_rule>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(LST_ruleBeforeTargets)' == '' and '$(LST_ruleAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <LST_ruleBeforeTargets>Midl</LST_ruleBeforeTargets>
+    <LST_ruleAfterTargets>CustomBuild</LST_ruleAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LST_ruleDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(LST_ruleDependsOn)</LST_ruleDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <LST_rule>
+      <CommandLineTemplate>$(ICUROOT)\bin\pkgdata --name XalanMessages_1_11 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(IntDir)%(Filename).lst</CommandLineTemplate>
+      <Outputs>$(OutDir)XalanMessages_1_11.dll,$(OutDir)XalanMessages_1_11.lib,$(OutDir)XalanMessages_1_11.dat,$(OutDir)XalanMessages_1_11.exp</Outputs>
+      <ExecutionDescription>Building resource DLL</ExecutionDescription>
+    </LST_rule>
+  </ItemDefinitionGroup>
+</Project>

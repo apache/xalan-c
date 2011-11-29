@@ -1,0 +1,1316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug with ICU|Win32">
+      <Configuration>Debug with ICU</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug with ICU|x64">
+      <Configuration>Debug with ICU</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release with ICU|Win32">
+      <Configuration>Release with ICU</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release with ICU|x64">
+      <Configuration>Release with ICU</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E1D6306E-4FF8-474A-BE7F-45DCBA4888B6}</ProjectGuid>
+    <RootNamespace>AllInOne</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\Build\Win32\VC10\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\..\Build\Win64\VC10\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\Build\Win32\VC10\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\..\Build\Win64\VC10\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">..\..\..\..\Build\Win32\VC10\Release.ICU\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">..\..\..\..\Build\Win64\VC10\Release.ICU\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">..\..\..\..\Build\Win32\VC10\Debug.ICU\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">..\..\..\..\Build\Win64\VC10\Debug.ICU\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">$(OutDir)$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">true</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1D.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1D.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;$(ICUROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;XALAN_USE_ICU;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;$(ICUROOT64)\include;$(ICUROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;XALAN_USE_ICU;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;$(ICUROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;XALAN_USE_ICU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3D.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1D.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src\;$(OutDir)Nls\Include;$(ICUROOT64)\include;$(ICUROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XALAN_BUILD_DLL;XALAN_INMEM_MSG_LOADER;XALAN_USE_ICU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>xerces-c_3D.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(TargetDir)\Xalan-C_1D.lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\PlatformDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\STLHelper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\VCPPDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanDeque.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMap.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanSet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVector.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVersion.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDATASection.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanComment.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocument.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanElement.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntity.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNode.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanNotation.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanText.hpp" />
+    <ClInclude Include="..\..\Res\AllInOne\resource.h" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlockBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntry.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntryExtended.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DirectoryEnumerator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaBlock.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\URISupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\Writer.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanArrayAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanCollationServices.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanInMemoryMessageLoader.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNamespace.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUnicode.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\PlatformSupport\XSLException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMServices.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\TreeWalker.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\Function.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionConcat.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionContains.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionID.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionLang.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionStartsWith.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionString.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstring.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\FunctionTranslate.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\MutableNodeRefList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NameSpace.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NodeRefList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\NodeRefListBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQName.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByReference.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValue.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XalanXPathException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XBoolean.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumber.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumberAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XNumberBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObject.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectFactory.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPath.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContext.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathEvaluator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContext.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathExpression.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactory.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathFunctionTable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathParserException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathProcessor.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XString.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAdapter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringCached.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringReference.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XToken.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPath\XUnknown.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.h" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToText.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXMLUnicode.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanDummyIndentWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanFormatterWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanIndentWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanOtherEncodingWriter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVT.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPart.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPartSimple.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\AVTPartXPath.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\Constants.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\CountersTable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\DecimalToRoman.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemApplyImport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemAttribute.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemChoose.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemComment.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCopy.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemCopyOf.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemElement.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemEmpty.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemFallback.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemForEach.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemIf.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemMessage.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemNumber.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemOtherwise.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemParam.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemPI.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemSort.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTemplate.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemText.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemUse.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemValueOf.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemVariable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemWhen.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ElemWithParam.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionCurrent.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionDocument.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionKey.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\GenerateEvent.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\KeyDeclaration.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\KeyTable.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NamespacesHandler.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NodeSorter.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\NodeSortKey.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\OutputContextStack.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ProblemListener.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\SelectionEvent.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\Stylesheet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetHandler.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\StylesheetRoot.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TopLevelArg.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TraceListener.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\TracerEvent.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\VariablesStack.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanParamHolder.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTInit.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTInputSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessor.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensionsDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommonImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTimeImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamicImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMathImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSetImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTStringImpl.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.h" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheet.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDocumentBuilder.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanFileUtility.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanHarnessDefinitions.hpp" />
+    <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.hpp" />
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridge.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeDefinitions.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDataSection.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanComment.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocument.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanElement.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntity.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNode.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanText.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\ProblemListenerBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\URISupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\Writer.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanFStreamOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanInMemoryMessageLoader.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagerDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanMessageLoader.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\PlatformSupport\XSLException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMServices.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\TreeWalker.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\Function.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionConcat.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionContains.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionID.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionLang.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionStartsWith.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionString.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstring.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\FunctionTranslate.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\MutableNodeRefList.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\NodeRefList.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\NodeRefListBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanDocumentFragmentNodeRefListBaseProxy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQName.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByReference.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValue.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XalanXPathException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XBoolean.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSet.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumber.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumberAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XNumberBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObject.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectFactory.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPath.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathEvaluator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathExpression.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactory.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathFunctionTable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathParserException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathProcessor.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XString.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAdapter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringCached.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringReference.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XToken.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPath\XUnknown.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToText.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF16Writer.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanUTF8Writer.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerBase.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XalanXMLSerializerFactory.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVT.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPart.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPartSimple.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\AVTPartXPath.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\Constants.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\CountersTable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemApplyImport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemChoose.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemComment.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCopy.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemCopyOf.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemElement.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemEmpty.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemFallback.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemForEach.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemForwardCompatible.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemIf.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemMessage.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemNumber.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemOtherwise.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemParam.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemPI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemSort.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTemplate.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemText.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemUse.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemValueOf.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemVariable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemWhen.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ElemWithParam.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionCurrent.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionDocument.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionKey.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\GenerateEvent.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\KeyTable.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NamespacesHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NodeSorter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\NodeSortKey.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\OutputContextStack.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ProblemListener.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\SelectionEvent.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\Stylesheet.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetHandler.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\StylesheetRoot.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TopLevelArg.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TraceListener.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\TracerEvent.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\VariablesStack.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTInit.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTInputSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessor.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDateTime.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanDiagnosticMemoryManager.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanFileUtility.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.cpp" />
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridge.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUFormatNumberFunctor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Res\AllInOne\AllInOne.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\XalanMsgLib\XalanMsgLib.vcxproj">
+      <Project>{e16eb6c5-a40a-4acc-a9a0-d4db5c551092}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
