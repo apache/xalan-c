@@ -109,7 +109,7 @@
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_11.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC10\Debug;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -146,7 +146,7 @@
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_11.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC10\Debug;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -180,7 +180,7 @@
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_11.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC10\Release;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -219,7 +219,7 @@
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_11.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC10\Release;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

@@ -191,7 +191,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;Xalan-C_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -202,6 +202,11 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <ProjectReference />
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -236,7 +241,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;Xalan-C_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -248,6 +253,10 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -275,7 +284,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;Xalan-C_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -287,6 +296,10 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -318,10 +331,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;Xalan-C_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC10\Debug;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -331,6 +344,10 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|Win32'">
     <Midl>
@@ -362,7 +379,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;Xalan-C_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -373,6 +390,10 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release with ICU|x64'">
     <Midl>
@@ -407,7 +428,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3.lib;Xalan-C_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -419,6 +440,10 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|Win32'">
     <Midl>
@@ -446,7 +471,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;Xalan-C_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -457,6 +482,10 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug with ICU|x64'">
     <Midl>
@@ -488,10 +517,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xerces-c_3D.lib;Xalan-C_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)Xalan.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC10\Debug;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <StackReserveSize>3096576</StackReserveSize>
@@ -500,6 +529,10 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\xalanc\XalanExe\XalanExe.cpp" />
