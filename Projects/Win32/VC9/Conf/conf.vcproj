@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win32\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				StringPooling="true"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -71,9 +71,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC9\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -128,7 +129,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win64\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions=""
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -156,9 +157,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC9\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -218,7 +220,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="false"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win32\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -243,9 +245,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC9\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -308,7 +311,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="false"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win64\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -333,9 +336,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC9\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -397,7 +401,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="false"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win32\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -422,9 +426,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC9\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -487,7 +492,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="false"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win64\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions="NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -512,9 +517,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC9\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -570,7 +576,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win32\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				StringPooling="true"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -597,9 +603,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC9\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -654,7 +661,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src;..\..\..\..\src\;..\..\..\..\Build\Win64\VC9\Debug\Nls\Include"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(XERCESCROOT)\src&quot;;..\..\..\..\src;&quot;$(OutDir)\Nls\Include&quot;"
 				PreprocessorDefinitions=""
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -682,9 +689,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC9\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
