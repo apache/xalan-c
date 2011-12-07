@@ -68,9 +68,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC8\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -152,9 +152,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC8\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="17"
@@ -237,9 +237,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC8\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -325,9 +325,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC8\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -409,9 +409,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC8\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -493,9 +493,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3D.lib "
+				AdditionalDependencies="xerces-c_3D.lib Xalan-C_1D.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Debug;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC8\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="17"
@@ -578,9 +578,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC8\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -666,9 +666,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_3.lib "
+				AdditionalDependencies="xerces-c_3.lib Xalan-C_1.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC8\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC8\Release;$(OutDir)"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win64\VC8\Release&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
