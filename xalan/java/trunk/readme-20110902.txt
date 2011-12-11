@@ -1,0 +1,83 @@
+MANIFEST FOR JIRA XALANC-712
+
+The XALAN, XALAN-C and XALAN-J web pages can be created relative to
+the Windows directory into which you unzip these three files.
+e
+   bin-win32-20110902.zip
+   build-xalan-docs-20110902.zip
+   xdocs-xalan-docs-20110902.zip
+
+These files can be extracted to any directory, but they are based
+on the SVN directory tree of
+
+   xalan/java/trunk/
+
+With sources merged from
+
+   xalan/c/trunk/xdocs/
+
+The old Java StyleBook templates are not being used.  The web page
+construction is built using command files and a new "stylebook.xslt"
+XSLT transformation stylesheet.  The web pages are rendered by 
+browsers using the new apache-xalan.css stylesheet.
+
+THIS IS A SNAPSHOT OF MY XALAN DOCUMENTATION PROJECT TOOLKIT ON WINDOWS   
+
+The new-format web pages for the following ASF XALAN web sites are
+combined in build-xalan-docs-20110902.zip for your review.
+
+   http://xalan.apache.org        -->  build/docs/xalan/*
+
+   http://xml.apache.org/xalan-c  -->  build/docs/xalan/xalan-c/*
+
+   http://xml.apache.org/xalan-j  -->  build/docs/xalan/xalan-j/*
+
+The new-format sources are combined into a common source tree
+in xdocs-xalan-docs-20110902.zip for your review.  There is no change in
+source markup other than to fix DOCTYPE (DTD) validation.
+
+   xdocs/style/dtd  ..  contains the edited StyleBook DTDs for XALAN-J
+
+   xdocs/sources    --  contains the combined sources for the 3 sites.
+                        (Only the StyleBook XML sources and scripts)
+
+   xdocs/sources/make-all.bat  --  Windows script to create all web pages.
+
+   http://xalan.apache.org     --> make-book-org.bat
+
+   http://xml.apache.org/xalan-j   --> make-book-xalanj.bat
+
+   http://xml.apache.org/xalan-j/design --> make-book-design.bat
+
+   http://xml.apache.org/xalan-j/xsltc  --> make-book-xsltc.bat
+
+   http://xml.apache.org/xalan-c   --> make-book-xalanc.bat
+
+The <book> files and selected sources have been edited to convert
+the URI "sbk:" to a proper relative path.
+
+The file directories are those found in the SVN repository for XALAN-J
+except as follows:
+
+The top-level sources for XALANJ are now in: xdocs/sources/xalan-j
+
+The top-level sources for XALANC are now in: xdocs/sources/xalan-c
+
+XALAN Comman-Line Processor (Windows 32-bit)
+
+   bin/xalan.exe
+
+This is the Apache XALAN command-line interface as compiled with
+the Current SVN of Xalan-C (1.11) and version 3.1.1 of Xerces-C
+
+---------------------------
+Sincerely,
+Steven J. Hathaway 
+(shathaway@apache.org)
+
+P.S.  I have not yet changed the new proposed logos to add (TM).
+
+The next minor change to the "stylebook.xslt" is to accommodate
+the <group> child element of <book> as used by example for the
+old Xerces-C web page.  This allows navigation grouping similar
+to how they separate Xerces-C 2.8 and Xerces-C 3.1.1 distributions.

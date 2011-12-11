@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Extensions library</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Extensions library</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>Extensions Library<br />
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Extensions library</h2>
+<ul>
+  <li>
+<a href="#intro">Introduction</a>
+</li>
+  <li>
+<a href="#exslt">Beta support for EXSLT extensions</a>
+</li>
+  <li>
+<a href="#xalanns">Xalan namespace</a>
+</li>
+  <li>
+<a href="#nodeset">nodeset</a>
+</li>
+  <li>
+<a href="#intersection">intersection</a>
+</li>
+  <li>
+<a href="#difference">difference</a>
+</li>
+  <li>
+<a href="#distinct">distinct</a>
+</li>
+  <li>
+<a href="#evaluate">evaluate</a>
+</li>
+  <li>
+<a href="#hassamenodes">hasSameNodes</a>
+</li>
+</ul>
+
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+<p>Extension functions provide a powerful mechanism
+   for extending and simplifying what you can do with an XLST processor like
+   Xalan. With input and contributions from the XML open-source developer community, we are working on placing the most useful
+   extensions in an extensions library distributed with Xalan-C++. If you have ideas and/or contributions you would like to make, 
+   please email us at the <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
+
+
+<a name="exslt">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>EXSLT extensions</h3>
+<p>Xalan-C++ supports the <a href="http://exslt.org/">EXSLT</a> initiative to provide a set of
+   standard extension functions to XSLT users. Xalan-C++ includes beta implementations for 
+   functions in four of the EXSLT namespaces (some are calls to extension already in the Xalan namespace).</p> 
+<p>The source files for the implementations are in the XalanEXSLT subdirectory of the source tree.  See</p> 
+<ul>
+  <li>
+<a href="apiDocs/XalanEXSLTCommonImpl_8hpp.html">XalanEXSLTCommonImpl</a>
+</li>
+  <li>
+<a href="apiDocs/XalanEXSLTMathImpl_8hpp.html">XalanEXSLTMathImpl</a>
+</li>
+  <li>
+<a href="apiDocs/XalanEXSLTSetImpl_8hpp.html">XalanEXSLTSetImpl</a>
+</li>
+  <li>
+<a href="apiDocs/XalanEXSLTStringImpl_8hpp.html">XalanEXSLTStringImpl</a>
+</li>
+  <li>
+<a href="apiDocs/XalanEXSLTDynamicImpl_8hpp.html">XalanEXSLTDynamicImpl</a>
+</li>
+  <li>
+<a href="apiDocs/XalanEXSLTDateTimeImpl_8hpp.html">XalanEXSLTDateTimeImpl</a>
+</li>
+</ul>
+<p>For the function specifications, see:</p>
+<ul>
+  <li>
+<a href="http://www.exslt.org/exsl/exsl.html">EXSLT common functions</a>
+</li>
+  <li>
+<a href="http://www.exslt.org/math/math.html">EXSLT math functions</a>
+</li>
+  <li>
+<a href="http://www.exslt.org/set/set.html">EXSLT set functions</a>
+</li>
+  <li>
+<a href="http://www.exslt.org/str/str.html">EXSLT string functions</a>
+</li>
+  <li>
+<a href="http://www.exslt.org/dyn/dyn.html">EXSLT dynamic functions</a>
+</li>
+  <li>
+<a href="http://www.exslt.org/date/date.html">EXSLT date-time functions</a>
+</li>
+</ul>
+<p>Anyone who would like to participate in the Xalan-C++ initiative to support EXSLT by testing these implementations or implementing 
+   other EXSLT functions is more than welcome. Please email us at the <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
+
+
+<a name="xalanns">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Xalan namespace</h3>
+<p>We are placing the Xalan extension functions in the XalanExtensions module and we have defined a namespace for this module:</p>
+<p>     <code>http://xml.apache.org/xalan</code>
+</p>
+<p>If you are calling Xalan-C++-supplied extensions, we recommend that you define this namespace in your stylesheet element, and 
+   call the extension using the namespace prefix that you have associated with that namespace. That way, if we later reorganize 
+   how the Xalan-C++-supplied extensions are stored, you won't have to modify your stylesheet.</p>
+<p>For an example that uses this namespace, see <a href="#ex-nodeset">Example with the nodeset extension function</a>.</p>
+
+
+<a name="nodeset">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>nodeset</h3>
+<p>Implemented in <a href="apiDocs/classFunctionNodeSet.html">FunctionNodeSet</a>, <code>nodeset (result-tree-fragment)</code> 
+   casts a result tree fragment into a node-set.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">When you bind a variable to a template, rather than to the value generated by a select expression, the data type of the variable 
+      is result tree fragment. For more information, see <a href="http://www.w3.org/TR/xslt#section-Result-Tree-Fragments">Result 
+      Tree Fragments</a>.</td>
+</tr>
+</table>
+
+<a name="ex-nodeset">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Example with the nodeset extension function</h4>
+<p>The following stylesheet uses the nodeset extension function to cast a result tree fragment into a node-set that can then be 
+   navigated in standard XPath manner. It uses the http://xml.apache.org/xalan namespace to provide access to the nodeset() method 
+   in xml.apache.xalan.lib.Extensions.</p>
+<blockquote class="source">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+                   version="1.0"
+                   xmlns:xalan="http://xml.apache.org/xalan"
+                   exclude-result-prefixes="xalan"&gt;
+&lt;xsl:template match="/"&gt;
+  &lt;out&gt;
+	  &lt;xsl:variable name="rtf"&gt;
+      &lt;docelem&gt;
+        &lt;elem1&gt;
+          &lt;elem1a&gt;ELEMENT1A&lt;/elem1a&gt;
+          &lt;elem1b&gt;,ELEMENT1B&lt;/elem1b&gt;
+        &lt;/elem1&gt;
+        &lt;elem2&gt;
+          &lt;elem2a&gt;ELEMENT2A&lt;/elem2a&gt;
+        &lt;/elem2&gt;
+      &lt;/docelem&gt;
+    &lt;/xsl:variable&gt;     
+      &lt;xsl:for-each select="xalan:nodeset($rtf)/docelem//*"&gt;
+        &lt;xsl:value-of select="name(.)"/&gt;&lt;xsl:text&gt;,&lt;/xsl:text&gt;
+      &lt;/xsl:for-each&gt;
+  &lt;/out&gt;
+&lt;/xsl:template&gt; 
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+<p>The output of running this stylesheet (with any XML input source) is a comma-delimited list of the element names in the node-set<br />
+     <code>&lt;out&gt;elem1,elem1a,elem1b,elem2,elem2a&lt;/out&gt;</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For illustration purposes, the preceding stylesheet pays no attention to the structure and content of the XML input document. 
+      Instead, it processes the template (in the stylesheet) bound to the variable named rtf.</td>
+</tr>
+</table>
+
+
+<a name="intersection">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>intersection</h3>
+<p>Implemented in <a href="apiDocs/classFunctionIntersection.html">FunctionIntersection</a>, <code>intersection (node-set1, 
+   node-set2)</code> returns a node-set with all nodes that are in ns1 and in ns2.</p>
+
+<a name="difference">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>difference</h3>
+<p>Implemented in <a href="apiDocs/classFunctionDifference.html">FunctionDifference</a>, <code>difference(node-set1, 
+   node-set2)</code> returns a node-set with the nodes in node-set1 and not in node-set2.</p>
+
+<a name="distinct">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>distinct</h3>
+<p>Implemented in <a href="apiDocs/classFunctionDistinct.html">FunctionDistinct</a>, distinct (node-set) returns a node-set 
+   containing nodes with distinct string values. If more than one node in the node-set contains the same text node value, distinct 
+   only returns the first of these nodes that it finds.</p>
+
+<a name="evaluate">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>evaluate</h3>
+<p>Implemented in <a href="apiDocs/classFunctionEvaluate.html">FunctionEvaluate</a>, <code>evaluate (xpath-expression)</code> 
+   returns the result of evaluating the xpath-expression in the current XPath expression context (automatically passed in by the 
+   extension mechanism).</p>
+<p>Use the evaluation extension function when the value of the expression is not known until run time.</p>
+
+<a name="hassamenodes">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>hasSameNodes</h3>
+<p>Implemented in <a href="apiDocs/classFunctionHasSameNodes.html">FunctionHasSameNodes</a>, <code>hasSameNodes(node-set1, 
+   node-set2)</code> returns true if both node-set1 and node-set2 contain exactly the same set of nodes.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

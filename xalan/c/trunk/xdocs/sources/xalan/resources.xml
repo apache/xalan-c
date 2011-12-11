@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE resources [
+  <!ENTITY % externalEntity SYSTEM "../entities.ent">
+  %externalEntity;
+  <!ELEMENT resources (resource|human-resource)+>
+  <!ELEMENT resource EMPTY>
+  <!ATTLIST resource 		id CDATA #IMPLIED
+				title CDATA #IMPLIED
+				location CDATA #IMPLIED>
+  <!ELEMENT human-resource EMPTY>
+  <!ATTLIST human-resource 	id CDATA #IMPLIED
+				name CDATA #IMPLIED
+				mailto CDATA #IMPLIED>
+   ]>     
+<resources>
+ 	
+<resource id="xslt4c-current" 
+          title="&xslt4c-current;" 
+          location="http://xml.apache.org/xalan-c"/>
+<resource id="xml4c-used" 
+          title="&xml4c-used;" 
+          location="http://xml.apache.org/xerces-c/index.html"/>   
+<resource id="xslt4c-distdir" 
+          title="Xalan-C downloads" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
+<!--
+<resource id="xml4c-distdir" 
+          title="Xerces-C downloads" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c"/>
+-->
+<resource id="xml4c-distdir" 
+          title="Xerces-C downloads" 
+          location="http://www.apache.org/dyn/closer.cgi/xerces/c"/>
+<resource id="xslt4c-win32-download" 
+          title="&xslt4c-dist;-win32.zip" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-win32.zip"/>
+<resource id="xslt4c-linux-download" 
+          title="&xslt4c-dist;-linux.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-linux.tar.gz"/>
+<resource id="xslt4c-aix-download" 
+          title="&xslt4c-dist;-aix.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-aix.tar.gz"/>
+<resource id="xslt4c-hp-ux-download" 
+          title="&xslt4c-dist;-hp-ux.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-hp-ux.tar.gz"/>
+<resource id="xslt4c-Solaris-download" 
+          title="&xslt4c-dist;-solaris.tar.gz" 
+          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-solaris.tar.gz"/>
+  
+<resource id="icu" 
+          title="International Components for Unicode (ICU)" 
+          location="http://oss.software.ibm.com/icu/index.html"/>
+<resource id="icu-download" 
+          title="&icu-used;" 
+          location="http://oss.software.ibm.com/icu/download/index.html"/>
+<resource id="xerces-build-icu" 
+          title="Building ICU for &xml4c;" 
+          location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
+<resource id="stlport" 
+          title="STLport" 
+          location="http://www.stlport.org/"/>
+<resource id="ApacheLicense" 
+          title="The Apache Software License, Version 2.0" 
+          location="http://www.apache.org/licenses/LICENSE-2.0"/>
+<resource id="Readme" 
+          title="Xalan Repository Release Notes" 
+          location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
+<resource id="XSL" 
+          title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation" 
+          location="http://www.w3.org/TR/xsl"/>
+<resource id="XSLT" 
+          title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" 
+          location="http://www.w3.org/TR/xslt"/>
+<resource id="XPath" 
+          title="XML Path Language (XPath) Version 1.0" 
+          location="http://www.w3.org/TR/xpath"/>
+<resource id="DOM" 
+          title="DOM" 
+          location="http://www.w3.org/DOM"/>
+<resource id="dpawsonxslfaq" 
+          title="XSL Frequently Asked Questions" 
+          location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
+
+<resource id="xercesmm" 
+          title="Pluggable Memory Manager" 
+          location="http://xml.apache.org/xerces-c/program-others.html#PluggableMemoryManager"/>
+
+<human-resource id="xalandev" 
+                name="Xalan Development Mailing List" 
+                mailto="xalan-dev@xml.apache.org"/>
+
+<human-resource id="xalancusers"
+                name="Xalan-C/C++ Users Mailing List"
+                mailto="xalan-c-users@xml.apache.org"/>
+  
+<resource id="bugzilla"
+          title="Bugzilla (the Apache bug database)"
+          location="http://nagoya.apache.org/bugzilla"/>
+
+<resource id="jira"
+          title="JIRA (the Apache bug database)"
+          location="https://issues.apache.org/jira/browse/XALANC"/>
+
+<resource id="buglist"
+          title="XalanC open bugs"         
+          location="https://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;jqlQuery=project+%3D+XALANC+AND+resolution+%3D+Unresolved+ORDER+BY+updated+DESC"/>
+
+<resource id="bugsfixedforthisrelease"
+          title="XalanC bugs fixed for this release"
+          location="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10582&amp;version=10833"/>
+
+
+</resources>

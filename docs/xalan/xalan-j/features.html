@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Transform Features</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Transform Features</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>Features<br />
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Transform Features</h2>
+<p>Transform features are identified by URI Strings and fall into the following categories:</p>
+<ul>
+<li>
+<a href="#factoryfeature">Standard TransformationFactory features</a>
+</li>
+<li>
+<a href="#factoryattribute">Implementation-specific TransformerFactory attributes</a>
+</li>
+</ul>
+<a name="factoryfeature">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Standard TransformerFactory features</h3>
+<p>
+<a href="http://java.sun.com/webservices/jaxp/index.jsp">Java API for XML Processing (JAXP) 1.3</a> defines objects and methods for processing input and producing 
+output in a variety of formats, including character streams, SAX event streams, and DOM Documents.</p>
+<p>JAXP 1.3 defines the following features:</p>
+<ul>
+<li>
+<a href="#streamsource">StreamSource feature</a>
+</li>
+<li>
+<a href="#streamresult">StreamResult feature</a>
+</li>
+<li>
+<a href="#domsource">DOMSource feature</a>
+</li>
+<li>
+<a href="#domresult">DOMResult feature</a>
+</li>
+<li>
+<a href="#saxsource">SAXSource feature</a>
+</li>
+<li>
+<a href="#saxresult">SAXResult feature</a>
+</li>
+<li>
+<a href="#saxtransformerfactory">SAXTransformerFactory feature</a>
+</li>
+<li>
+<a href="#xmlfilter">XMLFilter feature</a>
+</li>
+<li>
+<a href="#secureprocessing">Secure processing feature</a>
+</li>
+</ul>
+<p>You can use the 
+ <a href="apidocs/javax/xml/transform/TransformerFactory.html#getFeature(java.lang.String)">TransformerFactory.getFeature(String)</a> 
+method to return a boolean indicating whether the implementation you are using supports the use of one of these objects or methods. For the String argument, provide the static String variable or literal URI String as detailed below.</p>
+<p>You can use the 
+<a href="apidocs/javax/xml/transform/TransformerFactory.html#setFeature(java.lang.String, boolean)">TransformerFactory.setFeature(String, boolean)</a>
+method to set the value of a feature. Xalan-Java only supports setting of the
+<a href="apidocs/javax/xml/XMLConstants.html#FEATURE_SECURE_PROCESSING">XMLConstants.FEATURE_SECURE_PROCESSING</a>
+feature. For all other features, TransformerFactory exposes their values, but cannot change their states.</p>
+<p>Xalan-Java supports <b>all</b> TransformerFactory features.</p>
+<a name="streamsource">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>StreamSource feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.stream.StreamSource/feature"</p>
+<p>The implementation supports the processing of <a href="apidocs/javax/xml/transform/stream/StreamSource.html">StreamSource</a> input objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static StreamSource.FEATURE variable  (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.stream.StreamSource;
+
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(StreamSource.FEATURE)){
+  // Can process a StreamSource.
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#simpletransform">SimpleTransform</a>.</p>
+<a name="streamresult">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>StreamResult feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.stream.StreamResult/feature"</p>
+<p>The implementation supports the production of transformation output in the form of <a href="apidocs/javax/xml/transform/stream/StreamResult.html">StreamResult</a> objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static StreamResult.FEATURE variable  (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.stream.StreamResult;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(StreamResult.FEATURE)){
+  // Can generate a StreamResult.
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#simpletransform">SimpleTransform</a>.</p>
+<a name="domsource">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>DOMSource feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.dom.DOMSource/feature"</p>
+<p>The implementation supports the processing of XML input in the form of <a href="apidocs/javax/xml/transform/dom/DOMSource.html">DOMSource</a> objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static DOMSource.FEATURE string variable (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.dom.DOMSource;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(DOMSource.FEATURE)){
+  // Can process DOM input
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#dom2dom">DOM2DOM</a>.</p>
+<a name="domresult">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>DOMResult feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.dom.DOMResult/feature"</p>
+<p>The implementation supports the production of transformation output in the form of <a href="apidocs/javax/xml/transform/dom/DOMResult.html">DOMResult</a> objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static DOMResult.FEATURE variable  (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.dom.DOMResult;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(DOMResult.FEATURE)){
+  // Can generate DOM output.
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#dom2dom">DOM2DOM</a>.</p>
+<a name="saxsource">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SAXSource feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.dom.SAXSource/feature"</p>
+<p>The implementation supports the processing of XML input in the form of <a href="apidocs/javax/xml/transform/sax/SAXSource.html">SAXSource</a> objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static SAXSource.FEATURE string variable (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.sax.SAXSource;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(SAXSource.FEATURE)){
+  // Can process SAX events.
+  ..
+}</pre>
+</blockquote>
+<a name="saxresult">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SAXResult feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.dom.SAXResult/feature"</p>
+<p>The implementation supports the production of transformation output in the form of <a href="apidocs/javax/xml/transform/sax/SAXResult.html">SAXResult</a> objects.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static SAXResult.FEATURE variable  (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.sax.SAXResult;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(SAXResult.FEATURE)){
+  // Can output SAX events.
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#sax2sax">SAX2SAX</a>.</p>
+<a name="saxtransformerfactory">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SAXTransformerFactory feature</h4>
+<p>
+<b>URI:</b> "http://javax.xml.transform.sax.SAXTransformerFactory/feature"</p>
+<p>The implementation provides a <a href="apidocs/javax/xml/transform/sax/SAXTransformerFactory.html">SAXTransformerFactory</a>. 
+You may safely cast the TransformerFactory returned by TransformerFactory.newInstance() to a SAXTransformerFactory.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static SAXTransformerFactory.FEATURE 
+variable (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.sax.SAXTransformerFactory;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(SAXTransformerFactory.FEATURE)){
+  SAXTransformerFactory saxTFact = (SAXTransformerFactory)tFact;
+  ..
+}</pre>
+</blockquote>
+<p>For a example that uses this feature, see <a href="samples.html#sax2sax">SAX2SAX</a>.</p>
+<a name="xmlfilter">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XMLFilter feature</h4>
+<p>
+<b>URI: </b>"http://javax.xml.transform.sax.SAXTransformerFactory/feature/xmlfilter"</p>
+<p>The implementation supports the use of <a href="apidocs/org/xml/sax/XMLFilter.html">XMLFilter</a> to use the output of one 
+transformation as input for another transformation. The SAXTransformerFactory newXMLFilter(Source) and newXMLFilter(Templates) methods 
+are supported.</p>
+<p>To determine whether your implementation supports this feature (Xalan-Java does), you can use the static 
+SAXTransformerFactory.FEATURE_XMLFilter variable (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import javax.xml.sax.SAXTransformerFactory;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact.getFeature(SAXTransformerFactory.FEATURE_XMLFILTER))){
+  // Can use SAXTransformerFactory to get XMLFilters.
+  ..
+}</pre>
+</blockquote>
+<p>For an example that uses this feature to chain together a series of transformations, see 
+<a href="samples.html#usexmlfilters">UseXMLFilters</a>.</p>
+
+<a name="secureprocessing">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Secure processing feature</h4>
+<p>
+<b>URI: </b>"http://javax.xml.XMLConstants/feature/secure-processing"</p>
+<p>Xalan-Java supports the secure processing feature in both the interpretive and XSLTC 
+processors. When this feature is set to true, the implementation will apply a set of limits on the 
+XSLT/XML processing behavior to make the XSLT processor behave in a secure fashion. The limits are 
+implementation dependent. Xalan-Java applies the following limits when the secure processing feature 
+is set to true:<br />
+<br />
+<li>extension functions and extension elements are disabled.</li>
+<li>parsers created by the XSLT processors will also have the secure processing feature set to true.</li>
+</p>
+
+<a name="factoryattribute">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Xalan-Java TransformerFactory attributes</h3>
+<p>A given implementation may provide TransformerFactory attributes for which you can set and get values. Xalan-Java uses the 
+<a href="dtm.html"> DTM (Document Table Model)</a> to support three attributes which can be set to true or false:</p>
+<ul>
+<li>
+<a href="#optimize">optimize attribute</a>
+</li>
+<li>
+<a href="#incremental">incremental attribute</a>
+</li>
+<li>
+<a href="#source_location">source_location attribute</a>
+</li>
+</ul>
+<p>To get an attribute setting, use the TransformerFactory.getAttribute(String) method, which returns an Object. For these three Xalan-Java 
+attributes, you can cast the return value to a boolean. To set an attribute, use the TransformerFactory.setAttribute(String, Object) method. 
+For the String argument, provide the static String variable or literal URI String as detailed below. For the Object argument, use 
+Boolean.TRUE or Boolean.FALSE (or the Strings "true" or "false").</p>
+<a name="optimize">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>optimize attribute</h4>
+<p>
+<b>URI:</b> "http://xml.apache.org/xalan/features/optimize"</p>
+<p>Optimize stylesheet processing. By default, this attribute is set to true. You may need to set it to false for tooling applications. 
+For more information, see <a href="dtm.html#optimize">DTM optimize</a>.</p>
+<p>To turn optimization off, you can use the TransformerFactoryImpl.FEATURE_OPTIMIZE static variable (equivalent to the URI String above) 
+as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import org.apache.xalan.processor.TransformerFactoryImpl;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact instanceof TransformerFactoryImpl) {
+  tFact.setAttribute(TransformerFactoryImpl.FEATURE_OPTIMIZE, 
+                     Boolean.FALSE);
+}</pre>
+</blockquote>
+<a name="incremental">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>incremental attribute</h4>
+<p>
+<b>URI:</b> "http://xml.apache.org/xalan/features/incremental"</p>
+<p>Produce output incrementally, rather than waiting to finish parsing the input before generating any output. By default this attribute is set
+to false. You can turn this attribute on to transform large documents where the stylesheet structure is optimized to execute individual templates 
+without having to parse the entire document. For more information, see <a href="dtm.html#incremental">DTM incremental</a>.</p>
+<p>To turn incremental transformations on, you can use the TransformerFactoryImpl.FEATURE_INCREMENTAL static variable (equivalent to the URI String above) as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import org.apache.xalan.processor.TransformerFactoryImpl;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact instanceof TransformerFactoryImpl) {
+  tFact.setAttribute(TransformerFactoryImpl.FEATURE_INCREMENTAL, 
+                     Boolean.FALSE);
+}</pre>
+</blockquote>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The incremental feature is not currently supported by XSLTC.</td>
+</tr>
+</table>
+
+<a name="source_location">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>source_location attribute</h4>
+<p>
+<b>URI:</b> "http://xml.apache.org/xalan/properties/source-location"</p>
+<p>Provide a <a href="apidocs/javax/xml/transform/SourceLocator.html">SourceLocator</a> that can be used during a transformation
+to obtain the location of individual nodes in a source document (system ID, line number, and column number).</p>
+<p>By default, this attribute is set to false. Setting this attribute to true involves a substantial increase in storage cost per source 
+document node. If you want to use the <a href="extensionslib.html#nodeinfo">NodeInfo</a> extension functions (or some other mechanism) 
+to provide this information during a transform, you must set the attribute to true before generating the Transformer and processing the 
+stylesheet.</p>
+<p>The <a href="commandline.html">command-line utility</a> -L flag sets this attribute to true. To set the source_location attribute
+programmatically, you can use the TransformerFactoryImpl.FEATURE_SOURCE_LOCATION static variable (equivalent to the URI String above) 
+as follows:</p>
+<blockquote class="source">
+<pre>import javax.xml.transform.TransformerFactory;
+import org.apache.xalan.transformer.TransformerImpl;
+import org.apache.xalan.transformer.XalanProperties;
+..
+TransformerFactory tFact = TransformerFactory.newInstance();
+if (tFact instanceof TransformerFactoryImpl) {
+  tFact.setAttribute(TransformerFactoryImpl.FEATURE_SOURCE_LOCATION, 
+                     Boolean.TRUE);
+}</pre>
+</blockquote>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

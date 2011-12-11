@@ -1,0 +1,337 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"[
+<!ENTITY done-c SYSTEM "DONE">
+<!ENTITY status-c SYSTEM "STATUS">
+<!ENTITY history-c SYSTEM "history.xml">]>
+
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<s1 title="&xslt4c; Release Notes">
+<p>Release notes for &xslt4c-current;</p>
+ <ul>
+  <li><link anchor="status">Status</link></li>
+  <li><link anchor="build">Rebuilding &xslt4c; and the sample applications</link></li> 
+  <li><link anchor="contact">Getting in touch</link></li>
+  <li><link anchor="history">History of software changes</link></li>  
+ </ul>
+ <anchor name="status"/>
+ <s2 title="Status">
+   <ul>
+    <li><link anchor="done">Changes for &xslt4c; version 1.8</link></li>
+    <li><link anchor="bugs">Bug reporting</link></li>    
+    <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
+    <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
+   </ul>
+   <anchor name="done"/>
+   <s3 title="Changes for &xslt4c; version 1.8">
+     <p>Major updates since version 1.7 include:</p>
+     <ul>
+      <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+      <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
+      <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
+          HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
+      <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
+          is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
+          on this platform.  Please see <link anchor="dotNet">"Step for doing a Windows Build with Visual Studio .NET"</link> for details.</li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these changes to your build environment, please see <link anchor="xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"</link></li>
+      <!--
+      <li>Porting of conf utility to the UNIX platform.  The conf utility is a test harness designed to run the conformance tests located under the xml-xalan/test/tests directory.  After the tests have been run, a results report is generated in HTML format for easy viewing.  For more information on how to use this tool, please see <link idref="commandline" anchor="confexe">"Using the command line utility"</link>.</li>
+      -->
+      <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes". See bugzilla <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24304">24304</jump> and <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</jump>.</li>
+     </ul>  
+   </s3>  
+
+   <anchor name="bugs"/>
+   <s3 title="Bug reporting">
+     <p>All known &xslt4c; bugs are listed in <resource-ref idref="jira"/>. For a list of open bugs with links to each bug
+      report, see <resource-ref idref="buglist"/>. If you find a new bug, please enter a XalanC bug report in this
+      database.</p>
+     <note>Before you can enter your first bug report, you must submit your email address to Jira and receive a password.</note> 
+     <p>We strongly encourage you write patches for problems you find and submit them to
+      xalan-dev@xml.apache.org. We review the patches we receive to make sure they do not break something else, and (assuming they 
+     do not) include them in our next release. In the interest of fixing bugs, adding enhancements, and addressing outstanding design
+     issues, we sincerely want (and need!) your active participation in the ongoing development of Xalan.</p>
+     </s3><anchor name="xml4c"/>     
+     &status-c;     
+  </s2><anchor name="build"/>
+  <s2 title="Rebuilding &xslt4c;">
+<ul>
+<li><link anchor="jar">Rebuilding &xslt4c;</link></li>
+<li><link anchor="samples">Rebuilding sample applications</link></li>
+</ul>
+<anchor name="jar"/> 
+   <s3 title="Rebuilding &xslt4c;">
+   <ul>
+    <li><link anchor="needed">What you need from the distributions</link></li>   
+    <li><link anchor="win32">Steps for doing a Windows Build</link></li>
+    <li><link anchor="dotNet">Steps for doing a Windows Build with Visual Studio .NET</link></li>
+    <li><link anchor="unix">Steps for doing a UNIX build</link></li>       
+    <li><link anchor="locale">Steps for doing a Build with Message Localization Support</link></li>
+    <li><link anchor="xercesdepdom">Steps for doing a Build with Xerces Deprecated DOM Support</link></li>
+   </ul></s3><anchor name="needed"/>
+   <s3 title="What you need from the distributions">
+   <p>To rebuild &xslt4c;, you need the &xslt4c; source files, the &xml4c; header files, and
+   for Windows the &xml4c; .lib file. If you want to rebuild with the ICU, you will need to download the ICU source package to build the ICU libraries. </p>
+
+<note>You can also download &xslt4c; source distributions from <resource-ref idref="xslt4c-distdir"/>: &xslt4c-dist;-src.zip and &xslt4c-dist;-src.tar.gz. &xml4c; source distributions are available from <resource-ref idref="xml4c-distdir"/>: 
+&xml4c-dist;-src.zip and &xml4c-dist;-src.tar.gz.</note>
+<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, use the Xerces distributions that we certify as compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
+   <p>For information on using the <resource-ref idref="icu"/>, see
+   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
+   The recommended version of ICU for &xslt4c-current; is &icu-current;. You may be able to use newer ICU releases as they appear.</p>
+   </s3><anchor name="win32"/>
+  <s3 title="Steps for doing a Windows build">
+  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 5 for Visual C++ and Visual Studio .NET.</p> 
+  <p>If you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
+<p>Before you do the following, be sure you have <link idref="getstarted" anchor="windowspath">provided Visual C++ the paths to the Xerces headers and libraries</link>.</p>
+  <ol>    
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of &xml4c;.</li>
+    <li>Use Visual C++ to open the Xalan workspace (.dsw) from the &xslt4c-win_root;\Projects\Win32\VC6.  If you are building with ICU, then use XalanICU.dsw.  Otherwise, open the Xalan.dsw workspace.<br/><br/>
+    <note>You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</note>
+    <br/>
+    As an alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual C++.  From the "Options" window, click on the "Directories" tab and do the following:
+    <ol>
+    <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
+    <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
+    <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
+    </ol></li>
+  </ol>
+  <note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</note>
+  <p><img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change"/></p>
+</s3>
+<anchor name="dotNet"/>
+<s3 title="Steps for doing a Windows Build with Microsoft Visual Studio .NET">
+  <p>For users who want to build with Visual Studio .NET,</p>
+  <ol>
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of &xml4c;.</li>
+    <li>Use Visual Studio .NET to open the Xalan solution (.sln) from the &xslt4c-win_root;\Projects\Win32\VC7.  If you are building with ICU, then use XalanICU.sln.  Otherwise, open the Xalan.sln solution file.<br/><br/>
+    <note>You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</note>
+    <br/>
+    An alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual Studio .NET.  From the "Options" window, click on the "Projects" folder to expand the list.  Select "VC++ Directories" from the list and do the following:
+    <ol>
+    <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
+    <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
+    <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
+    </ol></li>
+  </ol>
+  <note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</note>
+  <p><img src="NET_options.jpg" alt="Visual Studio .NET Include Directories change"/></p>
+  </s3><anchor name="unix"/>
+<s3 title="Steps for doing a UNIX build">
+    <p>For users who want to build in the UNIX environment,</p>
+    <ol>
+      <li>The Xalan build files are written for GNU make, and will not work with other make utilities.<br/><br/></li>    
+      <li>Set the XERCESCROOT environment variable to the path to the root of &xml4c;.<br/><br/></li>    
+      <li>Set the XALANCROOT environment variable to the path to the c directory in the root of the &xslt4c;
+       distribution.  For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to "/home/mydir/&xslt4c-unix_root;". <br/><br/></li>
+      <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>).  Note that building Xalan with ICU requires that Xerces must also be built with ICU.<br/><br/></li>
+      <li>Change directory to XALANCROOT. You can also 
+          build Xalan-C outside of the source tree, but you will need to adjust the path to the
+          runConfigure script in the next step.<br/><br/></li>      
+      <li>Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as 
+          indicated below.  The runConfigure utility is used to generate the appropriate Makefile for 
+          the desired build platform based on the options specified by the user. Valid options for the 
+          runConfigure utility are:<br/><br/>
+          <code>./runConfigure -p &lt;value&gt; -c &lt;value&gt; -x &lt;value&gt; [-[flag] &lt;value&gt;]</code><br/><br/>
+          <table>
+          <tr><th>flag</th><th>Description</th></tr>
+          <tr><td>p</td><td>Build platform. Option must be provided by user. Valid values <br/>include: 
+          aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,<br/> tru64, macosx, cygwin. </td></tr>
+          <tr><td>c</td><td>C compiler name. Example: gcc, cc, c89, xlc_r, etc.</td></tr>
+          <tr><td>x</td><td>C++ compiler name. Example: g++, xlC_r, CC, etc.</td></tr>
+          <tr><td>d</td><td>Indicates build is a debug build. Takes no values. Default is no <br/>debug.</td></tr>
+          <tr><td>t</td><td>Transcoder to use. Valid value is 'icu'. Default is null.</td></tr>
+          <tr><td>m</td><td>Type of localization support method. Valid values include: inmem, <br/>icu, and nls. 
+          Default is inmem.</td></tr>
+          <tr><td>M</td><td>Locale for Message Localization Support. Default is "en_US"</td></tr>
+          <tr><td>r</td><td>Threads option. Valid values include: pthread or dce. Default is <br/>dce</td></tr>
+          <tr><td>b</td><td>Specify whether it is a 32-bit or 64-bit build. Valid values are 32 <br/>and 64. 
+          Default is 32-bit</td></tr>
+          <tr><td>P</td><td>Install root directory. Used if invoking build with gmake install or <br/>gmake 
+          install-package. Default install root directory is /usr/local</td></tr>
+          <tr><td>l</td><td>Extra link options other than the default. Default is null</td></tr>
+          <tr><td>z</td><td>Extra compiler options other than the default. Default is null</td></tr>
+          <tr><td>C</td><td>Extra configuration options.</td></tr>
+          <tr><td>h</td><td>To get help on the above commands. Default is no help.</td></tr>
+          </table><br/>
+          <ref>Linux using GCC:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c gcc -x c++</code><br/>
+          <ref>Linux using the Intel compiler:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c icc -x icpc</code><br/>
+          <ref>AIX (32-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
+          <ref>AIX (64-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64</code><br/><br/>
+          <ref>Cygwin (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p cygwin -c gcc -x g++</code><br/><br/>
+          <ref>HP-UX 11 (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
+          <ref>HP-UX 11 (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
+          <ref>HP-UX 11 for Itanium (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC</code><br/><br/>
+          <ref>HP-UX 11 for Itanium (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC -b 64</code><br/><br/>
+          <ref>Solaris (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC</code><br/><br/>
+          <ref>Solaris (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC -b 64</code><br/><br/>
+          If you choose to install the distribution after building the libraries and executables, 
+          then you will need to indicate where you would like the distribution to be installed. 
+          To specify the install directory for your distribution, specify the flag -P &lt;install directory&gt;. 
+          For example, building and installing on the AIX platform:<br/><br/>
+          <code>./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan</code><br/><br/>
+          <note>The standard binary directories bin, lib, and include are created in the specified directory only if the install or install-package option is 
+          specified in the build process.<br/><br/></note>
+          To see the other runConfigure flags you may include, use the help flag:<br/><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -h</code><br/><br/></li>
+      <li>Purge the previous build:<br/><br/>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make clean</code><br/><br/></li>
+      <li>Run the new build:<br/><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
+          or<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+          where <ref>targ</ref> can be one of:
+          <table>
+          <tr><th>targ</th><th>Description</th></tr>
+          <tr><td>all</td><td>Build the libraries and Xalan executable. This is the default target <br/>if no targ 
+          is specified.</td></tr>
+          <tr><td>clean</td><td>Deletes existing binaries, executables, libraries, tests, and <br/>samples.</td></tr>
+          <tr><td>install</td><td>Build the library, executables and copy them (along with <br/>the header files) 
+          the specified install location.</td></tr>
+          <tr><td>install-package</td><td>Installs the library, executables, samples to the <br/>specified location.</td></tr>
+          <tr><td>Samples</td><td>Builds the samples.</td></tr>
+          <tr><td>Tests</td><td>Builds the tests.</td></tr>
+          </table>
+      </li>
+    </ol>
+    <note>To recompile existing applications without changing your source code, be sure to modify the command line in your Makefile to pick up the Xalan headers from it's new location. e.g:  if your xalan source location is in /home/&xslt4c-unix_root;,</note><p>
+    <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>CC ... -I/home/&xslt4c-unix_root;/src -I/home/&xslt4c-unix_root;/src/xalanc mysrc.cpp</code><anchor name="64"/></p>
+   </s3>
+   <anchor name="locale"/>
+   <s3 title="Steps for doing a Build with Message Localization Support">
+   <p>Message Localization Support is a new feature to allow users to build &xslt4c;  such that 
+   diagnostic messages are issued in the language of their choice. Message localization support 
+   comes in three flavours:</p>
+   <ul>
+   <li>Building static messages in the form of a library (DLL or shared object) which can be bound 
+   to the Xalan executable. This method is referred to as "in memory".  By default, &xslt4c; is built using "in memory" method.
+   </li>
+   <li>Building messages in the form of a library using localization support provided by the 
+   International Components for Unicode (ICU). </li>
+   <li>Building messages in the form of a message catalog. This method utilizes the localization 
+   support provided by the Unix National Language Support (NLS) system. This method is supported 
+   for UNIX platforms only. </li>
+   </ul>
+   <p>Regardless of which method you choose, a message file containing translated messages in the 
+   language of your choice must be provided. The standard message file provided in the &xslt4c; 
+   version 1.8 source package is in XML Localization Interchange File Format (XLIFF) format 
+   and conforms to the XLIFF 1.1 standard (please see 
+   <jump href="http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm">
+   http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm</jump> for more 
+   information.) All message files must be written and conform with the XLIFF 1.1 standard.</p>
+   <p>Once an XLIFF message file has been created, the XLIFF file should be stored under 
+   &xslt4c-unix_root;/src/xalanc/NLS/&lt;locale_name&gt; directory (for example, the default XLIFF message file 
+   provided is XalanMsg_en_US.xlf). To build, you will need to follow the same steps 
+   as shown above for building in Unix or Windows but with a small change.</p>
+   <p>For building on Windows platform with "In Memory" method:</p>
+   <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of &xml4c;.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
+   <li>Open the Xalan.dsw workspace using Microsoft Visual C++. The "inmem" localization method should be configured by default.</li>
+   <li>Select the Localization project, and go to Settings and click on the "General" tab.Verify 
+   the build command line to use "nmake /f BuildMessages.mak TYPE=inmem LOCAL=en_US"</li>
+   <li>Run "Build all" with the configuration of your choice. </li>
+   </ol>
+   <p>For building on the Windows platform with ICU method:</p>
+   <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of &xml4c;.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
+   <li>Open the XalanICU.dsw workspace using Microsoft Visual C++. </li>
+   <li>Select the AllInOneWithICU project, and ensure that the project depends on the LocalizationWithICU 
+   project. </li>
+   <li>Select the LocalizationWithICU project, and go to Settings and click on the "General" tab. Modify 
+   the build command line to use "nmake /f BuildMessages.mak TYPE=icu LOCAL=en_US"</li>
+   <li>Open the tools.ini file under Projects\Win32\VC6\Utils\Localization and add the ICU root 
+   directory to the ICUROOT variable setting.</li>
+   <li>Run "Build all" with the configuration of your choice. </li>
+   </ol>
+   <p>For building on the Unix platform:</p>
+   <ol>
+   <li>Repeat steps 1 through 5 as outlined under "Steps for doing a UNIX Build" </li>
+   <li>Run the runConfigure and provide the platform, C compiler, C++ compiler, the message locale 
+   system flavour you are intending to build, and the locale support.<br/><br/>
+   Example 1: to use the NLS method for localization support using the default locale en_US:<br/><br/>
+   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC -m nls</code><br/><br/>
+   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;.<code>/runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m nls</code><br/><br/>
+   Example 2: to use the 'icu' method for localization support using the locale fr_FR:<br/><br/>
+   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -m icu -M fr_Fr</code><br/><br/>
+   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m icu -M fr_Fr</code><br/><br/>
+   </li>
+   <li>Perform steps 7 and 8 as outlined under "Steps for doing a UNIX Build" </li>
+   </ol>
+   <p>After &xslt4c; and associated libraries have been successfully built, the message catalog 
+   will be stored in the directory &xslt4c-unix_root;/bin.<br/><br/>
+   <table>
+   <tr><th>Localization Build Type</th><th>File Name</th></tr>
+   <tr><td><ref>ICU or "in memory" method:</ref></td><td>libxalanMsg18.so (for UNIX)<br/>
+   XalanMessages_1_8.dll and XalanMessages_1_8.lib (for Windows)
+   </td></tr>
+   <tr><td><ref>NLS method:</ref></td><td>xalanMsg1_8.cat can be found in $XALANCROOT/nls/&lt;locale_name&gt;/ directory</td></tr>
+   </table>
+   </p>
+   <p>The location of the message library, &xslt4c; and &xml4c; binaries need to be added to the PATH and 
+   library path variables. Depending on the Message Localization Support method you've chosen, the 
+   following steps will need to be performed such that &xslt4c; will be able to utilize the message 
+   library. </p>
+   <ul>
+   <li>For an "in memory" or "icu" build, the location of the &xslt4c; and &xml4c; executables need to 
+   be added to the PATH variable. The location of the message library will need to be added to: 
+   <ul>
+   <li>the LIBPATH variable for AIX users </li>
+   <li>the LD_LIBRARY_PATH variable for RedHat, SuSE, and Solaris users </li>
+   <li>the SHLIB_PATH variable for HP-UX users. </li>
+   </ul></li>
+   <li>For an NLS build, the message catalog will need to be added to the NLSPATH. </li>
+   </ul>   
+   </s3>   
+   <anchor name="xercesdepdom"/>
+   <s3 title="Steps for doing a Build with Xerces Deprecated DOM Support">
+   <p>If you application is dependent on the XercesBridge classes to interface with the deprecated Xerces DOM, then the following steps must be taken.</p>
+   <p>For a Windows build using Microsoft Visual C++ version 6.0:</p>
+   <ol>
+   <li>Open the Xalan.dsw workspace</li>
+   <li>Go to "Projects" and select "Settings".  From the "Project Settings panel", highlight the AllInOne project.</li>
+   <li>Click on the "C/C++" tab on the right hand side.  From the "Category" pull down menu, scroll down to find "Preprocessor" and click to highlight this category.</li>
+   <li>Under the "Preprocessor Definitions" box, add "XALAN_BUILD_DEPRECATED_DOM_BRIDGE" to the list of definitions.</li>
+   <li>Rebuild &xslt4c; as described under <link anchor="win32">"Steps for doing a Windows Build"</link></li>
+   </ol>
+   <p>For a UNIX build, the following parameter should be added to your runConfigure step: <code>-z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code>.  for example,</p>
+   &nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code><br/><br/>
+
+   </s3>
+   <anchor name="samples"/>
+   <s3 title="Rebuilding a Sample application">
+   <p>In the 32-bit Windows distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace.</p>
+<p>The Makefile that come with the UNIX distributions include targets for rebuilding one or all of the sample applications . To rebuild one or more sample applications, go to the root directory of your source package or the samples directory of your binary package, and run<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>Target</ref></code><br/><br/>
+where <ref>Target</ref> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, <code>ThreadSafe</code> (Windows only), <code>TraceListen</code>, <code>TransformToXercesDOM</code>, <code>UseStylesheetParam</code>, <code>XPathWrapper</code>, <code>XalanTransform</code>, or <code>XalanTransformerCallback</code>.</p>
+<note>For information on building Apache Module, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link></note>
+   </s3>
+ </s2><anchor name="contact"/>
+ <s2 title="Getting in Touch">
+  <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of &xslt4c;.</p> 
+<p>Please email your comments, questions, suggestions, bug reports, and offers to help to <human-resource-ref idref="xalandev"/>.</p>
+ </s2><anchor name="history"/>
+ <s2 title="Cumulative history of software changes">
+   <p>The following sections list the changes in each release since &xslt4c; version 0.40.0.</p>
+   &history-c;
+ </s2> 
+</s1>

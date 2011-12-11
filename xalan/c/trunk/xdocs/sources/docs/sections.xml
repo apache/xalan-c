@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="Sections Test File">
+  <p>
+    Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+    vero etiam in senatum venit, fit publici consilii particeps, notat et 
+    designat oculis ad caedem unum quemque nostrum.
+  </p>
+  <p>
+    Nos autem fortes viri satis facere rei publicae videmur, si istius 
+    furorem ac tela vitemus. Ad mortem te, Catilina, duci iussu consulis 
+    iam pridem oportebat, in te conferri pestem, quam tu in nos 
+    machinaris. An vero vir amplissumus, P. Scipio, pontifex maximus, Ti. 
+    Gracchum mediocriter labefactantem statum rei publicae privatus 
+    interfecit.
+  </p>
+  <p>
+    Catilinam orbem terrae caede atque incendiis vastare cupientem nos 
+    consules perferemus? Namilla nimis antiqua praetereo, quod C. 
+    Servilius Ahala Sp. Maelium novis rebus studentem manu sua occidit.
+  </p>
+  <s2 title="This is an &lt;s2 ...&gt; section">
+    <p>
+      Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+      vero etiam in senatum venit, fit publici consilii particeps, notat et 
+      designat oculis ad caedem unum quemque nostrum.
+    </p>
+    <p>
+      Nos autem fortes viri satis facere rei publicae videmur, si istius 
+      furorem ac tela vitemus. Ad mortem te, Catilina, duci iussu consulis 
+      iam pridem oportebat, in te conferri pestem, quam tu in nos 
+      machinaris. An vero vir amplissumus, P. Scipio, pontifex maximus, Ti. 
+      Gracchum mediocriter labefactantem statum rei publicae privatus 
+      interfecit.
+    </p>
+    <s3 title="This is an &lt;s3 ...&gt; section">
+      <p>
+        Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+        vero etiam in senatum venit, fit publici consilii particeps, notat et 
+        designat oculis ad caedem unum quemque nostrum.
+      </p>
+      <p>
+        Nos autem fortes viri satis facere rei publicae videmur, si istius 
+        furorem ac tela vitemus. Ad mortem te, Catilina, duci iussu consulis 
+        iam pridem oportebat, in te conferri pestem, quam tu in nos 
+        machinaris. An vero vir amplissumus, P. Scipio, pontifex maximus, Ti. 
+        Gracchum mediocriter labefactantem statum rei publicae privatus 
+        interfecit.
+      </p>
+    <s4 title="This is an &lt;s4 ...&gt; section">
+      <p>
+        Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+        vero etiam in senatum venit, fit publici consilii particeps, notat et 
+        designat oculis ad caedem unum quemque nostrum.
+      </p>
+    </s4>
+    <s4 title="This is an &lt;s4 ...&gt; section">
+      <p>
+        Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+        vero etiam in senatum venit, fit publici consilii particeps, notat et 
+        designat oculis ad caedem unum quemque nostrum.
+      </p>
+    </s4>
+      <p>
+        Catilinam orbem terrae caede atque incendiis vastare cupientem nos 
+        consules perferemus? Namilla nimis antiqua praetereo, quod C. 
+        Servilius Ahala Sp. Maelium novis rebus studentem manu sua occidit.
+      </p>
+    </s3>
+    <p>
+      Catilinam orbem terrae caede atque incendiis vastare cupientem nos 
+      consules perferemus? Namilla nimis antiqua praetereo, quod C. 
+      Servilius Ahala Sp. Maelium novis rebus studentem manu sua occidit.
+    </p>
+  </s2>
+  <anchor name="bottom"/>
+</s1>

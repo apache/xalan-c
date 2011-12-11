@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE faqs SYSTEM "../../style/dtd/faqs.dtd">
+
+<faqs title="Second FAQS simple file">
+  <faq title="Title for question 1 of Second file">
+    <q>Question 1 of Second file</q>
+    <a>
+      <p>
+        Answer 1 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 2 of Second file</q>
+    <a>
+      <p>
+        Answer 2 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 3 of Second file">
+    <q>Question 3 of Second file</q>
+    <a>
+      <p>
+        Answer 3 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 4 of Second file</q>
+    <a>
+      <p>
+        Answer 4 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 5 of Second file">
+    <q>Question 5 of Second file</q>
+    <a>
+      <p>
+        Answer 5 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 6 of Second file</q>
+    <a>
+      <p>
+        Answer 6 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 7 of Second file">
+    <q>Question 7 of Second file</q>
+    <a>
+      <p>
+        Answer 7 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 8 of Second file</q>
+    <a>
+      <p>
+        Answer 8 of Second file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 9 of Second file">
+    <q>Question 9 of Second file</q>
+    <a>
+      <p>
+        Answer 9 of Second file
+      </p>
+    </a>
+  </faq>
+
+</faqs>

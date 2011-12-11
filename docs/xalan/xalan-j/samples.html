@@ -1,0 +1,1410 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-Java Samples</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-Java Samples</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>Sample Apps<br />
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-Java Samples</h2>
+
+<p>Xalan-Java Interpretive samples:</p>
+<ul>
+<li>
+<a href="#simpletransform">SimpleTransform</a>
+</li>
+<li>
+<a href="#usestylesheetpi">UseStylesheetPI</a>
+</li>
+<li>
+<a href="#usestylesheetparam">UseStylesheetParam</a>
+</li>
+<li>
+<a href="#sax2sax">SAX2SAX</a>
+</li>
+<li>
+<a href="#dom2dom">DOM2DOM</a>
+</li>
+<li>
+<a href="#pipe">Pipe</a>
+</li>
+<li>
+<a href="#usexmlfilters">UseXMLFilters</a>
+</li>
+<li>
+<a href="#appletxmltohtml">AppletXMLtoHTML</a>
+</li>
+<li>
+<a href="#extensions">Extensions</a>
+</li>
+<li>
+<a href="#trace">Trace</a>
+</li>
+<li>
+<a href="#validate">Validate</a>
+</li>
+<li>
+<a href="#trax">trax (JAXP transform samples)</a>
+</li>
+<li>
+<a href="#transformthread">TransformThread</a>
+</li>
+<li>
+<a href="#applyxpath">ApplyXPath</a>
+</li>
+<li>
+<a href="#applyxpathdom">ApplyXPathDOM</a>
+</li>
+<li>
+<a href="#applyxpathjaxp">ApplyXPathJAXP</a>
+</li>
+<li>
+<a href="#xpathresolver">XPathResolver</a>
+</li>
+<li>
+<a href="#extensionresolver">ExtensionFunctionResolver</a>
+</li>
+</ul>
+<p>Xalan-Java Interpretive servlet samples:</p>
+<ul>
+<li>
+<a href="#servlet">servlet</a>
+</li>
+</ul>
+<p>Xalan-Java Compiled samples:</p>
+<ul>
+<li>
+<a href="#translets">translets</a>
+</li>
+</ul>  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Samples to help you get started</h3>
+<p>Each of the subdirectories in the Xalan-Java java/samples directory
+   contains the source files for one or more sample applications.  The class
+   files for the samples are in the following jar files:</p>
+<table border="1">
+<tr>
+  <th class="content" rowspan="1" colspan="1">JAR file</th>
+  <th class="content" rowspan="1" colspan="1">Content</th>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xalansamples.jar</td>
+  <td class="content" rowspan="1" colspan="1">Everything except the Xalan-Java Interpretive servlet sample and some
+      XSLTC samples</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xalanservlet.jar</td>
+  <td class="content" rowspan="1" colspan="1">Xalan-Java Interpretive servlet sample</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xsltcapplet.jar</td>
+  <td class="content" rowspan="1" colspan="1">XSLTC applet sample</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xsltcbrazil.jar</td>
+  <td class="content" rowspan="1" colspan="1">XSLTC Brazil server sample</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xsltcejb.jar</td>
+  <td class="content" rowspan="1" colspan="1">XSLTC EJB sample</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xsltcservlet.jar</td>
+  <td class="content" rowspan="1" colspan="1">XSLTC servlet sample</td>
+</tr>
+</table>
+<p>With most of the samples, you can use the following procedure:</p>
+ <ol>
+   <li>Be sure <code>xalan.jar</code>, <code>serializer.jar</code>, <code>xml-apis.jar</code>, the appropriate samples JAR file, 
+       and <code>xercesImpl.jar</code> are on the system class path. For the extension examples, <code>bsf.jar</code> 
+       and (for the JavaScript extensions) <code>js.jar</code> must also be on the class path.</li>
+   <li>Be sure the java executable is on your path.</li>
+   <li>Go to the samples subdirectory containing the sample (use the DOS shell if you are running Windows).</li>
+   <li>Run the sample from the command line (as indicated below).</li>
+   <li>Examine the application source files. You may also want to modify the source files. Remember that if you
+       modify a java file, you must recompile the class and place it on the classpath before you can run the
+       modified application.</li>
+ </ol>      
+<p>The basic command line for running most of the samples is </p> 
+    <p>
+<code>java <b>
+<i>classname args</i>
+</b>
+</code>
+</p>
+    <p>where <b>
+<i>classname</i>
+</b> is the sample class and <b>
+<i>args</i>
+</b> are the arguments, if any. As described in
+     the following sections, some samples take no arguments. The UseStylesheetParam sample takes an
+     additional argument. Several samples in extensions use the Xalan-Java 
+     <a href="commandline.html">command-line utility</a>, so they take arguments for the XML source
+     file and the XSL stylesheet.</p>
+  
+   
+   <a name="simpletransform">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SimpleTransform</h3>
+   <p>What it does: The SimpleTransform class uses the birds.xsl stylesheet to transform birds.xml, and prints the
+   output to birds.out.</p>
+   <p>You can run it from the SimpleTransform subdirectory with</p>
+   <p>
+<code>java SimpleTransform</code>
+</p>
+   
+   
+   <a name="usestylesheetpi">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>UseStylesheetPI</h3>
+   <p>What it does: The UseStylesheetPI class uses the stylesheet processing instruction in the XML source document to determine
+   which stylesheet to use to perform the transformation.</p>
+   <p>You can run it from the UseStylesheetPI subdirectory with</p>
+   <p>
+<code>java UseStylesheetPI</code>
+</p>
+   <p>For more information, see <a href="usagepatterns.html#embed">Working with embedded stylesheets</a>.</p>
+   
+   
+   <a name="usestylesheetparam">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>UseStylesheetParam</h3>
+   <p>What it does: The UseStyleSheetParam class uses foo.xsl and a stylesheet parameter to transform foo.xml,
+   and prints the output to System.out. The stylesheet parameter appears as a text node in the output.</p>
+   <p>Run this sample from the UseStylesheetParam subdirectory with</p> 
+   <p>
+<code>java UseStylesheetParam <b>
+<i>param</i>
+</b>
+</code>
+</p>
+   <p>where <b>
+<i>param</i>
+</b> is the stylesheet parameter value (a string of your choice).</p>  
+   
+   
+   <a name="sax2sax">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SAX2SAX</h3>
+   <p>What it does: Explicitly sets the SAX XMLReader and SAX ContentHandler for processing the stylesheet (birds.xsl), processing the XML input (birds.xml), and producing the output (birds.out).</p>
+   <p>Run this sample from the SAX2SAX subdirectory with</p>
+   <p>
+<code>java SAX2SAX</code>
+</p>
+   
+   
+   <a name="dom2dom">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>DOM2DOM</h3>
+   <p>What it does: the DOM2DOM class uses the birds.xsl stylesheet to transform a DOM Document generated from birds.xml,
+   produces an output DOM, and traverses the DOM, printing the traversal to System.out. In contrast to SimpleTransform,
+   DOM2DOM illustrates the procedure for processing an input DOM and creating an output DOM that is available for
+   further processing.</p>
+   <p>You can run it from the DOM2DOM subdirectory with</p>
+   <p>
+<code>java DOM2DOM</code>
+</p>
+   
+   
+   <a name="pipe">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Pipe</h3>
+   <p>What it does: Pipes the output from one transformation to a second transformation, then from the second
+    transformation to the third transformation. Transformer1 is the ContentHandler for the XMLReader (which parses the
+    input document). Transformer2 provides the ContentHandler for Transformer1, and Transformer3 for Transformer2.</p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Pipe and UseXMLFilters illustrate two strategies for using the output of one transformation as the input for
+    another transformation. The Pipe sample incorporates a "push" model -- Transformer1 "pushes" its output to
+    Transformer2, and so on -- whereas in the UseXMLFilters sample, Transformer3 "pulls" its input from Transformer2,
+    and so on.</td>
+</tr>
+</table>
+    <p>Run this sample from the Pipe subdirectory with</p> 
+    <p>
+<code>java Pipe</code>
+</p>
+    
+    
+    <a name="usexmlfilters">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>UseXMLFilters</h3>
+    <p>What it does: Chains together the same transformations as the preceding Pipe sample. Using each Transformer
+    object as an extension of the SAX XMLFilter interface, sets the XMLReader as the parent of filter1,
+    filter1 as the parent of filter2, and filter2 as the parent of of filter3.</p>
+    <p>
+<img src="xmlfilters.gif" alt="xmlfilters.gif" />
+</p>
+    <p>Run this sample from the UseXMLFilters subdirectory with</p>
+    <p>
+<code>java UseXMLFilters</code>
+</p>
+    
+    
+    <a name="appletxmltohtml">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>AppletXMLtoHTML</h3>
+    <p>This applet uses a stylesheet to transform an XML document into HTML. It displays the XML document, the
+     stylesheet, and the HTML output.</p>
+    <p>How to run it: Open appletXMLtoHTML.html in the Internet Explorer 5 browser.</p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For information about running Xalan-Java applets in Netscape Communicator, see <a href="usagepatterns.html#netscape">Problems
+    with Netscape</a>.<br />
+<br />
+    This applet looks for <code>xalan.jar</code> and <code>serializer.jar</code> in the build directory, or the top level directory, and <code>xml-apis.jar</code> and 
+    <code>xercesImpl.jar</code> in the lib subdirectory. If you have placed these JAR files elsewhere, adjust the applet archive setting in 
+    client.html accordingly.</td>
+</tr>
+</table>
+    
+
+    <a name="servlet">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>servlet</h3>
+    <p>For a general introduction, see <a href="usagepatterns.html#servlet">Using Xalan-Java in a servlet</a>.</p>
+    <p>The servlet subdirectory contains four sample servlets and one JSP that use Xalan-Java to perform transformations. The sample 
+    code is compiled and packed in xalanservlet.war. To run these samples, you must place 
+    xalanservlet.war on a web server with a servlet engine. For example, using <a href="http://tomcat.apache.org/index.html">jakarta-tomcat 4.1.*</a>. 
+    Copy the xalanservlet.war to %Tomcat_Home%/webapps. For more details about deploying
+    servlets on Tomcat, please refer to <a href="http://tomcat.apache.org/tomcat-4.1-doc/appdev/deployment.html">Deployment Organization</a>.</p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Dependency on Tomcat version. If encountering "java.lang.VerifyError: Cannot inherit from final class" error, 
+    replace <code>xercesImpl.jar</code> under %Tomcat_Home%/common/endorsed with the one included with Xalan-Java .</td>
+</tr>
+</table>
+    <p>
+<a href="#simplexsltservlet">servlet.SimpleXSLTServlet</a> applies a particular stylesheet to a particular 
+    XML document.</p> 
+    <p>
+<a href="#usestylesheetparamservlet">servlet.UseStylesheetParamServlet</a> sets a stylesheet parameter 
+    (the parameter name is hardwired into the servlet), and requires the user to supply parameters for the 
+    XML document and XSL stylesheet.</p>
+    <p>
+<a href="#jspsample">jspSample.jsp</a> is a Java ServerPage that sets a stylesheet parameter and applies the
+     stylesheet to the XML document.</p>
+    <p>
+<a href="#xsltservletwithparams">servlet.XSLTServletWithParams</a> accepts parameters for the XML document, 
+    the XSL stylesheet, and any number of stylesheet parameters.</p>
+    <p>
+<a href="#applyxslt">servlet.ApplyXSLT</a> (and associated classes) is closer to a production level servlet. It accepts parameters, provides a 
+    listener for capturing and reporting debugger messages, and supports  use of a property file to determine which 
+    stylesheet to apply based on the identity of the client browser/device.</p>
+    <a name="simplexsltservlet">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>servlet.SimpleXSLTServlet</h4>
+    <p>What it does: servlet.SimpleXSLTServlet applies the birds.xsl stylesheet to birds.xml 
+    and returns the transformation result to the HTTP client.</p>
+    <p>To run this servlet: set up an HTML page to call the servlet as
+    follows:</p>
+    <div class="glossary">
+<p class="label">
+<em>http://localhost:port/xalanservlet/SimpleXSLTServlet</em>
+</p>
+</div>
+    <a name="usestylesheetparamservlet">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>servlet.UseStylesheetParamServlet</h4>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Paul Campbell &lt;seapwc@halcyon.com&gt; wrote this servlet and the following explanatory text.
+    Thank you, Paul!</td>
+</tr>
+</table>
+    <p>What it does: The client (perhaps an HTML form) specifies an XML document, a stylesheet, and a value to be passed
+    to the stylesheet for a stylesheet parameter named "param1". The servlet performs the transformation and returns
+    the output to the client. The client must specify which stylesheet (containing a "param1" stylesheet parameter") 
+    and XML file are to be used or use sample files fooparam.xml and fooparam.xsl.</p>
+    <p>How to run it: set up an HTML client to call the servlet with arguments along the lines of</p>
+    <div class="glossary">
+<p class="label">
+<em>http://localhost:port/xalanservlet/UseStylesheetParamServlet?
+    XML=fooparam.xml&amp;XSL=fooparam.xsl&amp;PVAL=GoodBye</em>
+</p>
+</div>
+    <p>In the doGet() method, the servlet obtains the PVAL value "GoodBye" from the servlet request and passes it to the 
+    stylesheet as the paramValue argument in a Transformer setParameter() call:</p>
+    <p>
+<code>String paramValue = httpServletRequest.getParameter("PVAL");</code>
+<br />
+    <code>...</code>
+<br />
+    <code>transformer.setParameter("param1", paramValue);</code>
+</p>
+    <p>The result is returned to the client:</p>
+    <p>
+<code>&lt;html&gt;&lt;body&gt;&lt;p&gt;GoodBye&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</code>
+</p>
+    <a name="jspsample">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>jspSample.jsp</h4>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Paul Campbell &lt;seapwc@halcyon.com&gt; wrote this Java Server Page.</td>
+</tr>
+</table>
+    <p>This Java Server Page performs essentially the same operation as 
+    <a href="#usestylesheetparamservlet">servlet.UseStylesheetParamServlet</a>. It applies a stylesheet parameter 
+    to a stylesheet (fooparam.xsl), applies the stylesheet to an XML source document (fooparam.xml), and returns the
+    result.</p>
+    <p>Call JSP as follows:</p>
+    <div class="glossary">
+<p class="label">
+<em>http://localhost:port/xalanservlet/jspSample.jsp?
+    XML=fooparam.xml&amp;XSL=fooparam.xsl&amp;PMA=GoodBye</em>
+</p>
+</div>
+    <p>The JSP obtains the PMA value "GoodBye" from the http request and passes it to the stylesheet as the 
+    paramValue argument in a Transformer setParameter() call.</p>    
+    <a name="xsltservletwithparams">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>servlet.XSLTServletWithParams</h4>
+    <p>What it does: servlet.XSLTServletWithParams takes parameters in the request -- a URL parameter for
+    the XML input document URL and an xslURL parameter for the stylesheet URL.</p>
+    <p>To use XSLTServletWithParams to perform the same transformation as SimplestServlet: 
+    use birds.xsl and birds.xml as examples. Set up an HTML page to call the servlet as follows:</p>
+    <div class="glossary">
+<p class="label">
+<em>http://localhost:port/xalanservlet/XSLTServletWithParams?URL=birds.xml&amp;
+    xslURL=birds.xsl</em>
+</p>
+</div>
+    <p>If the XML document contains an associated stylesheet (a stylesheet Processing Instruction) that you want to use, simply omit the
+    xslURL parameter.</p>
+    <p>If the stylesheet takes stylesheet parameters, you can include them in the URL. For example to set the param1
+    stylesheet parameter to foo, include param1=foo in the URL.</p>
+    <a name="applyxslt">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>servlet.ApplyXSLT</h4>
+    <p>What it does: The client (which you must set up) specifies an XML document and a stylesheet. The servlet
+    performs the transformation and returns the output to the client. You can use media.properties to specify 
+    which stylesheet is to be used depending on the client browser/device.</p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The source files for this servlet, including ApplyXSLT.java, ApplyXSLTProperties.java, DefaultApplyXSLTProperties.java,
+    ApplyXSLTListener.java, ApplyXSLTException.java. booklist1.xsl, booklist2.xsl and catalog.xml,
+    are provided for testing.</td>
+</tr>
+</table>
+    <p>To run the servlet:  set system property server.root=server root. Set up an HTML page to call
+    servlet.ApplyXSLT with arguments as illustrated below.</p>
+    <p>The files catalog.xml,  booklist1.xsl and booklist2.xsl are used in the following example.
+    In the deployment descriptor, booklist1.xsl is set as the default xsl file. If you create these 
+    files yourself, make sure that you set the output method to "xml" in the stylesheet.</p>
+    <p>Examples:</p>
+    <div class="glossary">
+    <p class="label">
+<em>http://localhost:port/xalanservlet/ApplyXSLT?URL=/xalanservlet/catalog.xml&amp;xslURL=
+    /xalanservlet/booklist2.xsl</em>
+</p>
+    <blockquote class="item">...applies the booklist2.xsl stylesheet to the catalog.xml data. Both files are<br />
+    served from the Web server's HTTP document root.<br />
+<br />
+</blockquote>
+    <p class="label">
+<em>http://localhost:port/xalanservlet/ApplyXSLT?URL=/xalanservlet/catalog.xml&amp;xslURL=
+    /xalanservlet/booklist2.xsl&amp;debug=true</em>
+</p>
+    <blockquote class="item">...ensures that XML and XSL processor messages are returned in the event of problems
+    applying booklist2.xsl to catalog.xml<br />
+<br />
+</blockquote>
+    <p class="label">
+<em>http://localhost:port/xalanservlet/ApplyXSLT/xalanservlet/catalog.xml?xslURL=/xalanservlet/booklist2.xsl</em>
+</p>
+    <blockquote class="item">...applies the booklist2.xsl stylesheet to the catalog.xml data, just like the first example.
+    This is an alternative way of specifying the XML XSLTInputSource by utilizing the HTTP request's path
+    information.<br />
+<br />
+</blockquote>
+    <p class="label">
+<em>http://localhost:port/xalanservlet/ApplyXSLT/xalanservlet/catalog.xml</em>
+</p>
+    <blockquote class="item">...examines catalog.xml for an associated XSL stylesheet booklist1.xsl (a stylesheet Processing Instruction). If multiple XSLs are associated with the data, the stylesheet whose media attribute maps to your browser type will be chosen.  If no mapping is successful, the primary associated stylesheet is used.<br />
+<br />
+</blockquote>
+    </div>     
+    
+    
+   
+    <a name="extensions">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Extensions</h3>
+    <p>For an introduction to the creation and use of extension elements and extension functions, and
+    for information about the extensions library distributed with the Xalan-Java Interpretive processor, 
+    see <a href="extensions.html">Extensions</a>. Extensions are also supported for the Xalan-Java 
+    Compiling processor (XSLTC), however no samples exist at this time.  See 
+    <a href="extensions_xsltc.html">Extensions for XSLTC</a>.</p>
+    <ul>
+      <li>
+<a href="#ext1">1-redir</a>
+</li>
+      <li>
+<a href="#ext2">2-basicJscript</a>
+</li>
+      <li>
+<a href="#ext3">3-java-namespace</a>
+</li>
+      <li>
+<a href="#ext4">4-numlistJava</a>
+</li>
+      <li>
+<a href="#ext5">5-numlistJScript</a>
+</li>
+      <li>
+<a href="#sql">SQL library extensions</a>
+</li>
+    </ul>
+    <p>The extensions subdirectory contains six samples with Xalan-Java Interpretive extensions. Two of the samples use
+     extensions implemented in JavaScript, and four of the samples use extensions implemented in Java.</p>
+    <p>To run these examples, you must place <code>bsf.jar</code> and <code>js.jar</code> (version 1.5, available from 
+     <a href="http://www.mozilla.org/rhino">http://www.mozilla.org/rhino</a>) on the classpath. 
+     You do not need <code>js.jar</code> on the classpath for the samples that use Java extensions. <a href="faq.html">
+     Problems related to JDK 1.4 or higher</a>.</p>
+    <p>Use java.org.apache.xalan.xslt.Process, the Xalan-Java command-line utility, to run most of these samples from
+     the <a href="commandline.html">command line</a>. The command line must include an -in flag with the 
+     XML source and an -xsl flag with the XSL stylesheet. If you want the output to be written to a file, rather
+     than to the screen, add an -out flag with the output file name.</p>
+    <p>Run these samples from the extensions directory as follows (each of the following is a single command
+     line):</p> 
+
+    <a name="ext1">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>1-redir</h4>
+    <p>What it does: Uses the Redirect extension elements shipped with Xalan-Java to direct output to two output
+     files.</p>
+    <p>Run this sample from the extensions subdirectory with</p> 
+    <p>
+<code>java org.apache.xalan.xslt.Process -in 1-redir.xml</code>
+<br />
+       <code>-xsl 1-redir.xsl</code>
+</p>
+    <p>The standard (non-redirected) output is written to the screen. The redirected output is written to 1-redir-out, or
+     whatever filename you assign to the doc/foo @file attribute in 1-redir.xml. The stylesheet gets the file name for
+     redirected output from the XML input file.</p>
+    
+    
+    <a name="ext2">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>2-basicJscript</h4>
+    <p>What it does: Uses an extension element and extension function implemented in JavaScript to compute a
+      deadline for responding to a customer inquiry.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">
+<code>js.jar</code> must be on the classpath.</td>
+</tr>
+</table>
+    <p>Run this sample from the extensions subdirectory with</p>
+    <p>
+<code>java org.apache.xalan.xslt.Process -in 2-basicJscript.xml</code>
+     <br />  <code>-xsl 2-basicJscript.xsl</code>
+</p>     
+    
+    
+    <a name="ext3">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>3-java-namespace</h4>
+    <p>What it does: Uses extension functions to format dates. This sample illustrates use of the predefined java
+     extension namespace to provide ready access to extensions implemented in Java.</p>
+    <p>Run this sample from the extensions subdirectory with</p> 
+    <p>
+<code>java org.apache.xalan.xslt.Process -in 3-java-namespace.xml</code>
+     <br />  <code>-xsl 3-java-namespace.xsl</code>
+</p>    
+    
+    
+    <a name="ext4">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>4-numlistJava</h4>
+    <p>What it does: Uses a Java extension to transform a set of name elements into a numbered and alphabetized
+     list.</p>
+    <p>Run this sample from the extensions subdirectory with</p> 
+    <p>
+<code>java org.apache.xalan.xslt.Process -in numlist.xml</code> 
+     <br />  <code>-xsl 4-numlistJava.xsl</code>
+</p>    
+    
+    
+    <a name="ext5">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>5-numlistJscript</h4>
+    <p>What it does: Uses a JavaScript  extension to transform a set of name elements into a numbered and
+     alphabetized list. This sample performs the same operations as the preceding Java extension.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">
+<code>js.jar</code> must be on the classpath.</td>
+</tr>
+</table>
+    <p>Run this sample from the extensions subdirectory with</p>
+    <p>
+<code> java org.apache.xalan.xslt.Process -in numlist.xml</code>
+     <br />  <code>-xsl 5-numlistJscript.xsl</code>
+</p>
+    
+    
+   
+    <a name="sql">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SQL library extensions</h3>
+    <p>The <a href="extensionslib.html#sql">SQL library </a> 
+     extension enables you to execute SQL queries from within a stylesheet, 
+     and to incorporate query result sets in the XML output. 
+     To use the SQL library, you need a JDBC driver, the underlying DBMS, 
+     and a database.</p>
+    <p>Our samples use Apache Derby DBMS, but the SQL Extensions and sample code
+     can be configured to query data from any DBMS that can be accessed through
+     JDBC.</p>
+
+    <a name="dbsetup">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Setting up the SQL extension samples</h4>   
+    <p>To run the SQL library extension samples, do the following:</p>
+    <p>The SQL Extension examples require the Apache Derby jars.
+     The Derby jars are available from <a href="http://db.apache.org/derby/">
+     http://db.apache.org/derby/</a>.</p>
+    <p>The sample batch/script files are configured to look for the 
+     derby jars in the xml-xalan/java/samples/extensions/sql directory by default.</p>
+    <p>If you already have derby installed and want to use that implementation.
+      You can do one of the following.</p>
+    <ol>
+      <li>set the environment variable DERBY_JAR_DIR to point to the location of <code>derby.jar</code> and <code>derbytools.jar</code>
+</li>
+      <li>have the <code>derby.jar</code> and <code>derbytools.jar</code> in your classpath.</li>
+    </ol>
+    <p>First create the sample database using Derby.  To do this, </p>
+    <ul>
+<li>on Windows, execute the command<br /> <code>runDerby.bat createdb.sql</code>
+</li>
+        <li>on Unix, execute the command<br /> <code>sh runDerby.sh createdb.sql</code>
+</li>
+    </ul>
+    <p>You can use the Derby tools to examine the raw database. To do this, </p>
+      <ul>
+      <li>on Windows execute the command<br />
+      <code>runDerby.bat</code>
+<br />
+      At the lj&gt; prompt type the following commands:<br />
+      <code>lj&gt; connect 'sampleDB';</code>
+<br />
+      <code>lj&gt; select * from import1;</code>
+<br />
+<br />
+      <code>To quit the lj session type</code>
+<br />
+      <code>lj&gt; quit;</code>
+<br />
+      <br />
+</li>
+      <li>To Start lj on Unix type<br />
+      <code>sh runDerby.sh</code>
+<br />
+<br />
+</li>
+      </ul>
+    <p>Once the sample database has been created, you can run the sample
+      stylesheets using the runXalan script.</p>
+    
+
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SQL Library samples</h4>   
+    <ul>
+    <li>
+<a href="#Dump-SQL">The Details - Dump SQL</a>
+</li>
+    <li>
+<a href="#basic-conn">Basic Connections</a>
+</li>
+    <li>
+<a href="#ext-conn">ExternalConnection</a>
+</li>
+    <li>
+<a href="#pquery">Parameterized query</a>
+</li>
+    <li>
+<a href="#streamable">Streamable</a>
+</li>
+    <li>
+<a href="#showerror">Show-error</a>
+</li>
+    </ul>
+    
+
+    <a name="Dump-SQL">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Dump-SQL</h4>
+    <p>The Dump SQL example is used to show what data is available to the XSLT process.</p>
+    <p>To run the DumpSQL Example, execute the following command<br />
+         <code>runXalan.bat -XSL basic-connection/DumpSQL.xsl</code>
+</p>
+    <p>Dump SQL should produce the following output:</p>
+    <blockquote class="source">
+<pre>
+    &lt;sql&gt;
+      &lt;metadata&gt;
+        &lt;column-header searchable="true" writable="false" signed="true" 
+    nullable="true" definitely-writable="false" case-sensitive="false" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="10" 
+    column-typename="INTEGER" column-type="4" column-display-size="11" 
+    catalogue-name="" column-label="PRODUCTID" column-name="PRODUCTID"&gt;&lt;/column-header&gt;
+        &lt;column-header searchable="true" writable="false" signed="false" 
+    nullable="true" definitely-writable="false" case-sensitive="true" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="40" 
+    column-typename="VARCHAR" column-type="12" column-display-size="40" 
+    catalogue-name="" column-label="NAME" column-name="NAME"&gt;&lt;/column-header&gt;
+      &lt;/metadata&gt;
+      &lt;row-set&gt;
+       &lt;row&gt;
+        &lt;col searchable="true" writable="false" signed="true" 
+    nullable="true" definitely-writable="false" case-sensitive="false" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="10" 
+    column-typename="INTEGER" column-type="4" column-display-size="11" 
+    catalogue-name="" column-label="PRODUCTID" column-name="PRODUCTID"&gt;1&lt;/col&gt;
+        &lt;col searchable="true" writable="false" signed="false" 
+    nullable="true" definitely-writable="false" case-sensitive="true" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="40" 
+    column-typename="VARCHAR" column-type="12" column-display-size="40" 
+    catalogue-name="" column-label="NAME" column-name="NAME"&gt;toothpaste&lt;/col&gt;
+       &lt;/row&gt;
+       &lt;row&gt;
+        &lt;col searchable="true" writable="false" signed="true" 
+    nullable="true" definitely-writable="false" case-sensitive="false" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="10" 
+    column-typename="INTEGER" column-type="4" column-display-size="11" 
+    catalogue-name="" column-label="PRODUCTID" column-name="PRODUCTID"&gt;2&lt;/col&gt;
+        &lt;col searchable="true" writable="false" signed="false" 
+    nullable="true" definitely-writable="false" case-sensitive="true" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="40" 
+    column-typename="VARCHAR" column-type="12" column-display-size="40" 
+    catalogue-name="" column-label="NAME" column-name="NAME"&gt;milk&lt;/col&gt;
+       &lt;/row&gt;
+       &lt;row&gt;
+        &lt;col searchable="true" writable="false" signed="true" 
+    nullable="true" definitely-writable="false" case-sensitive="false" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="10" 
+    column-typename="INTEGER" column-type="4" column-display-size="11" 
+    catalogue-name="" column-label="PRODUCTID" column-name="PRODUCTID"&gt;3&lt;/col&gt;
+        &lt;col searchable="true" writable="false" signed="false" 
+    nullable="true" definitely-writable="false" case-sensitive="true" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="40" 
+    column-typename="VARCHAR" column-type="12" column-display-size="40" 
+    catalogue-name="" column-label="NAME" column-name="NAME"&gt;bread&lt;/col&gt;
+       &lt;/row&gt;
+       &lt;row&gt;
+        &lt;col searchable="true" writable="false" signed="true" 
+    nullable="true" definitely-writable="false" case-sensitive="false" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="10" 
+    column-typename="INTEGER" column-type="4" column-display-size="11" 
+    catalogue-name="" column-label="PRODUCTID" column-name="PRODUCTID"&gt;4&lt;/col&gt;
+        &lt;col searchable="true" writable="false" signed="false" 
+    nullable="true" definitely-writable="false" case-sensitive="true" 
+    table-name="IMPORT1" schema-name="" scale="0" precision="40" 
+    column-typename="VARCHAR" column-type="12" column-display-size="40" 
+    catalogue-name="" column-label="NAME" column-name="NAME"&gt;cereal&lt;/col&gt;
+       &lt;/row&gt;
+      &lt;/row-set&gt;
+    &lt;/sql&gt;
+    </pre>
+</blockquote>
+    
+    
+    
+    <a name="basic-conn">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Basic-Connection</h4>
+    <p>
+<b>Contributed by John Gentilin (johnglinux@eyecatching.com).</b>
+</p>
+    <p>What it does: illustrates two strategies for connecting to a database, executing a 
+      static query, and returning the query result.</p>
+    <p>The first strategy is to get connection information along with the static query from 
+      the stylesheet (dbtest.xsl)\ in the form of stylesheet parameters.</p>
+    <p>The second strategy is to get connection information from a nodeset in an XML source 
+      document (dbInfo.xml).</p>
+    <p>
+<a href="#dbsetup">Set up the database</a>, and run this sample from the 
+      extensions/sql/ directory.</p>
+    <p>1. To get connection information from the stylesheet:</p>
+     <code>runXalan -xsl basic-connection/dbtest.xsl -out import1.html</code>
+    <p>2. To get connection information in the form of a nodeset from the XML source document:</p>
+     <code>runXalan -in dbinfo.xml -xsl dbtest-cinfo.xsl -out import1.html</code>
+    
+    
+    <a name="ext-conn">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>ExternalConnection</h4>
+    <p>
+<b>Contributed by John Gentilin (johnglinux@eyecatching.com).</b>
+</p>
+    <p>What it does: The ExternalConnection classes uses the default implementation of the 
+     ConnectionPool interface to create a pool of connections. A stylesheet in turn uses a 
+     connection from this pool to instantiate an XConnection object and connect to a datasource.</p>
+    <p>The stylesheet uses this named connection pool to instantiate an XConnection object and 
+     connect to the datasource. The ExternalConnection class is in <code>xalansamples.jar</code>.</p>
+    <p>
+<a href="#dbsetup">Set up the database</a>, be sure <code>xalanxamples.jar</code> is on the 
+     class path, and run this sample from the extensions/sql directory:</p>
+    <code>runExtConnection ext-connection/dbtest.xsl</code>
+    <p>ExternalConnection creates the ConnectionPool, and performs a transformation with dbtest.xsl, 
+     which draws from the pool to instantiate an XConnection object, connect to the datasource, 
+     execute a static query, and return the query result.</p>
+    
+  
+    <a name="pquery">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Parameterized query</h4>
+    <p>
+<b>Contributed by John Gentilin (johnglinux@eyecatching.com).</b>
+</p>
+    <p>What it does: connects to a datasource, executes a parameterized query, and returns 
+     the result. The XML source document provides the parameter value as well as the connection 
+     information. The parameter value is in a node in the XML source.</p>
+    <p>The stylesheet gets the required connection and parameter information from the XML source, 
+     sets up and executes the parameterized query, and retuns the query result set.</p>
+    <p>
+<a href="#dbsetup">Set up the database</a>, and run this sample from the sql subdirectory:</p>
+     <code>runXalan -in pquery/dbinfo.xml -xsl pquery/dbtest.xsl -out import1.html</code>
+    
+  
+    <a name="streamable">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Streamable</h4>
+    <p>
+<b>Contributed by John Gentilin (johnglinux@eyecatching.com).</b>
+</p>
+    <p>What it does: Illustrates enabling and disabling of a streamable result set returned by a query.</p>
+    <p>With a streamable result set, you can create a query that will return many rows but the
+     result will only consume the amount of memory to represent a single row. As a benefit,
+     you can perform transformations on large amounts of data while maintaining a low memory profile. 
+     On the down side, when you use streaming, you can NOT, visit previous nodes because the SQL
+     extension only supports unidirectional cursors. If you requires that the whole query be available
+     so that you can apply templates to previous rows, just disable caching.</p>
+    <p>
+<a href="#dbsetup">Set up the database</a>, and run these samples from the sql subdirectory.</p>
+    <p>1. An example where streaming is disabled:</p>
+     <code>runXalan -in streamable/dbinfo.xml -xsl streamable/cachedNodes.xsl -out import1.html</code>
+    <p>2. An example where streaming is enabled</p>
+     <code>runXalan -in streamable/dbinfo.xml -xsl streamable/streamNodes.xsl -out import1.html</code>
+    <p>3. This example performs a pivor function swaping rows and columns, streaming is 
+     required to be disabled here.</p>
+     <code>runXalan -in streamable/dbinfo.xml -xsl streamable/pivot.xsl -out import1.html</code>
+    
+ 
+    <a name="showerror">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Show-error</h4>
+    <p>
+<b>Contributed by John Gentilin (johnglinux@eyecatching.com).</b>
+</p>
+    <p>What it does: use the SQL library ExtensionError class to return an error message 
+     in the output stream. The stylesheet calls a template with a select statement that 
+     returns a nodeset when an error occurs.</p>
+    <p>
+<a href="#dbsetup">Set up the database</a>, and run this sample from the extensions/sql subdirectory:</p>
+    <p>1. An example where we specify invalid connection information:</p>
+     <code>runXalan -in show-error/dbinfo.xml -xsl show-error/invalidConn.xsl -out import1.html</code>
+    <p>2. An example where we specify invalid parameters to a parameterized query:</p>
+     <code>runXalan -in show-error/dbinfo.xml -xsl show-error/invalidPQuery.xsl -out import1.html</code>
+    <p>3. An example where we specify an invlaid query:</p>
+     <code>runXalan -in show-error/dbinfo.xml -xsl show-error/invalidQuery.xsl -out import1.html</code>
+    
+        
+    
+    <a name="trace">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Trace</h3>
+      <p>What it does: Trace uses the TraceListener and TraceManager classes to log transformation events.</p>
+      <p>Run this sample from the Trace subdirectory with</p>
+      <p>
+<code>java Trace</code>
+</p>
+      <p>and examine the result in events.log. Additionally, run this sample from the extensions subdirectory with</p>
+      <p>
+<code>java Trace 3-java-namespace</code>
+</p>
+      <p>for the trace of a stylesheet with extensions.  For more information, see <a href="usagepatterns.html#debugging">Debugger Interface</a>
+</p>
+     <a name="validate">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Validate</h3>
+     <ul>
+     <li>
+<a href="#validatexmlinput">ValidateXMLInput</a>
+</li>
+     <li>
+<a href="#validateutility">Validate utility</a>
+</li>
+     </ul>
+<a name="validatexmlinput">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>ValidateXMLInput</h4>
+     <p>What it does: Uses <a href="apidocs/javax/xml/parsers/SAXParserFactory.html">SAXParserFactory</a> to turn on validation, and 
+     <a href="apidocs/org/xml/sax/XMLReader.html">XMLReader</a> to parse the XML input and report errors and warnings to a SAX event
+     handler. The XML input (birds.xml) contains an internal DOCTYPE declaration, and a few minor document type violations, which you are 
+     invited to fix, add to, and vary in any way you find useful.</p>
+     <p>Run this sample from the Validate subdirectory with</p>
+     <p>
+<code>java ValidateXMLInput</code>
+</p>
+     <a name="validateutility">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Validate utility</h4>
+     <p>What it does: Uses the <a href="apidocs/javax/xml/parsers/SAXParser.html">JAXP SAXParser</a> with a SAX event handler 
+     (extends <a href="apidocs/org/xml/sax/helpers/DefaultHandler.html">DefaultHandler</a> and implements 
+     <a href="apidocs/org/xml/sax/ext/LexicalHandler.html">LexicalHandler</a>) to verify that XML files conform to their declared 
+     document type. You can use this utility to verify that an individual file or all the .xml files in a directory are
+     well-formed and valid. Each .xml file should contain a DOCTYPE declaration.</p>
+     <p>Run this sample from any directory with</p>
+     <p>
+<code>java Validate <b>
+<i>file-or-dir-name</i>
+</b> [<b>
+<i>logfile</i>
+</b>
+</code>]</p>
+     <p>where <b>
+<i>file-or-dir-name</i>
+</b> is an XML file or directory pathname, and <b>
+<i>logfile</i>
+</b> designates a log.
+     If you omit the second argument, Validate reports its findings to the screen.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">A limitation: Files containing document parts appear to fail if you check them with Validate. Check readme.xml, 
+     which "includes" by entity reference a number of files, and it passes. The parse operation scans the entire document
+     with the includes. Check an "included" file (such as history.xml) as if it were an independent document and it fails.</td>
+</tr>
+</table>
+     
+     
+
+     <a name="trax">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>trax (JAXP transform samples)</h3>
+     <p>What it does: runs a number of samples illustrating uses of the <a href="trax.html">JAXP transform interfaces</a>.</p>
+     <p>Run this sample from the trax subdirectory with</p>
+     <p>
+<code>java Examples</code>
+</p>
+     <p>and examine the source in Examples.java and ExampleContentHandler.java.</p>
+     
+     
+     <a name="transformthread">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>TransformThread</h3>
+     <p>What it does: spawns multiple threads, with each thread running two transformations on two different XML files.</p>
+     <p>Run this sample from the TransformThread subdirectory with</p>
+     <p>
+<code>java TransformThread</code>
+</p>
+     <p>and examine the source in TransformThread.java. A more detailed description along with configuration options are listed in the header.</p>
+     
+     
+     <a name="applyxpath">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ApplyXPath</h3>
+     <p>What it does: ApplyXPath uses the convenience methods in the Xalan-Java 2 specific <a href="apidocs/org/apache/xpath/XPathAPI.html">XPathAPI</a> to
+     execute an XPath expression against an XML document and return the nodes (if any) it finds.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can use this sample as an aid when you want to find out what a given XPath expression returns from a
+     given XML file. Keep in mind that the context node (base point of evaluation) for the XPath expression is the document
+     root.</td>
+</tr>
+</table>
+     <p>Run this sample from the ApplyXPath subdirectory with</p> 
+     <p>
+<code>java ApplyXPath <b>
+<i>XMLFile XPathExpression</i>
+</b>
+</code>
+</p>
+     <p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file and <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to
+     apply to that file. The ApplyXPath subdirectory contains an XML file named foo.xml --<br />
+          <code>&lt;doc&gt;&lt;name first="David" last="Marston"/&gt;...&lt;/doc&gt;</code>
+<br /> -- so you can try command
+     lines like</p>
+     <p>
+<code>java ApplyXPath foo.xml /</code>
+</p>
+     <p>and</p>
+     <p>
+<code>java ApplyXPath foo.xml /doc/name/@first</code>
+</p>
+     <p>For more information, see <a href="usagepatterns.html#xpath">Working with XPath expressions</a>.</p>
+     
+    
+     <a name="applyxpathdom">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ApplyXPathDOM</h3>
+     <p>What it does: ApplyXPathDOM is very similar to the <a href="#applyxpath">ApplyXPath</a> sample, but it uses the API 
+     in the <a href="http://www.w3.org/TR/2004/NOTE-DOM-Level-3-XPath-20040226/">DOM Level 3 XPath 
+     Specification</a> to execute an XPath expression against an XML document and return 
+     the nodes (if any) it finds.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can use this sample as an aid when you want to find out what a given XPath expression returns from a
+     given XML file. Keep in mind that the context node (base point of evaluation) for the XPath expression is the document
+     root.</td>
+</tr>
+</table>
+     <p>Run this sample from the ApplyXPathDOM subdirectory with</p> 
+     <p>
+<code>java ApplyXPathDOM <b>
+<i>XMLFile XPathExpression</i>
+</b>
+</code>
+</p>
+     <p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file and <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to
+     apply to that file. The ApplyXPathDOM subdirectory contains an XML file named foo.xml --<br />
+          <code>&lt;doc&gt;&lt;name first="David" last="Marston"/&gt;...&lt;/doc&gt;</code>
+<br /> -- so you can try command
+     lines like</p>
+     <p>
+<code>java ApplyXPathDOM foo.xml /</code>
+</p>
+     <p>and</p>
+     <p>
+<code>java ApplyXPathDOM foo.xml /doc/name/@first</code>
+</p>
+     <p>For more information, see <a href="usagepatterns.html#xpath">Working with XPath expressions</a>.</p>
+     
+     
+     <a name="applyxpathjaxp">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ApplyXPathJAXP</h3>
+     <p>What it does: ApplyXPathJAXP is similar to the <a href="#applyxpath">ApplyXPath</a> sample, but it uses the XPath API in JAXP 1.3
+     to evaluate an XPath expression against an XML document and return the evaluation result in the specified type.</p>
+     <p>Run this sample from the XPathAPI subdirectory with</p>
+     <p>
+<code>java ApplyXPathJAXP <b>
+<i>XMLFile XPathExpression ReturnType</i>
+</b>
+</code>
+</p>
+     <p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file, <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to 
+     apply to that file, and <b>
+<i>ReturnType</i>
+</b> is one of the strings from the list {"num", "bool", "str", "node", "nodeset"}
+     designating the return type of the evaluation. The XPathAPI subdirectory contains an XML file named 
+     foo.xml. So you can try command lines like</p>
+     <p>
+<code>java ApplyXPathJAXP foo.xml /doc/name[1]/@last str</code>
+</p>
+     <p>and</p>
+     <p>
+<code>java ApplyXPathJAXP foo.xml /doc/name nodeset</code>
+</p>
+     
+
+     <a name="xpathresolver">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>XPathResolver</h3>
+     <p>What it does: XPathResolver provides sample implementations of the NamespaceContext, XPathFunctionResolver 
+     and XPathVariableResolver interfaces described in the <a href="apidocs/javax/xml/xpath/XPath.html">
+     JAXP 1.3 XPath API</a>. 
+     The sample demonstrates how these implementations can be used to to evaluate XPath expressions that contain 
+     extension functions and references to variables.</p>
+     <p>Run this sample from the XPathAPI subdirectory with</p>
+     <p>
+<code>java XPathResolver</code>
+</p>
+     
+
+     <a name="extensionresolver">&#8204;</a>
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ExtensionFunctionResolver</h3>
+     <p>What it does: ExtensionFunctionResolver demonstrates how to use the sample implementation of XPathFunctionResolver to 
+     evaluate XPath expressions containing Java or EXSLT extension functions.</p>
+     <p>To run this sample from the XPathAPI subdirectory, you need to compile ExtensionTest.java first and put
+     the XPathAPI directory on your classpath. Run the sample using</p>
+     <p>
+<code>java ExtensionFunctionResolver</code>
+</p>
+     
+     
+     <a name="translets">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Translets</h3>
+                 <ul>
+                 <li>
+<a href="#xsltc1">JAXPTransletOneTransformation</a>
+</li>
+                 <li>
+<a href="#xsltc2">JAXPTransletMultipleTransformations</a>
+</li>
+                 <li>
+<a href="#xsltcother">Other XSLTC samples</a>
+</li>   
+                 </ul>
+                 <p>You can use the JAXP interfaces to compile and run translets.
+                 For an overview of the usage patterns these samples illustrate, see 
+                 <a href="xsltc_usage.html#api">Calling XSLTC with the JAXP API</a>.</p>
+                 <a name="xsltc1">&#8204;</a>
+                 <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>JAXPTransletOneTransformation</h4>
+                 <p>What it does: Uses the XSLTC TransformerFactory to compile a translet and use
+                 the translet to transform the XSLTC to-do list from XML into HTML.</p>
+                 <p>Run this sample from the translets subdirectory with</p>
+                 <p>
+<code>java JAXPTransletOneTransformation</code>
+</p>
+                 <p>View the result in todo.html.</p>
+                 <a name="xsltc2">&#8204;</a>
+                 <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>JAXPTransletMultipleTransformations</h4>
+                 <p>What it does: Uses the XSLTC TransformerFactory to compile a translet and use
+                 the Templates object associated with the translet to transform the XSLTC and Xalan to-do lists from XML 
+                 into HTML.</p>
+                 <p>Run this sample from the translets subdirectory with</p>
+                 <p>
+<code>java JAXPTransletMultipleTransformations</code>
+</p>
+                 <p>View the results in todo.html and todotoo.html.</p>                
+                 <a name="xsltcother">&#8204;</a>
+                 <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Other XSLTC samples</h4>
+                 <p>Other XSLTC samples are located in the following samples subdirectories:</p>
+                 <ul>
+                 <li>CompiledServlet</li>
+                 <li>CompiledBrazil</li>
+                 <li>CompiledJAXP</li>
+                 <li>CompiledApplet</li>
+                 <li>CompiledEJB</li>
+                 </ul>
+                 <p>For information about each of these samples, consult the README file in the subdirectory.</p>
+                 <p>XSLTC provides demos for using XSLTC as a servlet and as a handler for
+                 Brazil (a new and powerful Web techology from Sun labs).</p>
+                 <p>To run the Brazil-handler demo, download Brazil from sunlabs:</p>
+                 <p>
+<code>    <a href="http://research.sun.com/research/download/index.html">http://research.sun.com/research/download/index.html</a>
+</code>
+</p>
+                 <p>The translet must be specified as a pure class name,
+                 accessible through the Brazil-handler's classpath. For
+                 example:</p>
+                 <p>
+<code>    translet=mk054</code>
+</p>
+                 <p>The document must be specified as a valid URL. For example:</p>
+                 <p>
+<code>    document=http://server/path/to/filename.xml</code>
+</p>
+                 <p>If the file is local to the Brazil handler, it has to be
+                specified using the "file:filename.xml" format.</p>
+                <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">In order to run the Brazil-handler demo, you also need to
+                      make the Brazil and javax classes available from your
+                      classpath</td>
+</tr>
+</table>
+                 <p>To run the servlet demo, download the java extensions for servlets from Sun:</p>
+                 <p>
+<code>    
+                 <a href="http://java.sun.com/products/servlet/download.html">
+                 http://java.sun.com/products/servlet/download.html</a>
+</code>
+</p>
+                 
+                 
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

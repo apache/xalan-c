@@ -1,0 +1,1663 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-Java Extensions</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-Java Extensions</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>Extensions<br />
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-Java Extensions</h2>
+<ul>
+<li>
+<a href="#intro">Introduction</a>
+</li>
+<li>
+<a href="#supported-lang">Supported languages</a>
+</li>
+<li>
+<a href="#basic-pattern">The basic pattern</a>
+</li>
+<li>
+<a href="#setup-runtime">Setting up the runtime environment</a>
+</li>
+<li>
+<a href="#basic-syntax">Syntax</a>
+</li>
+<li>
+<a href="#ext-elements">Using an extension element</a>
+</li>
+<li>
+<a href="#ext-functions">Using extension functions</a>
+</li>
+<li>
+<a href="#java-namespace">Alternative: using the abbreviated syntax for extensions implemented in Java</a>
+</li>
+<li>Examples: <a href="#ex-basic">basic JavaScript example</a>, <a href="#ex-java-namespace">using the java namespace</a>, <a href="#ex-java">using a Java Hashtable</a>, <a href="#ex-javascript">using a JavaScript array</a>
+</li>
+</ul>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Unless otherwise specified, the Xalan-Java extensions discussed in this section refers to 
+the Xalan-Java Interpretive processor. See <a href="extensions_xsltc.html">Extensions for XSLTC</a> for 
+more information.</td>
+</tr>
+</table>
+<br />
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+  <p>For those situations where you would like to augment the functionality of XSLT with calls to a 
+     procedural language, Xalan-Java supports the creation and use of extension elements and extension 
+     functions. Xalan-Java also provides a growing <a href="extensionslib.html">extensions library</a> 
+     available for your use. An extension (a collection of elements and functions) inhabits a namespace, 
+     either a namespace you declare and designate as an extensions namespace, or one of the predefined 
+     namespaces that Xalan-Java provides. For information about XML namespaces, see 
+     <a href="http://www.w3.org/TR/REC-xml-names/">Namespaces in XML</a>.</p>
+  <p>
+<b>Extension elements:</b>  Unlike a literal result element, which the stylesheet simply 
+     transfers to the result tree, an extension element performs an action. For example, you can use 
+     the Redirect extension elements shipped with Xalan-Java to redirect portions of your transformation 
+     output to one or more files. Extension elements may contain attributes, text nodes, other elements, 
+     basically any valid XML. Extension elements may perform quite sophisticated actions, given that 
+     the extension routine (the implementation) has direct access to the XSLT processor context object 
+     and to the element. In many cases the implementation returns void or null; if it does return a 
+     value, that value is placed in the transformation result tree.</p>
+  <p>
+<b>Extension functions:</b>  You can think of extension functions as extending the core library 
+     of functions that XPath provides. An extension function passes arguments to the extension 
+     implementation and returns a value. You can use extension functions to return values that XSLT 
+     can interact with directly (node-set, result tree fragment, string, boolean, and number) as well 
+     as values (of any type) that you pass in turn to other extension functions. Extension functions 
+     written in Java can also access certain items in the XSLT execution environment through an 
+     <a href="apidocs/org/apache/xalan/extensions/ExpressionContext.html">ExpressionContext</a> 
+     interface.</p>
+  <p>XSLT extensions are specified in the <a href="http://www.w3.org/TR/xslt#extension">XSLT 
+     Recommendation</a>.  This document focuses on the Xalan-Java implementation of those 
+     requirements, not on XSLT extensions in general. For additional information on extensions, 
+     consult the Recommendation or the other resources listed in <a href="overview.html#uptospeed">Getting up to speed with XSLT</a>.</p>
+
+<a name="supported-lang">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Supported languages</h3>
+<p>Extensions written in Java are directly supported by Xalan-Java.  For extensions written in languages 
+   other than Java, Xalan-Java uses the <a href="http://jakarta.apache.org/bsf/index.html">Bean Scripting Framework (BSF)</a>, an architecture for incorporating 
+   scripting into Java applications and applets. BSF allows an application to take advantage of 
+   scripting while being independent of any specific scripting language. To date, we have tested 
+   extensions implemented in JavaScript. The set of scripting languages supported using BSF is determined
+   by the BSF implementation you are using. If you are using Jakarta BSF, please refer to 
+   <a href="http://jakarta.apache.org/bsf/index.html">Jakarta BSF Supported Languages</a> for other
+   scripting languages with BSF support.</p>
+<p>BSF requires bsf.jar on the classpath. This JAR file is no longer shipped with Xalan-Java. It can be 
+   downloaded from <a href="http://jakarta.apache.org/bsf/index.html">the Apache Jakarta BSF project 
+   web site</a>. It is required only if you have extensions written in languages other than Java. 
+   The additional JAR files or DLLs required to support extensions written in other languages are 
+   listed at the Jakarta BSF web site as <a href="http://jakarta.apache.org/bsf/projects.html"> 
+   Related Projects </a> . These files are available from the sources indicated and are not shipped 
+   with Xalan-Java. </p>
+<a name="BSFManager">&#8204;</a>
+<p>By default Xalan-Java assumes BSF support is provided by the Jakarta BSF implementation. There are three 
+   ways of specifying the class that provides the BSF Manager service:.</p>
+<ul>
+<li>Set the system property org.apache.xalan.extensions.bsf.BSFManager;</li>
+    <li>In the property file "/lib/xalan.properties" in the JRE directory, add the key 
+    org.apache.xalan.extensions.bsf.BSFManager with the value that is the fully qualified BSF 
+    implementation class name;</li>
+    <li>Include a META-INF/services/org.apache.xalan.extensions.bsf.BSFManager 
+    file in your classpath;</li>
+</ul>
+<a name="basic-pattern">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The basic pattern</h3>
+<p>Let's examine a simple example. The stylesheet below uses an extension element and an 
+   extension function to transform an element in the XML source into a statement in the output 
+   indicating the date by which a customer can expect a response to a given enquiry.</p>
+
+<p>The source element contains a numdays attribute. The extension element contains a multiplier 
+   attribute, which is used to set a variable in the extension. The extension function computes the 
+   deadline, that is the current date plus numdays * multiplier. So for &lt;deadline numdays="3"/&gt; 
+   (in the XML source) and &lt;my-ext:timelapse multiplier="2"/&gt; (in the stylesheet), the 
+   extension computes a deadline 6 days from now, and the stylesheet template transforms the 
+   deadline element into a string along the lines of <code>&lt;p&gt;We have logged your enquiry 
+   and will respond by April 29, 2000 12:07:16 PM EST.&lt;/p&gt;</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The extension function could include both numdays and multiplier as arguments, thus bypassing 
+   the need for the extension element, but the purpose here is to illustrate the usage pattern for 
+   extension elements.</td>
+</tr>
+</table>
+<p>As you review this stylesheet, please note the following:</p>
+<ol>
+  <li>The declaration of the xalan namespace, which provides support for the component and
+      component/script elements:<br />
+<br />
+    <code>xmlns:xalan="http://xml.apache.org/xalan"</code>
+<br />
+<br />
+</li>
+  <li>The declaration of a namespace for this extension:<br />
+<br />
+    <code>xmlns:my-ext="ext1"</code>
+<br />
+<br />
+</li>
+  <li>The designation of this namespace prefix as an extension prefix. This causes any element in the 
+      namespace associated with this prefix to be treated as an extension element rather than a literal 
+      result element.<br />
+<br />
+     <code>extension-element-prefixes="my-ext"</code>
+<br />
+<br />
+</li>
+  <li>The xalan:component with attributes designating the namespace prefix and the elements and
+     functions this extension provides.<br />
+<br />
+</li>
+  <li>The xalan:script subelement with a JavaScript implementation of the extension. For Java
+     extensions, the xalan:script element has a src attribute that you set to identify the Java class.</li>
+</ol>
+<a name="ex-basic">&#8204;</a>   
+<blockquote class="source">
+<pre>&lt;?xml version="1.0"?&gt;
+&lt;!--Namespaces are global if you set them in the stylesheet element--&gt;
+&lt;xsl:stylesheet 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+    version="1.0"   
+    xmlns:xalan="http://xml.apache.org/xalan"
+    xmlns:my-ext="ext1"
+    extension-element-prefixes="my-ext"&gt;
+    
+  &lt;!--The component and its script are in the xalan namespace and define the 
+    implementation of the extension.--&gt;
+  &lt;xalan:component prefix="my-ext" elements="timelapse" functions="getdate"&gt;
+    &lt;xalan:script lang="javascript"&gt;
+      var multiplier=1;
+      // The methods or functions that implement extension elements always take 2
+      // arguments. The first argument is the XSL Processor context; the second 
+      // argument is the element node.
+      function timelapse(xslProcessorContext, elem)
+      {
+        multiplier=parseInt(elem.getAttribute("multiplier"));
+        // The element return value is placed in the result tree.
+        // If you do not want a return value, return null.
+        return null;
+      }
+      function getdate(numdays)
+      {
+        var d = new Date();
+        var totalDays = parseInt(numdays) * multiplier;
+        d.setDate(d.getDate() + totalDays);
+        return d.toLocaleString();
+      }
+    &lt;/xalan:script&gt;
+  &lt;/xalan:component&gt;
+      
+  &lt;xsl:template match="deadline"&gt;
+    &lt;p&gt;&lt;my-ext:timelapse multiplier="2"/&gt;We have logged your enquiry and will 
+      respond by &lt;xsl:value-of select="my-ext:getdate(string(@numdays))"/&gt;.&lt;/p&gt;
+  &lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+
+<a name="setup-runtime">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting up the runtime environment</h3>
+<p>To run the preceding example, bsf.jar and js.jar must be on the classpath. Remember that bsf.jar 
+   must be on the classpath to run any extension written in a language other than Java. For extensions 
+   implemented in a scripting language, see the additional requirements in 
+   <a href="#supported-lang">Supported languages</a>.</p>
+
+<a name="basic-syntax">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Syntax</h3>
+<p>You can always use the pattern illustrated above to set up and use extension elements and extension 
+   functions. For extension elements and functions implemented in Java, it is recommended that you use 
+   the abbreviated syntax, described in <a href="#java-namespace">Alternative: using the abbreviated 
+   syntax for extensions implemented in Java</a>. Unless you are using the abbreviated syntax, do 
+   the following:</p>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>1. Declare the xalan namespace</h4>
+<p>
+<br />
+<code>xmlns:xalan="http://xml.apache.org/xalan"</code>
+</p>
+<p>The xalan namespace provides support for the xalan:component element and xalan:script subelement.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The old namespace http://xml.apache.org/xslt is still supported for backward compatibility.</td>
+</tr>
+</table>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>2. Declare a unique namespace for each extension prefix</h4>
+<p>
+<br />
+<code>xmlns:<b>
+<i>prefix</i>
+</b>=<b>
+<i>URI</i>
+</b>
+</code>
+</p>
+<p>The <b>
+<i>prefix</i>
+</b> identifies the namespace, and <b>
+<i>URI</i>
+</b> is an arbitrary (but unique) 
+string that matches the value of the prefix attribute of an xalan:component element in the 
+stylesheet.<br />
+Example: <code>xmlns:ext1="xyz"</code>
+<br />
+<br />
+</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>3. If you are using extension elements, designate the extension element prefixes</h4>
+<p>
+<br />This step is required only if you are using extension elements.  If you are using extension 
+functions only, you can skip this step.</p>
+<p>In the stylesheet element, write:</p> 
+<p>
+<code>extension-element-prefixes="<b>
+<i>prefix-1 prefix-2 ...</i>
+</b>"</code>
+</p>
+<p>In a literal result element or extension element include the xsl prefix:</p>
+<p>
+<code>xsl:extension-element-prefixes="<b>
+<i>prefix1 prefix2 ...</i>
+</b>"</code>
+</p>
+<p>Keep in mind that where you declare namespaces and designate extension prefixes determines the scope of those namespaces.To make your extensions available throughout the stylesheet, include these settings and attribute in the stylesheet element.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>4. (Optional) Exclude the extension namespace declaration from the result tree</h4>
+<p>
+<br />By default, namespace declarations are included in the transformation output. To exclude 
+namespaces from the output, use</p>
+<p>
+<code>exclude-result-prefixes="<b>
+<i>prefix-1 prefix-2 ...</i>
+</b>"</code>
+</p>
+<p>in the stylesheet element or</p>
+<p>
+<code>xsl:exclude-result-prefixes="<b>
+<i>prefix-1 prefix-2 ...</i>
+</b>"</code>
+</p> 
+<p>in a literal result element or extension element.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>5. Set up an xalan:component</h4>
+<p>
+<br />In the scope of the xalan namespace declaration:</p>
+<p>
+<code>&lt;xalan:component prefix="<b>
+<i>prefix</i>
+</b>" </code>
+<br />
+   <code>    functions="<b>
+<i>func-1 func-2 ...func-n</i>
+</b>"</code>
+<br /> 
+   <code>    elements="<b>
+<i>elem-1 elem-2 ...elem-n</i>
+</b>"&gt;</code>
+<br />
+   <code>  &lt;!--See xalan:script below--&gt;</code>
+<br />
+   <code>&lt;/xalan:component&gt;</code>
+</p>
+<p>where <b>
+<i>func-1 func-2 ... func-n</i>
+</b> and <b>
+<i>elem-1 elem-2 ... elem-n</i>
+</b> designate the 
+functions and elements the extension provides and the stylesheet uses. You can use the function-available 
+and element-available functions to determine at run time whether a function or element designated in the 
+xalan:component is actually available.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If the component is implemented in Java, the values of the functions and elements attributes are 
+ignored. The function-available and element-available functions use reflection to examine the actual 
+Java methods.</td>
+</tr>
+</table>
+
+<a name="setup-script">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>6. Set up the xalan:script element</h4>
+<p>
+<br />In each xalan:component, you must include exactly one xalan:script element. If the extension 
+is implemented in JavaScript:</p>
+<p>
+<code>&lt;xalan:script lang="javascript" &gt;</code>
+<br />
+<code>  &lt;!--The implementation script--&gt;</code>
+<br />
+<code>&lt;/xalan:script&gt;</code>
+</p>
+<p>For other scripting languages supported by BSF, use the same approach as for JavaScript.
+The src attribute is also supported in the xalan:script element. If it is present, the script will
+be loaded from the URL specified in the src attribute. Otherwise the script is taken from the text child
+of the xalan:script element.</p>
+<p>If the extension is implemented in Java, you have three choices for the format of the src attribute 
+in the xalan:script element.</p>
+<p>
+<code>&lt;xalan:script lang="javaclass" src="xalan://<b>
+<i>FQCN</i>
+</b>"/&gt;</code>
+<br />where <b>
+<i>FQCN</i>
+</b> is the fully qualified class name.
+<br />Example: <code>&lt;xalan:script lang="javaclass" src="xalan://java.util.Hashtable"/&gt;</code>
+</p>
+<p>
+<code>&lt;xalan:script lang="javaclass" src="xalan://<b>
+<i>PJPN</i>
+</b>"/&gt;</code>
+<br />where <b>
+<i>PJPN</i>
+</b> is the beginning of or the complete name of a java package.
+<br />Example: <code>&lt;xalan:script lang="javaclass" src="java.util"/&gt;</code>
+</p>
+<p>
+<code>&lt;xalan:script lang="javaclass" src="http://xml.apache.org/xalan/java"/&gt;</code>
+</p>
+<p>The different formats for the value of the src attribute when using Java extensions are more fully 
+explained in <a href="#java-namespace-declare">Declare the namespace</a>.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Implicit DTD for xalan:component</h4>
+<blockquote class="source">
+<pre>&lt;!ELEMENT xalan:component (xalan:script)&gt;
+&lt;!ATTLIST xalan:component
+  prefix CDATA #REQUIRED
+  elements NMTOKENS #IMPLIED
+  functions NMTOKENS #IMPLIED&gt;
+
+&lt;!ELEMENT xalan:script (#PCDATA | EMPTY)?&gt;
+&lt;!ATTLIST xalan:script
+  lang CDATA #REQUIRED
+  src CDATA #IMPLIED&gt;</pre>
+</blockquote>
+
+<a name="ext-elements">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using an extension element</h3>
+<p>Extension elements pass the extension two objects:</p>
+<ul>
+<li>
+<a href="apidocs/org/apache/xalan/extensions/XSLProcessorContext.html">
+org.apache.xalan.extensions.XSLProcessorContext</a>, which provides access to the XSL processor, 
+the XML source tree, the stylesheet tree, the current context node, and the current mode (if any).
+<br />
+<br />
+</li>
+<li>
+<a href="apidocs/org/apache/xalan/templates/ElemExtensionCall.html">
+org.apache.xalan.templates.ElemExtensionCall</a>, which provides the API for interacting with 
+the extension element.</li>
+</ul>
+<p>You can use the ElemExtensionCall getAttribute(String name) method, for example, to read element 
+attributes in their raw form.  Use the getAttribute(String name, Node sourceNode, XSLTEngineImpl 
+processor) method to evaluate the attribute as an attribute value template.  Note that the method 
+names are the same but the method signatures are different.  For full details, see the 
+<a href="apidocs/org/apache/xalan/templates/ElemExtensionCall.html">Javadoc</a> for the 
+ElemExtensionCall class.</p>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Implementing an extension element</h4>
+<p>For each extension element in a namespace, the implementation must be a Java method with the 
+following signature, or the scripting language equivalent:</p>
+<p>
+<code>
+<b>
+<i>Type element</i>
+</b>(org.apache.xalan.extensions.XSLProcessorContext, </code>
+<br />
+<code>             org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
+</p>
+<p>where <b>
+<i>Type</i>
+</b> designates the return type and <b>
+<i>element</i>
+</b> is the local part of the 
+extension element name (the element name without the namespace prefix). In the method signature, you 
+may also use superclasses of the indicated types.</p>
+<p>If the extension element is implemented in a loosely typed scripting language, such as JavaScript, 
+the arguments and return value are untyped.</p>
+<p>
+<b>Caution:</b> The value returned by an extension element is placed in the transformation result. 
+If you are not interested in a return value, use a public void Java method or return null from a 
+scripting language function.</p>
+<p>Java example: <code>public void myElement</code>
+<br />
+<code>         (org.apache.xalan.extensions.XSLProcessorContext, </code>
+<br />
+<code>          org.apache.xalan.templates.ElemExtensionCall extensionElement)</code>
+</p>
+<p>JavaScript example: <code>function myElement(xslProcContext, element)</code>
+</p>
+<p>The <a href="extensionslib.html#redirect">Redirect extension</a> in the extensions 
+library contains three extension elements.</p>
+
+
+<a name="ext-functions">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using extension functions</h3>
+<p>Extension functions may include arguments of any type and return a value of any type.</p>
+<p>XSLT recognizes five data types: node-set, result-tree-fragment, string, boolean, and number. You 
+can use XPath expressions to set variables with values of these types. You can also pass literals for 
+string, boolean, and number arguments. If you want to pass an argument of a type that XSLT does not 
+recognize, use another extension function to return an object of that type. The stylesheet that appears 
+in <a href="#format-date-stylesheet">Formatting a date</a>, for example uses extension functions 
+to return a Date object and a SimpleDateFormat object, and then uses these objects to call another 
+extension function.</p>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Data type mapping and method selection</h4>
+<p>When calling an extension function written in a language other than Java, objects of the following 
+Java classes will always be passed to the extension function:</p>
+  <table border="1">
+    <tr>
+      <th class="content" rowspan="1" colspan="1">XSLT Type</th>
+      <th class="content" rowspan="1" colspan="1">Java Type</th>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Node-Set</td>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.traversal.NodeIterator</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">String</td>
+       <td class="content" rowspan="1" colspan="1">java.lang.String</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Boolean</td>
+       <td class="content" rowspan="1" colspan="1">java.lang.Boolean</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Number</td>
+       <td class="content" rowspan="1" colspan="1">java.lang.Double</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Result Tree Fragment</td>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.DocumentFragment</td>
+    </tr>
+  </table>
+<p>Any non-XSLT type is passed without conversion.</p>
+<p>When calling an extension function written in Java, the extension function signature can specify 
+any of the indicated Java types, as explained below:</p>
+  <table border="1">
+    <tr>
+      <th class="content" rowspan="1" colspan="1">XSLT Type</th>
+      <th class="content" rowspan="1" colspan="1">Java Types</th>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Node-Set</td>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.traversal.NodeIterator, org.w3c.dom.NodeList, org.w3c.dom.Node or its 
+           subclasses, java.lang.String, java.lang.Object, char, [double, float, long, int, short, byte,] 
+           boolean</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">String</td>
+       <td class="content" rowspan="1" colspan="1">java.lang.String, java.lang.Object, char, [double, float, long, int, short, byte,] boolean</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Boolean</td>
+       <td class="content" rowspan="1" colspan="1">boolean, java.lang.Boolean, java.lang.Object, java.lang.String</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Number</td>
+       <td class="content" rowspan="1" colspan="1">double, java.lang.Double, float, long, int, short,char, byte, boolean, java.lang.String, 
+           java.lang.Object</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Result Tree Fragment</td>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.traversal.NodeIterator, org.w3c.dom.NodeList, org.w3c.dom.Node or its subclasses, 
+           java.lang.String, java.lang.Object, char, [double, float, long, int, short, byte,] boolean</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">Non-XSLT Type</td>
+       <td class="content" rowspan="1" colspan="1">the native type or any of its superclasses, double, float, long, int, short, char, byte, 
+           java.lang.String</td>
+    </tr>
+  </table>
+<p>When calling extension functions written in Java, Xalan-Java selects the method to call as follows:</p>
+<ol>
+  <li>Xalan-Java selects all methods whose name matches the extension function name as specified in 
+      <a href="#ext-func-calls">Extension function Java calls</a>.</li>
+  <li>From this list of methods, Xalan-Java determines which methods are <b>
+<i>qualified</i>
+</b>.</li>
+  <li>Each qualified method is assigned a score based on the table shown above. To assign the score 
+      to a given method, Xalan-Java examines each of the XSLT argument types in the function invocation 
+      in the stylesheet. For each argument, the appropriate row in the table above is selected. Then, 
+      the corresponding Java parameter type in the method signature in the Java program is scored. 
+      Types which appear earlier in the list are given a higher score.  That is, the list appears in 
+      order of scoring preference from highest to lowest. Types shown in square brackets have equal 
+      priority.</li>
+  <li>The method with the highest score is invoked after the arguments are converted to the appropriate 
+      type. If more than one method has the highest score, an exception is thrown.</li>
+</ol>
+<p>Any extension function written in Java can have a first parameter of 
+type <code>org.apache.xalan.extensions.ExpressionContext</code>. Any method with an 
+ExpressionContext as the first parameter will score higher than any method which does not have an 
+ExpressionContext as a first parameter.</p>
+
+
+<a name="ext-func-retval">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Return values</h4>
+<p>The Xalan-Java extension mechanism examines the class of the value returned from a function and 
+   converts the value into an XSLT type according to the following table:</p>
+  <table border="1">
+    <tr>
+      <th class="content" rowspan="1" colspan="1">Java Types</th>
+      <th class="content" rowspan="1" colspan="1">XSLT Type</th>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.traversal.NodeIterator<br />org.apache.xml.dtm.DTM<br />org.apache.xml.dtm.DTMAxisIterator<br />org.apache.xml.dtm.DTMIterator<br />org.w3c.dom.Node</td>
+       <td class="content" rowspan="1" colspan="1">Node-Set</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">java.lang.String</td>
+       <td class="content" rowspan="1" colspan="1">String</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">java.lang.Boolean</td>
+       <td class="content" rowspan="1" colspan="1">Boolean</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">java.lang.Number</td>
+       <td class="content" rowspan="1" colspan="1">Number</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">org.w3c.dom.DocumentFragment</td>
+       <td class="content" rowspan="1" colspan="1">Result Tree Fragment</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">org.apache.xpath.objects.XObject</td>
+       <td class="content" rowspan="1" colspan="1">Specified XSLT Type</td>
+    </tr>
+    <tr>
+       <td class="content" rowspan="1" colspan="1">All other classes</td>
+       <td class="content" rowspan="1" colspan="1">Non-XSLT Type</td>
+    </tr>
+  </table>
+  <p>Note that the above test is applied using <code>instanceof</code> so that any subclasses of the 
+     classes listed above will be treated the same as the listed superclass.  For example, a 
+     <code>java.lang.Double</code> will be treated the same as a <code>java.lang.Number</code> and 
+     will be converted to an XSLT Number.</p>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The return value conversion can somtimes cause confusion.  For example, if your 
+     extension function returns an object that is a subclass of NodeIterator, that object will be 
+     converted by Xalan-Java to an XSLT Node-Set.  If you later attempt to treat that object as a 
+     non-XSLT object of your original class and try to invoke a method on that object, your method 
+     invocation will fail.</td>
+</tr>
+</table>
+
+
+<a name="ext-func-calls">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Extension function Java calls</h4>
+<p>The technique for instantiating Java objects and calling Java methods depends on the format of the 
+   extension namespace that was declared.  See <a href="#java-namespace-declare">Declare the 
+   namespace</a> for the three different formats of namespace declarations for Java extensions. 
+   For each namespace format, the section below describes how to instantiate an object, how to invoke 
+   an instance method, and how to invoke a static method. The sections below explain, for each syntax, 
+   which methods are <b>
+<i>qualified</i>
+</b> for method selection as described in the preceeding section.</p>
+<h5>Class format namespace</h5>
+<p>
+<br />
+<b>To create an instance of an object</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:new (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix. A new instance is to be created with 
+   the <b>
+<i>args</i>
+</b> constructor arguments (if any). All constructor methods are qualified for method 
+   selection.
+<br />Example: <code>&lt;xsl:variable name="myType"</code>
+<br />
+<code>       select="my-class:new()"&gt;</code>
+</p>
+
+<p>
+<b>To invoke an instance method on a specified object</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>methodName</i>
+</b> (<b>
+<i>object</i>
+</b>, <b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix and <b>
+<i>methodName</i>
+</b> is the name of 
+   the method to invoke on <b>
+<i>object</i>
+</b> with the <b>
+<i>args</i>
+</b> arguments. <b>
+<i>object</i>
+</b> must 
+   be an object of the class indicated by the namespace declaration.  Otherwise, the case shown 
+   immediately below will apply. Only instance methods with  the name <b>
+<i>methodName</i>
+</b> are 
+   qualified methods. If a matching method is found, <b>
+<i>object</i>
+</b> will be used to identify the 
+   object instance and <b>
+<i>args</i>
+</b> will be passed to the invoked method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="my-class:valueOf($myType, string(@population))"&gt;</code>
+</p>
+
+<p>
+<b>To invoke an instance method on a default object</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>methodName</i>
+</b> (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix and <b>
+<i>methodName</i>
+</b> is the name of 
+the method to invoke with the <b>
+<i>args</i>
+</b> arguments. The first <b>
+<i>arg</i>
+</b>, if any, must not be 
+an object of the class indicated by the namespace declaration.  Otherwise, the case shown immediately 
+above will apply. Only instance methods with the name <b>
+<i>methodName</i>
+</b> are qualified methods. If 
+a matching method is found, a default instance of the class will be created if it does not already 
+exist.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="my-class:valueOf(string(@population))"&gt;</code>
+</p>
+
+<p>
+<b>To invoke a static method</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>methodName</i>
+</b> (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix and <b>
+<i>methodName</i>
+</b> is the name of 
+the method to invoke with the <b>
+<i>args</i>
+</b> arguments. Only static methods with the name 
+<b>
+<i>methodName</i>
+</b> are qualified methods. If a matching method is found, <b>
+<i>args</i>
+</b> will 
+be passed to the invoked static method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="my-class:printit(string(@population))"&gt;</code>
+</p>
+
+<h5>Package format namespace</h5>
+<p>
+<br />
+<b>To create an instance of an object</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>subpackage</i>
+</b>.<b>
+<i>class</i>
+</b>.new (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix, <b>
+<i>subpackage</i>
+</b> is the rest of the 
+package name (the beginning of the package name was in the namespace declaration), and <b>
+<i>class</i>
+</b> 
+is the name of the class. A new instance is to be created with the <b>
+<i>args</i>
+</b> constructor 
+arguments (if any). All constructor methods are qualified for method selection.
+<br />Example: <code>&lt;xsl:variable name="myType"</code>
+<br />
+<code>       select="my-package:extclass.new()"&gt;</code>
+</p>
+
+<p>
+<b>To invoke an instance method on a specified instance</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>methodName</i>
+</b> (<b>
+<i>object</i>
+</b>, <b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix and <b>
+<i>methodName</i>
+</b> is the name of 
+the method to invoke on <b>
+<i>object</i>
+</b> with the <b>
+<i>args</i>
+</b> arguments. Only instance methods of 
+the <b>
+<i>object</i>
+</b> with the name <b>
+<i>methodName</i>
+</b> are qualified methods. If a matching method 
+is found, <b>
+<i>object</i>
+</b> will be used to identify the object instance and <b>
+<i>args</i>
+</b> will be 
+passed to the invoked method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="my-package:valueOf($myType, string(@population))"&gt;</code>
+</p>
+
+<p>
+<b>To invoke a static method</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>subpackage</i>
+</b>.<b>
+<i>class</i>
+</b>.<b>
+<i>methodName</i>
+</b> (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix, <b>
+<i>subpackage</i>
+</b> is the rest of 
+the package name (the beginning of the package name was in the namespace declaration), <b>
+<i>class</i>
+</b> 
+is the name of the class, and <b>
+<i>methodName</i>
+</b> is the name of the method to invoke with the 
+<b>
+<i>args</i>
+</b> arguments. Only static methods with the name <b>
+<i>methodName</i>
+</b> are qualified 
+methods. If a matching method is found, <b>
+<i>args</i>
+</b> will be passed to the invoked static method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="my-package:extclass.printit(string(@population))"&gt;</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Unlike the class format namespace, there is no concept of a default object since the namespace 
+declaration does not identify a unique class.</td>
+</tr>
+</table>
+
+<h5>Java format namespace</h5>
+<p>
+<br />
+<b>To create an instance of an object</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>FQCN</i>
+</b>.new (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix for the Java namespace and <b>
+<i>FQCN</i>
+</b> 
+is the fully qualified class name of the class whose constructor is to be called. A new instance is to 
+be created with the <b>
+<i>args</i>
+</b> constructor arguments (if any). All constructor methods are 
+qualified for method selection.
+<br />Example: <code>&lt;xsl:variable name="myHash"</code>
+<br />
+<code>       select="java:java.util.Hashtable.new()"&gt;</code>
+</p>
+
+<p>
+<b>To invoke an instance method on a specified instance</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>methodName</i>
+</b> (<b>
+<i>object</i>
+</b>, <b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix and <b>
+<i>methodName</i>
+</b> is the name of 
+the method to invoke on <b>
+<i>object</i>
+</b> with the <b>
+<i>args</i>
+</b> arguments. Only instance methods of 
+the <b>
+<i>object</i>
+</b> with the name <b>
+<i>methodName</i>
+</b> are qualified methods. If a matching method 
+is found, <b>
+<i>object</i>
+</b> will be used to identify the object instance and <b>
+<i>args</i>
+</b> will be 
+passed to the invoked method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="java:put($myHash, string(@region), $newpop)"&gt;</code>
+</p>
+
+<p>
+<b>To invoke a static method</b>:
+<br />
+<code>
+<b>
+<i>prefix</i>
+</b>:<b>
+<i>FQCN</i>
+</b>.<b>
+<i>methodName</i>
+</b> (<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>prefix</i>
+</b> is the extension namespace prefix, <b>
+<i>FQCN</i>
+</b> is the fully qualified 
+class name of the class whose static method is to be called, and <b>
+<i>methodName</i>
+</b> is the name of 
+the method to invoke with the <b>
+<i>args</i>
+</b> arguments. Only static methods with the name 
+<b>
+<i>methodName</i>
+</b> are qualified methods. If a matching method is found, <b>
+<i>args</i>
+</b> will be 
+passed to the invoked static method.
+<br />
+Example: <code>&lt;xsl:variable name="new-pop"</code>
+<br />
+<code>     select="java:java.lang.Integer.valueOf(string(@population))"&gt;</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Unlike the class format namespace, there is no concept of a default object since the namespace 
+declaration does not identify a unique class.</td>
+</tr>
+</table>
+
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Passing Nodes to java</h4>
+<p>Please keep in mind that <b>all</b> LocationPath expressions return a node-set, even if the 
+expression only returns a single attribute or a text node (node-sets with one member). You can use 
+the XSLT string() function (as in the syntax examples above) to convert a node-set value to string, 
+and the number() function to convert a node-set value to number (a double).</p>
+<p>If you want to pass a node-set to an extension function, set up a Java method to accept an 
+org.w3c.dom.NodeList (or an org.apache.xpath.NodeSet, which implements NodeList, if you want to modify 
+the nodes).</p>
+<p>Suppose, for example, you have a myExtensions.ProcessNodes class with the following doSomething 
+method:</p>
+<p>
+<code>public static boolean doSomething(org.w3c.dom.NodeList nList)</code>
+</p>
+<p>Assuming you set up this extension in the node-ext namespace, any of the following extension calls 
+from a stylesheet are syntactically possible:</p>
+<p>
+<code>&lt;!--Process the current node--&gt;</code>
+<br />
+<code>&lt;xsl:variable name="success" select="node-ext:MyExtensions.ProcessNodes.doSomething(.)"/&gt;</code>
+</p>
+<p>
+<code>&lt;!--Process all nodes in current context--&gt;</code>
+<br />
+<code>&lt;xsl:variable name="success" select="node-ext:MyExtensions.ProcessNodes.doSomething(*)"/&gt;</code>
+</p>
+<p>
+<code>&lt;!-- Process all nodes --&gt;</code>
+<br />
+<code>&lt;xsl:variable name="success" select="node-ext:MyExtensions.ProcessNodes.doSomething(/*)"/&gt;</code>
+</p>
+<p>
+<code>&lt;!--Process the foo/baz nodes in current context --&gt;</code>
+<br />
+<code>&lt;xsl:variable name="success" select="node-ext:MyExtensions.ProcessNodes.doSomething(foo/baz)"/&gt;</code>
+</p>
+<p>
+<code>&lt;!--Process the/foo/baz and /bar/saz nodes --&gt;</code>
+<br />
+<code>&lt;xsl:variable name="success" select="node-ext:MyExtensions.ProcessNodes.doSomething(/foo/baz | /bar/saz)"/&gt;</code>
+</p>
+<p>The NodeList is in fact a list of references into the XML document, so keep in mind that 
+getNextSibling(), for example, gets you the next sibling in the document, which may not be the next 
+Node in the NodeList.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Implementing extension functions</h4>
+<p>For each extension function in a namespace which is implemented in a language other than Java, the 
+implementation must include a method with the following signature, or the scripting language 
+equivalent:</p>
+<p>
+<code>public <b>
+<i> object function</i>
+</b>(<b>
+<i>args</i>
+</b>)</code>
+</p>
+<p>where <b>
+<i>object</i>
+</b> is the return type, <b>
+<i>function</i>
+</b> is the local part of the extension 
+function name (the function name without the namespace prefix), and <b>
+<i>args</i>
+</b> correspond to the 
+arguments in the function call.</p>
+<p>In addition, for extension functions implemented in Java, the implementation may include either a 
+Java method with the signature shown above or one with the following signature:</p>
+<p>
+<code>public <b>
+<i> object function</i>
+</b>(org.apache.xalan.extensions.ExpressionContext, 
+<b>
+<i>args</i>
+</b>)</code>
+</p>
+
+<a name="java-namespace">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Alternative: using the abbreviated syntax for extensions implemented in Java</h3>
+<p>For extension functions and extension elements implemented in Java, Xalan-Java permits an abbreviated 
+syntax. When you use the abbreviated syntax, you do not use an xalan:component to designate the 
+functions.</p>
+<p>The abbreviated syntax supports the use of extension functions and extension elements implemented 
+in Java. You cannot use this syntax with extensions implemented in JavaScript or another scripting 
+language.</p>
+<a name="java-namespace-declare">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Declare the namespace</h4>
+<p>Declare the namespace for your extensions using one of the following three formats. The 
+technique for invoking an extension for each format is explained in 
+<a href="#ext-func-calls">Extension function Java calls</a>.</p>
+<p>
+<b>class format:</b> <code>xmlns:my-class="xalan://<b>
+<i>FQCN</i>
+</b>"</code>
+</p>
+<p>where <b>
+<i>FQCN</i>
+</b> is the fully qualified class name.
+<br />Examples: <code>xmlns:my-class="xalan://java.util.Hashtable"</code>
+<br />               
+<code>xmlns:my-class="xalan://mypackage.myclass"</code>
+</p>
+<p>
+<b>package format:</b> <code>xmlns:my-class="xalan://<b>
+<i>PJPN</i>
+</b>"</code>
+</p>
+<p>where <b>
+<i>PJPN</i>
+</b> is a partial java package name.  That is, it is the beginning of or the 
+complete name of a java package.
+<br />Examples: <code>xmlns:my-package="xalan://java.util"</code>
+<br />               
+<code>xmlns:my-package="xalan://mypackage"</code>
+</p>
+<p>
+<b>Java format:</b> <code>xmlns:java="http://xml.apache.org/xalan/java"</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The old namespace http://xml.apache.org/xslt/java is still supported for backward compatibility.
+</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Although the namespace declarations for the class and package formats are shown with the 
+xalan:// prefix, the current implementation for those formats will simply use the string to the right 
+of the rightmost forward slash as the Java class name. This format, however, is the preferred 
+format for extension namespace declarations.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The class: prefix which was sometimes required in earlier versions of Xalan-Java is no longer 
+required.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">These formats are also available when coding the src attribute of the xalan:script element 
+as explained in <a href="#setup-script">Set up the xalan:script element</a>.</td>
+</tr>
+</table>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Use the namespace when you make extension calls</h4>
+<p>Use the declared prefix with the syntax described in <a href="#ext-func-calls">Extension 
+function Java calls</a>.</p>
+<p>That is all. You do not include an xalan:component element. Using the abbreviated syntax clearly 
+involves less setup than using the xalan:component/xalan:script approach.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">We recommend that, for extensions coded in Java, the abbreviated syntax should always be used 
+since the xalan:component/xalan:script constructs add no functionality.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The abbreviated syntax is supported in XSLTC, but the xalan:component/xalan:script constructs 
+are not.</td>
+</tr>
+</table>
+<a name="ex-java-namespace">&#8204;</a> 
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Example: Formatting a date</h4>
+<p>This example uses extension functions to call the SimpleDateFormat class and the IntDate class. 
+IntDate uses String arguments to set up a Date object:</p>
+<blockquote class="source">
+<pre>import java.util.Date;
+import java.util.Calendar;
+
+public class IntDate
+{
+  public static Date getDate(String year, String month, String day)
+    {
+      // Date(int, int, int) has been deprecated, so use Calendar to
+      // set the year, month, and day.
+      Calendar c = Calendar.getInstance();
+      // Convert each argument to int.
+      c.set ( Integer.parseInt(year),
+              Integer.parseInt(month),
+              Integer.parseInt(day) );
+      return c.getTime();
+    }
+}</pre>
+</blockquote>
+<p>The template transforms date elements with four attributes. For example, it transforms 
+<code>&lt;date format="EEEE, MMM dd, yyyy" year="2000" month="4" day="27"/&gt;</code> 
+into &lt;p&gt;Date: Thursday, April 27, 2000.&lt;/p&gt;.</p>
+<p>As you review this stylesheet, please keep the following in mind:</p>
+ <ul>
+  <li>The exclude-result-prefixes stylesheet attribute prevents the java namespace declaration from
+   appearing in the output.</li>
+  <li>The XSLT type returned by any LocationPath expression is node-set, so the XSLT string
+    function is used to convert the format, year, month, and day attribute values from node-sets to
+    strings.</li>
+  <li>The format attribute provides a String argument for constructing a java.text.SimpleDateFormat
+    object.</li>
+    <li>The IntDate class uses String values provided by the year, month, and day attributes, to set the
+    date. XSLT can pass number values, but these are converted into doubles.</li>
+  <li>The formatter variable holds a SimpleDateFormat object, and the date variable holds a Date object.
+    XSLT does not understand either of these types, but they are used to call the SimpleDateFormat format
+     method. In that call, $formatter is the object, and $date is the argument. The syntax for calling
+     Java constructors and methods is described above in <a href="#ext-func-calls">Extension 
+     function Java calls</a>.</li>    
+ </ul>
+<a name="format-date-stylesheet">&#8204;</a>   
+<blockquote class="source">
+<pre>&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+    version="1.0"   
+    xmlns:java="http://xml.apache.org/xalan/java"
+    exclude-result-prefixes="java"&gt;
+    
+  &lt;!--Other templates for transforming the rest of
+                                            the XML source documents--&gt;
+  
+  &lt;xsl:template match="date"&gt; 
+    &lt;xsl:variable name="year" select="string(./@year)"/&gt;
+    &lt;xsl:variable name="month" select="string(./@month)"/&gt; 
+    &lt;xsl:variable name="day" select="string(./@day)"/&gt;          
+    &lt;xsl:variable name="format" select="string(./@format)"/&gt;
+
+    &lt;xsl:variable name="formatter"       
+        select="java:java.text.SimpleDateFormat.new($format)"/&gt;
+
+    &lt;xsl:variable name="date" 
+        select="java:IntDate.getDate($year, $month, $day)"/&gt;
+
+    &lt;p&gt;Date: &lt;xsl:value-of select="java:format($formatter, $date)"/&gt;&lt;/p&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;  
+</pre>
+</blockquote>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Examples: using Java and JavaScript to implement the same extension</h3>
+<p>This section contains two examples. The first example uses a Java extension to transform a set of 
+name elements  into an alphabetical and numbered list. The second example uses a JavaScript script 
+to do the same. Both examples include equivalent extension elements and an extension function.</p>
+<a name="ex-java">&#8204;</a> 
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Java implementation</h4>
+<p>MyCounter.java</p>
+<blockquote class="source">
+<pre>Import java.util.*;
+
+public class MyCounter {
+  Hashtable counters = new Hashtable ();
+
+  public MyCounter () 
+  {}
+
+  public void init
+             ( org.apache.xalan.extensions.XSLProcessorContext context,
+               org.apache.xalan.templates.ElemExtensionCall extElem ) 
+  {
+    String name = extElem.getAttribute("name");
+    String value = extElem.getAttribute("value");
+    int val;
+    try 
+    {
+      val = Integer.parseInt (value);
+    } 
+    catch (NumberFormatException e) 
+    {
+      e.printStackTrace ();
+      val = 0;
+    }
+    counters.put (name, new Integer (val));
+  }
+
+  public int read(String name) 
+  {
+    Integer cval = (Integer) counters.get (name);
+    return (cval == null) ? 0 : cval.intValue ();
+  }
+
+  public void incr
+             ( org.apache.xalan.extensions.XSLProcessorContext context,
+               org.apache.xalan.templates.ElemExtensionCall extElem) 
+  {
+    String name = extElem.getAttribute("name");
+    Integer cval = (Integer) counters.get(name);
+    int nval = (cval == null) ? 0 : (cval.intValue () + 1);
+    counters.put (name, new Integer (nval));
+  }
+}
+</pre>
+</blockquote>
+<p>An XML source document:</p>
+<blockquote class="source">
+<pre>&lt;?xml version="1.0"?&gt;
+&lt;doc&gt;
+  &lt;name first="David" last="Marston"/&gt;
+  &lt;name first="David" last="Bertoni"/&gt;
+  &lt;name first="Donald" last="Leslie"/&gt;
+  &lt;name first="Emily" last="Farmer"/&gt;
+  &lt;name first="Jack" last="Donohue"/&gt;
+  &lt;name first="Myriam" last="Midy"/&gt;
+  &lt;name first="Paul" last="Dick"/&gt;
+  &lt;name first="Robert" last="Weir"/&gt;
+  &lt;name first="Scott" last="Boag"/&gt;
+  &lt;name first="Shane" last="Curcuru"/&gt;
+&lt;/doc&gt;</pre>
+</blockquote>
+<p>The stylesheet:</p>
+<blockquote class="source">
+<pre>&lt;?xml version="1.0"?&gt; 
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xalan="http://xml.apache.org/xalan"
+                xmlns:counter="MyCounter"
+                extension-element-prefixes="counter"
+                version="1.0"&gt;
+
+  &lt;xalan:component prefix="counter"
+                   elements="init incr" functions="read"&gt;
+    &lt;xalan:script lang="javaclass" src="xalan://MyCounter"/&gt;
+  &lt;/xalan:component&gt;
+
+  &lt;xsl:template match="/"&gt;
+    &lt;HTML&gt;
+      &lt;H1&gt;Names in alphabetical order&lt;/H1&gt;
+      &lt;counter:init name="index" value="1"/&gt;
+      &lt;xsl:for-each select="doc/name"&gt;
+        &lt;xsl:sort select="@last"/&gt;
+        &lt;xsl:sort select="@first"/&gt;
+        &lt;p&gt;
+        &lt;xsl:text&gt;[&lt;/xsl:text&gt;
+        &lt;xsl:value-of select="counter:read('index')"/&gt;
+        &lt;xsl:text&gt;]. &lt;/xsl:text&gt;
+        &lt;xsl:value-of select="@last"/&gt;
+        &lt;xsl:text&gt;, &lt;/xsl:text&gt;
+        &lt;xsl:value-of select="@first"/&gt;
+        &lt;/p&gt;
+        &lt;counter:incr name="index"/&gt;
+      &lt;/xsl:for-each&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+ 
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+<p>Transformation output:</p>
+<blockquote class="source">
+<pre>&lt;HTML&gt;
+&lt;H1&gt;Names in alphabetical order&lt;/H1&gt;
+&lt;p&gt;[1]. Bertoni, David&lt;/p&gt;
+&lt;p&gt;[2]. Boag, Scott&lt;/p&gt;
+&lt;p&gt;[3]. Curcuru, Shane&lt;/p&gt;
+&lt;p&gt;[4]. Dick, Paul&lt;/p&gt;
+&lt;p&gt;[5]. Donohue, Jack&lt;/p&gt;
+&lt;p&gt;[6]. Farmer, Emily&lt;/p&gt;
+&lt;p&gt;[7]. Leslie, Donald&lt;/p&gt;
+&lt;p&gt;[8]. Marston, David&lt;/p&gt;
+&lt;p&gt;[9]. Midy, Myriam&lt;/p&gt;
+&lt;p&gt;[10]. Weir, Robert&lt;/p&gt;
+&lt;/HTML&gt;</pre>
+</blockquote>
+<a name="ex-javascript">&#8204;</a> 
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>JavaScript implementation</h4>
+<p />
+<blockquote class="source">
+<pre>&lt;?xml version="1.0"?&gt; 
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xalan="http://xml.apache.org/xalan"
+                xmlns:counter="MyCounter"
+                extension-element-prefixes="counter"
+                version="1.0"&gt;
+
+  &lt;xalan:component prefix="counter"
+                   elements="init incr" functions="read"&gt;
+    &lt;xalan:script lang="javascript"&gt;
+      var counters = new Array();
+
+      function init (xslproc, elem) {
+        name = elem.getAttribute ("name");
+        value = parseInt(elem.getAttribute ("value"));
+        counters[name] = value;
+        return null;
+      }
+
+      function read (name) {
+        // Return a string.
+        return "" + (counters[name]);
+      }
+
+      function incr (xslproc, elem)
+      {
+        name = elem.getAttribute ("name");
+        counters[name]++;
+        return null;
+      }
+    &lt;/xalan:script&gt;
+  &lt;/xalan:component&gt;
+
+  &lt;xsl:template match="/"&gt;
+    &lt;HTML&gt;
+      &lt;H1&gt;Names in alphatebical order&lt;/H1&gt;
+      &lt;counter:init name="index" value="1"/&gt;
+      &lt;xsl:for-each select="doc/name"&gt;
+        &lt;xsl:sort select="@last"/&gt;
+        &lt;xsl:sort select="@first"/&gt;
+        &lt;p&gt;
+        &lt;xsl:text&gt;[&lt;/xsl:text&gt;
+        &lt;xsl:value-of select="counter:read('index')"/&gt;
+        &lt;xsl:text&gt;]. &lt;/xsl:text&gt;
+        &lt;xsl:value-of select="@last"/&gt;
+        &lt;xsl:text&gt;, &lt;/xsl:text&gt;
+        &lt;xsl:value-of select="@first"/&gt;
+        &lt;/p&gt;
+        &lt;counter:incr name="index"/&gt;
+      &lt;/xsl:for-each&gt;
+    &lt;/HTML&gt;
+  &lt;/xsl:template&gt;
+ 
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+<p>This stylesheet produces the same output as the preceding example with the Java extension.</p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

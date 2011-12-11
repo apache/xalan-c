@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: &lt;xsl:if&gt;</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">&lt;xsl:if&gt;</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>If design<br />
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>&lt;xsl:if&gt;</h2>
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Contents</h3>
+  <ul>
+    <li>
+<a href="#functionality">Functionality</a>
+</li>
+    <li>
+<a href="#implementation">Implementation</a>
+</li>    
+  </ul>
+  
+
+  <a name="functionality">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Functionality</h3>
+
+  <p>This element is cruical to XSL processing, but still very simple both in
+  its use and implementation. The element is used like this:</p>
+<blockquote class="source">
+<pre>
+  &lt;xsl:if test="contains($the-world,'Elvis')"&gt;
+    &lt;xsl:message&gt;Elvis is still alive!&lt;/xsl:message&gt;
+  &lt;/xsl:if&gt;</pre>
+</blockquote>
+
+  <p>The element's contents will only be executed if the test succeeds. There
+  is no <code>&lt;xsl:else&gt;</code> element. One has to use either several
+  <code>&lt;xsl:if&gt;</code>-elements or use a choose-element.</p>
+
+  
+
+  <a name="implementation">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Implementation</h3>
+
+  <p>The basic implementation is very simple:</p>
+  <ul>
+    <li>execute the expression from the 'test'-attribute</li>
+    <li>evaluate the resulting boolean value</li>
+    <li>ignore the element contents if the value is 'false'</li>
+    <li>otherwise execute the element contents</li>
+  </ul>
+
+  <p>There is onle type of function call that makes this a bit more complicated.
+  The <code>function-available()</code> and <code>element-available()</code>
+  function calls can be used to test for extension elements and functions. A
+  very common use for these is to encapsulate all references to extension
+  elements inside an <code>&lt;xsl:if&gt;</code> element and test for the
+  existance of this element before attempting to use it. XSLTC has to support
+  this. Otherwise we may risk either outputting erronuous error or warning
+  messages about acessing non-existing elements, or even worse, compiling in
+  calls to non-existing methods in the translet, causing the JVM's verifier to
+  prevent the translet from being loaded.</p>
+
+  <p>The <code>function-available()</code> and <code>element-available()</code>
+  functions have been updated to perform an evaluation at compile-time, so that
+  the <code>If</code> class can know wether to compile in calls to extensions or
+  not. This is possible because both functions take only literal expressions as
+  parameters. See the <code>getResult()</code> methods of the
+  <code>FunctionAvailableCall</code> and <code>ElementAvailableCall</code>
+  classes for details.</p>
+
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

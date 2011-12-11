@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Using the JAXP XPath APIs</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Using the JAXP XPath APIs</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>XPath API<br />
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Using the JAXP XPath APIs</h2>
+  <ul>
+  <li>
+<a href="#basic">Basic steps</a>
+</li>
+  <li>
+<a href="#plugin">Plugging in the XPathFactory</a>
+</li>
+  <li>
+<a href="#namespacecontext">Using NamespaceContext</a>
+</li>
+  <li>
+<a href="#variableresolver">Using XPathVariableResolver</a>
+</li>
+  <li>
+<a href="#functionresolver">Using XPathFunctionResolver</a>
+</li>
+  <li>
+<a href="#sampleresolver">Using the sample XPathFunctionResolver</a>
+</li>
+  </ul>
+  
+  <a name="basic">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Basic steps</h3>
+    <ol>
+    <li>
+<a href="#xpathfactory">Instantiate an XPathFactory</a>
+</li>
+    <li>
+<a href="#xpath">Create an XPath</a>
+</li>
+    <li>
+<a href="#xpathexpression">(optional) Create an XPathExpression</a>
+</li>
+    <li>
+<a href="#evaluation">Evaluate the XPath expression in a specified context</a>
+</li>
+    </ol>
+  <p>The following example illustrates the basic steps involved in evaluating an XPath expression.</p>
+  <blockquote class="source">
+<pre>// 1. Instantiate an XPathFactory.
+  javax.xml.xpath.XPathFactory factory = 
+                    javax.xml.xpath.XPathFactory.newInstance();
+  
+  // 2. Use the XPathFactory to create a new XPath object
+  javax.xml.xpath.XPath xpath = factory.newXPath();
+  
+  // 3. Compile an XPath string into an XPathExpression
+  javax.xml.xpath.XPathExpression expression = xpath.compile("/doc/name");
+  
+  // 4. Evaluate the XPath expression on an input document
+ String result = expression.evaluate(new org.xml.sax.InputSource("foo.xml"));
+  </pre>
+</blockquote>
+  
+  
+  <a name="xpathfactory">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>1. Instantiate an XPathFactory</h3>  
+  <p>
+<a href="apidocs/javax/xml/xpath/XPathFactory.html">XPathFactory</a> is an abstract class with two static 
+  newInstance() methods (<a href="apidocs/javax/xml/xpath/XPathFactory.html#newInstance()">newInstance()</a> and
+  <a href="apidocs/javax/xml/xpath/XPathFactory.html#newInstance(java.lang.String)">newInstance(String uri)</a>)
+  that instantiate the concrete subclass designated as the javax.xml.xpath.XPathFactory service provider.
+  The optional parameter uri specifies the object model. The implementation in Xalan-Java 2 only supports the
+  W3C DOM object model, identified by the URI <a href="apidocs/javax/xml/xpath/XPathFactory.html#DEFAULT_OBJECT_MODEL_URI">
+  DEFAULT_OBJECT_MODEL_URI</a>.</p>
+
+  <p>The default service provider for the javax.xml.xpath.XPathFactory service is 
+  <a href="apidocs/org/apache/xpath/jaxp/XPathFactoryImpl.html">org.apache.xpath.jaxp.XPathFactoryImpl</a>.
+  </p>
+  
+  
+  <a name="xpath">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>2. Create an XPath</h3>
+  You can use the <a href="apidocs/javax/xml/xpath/XPathFactory.html#newXPath()">XPathFactory.newXPath()</a> 
+  method to create a new <a href="apidocs/javax/xml/xpath/XPath.html">XPath</a>.
+  
+  
+  <a name="xpathexpression">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>3. (optional) Create an XPathExpression</h3>
+  You can use the <a href="apidocs/javax/xml/xpath/XPath.html#compile(java.lang.String)">XPath.compile(String expression)</a>
+  method to compile an XPath string into an <a href="apidocs/javax/xml/xpath/XPathExpression.html">XPathExpression</a> object 
+  for later evaluation. This is an optional step.
+  You can evaluate an XPath expression without compiling it first. 
+  
+
+  <a name="evaluation">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>4. Evaluate an XPath expression</h3>
+  <p>If you compile an XPath String into an <a href="apidocs/javax/xml/xpath/XPathExpression.html">XPathExpression</a> 
+  in step 3, you can use one of the four evaluate() methods in
+  the XPathExpression interface to evaluate the XPath expression. If the evaluation context is a W3C Node in an 
+  existing Document, you can use the <a href="apidocs/javax/xml/xpath/XPathExpression.html#evaluate(java.lang.Object)">
+  evaluate(Object item)</a> or <a href="apidocs/javax/xml/xpath/XPathExpression.html#evaluate(java.lang.Object, javax.xml.namespace.QName)">
+  evaluate(Object item, QName returnType)</a> method by passing the context item as the first parameter.
+  The method with a returnType parameter allows you to specify the return type as one of the following supported 
+  return types:
+  <li>
+<a href="apidocs/javax/xml/xpath/XPathConstants.html#BOOLEAN">XPathConstants.BOOLEAN</a>
+</li>
+  <li>
+<a href="apidocs/javax/xml/xpath/XPathConstants.html#NUMBER">XPathConstants.NUMBER</a>
+</li>
+  <li>
+<a href="apidocs/javax/xml/xpath/XPathConstants.html#STRING">XPathConstants.STRING</a>
+</li>
+  <li>
+<a href="apidocs/javax/xml/xpath/XPathConstants.html#NODESET">XPathConstants.NODESET</a>
+</li>
+  <li>
+<a href="apidocs/javax/xml/xpath/XPathConstants.html#NODE">XPathConstants.NODE</a>
+</li>
+  </p>
+  <p>If the returnType parameter is not specified, the default is XPathConstants.STRING.</p>
+  <p>If the evaluation context is an input document, you can use one of the two evaluate() methods with an 
+  InputSource parameter (<a href="apidocs/javax/xml/xpath/XPathExpression.html#evaluate(org.xml.sax.InputSource)">evaluate(InputSource source)</a> 
+  or <a href="apidocs/javax/xml/xpath/XPathExpression.html#evaluate(org.xml.sax.InputSource, javax.xml.namespace.QName)">
+  evaluate(InputSource source, QName returnType)</a>) to evaluate the XPath expression.</p>
+  <p>The compiling step allows you to reuse an XPath expression for evaluation on multiple contexts. 
+  If an XPath expression is only used once, you can use one of the four evaluate() methods in the 
+  <a href="apidocs/javax/xml/xpath/XPath.html">XPath</a> interface 
+  to evaluate the XPath expression without compiling it first.</p>
+  
+  
+  <a name="plugin">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Plugging in the XPathFactory</h3>
+  <p>The Java API for XML Processing interfaces enable you to plug in your own implementation of XPathFactory.
+  The abstract class XPathFactory has a static newInstance() method that instantiates a concrete Factory 
+  which wraps the underlying implementation. The newInstance() method uses system property settings to determine 
+  which implementation to instantiate.</p>
+  <p>Xalan-Java 2 is distributed with a pre-configured setting for the provider of the XPathFactory service. This setting is in 
+  xalan.jar in META-INF/services/javax.xml.xpath.XPathFactory, with a value of org.apache.xpath.jaxp.XPathFactoryImpl.</p>
+  <p>You can plug in a new XPathFactory as follows (in order of precedence):
+  <ol>
+  <li>Set the system property "javax.xml.xpath.XPathFactory" + ":uri" from the command line when you 
+  launch Java or from within your application, where uri is the URI of the underlying object model. The URI of
+  the default W3C DOM object model is <code>http://java.sun.com/jaxp/xpath/dom</code>.</li>
+  <li>Set the property in jaxp.properties in the JAVA_HOME/lib directory, where JAVA_HOME is the root of 
+  the JDK.</li>
+  <li>Revise the entry in src/META-INF/services/javax.xml.xpath.XPathFactory and rebuild xalan.jar. Each potential service 
+  provider entry in this file is required to implement the method <code>isObjectModelSupported(String objectModel).</code>
+  The first service provider found in class loader order that supports the specified object model will be used.</li>
+  </ol>
+  </p>
+  
+  
+  <a name="namespacecontext">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using NamespaceContext</h3>
+  <p>If namespace prefixes are used in an XPath expression, the XPath processor needs to know what namespace URIs 
+  the prefixes are bound to. Logically a prefix can only be bound to a single Namespace URI in the current scope. However,
+  a Namespace URI can be bound to multiple prefixes in the current scope. The information about namespace 
+  prefix to URI mappings is provided by an object that implements the 
+  <a href="apidocs/javax/xml/namespace/NamespaceContext.html">javax.xml.namespace.NamespaceContext</a> interface.</p>
+  <p>Suppose you want to evaluate the XPath expression <code>"/foo:document/bar:element"</code> on the following xml document:</p>
+  <blockquote class="source">
+<pre>
+  &lt;?xml version='1.0'?&gt;
+  &lt;foo:document xmlns:foo="http://apache.org/foo" xmlns:bar="http://apache.org/bar"&gt;
+    &lt;bar:element&gt;MyBar&lt;/bar:element&gt;
+  &lt;/foo:document&gt;
+  </pre>
+</blockquote>
+  
+  <p>You need to create your own implementation of <a href="apidocs/javax/xml/namespace/NamespaceContext.html">NamespaceContext</a>
+  to inform the XPath processor what namespace URIs
+  the prefixes are bound to. For the example above, you can create a NamespaceContext implementation as follows:</p>
+  <blockquote class="source">
+<pre>
+    public class MyNamespaceContext implements NamespaceContext
+    {
+        public String getNamespaceURI(String prefix)
+        {
+            if (prefix.equals("foo"))
+                return "http://apache.org/foo";
+            else if (prefix.equals("bar"))
+                return "http://apache.org/bar";
+            else
+                return XMLConstants.NULL_NS_URI;
+        }
+        
+        public String getPrefix(String namespace)
+        {
+            if (namespace.equals("http://apache.org/foo"))
+                return "foo";
+            else if (namespace.equals("http://apache.org/bar"))
+                return "bar";
+            else
+                return null;
+        }
+
+        public Iterator getPrefixes(String namespace)
+        {
+            return null;
+        }
+    }  
+  </pre>
+</blockquote>
+  
+  <p>Then you can use the <a href="apidocs/javax/xml/xpath/XPath.html#setNamespaceContext(javax.xml.namespace.NamespaceContext)">
+  XPath.setNamespaceContext(NamespaceContext nsContext)</a>
+  method to set the NamespaceContext on the XPath object you create using the <a href="#basic">basic steps</a>.</p>
+  <p>The XPath processor in Xalan-Java 2 only uses the <a href="apidocs/javax/xml/namespace/NamespaceContext.html#getNamespaceURI(java.lang.String)">
+  getNamespaceURI(String prefix)</a>
+  method on NamespaceContext. The other two methods 
+  <a href="apidocs/javax/xml/namespace/NamespaceContext.html#getPrefix(java.lang.String)">getPrefix(String namespace)</a>
+  and <a href="apidocs/javax/xml/namespace/NamespaceContext.html#getPrefixes(java.lang.String)">getPrefixes(String namespace)</a>
+  are not used. If the NamespaceContext object is only used by the XPath processor, you can let the unused methods 
+  return null for simplicity.</p>
+  
+  
+  
+  <a name="variableresolver">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using XPathVariableResolver</h3>
+  <p>
+<a href="apidocs/javax/xml/xpath/XPathVariableResolver.html">XPathVariableResolver</a> provides access to the set of user 
+  defined XPath variables. If an XPath expression contains
+  a variable reference, we need to set a XPathVariableResolver on the XPath object using the 
+  <a href="apidocs/javax/xml/xpath/XPath.html#setXPathVariableResolver(javax.xml.xpath.XPathVariableResolver)">
+  XPath.setXPathVariableResolver(XPathVariableResolver resolver)</a>
+  method. You can also set the XPathVariableResolver on the XPathFactory, using the 
+  <a href="apidocs/javax/xml/xpath/XPathFactory.html#setXPathVariableResolver(javax.xml.xpath.XPathVariableResolver)">
+  XPathFactory.setXPathVariableResolver(XPathVariableResolver resolver)</a>
+  method. If the XPathVariableResolver is set on the XPathFacory, then all XPath objects constructed from this 
+  XPathFactory will use the specified XPathVariableResolver by default. The XPath processor uses the
+  XPathVariableResolver to retrieve the value of a user defined variable. In the course of evaluating any 
+  single XPath expression, a variable's value must be immutable. </p>
+  <p>Suppose that the XPath expression to be evaluated is <code>"$x + $y"</code>, we need to provide a XPathVariableResolver
+  implementation from which the values of the variable x and y can be retrieved. For this example, the 
+  XPathVariableResolver implementation can be written as follows:</p>
+  <blockquote class="source">
+<pre>
+    public class MyVariableResolver implements XPathVariableResolver
+    {
+        public Object resolveVariable(QName var)
+        {
+            if (var == null)
+                throw new NullPointerException("The variable name cannot be null");
+              
+            if (var.equals(new QName("x")))
+                return new Integer(2);
+            else if (var.equals(new QName("y")))
+                return new Integer(3);
+            else
+                return null;
+        }
+    }
+  </pre>
+</blockquote>  
+  
+  
+  <a name="functionresolver">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using XPathFunctionResolver</h3>
+  <p>
+<a href="apidocs/javax/xml/xpath/XPathFunctionResolver.html">XPathFunctionResolver</a> provides access to the 
+  set of user defined XPathFunctions. If an XPath expression contains
+  an extension function, you can use the 
+  <a href="apidocs/javax/xml/xpath/XPath.html#setXPathFunctionResolver(javax.xml.xpath.XPathFunctionResolver)">
+  XPath.setXPathFunctionResolver(XPathFunctionResolver resolver)</a>
+  method to set a XPathFunctionResolver on the XPath object. You can also use the
+  <a href="apidocs/javax/xml/xpath/XPathFactory.html#setXPathFunctionResolver(javax.xml.xpath.XPathFunctionResolver)">
+  XPathFactory.setXPathFunctionResolver(XPathFunctionResolver resolver)</a>
+  method to set a XPathFunctionResolver on the XPathFactory, in which case all XPath objects constructed from this
+  XPathFactory will use the specified XPathVariableResolver by default.</p>
+  <p>The XPathFunctionResolver interface only has one method:</p>
+  <p>
+<a href="apidocs/javax/xml/xpath/XPathFunctionResolver.html#resolveFunction(javax.xml.namespace.QName, int)">
+  <code>public XPathFunction resolveFunction(QName functionName, int arity)</code>
+</a>
+</p>
+  <p>This method returns a XPathFunction object from the given function name and arity. XPath functions are resolved 
+  by name and arity. The parameter types have no impact here. XPathFunctionResolver is only used for functions with
+  an explicit prefix. It is not needed for XPath built-in functions and it cannot be used to override those functions.</p>
+  <p>The XPathFunction interface has only one method:</p>
+  <p>
+<a href="apidocs/javax/xml/xpath/XPathFunction.html#evaluate(java.util.List)">
+  <code>public java.lang.Object evaluate(java.util.List args) throws XPathFunctionException</code>
+</a>
+</p>
+  <p>The function parameters are passed in using the args parameter as a java.util.List. And the method returns the result 
+  of evaluating the XPath function as an Object.</p>
+  <p>To support the use of extension functions in an XPath expression, a user needs to provide implementations of
+  the XPathFunctionResolver and XPathFunction interfaces. The resolveFunction method of the XPathFunctionResolver
+  implementation should return an object of a class that implements the XPathFunction interface.</p>
+  <p>Suppose we want to evaluate the XPath expression <code>"ext:myAdditionFunction(2, 3)"</code>, and the purpose
+  of the extension function is simply to return the sum of the two parameters. Because an extension function
+  always has an explicit prefix, we also need to implement the NamespaceContext interface to provide a namespace
+  prefix to URI mapping. For this example, we need to implement three interfaces: NamespaceContext, 
+  XPathFunctionResolver and XPathFunction. A sample implementation is as follows:</p>
+  <blockquote class="source">
+<pre>
+      public class MyNamespaceContext implements NamespaceContext
+      {
+          public String getNamespaceURI(String prefix)
+          {
+              if (prefix == null)
+                throw new IllegalArgumentException("The prefix cannot be null.");
+              
+              if (prefix.equals("ext"))
+                  return "http://ext.com";
+              else
+                  return null;
+          }
+          
+          public String getPrefix(String namespace)
+          {
+              if (namespace == null)
+                throw new IllegalArgumentException("The namespace uri cannot be null.");
+              if (namespace.equals("http://ext.com"))
+                return "ext";
+              else
+                return null;
+          }
+  
+          public Iterator getPrefixes(String namespace)
+          {
+              return null;
+          }
+      }
+      
+      /**
+       * The XPathFunctionResolver implementation is used to evaluate
+       * the extension function "ext:myAdditionFunction(2, 3)".
+       */
+      public class MyFunctionResolver implements XPathFunctionResolver
+      {
+      	/**
+      	 * This method returns a customized XPathFunction implementation
+      	 * for the extension function "ext:myAdditionFunction(2, 3)".
+      	 */
+      	public XPathFunction resolveFunction(QName fname, int arity)
+      	{
+      	  if (fname == null)
+      	    throw new NullPointerException("The function name cannot be null.");
+      	  
+      	  // We only recognize one function, i.e. ex:addFunc().
+      	  if (fname.equals(new QName("http://ext.com", "myAdditionFunction", "ext")))
+      	    /** 
+      	     * Return a customized implementation of XPathFunction. We need
+      	     * to implement the evaluate(List) method.
+      	     */
+      	    return new XPathFunction() {
+      	      /**
+      	       * The actual implementation of the extension function.
+      	       * Just cast two arguments to Double and add them together.
+      	       */
+      	      public Object evaluate(java.util.List args) {
+      	        if (args.size() == 2) {
+      	          Double arg1 = (Double)args.get(0);
+      	          Double arg2 = (Double)args.get(1);
+      	          return new Double(arg1.doubleValue() + arg2.doubleValue());
+      	        }
+      	        else
+      	          return null;
+      	      }
+      	    };
+      	  else
+      	    return null;
+      	}
+      }
+  </pre>
+</blockquote>
+  
+  
+  <a name="sampleresolver">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using the sample XPathFunctionResolver</h3>
+  <p>Normally you need to provide your own implementation of XPathFunctionResolver in order to use
+  extension functions in XPath expressions. In Xalan-Java 2, we provide a sample implementation 
+  of XPathFunctionResolver in the class org.apache.xalan.extensions.XPathFunctionResolverImpl, with supports
+  for Java and EXSLT extensions. If you set the XPathFunctionResolver to an object of this class, then
+  you can use Java and EXSLT extension functions in the XPath expression. You also need to use a
+  NamespaceContext along with the sample XPathFunctionResolver. Xalan-Java 2 also includes a sample 
+  implementation of NamespaceContext in org.apache.xalan.extensions.ExtensionNamespaceContext, which 
+  provides the following namespace prefix to URI mappings:</p>
+  
+  <table border="1">
+  <tr>
+    <th class="content" rowspan="1" colspan="1">Prefix</th>
+    <th class="content" rowspan="1" colspan="1">URI</th>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">java</td>
+    <td class="content" rowspan="1" colspan="1">http://xml.apache.org/xalan/java</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">exslt</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/common</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">math</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/math</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">set</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/sets</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">str</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/strings</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">dyn</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/dynamic</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">datetime</td>
+    <td class="content" rowspan="1" colspan="1">http://exslt.org/dates-and-times</td>
+  </tr>
+  </table>
+  
+  <p>Suppose you want to evaluate the XPath expression <code>"math:max(/doc/num)"</code>, which contains
+  an EXSLT extension call. Here the prefix <code>"math"</code> corresponds to the URI <code>"http://exslt.org/math"</code>. 
+  The following code snippet demonstrates how to use the sample XPathFunctionResolver to evaluate the 
+  XPath expression above:</p>
+  <blockquote class="source">
+<pre>
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xpath = factory.newXPath();
+        
+        // set the NamespaceContext to 
+        // org.apache.xalan.extensions.ExtensionNamespaceContext
+        xpath.setNamespaceContext(new org.apache.xalan.extensions.ExtensionNamespaceContext());
+        
+        // set the XPathFunctionResolver to 
+        // org.apache.xalan.extensions.XPathFunctionResolverImpl
+        xpath.setXPathFunctionResolver(new org.apache.xalan.extensions.XPathFunctionResolverImpl());
+        
+        // Evaluate the XPath expression "math:max(/doc/num)" against 
+        // the input document numlist.xml
+        Object result = xpath.evaluate("math:max(/doc/num)", new InputSource("numlist.xml"), XPathConstants.NUMBER);  
+  </pre>
+</blockquote>
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

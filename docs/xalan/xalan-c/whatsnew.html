@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: What's New in this Release</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">What's New in this Release</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>What's New<br />
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>What's New in this Release</h2>
+
+ <ul>
+  <li>
+<a href="#status">Status</a>
+</li>
+  <li>
+<a href="#contact">Getting in Touch</a>
+</li>
+  <li>
+<a href="#history">History of Software Changes</a>
+</li>
+  <li>
+<a href="#bugfix11">Bug Fixes in Release 1.11</a>
+</li>
+  <li>
+<a href="#bugfix10">Bug Fixes in Release 1.10</a>
+</li>
+  <li>
+<a href="#bugs">Bug reporting</a>
+</li>    
+  <li>
+<a href="#to-do">To-do tasks for future Xalan-C/C++ releases</a>
+</li>
+ </ul>
+
+<a name="status">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Status</h3>
+
+<p>
+<b>Release notes for Xalan-C/C++ Version 1.11</b>
+</p>
+<p>This is primarily a bug-fix release of version 1.10.
+</p>
+<p>Xalan-C/C++ Version 1.11; has been tested with Xerces-C/C++ Version 3.1.1.
+Other versions of Xerces-C/C++ (2.8, 3.0, 3.0.1, 3.1) have also been tested, 
+but their use requires separate compilation of the Xerces-C/C++ library.
+</p>
+<p>At present, the Xalan-C/C++ Version 1.11 has no binary releases. 
+When building Xalan-C/C++ from sources, 
+you should use the same platform that was used to 
+compile the companion Xerces-C/C++ library.
+</p>
+<p>If you are able to successfully create a new binary package and wish it
+to be included, then we welcome your participation on the 
+<a href="mailto:xalan-dev@xml.apache.org">xalan-dev</a> mail list.
+</p>
+
+
+
+<a name="contact">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Getting in Touch</h3>
+<p>Your feedback is more than welcome. Offers of help are even more so! 
+Perhaps you would like to contribute to the ongoing development, 
+testing, or documentation of Xalan-C++.
+</p> 
+<p>Please email your comments, questions, suggestions, bug reports, 
+and offers to help to <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.
+</p>
+<p>Your general user comments on Xalan-C++ usage are also welcome on 
+<a href="mailto:xalan-c-users@xml.apache.org">Xalan-C/C++ Users Mailing List</a>.
+</p>
+
+
+<a name="history">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Cumulative history of software changes</h3>
+<p>The following sections list the changes in each release since Xalan-C++ version 0.40.0.</p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.11</h4>
+<p>This is a general bug fix release with added stability features.</p>
+<p>Major updates since version 1.10 include:</p>
+<ul>
+  <li>Upgrade from Xerces-C 2.7 to Xerces-C 2.8 and Xerces-C 3.1.1.</li>
+  <li>Fix support issues for AIX 5.3</li>
+  <li>Fix support issues for Solaris 2.8</li>
+  <li>Fix support issues for GCC-4.3</li>
+  <li>Add support for Microsoft .NET 2010 (VC10)</li>
+  <li>
+<a href="#bugfix11">Bugs fixed in this release</a>.</li>
+</ul>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.10</h4>
+<p>Major updates since version 1.9 include:</p>
+<ul>
+  <li>Support for XML 1.1 and Namespaces in XML 1.1.</li>
+  <li>Added support for IBM XLC 7.0 compiler on AIX.</li>
+  <li>Improved and stabilized C pluggable memory management functionality.</li> 
+  <li>Various improvements in Xalan XML serializers for better performance and stability.</li>
+  <li>Upgrade from Xerces-C 2.6 to Xerces-C 2.7.</li>
+ </ul>  
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.9</h4>
+<p>Major updates since version 1.8 include:</p>
+<ul>
+  <li>Pluggable Memory Management.  This feature allows applications to maintain precise control over memory allocations.  This 
+      will allow users, with knowledge of their application's characteristics, to provide a more efficient allocation method 
+      than the general purpose procedures provided by the system.  for more information on how to use this feature, please see
+      the <a href="programming.html#memory">Pluggable Memory Management</a> section of the Programming page.</li>
+  <li>Improved stability on the execution of large stylesheets and XML documents.  Because the current implementation relies on 
+      function recursion, certain stylesheets/input documents may cause the program stack to overflow and cause the application 
+      to fail.  It also may inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will 
+      prevent these types of failure. </li>
+  <li>Provided a global option to pool all text node strings.  This feature allows developers to set a flag to determine if a 
+      parsed source tree will pool the values of all of the text nodes in the XML document.  By doing so, this can result in a 
+      significant reduction in memory usage, particularly if there are a lot of repeated values in text nodes.  Please see 
+      the class descriptions for <a href="apiDocs/classXalanSourceTreeDocument.html">XalanSourceTreeDocument</a>,  
+      <a href="apiDocs/classXalanDefaultParsedSource.html">XalanDefaultParsedSource</a>, and
+      <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> in the <a href="apiDocs/index.html">
+      API Reference</a> section for more information.</li> 
+  <li>Added support for Microsoft Studio .NET V7.1.  Project files for Microsoft Studio .NET V7.1 have been provided under the 
+      directory xml-xalan\c\Projects\Win32\VC7.1.</li>
+  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+ </ul>  
+
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.8</h4>
+     <p>Major updates since version 1.7 include:</p>
+     <ul>
+      <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
+      <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
+          HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
+      <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
+          is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
+          on this platform.  Please see <a href="build_instruct.html#dotNet">"Step for doing a Windows Build with Visual Studio .NET"</a> 
+          for details.</li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users 
+          are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these 
+          changes to your build environment, please see <a href="#xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"
+          </a>
+</li>
+      
+      <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes".</li>
+
+     </ul>  
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.7</h4>
+     <p>Major updates since version 1.6 include:</p>
+     <ul>
+      <li>Message Localization Support. This feature enables Xalan-C++ to issue diagnostic messages 
+      in languages other than the default language (English). In order to utilize this feature, 
+      the user must provide a version of the Xalan-C++ message catalog that has been translated in 
+      their language of choice. For more information on how to exploit this feature, please see  
+      <a href="#locale">Steps for doing a Build with Message Localization Support</a>.</li>
+      <li>Build, packaging, and installation improvements. Changes to the Xalan-C++ makefiles now 
+      allow for a more flexible build, packaging, and install process. Each step in a typical 
+      build process can be invoked by specifying the appropriate target, for example to build the 
+      executable, and/or samples, or install the build at user-specified location. For more 
+      information on building Xalan-C++, please see <a href="#unix">Steps for doing a Unix build
+      </a>.</li>
+      <li>Deprecated DOM Support. The XercesBridge classes have been marked deprecated and moved 
+      into an exclusive directory within the xalanc/XercesParserLiaison directory called 
+      'Deprecated'. If your application is dependent on these classes to interface with the 
+      deprecated Xerces DOM you must alter your include directive with the 'Deprecated' directory. 
+      For example:<br />
+<br />
+      <code>#include "xalanc/XercesParserLiaison/XercesDocumentBridge.hpp"</code>
+<br />
+<br />
+      should be changed to:<br />
+<br />
+      <code>#include "xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp"</code>
+<br />
+<br />
+</li>
+      <li>Upgrade from Xerces-C 2.3 to Xerces-C 2.4. </li>
+      <li>Porting of ThreadSafe example to UNIX platform.</li>
+      <li>Implementation of EXSLT string extension functions encode-uri() and decode-uri(). </li>
+      <li>Implementation of EXSLT dynamic extension function evaluate(). </li>
+      <li>Implementation of EXSLT date-time extension function date-time().</li>
+     </ul>  
+     
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.6</h4>
+     <p>Major updates since version 1.5 include:</p>
+     <ul>
+	<li>Directory "sane include" reorganization.  A new sub-directory called 'xalanc' has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  
+            For example: <br />
+<br />
+            <code>#include &lt;XPath/XObject.hpp&gt;</code>
+<br />
+<br />
+            will need to be changed to <br />
+<br />
+            <code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code>
+<br />
+<br />
+            For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <a href="#unix">Steps for doing a UNIX build</a> for migration considerations.</li>
+     </ul>  
+     
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.5</h4>
+     <p>Major updates since version 1.4 include:</p>
+     <ul>
+	<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
+	<li>Support for Xerces-C++ DOMNode classes.</li>
+	<li>New sample <b>TransformToXercesDOM</b> that illustrates how to perform a transform resulting in a Xerces-C++ DOMDocument</li>
+	<li>Usage of the Xerces-C++ C++ namespace and creation of Xalan-C++ namespace.</li>
+     </ul>  
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.4</h4>
+     <p>Major updates since version 1.3 include:</p>
+     <ul>
+       <li>The Xalan-C++ distributions no longer include the Xerces-C++ headers and libraries. Accordingly, you must download the appropriate Xerces-C++ distribution (see <a href="getstarted.html#download">Downloading what you need</a>.</li>
+       <li>64-bit build for HP-11; <a href="#64">untested 64-bit support</a> for Solaris and AIX.</li>
+       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1.</li>
+       <li>
+<a href="http://www.stlport.org/">STLport</a> is no longer required on any of our supported platforms.</li> 
+       <li>
+<a href="extensionslib.html#exslt">Alpha support for a number of EXSLT functions</a>.</li>       
+       <li>
+<a href="samples.html#parsedsourcewrappers">ParsedSourceWrappers</a>, a sample that
+       illustrates how to perform transformations with input in the form of a pre-built
+       XalanDOM or XalanSourceTree.</li>
+     </ul>  
+     
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.3</h4>
+    <p>Major updates since version 1.2 include:</p>
+     <ul>
+       <li>A new and simplified command-line utility: <a href="commandline.html#xalanexe">the Xalan executable</a>
+</li>
+       <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <a href="samples.html#simplexpathcapi">SimpleXPathCAPI</a> and <a href="samples.html#serializenodeset">SerializeNodeSet</a>
+</li>
+       <li>A new <a href="usagepatterns.html#xercesdomwrapperparsedsource">wrapper class</a> that lets you pass in a Xerces DOM as input for a transformation</li>
+       <li>Bug fixes.</li>
+       <li>Changed XPathException to XalanXPathException because of a clash with a new Xerces class of the same name.</li>
+      </ul>
+     
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.2</h4>
+    <p>Major updates since version 1.1 include:</p>
+     <ul>
+      <li>
+<a href="extensionslib.html">Introduction of a library of extension functions</a>
+</li>
+      <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
+      <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> and the C API.</li>
+      <li>Support for stylesheet params in <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> 
+      and the C API</li>
+      <li>Support for extension functions in <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a>
+</li>
+      <li>Performance enhancements</li>
+      </ul>
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.1</h4>
+   <p>In addition to adding to the list of platforms on which Xalan-C++ builds, our focus for this release has been on bug fixes, performance enhancements, 
+      and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>
+   <ul>
+     <li>Added HP-UX 11 build.</li>
+     <li>Added Solaris build.</li>
+     <li>Greatly improved performance.</li>
+     <li>Improved conformance to the XSLT specification.</li>
+     <li>Simplified the C++ API and provided a C API for performing standard transformations with the <a href="usagepatterns.html#xalantransformer">XalanTransformer</a> class and associated header files.</li>
+     <li>Added sample illustrating use of XalanTransformer and the new C++ API: 
+         <a href="samples.html#xalantransform">XalanTransform</a>.</li> 
+     <li>Added sample illustrating use of XalanTransformer, the new C API, and how to run Xalan-C++ and perform transformations on an 
+         Apache Web server: <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a>.</li>
+     <li>Added the <a href="samples.html#streamtransform">StreamTransform</a> sample.</li>
+     <li>Eliminated dependencies on non-public Xerces headers; accordingly can now build with the Xerces distribution.</li>
+     <li>Fixed namespace mapping and inheritance problems.</li>
+     <li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.</li>
+     <li>Fixed bug sorting in reverse document order based on position. </li>
+     <li>Fixed &lt;xsl:number&gt; bug with use of letter-value="traditional" for "classical" Greek numbering.</li>
+     <li>Fixed use of &lt;xsl:fallback&gt; within a top-level extension function.</li>
+     <li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.</li>
+     <li>Fixed bug using key() in match patterns to find descendants.</li>
+     <li>Fixed bug using the id() function in complex match patterns.</li>
+     <li>Fixed problem outputting multiple single-character CDATA sections.</li>
+     <li>Fixed problem outputting whitespace characters.</li>
+     <li>Fixed problem transforming from a stream on UNIX platforms.</li>
+     <li>Fixed a bug with the document() function, which was generating a syntax error if called in the following manner: document(<b>
+<i>string</i>
+</b>,/).</li>
+     <li>Fixed named templates bug accepting global parameter when called with a parameter of the same name that the named template does not 
+         recognize.</li>
+   </ul> 
+   
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.0</h4>
+   <p>Major updates since version 0.40.0 include:</p>
+   <ul>
+     <li>Full support for namespace handling</li>
+     <li>Full implementation of the format-number() function and support for the decimal-format element</li>
+     <li>Integration with the <a href="http://oss.software.ibm.com/icu/index.html">International Components for Unicode (ICU)</a> for number formatting, sorting, and output encoding</li>
+     <li>Support for the exclude-result-prefixes attribute</li>
+     <li>Support for the output encoding attribute</li>
+   </ul>
+   
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 0.40.0</h4>
+   <p>Major updates since version 0.30.0 include:</p>
+   <ul>
+     <li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT</li>
+     <li>Stricter compliance for HTML and XML output</li>
+     <li>Improved handling of relative URI's</li>
+     <li>Improved handling of Import and Include</li>
+     <li>Better namespace handling (although there are still problems here)</li>
+     <li>Support for Document() function</li>
+     <li>Support for XPath predicates</li>
+     <li>ProblemListener with a different output stream and call 
+         XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
+   </ul>
+   
+
+ 
+
+
+<a name="bugfix11">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Bug Fixes in Release 1.11</h3>
+<p>The bugs fixed in Xalan-C++ Version 1.11 include:</p>
+<ul>
+<li>XALANC-709: Doxygen bug in XalanQName.hpp</li>
+<li>XALANC-705:	Crash with pure virtual function call</li>
+<li>XALANC-703:	Compiler errors while building on AIX 5.3</li>
+<li>XALANC-700:	Broken output when serializing UTF16 surrogates</li>
+<li>XALANC-699:	Compile using Visual C++ 2010 (VC10)</li>
+<li>XALANC-698:	Buffer overflow from XalanMessageLoader::load()</li>
+<li>XALANC-690:	The document function does not handle fragment IDs in URLs correctly</li>
+<li>XALANC-689:	XalanC transformation of a 600 kb file takes 43 seconds</li>
+<li>XALANC-684:	XPath single quate-comma bug</li>
+<li>XALANC-683:	xsl:number with level any does not always count all of the preceeding nodes in the document</li>
+<li>XALANC-681:	NamedNodeMapAttributeList constructor asserts when the provided NamedNodeMap is empty</li>
+<li>XALANC-680:	Error in match pattern with // and abbreviated attribute node test</li>
+<li>XALANC-679:	Possible wrong evaluation of abbreviated XPath in template match</li>
+<li>XALANC-677:	Debug assertion switching to HTML mode when the outputter is producing a DOM</li>
+<li>XALANC-675:	No error is reported for an unknown key</li>
+<li>XALANC-675:	GCC-4.3 cleanup</li>
+<li>XALANC-673:	Assertion failed with XalanDOMString::substr</li>
+<li>XALANC-671:	Incorrect handling of default namespace in xsl:element</li>
+<li>XALANC-669:	XalanOtherEncodingWriter reports an incorrect error message</li>
+<li>XALANC-667:	setUseValidation doesn't work</li>
+<li>XALANC-664:	Testing harness writes strings to the output XML in the local code page.</li>
+<li>XALANC-661:	PlatformSupport/DoubleSupport.cpp compile error on AIX 5.3</li>
+<li>XALANC-660:	Compilation errors in Tests/Performance/TestHarness.hpp on some platforms</li>
+<li>XALANC-659:	Unnecessary casting in ReusableArenaBlock</li>
+<li>XALANC-658:	Misplaced assert in ReusableArenaAllocator::destroyObject()</li>
+<li>XALANC-657:	Add Windows x64 targets to the project files</li>
+<li>XALANC-655:	Boolean value incorrectly converted ot string in attribute value templates</li>
+<li>XALANC-653:	Xalan-C not including namespace declaration in output</li>
+<li>XALANC-650:	XPathProcessorImpl uses XalanDOMString copy constructor instead of referring to an existing instance</li>
+<li>XALANC-648:	XalanUTF8Writer::write(const XalanDOMChar*, XalanDOMString::size_type) does not handle surrogates properly</li>
+<li>XALANC-647:	XalanOtherEncodingWriter::writeNumericCharacterReference() is inefficient</li>
+<li>XALANC-646:	During transcoding XalanC fails to append '0' to the transcoded string </li>
+<li>XALANC-645:	Pluggin of DOMStringPrintWriter into FormatterToXML leads to assert</li>
+<li>XALANC-641:	Class used as exception needs accessible copy constructor</li>
+<li>XALANC-640:	Path problem in Makefile under cygwin</li>
+<li>XALANC-638:	Performance test program does not build on HP-UX</li>
+<li>XALANC-635:	Build fails on Solaris 2.8</li>
+<li>XALANC-634:	Build fails with VC6</li>
+<li>XALANC-633:	The processor should ignore xsl:fallback element in LRE </li>
+<li>XALANC-632:	@use-attribute-sets attribute has to have no effect on xsl:copy when the context item is a documen node.</li>
+<li>XALANC-631:	The next stylesheet crashes XalanC</li>
+<li>XALANC-630:	Incorrect cast in XalanUTF16Writer</li>
+<li>XALANC-629:	Performance improvements for text node stripping</li>
+<li>XALANC-628:	Inconsistent flusing of serializers</li>
+<li>XALANC-627:	Broken cast in ElemTemplateElement::findTemplateToTransformChild()</li>
+<li>XALANC-626:	Fix copyrights in Apache XalanC source</li>
+<li>XALANC-625:	Spurious (though harmless) assert failure in XPath::findNodeSet() when an expression contains an empty node-set enclosed in parenthesis</li>
+<li>XALANC-624:	The key() function does not work when the context node is the root node of a result tree fragment obtained through exsl:node-set()</li>
+<li>XALANC-623:	Compatibility issues with Xerces-C 3.0</li>
+<li>XALANC-621:	Selection of compiler definitions file fails on Linux PPC in client code</li>
+<li>XALANC-618:	uninstallExternalFunction can run past the end of the array</li>
+<li>XALANC-617:	Leak in XalanTransformer</li>
+<li>XALANC-616:	xsl:strip-space element doesn't work proprely</li>
+<li>XALANC-615:	Xalan resolves a namespace prefix when it should report an error</li>
+<li>XALANC-614:	MsgCreator Makefile needs link option</li>
+<li>XALANC-613:	Cannot pass value to stylesheet parameter if parameter name is namespace-qualified</li>
+<li>XALANC-609:	Template with built-in template rules for namespaces gives and assert</li>
+<li>XALANC-604:	ConstructWithNoMemoryManager has a bug which prevents proper default initialization of built-in types.</li>
+<li>XALANC-603:	Source does not compile properly on HP-UX with newer versions of the HP compiler</li>
+<li>XALANC-595:	EXSLT date-time function missing + or - before timezone offset</li>
+<li>XALANC-588:	Floating point exceptions in DoubleSupport::initialize() on Solaris 10 (x86)</li>
+<li>XALANC-570: Removal of compiler warnings from STLHelper.hpp</li>
+<li>XALANC-535:	If an error/warning message contains not-displayable character for the local encoding , no message is shown at all</li>
+<li>XALANC-480:	XML1.1 and Namespaces for XML1.1 support</li>
+<li>XALANC-478:	Add support for XMLEntityResolver</li>
+<li>XALANC-432:	Minor spelling problems in XalanMsg_en_US.xlf</li>
+<li>XALANC-430:	"StylesheetExecutionContext::getVariable(name)" crahes if variable "name" was not found.</li>
+<li>XALANC-421:	omit-xml-declaration ignored</li>
+<li>XALANC-416:	Wrong access to out-of-scope xsl:variable not detected in certain circumstances</li>
+<li>XALANC-415:	Encoding attribute is not returning properly in output XML header</li>
+<li>XALANC-413:	Crash while using transform method on MacOSX</li>
+<li>XALANC-412:	XalanEXSLTDateTime not threadsafe, crashing application</li>
+<li>XALANC-409:	compilation error on g++ on SunOS 2.8</li>
+<li>XALANC-408:	runConfigure help does not include new HP platform</li>
+<li>XALANC-407:	XalanC output format is not suitable as a document entity</li>
+<li>XALANC-376:	Result tree fragment attributes are created without proper namespace and local name </li>
+</ul>
+
+
+<a name="bugfix10">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Bugs Fixed in Release 1.10</h3>
+<p>The bugs fixed in the 1.10 release include:</p>
+<ul>
+  <li>XALANC-572: Compile failure on SuSE80AMD_64b_GCC322 </li>
+  <li>XALANC-569: Compile-time assert on 32-bit Solaris and HPUX due to IEEE754 issue </li>
+  <li>XALANC-568: Pattern "/" does not match the pseudo root document of a node-set obtained from a result-tree fragment via exsl:node-set </li>
+  <li>XALANC-511: Crash during XalanTransformer::initialize on AIX </li>
+  <li>XALANC-554: Xalan-C does not implement erratum 25 </li>
+  <li>XALANC-552: Problems with the new serializers with CDATA and unrepresentable or special characters </li>
+  <li>XALANC-558: Latest source code does not build with the Intel compiler on Windows </li>
+  <li>XALANC-555: XalanEXSLTDateTime.cpp has too many platform-specifc ifdefs </li>
+  <li>XALANC-421: omit-xml-declaration ignored </li>
+  <li>XALANC-529: Xalan-C sometimes creates empty text nodes in RTFs or sends empty characters() events to FormatterListeners </li>
+  <li>XALANC-530: Serializers filter attributes unnecessarily </li>
+  <li>XALANC-245: substring-before and substring-after </li>
+  <li>XALANC-115: Need to catch use of variables in xsl:key attributes </li>
+  <li>XALANC-540: XPath absolute location path does not work when the context node was obtained from a result tree fragment through exsl:node-set() </li>
+  <li>XALANC-544: Assert failure, then crash, during "variable undefined" error recovery in certain circumstances. </li>
+  <li>XALANC-543: Crash when calling a template that wrongly uses xsl:with-param instead of xsl:param to declare its parameter. </li>
+  <li>XALANC-539: XalanMap needs to compact buckets to prevent long search times and ever-increasing memory usage. </li>
+  <li>XALANC-542: XalanDocumentFragmentXNodeSetBaseProxy::dereferenced() is not implemented properly </li>
+  <li>XALANC-538: Better handling for non-existent node test </li>
+  <li>XALANC-541: Fixes for zOS build </li>
+  <li>XALANC-455: Problem when releasing InputSource obtained through an EntityResolver </li>
+  <li>XALANC-535: If an error/warning message contains not-displayable character for the local encoding , no message is shown at all </li>
+  <li>XALANC-532: FormatterToXMLUnicode does not serialize UTF-8 </li>
+  <li>XALANC-536: ElemNumber uses extra temporary strings </li>
+  <li>XALANC-537: XalanC source code quotes incorrectly license protected documents </li>
+  <li>XALANC-526: Use of undefined stricmp breaks compilation on Linux </li>
+  <li>XALANC-513: ICUFormatNumberFunctor has some MemoryManager issues </li>
+  <li>XALANC-507: Safety improvements for XalanVector::insert() </li>
+  <li>XALANC-506: Remove references to stlport directory in Makefile.incl.in </li>
+  <li>XALANC-505: DirectoryEnumerator.hpp will not build on Solaris 10 with Sun Workshop 10 </li>
+  <li>XALANC-502: XalanDOMStringCache has initializer list out of order </li>
+  <li>XALANC-501: Creation of comments and PIs needs to detect illegal values </li>
+  <li>XALANC-500: Remove old "diagnostic" output from StylesheetRoot and XSLTEngineImpl </li>
+  <li>XALANC-497: Local variables or parameters in EXSLT-functions are interpreted as global </li>
+  <li>XALANC-496: Glitches in header files </li>
+  <li>XALANC-493: Problem with XALAN_STATIC_CHECK on HP-UX IA64 </li>
+  <li>XALANC-492: Various pluggable memory management bugs. </li>
+  <li>XALANC-490: XalanFileReporter is inconsistent in its usage of pluggable memory management </li>
+  <li>XALANC-489: XalanMemMgrs has a thread-safety issue </li>
+  <li>XALANC-488: XSLTInputSource does not support pluggable memory management </li>
+  <li>XALANC-487: URISupport does not provide explicit MemoryManager </li>
+  <li>XALANC-485: GCC warns about order of members in initializer list </li>
+  <li>XALANC-484: Remove compiler warnings about placement delete for HP's aCC compiler </li>
+  <li>XALANC-483: XercesParserLiaison does not create Xerces-C DOM instances with namespaces support enabled. </li>
+  <li>XALANC-482: Remove compiler warnings </li>
+  <li>XALANC-470: runConfigure does not pass link options to Makefile for AIX platform </li>
+  <li>XALANC-465: Add alt tag to footer.html page under html/apiDocs tree. </li>
+  <li>XALANC-463: Transforming an XML DOM document encapsulated within an XercesDOMWrapperParsedSource object triggers an invalid heap pointer exception if XSL opens other XML document with 'document()' function. </li>
+  <li>XALANC-460: Linux/xlC port </li>
+  <li>XALANC-448: TestXSLT/process.cpp compilation fails, interface broken in FormatterToText.hpp </li>
+  <li>XALANC-445: generate-id() inserts periods into name which limits usage </li>
+</ul>
+
+
+
+<a name="bugs">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Bug reporting</h3>
+<p>All known Xalan-C++ bugs are listed in <a href="https://issues.apache.org/jira/browse/XALANC">JIRA (the Apache bug database)</a>. For a list of open bugs with links to each bug
+   report, see <a href="https://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;jqlQuery=project+%3D+XALANC+AND+resolution+%3D+Unresolved+ORDER+BY+updated+DESC">XalanC open bugs</a>. If you find a new bug, please enter a XalanC bug report in this
+   database.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Before you can enter your first bug report, 
+  you must submit your email address to 
+  <a href="https://issues.apache.org/jira">JIRA</a> 
+  and receive a password.
+</td>
+</tr>
+</table> 
+<p>We strongly encourage you write patches for problems you find and 
+  submit them to JIRA and the
+  <a href="mailto:xalan-dev@xml.apache.org">xalan-dev</a> mailing list. 
+  We review the patches we receive to make sure they do not break   something else, and (assuming they do not) 
+  include them in our next release. 
+  In the interest of fixing bugs, adding enhancements, and 
+  addressing outstanding design issues, we sincerely want
+  (and need!) your active participation in the ongoing development of Xalan.
+</p>
+
+
+<a name="to-do">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>To-do tasks for future Xalan-C/C++ releases</h3>
+<p>Open bugs:</p>
+<ul>
+<li>Does not support 20 or more digits of numerical precision after the decimal.</li>
+<li>The namespace axis does not return the default "xml" namespace.</li>
+<li>Does not support case-order and lang attributes in xsl:sort.</li>
+</ul>
+<p>Items to do:</p>
+<ul>
+<li>Add support for new specifications (XPath-20, XSLT-2.0)</li>
+<li>Add transcoding support using Xerces-C modules</li>
+<li>Add XSLT extension elements</li>
+<li>Add more EXSLT extension functions</li>
+<li>Add the EXSLT document extension function</li>
+<li>Add support for user-defined extension modules</li>
+<li>Add support for node-set to be declared as top-level XSLT parameter</li>
+</ul>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

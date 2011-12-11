@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-Java DTM</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-Java DTM</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>DTM<br />
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-Java DTM</h2>
+<ul>
+  <li>
+<a href="#intro">Introduction</a>
+</li>
+  <li>
+<a href="#settings">Performance settings</a>
+</li>  
+</ul>
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+  <p>The Document Table Model (DTM) is an interface to a Document Model designed specifically for 
+  the needs of our XPath and XSLT implementations. The motivation behind this model is to optimize 
+  performance and minimize storage.</p>
+  <p>Specifically, DTM avoids the overhead of instantiating the objects the standard DOM requires to 
+  represent a tree of nodes. DTM uses unique integer "handles" to identify nodes, integer ID values 
+  to represent URLs, local names, and expanded names, and integer index and length references to a 
+  string buffer to represent the text value of each node.</p>
+  <p>In general, the "read" APIs to DTM resemble those of the W3C Document Object Model 
+  (<a href="http://www.w3.org/DOM">DOM</a>) interface. However, in place of the DOM object tree of nodes, DTM 
+  uses integer arrays and string pools to represent the structure and content of the XML document to 
+  be transformed. DTM also structures the document's contents slightly differently, to better match 
+  the XPath data model; some details and constraints present in a standard DOM are suppressed, and a 
+  few XPath-specific features are added.</p>
+  <p>DTM is intended to be a read-only model, and so does not attempt to replicate the DOM's write or 
+  create-node operations.</p> 
+  <p>The details of constructing a DTM vary depending on which implementation of this API you are 
+  using. Two reference implementations are currently available:</p>
+  <ul>
+    <li>SAX2DTM (built via a SAX stream)</li>
+    <li>DOM2DTM (which provides DTM access to an existing DOM)</li>
+  </ul> 
+  <p>Both DTMs can be built incrementally (see <a href="#incremental">incremental transforms</a>). 
+  When operating incrementally, the DTM allows the Xalan-Java processor to begin reading the DTM and 
+  performing the transformation while the DTM is still being assembled (for example, while the parser 
+  is still parsing the XML source), and attempts to do only as much work as is needed to support the
+  read requests actually made by the XPath or XSLT processor.</p>
+  <p>For the convenience of user-written extensions, a proxy mechanism presents the contents of the 
+  DTM as a read-only subset of the DOM.</p>
+
+
+<a name="settings">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>DTM performance settings</h3>
+  <p>Xalan-Java implements two DTM performance features that you can control with the TransformerFactory
+  <a href="apidocs/javax/xml/transform/TransformerFactory.html#setAttribute(java.lang.String,    java.lang.Object)">setAttribute(String name, Object value)</a> method.</p>
+  <table border="1">
+  <tr>
+    <th class="content" rowspan="1" colspan="1">Attribute name (URL)</th>
+    <th class="content" rowspan="1" colspan="1">Default setting</th>
+    <th class="content" rowspan="1" colspan="1">Description</th>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">"http://xml.apache.org/xalan/features/incremental"</td>
+    <td class="content" rowspan="1" colspan="1">false</td>
+    <td class="content" rowspan="1" colspan="1">
+<a href="#incremental">incremental transforms</a>
+</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">"http://xml.apache.org/xalan/features/optimize"</td>
+    <td class="content" rowspan="1" colspan="1">true</td>
+    <td class="content" rowspan="1" colspan="1">
+<a href="#optimized">optimized transforms</a>
+</td>
+  </tr> 
+  </table>
+  <p>Both of these DTM settings are described below.</p>
+  
+  <p> </p>
+  <a name="incremental">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>'http://xml.apache.org/xalan/features/incremental'</h4>
+   <p>Set this feature to true to enable incremental transformations. If set to false (the default), 
+      the transform and the parse are performed on the same thread.</p>
+   <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt"> When set to true: If the parser is Xerces, we perform an incremental transform on a single 
+          thread using the Xerces "parse on demand" feature. If the parser is not Xerces, we run the
+          transform in one thread and the parse in another. Exception: if the parser is not Xerces 
+          and the XML source is a DOMSource, setting this feature to true has no effect.</td>
+</tr>
+</table>
+   <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt"> The incremental feature is not currently supported by the XSLT Compiling processor, XSLTC.</td>
+</tr>
+</table>
+   <p>Example: setting incremental transforms to true (for the XSLT Interpretive processor):</p>
+   <blockquote class="source">
+<pre>javax.xml.transform.TransformerFactory tFactory =
+            javax.xml.transform.TransformerFactory.newInstance();
+ // setAttribute() takes a String and an Object.            
+  tFactory.setAttribute
+            ("http://xml.apache.org/xalan/features/incremental", 
+             java.lang.Boolean.TRUE);
+  ...</pre>
+</blockquote>
+  
+  
+  <a name="optimized">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>'http://xml.apache.org/xalan/features/optimize'</h4>
+   <p>When set to true (the default), this feature enables optimizations that may involve structural 
+      rewrites of the stylesheet. Any tool that requires direct access to the stylesheet structure 
+      should set this feature to false.</p>
+  
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>DTM node location tracking setting</h3>
+  <p>The DTM also provides a setting that you can use to track location information for each node in 
+     the source document. See <a href="features.html#source_location">"http://apache.org/xalan/features/source_location"</a>
+</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

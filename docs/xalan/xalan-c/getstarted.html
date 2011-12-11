@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Getting Started with Xalan-C++</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Getting Started with Xalan-C++</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>Getting Started<br />
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Getting Started with Xalan-C++</h2>
+<ul>
+<li>
+<a href="#download">Downloading what you need</a>
+</li>
+<li>
+<a href="#path">Setting up the path/library path</a>
+</li>
+<li>
+<a href="#samples">Trying out the samples</a>
+</li>
+<li>
+<a href="#commandline">Performing your own transformations from the command line</a>
+</li>
+<li>
+<a href="#apps">Setting up your own XSLT applications</a>
+</li>
+</ul>
+<p>This section is being rewritten. 
+<a href="index.html#getstarted">See: new getting started</a>
+</p>
+<a name="download">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Downloading what you need</h3>
+<p>For Xalan-C++ Version 1.11, we are distributing the following: 
+<ul>
+<li>AIX 5.1 32-bit and 64-bit xlC_r builds</li> 
+<li>HP-UX 11 32-bit and 64-bit aCC builds</li>
+<li>Red Hat Linux 7.2 32-bit and 64-bit Intel C++ builds</li>
+<li>Solaris 2.7 32-bit and 64-bit Forte C++ builds</li>
+<li>SuSE Linux 8.1 for IA-32 gcc 3.2.2 build  </li>
+<li>Windows 32-bit and 64-bit Visual C++ builds</li>
+</ul>
+</p>
+
+<p>As with previous releases, the documentation build containing this User's Guide and API documentation
+   will be provided in a separate distribution.</p> 
+<p>Please contact us at <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a> if you would like to help provide builds for other platforms.</p>
+<p>If you do not already have it, you must also download the Xerces-C++ version 3.1.1 build as indicated below.</p> 
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The Xalan distribution files are in <a href="http://www.apache.org/dyn/closer.cgi/xml/xalan-c">Xalan-C downloads</a>. The Xerces distribution files are in 
+      <a href="http://www.apache.org/dyn/closer.cgi/xerces/c">Xerces-C downloads</a>.  Xalan documentation is provided in a separate package from the binary 
+      distribution files.  For Windows, documentation is packaged with the file name Xalan-C_1_11_0-docs.zip.  For UNIX, 
+      documentation is packaged with the file name of Xalan-C_1_11_0-docs.tar.gz.</td>
+</tr>
+</table>
+<br />
+<table border="1">
+  <tr>
+  <th class="content" rowspan="1" colspan="1">Xalan distribution files</th>
+  <th class="content" rowspan="1" colspan="1">Xerces distribution files</th>
+  <th class="content" rowspan="1" colspan="1">Platform</th>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-aix_510-xlc_60_050623.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-aix_510-xlc_60_050623.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">AIX 5.1 (32-bit)</td>
+   </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-aix_510_64-xlc_60_050623.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-aix_510_64-xlc_60_050623.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">AIX 5.1 (64 bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">HP-UX 11.0 (32 bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">HP-UX 11.0 (64 bit)</td>
+  </tr>    
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-redhat_72-icc_71.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-redhat_72-icc_71.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">Redhat Linux 7.2 (32-bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-redhat_72_64-ecc_71.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-redhat_72_64-ecc_71.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">Redhat Linux 7.2 (64-bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">Solaris 2.7 (32-bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1"> </td>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">Solaris 2.7 (64-bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-suse_81-gcc_32.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-suse_81-gcc_32.tar.gz</td>
+  <td class="content" rowspan="1" colspan="1">SuSE Linux 8.1 (32-bit)</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-windows_2000-msvc_60.zip<br />
+</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-windows_nt-msvc_60.zip<br />
+</td>
+  <td class="content" rowspan="1" colspan="1">Windows 2000<br />
+</td>
+  </tr>
+  <tr>
+  <td class="content" rowspan="1" colspan="1">Xalan-C_1_11_0-windows_2003_64-ecl_71.zip<br />
+</td>
+  <td class="content" rowspan="1" colspan="1">xerces-c-3.1.1-windows_2003_64-ecc_71.zip<br />
+</td>
+  <td class="content" rowspan="1" colspan="1">Windows 2003 Server (64-bit)<br />
+</td>
+  </tr>
+</table>
+<p>The compiler version used for each platform is listed in the table below.
+    <table border="1">
+       <tr>
+         <th class="content" rowspan="1" colspan="1">Platform - Operating System</th>
+         <th class="content" rowspan="1" colspan="1">Compilers</th>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">AIX 5.1</td>
+         <td class="content" rowspan="1" colspan="1">IBM C and C++ for AIX 6.00</td>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">HP/UX 11.0</td>
+         <td class="content" rowspan="1" colspan="1">aCC A.03.52</td>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">Red Hat Linux 7.2</td>
+         <td class="content" rowspan="1" colspan="1">Intel C++ Compiler, version 7.1</td>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">Solaris 2.7</td>
+         <td class="content" rowspan="1" colspan="1">Sun Workshop 6 update 2</td>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">SuSE Linux 8.1</td>
+         <td class="content" rowspan="1" colspan="1">gcc Compiler, version 3.2.2</td>
+       </tr>
+       <tr>
+         <td class="content" rowspan="1" colspan="1">Windows NT, 2000, and XP</td>
+         <td class="content" rowspan="1" colspan="1">Microsoft Visual C++ with SP5 (for 32-bit)<br />
+         Intel C++ Compiler, version 7.1 (for 64-bit)</td>
+       </tr>
+    </table>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Use GNU tar to untar the Solaris distribution file; see <a href="faq.html#gnutar">A tar checksum error on Solaris</a>.</td>
+</tr>
+</table>
+<a name="xalandists">&#8204;</a>
+
+<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also 
+   download and install the <a href="http://oss.software.ibm.com/icu/index.html">International Components for Unicode (ICU)</a>; see <a href="usagepatterns.html#icu">Using the ICU</a>,</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To access previous releases of Xalan-C++, visit the <a href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive 
+      directory</a>.</td>
+</tr>
+</table>
+
+
+<a name="path">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting up the path/library path</h3>
+<ul>
+  <li>
+<a href="#windowspath">For Windows</a>
+</li>
+  <li>
+<a href="#unixpath">For UNIX</a>
+</li>  
+</ul>
+
+<a name="windowspath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>For Windows</h4>
+<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin and xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+</ul>
+<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, 
+   but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications 
+   or <a href="readme.html#jar">rebuild Xalan</a>, you must also provide Visual C++ with access to the Xerces headers 
+   and libraries.</p> 
+<p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
+<ul>
+  <li>Add the path to xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
+  <li>Add the path to xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
+</ul>
+
+
+<a name="unixpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>For UNIX</h4>
+<p>To use one of the UNIX binary distributions, you must place the Xalan-C++ executable on the path, and the Xalan-C++ and Xerces-C++ 
+   libraries on the library path.</p>
+<p>For the Xalan-C++ AIX distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_AIX_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_AIX_distribution&gt;/lib 
+      on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ HP-UX 11 distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br />
+<br />
+</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_HPUX_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_HPUX_distribution&gt;/lib on the library path 
+      SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ Solaris distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br />
+<br />
+</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_Solaris_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_Solaris_distribution&gt;/lib on the library path 
+     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ RedHat and SuSE Linux distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+<li>Put Xalan-C_1_11_0-&lt;my_Linux_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_Linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
+or copy the shared libraries to /usr/lib.</li>
+</ul>
+
+<a name="samples">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Trying out the samples</h3>
+<p>The Xalan-C++ distribution includes a number of basic sample applications. We have precompiled these samples for you so they are ready to run, and you can review the source files to see just how they work. </p>
+<p>To run the samples, do the following:</p>
+<ol>
+<li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
+Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin. In the UNIX distributions, the executables are in Xalan-C_1_11_0-&lt;my_UNIX_distribution&gt;/bin.</li>
+<li>Go to the samples subdirectory containing the sample.</li>
+<li>Run the sample from the command line (in Windows, use the DOS shell).</li>
+<li>Examine the application source files.</li>
+</ol>
+<p>For example, go to the SimpleTransform subdirectory and issue the following command:</p>
+<p>
+<code>SimpleTransform</code>
+</p>
+<p>SimpleTransform uses the foo.xsl stylesheet to transform foo.xml, and writes the transformation result to foo.out. To see how the example works, examine the source files: foo.xml, foo.xsl, foo.out, and SimpleTransform.cpp.</p>
+<p>For more information about the samples, see <a href="samples.html">Xalan-C++ Samples</a>.</p>
+<a name="commandline">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Performing your own transformations from the command line</h3>
+<p>The Xalan executable lets you perform transformations from the command line. The command line for 
+most standard transformations is as follows:</p>
+<p>
+<code>Xalan -o <b>
+<i>outputfile</i>
+</b> <b>
+<i>xmlSource</i>
+</b> <b>
+<i>stylesheet</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>xmlSource</i>
+</b> is the XML source file name, <b>
+<i>stylesheet</i>
+</b> is the XSL stylesheet file name, and <b>
+<i>outputfile</i>
+</b> is the output file name.</p>
+<p>If you want the output to be displayed on the screen, simply omit the -o flag and <b>
+<i>outputfile</i>
+</b>.</p>
+<p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement or Schema hint in your XML source files and include the -v flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE or Schema). For more information, see <a href="commandline.html">Command-Line Utility</a>.</p>
+<a name="apps">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting up your own XSLT applications</h3>
+<p>You can start by using your own XML source files and XSL stylesheets with the sample applications, which illustrate a number of usage patterns. For more information on setting up applications, see <a href="usagepatterns.html">Basic Usage Patterns</a>.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

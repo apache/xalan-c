@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Frequently asked questions</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Frequently asked questions</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>FAQs<br />
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2 class="faqSubHead">Questions</h2>
+<ol start="1">
+<li>
+<a href="#faq-1">Where do I go to learn about XSLT</a>
+</li>
+<li>
+<a href="#faq-2">Asking questions about Xalan-C++</a>
+</li>
+<li>
+<a href="#faq-3">What is Xerces-C++?</a>
+</li>
+<li>
+<a href="#faq-4">Which version of Xerces should I be using?</a>
+</li>
+<li>
+<a href="#faq-5">Should I be using the Xerces DOM or Xalan DOM?</a>
+</li>
+<li>
+<a href="#faq-6">Problems with samples in Windows</a>
+</li>
+<li>
+<a href="#faq-7">Building on Windows</a>
+</li>
+<li>
+<a href="#faq-8">Building on UNIX</a>
+</li>
+<li>
+<a href="#faq-9">Make errors on UNIX platforms</a>
+</li>
+<li>
+<a href="#faq-10">What is ICU</a>
+</li>
+<li>
+<a href="#faq-11">A tar checksum error on Solaris</a>
+</li>
+<li>
+<a href="#faq-12">Xalan-C++ in Apache</a>
+</li>
+<li>
+<a href="#faq-13">Is Xalan-C++ thread-safe?</a>
+</li>
+<li>
+<a href="#faq-14">What can I do to speed up transformations?</a>
+</li>
+<li>
+<a href="#faq-15">Stylesheet validation</a>
+</li>
+<li>
+<a href="#faq-16">What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?</a>
+</li>
+<li>
+<a href="#faq-17">Submitting Patches</a>
+</li>
+<li>
+<a href="#faq-18">Transformation Output Methods</a>
+</li>
+<li>
+<a href="#faq-19">Problems Using Sun's Forte/Workshop Compiler with code containing std::istrstream</a>
+</li>
+<li>
+<a href="#faq-20">Modifying an instance of XalanDocument</a>
+</li>
+<li>
+<a href="#faq-21">Changing Where Error Output is Sent</a>
+</li>
+<li>
+<a href="#faq-22">Programmatic Error Information</a>
+</li>
+<li>
+<a href="#faq-23">String Transcoding</a>
+</li>
+<li>
+<a href="#faq-24">Error Code/Exception Summary</a>
+</li>
+<li>
+<a href="#faq-25">Extension Functions</a>
+</li>
+<li>
+<a href="#faq-26">Outputting results to a file on Windows 95/98</a>
+</li>
+<li>
+<a href="#faq-27">Using format-number and ICU</a>
+</li>
+<li>
+<a href="#faq-28">Perl wrapper for Xalan-C++?</a>
+</li>
+<li>
+<a href="#faq-29">Missing LocalMsgIndex.hpp file</a>
+</li>
+</ol>
+<h2 class="faqSubHead">Answers</h2>
+<h3 id="faq-1" class="faqTitle">1. Where do I go to learn about XSLT</h3>
+<div class="faqQuestion">Where do I go to learn about XSLT?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The definitive sources are the W3C XSLT and XPath recommendations: <a href="http://www.w3.org/TR/xslt">W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0</a> and 
+      <a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a>.</p>
+   <p>For general questions not specific to Xalan-C++, see Dave Pawson's <a href="http://www.dpawson.co.uk/xsl/xslfaq.html">XSL Frequently Asked Questions</a> and Michael Kay's 
+      <a href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</a>.</p>
+   <p>For a brief listing of tutorials, discussion forums, and other materials, see <a href="overview.html#uptospeed">Getting up to speed with XSLT</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-2" class="faqTitle">2. Asking questions about Xalan-C++</h3>
+<div class="faqQuestion">Where can I ask a question?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>For generic questions about XSL stylesheets and transformations, use the <a href="http://www.mulberrytech.com/xsl/xsl-list/">
+      XSL-List -- Open Forum on XSL</a> hosted by Mulberry Technologies. There is an archive that can be searched as well. Please 
+      review the archive before posting a new question.</p>
+   <p>For specific questions on Xalan-C++, see xalan-c-users@xml.apache.org and xalan-dev@xml.apache.org on 
+      <a href="http://archive.covalent.net/">http://archive.covalent.net/</a>. To subscribe to these mailing lists, see 
+      <a href="http://xml.apache.org/mail.html">Mailing Lists</a>. Again, please review the archives before posting a new 
+      question.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-3" class="faqTitle">3. What is Xerces-C++?</h3>
+<div class="faqQuestion">What is Xerces-C++ and why do I need it?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Xerces-C++ is a validating XML parser written in a portable subset of C++. Xerces-C++ makes it easy to give your application the ability 
+      to read and write XML data. Like Xalan-C++, Xerces-C++ is available from the Apache XML site:  
+      <a href="http://xml.apache.org/xerces-c/index.html">http://xml.apache.org/xerces-c/index.html</a>
+</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-4" class="faqTitle">4. Which version of Xerces should I be using?</h3>
+<div class="faqQuestion">Which version of Xerces should I be using?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The Xalan-C++ release notes includes information about the Xerces-C++ release with which the Xalan-C++ release has been coordinated 
+      and tested. See <a href="whatsnew.html#status">Status</a>
+</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-5" class="faqTitle">5. Should I be using the Xerces DOM or Xalan DOM?</h3>
+<div class="faqQuestion">Should I be using the Xerces DOM or Xalan DOM?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The Xalan DOM implementation is highly optimised for transformations.  However, whilst you can build documents in the Xalan DOM, 
+      subsequent modification will not work.  The Xalan DOM is designed to be either an input or an output from a transformation, not 
+      as a general DOM implementation.</p>
+   <p>So in cases where you want to simply transform documents using Xalan, using the internal DOM implementation is the best approach.</p>
+   <p>In cases where you want to modify the DOM document on the fly, you should use the Xerces DOM as the base document.  You can wrap 
+      the Xerces DOM in a wrapper (see  <a href="usagepatterns.html#xercesdomwrapperparsedsource"> passing in a Xerces DOM</a>) 
+      to then use as an input to a Xalan transformation.  Alternatively you can output the result of a transformation to a Xerces DOM 
+      document (see <a href="usagepatterns.html#dom">working with DOM input and output</a>).  In either case, the Xerces document 
+      can be freely modified.  However, after you modify the document, you need to re-build the wrapper so that any changes are replicated 
+      in the Xalan wrappers.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-6" class="faqTitle">6. Problems with samples in Windows</h3>
+<div class="faqQuestion">I have encountered problem executing the Xalan-C++ sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
+   When I tried to execute the sample, I receive the error message 
+   "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead-&gt;nBlockUse)".</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, 
+      then you should link with the debug version of the Xalan-C++ and Xerces-C++ libraries and run with the debug version of the dynamic link 
+      libraries.</p>
+   <p>You must also make sure your application is linking with the Debug multithreaded DLL run-time library or the Multithreaded DLL 
+      run-time library.  To check this setting do the following in Visual C++:</p>
+   <ol>
+     <li>Select Settings from the Project menu.<br />
+<br />
+</li>
+     <li>Click the C/C++ tab.<br />
+<br />
+</li>
+     <li>In the Category drop-down list, select Code Generation.<br />
+<br />
+</li>
+     <li>In the Use run-time library drop-down list, select Multithreaded DLL for the Win32 Release configuration, or select Debug 
+         Multithreaded DLL for the Win32 Debug configuration.</li>
+   </ol>
+   <p>Once you have changed this setting, you must rebuild your project.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-7" class="faqTitle">7. Building on Windows</h3>
+<div class="faqQuestion">What do I need to rebuild Xalan-C++ on Windows?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>In order to build Xalan-C++ on Windows, you will need the supported version of Xerces-C++ and MS Visual C++ 6.0 installed with Service 
+      Pack 5 for Visual C++ and Visual Studio. In previous versions of Xalan-C++, the requirement on MS Visual C++ 6.0 was to have Service 
+      Pack 3 installed.  In this case, you should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. 
+      These fixes are available from the Dinkumware site: <a href="http://www.dinkumware.com/vc_fixes.html">
+      http://www.dinkumware.com/vc_fixes.html</a>.</p>
+   <p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces 
+      and Xalan binaries.</p>
+   <p>For more details, see <a href="build_instruct.html#win32">Steps for doing a Windows build</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-8" class="faqTitle">8. Building on UNIX</h3>
+<div class="faqQuestion">What do I need to rebuild Xalan-C++ on UNIX?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>To build Xalan-C++ on supported UNIX platforms, you need Xerces-C++, the GNU make utility, and a supported C++ compiler.  For more 
+      details see: <a href="build_instruct.html#unix">Steps for doing a UNIX build</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-9" class="faqTitle">9. Make errors on UNIX platforms</h3>
+<div class="faqQuestion">I get errors in the Makefile when running the make utility.  What's wrong?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>You must use the GNU make utility.  Other make utilities may not work with the Xalan Makefile</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-10" class="faqTitle">10. What is ICU</h3>
+<div class="faqQuestion">What is ICU and why do I need it?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on 
+      a wide variety of platforms. Xalan-C++ uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
+   <p>The ICU is available for download from <a href="http://oss.software.ibm.com/icu/index.html">
+      http://oss.software.ibm.com/icu/index.html</a>.</p>
+   <p>This release of Xalan was tested with International Components for Unicode(ICU) version 3.2.</p>
+   <p>For more details see: <a href="usagepatterns.html#icu">Using the International Components for Unicode (ICU)</a>.</p>
+   
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-11" class="faqTitle">11. A tar checksum error on Solaris</h3>
+<div class="faqQuestion">I am getting a tar checksum error on Solaris. What's the problem?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The Solaris tar utility you are using does not properly handle files with long pathnames.  You must use GNU tar (gtar), which 
+      handles arbitrarily long pathnames and is freely available on every platform on which Xalan-C++ is supported.  If you don't already 
+      have GNU tar installed on your system, you can obtain it from the Free Software Foundation
+      <a href="http://www.gnu.org/software/tar/tar.html">http://www.gnu.org/software/tar/tar.html</a>.  For additional background 
+      information on this problem, see the online manual<a href="http://www.gnu.org/manual/tar/html_chapter/tar_8.html#SEC112">
+      GNU tar and POSIX tar </a> for the utility.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-12" class="faqTitle">12. Xalan-C++ in Apache</h3>
+<div class="faqQuestion">Is it possible to run Xalan-C++ from an Apache server?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>A simple Apache module called <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a> is provided as a sample. 
+      It demonstrates how to integrate Xalan-C++ with Apache.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-13" class="faqTitle">13. Is Xalan-C++ thread-safe?</h3>
+<div class="faqQuestion">Is Xalan-C++ thread-safe?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Instances of XalanTransformer are not thread-safe; each thread should use its own instance.</p>
+   <p>In order to support very efficient use in multi-threaded applications, Xalan-C++ is designed to avoid synchronization as much as
+      possible. Each thread of execution is required to have its own set of "support" objects that contain the state of the
+      transformation.  Accordingly, no synchronization is required when multiple threads are executing.</p>     
+   <p>Parsed ("compiled") stylesheets (see <a href="usagepatterns.html#compiled">Compiling stylesheets</a>) and parsed
+      source documents may be freely shared by multiple threads of execution without worrying about providing synchronized access to 
+      them. The <b>only</b> exception to this rule: You use XercesParserLiaison to parse a document after calling 
+      XercesParserLiaison::setBuildBridgeNodes(false) or XercesParserLiaison::setThreadSafe(false). In this case, the document 
+      <b>cannot</b> be shared by multiple threads of execution. For reasons of performance, we do not recommend the use of
+      XercesParserLiaison, so this should not be an issue for most applications.</p>
+   <p>All other objects in Xalan-C++ are <b>not</b> thread-safe. Each thread must have its own instance of each object.</p>
+   <p>See the <a href="samples.html#threadsafe">ThreadSafe</a> sample program for more information.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-14" class="faqTitle">14. What can I do to speed up transformations?</h3>
+<div class="faqQuestion">What can I do to speed up transformations?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>To maximize performance, here are some suggestions for you to keep in mind as you set up your applications:</p>
+   <ul>
+     <li>Use a compiled stylesheet when you expect to use the stylesheet more than once.<br />
+<br />
+</li>     
+     <li>Set up your stylesheets to function efficiently.<br />
+<br />
+</li>
+       <ul>
+         <li>Don't use "//" (descendant axes) patterns near the root of a large document.<br />
+<br />
+</li>
+         <li>Use xsl:key elements and the key() function as an efficient way to retrieve node sets.<br />
+<br />
+</li>
+         <li>Where possible, use pattern matching rather than xsl:if or xsl:when statements.<br />
+<br />
+</li>
+         <li>xsl:for-each is fast because it does not require pattern matching.<br />
+<br />
+</li>
+         <li>Keep in mind that xsl:sort prevents incremental processing.<br />
+<br />
+</li>
+         <li>When you create variables, &lt;xsl:variable name="fooElem" select="foo"/&gt; is usually faster than
+         &lt;xsl:variable name="fooElem"&gt;&lt;xsl:value-of-select="foo"/&gt;&lt;/xsl:variable&gt;.<br />
+<br />
+</li>
+         <li>Be careful using the last() function.<br />
+<br />
+</li>
+         <li>The use of index predicates within match patterns can be expensive.<br />
+<br />
+</li>
+       </ul>
+   </ul>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-15" class="faqTitle">15. Stylesheet validation</h3>
+<div class="faqQuestion">Can I validate an XSL stylesheet?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>An XSL stylesheet is an XML document, so it can have a DOCTYPE and be subject to validation, but you probably will have
+      to write a custom DTD for the purpose.</p>
+   <p>The XSLT Recommendation includes a <a href="http://www.w3.org/TR/xslt#dtd">DTD Fragment 
+      for XSL Stylesheets</a> with some indications of what you need to do to create a complete DTD for a given
+      stylesheet. Keep in mind that stylesheets can include literal result elements and produce output that is not valid
+      XML.</p>
+   <p>You can use the xsl:stylesheet doctype defined in xsl-html40s.dtd for stylesheets that generate HTML.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-16" class="faqTitle">16. What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?</h3>
+<div class="faqQuestion">What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>It means that an attempt was made to add a node to a DOM that would create an invalid structure.  For example, text nodes 
+      are not allowed as children of the document node.</p>
+   <p>This is a common error when attempting to transform to DOM.  Source documents and stylesheets that might produce valid serialized XML
+      might not produce value DOM.  The usual suspect is text nodes being generated before the document element is generated.</p>
+   <p>If you think you have seen this error because of a bug in Xalan-C++'s source tree implementation, please post a bug report on Bugzilla, and attach a minimal source document 
+      and stylesheet that produce the problem to the bug report.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-17" class="faqTitle">17. Submitting Patches</h3>
+<div class="faqQuestion">Who do I submit patches to?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Your contributions are much appreciated! Please e-mail your patches to <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-18" class="faqTitle">18. Transformation Output Methods</h3>
+<div class="faqQuestion">How do I output a transformation to a DOM, a file, an in-memory buffer, or as input to another transformation?  Since the C++ 
+   language can automatically construct an XSLTResultTarget from any of its constructor's argument types, you usually don't need 
+   to create one explicitly.</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The output parameter of XalanTransformer::transform() is an XSLTResultTarget which has many constructors.</p>
+   <p>Output to a file:</p>
+   <ul>
+     <li>The easiest way is to use a null-terminated string containing the file name to create an XSLTResultTarget.  Or, use an 
+         instance of std::ofstream.  The command line executables, and many of the sample applications use file names, so take a 
+         look through the source code for more information.</li>
+   </ul>
+   <p>Output to an in-memory buffer:</p>
+   <ul>
+     <li>Use an instance of std::ostrstream or std::ostringstream to create an XSLTResultTarget.  See the StreamTransform sample 
+         for more information.</li>
+   </ul>
+   <p>Input to another transformation:</p>
+   <ul>
+     <li>Any of the previous output targets could be used as the input to another transformation, but the FormatterToSourceTree 
+         is probably the best for efficiency reasons.  See the source code for the TestXSLT command line program for more 
+         information.</li>
+   </ul>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-19" class="faqTitle">19. Problems Using Sun's Forte/Workshop Compiler with code containing std::istrstream</h3>
+<div class="faqQuestion">Why won't XSLTInputSource work with std::istrstream on Sun Solaris using Forte/Sun Workshop compiler?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>There is a bug in Sun's C++ standard library implementation; see 
+      <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=14176">this bug</a>. The short answer is that you need to 
+      get a patch. The bug report includes the code for a simple program which you can use to see if your environment has the bug. 
+      There is also a link to the patch.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-20" class="faqTitle">20. Modifying an instance of XalanDocument</h3>
+<div class="faqQuestion">My transformation outputs to a XalanDocument (actually XalanSourceTreeDocument underneath) but W3C DOM functions like 
+   DOMElement::setAttribute don't work! Am I going crazy or what?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>No, you aren't going crazy. Xalan's default source tree is read-only for efficiency. If you need a DOM that supports 
+      modifications, use the Xerces DOM instead.  See the TransformToXercesDOM sample for more information.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-21" class="faqTitle">21. Changing Where Error Output is Sent</h3>
+<div class="faqQuestion">XalanTransformer outputs errors to the console. How do I, for example, output error to a file?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>By default, XalanTransformer creates a XalanTransformerProblemListener (a subclass of ProblemListener) that writes 
+      output to std::cerr. To change this you can:</p>
+   <ul>
+     <li>Redirect std::cerr from the command line.</li>
+     <li>Call XalanTranformer::setWarningStream with a different std::ostream before calling XalanTransformer::transform.</li>
+     <li>Instantiate your own XalanTransformerProblemListener with a different output stream and call 
+         XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
+     <li>Subclass some ProblemListener type and do custom handling of errors (you still then need to tell XalanTransformer 
+         instances to use your ProblemListener.)</li>
+   </ul>
+   <p>In most case you probably want to do one of the first two.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-22" class="faqTitle">22. Programmatic Error Information</h3>
+<div class="faqQuestion">How do I programmatically get the file name, line number, and column number for an error in an XML file?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Create a custom ErrorHandler (a Xerces-C++ class) and call XalanTransformer::setErrorHandler before parsing any sources.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-23" class="faqTitle">23. String Transcoding</h3>
+<div class="faqQuestion">How do I make a char* out of XalanDOMString (or vice-versa)?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>See the static method XalanDOMString::transcode, or the functions TranscodeToLocalCodePage in the API documentation.  
+   However, you should be very careful when transcoding Unicode characters to the local code page, because not all Unicode 
+   characters can be represented.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-24" class="faqTitle">24. Error Code/Exception Summary</h3>
+<div class="faqQuestion">Is there a table of error codes somewhere? How about a summary of what methods throw which exceptions?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>There isn't, but we're working on it.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-25" class="faqTitle">25. Extension Functions</h3>
+<div class="faqQuestion">The Xalan extension functions (xalan:node-set, etc.) don't work for me. Help!</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Did you declare the namespace on the xsl:stylesheet or xsl:transform element? It should look like this: </p>
+   <p>&lt;xsl:stylesheet version="1.0" xmlns:xalan="http://xml.apache.org/xalan"&gt; ...rest of stylesheet</p>
+   <p>If you did and you still have problems, you might want to ask the mailing list.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-26" class="faqTitle">26. Outputting results to a file on Windows 95/98</h3>
+<div class="faqQuestion">Why can't I ouput my results to a file on Windows 95/98?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Well, you can, but it doesn't always work. Neither Windows 95 or 98 are supported or tested. There have been reports of 
+      problems on it, especially regarding Unicode support. See 
+      <a href="http://marc.theaimsgroup.com/?l=xalan-dev&amp;m=99840914524755&amp;w=2">this post</a> and 
+      <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=3825">this bug</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-27" class="faqTitle">27. Using format-number and ICU</h3>
+<div class="faqQuestion">Why does Xalan emit a warning when using the XSLT function format-number()?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>Did you build with ICU support? See <a href="usagepatterns.html#icu">Using the International Components for 
+      Unicode (ICU)</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-28" class="faqTitle">28. Perl wrapper for Xalan-C++?</h3>
+<div class="faqQuestion">Is there a Perl wrapper for Xalan-C++?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>There is no Apache Perl wrapper, however Edwin Pratomo has written a wrapper for Xalan-C++ version 1.4 that can be found 
+      on CPAN</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-29" class="faqTitle">29. Missing LocalMsgIndex.hpp file</h3>
+<div class="faqQuestion">Why can't I find the LocalMsgIndex.hpp file?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+<p>The LocalMsgIndex.hpp file is not shipped with the distributions because this file is generated during compile time.  This 
+      file is created at the start of the build process and customized for the locale and message set you are using.</p>
+   <p>On Windows, the LocalMsgIndex.hpp header is generated by the Localization project.  By building any project that has a 
+      dependency on the Localization project, will trigger the Message Localization component to built and the LocalMsgIndex.hpp 
+      to be generated.</p>
+   <p>To understand more on how to build with message localization support, see <a href="build_instruct.html#locale">Steps for 
+      Building with Message Localization Support</a>.</p>
+</div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

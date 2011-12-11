@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Using the JAXP Transform APIs</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Using the JAXP Transform APIs</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>Transform API<br />
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Using the JAXP Transform APIs</h2>
+<ul>
+ <li>
+<a href="#intro">Introduction</a>
+</li>
+ <li>
+<a href="#terminology">General Terminology</a>
+</li>
+ <li>
+<a href="#model">Model</a>
+</li>
+ <li>
+<a href="#patterns">Patterns</a>
+</li> 
+</ul>
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>   
+<p>This document describes the transformation API for XML (TrAX), the set of APIs contained in
+	 <a href="apidocs/javax/xml/transform/package-summary.html">javax.xml.transform</a>, <a href="apidocs/javax/xml/transform/stream/package-summary.html">javax.xml.transform.stream</a>, <a href="apidocs/javax/xml/transform/dom/package-summary.html">javax.xml.transform.dom</a>, and <a href="apidocs/javax/xml/transform/sax/package-summary.html">javax.xml.transform.sax</a>.</p> 
+  
+<p>There is a broad need for Java applications to be able to transform XML
+	 and related tree-shaped data structures. In fact, XML is not normally very
+	 useful to an application without going through some sort of transformation,
+	 unless the semantic structure is used directly as data. Almost all XML-related
+	 applications need to perform transformations. Transformations may be described
+	 by Java code, Perl code, <a href="http://www.w3.org/TR/xslt">XSLT</a>
+	 Stylesheets, other types of script, or by proprietary formats. The inputs, one
+	 or multiple, to a transformation, may be a URL, XML stream, a DOM tree, SAX
+	 Events, or a proprietary format or data structure. The output types are 
+	 pretty much the same types as the inputs, but different inputs may need to be
+	 combined with different outputs.</p> 
+  
+<p>The great challenge of a transformation API is how to deal with all the
+	 possible combinations of inputs and outputs, without becoming specialized for
+	 any of the given types.</p> 
+   
+<a name="terminology">&#8204;</a>	 
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>General Terminology</h3> 
+	 
+<p>This section will explain some general terminology used in this
+		document. Technical terminology will be explained in the Model section. In many
+		cases, the general terminology overlaps with the technical terminology.</p> 
+	 
+<div class="glossary">
+<p class="label">
+<em>Tree</em>
+</p>
+<blockquote class="item">This term, as used within this document, describes an
+			 abstract structure that consists of nodes or events that may be produced by
+			 XML. A Tree physically may be a DOM tree, a series of well balanced parse
+			 events (such as those coming from a SAX2 ContentHander), a series of requests
+			 (the result of which can describe a tree), or a stream of marked-up
+			 characters.</blockquote>
+
+<p class="label">
+<em>Source Tree(s)</em>
+</p>
+<blockquote class="item">One or more trees that are the inputs to the
+			 transformation.</blockquote>
+
+<p class="label">
+<em>Result Tree(s)</em>
+</p>
+<blockquote class="item">One or more trees that are the output of the
+			 transformation.</blockquote>
+
+
+
+<p class="label">
+<em>Transformation</em>
+</p>
+<blockquote class="item">The process of consuming a stream or tree to produce
+			 another stream or tree.</blockquote>
+
+
+
+<p class="label">
+<em>Identity (or Copy) Transformation</em>
+</p>
+<blockquote class="item">The process of transformation from a source to a result,
+			 making as few structural changes as possible and no informational changes. The
+			 term is somewhat loosely used, as the process is really a copy from one
+			 "format" (such as a DOM tree, stream, or set of SAX events) to
+			 another.</blockquote>
+
+
+
+<p class="label">
+<em>Serialization</em>
+</p>
+<blockquote class="item">The process of taking a tree and turning it into a stream. In
+			 some sense, a serialization is a specialized transformation.</blockquote>
+
+
+
+<p class="label">
+<em>Parsing</em>
+</p>
+<blockquote class="item">The process of taking a stream and turning it into a tree. In
+			 some sense, parsing is a specialized transformation.</blockquote>
+
+
+
+<p class="label">
+<em>Transformer</em>
+</p>
+<blockquote class="item">A Transformer is the object that executes the transformation.
+			 </blockquote>
+
+
+
+<p class="label">
+<em>Transformation instructions</em>
+</p>
+<blockquote class="item">Describes the transformation. A form of code, script, or
+			 simply a declaration or series of declarations.</blockquote>
+
+
+
+<p class="label">
+<em>Stylesheet</em>
+</p>
+<blockquote class="item">The same as "transformation instructions," except it is
+			 likely to be used in conjunction with <a href="http://www.w3.org/TR/xslt">XSLT</a>.</blockquote>
+
+
+
+<p class="label">
+<em>Templates</em>
+</p>
+<blockquote class="item">Another form of "transformation instructions." In the TrAX
+			 interface, this term is used to describe processed or compiled transformation
+			 instructions. The Source flows through a Templates object to be formed into the
+			 Result.</blockquote>
+
+
+
+<p class="label">
+<em>Processor</em>
+</p>
+<blockquote class="item">A general term for the thing that may both process the
+			 transformation instructions, and perform the transformation.</blockquote>
+
+       
+
+
+<p class="label">
+<em>DOM</em>
+</p>
+<blockquote class="item">Document Object Model, specifically referring to the <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/">DOM level 3</a>
+                         Specification.</blockquote>
+			 
+
+<p class="label">
+<em>SAX</em>
+</p>
+<blockquote class="item">Simple API for XML, specifically referring to the
+			 <a href="http://www.saxproject.org/">SAX 2.0
+			 release</a>.</blockquote>
+</div> 
+
+ <a name="model">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Model</h3> 
+  
+<p>The section defines the abstract model for TrAX, apart from the details
+	 of the interfaces.</p> 
+  
+<p>A TrAX <a href="#pattern-TransformerFactory">TransformerFactory</a> is an object
+	 that processes transformation instructions, and produces
+	 <a href="#pattern-Templates">Templates</a> (in the technical
+	 terminology). A <a href="#pattern-Templates">Templates</a>
+	 object provides a <a href="#pattern-Transformer">Transformer</a>, which transforms one or
+	 more <a href="#pattern-Source">Source</a>s into one or more
+	 <a href="#pattern-Result">Result</a>s.</p> 
+  
+<p>To use the TrAX interface, you create a
+	 <a href="#pattern-TransformerFactory">TransformerFactory</a>,
+	 which may directly provide a <a href="#pattern-Transformer">Transformer</a>, or which can provide
+	 <a href="#pattern-Templates">Templates</a> from a variety of
+	 <a href="#pattern-Source">Source</a>s. The
+	 <a href="#pattern-Templates">Templates</a> object is a processed
+	 or compiled representation of the transformation instructions, and provides a
+	 <a href="#pattern-Transformer">Transformer</a>. The
+	 <a href="#pattern-Transformer">Transformer</a> processes a
+	 <a href="#pattern-Transformer">Source</a> according to the
+	 instructions found in the <a href="#pattern-Templates">Templates</a>, and produces a
+	 <a href="#pattern-Result">Result</a>.</p> 
+  
+<p>The process of transformation from a tree, either in the form of an
+	 object model, or in the form of parse events, into a stream, is known as
+	 <b>
+<i>serialization</i>
+</b>.</p> 
+<a name="patterns">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>TrAX Patterns</h3>
+<p>The intent, responsibilities, and thread safety of TrAX objects:</p>
+<ul>
+  <li>
+<a href="#pattern-Processor">Processor</a>
+</li>
+  <li>
+<a href="#pattern-TransformerFactory">TransformerFactory</a>
+</li>
+  <li>
+<a href="#pattern-Templates">Templates</a>
+</li>
+  <li>
+<a href="#pattern-Transformer">Transformer</a>
+</li>
+  <li>
+<a href="#pattern-Source">Source</a>
+</li>
+  <li>
+<a href="#pattern-Result">Result</a>
+</li>  
+</ul>
+<a name="pattern-Processor">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Processor</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">Generic concept for the
+  set of objects that implement the TrAX interfaces.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">Create compiled transformation instructions, transform
+  sources, and manage transformation parameters and
+  properties.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">Only the Templates object can be
+  used concurrently in multiple threads. The rest of the processor does not do
+  synchronized blocking, and so may not be used to perform multiple concurrent
+  operations.</blockquote>
+</div>
+ <a name="pattern-TransformerFactory">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>TransformerFactory</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">Serve as a vendor-neutral Processor interface for
+  <a href="http://www.w3.org/TR/xslt">XSLT</a> and similar
+  processors.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">Serve as a factory for a concrete
+  implementation of an TransformerFactory, serve as a direct factory for
+  Transformer objects, serve as a factory for Templates objects, and manage
+  processor specific features.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">A TransformerFactory may not perform mulitple concurrent
+  operations.</blockquote>
+</div>  
+<a name="pattern-Templates">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Templates</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">The runtime representation of the transformation instructions.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">A data bag for transformation instructions; act as a factory
+  for Transformers.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">Threadsafe for concurrent
+  usage over multiple threads once construction is complete.</blockquote>
+</div>  
+<a name="pattern-Transformer">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Transformer</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">Act as a per-thread
+  execution context for transformations, act as an interface for performing the
+  transformation.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">Perform the
+  transformation.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">Only one instance per thread
+  is safe.</blockquote>
+</div>  
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The Transformer is bound to the Templates
+  object that created it.</td>
+</tr>
+</table>
+<a name="pattern-Source">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Source</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">Serve as a
+  single vendor-neutral object for multiple types of input.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">Act as simple data holder for System IDs, DOM nodes, streams,
+  etc.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">Threadsafe concurrently over multiple
+  threads for read-only operations; must be synchronized for edit
+  operations.</blockquote>
+</div>  
+<a name="pattern-Result">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Result</h4>
+<div class="glossary">
+<p class="label">
+<em>Intent</em>
+</p>
+<blockquote class="item">Serve
+  as a single object for multiple types of output, so there can be simple process
+  method signatures.</blockquote>
+<p class="label">
+<em>Responsibilities</em>
+</p>
+<blockquote class="item">Act as simple data holder for
+  output stream, DOM node, ContentHandler, etc.</blockquote>
+<p class="label">
+<em>Thread safety</em>
+</p>
+<blockquote class="item">Threadsafe concurrently over multiple threads for read-only,
+  must be synchronized for edit.</blockquote>
+</div>
+ 
+ 
+ <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

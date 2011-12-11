@@ -1,0 +1,76 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"
+[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent" >
+%entity-c-values; ]>
+
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<s1 title="Installing &xslt4c;">
+<s2 title="Setting up the path/library path">
+<ul>
+  <li><link anchor="windowspath">For Windows</link></li>
+  <li><link anchor="unixpath">For UNIX</link></li>  
+</ul>
+
+<anchor name="windowspath"/>
+<s3 title="For Windows">
+<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+</ul>
+<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it 
+   does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link 
+   idref="build_instruct" anchor="rebuild">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
+<p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
+<ul>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
+</ul>
+</s3>
+
+<anchor name="unixpath"/>
+<s3 title="For UNIX">
+<p>To use one of the UNIX binary distributions, you must place the &xslt4c; executable on the path, and the &xslt4c; and &xml4c; 
+   libraries on the library path.</p>
+<p>For the &xslt4c; AIX distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib on the library path (LIBPATH), 
+      or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; HP-UX 11 distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path 
+      (SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; Solaris distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_Solaris_distribution&gt;/lib on the library path 
+     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; RedHat and SuSE Linux distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/lib and &xml4c-dist;-&lt;my_Linux_distribution&gt;/lib on the library path 
+      (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+</s3>
+</s2>
+</s1>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-C++ Overview</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-C++ Overview</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>Overview<br />
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-C++ Overview</h2>
+<ul>
+  <li>
+<a href="#intro">Introduction</a>
+</li>
+  <li>
+<a href="#features">Xalan-C++ Features</a>
+</li>
+  <li>
+<a href="#towork">Getting to work with Xalan-C++</a>
+</li>
+  <li>
+<a href="#uptospeed">Getting up to speed with XSLT</a>
+</li>
+  <li>
+<a href="#glossary">Glossary</a>
+</li>
+</ul>
+
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+<p>Xalan-C++ (named after a rare musical instrument) implements the <a href="http://www.w3.org/TR/xslt">W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0</a> and the 
+   <a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a>. XSLT is the first part of the XSL stylesheet language for XML. It includes the XSL
+   Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials, 
+   discussion groups, frequently asked questions, and tutorials on XSLT, see <a href="#uptospeed">Getting up to speed with 
+   XSLT</a>.</p> 
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">XSL also includes a vocabulary for formatting documents, which is not part of Xalan-C++.  For more information, see 
+      <a href="http://www.w3.org/TR/xsl">Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation</a> and the <a href="http://xml.apache.org/fop">Apache XML FOP (Formatting Objects Project)
+      </a>.
+</td>
+</tr>
+</table>
+<p>You use the XSLT language to compose XSL stylesheets. An XSL stylesheet contains instructions for transforming XML documents 
+   from one document type to another document type (XML, HTML, or other). In structural terms, an XSL stylesheet specifies the 
+   transformation of one tree of nodes (the XML input) into another tree of nodes (the output or transformation result).</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The XSL stylesheet may generate and refer to cascading style sheets (<a href="http://www.w3.org/Style/CSS/">CSS</a>) 
+      as part of its output.
+</td>
+</tr>
+</table>  
+<p>In the following example, the foo.xsl stylesheet is used to transform foo.xml into foo.out:</p>
+<p>foo.xml:</p>
+<blockquote class="source">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;doc&gt;Hello&lt;/doc&gt;
+</pre>
+</blockquote>
+<p>foo.xsl:</p>
+<blockquote class="source">
+<pre>
+&lt;?xml version="1.0"?&gt; 
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"&gt;
+&lt;xsl:template match="doc"&gt;
+&lt;out&gt;&lt;xsl:value-of select="."/&gt;&lt;/out&gt;
+&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+<p>foo.out:</p>
+<blockquote class="source">
+<pre>&lt;out&gt;Hello&lt;/out&gt;</pre>
+</blockquote>
+
+<a name="features">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Xalan-C++ Features</h3>
+<ul> 
+  <li>Xalan-C++ fully implements the <a href="http://www.w3.org/TR/xslt">W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0</a>.</li>
+  <li>Xalan-C++ incorporates the <a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a>.<br />
+<br />
+</li>
+  <li>Xalan-C++ uses <a href="http://xml.apache.org/xerces-c/index.html">Xerces-C++</a> to parse XML documents and XSL
+      stylesheets.<br />
+<br />
+      The input may appear in the form of a file or URL, a stream, or a <a href="http://www.w3.org/DOM">DOM</a>. 
+      Xalan-C++ performs the transformations specified in the XSL stylesheet and produces a file, a stream, or a DOM as you
+      specify when you set up the transformation.<br />
+<br />
+</li>
+  <li>Along with a complete API for performing transformations in your C++ applications, Xalan-C++ provides a <a href="commandline.html">command line</a> utility for convenient file-to-file transformations.<br />
+<br />
+</li>
+  <li>Xalan-C++ supports C++ <a href="extensions.html">extension functions</a>
+</li>
+</ul> 
+
+
+<a name="towork">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Getting to work with Xalan-C++</h3>
+<p>For instructions and some suggestions about how to get started using Xalan-C++, see <a href="download.html">Downloading Xalan-C++</a>,
+   <a href="build_instruct.html">Building Xalan-C++</a>, and <a href="install.html">Installing Xalan-C++</a>.</p>
+
+
+<a name="uptospeed">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Getting up to speed with XSLT</h3>
+<p>If you are still working through the details of the XSLT spec (the W3C 1.0 Recommendation), you may want 
+   to consult one or more of the following:</p>
+   <ul>
+     <li>XSLT - XSL Transformations in 
+         <a href="http://www.brics.dk/~amoeller/XML/">The XML Revolution: Technologies for the future Web</a> by
+         Anders Møller and Michael I. Schwartzbach (Web pages, but designed for sequential reading)</li>
+     <li>Crane Softwright's <a href="http://www.CraneSoftwrights.com/training/">Free preview of Practical
+         Transformation Using XSLT and XPath</a>
+<br />
+<br />
+</li>
+     <li>Doug Tidwell's <a href="http://www.oreilly.com/catalog/xslt/">XSLT</a>, O'Reilly, 2001<br />
+<br />
+</li>                 
+     <li>Bob DuCharme's <a href="http://www.manning.com/ducharme/index.html">XSLT Quickly</a>, Manning Publications,
+         2001<br />
+<br />
+</li>                 
+     <li>John Robert Gardner and Zarella Rendon's 
+         <a href="http://vig.prenhall.com/catalog/academic/product/1,4096,0130404462,00.html">XSLT and XPath: A Guide to
+         Transformations</a>, Prentice-Hall, 2001<br />
+<br />
+</li>                 
+     <li>Michael Kay's <a href="http://www.wrox.com/Books/Book_Details.asp?ISBN=1861005067">XSLT Programmer's
+         Reference</a>, 2nd ed., Wrox Press, 2001<br />
+<br />
+</li>
+     
+     <li>Neil Bradley's <a href="http://www.aw-bc.com/catalog/academic/product/0,1144,0201770830,00.html">XSL Companion</a>,
+         Addison-Wesley, 2000<br />
+<br />
+</li>                 
+     
+     <li>Dave Pawson's <a href="http://www.dpawson.co.uk/xsl/xslfaq.html">XSL Frequently Asked Questions</a> to search out particular answers and techniques<br />
+<br />
+</li>
+     <li>Miloslav Nic's <a href="http://zvon.vscht.cz/HTMLonly/XSLTutorial/Books/Book1/index.html">XSL Tutorial</a>,
+         a collection of stylesheet examples<br />
+<br />
+</li>
+     <li>Elliotte Rusty Harold's <a href="http://www.ibiblio.org/xml/books/bible2/chapters/ch17.html">Chapter 17 of 
+         the XML Bible: XSL Transformations</a>
+<br />
+<br />
+</li>
+     <li>The Mulberry <a href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</a> 
+         (of interest to XSL users at all levels)<br />
+<br />
+</li>
+     <li>Objects by Design's <a href="http://www.objectsbydesign.com/projects/xmi_to_html.html">Transforming XMI to
+         HTML</a> (oriented towards XMI, "an XML-based, stream representation of a UML model," but also covers "generic"
+         XML transformations) and their related <a href="http://objectsbydesign.com/projects/xslt/xslt_by_example.html">XSLT
+         by Example</a>
+<br />
+<br />
+</li>         
+     <li>OASIS (the Organization for the Advancement of Structured Information Standards): 
+         <a href="http://www.oasis-open.org/cover/xsl.html">Extensible Stylesheet Language (XSL)</a> by Robin
+         Cover<br />
+<br />
+</li>
+     <li>Donald Ball's <a href="http://www.webslingerZ.com/balld/xsl/designer_manual.xml">A Guide to XML and XSL for
+         Designers</a>
+<br />
+<br />
+</li>         
+   </ul>
+<p>When you come across other useful introductory or background materials, please email <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>, so we can add them to this list.</p>
+   
+
+
+<a name="glossary">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Glossary</h3>
+<div class="glossary">
+       <p class="label">
+<em>XSLT Namespace</em>
+</p>
+       <blockquote class="item">The <a href="http://www.w3.org/TR/REC-xml-names/">XML namespace</a> for XSLT. An XML namespace is a 
+             collection of element and attribute names, identified by a Unique Resource Identifier (URI), which often takes 
+             the form of a URL, but is really just a unique string, not a pointer to a web page. The XSLT namespace URI is
+             http://www.w3.org/1999/XSL/Transform. In each XSLT stylesheet, you must declare this namespace in the stylesheet 
+             element tag and bind it to a local prefix. Like the XSLT specification, we always use xsl as the XSLT namespace 
+             prefix in our descriptions and examples, although you are free to bind any prefix to this namespace.<br />
+<br />
+</blockquote>
+        
+       <p class="label">
+<em>XSL Instruction</em>
+</p>
+       <blockquote class="item">Any tag associated with the XSLT namespace.<br />
+<br />
+</blockquote>
+        
+       <p class="label">
+<em>Template</em>
+</p>
+       <blockquote class="item">An element, usually with child elements, that specifies a "rule" or set of instructions to perform when a 
+             particular kind of node is encountered in the source tree.<br />
+<br />
+</blockquote>
+                
+       <p class="label">
+<em>XSL Template Instruction</em>
+</p>
+       <blockquote class="item">Any tag that occurs inside an xsl:template element and is associated with the XSLT namespace.<br />
+<br />
+</blockquote>
+                   
+       <p class="label">
+<em>Source Tree</em>
+</p>
+       <blockquote class="item">The XML tree input to the XSL process.<br />
+<br />
+</blockquote>
+        
+       <p class="label">
+<em>Result Tree</em>
+</p>
+       <blockquote class="item">The tree that is output by the XSL process.<br />
+<br />
+</blockquote>
+                
+       <p class="label">
+<em>Match Pattern</em>
+</p>
+       <blockquote class="item">The part of a template that defines the kind(s) of nodes to which the template applies.<br />
+<br />
+</blockquote>
+
+</div>
+<p>For more definitions of XSLT terminology, see Dave Pawson's <a href="http://www.dpawson.co.uk/xsl/xslvocab.html">XSLT 
+   Terminology Clarification</a> and the Glossary in Michael Kay's 
+   <a href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</a>.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

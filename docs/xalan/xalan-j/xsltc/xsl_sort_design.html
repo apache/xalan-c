@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: &lt;xsl:sort&gt;</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">&lt;xsl:sort&gt;</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>xsl:sort<br />
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>&lt;xsl:sort&gt;</h2>
+
+  <ul>
+    <li>
+<a href="#functionality">Functionality</a>
+</li>
+    <li>
+<a href="#sort-class">The Sort class</a>
+</li>
+    <li>
+<a href="#iterator">The SortingIterator class</a>
+</li>
+    <li>
+<a href="#sortrecord">The NodeSortRecord class</a>
+</li>    
+    <li>
+<a href="#recordfactory">The NodeSortRecordFactory class</a>
+</li>
+  </ul>
+  
+  <a name="functionality">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Functionality</h3>
+
+  <p>The <code>&lt;xsl:sort&gt;</code> element is used to define a sort key
+  which specifies the order in which nodes selected by either
+  <code>&lt;xsl:apply-templates&gt;</code> or <code>&lt;xsl:for-each&gt;</code>
+  are processed. The nodes can be sorted either in numerical or alphabetic
+  order, and the alphabetic order may vary depeinding on the language in use.
+  The nodes can be sorted either in ascending or descending order.</p>
+
+  <a name="sort-class">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The Sort class</h3>
+
+  <p>Static methods of the Sort class is responsible for generating the
+  necessary code for invoking SortingIterators under
+  <code>&lt;xsl:apply-templates&gt;</code> and <code>&lt;xsl:for-each&gt;</code>
+  elements. Both these elements can have several <code>&lt;xsl:sort&gt;</code>
+  child nodes defining primary, secondary, teriary, etc. keys. The code for
+  <code>&lt;xsl:apply-templates&gt;</code> and <code>&lt;xsl:for-each&gt;</code>
+  create  vectors containg a Sort object for each sort key. The object methods
+  of the Sort object encapsulate a container for key-specific data (such as the
+  sort key itself, sort order, sort type, and such) while the static methods
+  take a vector of Sort objects and generate the actual code.</p>
+
+  <p>The <code>translate()</code> method of the Sort object is never called. The
+  vectors containing the Sort objects for a <code>&lt;xsl:apply-templates&gt;</code>
+  or <code>&lt;xsl:for-each&gt;</code> element are instead passed to the static
+  <code>translateSortIterator()</code> method. This method compiles code that
+  instanciates a SortingIterator object that will pass on a node-set in a
+  specific order to the code handling the <code>&lt;xsl:apply-templates&gt;</code>
+  or <code>&lt;xsl:for-each&gt;</code> element.</p>
+
+  <a name="iterator">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The SortingIterator class</h3>
+
+  <p>The SortingIterator class is responsible for sorting nodes encapsulated in
+  sort obects. These sort objects must be of a class inheriting from
+  NodeSortRecord, a the SortingIterator object needs a factory object providing
+  it with the correct type of objects:</p>
+
+  <p>
+<img src="sort_objects.gif" alt="sort_objects.gif" />
+</p>
+  <p>
+<b>
+<i>Figure 1: SortingIterator</i>
+</b>
+</p>
+
+  <p>The SortingIterator class is fairly dumb and leaves much of the work to the
+  NodeSortRecord class. The iterator gets the NodeSortRecords from the factory
+  object and sorts them using quicksort and calling <code>compareTo()</code> on
+  pairs of NodeSortRecord objects.</p>
+
+  <a name="sortrecord">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The NodeSortRecord class</h3>
+
+  <p>The static methods in the Sort class generates a class inheriting from
+  NodeSortRecord, with the following overloaded methods:</p>
+
+  <ul>
+    <li>
+<b>Class Constructor</b>
+</li>
+      <ul>
+<li>The class constructor is overloaded to create sort-key global
+      tables, such as an array containing the sort order for all the sort keys
+      and another array containg all the sort types. Different sort order/types
+      can be specified for the different levels of sort keys, but we assume that
+      the same language is used for all levels.</li>
+</ul>
+      
+    <li>
+<code>extractValueFromDOM(int level)</code>
+</li>
+      <ul>
+<li>This method is called by the SortingIterator object to extract the
+      value for a specific sort key for a node. The SortingIterator will only
+      use this method once and will cache the returned value for later use. The
+      method will only be called if absultely necessary.</li>
+</ul>
+
+    <li>
+<code>compareType(int level)</code>
+</li>
+      <ul>
+<li>This method returns the sort type for one sort key level. Returns
+      either <code>COMPARE_STRING</code> or <code>COMPARE_NUMERIC</code>.</li>
+</ul>
+    
+    <li>
+<code>sortOrder(int level)</code>
+</li>
+      <ul>
+<li>This method returns the sort order for one sort key level. Returns
+      either <code>COMPARE_ASCENDING</code> or <code>COMPARE_DESCENDING</code>
+</li>
+</ul>
+    
+    <li>
+<code>getCollator(int level)</code>
+</li>
+      <ul>
+<li>This method returns a Collator object for language-specific
+      string comparisons. The same Collator is used for all levels of the key.
+      </li>
+</ul> 
+  </ul>
+
+  <p>The <code>compareTo()</code> method of the NodeSortRecord base class deserves
+  a bit of attention. It takes its own node (from the this pointer) and another
+  node and compares, if necessary, the values for all sort keys:</p>
+
+  <blockquote class="source">
+<pre>
+    /**
+     * Compare this sort element to another. The first level is checked first,
+     * and we proceed to the next level only if the first level keys are
+     * identical (and so the key values may not even be extracted from the DOM)
+     */
+    public int compareTo(NodeSortRecord other) {
+	int cmp;
+    
+	for (int level=0; level&lt;_levels; level++) {
+	    
+	    // Compare the two nodes either as numeric or text values
+	    if (compareType(level) == COMPARE_NUMERIC) {
+		final Double our = numericValue(level);
+		final Double their = other.numericValue(level);
+		if (our == null) return(-1);
+		if (their == null) return(1);
+		cmp = our.compareTo(their);
+	    }
+	    else {
+		String our = stringValue(level);
+		String their = other.stringValue(level);
+		if (our == null) return(-1);
+		if (their == null) return(1);
+		cmp = getCollator().compare(our,their);
+	    }
+	    
+	    // Return inverse compare value if inverse sort order
+	    if (cmp != 0) {
+		if (sortOrder(level) == COMPARE_DESCENDING)
+		    return(0 - cmp);
+		else
+		    return(cmp);
+	    }
+	    
+	}
+	return(0);
+    }
+  </pre>
+</blockquote>
+
+  <p>The two methods <code>stringValue(int level)</code> and 
+  <code>numericValue(int level)</code> return values for one level of the sort key
+  of a node. These methods cache these values after they are first read so that
+  the <code>DOM.getNodeValue()</code> is only called once. Also, the algorithm
+  used for these two methods assure that <code>DOM.getNodeValue()</code> is only
+  called when needed. The value for a node's secondary sort key is never
+  retrieved if the node can be uniquely identified by its primary key.</p>
+
+  <a name="recordfactory">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>The NodeSortRecordFactory class</h3>
+
+  <p>After the static methods of the Sort class has generated the new class for
+  sort objects it generates code that instanciates a new NodeSortRecordFactory
+  object. This object is passed as a parameter to SortingIterators constructor
+  and is used by the iterator to generate the necessary sort objects.</p>
+
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

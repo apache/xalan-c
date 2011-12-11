@@ -1,0 +1,110 @@
+
+Index of /xerces/c/2/binaries
+
+Icon  Name                                               Last modified      Size  Description[DIR] Parent Directory                                                        -   
+[   ] xerces-c_2_8_0-hppa-hpux-acc_3.tar.gz              30-Aug-2007 17:02   15M  
+[   ] xerces-c_2_8_0-hppa-hpux-acc_3_AA.tar.gz           31-Aug-2007 09:17   16M  
+[   ] xerces-c_2_8_0-hppa_64-hpux-acc_3.tar.gz           30-Aug-2007 16:54   15M  
+[   ] xerces-c_2_8_0-hppa_64-hpux-acc_3_AA.tar.gz        31-Aug-2007 09:09   16M  
+[   ] xerces-c_2_8_0-ia64-hpux-acc_6.tar.gz              30-Aug-2007 17:32   26M  
+[   ] xerces-c_2_8_0-ia64_64-hpux-acc_6.tar.gz           30-Aug-2007 17:18   27M  
+[   ] xerces-c_2_8_0-powerpc-aix-xlc_7_0.tar.gz          30-Aug-2007 17:45   12M  
+[   ] xerces-c_2_8_0-powerpc-macosx-gcc_4_0.tar.gz       30-Aug-2007 17:51   10M  
+[   ] xerces-c_2_8_0-powerpc_64-aix-xlc_7_0.tar.gz       30-Aug-2007 17:39   12M  
+[   ] xerces-c_2_8_0-sparc-solaris-cc_5_7.tar.gz         30-Aug-2007 17:57   10M  
+[   ] xerces-c_2_8_0-sparc-solaris-gcc_3_4.tar.gz        30-Aug-2007 18:03  9.8M  
+[   ] xerces-c_2_8_0-sparc_v9-solaris-cc_5_7.tar.gz      30-Aug-2007 18:09   11M  
+[   ] xerces-c_2_8_0-sparc_v9-solaris-gcc_3_4.tar.gz     30-Aug-2007 18:15   10M  
+[   ] xerces-c_2_8_0-x86-linux-gcc_3_4.tar.gz            30-Aug-2007 18:54  9.6M  
+[   ] xerces-c_2_8_0-x86-macosx-gcc_4_0.tar.gz           30-Aug-2007 18:59  9.9M  
+[   ] xerces-c_2_8_0-x86-solaris-cc_5_7.tar.gz           30-Aug-2007 19:05  9.5M  
+[   ] xerces-c_2_8_0-x86-solaris-gcc_3_4.tar.gz          30-Aug-2007 19:10  9.8M  
+[   ] xerces-c_2_8_0-x86-windows-vc_7_1.zip              30-Aug-2007 19:26   25M  
+[   ] xerces-c_2_8_0-x86-windows-vc_8_0.zip              30-Aug-2007 19:38   22M  
+[   ] xerces-c_2_8_0-x86_64-linux-gcc_3_4.tar.gz         30-Aug-2007 18:22  9.9M  
+[   ] xerces-c_2_8_0-x86_64-solaris-cc_5_7.tar.gz        30-Aug-2007 18:28   11M  
+[   ] xerces-c_2_8_0-x86_64-solaris-gcc_3_4.tar.gz       30-Aug-2007 18:34   10M  
+[   ] xerces-c_2_8_0-x86_64-windows-vc_8_0.zip           30-Aug-2007 18:48   24M  
+
+Index of /xerces/c/2/sources
+
+Icon  Name                            Last modified      Size  Description[DIR] Parent Directory                                     -   
+[   ] xerces-c-src_2_8_0.tar.gz       30-Aug-2007 19:45  7.5M  
+[   ] xerces-c-src_2_8_0.zip          30-Aug-2007 19:51   11M  
+[   ] xerces-c-tools_2_8_0.tar.gz     30-Aug-2007 19:52  1.1M  
+[   ] xerces-c-tools_2_8_0.zip        30-Aug-2007 19:52  1.2M  
+
+Index of /xerces/c/3/binaries
+
+Icon  Name                                               Last modified      Size  Description[DIR] Parent Directory                                                        -   
+[   ] xerces-c-3.1.1-ia64-hpux-acc-6.tar.gz              27-Apr-2010 15:31   21M  
+[   ] xerces-c-3.1.1-ia64_64-hpux-acc-6.tar.gz           27-Apr-2010 15:31   22M  
+[   ] xerces-c-3.1.1-powerpc-aix-xlc-7.0.tar.gz          27-Apr-2010 15:31  5.7M  
+[   ] xerces-c-3.1.1-powerpc_64-aix-xlc-7.0.tar.gz       27-Apr-2010 15:31  5.8M  
+[   ] xerces-c-3.1.1-sparc-solaris-cc-5.10.tar.gz        27-Apr-2010 15:31  7.5M  
+[   ] xerces-c-3.1.1-sparc_64-solaris-cc-5.10.tar.gz     27-Apr-2010 15:31  7.9M  
+[   ] xerces-c-3.1.1-x86-linux-gcc-3.4.tar.gz            27-Apr-2010 15:31  6.8M  
+[   ] xerces-c-3.1.1-x86-macosx-gcc-4.0.tar.gz           27-Apr-2010 15:31  6.7M  
+[   ] xerces-c-3.1.1-x86-solaris-cc-5.10.tar.gz          27-Apr-2010 15:31  7.2M  
+[   ] xerces-c-3.1.1-x86-windows-vc-10.0.zip             27-Apr-2010 15:31   22M  
+[   ] xerces-c-3.1.1-x86-windows-vc-7.1.zip              27-Apr-2010 15:31   18M  
+[   ] xerces-c-3.1.1-x86-windows-vc-8.0.zip              27-Apr-2010 15:31   18M  
+[   ] xerces-c-3.1.1-x86-windows-vc-9.0.zip              27-Apr-2010 15:31   18M  
+[   ] xerces-c-3.1.1-x86_64-linux-gcc-3.4.tar.gz         27-Apr-2010 15:31  7.1M  
+[   ] xerces-c-3.1.1-x86_64-solaris-cc-5.10.tar.gz       27-Apr-2010 15:31  8.1M  
+[   ] xerces-c-3.1.1-x86_64-windows-vc-10.0.zip          27-Apr-2010 15:31   24M  
+[   ] xerces-c-3.1.1-x86_64-windows-vc-8.0.zip           27-Apr-2010 15:31   20M  
+[   ] xerces-c-3.1.1-x86_64-windows-vc-9.0.zip           27-Apr-2010 15:31   21M  
+
+Index of /xerces/c/3/sources
+
+Icon  Name                            Last modified      Size  Description[DIR] Parent Directory                                     -   
+[   ] xerces-c-3.1.1.tar.gz           27-Apr-2010 15:32  4.8M  
+[   ] xerces-c-3.1.1.zip              27-Apr-2010 15:32  6.9M  
+[   ] xerces-c-tools-3.1.1.tar.gz     27-Apr-2010 15:32  1.1M  
+[   ] xerces-c-tools-3.1.1.zip        27-Apr-2010 15:32  1.2M  
+
+==============================================================================
+
+Index of /xml/xerces-c/binaries
+
+Icon  Name                                               Last modified      Size  Description[DIR] Parent Directory                                                        -   XML project
+[   ] xerces-c_2_7_0-aix_510-xlc_60_050623.tar.gz        01-Sep-2005 10:23  8.7M  XML project
+[   ] xerces-c_2_7_0-aix_510_64-xlc_60_050623.tar.gz     01-Sep-2005 10:26  8.7M  XML project
+[   ] xerces-c_2_7_0-hpux_11i-acc_a03.tar.gz             01-Sep-2005 10:28  8.3M  XML project
+[   ] xerces-c_2_7_0-hpux_11i_64-acc_a03.tar.gz          01-Sep-2005 10:31  7.9M  XML project
+[   ] xerces-c_2_7_0-redhat_AS4-gcc_343.tar.gz           01-Sep-2005 10:33  6.7M  XML project
+[   ] xerces-c_2_7_0-solaris_28-cc_62.tar.gz             01-Sep-2005 10:35  8.7M  XML project
+[   ] xerces-c_2_7_0-solaris_28_64-cc_62.tar.gz          01-Sep-2005 10:38  9.0M  XML project
+[   ] xerces-c_2_7_0-suse_80_AMD_64-gcc_32.tar.gz        01-Sep-2005 10:40  6.7M  XML project
+[   ] xerces-c_2_7_0-windows_2000-msvc_60.zip            01-Sep-2005 10:43  9.9M  XML project
+
+Index of /xml/xerces-c/source
+
+Icon  Name                          Last modified      Size  Description[DIR] Parent Directory                                   -   XML project
+[   ] xerces-c-src_2_7_0.tar.gz     08-Sep-2005 14:14  7.4M  XML project
+[   ] xerces-c-src_2_7_0.zip        08-Sep-2005 14:14   11M  XML project
+
+==============================================================================
+
+Index of /xml/xalan-c/binaries
+
+Icon  Name                                               Last modified      Size  Description[DIR] Parent Directory                                                        -   XML project
+[   ] Xalan-C_1_10_0-aix_510-xlc_60_050623.tar.gz        22-Oct-2005 19:59  2.5M  Binary distribution
+[   ] Xalan-C_1_10_0-aix_510_64-xlc_60_050623.tar.gz     22-Oct-2005 19:59  2.5M  Binary distribution
+[   ] Xalan-C_1_10_0-hpux_11i-acc_a03.tar.gz             22-Oct-2005 19:59  5.7M  Binary distribution
+[   ] Xalan-C_1_10_0-hpux_11i_64-acc_a03.tar.gz          22-Oct-2005 19:59  5.6M  Binary distribution
+[   ] Xalan-C_1_10_0-redhat_AS4-gcc_343.tar.gz           22-Oct-2005 19:59  2.0M  Binary distribution
+[   ] Xalan-C_1_10_0-solaris_28-cc_62.tar.gz             22-Oct-2005 19:59  3.8M  Binary distribution
+[   ] Xalan-C_1_10_0-solaris_28_64-cc_62.tar.gz          22-Oct-2005 19:59  3.9M  Binary distribution
+[   ] Xalan-C_1_10_0-suse_80_AMD_64-gcc_32.tar.gz        22-Oct-2005 19:59  2.6M  Binary distribution
+[   ] Xalan-C_1_10_0-win32-msvc_60.zip                   22-Oct-2005 19:59  3.4M  Binary distribution
+
+Index of /xml/xalan-c/source
+
+Icon  Name                          Last modified      Size  Description[DIR] Parent Directory                                   -   XML project
+[   ] Xalan-C_1_10_0-src.tar.gz     22-Oct-2005 19:35  1.5M  Source distribution
+[   ] Xalan-C_1_10_0-src.zip        22-Oct-2005 19:35  2.8M  Source distribution
+
+==============================================================================
+

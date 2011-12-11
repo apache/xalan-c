@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-C++ Samples</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-C++ Samples</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>Sample Apps<br />
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-C++ Samples</h2>
+<ul>
+  <li>
+<a href="#getstarted">Samples to help you get started</a>
+</li>
+  <li>
+<a href="#rebuilding">Rebuilding a Sample application</a>
+</li>
+  <li>
+<a href="#apachemodulexslt">ApacheModuleXSLT</a>
+</li>
+  <li>
+<a href="#compilestylesheet">CompileStylesheet</a>
+</li>
+  <li>
+<a href="#documentbuilder">DocumentBuilder</a>
+</li>
+  <li>
+<a href="#externalfunctions">ExternalFunctions</a>
+</li>
+  <li>
+<a href="#parsedsourcewrappers">ParsedSourceWrappers</a>
+</li>
+  <li>
+<a href="#serializenodeset">SerializeNodeSet</a>
+</li>    
+  <li>
+<a href="#simpletransform">SimpleTransform</a>
+</li>
+  <li>
+<a href="#simplexpathapi">SimpleXPathAPI</a>
+</li>
+  <li>
+<a href="#simplexpathcapi">SimpleXPathCAPI</a>
+</li>
+  <li>
+<a href="#streamtransform">StreamTransform</a>
+</li>    
+  <li>
+<a href="#threadsafe">ThreadSafe</a>
+</li>  
+  <li>
+<a href="#tracelisten">TraceListen</a>
+</li>        
+  <li>
+<a href="#transformtoxercesdom">TransformToXercesDOM</a>
+</li>
+  <li>
+<a href="#usememorymanager">UseMemoryManager</a>
+</li>
+  <li>
+<a href="#usestylesheetparam">UseStylesheetParam</a>
+</li>
+  <li>
+<a href="#xalantransform">XalanTransform</a>
+</li>
+  <li>
+<a href="#xalantransformercallback">XalanTransformerCallback</a>
+</li>
+</ul>
+
+<a name="getstarted">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Samples to help you get started</h3>
+<p>Each of the subdirectories in the Xalan-C++ samples directory contains the source files for a
+   sample application. The executables for the samples are in the build subdirectory, which should be on the system
+   path.</p>
+<p>With most of the samples, you can use the following procedure:</p>
+<ol>
+  <li>Go to the samples subdirectory containing the sample (use the DOS shell if you are running Windows)<br />
+<br />
+</li>
+  <li>Run the sample from the command line (as indicated below)<br />
+<br />
+</li>
+  <li>Examine the application source files. You may also want to modify the source files. Remember that if you
+      modify a .cpp file, you must rebuild the executable and place it on the path before you can run the
+      modified application.</li>
+</ol>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Each sample application looks for input files in the current directory, the directory from
+      which you run the application. The input files are in the samples subdirectory along with the sample source
+      files. For the UNIX builds, application executables are in the bin subdirectory. For the Windows32 build, the
+      application executable is in the bin subdirectory (Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin). To run a 
+      sample, be sure the executable is on the path, and run it from the samples subdirectory that contains the input 
+      files.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The most of the samples are implemented without providing a pluggable memory manager. The <a href="#simpletransform">SimpleTransform</a> sample illustrates, 
+      in addition to a simple transformation, the usage of the processor with memory manager</td>
+</tr>
+</table>
+
+
+
+<a name="rebuilding">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Rebuilding a Sample application</h3>
+<p>Instructions for rebuilding the samples differ depending on whether you are using the binary package or the source 
+package. </p>
+<p>For Windows users, the Xalan Visual C++ workspace contains project configurations for building 
+   each of the samples.  Users who have downloaded the source package, can find the XalanICU.dsw workspace
+   file under:<br />
+<br />     <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC6</code>
+   <br />
+<br />  and XalanICU.sln solution file under:<br />
+<br />
+        <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC7.1</code>
+
+   <br />
+<br />  Users who have downloaded the binary package, should use the Samples.dsw workspace file 
+   located under: <br />
+<br />     
+   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code>
+<br />
+<br />
+   or the Samples.sln solution file for .NET V7.1 users, located under: <br />
+<br />     
+   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code>
+<br />
+<br />
+</p>
+<p>The Makefile that comes with the UNIX distributions include targets for rebuilding one or all of 
+   the sample applications.  To rebuild one or more sample applications from the UNIX source package, 
+   go to the Xalan-C_1_11_0-src directory and run<br />
+<br />
+        <code>gmake <b>
+<i>Target</i>
+</b>
+</code>
+<br />
+<br />
+   where <b>
+<i>Target</i>
+</b> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, 
+   <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, 
+   <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  
+   <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, 
+   <code>ThreadSafe</code>, <code>TraceListen</code>, <code>TransformToXercesDOM</code>, 
+   <code>UseStylesheetParam</code>, <code>XalanTransform</code>, or 
+   <code>XalanTransformerCallback</code>.</p>
+<p>To rebuild the samples from the UNIX binary package, go to the ../samples directory of your installation,
+   run the runConfigure utility for your target platform, and then run gmake.  For example, AIX users would 
+   issue the following command:<br />
+<br />
+        <code>./runConfigure -p aix -c xlc_r -x xlC_r</code>
+<br />
+        <code>cd samples</code>
+<br />
+<br />
+        <code>gmake <b>
+<i>Target</i>
+</b>
+</code>
+<br />
+<br />
+   where <b>
+<i>Target</i>
+</b> can be Samples (for building all samples), or the individual sample name as 
+   listed above.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For information on building Apache Module, see <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a>
+</td>
+</tr>
+</table>
+
+
+<a name="apachemodulexslt">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ApacheModuleXSLT</h3>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">This sample must be built with the Apache Web server, and the Xalan-C++ distribution files do not include a binary
+      for ApacheModuleXSLT. Assuming you have installed the Apache server on your platform, you can use Visual C++ on Windows to
+      build ApacheModuleXSLT.dll, or the Makefile on UNIX to build xslt_module (with the appropriate library suffix).</td>
+</tr>
+</table>
+    
+<p>What it does: runs as an Apache module on an Apache Web server; performs transformations and returns the output to a Web
+   browser. You configure Apache to respond to a given URL request for an output file (html or txt file in the configuration below)
+   by applying an xsl stylesheet file to an xml document file (both with the specified name in a given location) and returning
+   the transformation output to the client.</p> 
+<p>This sample also illustrates use of the XalanTransformer class and the C API defined in src/XalanTransformer/XalanCAPI.h. It returns 
+   transformation output in blocks to a callback function, which enables the browser to start displaying the result before the transformation
+   has been completed.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You may need to adjust the Visual C++ or Makefile settings to locate the required Apache header files. As shipped, the Visual C++ 
+      project file looks in \Apache Group\Apache\src\include, and the UNIX Makefile looks in usr/lib.</td>
+</tr>
+</table>
+<p>To build the Apache module, follow the instructions in <a href="buildlibs.html#winbldenv">Steps for doing a Windows 
+   build</a> or <a href="buildlibs.html#unixbldenv">Steps for doing a UNIX build</a>. For UNIX platforms, you do the build with<br /> 
+   <code>gmake ApacheModuleXSLT</code>.</p>
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Setting up and using ApacheModuleXSLT</h4>
+<p>To use ApacheModuleXSLT, do the following:</p>
+<ol>
+  <li>(UNIX only) Be sure the Xalan and Xerces libraries are on your library path (you can accomplish this by copying them to
+      /usr/lib; see <a href="getstarted.html#path">Setting up the path/library path</a>), and copy the Apache module to 
+      /usr/lib/apache.<br />
+<br />
+</li>
+  <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br />
+<br />
+      Windows: <code>LoadModule xslt_module Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code>
+<br />
+<br />
+      UNIX: <code>AddModule mod_xslt.c</code>
+<br />
+              and<br />
+              <code>LoadModule xslt_module /usr/lib/apache/mod_xslt.<b>
+<i>xx</i>
+</b>
+</code>
+<br />
+<br />
+      where <b>
+<i>xx</i>
+</b> is the appropriate library suffix for the UNIX platform ("so" or "a").<br />
+<br />
+</li>
+  <li>Add a &lt;Location&gt; entry to httpd.conf that indicates where xml/xsl file pairs are to be found, and what target file extensions
+      to recognize. We suggest the following:<br />
+<br />
+      <code>&lt;Location /xslt&gt;</code>
+<br />
+        <code>AddHandler mod_xslt .html</code>
+<br />
+        <code>AddHandler mod_xslt .txt</code>
+<br />
+      <code>&lt;/Location&gt;</code>
+<br />
+<br />
+      This &lt;Location&gt; element instructs the module to respond to requests for <b>
+<i>xxx</i>
+</b>.html and <b>
+<i>xxx</i>
+</b>.txt files in the 
+      in the xslt subdirectory (under the document root; see next item) by applying the <b>
+<i>xxx</i>
+</b>.xsl stylesheet to <b>
+<i>xxx</i>
+</b>.xml 
+      (both in that directory) and returning the transformation result to the browser.<br />
+<br />
+      For example, a request for foo.html instructs the module to apply foo.xsl to foo.xml and return the result.<br />
+<br />
+      Note: It is up to the stylesheet to apply the appropriate xsl:output method to the output. Whether the user specifies html or txt is, of
+      itself, immaterial.<br />
+<br />
+</li>
+  <li>Put xml/xsl file pairs in the &lt;Location&gt; subdirectory (xslt in the example)) under the document root directory specified in 
+      httpd.conf by the DocumentRoot and &lt;Directory&gt; settings. Alternatively, you can modify these settings to point to 
+      Xalan-C_1_11_0-&lt;my_UNIX_distribution&gt;/samples/ApacheModuleXSLT, which includes an xslt subdirectory with xml/xsl file pairs 
+      (foo.xml/xsl, apachemod.xml/xsl).<br />
+<br />
+</li>
+  <li>Start the Apache server.<br />
+<br />
+</li>
+  <li>From a Web browser, call the module with a URL as follows:<br />
+      <code>http://<b>
+<i>serverName</i>
+</b>/xslt/<b>
+<i>xxx</i>
+</b>.html</code>
+<br />
+      where <b>
+<i>serverName</i>
+</b> is the Apache server (such as www.myServer.com) and <b>
+<i>xxx</i>
+</b> is the name of an xml/xsl pair of files 
+      (such as foo.xml and foo.xsl) in the xslt subdirectory under the DocumentRoot directory.<br />
+<br />
+      For example,<br />
+      <code>http://www.myServer.com/xslt/apachemod.html</code>
+<br />
+      instructs ApacheModuleXSLT to apply the apachemod.xsl stylesheet to the apachemod.xml XML document (both files in the xslt directory 
+      under the Apache DocumentRoot directory) and return the transformation result to the browser.</li>
+</ol>
+
+
+  
+<a name="compilestylesheet">&#8204;</a>    
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>CompileStylesheet</h3>
+<p>What it does: Use a compiled stylesheet to perform a series of transformations.</p>
+<p>You can run it from the CompileStylesheet subdirectory with</p>
+<p>
+<code>CompileStylesheet</code>
+</p>
+<p>See also: <a href="usagepatterns.html#compiled">Compiling stylesheets</a>.</p>
+
+
+<a name="documentbuilder">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>DocumentBuilder</h3>
+<p>What it does: Use a DocumentBuilder to programmatically construct an XML document, apply the foo.xsl stylesheet to
+   this document, and write the ouput to foo.out.</p>
+<p>You can run it from the DocumentBuilder subdirectory with</p>
+<p>
+<code>DocumentBuilder</code>
+</p>
+
+
+<a name="externalfunctions">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ExternalFunctions</h3>
+<p>What it does: implement, install, and illustrate the usage of three extension functions. The functions return a
+   square root, a cube, and a string with the current date and time. The sample stylesheet (foo.xsl) gets the area
+   of a cube and units of measurement from an XML document (foo.xml), computes the length of each side
+   of a cube and the volume of the cube, and enters the date and time of the transformation. The output appears in
+   foo.out.</p>
+<p>Run this sample from the ExternalFunctions subdirectory with</p> 
+<p>
+<code>ExternalFunctions</code>
+</p>
+<p>See also: <a href="extensions.html">Extension Functions</a>.</p>
+  
+  
+<a name="parsedsourcewrappers">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ParsedSourceWrappers</h3>
+<p>What it does: performs a transformation with input in the form of a pre-built XercesDOM or XalanSourceTree.</p>
+<p>Run this sample from the ParsedSourceWrappers subdirectory with</p>
+<p>
+<code>ParsedSourceWrappers</code>
+</p>
+<p>See transformXercesDOM() and transformXalanSourceTree() as called by transform() in ParsedSourceWrappers.cpp.</p>
+
+
+<a name="serializenodeset">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SerializeNodeSet</h3>
+<p>What it does: Serialize the node set returned by the application of an XPath expression to an XML document.</p>
+<p>Run this sample from the SerializeNodeSet subdirectory with</p>
+<p>
+<code>SerializeNodeSet <b>
+<i>XMLFile</i>
+</b> <b>
+<i>ContextNode</i>
+</b> <b>
+<i>XPathExpression</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file, <b>
+<i>ContextNode</i>
+</b> is the location path to the context
+   node, and <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to apply to that context node. The SerializeNodeSet 
+   directory contains the same foo.xml sample source file as the preceding examples.</p>
+    
+
+<a name="simpletransform">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SimpleTransform</h3>
+<p>What it does: The SimpleTransform class uses the foo.xsl stylesheet to transform foo.xml, and writes the
+   output to foo.out.  The source for this sample has been modified to demonstrate the usage of the new pluggable
+   memory management feature.</p>
+<p>You can run it from the SimpleTransform subdirectory with</p>
+<p>
+<code>SimpleTransform</code>
+</p>
+<p>See also: <a href="usagepatterns.html#xalantransformer">Basic procedures for performing XSL
+   transformations</a>.</p>
+
+  
+<a name="simplexpathapi">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SimpleXPathAPI</h3>
+<p>What it does: Use the XPathEvaluator interface to evaluate an XPath expression from the specified context node of 
+   an XML file and display the nodeset returned by the expression.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can use this sample as an aid when you want to find out what a given XPath expression returns from a
+      given context node in an XML file.</td>
+</tr>
+</table>
+<p>Run this sample from the SimpleXPathAPI subdirectory with</p>
+<p>
+<code>SimpleXPathAPI <b>
+<i>XMLFile</i>
+</b> <b>
+<i>ContextNode</i>
+</b> <b>
+<i>XPathExpression</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file, <b>
+<i>ContextNode</i>
+</b> is the location path to the context
+   node, and <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to apply to that context node.</p> 
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Keep in mind that the string value returned by an XPath expression is the string value of the first node in the 
+      nodeset returned by the expresssion.</td>
+</tr>
+</table>
+<p>The XPathWrapper subdirectory contains an XML file named xml.foo (part of it appears below).</p>
+<blockquote class="source">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;doc&gt;
+  &lt;name first="David" last="Marston"&gt;Mr. Marson&lt;/name&gt;
+  &lt;name first="David" last="Bertoni"&gt;Mr. Bertoni&lt;/name&gt;
+  ...
+  &lt;name first="Paul" last="Dick"&gt;Mr. Dick&lt;/name&gt;
+&lt;/doc&gt;
+</pre>
+</blockquote>
+<p>You can try command lines like</p>
+<p>
+<code>SimpleXPathAPI foo.xml /doc name/@last</code>
+</p>
+<p>and</p>
+<p>
+<code>SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If a SimpleXPathAPI argument includes characters (such as *) that the shell interprets incorrectly, enclose the argument 
+      in double quotes.</td>
+</tr>
+</table>
+<p>See also: <a href="usagepatterns.html#xpath">Working with XPath expressions</a>.</p>
+
+
+<a name="simplexpathcapi">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>SimpleXPathCAPI</h3>
+<p>What it does: Use the XPathEvaluator C interface to evaluate an XPath epxeression and display the string value returned 
+   by the epxression.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Keep in mind that the string value returned by an XPath expression is the string value of the first node in the nodeset 
+      returned by the epxresssion.</td>
+</tr>
+</table>
+<p>Run this sample from the SimpleXPathCAPI subdirectory with</p>
+<p>
+<code>SimpleXPathCAPI <b>
+<i>XMLFile</i>
+</b> <b>
+<i>XPathExpression</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>XMLFile</i>
+</b> is an XML source file, and <b>
+<i>XPathExpression</i>
+</b> is an XPath expression to apply to the XML 
+   source file. The SimpleXPathCAPI subdirectory contains an XML file named xml.foo identical to foo.xml in the preceding 
+   example.</p>
+<p>You can try command lines like</p>
+<p>
+<code>SimpleXPathCAPI foo.xml /doc/name[3]</code>
+</p>
+
+  
+<a name="streamtransform">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>StreamTransform</h3>
+<p>What it does: The StreamTransform class processes character input streams containing a stylesheet and an XML document, and
+   writes the transformation output to a character output stream. This sample illustrates the process for working with stylesheets 
+   and documents that you assemble in memory.</p>
+<p>You can run it from the SimpleTransform subdirectory with</p>
+<p>
+<code>StreamTransform</code>
+</p>
+
+  
+<a name="threadsafe">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>ThreadSafe</h3>
+<p>What it does: Multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
+   transformations concurrently. The application tracks the progress of the threads in messages to the console, and each thread
+   writes its own output file. Imagine a server application responding to multiple clients who happen to request the same
+   transformation.</p>
+<p>You can run it from the ThreadSafe subdirectory with</p>
+<p>
+<code>ThreadSafe</code>
+</p>
+<p>See also: <a href="usagepatterns.html#compiled">Compiling stylesheets</a>.</p>  
+
+
+<a name="tracelisten">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>TraceListen</h3>
+<p>What it does: Trace events during a transformation; the transformation uses birds.xsl to transform birds.xml and writes the
+   output to birds.out.</p>
+<p>You can run it from the TraceListen subdirectory with</p>
+<p>
+<code>TraceListen <b>
+<i>traceFlags</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>traceFlags</i>
+</b> is one or more of the following:</p>
+<p>  <code>-tt</code> (Trace the templates as they are being called)</p>
+<p>  <code>-tg</code> (Trace each result tree generation event)</p>
+<p>  <code>-ts</code> (Trace each selection event)</p>
+<p>  <code>-ttc</code> (Trace the template children as they are being processed)</p>
+<p>These flags are also available in the <a href="commandline.html">command-line utility (TestXSLT)</a>.</p>
+<p>The core of this example is the following fragment:</p>
+<blockquote class="source">
+<pre>
+// Set up a diagnostic writer to be used by the TraceListener...
+XalanStdOutputStream  theStdErr(cerr);
+XalanOutputStreamPrintWriter  diagnosticsWriter(theStdErr);
+// Make sure that error reporting, which includes any TraceListener 
+// output does not throw exceptions when transcoding, since that could 
+// result in an exception being thrown while another exception is active.
+// In particular, characters that the TraceListener writes might not be 
+// representable in the local code page.
+theStdErr.setThrowTranscodeException(false);
+
+// Set up the TraceListener...
+// traceTemplates, traceTemplateChildren, traceGenerationEvent,
+// and TraceSelectionEvent are booleans set by the command line.
+TraceListenerDefault theTraceListener(
+        diagnosticsWriter,
+        traceTemplates,
+        traceTemplateChildren,
+        traceGenerationEvent,
+        traceSelectionEvent);
+
+// Add the TraceListener to the XSLT processor...
+theProcessor.setTraceSelects(traceSelectionEvent);
+theProcessor.addTraceListener(&amp;theTraceListener);
+
+// Perform the transformation
+....
+</pre>
+</blockquote>
+  
+    
+<a name="transformtoxercesdom">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>TransformToXercesDOM</h3>
+<p>What it does: Performs a simple transformation but puts the result in a Xerces DOMDocument</p>
+<p>Run this sample from the TransformToXercesDOM subdirectory with</p>
+<p>
+<code>TransformToXercesDOM <b>
+<i>XMLFile</i>
+</b> <b>
+<i>XSLFile</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>XMLFile</i>
+</b> is a source XML file, and <b>
+<i>XSLFile</i>
+</b> is the XLST input file.  The program will use 
+   <b>
+<i>XSLFile</i>
+</b> to transform the input file <b>
+<i>XMLFile</i>
+</b> using Xerces DOM as the output destination.</p>	  
+<p>See the FormatterToXercesDOM usage in the sample code.</p>
+
+
+<a name="usestylesheetparam">&#8204;</a>    
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>UseStylesheetParam</h3>    
+<p>What it does: Set a stylesheet parameter that the stylesheet uses during the transformation.</p>
+<p>You can run it from the UseStylesheetParam subdirectory with</p>
+<p>
+<code>UseStylesheetParam <b>
+<i>key expression</i>
+</b>
+</code>
+</p>
+<p>where <b>
+<i>key</i>
+</b> is the parameter key (or name) and <b>
+<i>expression</i>
+</b> is a string expression enclosed
+   in single quotes.</p>
+<p>The example uses a stylesheet (foo.xsl) with a parameter named param1. The stylesheet accepts any string
+   expression. Enclose the string expression in single quotes (so it is interpreted as an expression); if it
+   includes more than a single word, enclose the resulting string in double quotes so the executable interprets it
+   as a single argument. For example:</p>
+<p>
+<code>UseStylesheetParam param1 "'hello out there'"</code>
+</p>
+<p>See also: <a href="usagepatterns.html#params">Setting stylesheet parameters</a>.</p>     
+
+  
+<a name="xalantransform">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>XalanTransform</h3>
+<p>What it does: XalanTransform uses the XalanTransformer class and the associated C++ API to apply an XSL stylesheet 
+   file to an XML document file and write the transformation output to either an output file or to a stream. XalanTransform 
+   takes command-line arguments for the XML document to be transformed, the XSL stylesheet to apply, and an optional output 
+   file argument. If you omit the third argument, XalanTransform writes the transformation output to a stream that is sent to 
+   standard out (the console).</p>
+<p>You can run XalanTransform from the XalanTransform subdirectory with</p>
+<p>
+<code>XalanTransform foo.xml foo.xsl foo.out</code>
+</p>
+<p>Omit the third argument to write the transformation result to the console. See also: <a href="usagepatterns.html#xalantransformer">Using the XalanTransformer class.</a>.</p>
+
+  
+<a name="xalantransformercallback">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>XalanTransformerCallback</h3>
+<p>What it does: Return transformation output in blocks to a callback function, which writes the output to a file.
+   This sample illustrates the use of a callback function to incrementally process a transformation result, that is to begin
+   working with the transformation result before the transformation has been completed. See <a href="usagepatterns.html#incremental">Processing output incrementally</a>.</p>
+<p>You can run it from the XalanTransformerCallback subdirectory with</p>
+<p>
+<code>XalanTransformerCallback foo.xml foo.xsl [foo.out]</code>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If you omit the third argument, the transformation result is written to the console.</td>
+</tr>
+</table>
+
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Installing Xalan-C++</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Installing Xalan-C++</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>Installation<br />
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Installing Xalan-C++</h2>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting up the path/library path</h3>
+<ul>
+  <li>
+<a href="#windowspath">For Windows</a>
+</li>
+  <li>
+<a href="#unixpath">For UNIX</a>
+</li>  
+</ul>
+
+<a name="windowspath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>For Windows</h4>
+<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin and xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+</ul>
+<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it 
+   does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <a href="build_instruct.html#rebuild">rebuild Xalan</a>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
+<p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
+<ul>
+  <li>Add the path to xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
+  <li>Add the path to xerces-c-3.1.1-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
+</ul>
+
+
+<a name="unixpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>For UNIX</h4>
+<p>To use one of the UNIX binary distributions, you must place the Xalan-C++ executable on the path, and the Xalan-C++ and Xerces-C++ 
+   libraries on the library path.</p>
+<p>For the Xalan-C++ AIX distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_AIX_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_AIX_distribution&gt;/lib on the library path (LIBPATH), 
+      or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ HP-UX 11 distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br />
+<br />
+</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_HPUX_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_HPUX_distribution&gt;/lib on the library path 
+      (SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ Solaris distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br />
+<br />
+</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_Solaris_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_Solaris_distribution&gt;/lib on the library path 
+     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the Xalan-C++ RedHat and SuSE Linux distributions:</p>
+<ul>
+  <li>Put Xalan-C_1_11_0-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put Xalan-C_1_11_0-&lt;my_Linux_distribution&gt;/lib and xerces-c-3.1.1-&lt;my_Linux_distribution&gt;/lib on the library path 
+      (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

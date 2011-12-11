@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: lang() function</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">lang() function</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>lang()<br />
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>lang() function</h2>
+
+  <ul>
+    <li>
+<a href="#functionality">Functionality</a>
+</li>
+    <li>
+<a href="#implementation">Implementation</a>
+</li>    
+  </ul>
+  <a name="functionality">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Functionality</h3>
+
+  <p>The <code>xml:lang</code> can be used to determine the language for a node or
+  a node-set. The attribute can be used to store language-specific data in an
+  XML document:</p>
+
+  <blockquote class="source">
+<pre>
+    &lt;phrases&gt;
+      &lt;greeting xml:lang="en"&gt;Hello!&lt;/greeting&gt;
+      &lt;greeting xml:lang="no"&gt;Hei!&lt;/greeting&gt;
+      &lt;greeting xml:lang="fr"&gt;Salut!&lt;/greeting&gt;
+      &lt;greeting xml:lang="es"&gt;Hola!&lt;/greeting&gt;
+      &lt;greeting xml:lang="de"&gt;Sweinhund!&lt;/greeting&gt;
+    &lt;/phrases&gt;
+  </pre>
+</blockquote>
+
+  <p>The XSL stylesheet can use the <code>lang()</code> function to select the
+  element with the desired language:</p>
+
+  <blockquote class="source">
+<pre>
+    &lt;xsl:template match="greeting"&gt;
+      &lt;xsl:if test="lang("de")&gt;
+        &lt;xsl:value-of select="."/&gt;
+        &lt;xsl:text&gt; Grossglucklicher wunche!&lt;/xsl:text&gt;
+      &lt;/xsl:if&gt;
+    &lt;/xsl:template&gt;
+  </pre>
+</blockquote>
+ <a name="implementation">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Implementation</h3>
+
+  <p>The DOM interface has been given a method that returns the language for
+  a given node. The language is returned as a string (on whatever format is
+  used in the XML document - should be iso), and may be null if no language is
+  defined.</p>
+
+  <blockquote class="source">
+<pre>
+    public String DOM.getLanguage(int node);
+  </pre>
+</blockquote>
+
+  <p>The BasisLibrary class has a static method that will compare the language
+  of the context node with some other language and return the result as a
+  boolean.</p>
+
+  <blockquote class="source">
+<pre>
+    public static boolean BasisLibrary.testLanguage(String language, DOM dom, int node);
+  </pre>
+</blockquote>
+
+  <p>The compiled code for the <code>lang()</code> method calls this method in the
+  BasisLibrary and leaves the result on the stack for the calling element.</p>
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

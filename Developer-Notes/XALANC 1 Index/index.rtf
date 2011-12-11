@@ -1,0 +1,197 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fswiss\fprq2\fcharset0 Lucida Sans Unicode;}{\f2\fswiss\fprq2\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\lang1033\f0\fs20 [FILE: index.rtf]\par
+\par
+\ul\fs32 The Xalan-C/C++ XSLT Project Version 1.11\ulnone\fs20\par
+\par
+Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML document types.\par
+\par
+Xalan-C++ version 1.11 is a robust implementation of the W3C Recommendations for \ul XSL Transformations (XSLT)\ulnone  [http://www.w3.org/TR/xslt] and the \ul XML Path Language (XPath)\ulnone  [http://www.w3.org/TR/xpath]. It works with the \ul Xerces-C++ version 3.1.1\ulnone  [http://xerces.apache.org/xerces-c] release of XML parsers. The focus for this Xalan release is on bug fixes and compatibility with newer development platforms.\par
+\par
+The Xalan-C/C++ project creates and distributes a standard XSLT library and a simple Xalan command-line utility for transforming XML documents.\par
+\par
+This project is written in a reduced set of the C++ programming language.  This makes the library directly usable on numerous platforms.  A set of 'C' language APIs is also available so that XSLT and XPath functionality is easily deployed to 'C' language applications.\par
+\par
+\ul Sample programs\ulnone  [samples.html] are available for you to test and experiment with as you learn the Xalan library.\par
+\par
+Some of the \ul EXSLT extension functions\ulnone  [http://www.exslt.org] for XPath are available.  We need to write and validate more of the EXSLT functions.  Apache also provides some of their own XPath extensions [extensionslib.html] for use.  Documentation and examples are available for you to write your own custom \ul XPath extensions\ulnone  [extensions.html].\par
+\par
+There is a library of XPath extensions [extensionslib.html] that are provided by the Apache Xalan community.\par
+\par
+\par
+\b\fs28 Licenses\b0\par
+\fs20\par
+The Xalan-C/C++ software conforms to \ul The Apache Software Foundation License, Version 2.0\ulnone  [license.html].\par
+\par
+\par
+\b\fs28 Getting Involved\b0\par
+\fs20\par
+You are invited to \ul participate in The Apache Software Foundation\ulnone  [http://www.apache.org/foundation/getinvolved.html].  You will need to subscribe if you wish to receive mail from the lists.  Some lists require a subscription in order to post messages.\par
+\par
+The \ul\f1 xalan-dev\ulnone\f0  [mailto:xalan-dev@xml.apache.org] mailing list is used to communicate product development issues with the software development team. The \ul xalan-dev messages\ulnone  \f2 [http://mail-archives.apache.org/mod_mbox/xml-xalan-dev\f0 ] are archived here.\par
+\par
+The \ul\f1 xalan-c-users\ulnone\f0  [mailto:xalan-c-users@xml.apache.org] mailing list is used to discuss issues regarding the use of the Xalan-C/C++ software and libraries. The \ul xalan-c-users messages\ulnone  [http://mail-archives.apache.org/mod_mbox/xml-xalan-c-users] are archived here.\par
+\par
+The subversion repository changes are logged on the \ul\f1 xalan-cvs\f0  mailing list\ulnone  [http://mail-archives.apache.org/mod_mbox/xml-xalan-cvs] and are archived here.\par
+\par
+You can review the project sources and change history in the subversion repository at [http://svn.apache.org/viewvc/xalan/c] \ul\f1 http://svn.apache.org/viewvc/xalan/c\ulnone\f0 .\par
+\par
+You can get a private copy of the subversion snapshot of the development sources at [http://svn.apache.org/repos/asf/xalan/c/trunk] \ul\f1 http://svn.apache.org/repos/asf/xalan/c/trunk\ulnone\f0  using your favorite SVN program.\par
+\par
+The JIRA system is used for issue tracking. You must create an account before you can post messages and files to the JIRA tracking system. You can view the issues at [https://issues.apache.org/jira/browse/XALANC]\ul https://issues.apache.org/jira/browse/XALANC\ulnone .\par
+\par
+\par
+\b\fs28 XSLT Standards Implemented\b0\fs20\par
+\par
+Xalan-C/C++ implements the following specifications from the World Wide Web Consortium (W3C).\par
+\par
+\tab XSL Transformations (XSLT) Version 1.0\par
+\tab\tab [http://www.w3.org/TR/xslt]\par
+\tab XML Path Language (XPath) Version 1.0\par
+\tab\tab [http://www.w3.org/TR/xpath]\par
+\tab Associating Style Sheets with XML documents 1.0 (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xml-stylesheet]\par
+\par
+The next major release of Xalan-C/C++ will hopefully be compatible with following standards.  This added support will require a major version change from 1 to 2.\par
+\par
+\tab XSL Transformations (XSLT) Version 2.0\par
+\tab\tab [http://www.w3.org/TR/xslt20]\par
+\tab XSLT 2.0 and XQuery 1.0 Serialization\par
+\tab\tab [http://www.w3.org/TR/xslt-xquery-serialization]\par
+\tab XML Path Language (XPath) Version 2.0 (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xpath20]\par
+\tab XQuery 1.0 and XPath 2.0 Formal Semantics (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xquery-semantics]\par
+\tab XQuery 1.0 and XPath 2.0 Data Model (XDM) (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xpath-datamodel]\par
+\tab XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xpath-functions]\par
+\par
+\par
+\b\fs28 XML Parser Library\b0\fs20\par
+\par
+Xalan-C/C++ uses the The Apache Software Foundation Xerces-C project that implements parsers for XML 1.0 and XML 1.1.  The following standards as specified by the \ul World Wide Web Consortium (W3C)\ulnone  [http://www.w3.org] are implemented by the Xerces-C XML parser library.\par
+\par
+\tab Extensible Markup Language (XML) 1.0 (Third Edition) - currently (Fifth Edition)\par
+\tab\tab [http://www.w3.org/TR/xml]\par
+\tab Extensible Markup Language (XML) 1.1 (First Edition) - currently (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xml11]\par
+\tab xml:id Version 1.0\par
+\tab\tab [http://www.w3.org/TR/xml-id]\par
+\tab XML Base (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xmlbase]\par
+\tab XML Information Set (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xml-infoset]\par
+\tab Namespaces in XML 1.0 (Third Edition)\par
+\tab\tab [http://www.w3.org/TR/xml-names]\par
+\tab Namespaces in XML 1.1 (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xml-names11]\par
+\tab XML Schema Part 1: Structures Second Edition\par
+\tab\tab [http://www.w3.org/TR/xmlschema-1]\par
+\tab XML Schema Part 2: Datatypes Second Edition\par
+\tab\tab [http://www.w3.org/TR/xmlschema-2]\par
+\tab Document Object Model (DOM) Level 1\par
+\tab\tab [http://www.w3.org/TR/REC-DOM-Level-1]\par
+\tab Element Traversal Specification\par
+\tab\tab [http://www.w3.org/TR/ElementTraversal]\par
+\tab Document Object Model (DOM) Level 2 Core Specification\par
+\tab\tab [http://www.w3.org/TR/DOM-Level-2-Core]\par
+\tab Document Object Model (DOM) Level 2 Traversal and Range Specification\par
+\tab\tab [http://www.w3.org/TR/DOM-Level-2-Traversal-Range]\par
+\tab Document Object Model (DOM) Level 3 Core Specification\par
+\tab\tab [http://www.w3.org/TR/DOM-Level-3-Core]\par
+\tab Document Object Model (DOM) Level 3 Validation Specification\par
+\tab\tab [http://www.w3.org/TR/DOM-Level-3-Val]\par
+\tab Document Object Model (DOM) Level 3 Load and Save Specification\par
+\tab\tab [http://www.w3.org/TR/DOM-Level-3-LS]\par
+\tab XML Inclusions (XInclude) 1.0 (Second Edition)\par
+\tab\tab [http://www.w3.org/TR/xinclude]\par
+\par
+The Xerces-C/C++ also supports the SAX 1.0 and SAX 2.0 projects [http://sax.sourceforge.net/]. SAX is primarily Java based. The Xerces-C/C++ project has implemented a SAX C++ API that looks much like the SAX Java API.\par
+\par
+Web Services and Web Security recommendations have been developed by the World Wide Web Consortium (W3C) [http://www.w3.org] and OASIS Advancing open standards for the information society [http://www.oasis-open.org].  The Xerces-C/C++ has support for custom entity resolvers.\par
+\par
+\par
+\b\fs28 Security Issues\b0\fs20\par
+\par
+The Xalan-C/C++ library has hooks so that custom entity resolvers can be deployed.  The entity resolvers are actually interfaces into the Xerces-C/C++ XML Parser Library.  Use of trusted entity resolvers greatly increases the security of XML based applications.\par
+\par
+The Web Services Architecture uses specifications and recommendations that are documented by the following organizations.\par
+\par
+\pard\tx720\tx6480\tab World Wide Web Consortium (W3C)\tab http://www.w3.org\par
+\tab Advancing open standards for the information society (OASIS)\tab http://www.oasis-open.org\par
+\tab The Sourceforge SAX Project (SAX1, SAX2)\tab http://sax.sourceforge.net\par
+\tab Internet Engineering Task Force (IETF)\tab http://www.ietf.org\par
+\pard\par
+There are some architecture security issues that should be addressed by any XML parser or XSLT transformation application.  Other than validating and cleaning the content of XML elements, the access to untrusted external entities is a big problem for security management.\par
+\par
+The "Xalan" comman-line transformation program does not deploy an OASIS catalog or perform other security measures.  URLs are resolved using the system directory of the local machine and DNS to resolve host locations. The "Xalan" program should be used only with trusted XSLT stylesheets and XML documents on a trusted computer.\par
+\par
+A future release of the "Xalan" command-line transformation program may include support for an OASIS entity resolver catalog.\par
+\par
+Information on creating \ul Secure Web Service Applications\ulnone  [secureweb.html] is useful for review. This overview document goes beyond the scope of XSLT transformations and asks many pertinent security based questions.\par
+\par
+\par
+\b\fs28 Getting Started\par
+\b0\fs20\par
+The source code and documentation are delivered in separate packages.  Binary packages comprise the compiled libraries, the Xalan command line utility, and the C/C++ header files.  The documentation package contains the pre-built documentation.  The source package contains the sources to build everything.\par
+\par
+The current Xalan-C/C++ Version 1.11 will work with the stable releases of Xerces-C/C++ Version 2.8.0 and Version 3.1.1 [http://xerces.apache.org/xerces-c].\par
+\par
+The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Version 2.7.0.\par
+\par
+If you are having problems using the product, send your comments to [mailto:xalan-c-users@xml.apache.org].\par
+\par
+If you think a change needs to be made or have suggestions for future releases, send your comments to [mailto:xalan-dev@xml.apache.org].\par
+\par
+Binary releases are not yet available.  We would like to distribute Xalan-C/C++ Version 1.11 binary releases using the same platforms specified for the compatible Xerces-C binary packages.\par
+\par
+\par
+\b\fs28 Getting What You Need\b0\fs20\par
+\par
+What you need depends whether you plan to build from the sources or download prebuilt packages.\par
+\par
+The development platform used to build the Xalan-C (XSLT) library should be the same as the platform used to build the Xerces-C (XML) parser library.\par
+\par
+Xalan-C (XSLT) library requires a working Xerces-C (XML) parser library.  The supported versions of Xerces-C are 2.8 and 3.1.1.\par
+\par
+If you are ambitious and willing to experiment, you can download the bleeding edge development from the Apache Software Foundation subversion repositories.  Use a subversion 'svn' utility for download.\par
+\par
+\tab Xalan-C Repository\tab http://svn.apache.org/repos/asf/xalan/c/trunk\par
+\par
+\tab Xerces-C Repository\tab http://svn.apache.org/repos/asf/xerces/c/trunk\par
+\par
+The current \ul stable Xerces-C (XML) packages\ulnone  [http://xerces.apache.org/xerces-c/download.cgi] are available for download.\par
+\par
+Note: The sources from the Xalan-C repository are current for Version 1.11 until released packages are available.  You can help us prepare for a Version 1.11 release by \ul providing packages\ulnone  [downloadpkgs.html] for your platforms and let us know of your building issues.\par
+\par
+The previous version packages can still be downloaded until officially replaced.\par
+\par
+\tab Xalan-C Version 1.10\tab [http://xml.apache.org/dyn/closer.cgi/xml/xalan-c/]\par
+\par
+\tab Xerces-C Version 2.7\tab [http://xml.apache.org/dyn/closer.cgi/xml/xerces-c/]\par
+\par
+\par
+\par
+\fs28 Getting the Documentation\par
+\fs20\par
+\par
+\par
+\fs28 Building the Documentation\par
+\fs20\par
+\par
+\par
+\fs28 Downloading the Sources\par
+\fs20\par
+\par
+\par
+\fs28 Building the Libraries\par
+\fs20\par
+\par
+\par
+\fs28 Installing the Libraries\par
+\par
+\fs20\par
+\par
+\par
+}
+ 

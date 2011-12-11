@@ -1,0 +1,225 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="&xslt4c; Extension Functions">
+<ul>
+  <li><link anchor="intro">Introduction</link></li>
+  <li><link anchor="implement">Implementing an extension function</link></li>
+  <li><link anchor="install">Installing an extension function</link></li>
+  <li><link anchor="use">Using an extension function</link></li>
+</ul>
+<anchor name="intro"/>
+<s2 title="Introduction">
+<p>At times, you may want to call your own custom C functions from a stylesheet. For these situations, &xslt4c; supports the 
+   creation and use of extension functions. &xslt4c; also provides a <link idref="extensionslib">library of extension functions
+   </link> for your use.</p>
+<p>You can think of extension functions as extending the core library of functions that XPath provides. Like the
+   XPath functions, an extension function returns an XObject, which may contain a value of any of the five XSLT
+   data types: node-set, result-tree-fragment, string, boolean, or number.</p> 
+<p>You can send arguments to an extension function in the form of XPath expressions, literals (for string, boolean, and number), 
+   the values returned by other functions, and XSL variables or parameters set to any of the preceding.</p>
+<p>For an example that implements, installs, and uses three extension functions, see the 
+<link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
+<note>&xslt4c; does not support extension elements.</note>
+</s2>
+
+<anchor name="implement"/>
+<s2 title="Implementing an extension function">
+<p>Like the standard XPath functions, the functions you create derive from the Function base class. Set up your 
+   extension function class as follows:</p>
+<ol>
+  <li>The body of a function is the execute() method. Use the appropriate XObjectFactory method -- createNumber()
+      in the example below -- to create an XObject corresponding to the XSLT data type the function returns.<br/><br/></li>
+  <li>Implement a clone() method to enable Xalan to create and maintain a copy of the extension
+      function.<br/><br/></li> 
+  <li>(Optional) As Xalan does for the XPath functions, you may want to prevent the compiler from generating 
+      an assignment or equality operator for this function.</li>
+</ol>
+<p>These features all appear in the following example.</p>
+<source>
+// Base header file.  Must be first.
+#include &lt;xalanc/Include/PlatformDefinitions.hpp&gt;
+
+#include &lt;cmath&gt;
+#include &lt;ctime&gt;
+
+#include &lt;xercesc/util/PlatformUtils.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
+#include &lt;xalanc/XPath/XObjectFactory.hpp&gt;
+
+XALAN_CPP_NAMESPACE_USE
+
+// This class defines a function that will return the square root
+// of its argument.
+class FunctionSquareRoot : public Function
+{
+public:
+
+  /**
+   * Execute an XPath function object.  The function must return a valid
+   * XObject.
+   *
+   * @param executionContext executing context
+   * @param context          current context node
+   * @param opPos            current op position
+   * @param args             vector of pointers to XObject arguments
+   * @return                 pointer to the result XObject
+   */
+  virtual XObjectPtr
+  execute(
+      XPathExecutionContext&amp; executionContext,
+      XalanNode* /* context */,
+      const XObjectPtr arg,
+     	const Locator*	/* locator */) const
+  {
+    if (args.size() != 1)
+    {
+      executionContext.error("The square-root() function takes one argument!", 
+                              context);
+    }
+    assert(args[0] != 0);
+    // Use the XObjectFactory createNumber() method to create an XObject 
+    // corresponding to the XSLT number data type.
+    return executionContext.getXObjectFactory().createNumber(
+                                                        sqrt(args[0]->num()));
+  }
+
+  /**
+   * Implement clone() so Xalan can copy the square-root function into
+   * its own function table.
+   *
+   * @return pointer to the new object
+   */
+// For compilers that do not support covariant return types,
+// clone() must be declared to return the base type.
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+  virtual Function*
+#else
+  virtual FunctionSquareRoot*
+#endif
+  clone() const
+  {
+    return new FunctionSquareRoot(*this);
+  }
+
+private:
+  // The assignment and equality operators are not implemented...
+  FunctionSquareRoot&amp;
+  operator=(const FunctionSquareRoot&amp;);
+  bool
+  operator==(const FunctionSquareRoot&amp;) const;
+}
+</source>   
+</s2>
+<anchor name="install"/>
+<s2 title="Installing an extension function">
+<p><jump href="apiDocs/classXalanTransformer.html">XalanTransformer</jump> provides methods for installing and uninstalling external functions:</p>
+<ul>
+  <li>installExternalFunction() makes the function available in the current instance of XalanTransformer. Use uninstallExternalFunction() to remove the function.<br/><br/></li>
+  <li>installExternalFunctionGlobal() makes the function available globally. Use uninstallExternalFunctionGlobal() to remove the function. The global install and uninstall operations are not thread-safe.  However, all global functions should be thread-safe, because multiple threads could call a particular function instance at the same time.</li>
+</ul>
+<p>These methods include arguments for the namespace, the function name, and the function implementation.</p>
+<p>When you install an extension function, the function inhabits the namespace you designate. For information about XML namespaces, see <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces in XML</jump>.</p>
+<p>The following code fragment installs locally the square root function defined above, and binds it to the extension-function name "square-root" in the namespace "http://MyExternalFunction.mycompany.org" so it can be accessed from stylesheets. Keep in mind that the function name does not need to be the same as the name of the function class, and that a function name may be used more than once provided that each function with that name is installed in a different namespace.</p>
+<source>#include &lt;xalanc/Include/PlatformDefinitions.hpp&gt;
+#include &lt;xercesc/util/PlatformUtils.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
+// You have created a header file for FunctionSquareRoot.
+#include &lt;MyFunctions/FunctionSquareRoot.hpp&gt;
+// The namespace...
+const XalanDOMString	
+    theNamespace("http://MyExternalFunction.mycompany.org");
+    
+theXalanTransformer.installExternalFunction(theNamespace,
+                                            XalanDOMString("square-root"),
+                                            FunctionSquareRoot());</source>
+<p>For an example that installs three functions, see the <link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
+</s2>
+<anchor name="use"/>
+<s2 title="Using an extension function">
+<p>To use the extension function in a stylesheet, you must do the following:</p>
+<ol>
+  <li>Declare the extension function namespace.<br/><br/>
+      <code>xmlns:<ref>prefix</ref>=<ref>URI</ref></code><br/><br/>
+      The <ref>prefix</ref> identifies the namespace, and <ref>URI</ref> matches the namespace specified when the function
+      is installed.<br/><br/>
+      By default, namespace declarations are included in the transformation output. To exclude namespaces from the output, 
+      use<br/><br/>
+      <code>exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>
+      in the stylesheet element or<br/><br/>
+      <code>xsl:exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>
+      in a literal result element or extension element.<br/><br/></li>
+  <li>Call the extension function in the same manner you would call an XPath function. The function name you use in the stylesheet is a Qualified Name (QName) made up of the prefix you declared in step 1 and the function name you specified when you installed the function.<br/><br/>
+      You can use XPath expressions, literals (for string, boolean, and number), and values returned by other functions to
+      specify function arguments.</li></ol>
+<p>Suppose, for example, you are working with XML documents containing area elements like
+   <code>&lt;area value="397"/&gt;</code>, where the value attribute identifies the area of a square.</p>
+<p>The following stylesheet declares the square-root function namespace (the prefix is up to you), instructs 
+   the processor not to copy the namespace declaration to the result tree, and uses the square-root function to return
+   the square root of //area/@value:</p>
+<source>
+&lt;?xml version="1.0"?&gt; 
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  version="1.0"
+	xmlns:external="http://ExternalFunction.xalan-c.xml.apache.org"
+  exclude-result-prefixes="external"&gt;
+  
+    &lt;xsl:template match="//area"&gt;
+    &lt;out&gt;
+      The area of the square is
+      &lt;xsl:value-of select="@value"/&gt; square units.
+      The length of each side is 
+      &lt;xsl:value-of select="external:square-root(@value)"/&gt; units
+    &lt;/out&gt;
+</source>
+<p>This stylesheet converts  <code>&lt;area value="397"/&gt;</code> into the following output:</p>
+<source>&lt;out&gt;
+  The area of the square is 
+  397 square units.
+  The length of each side is 
+  19.9249 units.
+&lt;/out&gt;
+</source>
+<p>For a slightly more complex variation on this example,  
+see the <link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
+<s3 title="Passing Nodes to a function">
+<p>Please keep in mind that <em>all</em> LocationPath expressions return a node-set, even if the expression only 
+   returns a single attribute or a text node (node-sets with one member). You can use the XSLT string() function 
+   to convert a node-set value to string, and the number() function to convert a node-set value to number (a double).</p>
+<p>If you pass a node-set to an extension function, be sure to set up the function to process a node-set.</p>
+<p>Suppose, for example, you have a ProcessNodes function class that uses<br/><br/> 
+   <code>const NodeRefListBase&amp; theNodeList = args[0]->nodeset();</code><br/><br/>
+   in the execute() method to get a reference to the node-set.</p>
+<p>Assuming you install the function as "ProcessNodes" and use the "node-ext" prefix in a stylesheet to refer to the ProcessNodes function namespace, any of the following function calls are syntactically possible:</p>
+<p><code>&lt;!--Process the current node--&gt;</code><br/>
+<code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(.)"/&gt;</code></p>
+<p><code>&lt;!--Process all nodes in current context--></code><br/>
+<code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(*)"/&gt;</code></p>
+<p><code>&lt;!-- Process all nodes --></code><br/>
+<code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(/*)"/&gt;</code></p>
+<p><code>&lt;!--Process the foo/baz nodes in current context --></code><br/>
+<code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(foo/baz)"/&gt;</code></p>
+<p><code>&lt;!--Process the/foo/baz and /bar/saz nodes --></code><br/>
+<code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(/foo/baz | /bar/saz)"/&gt;</code></p>
+<p>The NodeRefListBase is in fact a list of references into the XML document, so keep in mind that getNextSibling(), 
+for example, gets you the next sibling in the document, which may not be the next Node in the node-set.</p>
+</s3>
+</s2>
+</s1>

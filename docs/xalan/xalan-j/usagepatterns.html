@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Basic usage patterns</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Basic usage patterns</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>Usage Patterns<br />
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Basic usage patterns</h2>
+<ul>
+<li>
+<a href="#basic">Basic steps</a>
+</li>
+<li>
+<a href="#plug">Plugging in the Transformer and XML parser</a>
+</li>
+<li>
+<a href="#outputprops">Configuring serialization output properties</a>
+</li>
+<li>
+<a href="#outputencoding">Caution: setting output encoding in the stylesheet</a>
+</li>
+<li>
+<a href="#incremental">Performing incremental transformations</a>
+</li>
+<li>
+<a href="#embed">Working with embedded stylesheets</a>
+</li>
+<li>
+<a href="#params">Setting stylesheet parameters</a>
+</li>
+<li>
+<a href="#serialize">Serializing output</a>
+</li>
+<li>
+<a href="#sax">Explicitly working with SAX</a>
+</li>
+<li>
+<a href="#outasin">Using transformation output as input for another transformation</a>
+</li>
+<li>
+<a href="#dom">Processing and producing DOM trees</a>
+</li>
+<li>
+<a href="#xpath">Working with XPath expressions</a>
+</li>
+<li>
+<a href="#applet">Using the Xalan-Java applet wrapper</a>
+</li>
+<li>
+<a href="#servlet">Using Xalan-Java in a servlet</a>
+</li>
+<li>
+<a href="#extensions">Creating and using extensions</a>
+</li>
+<li>
+<a href="#multithreading">Multithreading</a>
+</li>
+<li>
+<a href="#debugging">Debugger interface</a>
+</li>
+</ul>
+<p>See also: <a href="features.html">Transform Features</a>.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Unless otherwise specified, the usage discussed in this section refers to 
+the Xalan-Java Interpretive processor. See <a href="xsltc_usage.html">Getting Started Using  
+XSLTC</a> for information on using the Xalan-Java Compiling processor.</td>
+</tr>
+</table>
+<br />
+<a name="basic">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Basic steps</h3>
+    <ol>
+    <li>
+<a href="#transformerfactory">Instantiate a TransformerFactory</a>
+</li>
+    <li>
+<a href="#transformer">Process the stylesheet and generate a Transformer</a>
+</li>
+    <li>
+<a href="#transformation">Perform the transformation</a>
+</li>
+  </ol>
+    <p>The following example illustrates the three basic steps involved in performing a transformation.</p>
+    <blockquote class="source">
+<pre>// 1. Instantiate a TransformerFactory.
+javax.xml.transform.TransformerFactory tFactory = 
+                  javax.xml.transform.TransformerFactory.newInstance();
+
+// 2. Use the TransformerFactory to process the stylesheet Source and
+//    generate a Transformer.
+javax.xml.transform.Transformer transformer = tFactory.newTransformer
+                (new javax.xml.transform.stream.StreamSource("foo.xsl"));
+
+// 3. Use the Transformer to transform an XML Source and send the
+//    output to a Result object.
+transformer.transform
+    (new javax.xml.transform.stream.StreamSource("foo.xml"), 
+     new javax.xml.transform.stream.StreamResult( new
+                                  java.io.FileOutputStream("foo.out")));</pre>
+</blockquote>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For a working example of this model at its simplest, see SimpleTransform.java in the java/samples/SimpleTransform subdirectory.</td>
+</tr>
+</table>
+  <a name="transformerfactory">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>1. Instantiate a TransformerFactory</h3>
+  <p>
+<a href="apidocs/javax/xml/transform/TransformerFactory.html">TransformerFactory</a> is an abstract class with a static newInstance() method that instantiates the concrete subclass designated by the javax.xml.transform.TransformerFactory system property.</p>
+  <p>The default setting for this system property is <a href="apidocs/org/apache/xalan/processor/TransformerFactoryImpl.html">org.apache.xalan.processor.TransformerFactoryImpl</a>.</p>
+<a name="transformer">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>2. Use the TransformerFactory to process the stylesheet Source and produce a Transformer</h3>
+<p>The TransformerFactory <a href="apidocs/javax/xml/transform/TransformerFactory.html#newTransformer(javax.xml.transform.Source)">newTransformer(Source xslSource)</a> method processes the stylesheet Source into a Templates object and returns a Transformer that you can use to perform a transformation (apply the Templates object to an XML Source).</p>
+<p>You may provide the stylesheet Source in the form of a stream of XML markup (<a href="apidocs/javax/xml/transform/stream/StreamSource.html">StreamSource</a>), a DOM Node (<a href="apidocs/javax/xml/transform/dom/DOMSource.html">DOMSource</a>), or a SAX InputSource (<a href="apidocs/javax/xml/transform/sax/SAXSource.html">SAXSource</a>). To specify a StreamSource, you may use a system ID or file name (using URI syntax), a java.io.InputStream, or a java.io.Reader. The use of DOMSource and SAXSource are illustrated in subsequent sections.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If you plan to use the stylesheet Source to transform multiple XML Sources, you should use the TransformerFactory <a href="apidocs/javax/xml/transform/TransformerFactory.html#newTemplates(javax.xml.transform.Source)">newTemplates(Source xslSource)</a> method to explicitly generate a Templates object. For each transformation, use the Templates object to generate a new Transformer. For the details, see <a href="#multithreading">Multithreading</a>.</td>
+</tr>
+</table>
+<a name="transformation">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>3. Use the Transformer to perform a transformation</h3>
+<p>Use the Transformer <a href="apidocs/javax/xml/transform/Transformer.html#transform(javax.xml.transform.Source,javax.xml.transform.Result">transform(Source xmlSource, Result transformResult)</a> method to transform  the XML Source and place the transformation output in a Result object.</p>
+<p>Just as with the stylesheet, you can supply the XML Source in the form of a <a href="apidocs/javax/xml/transform/stream/StreamSource.html">StreamSource</a>, <a href="apidocs/javax/xml/transform/dom/DOMSource.html">DOMSource</a>, or <a href="apidocs/javax/xml/transform/sax/SAXSource.html">SAXSource</a>. Likewise, the Result may be a <a href="apidocs/javax/xml/transform/stream/StreamResult.html">StreamResult</a>, <a href="apidocs/javax/xml/transform/dom/DOMResult.html">DOMResult</a>, or <a href="apidocs/javax/xml/transform/sax/SAXResult.html">SAXResult</a>.</p>
+<p>For each node in the XML source, the Transformer uses the transformation instructions in the Templates object to determine which template to apply: one of the templates in the Templates object, a default template rule as specified in the XSLT spec, or none.</p>
+<a name="plug">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Plugging in a Transformer and XML parser</h3>
+<p>The Java API for XML Processing interfaces enable you to isolate your application from the internal implementation details of a given Transformer, SAX parser, or DOM parser. For each of these objects, there is an abstract Factory class with a static newInstance() method that instantiates a concrete Factory which wraps the underlying implementation. These newInstance() methods use system property settings to determine which implementation to instantiate.</p>
+<p>Xalan-Java is distributed with a system property setting for the Xalan-Java processor. This setting is in <code>xalan.jar</code> in META-INF/services (see src/META-INF/services).</p>
+<div class="glossary">
+  <p class="label">
+<em>System property</em>
+</p>
+    <blockquote class="item">Setting</blockquote>
+  <p class="label">
+<em>
+<code>javax.xml.transform.TransformerFactory</code>
+</em>
+</p>
+   <blockquote class="item">
+<code>org.apache.xalan.processor.TransformerFactoryImpl</code>
+</blockquote>
+</div>
+<p>If you are using Xerces, the XML parser factory settings are as follows:</p>
+<div class="glossary">
+  <p class="label">
+<em>System property</em>
+</p>
+    <blockquote class="item">Setting</blockquote>
+  <p class="label">
+<em>
+<code>javax.xml.parsers.DocumentBuilderFactory</code>
+</em>
+</p>
+   <blockquote class="item">
+<code>org.apache.xerces.jaxp.DocumentBuilderFactoryImpl</code>
+</blockquote>    
+  <p class="label">
+<em>
+<code>javax.xml.parsers.SAXParserFactory</code>
+</em>
+</p>
+   <blockquote class="item">
+<code>org.apache.xerces.jaxp.SAXParserFactoryImpl</code>
+</blockquote>
+ </div>
+<p>You can change any of these settings as follows (in order of precedence):</p>
+<ol>
+  <li>Set the system property from the command line when you launch Java or from within your application.<br />
+<br />
+</li>
+  <li>Set the system property in jaxp.properties in the JAVA_HOME/lib directory, where JAVA_HOME is the root of the JDK.<br />
+<br />
+</li>
+  <li>Revise the entry in src/META-INF/services and rebuild <code>xalan.jar</code> or <code>xercesImpl.jar</code>, depending on which entry you have changed.<br />
+<br />
+</li>
+</ol>
+<p>For example, to use the Crimson XML parser in place of the Xerces XML parser, place Crimson on the class path and set the 
+<code>javax.xml.parsers.SAXParserFactory</code> system property to <code>org.apache.crimson.jaxp.SAXParserFactoryImpl</code>.</p>
+<p>For more information about the mechanism used to determine system property values and how you can plug other implementations into your applications, see "Section 3: Plugability Layer" in the <b>
+<i>Java API for XML Processing</i>
+</b> at 
+<a href="http://java.sun.com/aboutJava/communityprocess/review/jsr063/index.html">JSR-000063 1.1</a>.</p> 
+<a name="outputprops">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Configuring serialization output properties</h3>
+<p>Output properties for XML, HTML, and text transformation output are defined in property files in the org.apache.xml.serializer package.</p>
+<p>You can override the default value of these properties in your stylesheet by using the attributes of an xsl:output element. 
+You can override the Xalan specific default settings as follows:</p>
+<ol>
+  <li>Declare the xalan namespace in your stylesheet element (xmlns:xalan="http://xml.apache.org/xalan").<br />
+<br />
+</li>
+  <li>Use the namespace prefix you assign (for example, "xalan") to redefine properties of interest in the stylesheet xsl:output
+      element (for example, xalan:indent-amount="5").</li>
+</ol>
+<p>The following stylesheet fragment declares the xalan namespace and sets indent-amount to 2:</p>
+<blockquote class="source">
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xalan="http://xml.apache.org/xalan"&gt;
+                
+  &lt;xsl:output method="xml" 
+              encoding="UTF-8"
+              indent="yes" 
+              xalan:indent-amount="2"/&gt;</pre>
+</blockquote>
+  <p>If you want to change the property settings globally, edit the values in the property files in src/org/apache/xml/serializer, 
+  and use Ant to <a href="readme.html#jar">rebuild <code>serializer.jar</code>
+</a>. Be aware that if you change the default value
+  of a standard property, such as the default encoding value, this may be in conflict with the default value specified by the XSLT 1.0 
+  recommendation.</p>
+<p>The properties files define the following properties:</p>
+<p>
+<b>
+<i>output_xml.properties</i>
+</b>:</p>
+<table border="1">
+  <tr>
+    <th class="content" rowspan="1" colspan="1">Property</th>
+    <th class="content" rowspan="1" colspan="1">Default value</th>
+  </tr>  
+  <tr>
+    <td class="content" rowspan="1" colspan="1">version</td>
+    <td class="content" rowspan="1" colspan="1">1.0</td>
+  </tr>  
+  <tr>
+    <td class="content" rowspan="1" colspan="1">encoding</td>
+    <td class="content" rowspan="1" colspan="1">UTF-8</td>
+  </tr>  
+  <tr>
+    <td class="content" rowspan="1" colspan="1">indent</td>
+    <td class="content" rowspan="1" colspan="1">no</td>
+  </tr>  
+  <tr>
+    <td class="content" rowspan="1" colspan="1">omit-xml-declaration</td>
+    <td class="content" rowspan="1" colspan="1">no</td>
+  </tr> 
+  <tr>
+    <td class="content" rowspan="1" colspan="1">standalone</td>
+    <td class="content" rowspan="1" colspan="1">no</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">media-type</td>
+    <td class="content" rowspan="1" colspan="1">text/xml</td>
+  </tr>     
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:indent-amount</td>
+    <td class="content" rowspan="1" colspan="1">0</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:content-handler</td>
+    <td class="content" rowspan="1" colspan="1">org.apache.xml.serializer.ToXMLStream</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:entities</td>
+    <td class="content" rowspan="1" colspan="1">org/apache/xml/serializer/XMLEntities</td>
+  </tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The xalan:content-handler property specifies the default name of the Java class that implements the 
+<a href="apidocs/org/xml/sax/ContentHandler.html">org.xml.sax.ContentHandler</a>
+interface and recieves calls during result tree serialization. If you specify an 
+alternate Java class it must implement the ContentHandler interface.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also create your own XML entity file (mapping characters to
+entities) or edit src/org/apache/xml/serializer/XMLEntities.properties and
+rebuild <code>serializer.jar</code>.</td>
+</tr>
+</table>
+<p>
+<b>
+<i>output_html.properties</i>
+</b>:</p>
+<table border="1">
+  <tr>
+    <th class="content" rowspan="1" colspan="1">Property</th>
+    <th class="content" rowspan="1" colspan="1">Default value</th>
+  </tr>  
+  <tr>
+    <td class="content" rowspan="1" colspan="1">version</td>
+    <td class="content" rowspan="1" colspan="1">4.0</td>
+  </tr> 
+  <tr>
+    <td class="content" rowspan="1" colspan="1">indent</td>
+    <td class="content" rowspan="1" colspan="1">yes</td>
+  </tr>   
+  <tr>
+    <td class="content" rowspan="1" colspan="1">media-type</td>
+    <td class="content" rowspan="1" colspan="1">text/html</td>
+  </tr>   
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:indent-amount</td>
+    <td class="content" rowspan="1" colspan="1">0</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:content-handler</td>
+    <td class="content" rowspan="1" colspan="1">org.apache.xml.serializer.ToHTMLStream</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:entities</td>
+    <td class="content" rowspan="1" colspan="1">org/apache/xml/serializer/HTMLEntities</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:use-url-escaping</td>
+    <td class="content" rowspan="1" colspan="1">yes</td>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:omit-meta-tag</td>
+    <td class="content" rowspan="1" colspan="1">no</td>
+  </tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The xalan:content-handler property specifies the default name of the Java class that implements the 
+<a href="apidocs/org/xml/sax/ContentHandler.html">org.xml.sax.ContentHandler</a>
+interface and recieves calls during result tree serialization. If you specify an 
+alternate Java class it must implement the ContentHandler interface.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also create your own HTML entity file (mapping characters to entities) 
+or edit src/org/apache/xml/serializer/HTMLEntities.properties and rebuild <code>serializer.jar</code>.</td>
+</tr>
+</table>
+<p>
+<b>
+<i>output_text.properties</i>
+</b>:</p>
+<table border="1">  
+  <tr>
+    <th class="content" rowspan="1" colspan="1">Property</th>
+    <th class="content" rowspan="1" colspan="1">Default value</th>
+  </tr>
+  <tr>
+    <td class="content" rowspan="1" colspan="1">media-type</td>
+    <td class="content" rowspan="1" colspan="1">text/plain</td>
+  </tr>    
+  <tr>
+    <td class="content" rowspan="1" colspan="1">xalan:content-handler</td>
+    <td class="content" rowspan="1" colspan="1">org.apache.xml.serializer.ToTextStream</td>
+  </tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The xalan:content-handler property specifies the default name of the Java class that implements the 
+<a href="apidocs/org/xml/sax/ContentHandler.html">org.xml.sax.ContentHandler</a>
+interface and recieves calls during result tree serialization. If you specify an 
+alternate Java class it must implement the ContentHandler interface.</td>
+</tr>
+</table>
+<a name="outputencoding">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Caution: setting output encoding in the stylesheet</h3>
+<p>When you use the &lt;xsl:output&gt; encoding attribute to set output character encoding, you should not 
+use StreamResult(java.io.Writer) to construct a 
+<a href="apidocs/javax/xml/transform/stream/StreamResult.html">StreamResult</a> object to hold the transformation result.
+If you do, the Writer uses its own encoding rather than the encoding specified in the stylesheet.</p>
+<p>If you want to use a Writer, you can specify an encoding when you create the Writer (java.io.OutputStreamWriter). Once the 
+Writer exists, you cannot reset the encoding it uses.</p>
+<a name="incremental">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Performing incremental transformations</h3>
+<p>The <a href="dtm.html">DTM</a> (Document Table Model) supports incremental transformations, the incremental generation of the 
+transformation result while the source document is still being parsed. For more information, see 
+<a href="dtm.html#incremental">incremental transformations</a>.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also enable incremental transformations with the <a href="commandline.html">command-line utility</a> by including the -INCREMENTAL flag.</td>
+</tr>
+</table>
+<a name="embed">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Working with embedded stylesheets</h3>
+<p>An XML Source may include an <a href="http://www.w3.org/TR/xml-stylesheet/">xml-stylesheet processing instruction</a> which identifies the stylesheet to be used to process the document. As indicated by the processing instruction <b>
+<i>href</i>
+</b> attribute, the stylesheet itself may be embedded in the XML document or located elsewhere.</p>
+<p>Suppose you have an XML document (foo.xml) with the following xml-stylesheet processing instruction:</p>
+<p>
+<code>&lt;?xml-stylesheet type="text/xml" href="foo.xsl"?&gt;</code>
+</p>
+<p>The following fragment uses this instruction to locate the stylesheet (foo.xsl in the same directory as foo.xml) and create a Templates object. Note the use of the TransformerFactory getAssociatedStylesheet() in step 2a.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">An XML document may include more than one xml-stylesheet processing instruction, hence the support for working with multiple stylesheets. If more than one stylesheet is returned, the other stylesheets are imported into the first stylesheet.</td>
+</tr>
+</table>
+<blockquote class="source">
+<pre>// 1. Instantiate the TransformerFactory.
+javax.xml.transform.TransformerFactory tFactory = 
+                    javax.xml.transform.TransformerFactory.newInstance();
+// 2a. Get the stylesheet from the XML source.
+String media = null , title = null, charset = null;
+javax.xml.transform.Source stylesheet = tFactory.getAssociatedStylesheet
+                   (new StreamSource("foo.xml"), media, title, charset);
+
+// 2b. Process the stylesheet and generate a Transformer.
+Transformer transformer = tFactory.newTransformer(stylesheet);
+
+// 3. Use the Transformer to perform the transformation and send the
+//    the output to a Result object.
+transformer.transform
+             (new javax.xml.transform.stream.StreamSource("foo.xml"),
+              new StreamResult (new java.io.FileOutputStream("foo.out")));</pre>
+</blockquote>
+<p>For a sample that uses this technique, see <a href="samples.html#usestylesheetpi">UseStylesheetPI</a>.</p>
+<p>You can also instruct the <a href="commandline.html">command-line utility</a> to use stylesheet processing
+instructions:</p>
+<ol>
+  <li>Include the <code>-in</code> flag with an XML source that contains a stylesheet processing instruction.<br />
+<br />
+</li>
+  <li>Do not include the <code>-xsl</code> flag.</li>
+</ol>
+<a name="serialize">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Serializing output</h3>
+<p>In some cases, you may want to "transform" a DOM tree into a stream, which the XML community calls serialization. 
+<a href="http://java.sun.com/webservices/jaxp/index.jsp">JAXP 1.3</a> and the Xalan-Java Transformer implementation provide direct 
+support for this operation. Simply use the TransformerFactory newTransformer() method (no arguments) to create a Transformer 
+that you can use to "copy" a DOMSource to a StreamResult. For examples, see Examples.exampleDOM2DOM(), 
+Examples.exampleSerializeNode(), and Examples.exampleAsSerializer() in the <a href="samples.html#trax">trax (JAXP transform) sample</a>.</p>
+<a name="params">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting stylesheet parameters</h3>
+<p>An XSLT stylesheet may include parameters that are set at run time each time a transformation is performed. To set a stylesheet parameter, use the Transformer 
+<a href="apidocs/javax/xml/transform/Transformer.html#setParameter(java.lang.String,java.lang.Object)">setParameter(String name, Object value)</a> method. For a working example, see UseStylesheetParam.java in the samples/UseStylesheetParam subdirectory.</p>
+<p>You can also set a parameter with the command-line utility by including the <code>-param</code> flag. For example:</p>
+<p>
+<code>java org.apache.xalan.xslt.Process -in foo.xml -xsl foo.xsl -param param1 foobar</code>
+</p>
+<p>where <code>param</code> is the parameter name and <code>foobar</code> is the parameter value. The parameter namespace is null.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Xalan-Java 2 processes string parameters. You are no longer required (as you were with Xalan-Java version 1) to enclose strings in single 
+quotes (') as string expressions.</td>
+</tr>
+</table>
+<a name="sax">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Explicitly working with SAX</h3>
+  <p>Xalan-Java uses the SAX event model to process stylesheets, to parse XML input documents, and to produce output. For each of these operations, an XMLReader reads input, firing parse events, and a ContentHandler listens to the XMLReader and executes parse event methods.</p>
+<p>When you use the basic procedure described above for performing transformations, Xalan-Java takes care of many of the SAX details under the covers. You are free to make these details explicit, which simply means that you can intervene in the procedure to accommodate the precise environment in which your application operates.</p>
+<p>Suppose, for example, you are using a custom XMLReader (perhaps for doing more than just parsing static XML documents) to generate Xalan-Java SAX parse events. You might even have a custom reader for producing/processing stylesheets. You can cast the TransformerFactory to a SAXTransformerFactory, which provides access to a TransformerHandler, which you can set as the ContentHandler for this reader.</p>
+  <p>The following example explicitly sets up the XMLReader and ContentHandlers, and replicates the <a href="#basic">basic steps</a> described above.</p>
+  <blockquote class="source">
+<pre>// Instantiate a TransformerFactory.
+javax.xml.transform.TransformerFactory tFactory = 
+                    javax.xml.transform.TransformerFactory.newInstance();
+// Verify that the TransformerFactory implementation you are using
+// supports SAX input and output (Xalan-Java does!).
+if (tFactory.getFeature(javax.xml.transform.sax.SAXSource.FEATURE) &amp;&amp; 
+    tFactory.getFeature(javax.xml.transform.sax.SAXResult.FEATURE))
+  { 
+    // Cast the TransformerFactory to SAXTransformerFactory.
+    javax.xml.transform.sax.SAXTransformerFactory saxTFactory = 
+                   ((javax.xml.transform.sax.SAXTransformerFactory) tFactory);
+    // Create a Templates ContentHandler to handle parsing of the 
+    // stylesheet.
+    javax.xml.transform.sax.TemplatesHandler templatesHandler = 
+                                        saxTFactory.newTemplatesHandler();
+
+    // Create an XMLReader and set its ContentHandler.
+    org.xml.sax.XMLReader reader = 
+                   org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+    reader.setContentHandler(templatesHandler);
+    
+    // Parse the stylesheet.                       
+    reader.parse("foo.xsl");
+
+    // Get the Templates object (generated during the parsing of the stylesheet)
+    // from the TemplatesHandler.
+    javax.xml.transform.Templates templates = 
+                                          templatesHandler.getTemplates();
+    // Create a Transformer ContentHandler to handle parsing of 
+    // the XML Source.  
+    javax.xml.transform.sax.TransformerHandler transformerHandler 
+                           = saxTFactory.newTransformerHandler(templates);
+    // Reset the XMLReader's ContentHandler to the TransformerHandler.
+    reader.setContentHandler(transformerHandler);
+
+    // Set the ContentHandler to also function as a LexicalHandler, which
+    // can process "lexical" events (such as comments and CDATA). 
+    reader.setProperty("http://xml.org/sax/properties/lexical-handler", 
+                        transformerHandler);
+
+    // Set up a Serializer to serialize the Result to a file.
+    org.apache.xml.serializer.Serializer serializer = 
+    org.apache.xml.serializer.SerializerFactory.getSerializer
+    (org.apache.xml.serializer.OutputPropertiesFactory.getDefaultMethodProperties
+                                                                   ("xml"));
+    serializer.setOutputStream(new java.io.FileOutputStream("foo.out"));
+    // The Serializer functions as a SAX ContentHandler.
+    javax.xml.transform.Result result =
+      new javax.xml.transform.sax.SAXResult(serializer.asContentHandler());
+    transformerHandler.setResult(result);
+      
+    // Parse the XML input document.
+    reader.parse("foo.xml");</pre>
+</blockquote>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If you want to perform multiple transformations with the same Templates object and a TransformerHandler, you must create a new
+    TransformerHandler for each transformation. The Xalan-Java implementation of TransformerHandler 
+    (<a href="apidocs/org/apache/xalan/transformer/TransformerHandlerImpl.html">TransformerHandlerImpl</a> fails to respond 
+    to events after the first endDocument event occurs.</td>
+</tr>
+</table>
+<a name="outasin">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using transformation output as input for another transformation</h3>
+
+<p>You can chain together a series of transformations such that the output of each transformation provides input for the next transformation. Xalan-Java supports two basic strategies for chaining a series of transformations:</p>
+<ul>
+  <li>Use the SAXTransformerFactory to process the stylesheet and create a TransformerHandler for each transformation. Then you can set
+the first TransformerHandler as the ContentHandler for the XMLReader that parses the input, make the second TransformerHandler the ContentHandler for the output of the first TransformerHandler, and so on. For more detail and an example, see the <a href="samples.html#pipe">Pipe</a> sample.<br />
+<br />
+</li>
+  <li>Use the SAXTransformerFactory to process the stylesheet and create a SAX XMLFilter for each transformation. Set an XMLReader as the parent of the first XMLFilter, the first XMLFilter as the parent of the second XMLFilter, and so on. You launch the series of transformations by instructing the last XMLFilter to parse the XML Source for the first transformation. For more detail and an example, see the <a href="samples.html#usexmlfilters">UseXMLFilters</a> sample.</li>
+</ul>
+<a name="dom">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Processing and producing DOM trees</h3>
+  <p>In some cases, the input and/or desired output for a transformation may be a DOM tree object. The javax.xml.transform.DOM package provides <a href="apidocs/javax/xml/transform/dom/DOMSource.html">DOMSource</a> and a <a href="apidocs/javax/xml/transform/dom/DOMResult.html">DOMResult</a>, either or both of which you can use when you perform a transformation.</p>
+<p>In some cases, your application provides input in the form of a DOM tree, which accelerates the transformation process, since the input has in effect already been processed. To produce DOM input from a stream, you can use a <a href="apidocs/javax/xml/parsers/DocumentBuilderFactory.html">DocumentBuilderFactory</a> to produce a <a href="apidocs/javax/xml/parsers/DocumentBuilder.html">DocumentBuilder</a> with which you can parse the XML input into a DOM Document, as illustrated below.</p>
+<blockquote class="source">
+<pre>// Instantiate a DocumentBuilderFactory.
+javax.xml.parsers.DocumentBuilderFactory dfactory =
+                    javax.xml.parsers.DocumentBuilderFactory.newInstance();
+// Use the DocumentBuilderFactory to provide access to a DocumentBuilder.
+javax.xml.parsers.DocumentBuilder dBuilder = dfactory.newDocumentBuilder();
+// Use the DocumentBuilder to parse the XML input.
+org.w3c.dom.Document inDoc = dBuilder.parse("foo.xml");</pre>
+</blockquote>
+<p>To produce DOM output, simply use a Transformer to transform to a DOMResult object.</p>
+<blockquote class="source">
+<pre>// Generate a Transformer.
+javax.xml.transform.Transformer transformer = tFactory.newTransformer
+                  (new javax.xml.transform.stream.StreamSource("foo.xsl"));
+// Create an empy DOMResult object for the output.
+javax.xml.transform.dom.DOMResult domResult =
+                                   new javax.xml.transform.dom.DOMResult();
+// Perform the transformation.
+transformer.transform(new javax.xml.transform.dom.DOMSource(inDoc),
+                      domResult);
+// Now you can get the output Node from the DOMResult.
+org.w3c.dom.Node node = domResult.getNode();</pre>
+</blockquote>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Create a new DOMResult object or use DOMResult.setNode() to assign a new container each time you want to perform a transformation 
+and place the output in a DOMResult object.</td>
+</tr>
+</table>
+<p>The <a href="samples.html#dom2dom">DOM2DOM</a> illustrates both procedures, and serializes the DOMResult to System.out.</p>
+<a name="xpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Working with XPath expressions</h3>
+<p>XSLT stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. XPath provides an API that you can call directly. For example, you may want to evaluate an XPath expression programmatically and do your own processing without a stylesheet.</p>
+<p>XPath is an independent entity, with clients other than XSLT processors (such as XPointer). Accordingly, Xalan-Java 2 has packaged XPath as a separate module (org.apache.xpath and its subpackages). The org.apache.xpath.XPathAPI class contains convenience methods that you can use to return single DOM Nodes, NodeIterators, and XObjects. Apart from their own functionality, these methods also provide a path into the lower-level XPath API that you may find useful.</p>
+<p>JAXP 1.3 also provides an API for xpath expression evaluation in the javax.xml.xpath package. Users are 
+ recommended to use the new JAXP 1.3 XPath API rather than the old Xalan-Java 2 specific XPath API.</p>
+<p>For an example that uses the Xalan-Java 2 specific XPathAPI to execute XPath expressions against XML source files, 
+see <a href="samples.html#applyxpath">ApplyXPath</a>. For examples on how to use the new JAXP 1.3 XPath
+API, see <a href="samples.html#applyxpathjaxp">ApplyXPathJAXP</a> and 
+<a href="samples.html#xpathresolver">XPathResolver</a>.</p>
+<a name="applet">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using the Xalan-Java applet wrapper</h3>
+<ol> 
+<li>Include <a href="apidocs/org/apache/xalan/client/XSLTProcessorApplet.html">XSLTProcessorApplet</a> in an HTML client.<br />
+<br />
+</li>
+<li>Specify the XML source document and XSL stylesheet.<br />
+<br />
+You can use the DocumentURL and StyleURL PARAM tags or the <a href="apidocs/org/apache/xalan/client/XSLTProcessorApplet.html#setDocumentURL(java.lang.String)">setdocumentURL()</a> and <a href="apidocs/org/apache/xalan/client/XSLTProcessorApplet.html#setStyleURL(java.lang.String)">setStyleURL()</a> methods. If the XML document contains a stylesheet Processing Instruction (PI), you do not need to specify an XSL stylesheet.<br />
+<br />
+</li>
+<li>Call the <a href="apidocs/org/apache/xalan/client/XSLTProcessorApplet.html#transformToHtml(java.lang.String,java.lang.String)">transformToHtml()</a> or <a href="apidocs/org/apache/xalan/client/XSLTProcessorApplet.html#getHtmlText()">getHtmlText()</a> method, which performs the transformation and returns the new document as a String.</li>
+</ol>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The transformToHTML() method takes arguments for the XML source document and XSL stylesheet. The getHtmlText() method takes no arguments: it uses property or parameter settings, as in the example below.</td>
+</tr>
+</table>
+<p>For an example, see the <a href="samples.html#appletxmltohtml">AppletXMLtoHTML</a> sample applet. The &lt;applet&gt; tag is in samples/AppletXMLtoHTML/client.html:</p>
+<blockquote class="source">
+<pre>&lt;applet  
+    name="xslControl"
+    code="org.apache.xalan.client.XSLTProcessorApplet.class"
+    archive="../../xalan.jar,../../build/xalan.jar,../../serializer.jar,../../build/serializer.jar,../../lib/xml-apis.jar,../../lib/xercesImpl.jar"
+    height="0"
+    width"0"&gt;
+    &lt;param name="documentURL" value="xalanApplets.xml"/&gt;
+    &lt;param name="styleURL" value="s1ToHTML.xsl"/&gt;
+&lt;/applet&gt;</pre>
+</blockquote>
+<p>When the user clicks the Transform button, the HTML client calls the getHtmlText() method, and puts the returned HTML text in a frame for the user to view.</p>
+<p>For samples, see <a href="samples.html#applet">AppletXMLtoHTML</a>.</p>
+<a name="netscape">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Problems with Netscape</h4>
+    <p>The JAXP strategy of reading system properties 
+    generates SecurityExceptions when you attempt to run Xalan-Java applets in the Netscape Communicator 4.7.</p> 
+    <p>Stuart Connell 
+    &lt;Stuart.Connell@compuware.com&gt; reports that the Xalan-Java applet wrapper does work in Netscape Communicator 6, 
+    provided that you avoid calls to the AppletContext showStatus() method. In other words, you can remove the showStatus() calls
+    from org.apache.xalan.client.XSLTProcessorApplet, and run Xalan-Java applets from Netscape Communicator 6. This appears to be a
+    Netscape bug, which hopefully will be fixed soon. For more information, see 
+    <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=3231">Bugzilla bug 3231</a>.</p>
+    
+<a name="servlet">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using Xalan-Java in a servlet</h3>
+<p>You can set up a servlet to use Xalan-Java to respond to requests for XML documents by transforming those documents into HTML and serving them to web browsers. To respond to HTTP GET requests, all you need to do is overwrite the HttpServlet doGet() method with a procedure that instantiates a Transformer and uses it to perform a transformation. As the following example shows, you can generate a ResultStream that a PrintWriter writes to the HttpResponse OutputStream, returning the transformation output to the web browser.</p>
+<blockquote class="source">
+<pre>
+public class SampleXSLTServlet extends javax.servlet.http.HttpServlet {
+  
+  public final static String FS = System.getProperty("file.separator"); 
+  // Respond to HTTP GET requests from browsers.
+  public void doGet (javax.servlet.http.HttpServletRequest request,
+                     javax.servlet.http.HttpServletResponse response)
+    throws javax.servlet.ServletException, java.io.IOException
+  {
+    // Set content type for HTML.
+    response.setContentType("text/html; charset=UTF-8");    
+    // Output goes to the response PrintWriter.
+    java.io.PrintWriter out = response.getWriter();
+    try
+    {	
+      javax.xml.transform.TransformerFactory tFactory = 
+                javax.xml.transform.TransformerFactory.newInstance();
+      //get the real path for xml and xsl files.
+      String ctx = getServletContext().getRealPath("") + FS;        
+      // Get the XML input document and the stylesheet, both in the servlet
+      // engine document directory.
+      javax.xml.transform.Source xmlSource = 
+                new javax.xml.transform.stream.StreamSource
+                             (new java.net.URL("file", "", ctx+"foo.xml").openStream());
+      javax.xml.transform.Source xslSource = 
+                new javax.xml.transform.stream.StreamSource
+                             (new java.net.URL("file", "", ctx+"foo.xsl").openStream());
+      // Generate the transformer.
+      javax.xml.transform.Transformer transformer = 
+                             tFactory.newTransformer(xslSource);
+      // Perform the transformation, sending the output to the response.
+      transformer.transform(xmlSource, 
+                           new javax.xml.transform.stream.StreamResult(out));
+    }
+    // If an Exception occurs, return the error to the client.
+    catch (Exception e)
+    {
+      out.write(e.getMessage());
+      e.printStackTrace(out);    
+    }
+    // Close the PrintWriter.
+    out.close();
+  }  
+}</pre>
+</blockquote>
+<p>For a working sample, see <a href="samples.html#simplexsltservlet">SimpleXSLTServlet</a>.</p>
+<p>In the preceding example, the URLs for the XML document and XSL stylesheet are hardcoded in the servlet. You can also create a servlet that parses the request URL for input parameters specifying the XML document, XSL stylesheet, and any relevant stylesheet parameters. For samples, see <a href="samples.html#usestylesheetparamservlet">UseStylesheetParamServlet</a> and <a href="samples.html#xsltservletwithparams">XSLTServletWithParams</a>. For a more robust and complex sample that also employs a properties file to determine which stylesheet to use depending on the client browser/device, see <a href="samples.html#applyxslt">ApplyXSLT</a>.</p>
+<a name="extensions">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Creating and using extensions</h3>
+<p>For those cases where you want to be able to call procedural code from within a stylesheet, the Xalan-Java Extensions facility supports the creation of extension elements and extension functions. See <a href="extensions.html">Extensions</a> and <a href="samples.html#extensions">Extensions samples</a>.</p>
+<a name="multithreading">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Multithreading</h3>
+<p>A given Templates object may be used repeatedly and even in multiple threads running concurrently for the transformation of XML input, but you should use the Templates object to instantiate a separate Transformer for each transformation you perform. The Templates object is an immutable runtime representation of the structure and content of a stylesheet (which may include and import multiple stylesheet sources). A Transformer, on the other hand, is a lightweight object that tracks state information during the transformation, and should only be used to perform a single transformation.</p>
+
+<p>If you want to perform multiple transformations (sequentially or concurrently) with the same stylesheet instructions, do the following:</p>
+<ol>
+  <li>Use the TransformerFactory <a href="apidocs/javax/xml/transform/TransformerFactory.html#newTemplates(javax.xml.transform.Source)">newTemplates(Source xslSource)</a> method to create a Templates object.<br />
+<br />
+</li>
+<li>For each transformation, use the Templates object <a href="apidocs/javax/xml/transform/Templates.html#newTransformer()">newTransformer()</a> method to create a Transformer, and use that Transformer's 
+<a href="apidocs/javax/xml/transform/Transformer.html#transform(javax.xml.transform.Source,javax.xml.transform.Result)">transform(Source xmlSource, Result transformResult)</a> method to perform the transformation.</li>
+</ol>
+<p>For an example, see Examples.exampleUseTemplatesObj() in the <a href="samples.html#trax">trax sample</a>.</p>
+<a name="debugging">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Debugger Interface</h3>
+		<p>Xalan-Java contains a debugger interface in the org.apache.xalan.xslt.trace package:</p> 
+		<ul>
+		  <li>
+<a href="apidocs/org/apache/xalan/trace/TraceListener.html">TraceListener</a> is an interface that debuggers 
+		  can implement. Or, like the <a href="commandline.html">command-line utility</a>, you can use the <a href="apidocs/org/apache/xalan/trace/PrintTraceListener.html">PrintTraceListener</a> implementation of that interface.
+      <br />
+<br />
+</li>
+      <li>You can register a TraceListener with the 
+      <a href="apidocs/org/apache/xalan/trace/TraceManager.html">TraceManager</a> associated
+      with the Transformer that will perform a given transformation.<br />
+<br />
+</li>
+		  <li>
+<a href="apidocs/org/apache/xalan/trace/TracerEvent.html">TracerEvent</a> is an event that is 
+		  passed to the TraceListener.trace() function. It is called before a node is 'executed' in the stylesheet.<br />
+<br />
+</li>
+		  <li>
+<a href="apidocs/org/apache/xalan/trace/GenerateEvent.html">GenerateEvent</a> is an event that is 
+		  passed to the TraceListener.generated() function. It is called after an event occurs to create something in the result
+      tree.<br />
+<br />
+</li>
+      <li>
+<a href="apidocs/org/apache/xalan/trace/SelectionEvent.html">SelectionEvent</a> is an event triggered by the
+       selection of a stylesheet node.</li>
+      <li>
+<a href="apidocs/org/apache/xalan/trace/ExtensionEvent.html">ExtensionEvent</a> is an event that is
+       passed to the TraceListener.extension() function.  It is called before an extension call is made.<br />
+<br />
+</li>
+		</ul>
+    <p>The <a href="commandline.html">command-line utility</a> uses the debugger interface when you include one or more of the
+     following switches: <code>-TT</code>, <code>-TG</code>, <code>-TS</code>, <code>-TTC</code>.</p>
+    <p>Example:</p>
+<blockquote class="source">
+<pre>import org.apache.xalan.transformer.TransformerImpl;
+import org.apache.xalan.trace.TraceManager;
+import org.apache.xalan.trace.PrintTraceListener;
+...
+// Set up a PrintTraceListener object to print to a file.
+java.io.FileWriter fw = new java.io.FileWriter("events.log");
+java.io.PrintWriter pw = new java.io.PrintWriter(fw);
+PrintTraceListener ptl = new PrintTraceListener(pw);
+
+// Print information as each node is 'executed' in the stylesheet.
+ptl.m_traceElements = true;
+// Print information after each result-tree generation event.
+ptl.m_traceGeneration = true;
+// Print information after each selection event.
+ptl.m_traceSelection = true;
+// Print information whenever a template is invoked.
+ptl.m_traceTemplates = true;
+// Print information whenever an extension is called.
+ptl.m_traceExtension = true;
+
+// Set up the transformation    
+javax.xml.transform.TransformerFactory tFactory = 
+                     javax.xml.transform.TransformerFactory.newInstance();
+javax.xml.transform.Transformer transformer = 
+  tFactory.newTransformer(new javax.xml.transform.stream.StreamSource
+                                                             ("foo.xsl"));
+
+// Cast the Transformer object to TransformerImpl.
+if (transformer instanceof TransformerImpl) {
+  TransformerImpl transformerImpl = (TransformerImpl)transformer;
+  
+  // Register the TraceListener with the TraceManager associated 
+  // with the TransformerImpl.
+  TraceManager trMgr = transformerImpl.getTraceManager();
+  trMgr.addTraceListener(ptl);
+  
+  // Perform the transformation --printing information to
+  // the events log during the process.
+  transformer.transform
+      ( new javax.xml.transform.stream.StreamSource("foo.xml"), 
+        new javax.xml.transform.stream.StreamResult
+                                    (new java.io.FileWriter("foo.out")) );
+}
+// Close the PrintWriter and FileWriter.
+pw.close();
+fw.close();</pre>
+</blockquote>
+<p>For a sample application that uses this technique, see <a href="samples.html#trace">Trace</a>.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

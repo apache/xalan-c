@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: XSLTC node iterators</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">XSLTC node iterators</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>Xsltc Iterators<br />
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>XSLTC node iterators</h2>
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Contents</h3>
+
+  <p>This document describes the function of XSLTC's node iterators. It also
+  describes the <code>NodeIterator</code> interface and some implementations of
+  this interface are described in detail:</p>
+
+  <ul>
+    <li>
+<a href="#purpose">Node iterator function</a>
+</li>
+    <li>
+<a href="#interface">NodeIterator interface</a>
+</li>
+    <li>
+<a href="#baseclass">Node iterator base class</a>
+</li>    
+    <li>
+<a href="#details">Implementation details</a>
+</li>    
+  </ul>
+
+  
+
+   
+
+  <a name="purpose">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Node Iterator Function</h3>
+
+    <p>Node iterators have several functions in XSLTC. The most obvious is
+    acting as a placeholder for node-sets. Node iterators also act as a link
+    between the translet and the DOM(s), they can act as filters (implementing
+    predicates), they contain the functionality necessary to cover all XPath
+    axes and they even serve as a front-end to XSLTC's node-indexing mechanism
+    (for the <code>id()</code> and <code>key()</code> functions).</p>
+  
+
+   
+
+  <a name="interface">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Node Iterator Interface</h3>
+
+    <p>The node iterator interface is defined in
+    <code>org.apache.xalan.xsltc.NodeIterator</code>.</p>
+
+    <p>The most basic operations in the <code>NodeIterator</code> interface are
+    for setting the iterators start-node. The "start-node" is
+    an index into the DOM. This index, and the axis of the iterator, determine
+    the node-set that the iterator contains. The axis is programmed into the
+    various node iterator implementations, while the start-node can be set by
+    calling:</p>
+<blockquote class="source">
+<pre>
+    public NodeIterator setStartNode(int node);</pre>
+</blockquote>
+
+    <p>Once the start node is set the node-set can be traversed by a sequence of
+    calls to:</p>
+<blockquote class="source">
+<pre>
+    public int next();</pre>
+</blockquote>
+
+    <p>This method will return the constant <code>NodeIterator.END</code> when
+    the whole node-set has been returned. The iterator can be reset to the start
+    of the node-set by calling:</p>
+<blockquote class="source">
+<pre>
+    public NodeIterator reset();</pre>
+</blockquote>
+
+    <p>Two additional methods are provided to set the position within the
+    node-set. The first method below will  mark  the current node in the
+    node-set, while the second will (at any point) set the iterators position
+    back to that node.</p>
+<blockquote class="source">
+<pre>
+    public void setMark();
+    public void gotoMark();</pre>
+</blockquote>
+
+    <p>Every node iterator implements two functions that make up the
+    functionality behind XPath's <code>getPosition()</code> and
+    <code>getLast()</code> functions.</p>
+<blockquote class="source">
+<pre>
+    public int getPosition();
+    public int getLast();</pre>
+</blockquote>
+
+    <p>The <code>getLast()</code> function returns the number of nodes in the
+    set, while the <code>getPosition()</code> returns the current position
+    within the node-set. The value returned by <code>getPosition()</code> for
+    the first node in the set is always 1 (one), and the value returned for the
+    last node in the set is always the same value as is returned by
+    <code>getLast()</code>.</p>
+
+    <p>All node iterators that implement an XPath axis will return the node-set
+    in the natural order of the axis. For example, the iterator implementing the
+     ancestor  axis will return nodes in reverse document order (bottom to
+    top), while the iterator implementing the  descendant  will return
+    nodes in document order. The node iterator interface has a method that can
+    be used to determine if an iterator returns nodes in reverse document order:
+    </p>
+<blockquote class="source">
+<pre>
+    public boolean isReverse();</pre>
+</blockquote>
+
+    <p>Two methods are provided for when node iterators are encapsulated inside
+    a variable or parameter. To understand the purpose behind these two methods
+    we should have a look at a sample XML document and stylesheet first:</p>
+    <blockquote class="source">
+<pre>
+    &lt;?xml version="1.0"?&gt;
+    &lt;foo&gt;
+        &lt;bar&gt;
+            &lt;baz&gt;A&lt;/baz&gt;
+            &lt;baz&gt;B&lt;/baz&gt;
+        &lt;/bar&gt;
+        &lt;bar&gt;
+            &lt;baz&gt;C&lt;/baz&gt;
+            &lt;baz&gt;D&lt;/baz&gt;
+        &lt;/bar&gt;
+    &lt;/foo&gt;
+
+    &lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+
+        &lt;xsl:template match="foo"&gt;
+            &lt;xsl:variable name="my-nodes" select="//foo/bar/baz"/&gt;
+            &lt;xsl:for-each select="bar"&gt;
+                &lt;xsl:for-each select="baz"&gt;
+                    &lt;xsl:value-of select="."/&gt;
+                &lt;/xsl:for-each&gt;
+                &lt;xsl:for-each select="$my-nodes"&gt;
+                    &lt;xsl:value-of select="."/&gt;
+                &lt;/xsl:for-each&gt;
+            &lt;/xsl:for-each&gt;
+        &lt;/xsl:template&gt;
+
+    &lt;/xsl:stylesheet&gt;</pre>
+</blockquote>
+
+    <p>Now, there are three iterators at work here. The first iterator is the
+    one that is wrapped inside the variable <code>my-nodes</code> - this
+    iterator contains  all  <code>&lt;baz/&gt;</code> elements in the
+    document. The second iterator contains all <code>&lt;bar&gt;</code>
+    elements under the current element (this is the iterator used by the
+    outer <code>for-each</code> loop). The third and last iterator is the one
+    used by the first of the inner <code>for-each</code> loops. When the outer
+    loop is run the first time, this third iterator will be initialized to
+    contain the first two <code>&lt;baz&gt;</code> elements under the context
+    node (the first <code>&lt;bar&gt;</code> element). Iterators are by default
+    restarted from the current node when used inside a <code>for-each</code>
+    loop like this. But what about the iterator inside the variable
+    <code>my-nodes</code>? The variable should keep its assigned value, no
+    matter what the context node is. In able to prevent the iterator from being
+    reset, we must use a mechanism to block calls to the
+    <code>setStartNode()</code> method. This is done in three steps:</p>
+
+    <ul>
+      <li>The iterator is created and initialized when the variable gets
+      assigned its value (node-set).</li>
+      <li>When the variable is read, the iterator is copied (cloned). The
+      original iterator inside the variable is never used directly. This is
+      to make sure that the iterator inside the variable is always in its
+      original state when read.</li>
+      <li>The iterator clone is marked as not restartable to prevent it from
+      being restarted when used to iterate the <code>&lt;xsl:for-each&gt;</code>
+      element loop.</li>
+    </ul>
+
+    <p>These are the two methods used for the three steps above:</p>
+<blockquote class="source">
+<pre>
+    public NodeIterator cloneIterator();
+    public void setRestartable(boolean isRestartable);</pre>
+</blockquote>
+
+    <p>Special care must be taken when implementing these methods in some
+    iterators. The <code>StepIterator</code> class is the best example of this.
+    This iterator wraps two other iterators; one of which is used to generate
+    start-nodes for the other - so one of the encapsulated node iterators must
+    always remain restartable - even when used inside variables. The
+    <code>StepIterator</code> class is described in detail later in this
+    document.</p>
+
+  
+
+
+   
+
+  <a name="baseclass">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Node Iterator Base Class</h3>
+
+    <p>A node iterator base class is provided to contain some common
+    functionality. The base class implements the node iterator interface, and
+    has a few additional methods:</p>
+<blockquote class="source">
+<pre>
+    public NodeIterator includeSelf();
+    protected final int returnNode(final int node);
+    protected final NodeIterator resetPosition();</pre>
+</blockquote>
+
+    <p>The <code>includeSelf()</code> is used with certain axis iterators that
+    implement both the <code>ancestor</code> and <code>ancestor-or-self</code>
+    axis and similar. One common implementation is used for these axes and
+    this method is used to signal that the  "self"  node should
+    also be included in the node-set.</p>
+
+    <p>The <code>returnNode()</code> method is called by the implementation of
+    the <code>next()</code> method. <code>returnNode()</code> increments an
+    internal node counter/cursor that keeps track of the current position within
+    the node set. This counter/cursor is then used by the 
+    <code>getPosition()</code> implementation to return the current position.
+    The node cursor can be reset by calling <code>resetPosition()</code>. This
+    method is normally called by an iterator's <code>reset()</code> method.</p>
+
+  
+
+   
+
+  <a name="details">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Node Iterator Implementation Details</h3>
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Axis iterators</h4>
+
+    <p>All axis iterators are implemented as inner classes of the internal
+    DOM implementation <code>org.apache.xalan.xsltc.dom.DOMImpl</code>. In this
+    way all axis iterator classes have direct access to the internal node
+    type- and navigation arrays of the DOM:</p>
+<blockquote class="source">
+<pre>
+    private short[]   _type;          // Node types
+    private short[]   _namespace;     // Namespace URI types
+    private short[]   _prefix;        // Namespace prefix types
+
+    private int[]     _parent;        // Index of a node's parent
+    private int[]     _nextSibling;   // Index of a node's next sibling node
+    private int[]     _offsetOrChild; // Index of an elements first child node
+    private int[]     _lengthOrAttr;  // Index of an elements first attribute node</pre>
+</blockquote>
+
+    <p>The axis iterators can be instanciated by calling either of these two
+    methods of the DOM:</p>
+<blockquote class="source">
+<pre>
+    public NodeIterator getAxisIterator(final int axis);
+    public NodeIterator getTypedAxisIterator(final int axis, final int type);</pre>
+</blockquote>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>StepIterator</h4>
+    
+    <p>The <code>StepIterator</code> is used to  chain  other iterators. A
+    very basic example is this XPath expression:</p>
+<blockquote class="source">
+<pre>
+    &lt;xsl:for-each select="foo/bar"&gt;</pre>
+</blockquote>
+
+    <p>To generate the appropriate node-set for this loop we need three
+    iterators. The compiler will generate code that first creates a typed axis
+    iterator; the axis will be  child  and the type will be that assigned
+    to <code>&lt;foo&gt;</code> elements. Then a second typed axis iterator will
+    be created; this also a  child -iterator, but this one with the type
+    assigned to <code>&lt;bar&gt;</code> elements. The third iterator is a
+    step iterator that encapsulates the two axis iterators. The step iterator is
+    the initialized with the context node.</p>
+
+    <p>The step iterator will use the first axis iterator to generate
+    start-nodes for the second axis iterator. In plain english this means that
+    the step iterator will scan all <code>foo</code> elements for any
+    <code>bar</code> child elements. When a <code>StepIterator</code> is
+    initialized with a start-node it passes the start node to the
+    <code>setStartNode()</code> method of its  source -iterator (left).
+    It then calls <code>next()</code> on that iterator to get the start-node
+    for the  iterator  iterator (right):</p>
+<blockquote class="source">
+<pre>
+    // Set start node for left-hand iterator...
+    _source.setStartNode(_startNode);
+    // ... and get start node for right-hand iterator from left-hand,
+    _iterator.setStartNode(_source.next());</pre>
+</blockquote>
+
+    <p>The step iterator will keep returning nodes from its right iterator until
+    it runs out of nodes. Then a new start-node is retrieved by again calling
+    <code>next()</code> on the  source -iterator. This is why the
+    right-hand iterator always has to be restartable - even if the step iterator
+    is placed inside a variable or parameter. This becomes even more complicated
+    for step iterators that encapsulate other step iterators. We'll make our
+    previous example a bit more interesting:</p>
+<blockquote class="source">
+<pre>
+    &lt;xsl:for-each select="foo/bar[@name='cat and cage']/baz"&gt;</pre>
+</blockquote>
+
+    <p>This will result in an iterator-tree similar to this:</p>
+
+    <p>
+<img src="iterator_stack.gif" alt="iterator_stack.gif" />
+</p>
+    <p>
+<b>
+<i>Figure 1: Stacked step iterators</i>
+</b>
+</p>
+
+    <p>The  "foo"  iterator is used to supply the second step
+    iterator with start nodes. The second step iterator will pass these start
+    nodes to the  "bar"  iterator, which will be used to get the
+    start nodes for the third step iterator, and so on....</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Iterators for Filtering/Predicates</h4>
+
+    <p>The <code>org.apache.xalan.xsltc.dom</code> package contains a few
+    iterators that are used to implement predicates and filters. Such iterators
+    are normally placed on top of another iterator, and return only those nodes
+    that match a specific node value, position, etc.
+    These iterators include:</p>
+
+    <ul>
+      <li>NthIterator</li>
+      <li>NodeValueIterator</li>
+      <li>FilteredStepIterator</li>
+      <li>CurrentNodeListIterator</li>
+    </ul>
+
+    <p>The last one is the most interesting. This iterator is used to implement
+    chained predicates, such as:</p>
+<blockquote class="source">
+<pre>
+    &lt;xsl:value-of select="foo[@blob='boo'][2]"&gt;</pre>
+</blockquote>
+
+    <p>The first predicate reduces the node set from containing all
+    <code>&lt;foo&gt;</code> elements, to containing only those elements that
+    have a  "blob"  attribute with the value 'boo'. The
+    <code>CurrentNodeListIterator</code> is used to contain this reduced
+    node-set. The iterator is constructed by passing it a source iterator (in
+    this case an iterator that contains all <code>&lt;foo&gt;</code> elements)
+    and a filter that implements the predicate (<code>@blob = 'boo'</code>).</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SortingIterator</h4>
+
+    <p>The sorting iterator is one of the main functional components behind the
+    implementation of the <code>&lt;xsl:sort&gt;</code> element. This element,
+    including the sorting iterator, is described in detail in the
+    <code>&lt;xsl:sort&gt;</code>
+    <a href="xsl_sort_design.html">design document</a>.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>SingletonIterator</h4>
+
+    <p>The singleton iterator is a wrapper for a single node. The node passed
+    in to the <code>setStartNode()</code> method is the only node that will be
+    returned by the <code>next()</code> method. The singleton iterator is used
+    mainly for node to node-set type conversions.</p>
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>UnionIterator</h4>
+
+    <p>The union iterator is used to contain unions of node-sets contained in
+    other iterators. Some of the methods in this iterator are unnecessary
+    comlicated. The <code>next()</code> method contains an algorithm for
+    ensuring that the union node-set is returned in document order. We might be
+    better off by simply wrapping the union iterator inside a duplicate filter
+    iterator, but there could be some performance implications. Worth checking.
+    </p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>KeyIndex</h4>
+
+    <p>This is not just an node iterator. An index used for keys and ids will
+    return a set of nodes that are contained within the named index and that
+    share a certain property. The <code>KeyIndex</code> implements the node
+    iterator interface, so that these nodes can be returned and handled just
+    like any other node set. See the
+    <a href="xsl_key_design.html">design document</a> for 
+    <code>&lt;xsl:key&gt;</code>, <code>key()</code> and <code>id()</code>
+    for further details.</p>
+
+    
+
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

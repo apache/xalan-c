@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE book SYSTEM "../style/dtd/book.dtd">
+
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<book title="Book For Group Navigation" copyright="1999-2011 The Apache Software Foundation">
+
+<resources
+  source="xalan/resouces.xml"/>
+
+<document
+  id="index"
+  label="HOME"
+  source="xalan/index.xml"/>
+
+<document
+  id="test"
+  label="Test"
+  source="xalan/test.xml"/>
+
+<separator/>
+
+<group
+  id="testgroup"
+  label="Test Group">
+<document
+  id="test1"
+  label="Test Doc 1"
+  source="xalan/test1.xml"/>
+<document
+  id="test2"
+  label="Test Doc 2"
+  source="xalan/test2.xml"/>
+</group>
+
+<separator/>
+
+<group
+  id="faqsgroup"
+  label="Faqs Group">
+<faqs
+  id="test-faqs"
+  label="Test Faqs"
+  source="xalan/test-faqs.xml"/>
+
+<faqs
+  id="xalanj-faqs"
+  label="FAQS Xalan-J"
+  source="xalan/xalanj-faqs.xml"/>
+
+<faqs
+  id="xalanc-faqs"
+  label="FAQS xalan-C"
+  source="xalan/xalanc-faqs.xml"/>
+</group>
+
+<separator/>
+</book>

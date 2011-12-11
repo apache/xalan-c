@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="Test Files Readme">
+  <p>
+    Senatus haec intellegit. consul videt; hic tamen vivit. Vivit? immo 
+    vero etiam in senatum venit, fit publici consilii particeps, notat et 
+    designat oculis ad caedem unum quemque nostrum. &myentity;
+  </p>
+</s1>

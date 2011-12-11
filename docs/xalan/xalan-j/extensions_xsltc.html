@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Extensions for XSLTC</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Extensions for XSLTC</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>XSLTC Exts<br />
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Extensions for XSLTC</h2>
+<ul>
+<li>
+<a href="#intro">Introduction</a>
+</li>
+<li>
+<a href="#constraints">Constraints</a>
+</li>
+<li>
+<a href="#java_ext">Java extension</a>
+</li>
+<li>
+<a href="#exslt_ext">EXSLT extensions</a>
+</li>
+<li>
+<a href="#nodeset_ext">nodeset</a>
+</li>
+<li>
+<a href="#redirect_ext">output/redirect</a>
+</li>
+</ul>
+<a name="intro">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+  <p>XSLTC supports the use of extension functions implemented in external Java classes. It also
+  supports the <a href="#nodeset_ext">nodeset</a>, <a href="#redirect_ext">output/redirect</a> 
+  and <a href="#exslt_ext">EXSLT</a> extension functions. Extension support in XSLTC is
+  still under development. It is currently not as complete as the extension support in the
+  Xalan-Java Interpretive processor. There are constraints in some areas.</p>
+  
+
+<a name="constraints">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Constraints</h3>
+  <p>In addition to the constraints listed below for each particular extension, extension support
+  in XSLTC also has the following limitations:</p>
+  <ol>
+  <li>
+<a href="extensions.html#ext-elements">Extension element</a> is not supported.
+  The extension element mechanism is closely related to the internal implementation of the XSLT processor.
+  The current extension element mechansim is designed for the Xalan-Java Interpretive processor. It does not work with XSLTC.</li>
+  <li>The <a href="extensions.html#supported-lang">xalan:component and xalan:script</a> extension elements are not supported at the moment. This has
+  the implication that you cannot use scripting languages (e.g. javascript) with XSLTC.</li>
+  <li>
+<a href="extensionslib.html#sql">The SQL extension</a> is not supported in XSLTC at the moment.</li>
+  </ol>
+  
+  
+<a name="java_ext">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Java extension</h3>
+  <p>Java extension is supported in XSLTC. Constructors, static and instance methods are all supported.
+  You can use any of the <a href="extensions.html#ext-func-calls">three namespace formats</a>
+   (Java, package and class) in your stylesheet.
+  </p>
+  <p>The official namespace for the Java extension is <code>http://xml.apache.org/xalan/java</code>. The old XSLTC Java namespace
+  <code>http://xml.apache.org/xalan/xsltc/java</code> and the old Xalan-Java namespace <code>http://xml.apache.org/xslt/java</code>
+  are also supported for backward compatibility.</p>
+  <p>All usage syntax for the Xalan-Java Interpretive processor also applies to XSLTC with only one 
+  exception: XSLTC does not support the notion of default object 
+  in <a href="extensions.html#ext-func-calls">class format namespace</a>. 
+  When using instance methods, you should always specify the class instance as the first argument
+  to the extension function.</p>
+  <p>The following example shows you how to call constructors, static, and nonstatic functions,
+  using different namespace formats:</p>
+
+  <blockquote class="source">
+<pre>&lt;xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:date="http://xml.apache.org/xalan/java/java.util.Date"
+    xmlns:java_lang="http://xml.apache.org/xalan/java/java.lang"
+    exclude-result-prefixes="date java_lang"&gt;
+
+  &lt;!--
+  * test: construction of Date object using a parameter calculated
+  *       by a static call to the java.lang.Math object. Then call
+  *       a non-static method (getTime()) on the newly created Date
+  *       object. Demonstrates calling constructors, static functions
+  *       (Math.max) and non-static functions (getTime()).
+  *
+  * Output:
+  *   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  *     Date of object: Sat Nov 30 17:32:41 EST 2002
+  *     Time of object: 1038695561000
+  *
+  --&gt;
+
+  &lt;xsl:template match="/"&gt;
+   &lt;!-- create Date object with calculated parameter --&gt;
+   &lt;xsl:variable name="dateObject"
+     select="date:new(
+         java_lang:Math.max(1027695561000,1038695561000)
+     )"/&gt;
+   Date of object: &lt;xsl:value-of select="$dateObject"/&gt;
+   Time of object: &lt;xsl:value-of select="date:getTime($dateObject)"/&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;/xsl:stylesheet&gt;
+  </pre>
+</blockquote>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Always use the abbreviated syntax for Java extension, because the xalan:component/xalan:script
+  constructs are not supported in XSLTC.</td>
+</tr>
+</table>
+  
+  
+<a name="exslt_ext">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>EXSLT extensions</h3>
+  <p>The following EXSLT extension modules are supported in XSLTC:</p>
+  <ul>
+  <li>
+<a href="apidocs/org/apache/xalan/lib/ExsltCommon.html">EXSLT common functions</a>
+</li>
+  <li>
+<a href="apidocs/org/apache/xalan/lib/ExsltMath.html">EXSLT math functions</a>
+</li>
+  <li>
+<a href="apidocs/org/apache/xalan/lib/ExsltSets.html">EXSLT set functions</a>
+</li>
+  <li>
+<a href="apidocs/org/apache/xalan/lib/ExsltDatetime.html">EXSLT date-and-time functions</a>
+</li>
+  <li>
+<a href="apidocs/org/apache/xalan/lib/ExsltStrings.html">EXSLT string functions</a>
+</li>
+  </ul> 
+  <p>The functions in the <a href="apidocs/org/apache/xalan/lib/ExsltDynamic.html">dynamic</a> module 
+  (e.g. evaluate) are not supported because of the XSLTC design limitation.
+  Work is currently underway on <a href="http://www.exslt.org/func/elements/function/index.html">user 
+  defined EXSLT functions (with the function and result elements)</a>.</p>
+  <p>The <code>nodeset</code> and <code>objectType</code> extension functions in the <a href="apidocs/org/apache/xalan/lib/ExsltCommon.html">common</a> 
+  module are implemented natively in XSLTC. For all other EXSLT extension functions,
+  XSLTC uses the same implementation as the Xalan-Java Interpretive processor. The implementation classes 
+  are under <code>org.apache.xalan.lib</code>.
+  Depending on the packaging, these classes can be in a separate jar file (e.g. xalan.jar) from
+  the XSLTC classes. In this case you need to add the jar file containing the EXSLT classes to your
+  classpath in order to use EXSLT extensions in XSLTC.</p>
+  
+  
+<a name="nodeset_ext">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>nodeset</h3>
+  <p>XSLTC also supports the nodeset() extension function for transforming an RTF (result 
+    tree fragment) into a node set.</p>
+    <p>The nodeset extension can be used as an XSLTC extension function in the namespace
+    <code>http://xml.apache.org/xalan/xsltc</code>, a Xalan-Java extension function in the namespace
+    <code>http://xml.apache.org/xalan</code>, an EXSLT extension function in the namespace 
+    <code>http://exslt.org/common</code> or as a standard XPATH function. When it is used as
+    an EXSLT extension function, you need to refer to the nodeset extension function as 
+    <code>node-set</code>.</p>
+    <p>The following exmaple shows you how to use the nodeset extension
+    function in different namespaces:</p>
+    <blockquote class="source">
+<pre>&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"        
+  xmlns:xsltc-extension="http://xml.apache.org/xalan/xsltc"
+  xmlns:xalan="http://xml.apache.org/xalan"
+  xmlns:exslt="http://exslt.org/common"
+  version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;xsl:variable name="rtf"&gt;
+      &lt;docelem&gt;
+        &lt;elem1&gt;elem1&lt;/elem1&gt;
+        &lt;elem2&gt;elem2&lt;/elem2&gt;
+      &lt;/docelem&gt;
+    &lt;/xsl:variable&gt;
+    &lt;!-- Use nodeset as an XSLTC extension function --&gt;
+    &lt;xsl:value-of select="xsltc-extension:nodeset($rtf)/docelem/elem1"/&gt;
+    &lt;!-- Use nodeset as a Xalan-Java extension function --&gt;
+    &lt;xsl:value-of select="xalan:nodeset($rtf)/docelem/elem1"/&gt;
+    &lt;!-- Use nodeset as an EXSLT extension function --&gt;
+    &lt;xsl:value-of select="exslt:node-set($rtf)/docelem/elem1"/&gt;
+    &lt;!-- Use nodeset as standard function --&gt;
+    &lt;xsl:value-of select="nodeset($rtf)/docelem/elem1"/&gt;
+  &lt;/xsl:template&gt; 
+&lt;/xsl:stylesheet&gt;
+</pre>
+</blockquote>
+<br />
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The preferred solution is to use the EXSLT node-set function so that it can work
+with multiple XSLT processors.</td>
+</tr>
+</table>
+  
+  
+<a name="redirect_ext">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>output/redirect</h3>
+  <p>XSLTC supports the output extension element for redirecting the output to one 
+  or more files. The output extension element is also aliased to the write extension element 
+  in the namespace <code>http://xml.apache.org/xalan/redirect</code>. Therefore you can use
+  it in the same way as the <a href="extensionslib.html#redirect">redirect</a> 
+  extension in Xalan-Java.</p>
+  <p>You can use the file and append attributes with the output/redirect extension. The value of the file
+  attribute is an attribute value template. If the value of the append attribute is true or yes, the
+  output is appended to the file rather than overwriting the file.</p>
+  <p>The following example shows you how to use the output/redirect extension:</p>
+    <blockquote class="source">
+<pre> &lt;xsl:stylesheet 
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xsltc="http://xml.apache.org/xalan/xsltc"
+   xmlns:redirect="http://xml.apache.org/xalan/redirect"
+   extension-element-prefixes="xsltc redirect"
+   version="1.0"&gt;
+   &lt;xsl:template match="/"&gt;
+     &lt;xsl:text&gt;This goes to standard output&lt;/xsl:text&gt;
+     &lt;xsltc:output file="blob.xml"&gt;
+       &lt;xsl:text&gt;This ends up in the file 'blob.xml'&lt;/xsl:text&gt;
+     &lt;/xsltc:output&gt;
+     &lt;redirect:write file="blob2.xml"&gt;
+       &lt;xsl:text&gt;This ends up in the file 'blob2.xml'&lt;/xsl:text&gt;
+     &lt;/redirect:write&gt;
+   &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre>
+</blockquote>  
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

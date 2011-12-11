@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Getting Started with XSLTC</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Getting Started with XSLTC</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>Using XSLTC<br />
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Getting Started with XSLTC</h2>
+
+<ul>
+  <li>
+<a href="#intro">Introduction</a>
+</li>
+  <li>
+<a href="#classpath">Setting the system classpath for XSLTC</a>
+</li>
+  <li>
+<a href="#compile">Compiling translets from the command line</a>
+</li>
+  <li>
+<a href="#run">Running translets from the command line</a>
+</li>
+  <li>
+<a href="#api">Calling XSLTC with the JAXP API</a>
+</li>
+  <li>
+<a href="#xsltcsmart">Smart Transformer Switch</a>
+</li>
+  <li>
+<a href="#native_api">Calling XSLTC with the native API</a>
+</li>
+  <li>
+<a href="#constraints">Usage constraints</a>
+</li>
+  <li>
+<a href="samples.html#translets">Sample translets</a>
+</li>
+  <li>
+<a href="extensions_xsltc.html">Extensions for XSLTC</a>
+</li>  
+</ul>
+<p>See also: <a href="xsltc/index.html">XSLTC Design</a>
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Unless otherwise specified, the usage discussed in this section refers to 
+the Xalan-Java Compiling processor, XSLTC. See <a href="usagepatterns.html">Basic Usage 
+Patterns</a> for information on using the Xalan-Java Interpretive processor.</td>
+</tr>
+</table>
+<br />
+
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>
+<p>XSLTC provides a compiler and a runtime processor. 
+Use the compiler to compile an XSL stylesheet into a translet (i.e., a set of
+Java classes). Use the runtime processor to apply the translet to an XML
+document and perform a transformation.</p>
+
+
+<a name="classpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting the system classpath for XSLTC</h3>
+<p>The xalan.jar contains support for both Xalan-Java processors.  You
+can use the JAXP <code>javax.xml.transform.TransformerFactory</code> property
+(see <a href="#api">"Calling XSLTC with the JAXP API"</a> below) to
+select which processor to use:  the Interpretive or the Compiling processor.</p>
+<p>To use XSLTC, simply put xalan.jar, serializer.jar, xml-apis.jar, and xercesImpl.jar on
+your classpath.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To compile and run translets, you must use JDK (or JRE) 1.3.1 or higher.</td>
+</tr>
+</table>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Although the XSLTC developers make every effort to avoid changes that
+affect binary compatibility, we cannot guarantee that a translet will work with
+any version of the run-time processor other than the one that corresponds to
+the version of the XSLTC compiler that was used to create the translet.</td>
+</tr>
+</table>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Bundled System Classpath</h4>
+<p>
+To use this newer approach, simply put xalan.jar, serializer.jar, xml-apis.jar and 
+xercesImpl.jar in your classpath.  There is no need to include xsltc.jar, BCEL.jar, JLex.jar,
+regexp.jar, java_cup.jar or runtime.jar as required in previous releases.
+</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">In order to compile and run translets you must have a JAXP 1.3 compliant XML
+parser installed. Our distribution includes <a href="http://xerces.apache.org/xerces2-j/index.html">Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@</a>.
+Include xercesImpl.jar and xml-apis.jar in your class path.</td>
+</tr>
+</table>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Unbundled System Classpath</h4>
+<p>The binary distribution contains XSLTC and all its support classes bundled 
+into xalan.jar. To use the unbundled approach, rebuild 
+the xsltc.jar file using the xsltc.unbundledjar target. The support jars that 
+you'll need to add to your classpath are available in the Xalan Java lib 
+directory.</p>
+<p>To compile translets, run translets, and use the XSLTC API, using
+the unbundled jar approach, put the following on the system classpath:</p>
+<table border="1">
+<tr>
+  <th class="content" rowspan="1" colspan="1">Classes or JAR</th>
+  <th class="content" rowspan="1" colspan="1">To compile a translet</th>
+  <th class="content" rowspan="1" colspan="1">To run a translet</th>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">the translet</td>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">required</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xsltc.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">runtime.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">BCEL.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">JLex.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">java_cup.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">regexp.jar</td>
+  <td class="content" rowspan="1" colspan="1">required</td>
+  <td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">xml-dtm.jar</td>
+  <td class="content" rowspan="1" colspan="1" />
+  <td class="content" rowspan="1" colspan="1">required</td>
+</tr>
+</table>
+<p>The translet is the set of class files or the JAR file that you generate with
+the compiler; see <a href="#compile">Compiling translets</a>.</p>
+
+
+<a name="compile">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Compiling translets from the command line</h3>
+    <ul>
+      <li>
+<a href="#comp-synopsis">Synopsis</a>
+</li>
+      <li>
+<a href="#comp-args">Flags and arguments</a>
+</li>
+      <li>
+<a href="#comp-examples">Examples</a>
+</li>
+    </ul>
+    <p>The XSLT Compiler is a Java-based tool for compiling XSLT
+    stylesheets into lightweight and portable Java byte codes 
+    called translets.</p>  
+
+    <p>To run the compiler from the command line or from a script, 
+    <a href="#classpath">set the classpath</a> and 
+    run the class <code>org.apache.xalan.xsltc.cmdline.Compile</code>. The
+    synopsis of the options and arguments accepted by this class is shown below.
+    </p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also use the
+    <a href="commandline.html">Xalan-Java command-line utility</a>, to
+          compile or run XSLTC translets.</td>
+</tr>
+</table>
+
+<a name="comp-synopsis">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Synopsis</h4>
+<p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+<code>    [-o &lt;output&gt;] [-d &lt;directory&gt;] [-j &lt;jarfile&gt;]</code>
+<br />
+<code>    [-p &lt;package name&gt;] [-n] [-x] [-v] [-u] [-h]<br />
+    {&lt;stylesheet&gt; | -i }</code>
+</p> 
+
+
+<a name="comp-args">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Flags and arguments</h4>
+    <p>The following flags and arguments are supported:</p>
+
+<blockquote class="source">
+<pre>-o &lt;output&gt;
+   Specifies the name of the generated translet class.
+   If you omit this argument, the translet class is
+   named &lt;stylesheet&gt;.  Translets are written as 
+   .class files.
+
+-d &lt;directory&gt;
+   Specifies the destination directory.  If you omit
+   this argument, the translet class files are placed
+   in the current working directory.
+
+-j &lt;jarfile&gt;
+   Outputs the generated translet class files into a 
+   jar file named &lt;jarfile&gt;.jar. When this option is 
+   used, only the jar file is output.
+
+-p &lt;package name&gt;
+   Specifies a package name for the generated translet
+   classes.
+
+-n Enables template inlining (default behavior better on average).
+
+-x Turns on additional debugging messages.
+
+-s Disables calling System.exit
+
+-u  &lt;stylesheet&gt;
+  Specifies the stylesheet with a URI such as 
+  'http://myserver/stylesheet1.xsl'.
+
+   &lt;stylesheet&gt;
+   (No flag) The pathname of the stylesheet file.
+
+-i Force stylesheet to be read from stdin
+
+-v Prints version of compiler
+
+-h Prints usage statement</pre>
+</blockquote>
+
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The translet name is the same as the name of the Java class that
+implements the translet.  If the name specified by the <code>-o</code> option
+or derived from the URL for the stylesheet contains characters that are not
+permitted in a Java class name, any such character will be replaced with an
+underscore.  For example, if the translet name specified by the <code>-o</code>
+option is <code>my-stylesheet</code>, or if the URL of the stylesheet is
+<code>http://example.org/my-stylesheet.xsl</code>, the translet will actually
+be named <code>my_stylesheet</code>.
+</td>
+</tr>
+</table>
+
+
+<a name="comp-examples">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Examples</h4>
+    <p>The following examples assume that you have already set the
+           classpath to include the translet and the required JAR
+    files (see <a href="#classpath">setting the system classpath</a>).</p>
+
+    <p>
+<b>Example 1:</b>  Creating a translet from the hamlet.xsl
+       stylesheet.</p>
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+    <code>     hamlet.xsl</code>
+</p>    
+    <p>Example 1 produces a set of class files such as hamlet.class, hamlet$0.class, hamlet$1.class.</p>
+
+    <p>
+<b>Example 2:</b>  Outputting to a JAR file.</p>
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+    <code>     -j hamlet.jar hamlet.xsl</code>
+</p>
+    <p>Example 2 produces hamlet.jar, which contains the translet class
+       files.</p>
+
+    <p>
+<b>Example 3:</b> Specifying the translet class name. </p> 
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+    <code>     -o newhamlet hamlet.xsl</code>
+</p>
+    <p>Example 3 produces a set of class files such as newhamlet.class,
+       newhamlet$0.class, etc., rather than hamlet.class, hamlet$0.class,
+       etc.</p>
+
+
+    <p>
+<b>Example 4:</b> Compiling multiple stylesheets.</p>
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+    <code>     hamlet1.xsl hamlet2.xsl hamlet3.xsl</code>
+</p>
+    <p>Example 4 produces three translets and set of class files derived from the three stylesheets.</p>
+
+    <p>
+<b>Example 5:</b> Package Specification.</p>
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Compile</code>
+<br />
+    <code>     -p com.mycompany.translets hamlet.xsl</code>
+</p>
+    <p>Example 5 produces a set of class files such as com/mycompany/translets/hamlet.class,
+    com/mycompany/translets/hamlet$0.class', etc.</p>
+
+
+
+<a name="run">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Running translets from the command line</h3>
+    <ul>
+      <li>
+<a href="#run-synopsis">Synopsis</a>
+</li>
+      <li>
+<a href="#run-args">Flags and arguments</a>
+</li>
+      <li>
+<a href="#run-examples">Examples</a>
+</li>
+    </ul>
+
+    <p>The XSLTC runtime processor is a Java-based tool for 
+    transforming XML document files using a translet (compiled 
+    stylesheet). </p>
+
+    <p>The XSLTC processor can be run on any platform including UNIX,
+    Windows, NT, Mac that supports Java, including a Palm Pilot
+    with J2ME CLDC (Java 2 Micro Edition, Connected Limited Device
+    Configuration).</p>
+
+    <p>To run a translet from the command line or a script,
+     <a href="#classpath">set the classpath</a> (be sure to include
+     the translet) and run the translet with the appropriate flags and arguments
+     (described below).</p>
+
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also use the
+    <a href="commandline.html">Xalan-Java Command-line Utility</a>, to
+          compile or run XSLTC translets.</td>
+</tr>
+</table>
+
+<a name="run-synopsis">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Synopsis</h4>
+<p>
+<code>java org.apache.xalan.xsltc.cmdline.Transform</code>
+<br />
+<code>     [-j &lt;jarfile&gt;] [-x] {-u &lt;document_url&gt; | &lt;document&gt;} &lt;class&gt;</code>
+<br />
+<code>     [&lt;name1&gt;=&lt;value1&gt; ...]</code>
+</p>
+
+
+<a name="run-args">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Flags and arguments</h4>
+
+    <p>The following flags and arguments are supported:</p>
+
+<blockquote class="source">
+<pre>
+
+-j Specifies &lt;jarfile&gt; from which to load translet.
+
+-x Turns on debugging messages.
+
+-s Disables calling System.exit
+
+-u Specifies the XML input &lt;document&gt; with a URI,
+   such as 'http://myserver/hamlet.xml'.
+
+Arguments without flags:
+
+   &lt;document&gt;
+   Filename of the XML input document. 
+   
+   &lt;document_url&gt;
+   URI of the XML input document (see the -u flag above). 
+
+   &lt;class&gt;
+   The translet that performs the transformation. The translet
+   may take a set of stylesheet parameters specified as
+   name-value pairs. The format for a name-value pair is
+   &lt;name&gt;=&lt;value&gt;.</pre>
+</blockquote>
+
+
+<a name="run-examples">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Examples</h4>
+
+    <p>The following examples assume that you have already set the classpath to include the translet and the required JAR
+    files (see <a href="#classpath">setting the system classpath</a>).</p>
+    <p>A possible variation: You have set the classpath to include the required JAR files, but when you run the translet,
+    you use the java -cp flag to add the current working directory (containing the translet class files you have just generated)
+    to the classpath.</p>
+    <p>
+<b>
+<i>Windows:</i>
+</b>
+<code> java -cp .;%CLASSPATH% ...</code>
+<br />
+       <b>
+<i>UNIX:     </i>
+</b>
+<code> java -cp .:$CLASSPATH ...</code>
+</p>
+    
+    <p>
+<b>Example 1:</b> Processing an XML document.</p>
+
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Transform</code>
+<br />
+       <code>      hamlet.xml hamlet</code>
+</p> 
+
+    <p>Example 1 uses the specified translet (hamlet) to transform the specified XML input document (hamlet.xml). 
+    The XML input document is in the current working directory. The translet was created by using
+    org.apache.xalan.xslt.cmdline.Compile to compile an XSL stylesheet (hamlet.xsl). </p>
+
+    <p>
+<b>Example 2:</b> Passing stylesheet parameters to the translet.</p>
+
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Transform</code>
+<br />
+       <code>     hamlet.xml hamlet</code>
+<br />
+       <code>     speaker=HAMLET 'scene=SCENE IV'</code>
+</p>
+
+    <p>Example 2 passes "HAMLET" to the stylesheet for the stylesheet parameter named speaker, and "SCENE IV" for the
+    stylesheet parameter named scene. The second name-value pair was placed in single quotes to 
+    specify a value containing a space.</p>
+    
+    <p>
+<b>Example 3:</b> Processing an XML input document specified with a URI.</p>
+
+    <p>
+<code>java org.apache.xalan.xsltc.cmdline.Transform</code>
+<br />
+       <code>      -u http://zarya.east/test.xml hamlet</code>
+</p>
+
+    <p>Example 3 applies the translet (hamlet) to the XML input document (http://zarya.east/test.xml hamlet). Inclusion of
+    the flag (-u) is optional.</p>
+
+
+
+<a name="api">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Calling XSLTC with the JAXP API</h3>
+<ul>
+<li>
+<a href="#api-attributes">XSLTC TransformerFactory attributes</a>
+</li>
+<li>
+<a href="#api-examples">Examples</a>
+</li>
+</ul>
+<p>XSLTC translets are integrated with the JAXP 1.3 API. Accordingly, it is now possible to set a 
+system property and use a TransformerFactory to generate a Transformer that performs a transformation by compiling 
+and running a translet.</p>
+
+<p>When you use the JAXP 1.3 API to run Xalan-Java, the
+<code>javax.xml.transform.TransformerFactory</code> system property is set to
+<code>org.apache.xalan.processor.TransformerFactoryImpl</code>. As it currently
+stands, this Xalan-Java implementation of TransformerFactory always uses the Xalan-Java
+Interpretive processor to perform transformations.  To use translets to perform
+transformations, set this system property to
+<code>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</code>. For
+information on setting this and related system properties designating XML
+parsers and XSL transformers, see
+<a href="usagepatterns.html#plug">Plugging in a Transformer and XML
+parser</a>.</p>
+
+<p>To use the JAXP 1.3 API to perform transformations with translets do the
+   following:</p>
+<ol>
+  <li>Set the <code>javax.xml.transform.TransformerFactory</code> system
+      property as indicated above.<br />
+<br />
+</li>
+  <li>Instantiate a <code>TransformerFactory</code>.<br />
+<br />
+</li>
+  <li>Instantiate a <code>Transformer</code> object either directly from
+      the <code>TransformerFactory</code> or through a <code>Templates</code>
+      object.  A <code>Transformer</code> is a processed instance of a
+      stylesheet (a translet) that can be used to perform a
+      transformation.  See below for more information on when you should use
+      a <code>Templates</code> object.<br />
+<br />
+</li>
+  <li>Perform the transformation, using a StreamSource object for the XML
+      input and a StreamResult object to hold the transformation output.</li>
+</ol>
+<p>Both a <code>Templates</code> object and a <code>Tranformer</code> object are
+   processed representations of a stylesheet, but you cannot use a
+   <code>Templates</code> object to perform transformations.  Instead,
+   you can use a <code>Templates</code> object to create new
+   <code>Transformer</code> instances, without having to reprocess the
+   stylesheet each time.  You can use a <code>TransformerFactory</code> to
+   generate a <code>Templates</code> object or a <code>Transformer</code>
+   object directly.  You can use a <code>Transformer</code> more than once,
+   but you cannot use it concurrently on more than one thread.  If you need
+   to use the same stylesheet to perform transformations on more than one
+   thread at the same time, use a <code>Templates</code> object and create
+   as many <code>Transformer</code> objects as you require.</p>
+
+<p>XSLTC also defines a set of attributes that you can set on the
+<code>TransformerFactory</code> in order to save and subsequently use those
+translets by way of the JAXP Transform API - without having to recompile the
+stylesheet each time.</p>
+
+<a name="api-attributes">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XSLTC TransformerFactory attributes</h4>
+The JAXP Transform API defines a <code>
+<a href="apidocs/javax/xml/transform/TransformerFactory.html#setAttribute(java.lang.String, java.lang.Object)">TransformerFactory.setAttribute</a>
+</code> method that you can use to set implementation-defined attributes.
+<table border="1">
+<tr>
+  <th class="content" rowspan="1" colspan="1">Attribute</th>
+<th class="content" rowspan="1" colspan="1">Purpose</th>
+  <th class="content" rowspan="1" colspan="1">Type of value</th>
+<th class="content" rowspan="1" colspan="1">Default value</th>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">translet-name</td>
+  <td class="content" rowspan="1" colspan="1">Specifies the name of the translet</td>
+  <td class="content" rowspan="1" colspan="1">String</td>
+  <td class="content" rowspan="1" colspan="1">"GregorSamsa"</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">destination-directory</td>
+  <td class="content" rowspan="1" colspan="1">Specifies where to save translet class files</td>
+  <td class="content" rowspan="1" colspan="1">String</td>
+  <td class="content" rowspan="1" colspan="1">null</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">package-name</td>
+  <td class="content" rowspan="1" colspan="1">Specifies which package translet class files will be in</td>
+  <td class="content" rowspan="1" colspan="1">String</td>
+  <td class="content" rowspan="1" colspan="1">null</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">jar-name</td>
+  <td class="content" rowspan="1" colspan="1">Specifies the name of a jar file in which translets should be saved</td>
+  <td class="content" rowspan="1" colspan="1">String</td>
+  <td class="content" rowspan="1" colspan="1">null</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">generate-translet</td>
+  <td class="content" rowspan="1" colspan="1">Specifies whether translet class files should be generated</td>
+  <td class="content" rowspan="1" colspan="1">Boolean</td>
+  <td class="content" rowspan="1" colspan="1">Boolean.FALSE</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">auto-translet</td>
+  <td class="content" rowspan="1" colspan="1">Specifies that time-stamp of translet file, if any, should be compared with that of stylesheet to decide whether to recompile the stylesheet</td>
+  <td class="content" rowspan="1" colspan="1">Boolean</td>
+  <td class="content" rowspan="1" colspan="1">Boolean.FALSE</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">use-classpath</td>
+  <td class="content" rowspan="1" colspan="1">Specifies that precompiled translet classes should be looked up from the classpath when a new transformer or templates is created</td>
+  <td class="content" rowspan="1" colspan="1">Boolean</td>
+  <td class="content" rowspan="1" colspan="1">Boolean.FALSE</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">enable-inlining</td>
+  <td class="content" rowspan="1" colspan="1">Specifies whether methods that represent templates should be inlined.  See <a href="#constraints">Usage constraints</a>
+</td>
+  <td class="content" rowspan="1" colspan="1">Boolean</td>
+  <td class="content" rowspan="1" colspan="1">Boolean.FALSE</td>
+</tr>
+<tr>
+  <td class="content" rowspan="1" colspan="1">debug</td>
+  <td class="content" rowspan="1" colspan="1">Enables debugging messages</td>
+  <td class="content" rowspan="1" colspan="1">Boolean</td>
+  <td class="content" rowspan="1" colspan="1">Boolean.FALSE</td>
+</tr>
+</table>
+<p>The <code>translet-name</code>, <code>destination-directory</code>,
+<code>package-name</code> and <code>jar-name</code> attributes are transient.
+They only apply to the next invocation of either the <code>newTemplates</code>
+or the <code>newTransformer</code> method on that
+<code>TransformerFactory</code>.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The translet name is the same as the name of the Java class that
+implements the translet.  If the value specified for the
+<code>translet-name</code> attribute contains characters that are not
+permitted in a Java class name, any such character will be replaced with an
+underscore.  For example, if the translet name specified was
+<code>my-stylesheet</code>, the translet will actually be named
+<code>my_stylesheet</code>.</td>
+</tr>
+</table>
+
+
+<a name="api-examples">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Examples</h4>
+<p>
+<b>Example 1:</b> Using a translet/Templates object for multiple
+concurrent transformations</p>
+<blockquote class="source">
+<pre>import java.util.Properties;
+import javax.xml.transform.Transformer;
+import java.io.FileOutputStream;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Templates;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
+...
+// Set the TransformerFactory system property.
+// Note: For more flexibility, load properties from a properties file.
+String key = "javax.xml.transform.TransformerFactory";
+String value = "org.apache.xalan.xsltc.trax.TransformerFactoryImpl";
+Properties props = System.getProperties();
+props.put(key, value);
+System.setProperties(props);
+...
+String xslInURI;
+// Instantiate the TransformerFactory, and use it with a StreamSource
+// XSL stylesheet to create a translet as a Templates object.
+TransformerFactory tFactory = TransformerFactory.newInstance();
+Templates translet = tFactory.newTemplates(new StreamSource(xslInURI));
+...
+String xmlInURI;
+String htmlOutURI;
+String xmlInURI2;
+String htmlOutURI2;
+...
+// For each thread, instantiate a new Transformer, and perform the
+// transformations on that thread from a StreamSource to a StreamResult;
+Transformer transformer = translet.newTransformer();
+transformer.transform(new StreamSource(xmlInURI),
+                  new StreamResult(new FileOutputStream(htmlOutURI)));
+transformer.transform(new StreamSource(xmlInURI2),
+                  new StreamResult(new FileOutputStream(htmlOutURI2)));
+...</pre>
+</blockquote>
+<p>For a working sample that illustrates this usage pattern, see <a href="samples.html#xsltc1">JAXPTransletOneTransformation</a>.</p>
+<p>
+<b>Example 2:</b> Compiling a translet/Templates object for a single transformation</p>
+<blockquote class="source">
+<pre>import java.util.Properties;
+import javax.xml.transform.TransformerFactory;
+import java.io.FileOutputStream;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
+...
+// Set the TransformerFactory system property.
+// Note: For more flexibility, load properties from a properties file.
+String key = "javax.xml.transform.TransformerFactory";
+String value = "org.apache.xalan.xsltc.trax.TransformerFactoryImpl";
+Properties props = System.getProperties();
+props.put(key, value);
+System.setProperties(props);
+...
+String xslInURI;
+String xmlInURI;
+String xmlInURI2;
+String htmlOutURI;
+String htmlOutURI2;
+// Instantiate the TransformerFactory, and use it along with a StreamSource
+// XSL stylesheet to create a Transformer.
+TransformerFactory tFactory = TransformerFactory.newInstance();
+Transformer transformer =
+                 tFactory.newTransformer(new StreamSource(xslInURI));
+// Perform the transformation from a StreamSource to a StreamResult;
+transformer.transform(new StreamSource(xmlInURI),
+                  new StreamResult(new FileOutputStream(htmlOutURI)));
+// Re-use the same transformer for a second transformation
+transformer.transform(new StreamSource(xmlInURI2),
+                  new StreamResult(new FileOutputStream(htmlOutURI2)));</pre>
+</blockquote>
+<p>For a working sample that illustrates this usage pattern, see <a href="samples.html#xsltc2">JAXPTransletMultipleTransformations</a>.</p>
+
+
+
+<a name="xsltcsmart">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Smart Transformer Switch</h3>
+<p>As part of the JAXP API, a "Smart Transformer Switch" enables automatic switching 
+between Xalan-Java Interpretive and XSLTC processors within your application. It uses Xalan-Java Interpretive 
+processor to create your <code>Transformer</code> objects, and uses XSLTC to create your 
+<code>Templates</code> objects.</p>
+<p>To use the switch, you set the JAXP system property,
+<code>javax.xml.transform.TransformerFactory</code>, to
+<code>org.apache.xalan.xsltc.trax.SmartTransformerFactoryImpl</code>. 
+For one-time transformations or transformations that require extensions
+supported by Xalan-Java Interpretive, and not XSLTC, you would use the
+<code>SmartTransformerFactoryImpl</code> to create <code>Transformer</code>
+objects. For a repeated transformation where performance is critical, you would
+create a <code>Templates</code> object from which you would create your
+<code>Transformer</code> objects.</p> 
+
+
+<a name="native_api">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Calling XSLTC with the native API</h3>
+<p>The XSLTC Native API is no longer supported.  Instead, you should always
+use XSLTC with the JAXP Transform API.</p>
+
+
+<a name="constraints">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Usage constraints</h3>
+<ul>
+  <li>The default for template inlining has been changed. Previously,
+    by default, inlining (putting all the templates into one big method) was on and 
+    the <code>"-n"</code> option to the compile command line disabled inlining. 
+    With inlining on, XSLTC can generate methods that are too long (<b>&gt; 64K length</b>) 
+    to run, or contain jump offsets that are too large for the JVM to handle. 
+    Now the default is not to inline templates. Instead, compilation creates separate 
+    methods for each template. Inlining was thought to improve performance, 
+    but with recent hotspot technology in the Java 1.4.x JVM, performance is better with 
+    inlining off. From the command line, you would use <code>"-n"</code> 
+    to turn on inlining, or with JAXP set the "enable-inlining" attribute to the TransformerFactory. 
+    For example, 
+      <blockquote class="source">
+<pre>TransformerFactory tfac = new TransformerFactory(); 
+tfac.setAttribute("enable-inlining", Boolean.TRUE);</pre>
+</blockquote>
+<br />
+</li>
+  <li>XSLTC tries to determine the order in which global variables are initialized 
+    by tracking the dependencies between them. In some cases, the value of a variable 
+    may depend on a template, e.g., if <code>xsl:call-template</code> is used to initialized
+    a variable whose type is RTF. If this happens, a
+    <code>NullPointerException</code> may be thrown at run-time 
+    when the translet attempts to access a variable that has not been properly 
+    initialized. In most cases, this problem can be avoided by reordering the 
+    variable declarations.<br />
+</li>
+</ul>
+<p>To check on the open bugs in the current Apache xml-xalan/java repository, 
+  follow the instructions below:</p>
+<ol>
+  <li>Go to <a href="http://issues.apache.org/jira">http://issues.apache.org/jira</a>.</li>
+  <li>Select project <b>XalanJ2</b>.</li>
+  <li>Select <b>XSLTC</b> from the Components list.</li> 
+</ol>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

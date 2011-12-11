@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Download/Build &amp; Dependencies</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Download/Build &amp; Dependencies</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>Download/Build<br />
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Download/Build &amp; Dependencies</h2>
+<ul>
+  <li>
+<a href="#latest-release">Downloading the latest release</a>
+</li>
+  <li>
+<a href="#download">Downloading what else you might need</a>
+</li>
+  <li>
+<a href="#whereis_xml4j">Where do I get Xerces-Java? </a>
+</li>
+  <li>
+<a href="#viewcode">How do I view Xalan code in a browser?</a>
+</li>
+  <li>
+<a href="#buildmyself">How do I download the latest development code to build myself?</a>
+</li>
+  <li>
+<a href="#using-ant">Using ant</a>
+</li>
+  <li>
+<a href="#samples">Rebuilding a sample application</a>
+</li>
+  <li>
+<a href="#previous-releases">Where do I download previous releases?</a>
+</li>
+</ul>
+<a name="latest-release">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Downloading the latest release</h3>
+  <p> You can download the pre-built binary distributions from one of the
+      mirror sites at <a href="http://www.apache.org/dyn/closer.cgi/xml/xalan-j">xalan-j distribution directory</a>.
+  </p>
+  
+  <p>Xalan-J has two processors, 
+  an interpretive one, Xalan Interpretive, and a compiled one, Xalan Compiled (XSLTC).
+  Your choice of which binary distribution to download depends on which
+  of the processors you want to use.
+  There are 2 binary distributions available; you only need to choose one of them.  
+  Both binary distributions contain <code>xml-apis.jar</code> and <code>xercesImpl.jar</code> from <a href="http://xerces.apache.org/xerces2-j/index.html">Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@</a>.</p>
+  <ul>
+    <li>The first binary distribution, <code>xalan-j_2.7.1-bin.zip</code> or 
+      <code>xalan-j_2.7.1-bin.tar.gz</code>,
+      contains the Xalan Interpretive processor, the Xalan Compiled processor (XSLTC) and the 
+      runtime support packages in a single jar, called <code>xalan.jar</code>.
+      The reason to use this distribution would be that you don't know
+      which processor you are going to use, or might be using both.
+    </li>
+<br />
+<br />
+    <li>The second binary distribution, <code>xalan-j_2.7.1-bin-2jars.zip</code> or 
+      <code>xalan-j_2.7.1-bin-2jars.tar.gz</code>
+      contains the Xalan Interpretive processor in <code>xalan.jar</code>, and the Xalan Compiled 
+      processor (XSLTC) and the runtime support packages in <code>xsltc.jar</code>.
+      The reason to using this distribution is that you want more control.
+      If you are using just XSLTC you can put <code>xsltc.jar</code> on the classpath
+      and not <code>xalan.jar</code>. If you are using just the interpretive processor
+      you can put xalan <code>xalan.jar</code> on the classpath and not <code>xsltc.jar</code>. Of course
+      you can put both <code>xalan.jar</code> and <code>xsltc.jar</code> from this distribution
+      on your classpath if you want to use both.
+    </li>
+  </ul>  
+
+  
+  <p>
+    We provide two distributions: a binary distribution, and a source distribution.
+    You can also download a source distribution from one of the same
+    mirror sites at <a href="http://www.apache.org/dyn/closer.cgi/xml/xalan-j">xalan-j distribution directory</a>. The difference
+    is that a binary distribution contains <b>-bin</b> in its name,
+    whereas a source distribution contain <b>-src</b> in its name.
+  </p>
+
+   <p>To use Xalan-Java, you need the following which are available from
+      either a binary or source distribution:</p> 
+  <ul>
+    <li>
+<code>xml-apis.jar</code> JAXP APIs</li>
+    <li>
+<code>xercesImpl.jar</code> (or another <a href="usagepatterns.html#plug">XML Parser</a>)</li>
+    <li>
+<code>xalan.jar</code>
+</li>
+    <li>
+<code>xsltc.jar</code> the XSLTC processor, if you choose a 2jars distribution</li>
+    <li>
+<code>serializer.jar</code> which are the serializer classes of
+    Xalan-Java</li>
+  </ul>
+  <p>  
+    If you have downloaded a binary distribution, you already have a build 
+    (you have the jars). This is also true for a source distribution, however
+    if you downloaded a source distribution, 
+    you have the option to use Ant to build Xalan-Java, 
+    including <code>xalan.jar</code>, <code>xsltc.jar</code>, <code>serializer.jar</code>
+    and other things, see <a href="#using-ant">Using ant</a> for more
+    details.
+  </p>  
+    
+    
+
+<a name="download">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Downloading what else you might need</h3>
+  <p>To use Xalan-Java, you need the following:</p> 
+  <ul>
+    <li>The JDK or JRE 1.3.x, 1.4.x, or 5.x</li>
+  </ul>
+  <p>
+    You can get the JDK or JRE from <a href="http://www-128.ibm.com/developerworks/java/jdk/index.html">
+    IBM developerWorks</a> or <a href="http://www.java.sun.com">java.sun.com</a>.
+  </p> 
+  <p>If you plan to run <a href="extensions.html">XSLT extensions</a> 
+     through extension functions or elements, and you want to implement
+     that support in languages
+     other than Java, then you will need an implementation of the Bean Scripting Framework (BSF).
+     An open source implementation is available for download from Apache.  See the 
+     <a href="http://jakarta.apache.org/bsf/index.html">Apache Jakarta
+     BSF project</a>. If you plan to run XSLT extensions implemented in scripting 
+     languages, you will need <code>bsf.jar</code> and one or more additional files as indicated in 
+     <a href="extensions.html#supported-lang">extensions language requirements</a>.
+  </p>
+
+
+<a name="whereis_xml4j">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Where do I get Xerces-Java?</h3>
+  <p>
+    The Xalan-Java Version 2.7.1 has been tested with Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@.
+  </p>
+  <p>
+<b>Important:</b> You may experience unpredictable anomalies
+    if your Xalan-Java and Xerces-Java builds are not in synch.
+    If you download an update to Xalan-Java, check the
+    <a href="readme.html">release notes</a>
+    to determine which version of Xerces-Java you should use.
+  </p>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">
+    You can use Xalan-Java with other XML parsers that implement
+    the <a href="http://java.sun.com/webservices/jaxp/index.jsp">Java API for XML Processing (JAXP) 1.3</a>. 
+    See <a href="usagepatterns.html#plug">Plugging in the Transformer and XML parser</a>.
+  </td>
+</tr>
+</table>
+  <p>
+    The Xalan-Java download includes <code>xercesImpl.jar</code> from Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@. In conjunction with <code>xml-apis.jar</code>, 
+    this is all you need to run Xalan-Java with the Xerces-Java XML parser. You can, however, download the 
+    complete Xerces-Java binary or source distribution from the <a href="http://www.apache.org/dyn/closer.cgi/xml/xerces-j/">xerces-j distribution directory</a>.
+    If you cannot find Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@ at that location, have a look at the 
+    <a href="http://archive.apache.org/dist/xml/xerces-j/">Apache archive location for
+    Xerces Java</a>.
+  </p>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">
+    If you plan to use a different XML parser, see <a href="usagepatterns.html#plug">Plugging 
+    in a Transformer and XML parser</a>.
+  </td>
+</tr>
+</table> 
+
+
+<a name="viewcode">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>How do I view Xalan code in a browser?</h3>
+  <p>
+    If you wish to view some of Xalan's files in a browser without downloading the
+    whole project you can view it at
+    <a href="http://svn.apache.org/viewvc/xalan/">http://svn.apache.org/viewvc/xalan/</a>
+    or at
+    <a href="http://svn.apache.org/repos/asf/xalan/">http://svn.apache.org/repos/asf/xalan/</a>.  
+    The link with "viewvc" in it is slightly prettier.
+  </p>
+  <p>
+    The java/trunk and test/trunk subdirectories are the ones with the latest development code.  
+  </p>
+
+
+
+<a name="buildmyself">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>How do I download the latest development code to build myself?</h3>
+  <p>
+    If you have downloaded a source distribution, or obtained source code
+    using subversion, this section may be of interest to you.
+  </p>
+  <p>
+    If you wish to download Xalan and build it yourself, perhaps because you want to 
+    apply a patch and test it, you will need a subversion client and anonymous access
+    to the repository.
+    Don't worry, everyone has anonymous access.
+    You can find pre-built binaries of subversion clients for different
+    operating systems here:
+    <a href="http://subversion.tigris.org/project_packages.html#binary-packages">
+    http://subversion.tigris.org/project_packages.html#binary-packages</a>.
+    See 
+    <a href="http://www.apache.org/dev/version-control.html">
+    http://www.apache.org/dev/version-control.html
+    </a> for more information on Apache and subversion.    
+  </p>
+  <p>
+    Once the subverion client is installed on your local machine you
+    can use the command line client program <b>svn</b>
+    to get the latest Xalan-J using a command line something like this:
+    <blockquote class="source">
+<pre>
+    svn checkout http://svn.apache.org/repos/asf/xalan/java/trunk java    
+    </pre>
+</blockquote>
+    where the argument after <b>checkout</b> is the Subversion repository location,
+    in this case the location of the latest development code, and the last argument,
+    in this case <b>java</b> is the location of the local directory that the repository is
+    copied to.   
+  </p>
+  <p>
+    Similarly for the test harness, you can download the latest test harness with a Subversion command
+    something like this:
+    <blockquote class="source">
+<pre>
+    svn checkout http://svn.apache.org/repos/asf/xalan/test/trunk test    
+    </pre>
+</blockquote>  
+  </p>
+  <p>
+    Those two commands will put a copy of the latest parts in the local
+    directories <b>java</b> and <b>test</b>,
+    which are sibling directories.  If you
+    want to test your build with
+    the test harness provided with Xalan then it is easiest if you keep the
+    local directory names
+    as suggested. With your paths set up to compile Java code, go into the local <b>java</b>
+    directory and issue these two commands:
+    <blockquote class="source">
+<pre>
+  build clean
+  build  
+  </pre>
+</blockquote>
+  </p>
+  <p>
+  The <b>build.bat</b> batch file, or <b>build.sh</b> shell script (depending on
+  your operating system use <b>ant</b> and the buildfile <b>build.xml</b>. See
+  the section <a href="#jar">Using ant</a> for more information.
+  </p>
+  <p>
+  Other useful targets may be <code>xsltc.jar</code> or <code>serializer.jar</code>.
+  If you want to test the jars you just built in the directory <b>java/build</b>, change to
+  directory <b>test</b> and issue this command:
+  <blockquote class="source">
+<pre>
+  build jar
+  build smoketest
+    </pre>
+</blockquote>
+    The first target, <b>jar</b> builds the test harness and only needs to be done
+    once after the <b>test</b> repository is checked out. The second target, <b>smoketest</b>,
+    runs the Xalan-J intepretive smoketest. 
+    Running the <b>build smoketest</b> or other targets in the <b>test</b> directory
+    automatically looks for the jars in the directory <b>../java/build</b>
+    and that is why it is easiest to download the projects into suggested sibling
+    directories with the given names.
+  </p>
+  <p>
+    Towards the end of the console output you will see <b>two CONGRATULATIONS!</b> messages if all
+    goes well. The end of the console output should look like this:
+    <blockquote class="source">
+<pre>
+    .
+    .
+    .
+minitest-pass:
+     [echo]  [minitest] CONGRATULATIONS! The Minitest passed!
+     [echo]  [minitest] See details in smoketest/Minitest.xml
+
+smoketest-notpass:
+
+smoketest-pass:
+     [echo]  [minitest] CONGRATULATIONS! The Smoketest passed!
+     [echo]  [minitest] Details are in smoketest/results-conf.xml, smoketest/results-api.xml, smoketest/extensions/results-extensions.xml
+
+smoketest:
+
+BUILD SUCCESSFUL
+Total time: 2 minutes 4 seconds
+build completed! 
+    </pre>
+</blockquote>
+  </p>
+  <p>
+    Don't be fooled by the <b>BUILD SUCCESSFUL</b> messages, look for the two CONGRATULATIONS!
+    messages. If you run the smoketest for XSLTC with <b>build smoketest.xsltc</b> you wil
+    only get one CONGRATULATIONS! message if all goes well.
+  </p>  
+
+
+<a name="using-ant">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using Ant To Build</h3>
+    <p>
+      If you have downloaded a source distribution, or obtained source code
+      using subversion, this section may be of interest to you.
+    </p>
+       
+     <p>Apache <a href="http://jakarta.apache.org/ant/index.html">Ant</a> is a flexible, powerful, and easy-to-use Java build tool that we include with the
+     Xalan-Java distribution. The Ant JAR file is in the tools directory, and the cross-platform XML build file (build.xml) is in 
+     the root directory along with a Windows32 batch file (build.bat) and a UNIX shell file (build.sh). The build file defines 
+     the "targets" that you can use Ant to build. The batch and shell files set up the classpath and launch Ant with the target 
+     (and any other arguments) you provide.</p>
+     <p>
+<b>Instructions for using Ant</b>
+</p>
+     <ol>
+       <li>Set the JAVA_HOME environment variable to the JDK root directory.<br />
+<br />
+       JDK 1.3.1 or higher is required to build Xalan-Java. You must put <code>tools.jar</code> from the JDK
+       bin directory on the classpath.<br />
+<br />
+</li>
+       <li>Depending on your environment, run the batch file (build.bat) or shell file (build.sh) 
+       from the Xalan-Java root directory, optionally with arguments (see the table of targets below).<br />
+<br />
+       The batch/shell file adds several JAR files to the classpath and launches Ant with any arguments 
+       you provide. If you provide no target, Ant compiles the source files and rebuilds <code>xalan.jar</code> 
+       (the "jar" target).</li>
+     </ol>
+     
+     <p>The Xalan-Java source code tree is in the src directory.
+     </p>
+     <p>
+       If you are using Ant, the target is jar (the default). 
+     </p>
+     
+     <p>You can also set up your classpath manually (see build.bat or build.sh for the details), and 
+     then run Ant as follows:<br />
+<br />
+     <code>java org.apache.tools.ant.Main <b>
+<i>target</i>
+</b>
+</code>
+<br />
+<br />
+     where <b>
+<i>target</i>
+</b> is nothing (for the default target) or one of the following.</p>
+     <table border="1">
+       <tr>
+<td class="content" rowspan="1" colspan="1">
+<b>Ant Target</b>
+</td>
+<td class="content" rowspan="1" colspan="1">
+<b>What Ant does</b>
+</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">compile</td>
+<td class="content" rowspan="1" colspan="1">compiles Xalan-Java in build/classes.</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">jar (the default)</td>
+<td class="content" rowspan="1" colspan="1">creates xalan.jar and serializer.jar in the build directory</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">serializer.jar</td>
+<td class="content" rowspan="1" colspan="1">creates serializer.jar in the build directory</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">xsltc.jar</td>
+<td class="content" rowspan="1" colspan="1">creates xsltc.jar in the build directory</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">samples</td>
+<td class="content" rowspan="1" colspan="1">compiles and jars the sample apps in build/xalansamples.jar</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">servlet</td>
+<td class="content" rowspan="1" colspan="1">compiles and jars the sample servlet in build/xalanservlet.jar</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">docs</td>
+<td class="content" rowspan="1" colspan="1">creates the HTML User's Guide in build/docs</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">javadocs</td>
+<td class="content" rowspan="1" colspan="1">generates the API documentation in ./build/docs/apidocs</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">fulldist</td>
+<td class="content" rowspan="1" colspan="1">generates a complete distribution tree with zip and tar.gz distribution files in build</td>
+</tr>
+       <tr>
+<td class="content" rowspan="1" colspan="1">clean</td>
+<td class="content" rowspan="1" colspan="1">purges the build and distribution</td>
+</tr> 
+  </table>
+  <p>If you build a target that depends on other targets, Ant creates those other targets in the correct order.
+  </p>
+  <p>
+<b>Building without Ant</b>
+</p>
+  <p>If you want to do the build without Ant, keep the following in mind:
+  </p>
+     <ul>
+     <li>Set the classpath to include the src directory, <code>xercesImpl.jar</code>, and <code>xml-apis.jar</code>.</li>
+     <li>Use a Java compiler (such as the IBM Just-In-Time compiler or the Sun javac) to compile all the .java files in the src
+     tree. </li>
+     <li>Use the <code>jar</code> utility to store the resulting .class files in <code>xalan.jar</code>
+</li>
+     </ul>
+
+
+
+<a name="samples">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Rebuilding a sample application</h3>
+   <p>If you modify a sample and want to recompile it, you can run the Java compiler in the directory containing the
+   example. Be sure <code>xalan.jar</code>, <code>serializer.jar</code>, <code>xml-apis.jar</code>, and <code>xercesImpl.jar</code> are on the classpath. </p>
+   <p>To recompile and run the class files in the servlet subdirectory, the javax.servlet and 
+   javax.servlet.http packages must also be on the classpath. These packages are available via
+   the <code>servlet.jar</code> file found in Apache Tomcat ( see <a href="http://tomcat.apache.org/">The Jakarta Site - Apache Tomcat</a> ).</p>
+   <p>After recompiling a sample, you can use the jar utility to place your new .class files in
+    <code>xalansamples.jar</code>.</p>
+    <p>You can use Ant with the samples target to recompile the samples and place the unpackaged class files in <code>xalansamples.jar</code>.
+     For more information, see <a href="#ant">Using Ant</a>.</p>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To rebuild (and to run) the sample servlet, the javax.servlet and javax.servlet.http packages must be on your
+    classpath.</td>
+</tr>
+</table>
+
+
+<a name="previous-releases">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Where do I download previous releases?</h3>
+  <p>
+    To access previous releases, see the <a href="http://archive.apache.org/dist/xml/xalan-j/">xalan-j archive directory</a>.
+  </p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1187 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Frequently asked questions</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Frequently asked questions</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>FAQs<br />
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>
+<a href="public_apis.html">Public APIs</a>
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2 class="faqSubHead">Questions</h2>
+<h3>General XSLT</h3>
+<ol start="1">
+<li>
+<a href="#faq-1">Where do I go to learn about XSLT</a>
+</li>
+<li>
+<a href="#faq-2">Where can I ask questions about XSLT</a>
+</li>
+<li>
+<a href="#faq-3">TrAX and JAXP</a>
+</li>
+</ol>
+<h3>Versions</h3>
+<ol start="4">
+<li>
+<a href="#faq-4">Determining Xalan-Java Version</a>
+</li>
+<li>
+<a href="#faq-5">Determining the Serializer Version</a>
+</li>
+<li>
+<a href="#faq-6">Which version of Xerces should I be using?</a>
+</li>
+<li>
+<a href="#faq-7">Compatibility with Xalan-Java version 1</a>
+</li>
+<li>
+<a href="#faq-8">Issues running Xalan-Java on JDK 1.3</a>
+</li>
+<li>
+<a href="#faq-9">Issues running Xalan-Java on JDK/JRE 1.4 or higher</a>
+</li>
+<li>
+<a href="#faq-10">Issues running Xalan-Java on Tomcat with JDK 1.4</a>
+</li>
+<li>
+<a href="#faq-11">Issues running Applets with XSLTC in Web Browsers with JAVA Plug-in (JRE 1.4)</a>
+</li>
+<li>
+<a href="#faq-12">Using the 'signature' file to verify a download</a>
+</li>
+</ol>
+<h3>Performance Issues</h3>
+<ol start="13">
+<li>
+<a href="#faq-13">Speeding up transformations</a>
+</li>
+<li>
+<a href="#faq-14">JAXP factory lookup procedure</a>
+</li>
+</ol>
+<h3>Namespace Related</h3>
+<ol start="15">
+<li>
+<a href="#faq-15">Retrieving nodes in the default namespace</a>
+</li>
+<li>
+<a href="#faq-16">Setting the parser to be namespace aware</a>
+</li>
+</ol>
+<h3>Common Errors</h3>
+<ol start="17">
+<li>
+<a href="#faq-17">NoClassDefFound errors</a>
+</li>
+<li>
+<a href="#faq-18">a "DOM006 Hierarchy request error"</a>
+</li>
+<li>
+<a href="#faq-19">Namespace not supported by SAXParser</a>
+</li>
+<li>
+<a href="#faq-20">Missing xsl:version attribute error</a>
+</li>
+<li>
+<a href="#faq-21">StackOverflowError with recursive stylesheet</a>
+</li>
+<li>
+<a href="#faq-22">OutOfMemoryError processing multiple documents</a>
+</li>
+<li>
+<a href="#faq-23">File Not Found error</a>
+</li>
+<li>
+<a href="#faq-24">No more DTM IDs are available</a>
+</li>
+<li>
+<a href="#faq-25">IllegalAccessError or could not load output_xml.properties                 on JDK 1.4</a>
+</li>
+</ol>
+<h3>Miscellaneous</h3>
+<ol start="26">
+<li>
+<a href="#faq-26">Chaining transformations</a>
+</li>
+<li>
+<a href="#faq-27">Stylesheet validation</a>
+</li>
+<li>
+<a href="#faq-28">Setting output encoding</a>
+</li>
+<li>
+<a href="#faq-29">Getting line and column numbers for errors in XML input documents and XSL stylesheets</a>
+</li>
+<li>
+<a href="#faq-30">Servlet unable to find classes for extension functions/elements</a>
+</li>
+<li>
+<a href="#faq-31">Translet name doesn't match stylesheet name</a>
+</li>
+</ol>
+<h2 class="faqSubHead">Answers</h2>
+<h3 id="faq-1" class="faqTitle">1. Where do I go to learn about XSLT</h3>
+<div class="faqQuestion">Where do I go to learn about XSLT?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>The definitive sources are the W3C XSLT and XPath recommendations:
+          <a href="http://www.w3.org/TR/xslt">XSL Transformations (XSLT) Version 1.0</a> and
+          <a href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</a>.
+        </p>
+        <p>For a brief listing of tutorials, discussion forums, and other materials, see
+          <a href="overview.html#uptospeed">Getting up to speed with XSLT</a>.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-2" class="faqTitle">2. Where can I ask questions about XSLT</h3>
+<div class="faqQuestion">Where can I ask questions about XSLT?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a href="http://marc.theaimsgroup.com/?l=xalan-dev&amp;r=1&amp;w=2">xalan-dev</a> and
+           <a href="http://marc.theaimsgroup.com/?l=xalan-j-users&amp;r=1&amp;w=2">xalan-j-users</a>
+           are for Xalan-Java questions only. This is not the best 
+           forum to ask general XSLT questions. The <a href="http://mulberrytech.com/xsl/xsl-list/index.html">Mulberry XSL Mailing List</a> is an 
+           excellent place to ask XSLT questions; please search
+          <a href="http://www.dpawson.co.uk/xsl/">XSL Frequently Asked Questions</a> to ensure your question has not been already asked.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-3" class="faqTitle">3. TrAX and JAXP</h3>
+<div class="faqQuestion">What are TrAX and JAXP, and are they related?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+      	<p>
+<a name="trax">&#8204;</a>
+</p>
+        <p>TrAX is the Transformation API for XML. In November 2000, TrAX was revised and incorporated 
+           into JAXP, the JAVA API for XML Processing. JAXP (including TrAX) provides users a standard, 
+           vendor-neutral API for working with (and transforming) XML documents. You can use this API 
+           to build applications that are not bound to the particular implementation details of a given 
+           XML parser or XSL transformer.</p>
+        <p>Xalan-Java includes the JAXP packages, implements the TrAX portion of 
+           that API (javax.xml.transform....), implements the XPath API of JAXP (javax.xml.xpath....), 
+           and includes xercesImpl.jar from  
+           <a href="http://xerces.apache.org/xerces2-j/index.html">Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@</a>, which implements the parser portion of the API 
+           (javax.xml.parser....).</p>
+        <p>For more information, see <a href="trax.html">Using the JAXP Transform APIs</a> and
+          <a href="http://java.sun.com/webservices/jaxp/index.jsp">Java API for XML Processing (JAXP) 1.3</a>.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-4" class="faqTitle">4. Determining Xalan-Java Version</h3>
+<div class="faqQuestion">How do I see what version of Xalan-Java I'm running? How do I determine 
+         which parser I'm using?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+          <a name="environmentcheck">&#8204;</a>
+        </p>
+        <p>
+          <b>Using the EnvironmentCheck utility:</b> To help diagnose classpath problems and also 
+              determine which version of Xalan-Java is being used, try running 
+              Xalan-Java's environment checking utility.
+        </p>
+        <p>You can run this utility from the command line as follows:</p>
+        <p>
+          <code>java org.apache.xalan.xslt.EnvironmentCheck [-out outFile]</code>
+        </p>
+        <p>You can also call this utility from within your application. For example,</p>
+        <p>
+          <code>boolean environmentOK = (new EnvironmentCheck()).checkEnvironment (yourPrintWriter);</code>
+        </p>
+        <p>Be sure to run EnvironmentCheck in the environment where you are experiencing the problem. 
+           For example, if you get a NoClassDefFound error from a command-line application, run 
+           EnvironmentCheck on the command line with exactly the same classpath. If the error occurs 
+           inside your Java application (or in a servlet, etc.), be sure to call the EnvironmentCheck 
+           checkEnvironment(...) method from within your running application.</p>
+        <p>Best of all, you can call checkEnvironment from a stylesheet using extensions:</p>
+        <blockquote class="source">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+    xmlns:xalan="http://xml.apache.org/xalan"
+    exclude-result-prefixes="xalan"&gt;
+&lt;xsl:output indent="yes"/&gt;
+
+&lt;xsl:template match="/"&gt;
+  &lt;out&gt;
+    &lt;xsl:copy-of select="xalan:checkEnvironment()"/&gt;
+  &lt;/out&gt;
+&lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre>
+</blockquote>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-5" class="faqTitle">5. Determining the Serializer Version</h3>
+<div class="faqQuestion">How do I see what version of the Serializer I'm running? </div>
+<br />
+<hr />
+<div class="faqAnswer">
+          <a name="serlializercheck">&#8204;</a>          
+        <p>
+          Xalan's serialier is now shared with Xerces. It may be packaged in Xalan, or Xerces,
+          or in the JRE itself. You can run the serializer's <b>Version</b> utility from the command line as follows:
+        </p>
+        <p>
+          <code>java org.apache.xml.serializer.Version</code>
+        </p>
+        The output should indicate which serializer you are using.
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-6" class="faqTitle">6. Which version of Xerces should I be using?</h3>
+<div class="faqQuestion">Which version of Xerces-Java should I be using?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a href="http://xml.apache.org/xalan-j">Xalan-Java Version 2.7.1</a> has been tested with <a href="http://xerces.apache.org/xerces2-j/index.html">Xerces-Java @parser.version.VERSION@.@parser.version.RELEASE@.@parser.version.MINOR@</a>. 
+           See <a href="readme.html#status">Status</a>.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-7" class="faqTitle">7. Compatibility with Xalan-Java version 1</h3>
+<div class="faqQuestion">How do I run applications that use the Xalan-Java version 1 API with Xalan-Java</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>The Xalan-Java version 1 compatibility API has been deprecated and removed, so you 
+           must use the Xalan-Java version 2 API. We strongly encourage you to use the 
+           <a href="http://java.sun.com/webservices/jaxp/index.jsp">Java API for XML Processing (JAXP) 1.3</a>. For more information, see 
+           the FAQ on <a href="#trax">TrAX and JAXP.</a>
+</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-8" class="faqTitle">8. Issues running Xalan-Java on JDK 1.3</h3>
+<div class="faqQuestion">I'm having a problem building or running Xalan-Java on the JDK 1.3.</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a name="jdk13">&#8204;</a>
+</p>
+        <p>The JDK 1.3 automatically places everything in the lib/ext directory in front of everything 
+           you place on the classpath. If this directory contains a version of DOM, JAXP, or Xerces 
+           that predates the Xalan-Java distribution you are using, you may have problems!</p>
+        <p>The IBM JDK 1.3 includes an earlier version of xerces.jar in the lib/ext directory, a 
+           version that does not implement the JAXP 1.3 interfaces and therefore does not work with the 
+           current Xalan-Java release. Accordingly, you must either remove the 
+           xerces.jar that is in that directory or replace it with the xercesImpl.jar that is included 
+           with the Xalan-Java distribution.</p>
+        <p>The SUN JDK 1.3 includes a pre-1.1 version of the JAXP in crimson.jar. Either remove the 
+           crimson.jar in that directory or overwrite it with a newer crimson.jar that includes and 
+           implements the JAXP 1.3 interfaces.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-9" class="faqTitle">9. Issues running Xalan-Java on JDK/JRE 1.4 or higher</h3>
+<div class="faqQuestion">I'm having a problem running Xalan-Java on JDK/JRE 1.4 or higher</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a name="jdk14">&#8204;</a>
+</p>      
+        <p>JDK/JRE 1.4, and JDK/JRE 5.0 is packaged with an old version of Xalan-Java. The JDK/JRE 
+           will attempt to use this version instead of any on the classpath. Unfortunately, 
+           this causes problems when attempting to use a newer version of Xalan-Java.</p>
+        <p>You can always determine which version of Xalan-Java you are running 
+           by using the <a href="#environmentcheck">EnvironmentCheck</a> class or by using the 
+           xalan:checkEnvironment extension function. It is highly recommended that you use this 
+           method to verify the version of Xalan-Java you are running, especially 
+           before opening a bug report.</p>
+        <p>To use a newer version of Xalan-Java and override the one packaged with the JDK:</p>
+        <ul>
+          <li>use the
+            <a href="http://java.sun.com/j2se/1.4.2/docs/guide/standards/">Endorsed Standards Override Mechanism</a>. Place the xalan.jar, serializer.jar, xercesImpl.jar 
+            and xml-apis.jar in the 
+            &lt;java-home&gt;\lib\endorsed directory, where
+            &lt;java-home&gt; is where the runtime software is installed.
+          </li>
+        </ul>
+        <p>The following methods
+          <b>do not work</b>:
+        </p>
+        <ul>
+          <li>Using the CLASSPATH environment variable or using -classpath to place the new classes 
+              in the classpath.</li>
+          <li>Using the -jar option to explicitly execute the classes inside the new jar files.</li>
+        </ul>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-10" class="faqTitle">10. Issues running Xalan-Java on Tomcat with JDK 1.4</h3>
+<div class="faqQuestion">I got java.lang.IllegalAccessError running Xalan-Java on Tomcat with JDK 1.4.</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a name="tomcat">&#8204;</a>
+</p>
+        <p>
+<a href="http://tomcat.apache.org/index.html">jakarta-tomcat 4.1.*</a> is packed
+           with an old version of xercesImpl.jar. Based on the <a href="http://java.sun.com/j2se/1.4.2/docs/guide/standards/">Endorsed Standards Override Mechanism</a>, you should
+           replace it with the newer xercesImpl.jar. You should add a newer xalan.jar and serializer.jar 
+           to Tomcat as well.  
+           Read the FAQ about <a href="#jdk14">Issues running Xalan-Java on JDK/JRE 1.4 or higher</a>. Place the 
+           xalan.jar, serializer.jar, and xercesImpl.jar in the &lt;Tomcat_Home&gt;\common\endorsed directory, where 
+           &lt;Tomcat_Home&gt; is where the Tomcat application server is installed.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-11" class="faqTitle">11. Issues running Applets with XSLTC in Web Browsers with JAVA Plug-in (JRE 1.4)</h3>
+<div class="faqQuestion">I got javax.xml.transform.TransformerException running my applet which uses XSLTC in JRE 1.4.</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a name="applet">&#8204;</a>
+</p>
+        <p>To overwrite an older version of Xalan Java; packaged with JRE 1.4 or higher you can add a newer 
+        xalan.jar and serializer.jar to the &lt;jre-home&gt;\lib\endorsed directory. Read the FAQ about 
+        <a href="#jdk14">Issues running 
+        Xalan-Java on JDK/JRE 1.4 or higer</a>.  If there is a META-INF/services/javax.xml.transform.TransformerFactory
+        file in xalan.jar (as there is in the Xalan Java distributions), then the TransformerFactoryImpl 
+        setting in this file will be used by the JVM during the factory finder lookup procedure.  
+        The TransformerFactoryImpl for the Xalan Java Interpretive processor is the default setting in the 
+        META-INF/services/javax.xml.transform.TransformerFactory file, therefore, you will get an error
+        when your applet attempts to use the XSLTC implementation.</p>
+        <p>To work around this problem, you can change the contents of the 
+        META-INF/services/javax.xml.transform.TransformerFactory file in xalan.jar so that it refers to the
+        transformer factory class implementation for XSLTC, org.apache.xalan.xsltc.trax.TransformerFactoryImpl. </p>
+        <p>Another solution is to create a jar that contains a META-INF/services/javax.xml.transform.TransformerFactory file 
+        containing the value org.apache.xalan.xsltc.trax.TransformerFactoryImpl.  Place the jar in the 
+         &lt;jre-home&gt;\lib\endorsed directory. When you name your jar file, the ASCII code of the first 
+        character should be smaller than the ASCII code of "X" to ensure that your jar will be loaded before 
+        xalan.jar</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-12" class="faqTitle">12. Using the 'signature' file to verify a download</h3>
+<div class="faqQuestion">How do I use the "signature" file to verify my download?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>For each Xalan-Java download file there is a corresponding signature file. 
+        The signature file for xalan-j_2_0_1.tar.gz, for example, is xalan-j_2_0_1.tar.gz.sig.
+        </p>
+        <p>The .sig files are PGP signatures of the actual .zip or .tar.gz
+        download files.  You can use these files to verify the authenticity of the download. You do not 
+        need the .sig file to use the corresponding download file.</p>
+        <p>To check the authenticity of a Xalan-Java distribution, you need a copy of
+        PGP which is available in a number of licenses, including some free
+        non-commercial licenses, either from an mit.edu site or on
+        the pgp.com site. Once you have a version of PGP installed, you
+        should be able to 'verify the signature' of the .sig file, which basically verifies that the 
+        corresponding .zip or tar.gz file has not been changed since we signed it.</p>
+        <p>The PGP key can be found in 
+        <a href="http://svn.apache.org/viewvc/xalan/java/trunk/KEYS">KEYS.</a>
+</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-13" class="faqTitle">13. Speeding up transformations</h3>
+<div class="faqQuestion">What can I do to speed up transformations?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>In the ongoing development of Xalan-Java, enhancing performance is 
+           the primary goal of the Xalan-Java team.  Here are some preliminary 
+           suggestions for you to keep in mind as you set up your applications:</p>
+        <ul>
+          <li>Use a Templates object (with a different Transformers for each transformation) to 
+              perform multiple transformations with the same set of stylesheet instructions (see
+            <a href="usagepatterns.html#multithreading">Multithreading</a>).
+            <br />
+            <br />
+          </li>
+          <li>Set up your stylesheets to function efficiently.
+            <br />
+            <br />
+          </li>
+          <ul>
+            <li>Don't use "//" (descendant axes) patterns near the root of a large document.
+              <br />
+              <br />
+            </li>
+            <li>Use xsl:key elements and the key() function as an efficient way to retrieve node sets.
+              <br />
+              <br />
+            </li>
+            <li>Where possible, use pattern matching rather than xsl:if or xsl:when statements.
+              <br />
+              <br />
+            </li>
+            <li>xsl:for-each is fast because it does not require pattern matching.
+              <br />
+              <br />
+            </li>
+            <li>Keep in mind that xsl:sort prevents incremental processing.
+              <br />
+              <br />
+            </li>
+            <li>When you create variables, <br />
+<code>&lt;xsl:variable name="fooElem" select="foo"/&gt;</code>
+<br /> is usually faster than
+              <br />
+<code>&lt;xsl:variable name="fooElem"&gt;&lt;xsl:value-of-select="foo"/&gt;&lt;/xsl:variable&gt;</code>
+              <br />
+              <br />
+            </li>
+            <li>Be careful using the last() function.
+              <br />
+              <br />
+            </li>
+            <li>The use of index predicates within match patterns can be expensive.
+              <br />
+              <br />
+            </li>
+            <li>Decoding and encoding is expensive.
+              <br />
+              <br />
+            </li>
+          </ul>
+          <li>For the ultimate in server-side scalability, perform transform operations on the client. 
+              For examples, see
+            <a href="samples.html#appletxmltohtml">appletXMLtoHTML</a> and
+            <a href="samples.html#get-todo-list">get-todo-list</a>.
+          </li>
+        </ul>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-14" class="faqTitle">14. JAXP factory lookup procedure</h3>
+<div class="faqQuestion">What is the JAXP factory lookup procedure and does it affect performance?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+      <p>JAXP uses an ordered lookup procedure to find factory implementations, such as
+         an implementation of javax.xml.transform.TransformerFactory.  For information
+         on this procedure, refer to Section 3 Plugability in <a href="http://java.sun.com/webservices/jaxp/index.jsp">JAXP 1.3</a>.  
+       </p>
+       <p>In most cases, Factory classes need only be looked up once for an application, so
+          performance is not an issue.  However, there may be scenarios where the lookup
+          procedure executes multiple times which could impact performance.  In these cases,
+          users may want to set system properties or populate the jaxp.properties file in order
+          to shorten the time spent in the lookup procedure.
+       </p>   
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-15" class="faqTitle">15. Retrieving nodes in the default namespace</h3>
+<div class="faqQuestion">XPath isn't retrieving nodes that are in the default namespace I defined. How do I get them?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>If you are looking for nodes in a namespace, the XPath expression must include a namespace 
+           prefix that you have mapped to the namespace with an xmlns declaration. If you have declared 
+           a default namespace, it does not have a prefix (see 
+           <a href="http://www.w3.org/TR/xpath.html#node-tests">XPath Node Tests</a>). In order 
+           to construct XPath expressions to retrieve nodes from this namespace, you must add a 
+           namespace declaration that provides a prefix you can include in the XPath expressions.</p>
+        <p>Suppose, for example, you you want to locate nodes in a default namespace declared as follows:
+          <br />
+          <code>xmlns="http://my-namespace"</code>
+        </p>
+        <p>Add a namespace declaration with a prefix:
+          <br />
+          <code>xmlns:foo="http://my-namespace"</code>
+        </p>
+        <p>Then you can use foo: in your XPath expression.</p>
+        <p>Hint: Avoiding the use of default namespaces will prevent this problem from occuring.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-16" class="faqTitle">16. Setting the parser to be namespace aware</h3>
+<div class="faqQuestion">
+        How do I set my parser to be namespace aware?
+      </div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>
+<a name="namespace-aware">&#8204;</a>
+</p>
+        <p>If you use a TransformerFactory to process a stylesheet Source and generate a Transformer, 
+           the TransformerFactory instructs the SAXParserFactory to set the parser's namespaceAware 
+           property to true. But if you call the parser directly, you may need to set the namespaceAware 
+           property yourself. for example:</p>
+        <blockquote class="source">
+<pre>javax.xml.parsers.SAXParserFactory spFactory =
+  javax.xml.parsers.SAXParserFactory.newInstance();
+spFactory.setNamespaceAware(true);</pre>
+</blockquote>
+        <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For more information about setting the namespaceAware property, and SAX2 vs. JAXP default 
+              settings, see <a href="http://people.apache.org/~edwingo/jaxp-faq.html#nsDefaults">JAXP FAQ: 
+              Warning about namespace processing defaults</a>.
+        </td>
+</tr>
+</table>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-17" class="faqTitle">17. NoClassDefFound errors</h3>
+<div class="faqQuestion">I'm getting a NoClassDefFound error. What has to be on the classpath?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <ol>
+          <li>xalan.jar, serializer.jar, xml-apis.jar, and xercesImpl.jar -- or the XML parser you are using -- must 
+              always be on the classpath.
+            <br />
+            <br />
+          </li>
+          <li>To run the samples in the samples subdirectories, xalansamples.jar must be on the 
+              classpath. To run the servlet samples, you must place xalanservlet.war 
+              on a web server with a servlet engine and you must put the javax.servlet and
+              javax.servlet.http packages on the classpath.  These packages 
+              are available via the servlet.jar file found in Apache Tomcat ( see <a href="http://tomcat.apache.org/">The Jakarta Site - Apache Tomcat</a> ).
+            <br />
+            <br />
+          </li>
+          <li>To run extensions which use the component and script extension elements (including the 
+              samples in samples/extensions), bsf.jar must be on the classpath. To run extensions 
+              implemented in JavaScript, js.jar must also be on the classpath. For information on what 
+              you need to run extensions implemented in other scripting languages, see
+              <a href="extensions.html#supported-lang">Supported languages</a>.
+          </li>
+        </ol>
+    You can check the correctness of your environment with the
+        <a href="#environmentcheck">EnvironmentCheck</a> feature.
+        <p>For more information, see
+          <a href="getstarted.html#classpath">Setting up the system classpath</a>.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-18" class="faqTitle">18. a "DOM006 Hierarchy request error"</h3>
+<div class="faqQuestion">Why do I get a "DOM006 Hierarchy request error" when I try to transform into a DOM Document node?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>This error occurs when Xalan-Java tries to add a Node to a Document node 
+           where it isn't allowed. For example, attempting to add non-whitespace text to the DOM Document 
+           node produces this error.</p>
+        <p>The error can also occur when a Document node is created with the DOMImplementation 
+           createDocument() method, which takes a qualified name as an argument and creates an element 
+           node.  If you then pass the returned Document node to Xalan-Java, you 
+           get a "DOM006 Hierarchy request error" when Xalan-Java tries to add a 
+           second element to the Document node. The solution is to either use the DocumentBuilder 
+           newDocument() method to create a Document that does not contain an element node, or use a 
+           DocumentFragment. It should be noted that the DocumentBuilder newDocument() method is 
+           "Non-preferred" according to the JAXP 1.3 documentation.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-19" class="faqTitle">19. Namespace not supported by SAXParser</h3>
+<div class="faqQuestion">Why am I getting a "Namespace not supported by SAXParser exception?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>We have seen this problem arise for two quite different reasons:</p>
+        <ul>
+          <li>SAX1 interfaces are on your classpath in front of the SAX2 interfaces provided with 
+              your XML parser.
+            <br />
+            <br />
+  or
+            <br />
+            <br />
+          </li>
+          <li>The parser you are using to process a stylesheet Source and generate a Transformer does 
+              not have the namespaceAware property set to true.</li>
+        </ul>
+        <p>
+          <b>SAX1 on the classpath</b>
+        </p>
+        <p>SAX1 should not be on your classpath. The SAX1 interfaces and implementations of the SAX1 
+           SAX parser are not namespace aware.</p>
+        <p>To help diagnose your classpath, you can use the
+          <a href="#environmentcheck">EnvironmentCheck
+  utility</a>. If you are running under JDK 1.3, see
+          <a href="#jdk13">Issues running Xalan-Java on JDK
+  1.3</a>. If you are running a servlet, make sure the webserver is not placing SAX1 on the
+  classpath.
+        </p>
+        <p>When you create a Transformer, you must use a
+          <a href="#namespace-aware">namespace-aware</a> parser to parse the stylesheet.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-20" class="faqTitle">20. Missing xsl:version attribute error</h3>
+<div class="faqQuestion">I'm getting an error about my stylesheet missing the xsl:version attribute - what's wrong?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>There are two common causes for this error.</p>
+        <ol>
+          <li>Using the wrong URI for the xsl: prefix will cause this message. URIs, and namespace 
+              URIs in particular, are case sensitive. Ensure the URI for the xsl namespace is 
+              "http://www.w3.org/1999/XSL/Transform".<br />
+<br />
+</li>
+          <li>The parser you are using to process a stylesheet Source and generate a Transformer 
+              does not have the namespaceAware property set to true.<br />
+          When you create a Transformer, you must use a <a href="#namespace-aware">namespace-aware</a> parser to parse the stylesheet.</li>
+        </ol>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-21" class="faqTitle">21. StackOverflowError with recursive stylesheet</h3>
+<div class="faqQuestion">Xalan-Java dies with a java.lang.StackOverflowError when I run a deeply 
+         recursive stylesheet. The same stylesheet worked fine in the past (or on other machines). 
+         What's happening?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>That may not be our fault.  As of JDK 1.3.x, many Java Virtual Machine publishers reduced 
+           the default size of a thread's call stack from 1MB to 256KB. This allows more threads to 
+           run simultaneously, but it means that each thread is more limited in how deeply its function 
+           calls can be nested.</p>
+	<p>Some JVMs may offer an option that allows you to raise this limit. For example, in Sun 
+	   JDK 1.3.1 you can start JVM with the -Xss1m option to allow each thread to use a full 
+	   megabyte.  In IBM's JDK you can start with the -Xss1m and -Xoss1m options.  Other JVMs 
+	   may set this in other ways, or may not allow you to control it at all; check the 
+	   documentation on your system for details.</p>
+        <p>Note too that on some platforms 1MB is an architectural upper limit on the stack size, so 
+           setting -Xss2m (or equivalent) may not allow deeper recursion than -Xss1m.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-22" class="faqTitle">22. OutOfMemoryError processing multiple documents</h3>
+<div class="faqQuestion">I get a java.lang.OutOfMemoryError when I try to process multiple documents with the 
+         document() function. What can I do?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>As a general rule, Xalan-Java currently caches all of the documents 
+           that you read in with the document() function during a transformation.</p>
+        <p>If your objective is to transform a series of documents, you can break the process into a 
+           series of transformations. The
+          <a href="extensionslib.html#pipedocument">PipeDocument</a> extension element 
+          provides one strategy for batching a series of parallel transformations.</p>
+        <p>Another alternative is to place your document() call in the select attribute of an 
+           xsl:for-each instruction element and use a custom PI (Processing Instruction) to turn off 
+           document caching. Include an XPath expression in your document() call if you do not 
+           need to process the entire document.</p>
+        <p>Sample stylesheet fragment:</p>
+        <blockquote class="source">
+<pre>
+&lt;xsl:template match="doc"&gt;
+  &lt;xsl:for-each select="document(@href)/bar/zulu"&gt;
+    &lt;?xalan-doc-cache-off?&gt;
+    &lt;!-- process each document --&gt;
+  &lt;xsl:for-each&gt;
+&lt;/xsl:template&gt;</pre>
+</blockquote>
+        <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">PIs do not ordinarily uses namespaces, so "xalan:" is a 'fake' namespace we have 
+        included to indicate that this is not a standard PI.</td>
+</tr>
+</table>
+        <p>If you include an XPath expression in your document() call, you can also turn on
+          <a href="dtm.html#incremental">incremental transform</a> to eliminate the need 
+          to read in the entire document. In fact, you can take advantage of the incremental transform 
+          feature even if you are not turning off document caching.
+        </p>
+        <p>You can also increase your JVM heap size with the -Xmx or -mx flag, depending on which JVM 
+           you are using (you can include both flags, and the JVM will ignore the one it doesn't 
+           understand). For example, to give your JVM 64 meg, try
+          <br />
+          <code> java -Xmx64m -mx64m
+            <b>
+<i>Class</i>
+</b>
+          </code>
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-23" class="faqTitle">23. File Not Found error</h3>
+<div class="faqQuestion">Why do I get 'file not found' when I pass c:\path\filename.txt?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>Xalan-Java often requires legal URLs as system identifiers, not local 
+           pathnames (this is partly due to underlying parsers requiring this). A simple (but not always 
+           correct!) way to change a local pathname into a URL in Java 1.1x is:</p>
+        <blockquote class="source">
+<pre>
+  public static String filenameToURL(String filename)
+  {
+    File f = new File(filename);
+    String tmp = f.getAbsolutePath();
+    if (File.separatorChar == '\\')
+    {
+      tmp = tmp.replace('\\', '/');
+    }
+    // Note: gives incorrect results when filename already begins with
+file:///
+    return "file:///" + tmp;
+  }
+        </pre>
+</blockquote>
+        <p>For a slightly more detailed example, see org.apache.xml.utils.SystemIDResolver.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-24" class="faqTitle">24. No more DTM IDs are available</h3>
+<div class="faqQuestion">What does: "XSLT Error (javax.xml.transform.TransformerException): 
+          org.apache.xml.dtm.DTMException: No more DTM IDs are available" mean?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+         <p>It means you are probably using a very old version of Xalan or Xalan-Java, 
+            likely the version 2.2D11 which was packaged in JDK1.4.  Architectural changes made in 
+            early 2002 should have eliminated this issue for almost all cases.</p>
+         <p>You should verify the version of Xalan-Java you are using by running 
+            the <a href="#environmentcheck">EnvironmentCheck</a> utility, 
+            and read the FAQ about <a href="#jdk14">Issues running Xalan-Java
+            on JDK 1.4</a>.</p>
+        </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-25" class="faqTitle">25. IllegalAccessError or could not load output_xml.properties                 on JDK 1.4</h3>
+<div class="faqQuestion">Why do I get a "java.lang.IllegalAccessError" or the message
+         "Could not load the property file 'output_xml.properties'" when I try
+         to transform using XSLTC or Xalan-Java Interpretive?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>These errors may occur if you use JDK 1.4 or later releases.</p>
+        <p>JRE 1.4 and later releases contain copies of Xalan-Java.  In some
+        cases, the JRE includes only Xalan-Java Interpretive, while in other cases it also
+        includes XSLTC.  Typically, the copy of the processor packaged
+        with the JRE will be loaded in preference to any copy of Xalan-Java on
+        your class path.</p>
+        <p>Beginning with Xalan-Java 2.5, Xalan-Java Interpretive and XSLTC are both
+        packaged in xalan.jar, and share some of the same classes.  If you
+        are using a version of the JRE that contains Xalan-Java Interpretive, but not
+        XSLTC, and you try to use XSLTC on your class path,
+        classes from that version of XSLTC may be loaded along with
+        classes from the version of Xalan-Java packaged with your JRE.</p>
+        <p>Because the classes may be from different versions of Xalan-Java, the
+        results may be unpredictable.  In particular, a
+        <code>java.lang.IllegalAccessError</code> may be thrown, or an
+        <code>org.apache.xml.utils.WrappedRuntimeException</code> containing
+        the message:  <code>"Could not load the property file
+        'output_xml.properties' for output method 'xml' (check
+        CLASSPATH)"</code> may be thrown.</p>
+        <p>To work around those problems, please read the FAQ entitled
+        <a href="#jdk14">Issues running Xalan-Java on JDK 1.4</a>.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-26" class="faqTitle">26. Chaining transformations</h3>
+<div class="faqQuestion">How do you chain together a series of transformations?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>Xalan-Java supports two strategies for chaining together a series of 
+           transformations such that the output of each transformation provides input for the next 
+           transformation.</p>
+        <ul>
+          <li>For each transformation in the series, you can set one SAX ContentHandler to process 
+              the input, and another ContentHandler to process the output.
+            <br />
+            <br />
+          </li>
+          <li>You can also set up a series of parent-child relationships between an XMLReader and 
+              one or more XMLFilters.</li>
+        </ul>
+        <p>For the details and links to examples, see
+          <a href="usagepatterns.html#outasin">Using transformation output as input for 
+          another transformation</a>.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-27" class="faqTitle">27. Stylesheet validation</h3>
+<div class="faqQuestion">How do I validate an XSL stylesheet?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>An XSL stylesheet is an XML document, so it can have a DOCTYPE and be subject to 
+           validation, right?</p>
+        <p>The XSLT Recommendation includes a
+          <a href="http://www.w3.org/TR/xslt#dtd">DTD Fragment 
+          for XSL Stylesheets</a> with some indications of what you need to do to create a 
+          complete DTD for a given stylesheet. Keep in mind that stylesheets can include literal 
+          result elements and produce output that is not valid XML.</p>
+        <p>You can use the xsl:stylesheet doctype defined in xsl-html40s.dtd for stylesheets that 
+           generate HTML.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-28" class="faqTitle">28. Setting output encoding</h3>
+<div class="faqQuestion">Why is the output character encoding I set in the stylesheet not being used?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>If you use a character output stream to instantiate the
+          <a href="apidocs/javax/xml/transform/stream/StreamResult.html">StreamResult</a> object 
+          which holds the transformation output, the Writer uses its own encoding, not the encoding 
+          you specify in the stylesheet.</p>
+        <p>If you want to use the stylesheet output encoding, do not use StreamResult(java.io.Writer) 
+           to instantiate the holder for the output. Alternatively, you can specify the encoding when 
+           you create a Writer (java.io.OutputStreamWriter). Once the Writer exists, you cannot change 
+           its encoding. If the transformation is run in a servlet, it is possible
+           that the Writer is coming from the ServletResponse object.
+        </p>
+        <p>
+          If the stylesheet is run using the JAXP APIs and the Transformer's setOutputProperty() 
+          method is invoked, it is possible to set the <b>"encoding"</b> property and
+          over-ride the value in the stylesheet.
+        </p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-29" class="faqTitle">29. Getting line and column numbers for errors in XML input documents and XSL stylesheets</h3>
+<div class="faqQuestion">How do I get line numbers for errors in the XML or XSL input when I am performing a 
+         transformation?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>Use or mimic the command-line processor (<a href="apidocs/org/apache/xalan/xslt/Process.html">org.apache.xalan.xslt.Process</a>).
+        </p>
+        <p>A
+          <a href="apidocs/javax/xml/transform/TransformerException.html">TransformerException</a> generally wraps another exception, often a SAXParseException. The command-line processor uses the static
+          <a href="apidocs/org/apache/xml/utils/DefaultErrorHandler.html">org.apache.xml.utils.DefaultErrorHandler</a> printLocation() method to chase down the exception cause and get a
+          <a href="apidocs/javax/xml/transform/SourceLocator.html">SourceLocator</a> that can usually report line and column number.
+        </p>
+        <p>Suppose you wanted to modify the ValidateXMLInput sample in the samples/Validate 
+           subdirectory to include line and column numbers . All you need to do is call 
+           DefaultErrorHandler.printLocation() in the the Handler internal class error() and warning() 
+           methods. For example, replace</p>
+        <blockquote class="source">
+<pre>public void error (SAXParseException spe)
+  throws SAXException
+{
+  System.out.println("SAXParseException error: " + spe.getMessage());
+}</pre>
+</blockquote>
+        <p>with</p>
+        <blockquote class="source">
+<pre>public void error (SAXParseException spe)
+  throws SAXException
+{
+  PrintWriter pw = new PrintWriter(System.out, true);
+  org.apache.xml.utils.DefaultErrorHandler.printLocation(pw, spe);
+  pw.println("SAXParseException error: " + spe.getMessage());
+}</pre>
+</blockquote>
+        <p>You can also replicate code from the printLocation() method to obtain a SourceLocator, and 
+           then use the SourceLocator getLineNumber() and getColumnNumber() methods. The 
+           getRootSourceLocator() method below returns a SourceLocator.</p>
+        <blockquote class="source">
+<pre>
+import javax.xml.transform.SourceLocator;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.apache.xml.utils.SAXSourceLocator;
+import org.apache.xml.utils.WrappedRuntimeException;
+....
+public static SourceLocator getRootSourceLocator(Throwable exception)
+{
+  SourceLocator locator = null;
+  Throwable cause = exception;
+    
+  // Try to find the locator closest to the cause.
+  do
+  {
+    if(cause instanceof SAXParseException)
+    {
+      locator = new SAXSourceLocator((SAXParseException)cause);
+    }
+    else if (cause instanceof TransformerException)
+    {
+      SourceLocator causeLocator = 
+                    ((TransformerException)cause).getLocator();
+      if(null != causeLocator)
+        locator = causeLocator;
+    }
+    if(cause instanceof TransformerException)
+      cause = ((TransformerException)cause).getCause();
+    else if(cause instanceof WrappedRuntimeException)
+      cause = ((WrappedRuntimeException)cause).getException();
+    else if(cause instanceof SAXException)
+      cause = ((SAXException)cause).getException();
+    else
+      cause = null;
+  }
+  while(null != cause);
+        
+  return locator;
+}</pre>
+</blockquote>
+        <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">
+          <b>Xalan-Java exception handling:</b>  The exception architecture 
+          in Xalan-Java and with transforms in general is tricky because of 
+          multiple layers of exception handling, involving movement back and forth between SAX and 
+          Transformer exceptions and across pipes. Xalan-Java often uses a 
+          WrappedRuntimeException to throw over many layers of checked exceptions, in order not to 
+          have every possible checked exception be declared for every function in the stack, which 
+          means it has to catch this exception at the upper levels and unwrap the exception to pass 
+          it on as a TransformerException.
+          <br />
+          <br />A JAXP 1.3 TransformerException often wraps another exception. Two of the 
+          TransformerException structures that are frequently used to construct contained exceptions 
+          in JAXP 1.3 do not set the locator.  The locator is not set because we don't know the type 
+          of exception that the Throwable argument represents.  The solution is to chase up the 
+          contained exceptions to find the root cause, which will usually have a location set for 
+          you.  This can be somewhat tricky, as not all the exceptions may be TransformerExceptions.  
+          A good sample is in the DefaultHandler static printLocation() method, which the 
+          Xalan-Java command-line processor uses to report errors. You can also 
+          roll your own functions along the lines of the getRootSourceLocator() example above.
+        </td>
+</tr>
+</table>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-30" class="faqTitle">30. Servlet unable to find classes for extension functions/elements</h3>
+<div class="faqQuestion">My servlet cannot find classes that implement extension functions or elements. What can I do?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>If you install xalan.jar in the webserver's lib directory (e.g., tomcat/lib), as 
+           opposed to the servlet application's lib directory, then the Xalan-Java classes 
+           are loaded by a classloader that does not see the classes in the application's classloader 
+           (i.e., the extension classes, if you placed them there). The Xalan-Java
+           classes try to load the extension classes using their own classloader, and that attempt 
+           fails.</p>
+        <p>Workaround: place xalan.jar in the servlet application's lib directory and NOT in the webserver's 
+           lib directory. Another workaround is to place the extension classes also in the webserver's
+           lib directory, but you generally want to avoid cluttering that directory.</p>
+        <p>Thanks to Gunnlauger Thor Briem (gthb@dimon.is) for providing this information.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3 id="faq-31" class="faqTitle">31. Translet name doesn't match stylesheet name</h3>
+<div class="faqQuestion">My stylesheet is named <code>foo-bar.xsl</code>, but XSLTC
+         created a translet named <code>foo_bar</code>.  Is that a bug?</div>
+<br />
+<hr />
+<div class="faqAnswer">
+        <p>No.  The name of a translet is usually the name of the stylesheet,
+           the name specified using the <code>translet-name</code> attribute on
+           the XSLTC <code>TransformerFactory</code> or the name
+           specified for the translet on the command-line invocation.
+           However, the name of the translet is also the name of a Java class.
+           Any character that is not permitted in a class name is replaced with
+           an underscore.</p>
+      </div>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

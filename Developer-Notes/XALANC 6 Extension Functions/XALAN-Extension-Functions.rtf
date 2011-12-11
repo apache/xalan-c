@@ -1,0 +1,183 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fswiss\fprq2\fcharset0 Lucida Sans Unicode;}{\f2\fswiss\fprq2\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\lang1033\f0\fs20\par
+\fs32 Apache XALAN Extension Functions Library\fs20\par
+\par
+The Apache Software Foundation has some useful XSLT functions that are available to the XALAN projects.\par
+\par
+The extension functions provide a powerful mechanism for extending and simplifying what you can do with an XSLT processor like Xalan.  With input and contibutions from the XML open-source developer community, we are working on placing the most useful extensions in an extensions library distributed with Xalan-C/C++.  If you have ideas and/or contributions you would like to make, please email us at the [mailto:xalan-dev@xml.apache.org] Xalan Development Mailing List.\par
+\par
+The XALAN Extensions are associated with the namespace \f1 http://xml/.apache.org/xalan\f0 .  This namespace is fully implemented with [http://xml.apache.org/xalan-j/apidocs/org/apache/xalan/lib/Extensions.html] Xalan-Java.  A subset of the namespace is implemented in Xalan-C/C++.\par
+\par
+MODULE\par
+\par
+\b Xalan\tab\tab\tab Namespace = http://xml.apache.org/xalan\b0\par
+\par
+\par
+  xalan:hasSameNodes()\par
+\par
+\tab\b boolean xalan:hasSameNodes(node-set, node-set)\b0\par
+\par
+\tab Returns true if both node sets contain exactly the same set of nodes.\par
+\tab The identity check is on the string value associated with each node.\par
+\par
+  xalan:nodeset()\par
+\par
+\tab\b node-set xalan:nodeset(result-tree-fragment)\b0\par
+\par
+\tab Returns a node-set that corresponds to a result-tree-fragment.\par
+\pard\li180\par
+This Xalan nodeset() extension function is also found in xt and saxon. If the argument is a Result Tree Fragment, then nodeset returns a node-set consisting of a single root node as described in section 11.1 of the XSLT 1.0 Recommendation. If the argument is a node-set, nodeset returns a node-set. If the argument is a string, number, or boolean, then nodeset returns a node-set consisting of a single root node with a single text node child that is the result of calling the XPath string() function on the passed parameter.  If the argument is anything else, an empty node-set is returned.\par
+\par
+\b Example with the nodeset extension function\b0\par
+\pard\par
+\pard\li180 The following stylesheet uses the nodeset extension function to cast a result tree fragment into a node-set that can be navigated in standard XPath manner.  It uses the \b\f1 http://xml.apache.org/xalan\b0\f0  namespace to provide access to the nodeset() extended function.\par
+\pard\par
+\pard\li720\f1 <?xml version="1.0"?>\par
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" \par
+                   version="1.0"\par
+                   xmlns:xalan="http://xml.apache.org/xalan"\par
+                   exclude-result-prefixes="xalan">\par
+<xsl:template match="/">\par
+  <out>\par
+    <xsl:variable name="rtf">\par
+      <docelem>\par
+        <elem1>\par
+          <elem1a>ELEMENT1A</elem1a>\par
+          <elem1b>,ELEMENT1B</elem1b>\par
+        </elem1>\par
+        <elem2>\par
+          <elem2a>ELEMENT2A</elem2a>\par
+        </elem2>\par
+      </docelem>\par
+    </xsl:variable>     \par
+    <xsl:for-each select="xalan:nodeset($rtf)/docelem//*">\par
+      <xsl:value-of select="name(.)"/><xsl:text>,</xsl:text>\par
+    </xsl:for-each>\par
+  </out>\par
+</xsl:template> \par
+</xsl:stylesheet>\f0\par
+\pard\par
+\pard\li180 The output of running this stylesheet (with any XML input source) is a comma-delimited list of the element names in the node-set\par
+\tab\f1 <out>elem1,elem1a,elem1b,elem2,elem2a</out>\f0\par
+\pard\par
+\pard\li180 Note: For illustration pruposes, the preceding stylesheet pays no attention to the structure and content of the XML input document. Instead, it processes the template (in the stylesheet) bound to the variable named rtf.\par
+\pard\par
+  xalan:intersection()\par
+\par
+\tab\b node-set xalan:intersection(node-set, node-list)\b0\par
+\par
+\tab Same as the EXSLT set:intersection() function.\par
+\par
+  xalan:difference()\par
+\par
+\tab\b node-set xalan:difference(node-set, node-set)\b0\par
+\par
+\tab Same as the EXSLT set:difference() function.\par
+\par
+  xalan:distinct()\par
+\par
+\tab\b node-set xalan:distinct(node-set)\b0\par
+\par
+\tab Same as the EXSLT set:distinct() function.\par
+\par
+  xalan:evaluate()\par
+\par
+\b\tab object xalan:evaluate(xpath-expression)\b0\par
+\par
+\tab Same as EXSLT dyn:evaluate()\par
+\par
+\pard\li720 Returns the result of evaluating the xpath-expression in the current XPath expression context (automatically passed in by the extension mechanism).\par
+\par
+Use the evaluate() extension function when the value of the expression is not known until run time.\par
+\par
+\pard   xalan:tokenize()\par
+\par
+\tab\b node-set xalan:tokenize(string, string?)\b0\par
+\par
+\tab Same as the EXSLT str:tokenize() function.\par
+\par
+  xalan:checkEnvironment()\par
+\par
+\tab This is a diagnostic function for Xalan Java environments (Not implemented in Xalan-C/C++).\par
+\pard\li720 A related function is available from the [http://xml.apache.org/commons] Apache XML Commons project.\par
+\pard\par
+MODULE\par
+\par
+\b XSLTC\tab\tab\tab Namespace = http://xml.apache.org/xalan/xsltc\b0\par
+\par
+  (Extension Elements)\par
+\par
+  xsltc:output\par
+\par
+\f1\tab <xsltc:output\par
+\tab\tab file="pattern"\tab\tab // filename (required)\par
+\tab >\par
+\tab <-- Contents: template -->\par
+\tab </xsltc:output>\f0\par
+\par
+\tab The usage of this element is similar and compatible with the <redirect:write> element.\par
+\par
+\par
+\b Redirect\tab\tab Namespace = http://xml.apache.org/xalan/redirect\b0\par
+\par
+  (Extension Elements)\par
+\par
+A standard XSL transformation involves an XSL stylesheet, an XML source tree, and the transformation result tree. The transformation sends the entire result to a single result object.\par
+\par
+The namespace for the Redirect extension is:\par
+\par
+     http://xml.apache.org/xalan/redirect\par
+\par
+It supplies three extension elements that you can use to redirect portions of your transformation output to multiple files: <open>, <write>, and <close>. If you use the <write> element alone, the extension opens a file, writes to it, and closes the file immediately. If you want explicit control over the opening and closing of files, use <write> in conjunction with the <open> and <close> elements.\par
+\par
+The <open> and <write> elements include a file attribute and/or a select attribute to designate the output file. The file attribute takes a string, so you can use it to directly specify the output file name. The select attribute takes an XPath expression, so you can use it to dynamically generate the output file name. If you include both attributes, the Redirect extension first evaluates the select attribute, and falls back to the file attribute if the select attribute expression does not return a valid file name.\par
+\par
+The <open> and <write> elements also support an append attribute. If the append attribute is set to true or yes, then the result is appended to the output file.\par
+\par
+  redirect:open\par
+\par
+\f1\tab <redirect:open\par
+\tab\tab file="pattern"\tab\tab\tab // the filename (usage: required)\par
+\tab\tab append=\{ "yes" | "no" \}\tab\tab // optional\par
+\tab />\f0\par
+\par
+  redirect:write\par
+\par
+\f1\tab <redirect:write\par
+\tab\tab file="pattern"\tab\tab\tab // the filename (usage: required)\par
+\tab\tab append=\{ "yes" | "no" \}\tab\tab // optional\par
+\tab >\par
+\tab <-- Content: template -->\par
+\tab </redirect:write>\f0\par
+\par
+  redirect:close\par
+\par
+\f1\tab <redirect:close\par
+\tab\tab file="pattern"\tab\tab\tab // the filename (usage: required)\par
+\tab />\f0\par
+\par
+Note: The <redirect:open /> element must have a <redirect:close /> element on the same @file attribute value.\par
+\par
+Note: If the <redirect:write> file is already open, the template content will be appended and the filw will remain open.  If the <redirect:write> file is not open, the file will be opened, the template content will be written, and the file will be closed.\par
+\par
+Note: Redirection of XSLT output is similar to the <exsl:document> element referenced by namespace [http://www.exslt.org/exsl] \f1 http://exslt.org/common\f0 .  It is best to implement this extension element in preference to the other redirection schemes. This element is modeled after the standard XSLT <xsl:output> element.\par
+\par
+\pard\li720\f1 <exsl:document\par
+   href = \{ uri-reference \}\par
+   method = \{ "xml" | "html" | "text" | qname-but-not-ncname \}\par
+   version = \{ nmtoken \}\par
+   encoding = \{ string \}\par
+   omit-xml-declaration = \{ "yes" | "no" \}\par
+   standalone = \{ "yes" | "no" \}\par
+   doctype-public = \{ string \}\par
+   doctype-system = \{ string \}\par
+   cdata-section-elements = \{ qnames \}\par
+   indent = \{ "yes" | "no" \}\par
+   media-type = \{ string \}>\par
+   <-- Content: template -->\par
+</exsl:document>\par
+\pard\f2\par
+\par
+\f0\par
+}
+ 

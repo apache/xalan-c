@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: XSLTC Native API Documentation</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">XSLTC Native API Documentation</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>Xsltc Native API<br />
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>XSLTC Native API Documentation</h2>
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>XSLTC Compiler API</h3>
+
+    <p>XSLTC's native API is represented by the
+    <code>org.apache.xalan.xsltc.compiler.XSLTC</code> class. Any application
+    using XSLTC's native API should only have to access methods in this class
+    in order to compile a stylesheet (or a set or stylesheets) into one or
+    more Java classes. The <code>XSLTC</code> has an empty constructor. The
+    class needs to be initialized before each compilation by a call to:</p>
+<blockquote class="source">
+<pre>
+    public void init();
+</pre>
+</blockquote>
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Compile methods</h4>
+    <p>There is a set of methods for compiling one or more stylesheets into a
+    set of Java classes. The stylesheet can be specified either as a
+    <code>URL</code>, <code>InputStream</code>, <code>InputSource</code> or
+    a <code>Vector</code> containing a set of <code>URL</code>s pointing to
+    stylesheets:</p>
+<blockquote class="source">
+<pre>
+    public boolean compile(URL url);
+    public boolean compile(URL url, String transletName);
+    public boolean compile(InputStream stream, String transletName);
+    public boolean compile(InputSource input, String transletName);
+    public boolean compile(Vector stylesheets);</pre>
+</blockquote>
+
+    <p>The default behaviour is to output the compiled Java class(es) to one or
+    more Java classes in the current working directory. The name of the main
+    translet class will be obtained from (in order of priority):</p>
+
+    <ul>
+      <li>that specified in the <code>compile()</code> method</li>
+      <li>if none is specified (if the parameter is 'null') the name will be
+      generated from the filename specified by the input URL/file/stream</li>
+      <li>the default translet name (set by <code>setClassName()</code>)</li>
+      <li>the built-in default class name <code>"GregorSamsa"</code>
+</li>
+    </ul>
+
+    <p>Additional Java classes will be generated for complex stylesheets. These
+    classes represent elements such as predicates, sort-records, etc. in the
+    stylesheet. Additional classes share the same root name as the main translet
+    class, with a suffix containing a '$'-sign and a sequence number. The result
+    of a single compilation of a complex stylesheet could be:</p>
+<blockquote class="source">
+<pre>
+    GregorSamsa.java
+    GregorSamsa$0.java
+    GregorSamsa$1.java
+    GregorSamsa$2.java
+    GregorSamsa$3.java</pre>
+</blockquote>
+
+    <p>It is not always desireable having these classes dumped to files in the
+    current working directory. There is one <code>compile()</code> method that
+    will return the Java class definitions as bytecodes. The bytecodes are
+    returned in a two-dimmensional <code>byte</code> array. Each byte-array
+    contains the bytecodes for one Java class:</p>
+<blockquote class="source">
+<pre>
+    public byte[][] compile(String name, InputSource input);</pre>
+</blockquote>
+
+    <p>Alternatively, one can first compile the stylesheet into one or more
+    Java class files, and then also retrieve the bytecodes from the compiler:</p>
+<blockquote class="source">
+<pre>
+    public byte[][] getBytecodes();</pre>
+</blockquote>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Output settings</h4>
+
+    <p>The default (root) name for the generated Java classes can be set and
+    retrieved by calls to these methods:</p>
+<blockquote class="source">
+<pre>
+    public void setClassName(String className);
+    public String getClassName();</pre>
+</blockquote>
+
+    <p>One can also specify a package to place the classes in:</p>
+<blockquote class="source">
+<pre>
+    public void setPackageName(String package);</pre>
+</blockquote>
+
+    <p>The generated classes can also be wrapped inside a single Java archive
+    (JAR-file):</p>
+<blockquote class="source">
+<pre>
+    public void setJarFileName(String jarFileName);
+    public String getJarFileName();</pre>
+</blockquote>
+
+    <p>The result file(s) need not be output in the current working directory.
+    Specify the directory to output to by calling:</p>
+<blockquote class="source">
+<pre>
+    public boolean setDestDirectory(String directory);</pre>
+</blockquote>
+
+    
+
+    <a name="document-locator">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Input document locator interface</h4>
+
+    <p>XSLTC's compiler has an interface that a client application can implement
+    to provide XSL input from alternative sources. Implementing and using this
+    interface is necessary when the top-level stylesheet contains one or more
+    <code>&lt;xsl:include&gt;</code> and <code>&lt;xsl:import&gt;</code>
+    elements that reference stylesheets that cannot be read using standard
+    <code>File</code> or <code>URL</code> classes. The interface that a client
+    must implement is <code>org.apache.xalan.xsltc.compiler.SourceLoader</code>,
+    and its only method is:</p>
+<blockquote class="source">
+<pre>
+    public InputSource loadSource(String href, String context, XSLTC xsltc);</pre>
+</blockquote>
+
+    <p>The compiler class, <code>XSLTC</code>, has a method for specifying the
+    implementation of this interface:</p>
+<blockquote class="source">
+<pre>
+    public void setSourceLoader(SourceLoader loader);</pre>
+</blockquote>
+
+    <p>This interface shares the same purpose as the <code>URIResolver</code>
+    interface in the JAXP/TrAX API.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Debug settings</h4>
+
+    <p>XSLTC can be forced to output debug messages and stack dumps:</p>
+<blockquote class="source">
+<pre>
+    public void setDebug(boolean debug);
+    public boolean debug();</pre>
+</blockquote>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Error handling</h4>
+
+    <p>All <code>compile()</code> methods return 'true' if the compilation
+    succeeded. The compiler could in such case still generate warning messages.
+    These message could be retrieved a <code>Vector</code> of strings or
+    output directlry to stderr:</p>
+<blockquote class="source">
+<pre>
+    public Vector getWarnings();
+    public void printWarnings();</pre>
+</blockquote>
+
+    <p>All <code>compile()</code> methods will return 'false' if any serious
+    errors prevented the compiler from generating any Java classes. Error
+    messages are handled similar to warning messages:</p>
+<blockquote class="source">
+<pre>
+    public Vector getErrors();
+    public void printErrors();</pre>
+</blockquote>
+
+    <p>Note that warning messages are not returned/output by these two methods.
+    A client application should pass both warning  and error messages
+    to its user.</p>
+
+    
+
+  
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>XSLTC Transform API</h3>
+
+    <p>The steps described in this chapter are covered in these sample
+    source code files:</p>
+
+    <ul>
+      <li>
+<code>org.apache.xalan.xsltc.cmdline.Transform</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledApplet/TransformApplet.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledBrazil/TransformHandler.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledEJB/TransformBean.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledEJB/TransformHome.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledEJB/TransformRemote.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledEJB/TransformServlet.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledServlet/CompileServlet.java</code>
+</li>
+      <li>
+<code>xml-xalan/java/samples/CompiledServlet/TransformServlet.java</code>
+</li>
+    </ul>
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Transformation input handling</h4>
+
+    <p>The main input document must be parsed using a SAX handler. The main SAX
+    events (<code>ContentHandler</code>) and lexical declarations
+    (<code>LexicalHandler</code>) are handled by the internal DOM builder.
+    The classes that make up the internal DOM are:</p>
+<blockquote class="source">
+<pre>
+    org.apache.xalan.xsltc.DOM;             - DOM interface
+    org.apache.xalan.xsltc.dom.DOMImpl;     - DOM implementation
+    org.apache.xalan.xsltc.dom.DOMAdapter;  - DOM-to-translet mapper
+    org.apache.xalan.xsltc.dom.MultiDOM;    - DOM multiplexer
+    org.apache.xalan.xsltc.dom.DOMBuilder;  - DOM builder interface</pre>
+</blockquote>
+
+    <p>The <code>DOMBuilder</code> interface is a wrapper for the standard SAX
+    <code>ContentHandler</code> and <code>LexicalHandler</code> interfaces.
+    The <code>DOMBuilder</code> contains both these interfaces, and it is
+    implemented by an inner class of the <code>DOMImpl</code> class. To build
+    the internal DOM, one has to go through these steps:</p>
+<blockquote class="source">
+<pre>
+    // Create a SAX parser and get the XMLReader object it uses
+    final SAXParserFactory factory = SAXParserFactory.newInstance();
+    try {
+	factory.setFeature(Constants.NAMESPACE_FEATURE,true);
+    }
+    catch (Exception e) {
+	factory.setNamespaceAware(true);
+    }
+    final SAXParser parser = factory.newSAXParser();
+    final XMLReader reader = parser.getXMLReader();
+
+     // Set the DOM's DOM builder as the XMLReader's SAX2 ContentHandler
+    final DOMImpl dom = new DOMImpl();
+    DOMBuilder builder = dom.getBuilder();
+    reader.setContentHandler(builder);
+
+     // Set the DOM's DOM builder as the XMLReader's SAX2 LexicalHandler
+    try {
+	String prop = "http://xml.org/sax/properties/lexical-handler";
+	reader.setProperty(prop, builder);
+    }
+    catch (SAXException e) {
+	 // Can be quitely ignored...
+    }
+
+     // Pass the document URI or file-name to the DOM
+    dom.setDocumentURI(uri);
+     // Parse the input document to populate the DOM
+    reader.parse(uri);</pre>
+</blockquote>
+
+    <p>The input XML document may contain of reference a DTD. A DTD must be
+    processed by XSLTC in order to support the <code>id()</code> and
+    <code>unparsed-entity-uri()</code> functions.
+    The <code>org.apache.xalan.xsltc.dom.DTDMonitor</code> class can handle
+    DTD declarations and aggregate them for use by a translet. Create your
+    <code>DTDMonitor</code> instance by passing it a reference to your SAX
+    parser:</p>
+<blockquote class="source">
+<pre>
+     // Create a DTD monitor and pass it to the XMLReader object
+    final DTDMonitor dtd = new DTDMonitor(reader);</pre>
+</blockquote>
+
+    <p>This call ensures that an index is built for all <code>ID</code>
+    attributes described in the DTD:</p>
+<blockquote class="source">
+<pre>
+     // If there are any elements with ID attributes, build an index
+    dtd.buildIdIndex(dom, 0, _translet);</pre>
+</blockquote>
+
+    <p>And this call ensures that the translet is passed all unparsed entities
+    described in the DTD:</p>
+<blockquote class="source">
+<pre>
+    translet.setDTDMonitor(dtd);</pre>
+</blockquote>
+
+    <p>We'll tell you how to create the translet instance in the next section.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>The translet instance</h4>
+
+    <p>All compiled translets inherit from the <code>AbstractTranslet</code>
+    class, so it is safe to cast your tranlet instance to that class:</p>
+<blockquote class="source">
+<pre>
+    Class transletClass = Class.forName(transletName);
+    AbstractTranslet translet = (AbstractTranslet)transletClass.newInstance();</pre>
+</blockquote>
+
+    <p>Note that the translet  instance  is not reusable, so you would
+    benefit from keeping the reference to the translet class.</p>
+
+    <p>Once you have your translet instance you can start playing around with
+    it. First you want to pass parameters to it:</p>
+<blockquote class="source">
+<pre>
+    // Pass global parameters
+    translet.addParameter("my-param", "my-value");</pre>
+</blockquote>
+
+    <p>You also want to remember to pass your DTD handler to the translet.
+    (See previous section.)</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Preparing the output handler</h4>
+
+    <p>The compiled translet does not contain all the functionality needed to
+    format the output document. This is handled by our output post-processor
+    <code>org.apache.xalan.xsltc.runtime.TextOutput</code>. This class needs
+    to be instanciated with three parameters; a SAX <code>ContentHandler</code>,
+    a <code>LexicalHandler</code> and a string containing the desired output
+    encoding. The user should normally provide the two handlers, and the
+    output encoding can be obtained from a field in the translet:</p>
+<blockquote class="source">
+<pre>
+    // Get the output encoding (from any &lt;xsl:output&gt; element
+    String encoding = translet._encoding;
+
+    // Create a translet output handler and plug in the SAX handlers
+    TextOutput textOutput = new TextOutput(myContentHandler, myLexicalHandlere, encoding);</pre>
+</blockquote>
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Transformation</h4>
+
+    <p>With the internal DOM built, the DTD monitor in place, and the output
+    handler set up, we're ready to run the actual transformation:</p>
+<blockquote class="source">
+<pre>
+    // Transform and pass output to the translet output handler
+    translet.transform(dom, textOutput);</pre>
+</blockquote>
+ 
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>The DOM cache interface</h4>
+
+    <p>Parsing the input document and building the internal DOM is a fairly
+    expensive operation, and it is often desireable to build a cache holding
+    frequently accessed internal DOMs. An application using XSLTC's native
+    API can accomplish this by implementing the
+    <code>org.apache.xalan.xsltc.DOMCache</code> interface. The application will
+    still have to call the translet's <code>transform()</code> method with a
+    DOM from the cache. But, the translet may have to load additional documents
+    if the original stylesheet contained calls to the <code>document()</code>
+    function. The translet can be instructed to read DOMs from a cache by
+    calling this method:</p>
+<blockquote class="source">
+<pre>
+    public void setDOMCache(DOMCache cache);
+    public DOMCache getDOMCache();</pre>
+</blockquote>
+
+    
+
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1292 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fmodern\fprq1\fcharset0 Courier New;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\lang1033\f0\fs20 [Build-Web-Pages.rtf]\par
+\par
+\b\fs36 Building the Xalan-C Web Pages\b0\par
+\fs20\par
+This section shows how to build the documentation products for Xalan-C/C++.  This is a subproject of the ASF XALAN PMC.\par
+\par
+The XALAN PMC project web page [\b http://xalan.apache.org\b0 ] is a top-level page with branches to the subprojects that include the Java and C/C++ code libraries.\par
+\par
+The Xalan-C/C++ home web page [\b http://xml.apache.org/xalan-c\b0 ] is the content construction that is being described here.\par
+\par
+\par
+\b\fs28 Documentation Source Tree\par
+\b0\fs20\par
+\f1 xalan/c/trunk/xdocs/sources/\par
+\tab entities.ent\tab -- Product specific entities\par
+\tab make-book.bat\tab -- Build All Web Pages\par
+\tab make-xalan.bat\tab -- Build Single Web Page\par
+\tab xalan-book.xslt\tab -- Transformation for StyleBook XML\par
+\tab xalan.xml\tab\tab -- The Navigation Panel for Xalan-C Pages\par
+\par
+xalan/c/trunk/xdocs/sources/xslt-resources/\par
+\tab\{Common components used by Xalan-C Web Pages\}\par
+\tab apache-xalan.css\tab -- The Web Page Presentation Style\par
+\tab asf_logo.png\tab -- The ASF Trademark Logo\par
+\tab note.gif\tab\tab -- A (note:) graphic\par
+\par
+xalan/c/trunk/xdocs/sources/xalan/\par
+\tab\{The StyleBook XML Sources for Xalan-C Web Pages\}\par
+\tab index.xml\tab\tab -- This creates the root index.html\par
+\tab resources.xml\tab -- A resources dispatch page\par
+\par
+xalan/c/trunk/xdocs/style/dtd/\par
+\tab\{Resources for Apache StyleBook Validation\}\par
+\tab blocks.ent\par
+\tab book.dtd\par
+\tab changes.dtd\par
+\tab characters.ent\par
+\tab document.dtd\par
+\tab faqs.dtd\par
+\tab links.ent\par
+\tab markup.ent\par
+\f0\par
+\par
+\b\fs28 Destination Build Tree\b0\fs20\par
+\par
+\f1 xalan/c/trunk/build/docs/html/\par
+\tab\{The Xalan-C project html Web Pages go here\}\par
+\tab index.html\tab -- This is the root of the Xalan-C subproject\par
+\par
+xalan/c/trunk/build/docs/html/resources/\par
+\tab\{Resources to support Xalan-C project html Web Pages\}\par
+\tab apache-xalan.css\par
+\tab asf_logo.png\par
+\tab note.gif\par
+\par
+xalan/c/trunk/build/docs/html/apiDocs/\par
+\tab\{The Xalan-C API Web Pages go here\}\par
+\tab index.html\tab -- This is the root of the Xalan-C API Documents\f0\par
+\par
+\par
+\b\fs28 Building the Web Pages\par
+\b0\fs20\par
+The Apache StyleBook Java program is no longer needed to create useful web pages.  You should have a standard XSLT transform utility.  The "Xalan" command-line program distributed with Xalan-C works just fine.\par
+\par
+Connect to the a copy of the (xdocs) directory.\par
+\par
+The StyleBook validation files are in the (xdocs/style/dtd) directory.\par
+\par
+The StyleBook XML sources for the web pages are in the (xdocs/xalan) directory.  Each web page is associated with an XML file in this directory.  The transformed output is to be placed in the (build/docs/html) directory.\par
+\par
+The Web Page output directory is (build/docs/html).\par
+\par
+After creating the web pages, copy the (xdocs/xslt-resources) files to the (build/docs/html/resources) directory.\par
+\par
+Graphic images for individual web pages are in the (xdocs/xalan-graphic) directory and later copied to the (build.docs/html) directory.\par
+\par
+\par
+\fs28 Preparing the Navigation File\fs20\par
+\par
+The (\b xdocs/xalan.xml\b0 ) is the project navigation file that is on the left side of each web page.  The root element is <\b book\b0 > containing child elements of <\b hidden\b0 >, <\b external\b0 >, <\b document\b0 >, <\b resources\b0 >, <\b faqs\b0 >, and <\b separator\b0 >.  The format of this navigation file is inherited from the StyleBook Java program.  Our stylesheet uses the <\b book\b0 > to provide only a navigation panel.  It does not control the production of the entire suite of web pages.\par
+\par
+The "\b id=" \b0 attribute is the name of the web page file without extension.\par
+\par
+The "\b label=" \b0 attribute is the navigation text.\par
+\par
+The "\b source=\b0 " attribute is the name of the StyleBook XML source file.\par
+\par
+The "\b href=\b0 " attribute is a link to an external resource.\par
+\par
+\par
+\fs28 Creating the Web Pages\fs20\par
+\par
+The XSLT transformation utility must support top-level parameters.  The Xalan command-line program built and distributed with the this project has sufficient capability to create the project web pages.  The \b xalan-book.xslt\b0  stylesheet is designed to interpret StyleBook XML and create XHTML web pages for the Xalan-C project.\par
+\par
+Example: Create the "index.html" web page from "index.xml" source.\par
+\par
+\f1 Xalan.exe \par
+    -p sectionid "'index'" \par
+    -p createdate "'Tue 08/09/2011'" \par
+    xalan\\index.xml\par
+    xalan-book.xslt\par
+    > ..\\..\\build\\docs\\html\\index.html\f0\par
+\par
+Do the same for each web page replacing \b index\b0 , \b index.xml\b0 , and \b index.html \b0 in the above example.\par
+\par
+I use batch files or shell scripts to automate this process.  The following batch files are what I use on Windows platforms.\par
+\par
+The \b make-book.bat\b0  file to create all web pages:\par
+\par
+\f1   mkdir ..\\..\\build\\docs\\html\\resources\par
+\par
+  call make-xalan usagepatterns\par
+  call make-xalan samples\par
+  call make-xalan resources\par
+  call make-xalan install\par
+  call make-xalan download\par
+  call make-xalan overview\par
+  call make-xalan charter\par
+  call make-xalan whatsnew\par
+  call make-xalan extensionslib\par
+  call make-xalan commandline\par
+  call make-xalan readme\par
+  call make-xalan releasenotes\par
+  call make-xalan programming\par
+  call make-xalan getstarted\par
+  call make-xalan index\par
+  call make-xalan extensions\par
+  call make-xalan faq\par
+  call make-xalan license\par
+  call make-xalan buildlibs\par
+  call make-xalan secureweb\par
+\par
+  copy xalan-graphic\\*.* ..\\..\\build\\docs\\html\par
+  copy xslt-resources\\*.* ..\\..\\build\\docs\\html\\resources\f0\par
+\par
+The \b make-xalan.bat\b0  file to create a single web page:\par
+\par
+\f1   ::\par
+  :: Set the current path to include a stylesheet transformation utility\par
+  ::\par
+  :: %1               The document filename (without extension) to transform\par
+  ::\par
+  :: %XALANEXSLT%     The exslt stylesheet transformation utility\par
+  ::\par
+  :: %XALANSTYLE%     The XSLT stylesheet to \par
+  ::\par
+  :: %XALANXMLDIR%    Source directory of STYLEBOOK markup XML documents\par
+  ::\par
+  :: %XALANOUTDIR%    Target directory of XHTML web page documents\par
+  ::\par
+  :: %WEBCREATED%     Web Page Creation Date\par
+  ::\par
+  :: sectionid        Top-level stylesheet parameter (document file id)\par
+  ::\par
+  :: createdate       Top-level stylesheet parameter (web page creation date)\par
+  ::\par
+\par
+  SET WEBCREATED=%DATE%\par
+  SET XALANEXSLT=..\\..\\bin\\xalan.exe\par
+  SET XALANSTYLE=xalan-book.xslt\par
+  SET XALANXMLDIR=xalan\par
+  SET XALANOUTDIR=..\\..\\build\\docs\\html\par
+\par
+  "%XALANEXSLT%" -p sectionid "'%1'" -p createdate "'%WEBCREATED%'" \par
+    %XALANXMLDIR%\\%1.xml %XALANSTYLE%  >% XALANOUTDIR%\\%1.html\f0\par
+\par
+\fs28 XSLT Stylesheet for Xalan-C Web Pages\fs20\par
+\par
+Here is the stylesheet I use to generate the Xalan-C documentation web pages.\par
+\par
+\f1 <?xml version="1.0" encoding="ISO-8859-1" ?>\par
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">\par
+\par
+<!--\par
+ * Licensed to the Apache Software Foundation (ASF) under one\par
+ * or more contributor license agreements. See the NOTICE file\par
+ * distributed with this work for additional information\par
+ * regarding copyright ownership. The ASF licenses this file\par
+ * to you under the Apache License, Version 2.0 (the  "License");\par
+ * you may not use this file except in compliance with the License.\par
+ * You may obtain a copy of the License at\par
+ *\par
+ *     http://www.apache.org/licenses/LICENSE-2.0\par
+ *\par
+ * Unless required by applicable law or agreed to in writing, software\par
+ * distributed under the License is distributed on an "AS IS" BASIS,\par
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\par
+ * See the License for the specific language governing permissions and\par
+ * limitations under the License.\par
+-->\par
+\par
+<!--\par
+* <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" \par
+* "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\par
+-->\par
+\par
+<xsl:output  method="xml" version="1.0" indent="yes"\par
+  doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"\par
+  doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"\par
+  omit-xml-declaration="no"\par
+  encoding="ISO-8859-1"\par
+  standalone="no"\par
+/>\par
+\par
+<!-- THE TOP-LEVEL PARAMETERS (sectionid, createdate)\par
+\par
+  sectionid   = basename of the source xml file without the (.xml) extension.\par
+  createdate  = date that this stylesheet is used.\par
+\par
+  Building the documentation using commandline stylesheet transformation.\par
+\par
+  EXSLT -p sectionid='documentfile' -p createdate='June 1, 2011'\par
+    xalan\\documentfile.xml  xalan-manual.xslt  ..\\html\\documentfile.html\par
+-->\par
+\par
+<xsl:param name="sectionid"/>\par
+<xsl:param name="createdate"/>\par
+\par
+\par
+<!-- THE STYLESHEET ROOT - LAUNCH THE CONSTRUCTORS -->\par
+\par
+<xsl:template match="/">\par
+<html>\par
+<head>\par
+ <title>Xalan-C++ XSLT User Guide Version 1.11</title>\par
+ <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>\par
+ <meta http-equiv="Content-Style-Type" content="text/css"/>\par
+ <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css"/>\par
+</head>\par
+ <xsl:comment>\par
+ * Licensed to the Apache Software Foundation (ASF) under one\par
+ * or more contributor license agreements. See the NOTICE file\par
+ * distributed with this work for additional information\par
+ * regarding copyright ownership. The ASF licenses this file\par
+ * to you under the Apache License, Version 2.0 (the  "License");\par
+ * you may not use this file except in compliance with the License.\par
+ * You may obtain a copy of the License at\par
+ *\par
+ *     http://www.apache.org/licenses/LICENSE-2.0\par
+ *\par
+ * Unless required by applicable law or agreed to in writing, software\par
+ * distributed under the License is distributed on an "AS IS" BASIS,\par
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\par
+ * See the License for the specific language governing permissions and\par
+ * limitations under the License.\par
+ </xsl:comment>\par
+ <body>\par
+\par
+   <!-- CONSTRUCT A BOOK SUBTITLE TITLE FROM SOURCE XML PROPERTIES -->\par
+\par
+   <xsl:variable name="xalantitle">\par
+     <xsl:choose>\par
+       <xsl:when test="s1/@title">\par
+         <xsl:value-of select="s1/@title"/>\par
+       </xsl:when>\par
+       <xsl:when test="s2/@title">\par
+         <xsl:value-of select="s2/@title"/>\par
+       </xsl:when>\par
+       <xsl:when test="s3/@title">\par
+         <xsl:value-of select="s3/@title"/>\par
+       </xsl:when>\par
+       <xsl:when test="faqs">\par
+         <xsl:choose>\par
+           <xsl:when test="faqs/@title">\par
+             <xsl:value-of select="faqs/@title"/>\par
+           </xsl:when>\par
+           <xsl:otherwise>\par
+             <xsl:text>Frequently Asked Questions</xsl:text>\par
+           </xsl:otherwise>\par
+         </xsl:choose>\par
+       </xsl:when>\par
+       <xsl:when test="resources">\par
+         <xsl:text>Resources</xsl:text>\par
+       </xsl:when>\par
+       <xsl:when test="changes/@title">\par
+         <xsl:value-of select="changes/@title"/>\par
+       </xsl:when>\par
+       <xsl:otherwise>\par
+         <xsl:text>DEBUG - xalantitle not found</xsl:text>\par
+       </xsl:otherwise>\par
+     </xsl:choose>\par
+   </xsl:variable>\par
+\par
+   <!-- THE TITLE SECTION -->\par
+\par
+   <xsl:call-template name="doTitle">\par
+     <xsl:with-param name="booktitle">\par
+       <xsl:text>Xalan-C++ XSLT 1.11 User Guide</xsl:text>\par
+     </xsl:with-param>\par
+     <xsl:with-param name="booksection">\par
+       <xsl:value-of select="$xalantitle"/>\par
+     </xsl:with-param>\par
+   </xsl:call-template>\par
+\par
+   <!-- THE NAVIGATION SECTION -->\par
+\par
+   <xsl:call-template name="doLeftNav">\par
+     <xsl:with-param name="sectparm">\par
+       <xsl:value-of select="$sectionid"/>\par
+     </xsl:with-param>\par
+   </xsl:call-template>\par
+\par
+   <!-- THE MAIN CONTENT SECTION -->\par
+\par
+   <xsl:call-template name="doContent">\par
+     <xsl:with-param name="mysectionid">\par
+       <xsl:value-of select="$sectionid"/>\par
+     </xsl:with-param>\par
+   </xsl:call-template>\par
+\par
+   <!-- THE COPYRIGHT FOOTER -->\par
+\par
+   <xsl:call-template name="doFooter">\par
+     <xsl:with-param name="releaseinfo">\par
+       <xsl:text>Web Page created on - </xsl:text>\par
+       <xsl:value-of select="$createdate"/>\par
+     </xsl:with-param>\par
+   </xsl:call-template>\par
+ </body>\par
+</html>\par
+</xsl:template>\par
+\par
+\par
+<!-- DEBUG TEMPLATE -->\par
+<xsl:template name="DEBUG">\par
+  <xsl:param name="theText"/>\par
+  <xsl:param name="theNode"/>\par
+  <xsl:element name="DEBUG">\par
+    <xsl:element name="DEBUGTEXT">\par
+      <xsl:value-of select="$theText"/>\par
+    </xsl:element>\par
+    <xsl:if test="$theNode">\par
+      <xsl:element name="DEBUGNODES">\par
+        <xsl:copy-of select="$theNode"/>\par
+      </xsl:element>\par
+    </xsl:if>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doTitle">\par
+  <xsl:param name="booktitle">Xalan-C++ Version 1.11 User Guide</xsl:param>\par
+  <xsl:param name="booksection">Documentation Project</xsl:param>\par
+  <xsl:element name="div">\par
+    <xsl:attribute name="id">\par
+       <xsl:text>title</xsl:text>\par
+    </xsl:attribute>\par
+ <table>\par
+ <tbody>\par
+ <tr>\par
+  <th rowspan="2">\par
+   <a href="http://www.apache.org/">\par
+   <img alt="ASF Logo" title="ASF Logo" \par
+       src="resources/asf_logo.png" \par
+       width="220" height="66"/></a>\par
+  </th>\par
+  <th text-align="center" width="75%">\par
+    <a href="index.html"><xsl:value-of select="$booktitle"/></a>\par
+  </th>\par
+ </tr>\par
+ <tr>\par
+  <td valign="middle"><xsl:value-of select="$booksection"/></td>\par
+ </tr>\par
+ </tbody>\par
+ </table>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doLeftNav">\par
+<xsl:param name="sectparm" select="''"/>\par
+<xsl:element name="div">\par
+  <xsl:attribute name="id">navLeft</xsl:attribute>\par
+  <ul>\par
+  <xsl:for-each select="document('xalan.xml')/book/*">\par
+    <xsl:if test="name(.)='external'">\par
+      <li>\par
+      <xsl:element name="a">\par
+        <xsl:attribute name="href">\par
+          <xsl:value-of select="@href"/>\par
+        </xsl:attribute>\par
+        <xsl:value-of select="@label"/>\par
+      </xsl:element>\par
+      </li>\par
+    </xsl:if>\par
+    <xsl:if test="name(.)='resources'">\par
+      <li>\par
+      <xsl:choose>\par
+        <xsl:when test="$sectparm != 'resources'">\par
+          <a href="resources.html">Resources</a><br/>\par
+        </xsl:when>\par
+        <xsl:otherwise>\par
+          <xsl:text>Resources</xsl:text><br/>\par
+        </xsl:otherwise>\par
+      </xsl:choose>\par
+      </li>\par
+    </xsl:if>\par
+    <xsl:if test="name(.)='changes'">\par
+      <li>\par
+      <xsl:choose>\par
+        <xsl:when test="$sectparm != 'changes'">\par
+          <a href="changes.html">Changes</a><br/>\par
+        </xsl:when>\par
+        <xsl:otherwise>\par
+          <xsl:text>Changes</xsl:text>\par
+        </xsl:otherwise>\par
+      </xsl:choose>\par
+      </li>\par
+    </xsl:if>\par
+    <xsl:if test="name(.)='separator'">    <!--  </ul>   <hr/>      <ul> -->\par
+      <xsl:text disable-output-escaping="yes">&lt;/ul>&lt;hr/&gt;&lt;ul></xsl:text>\par
+    </xsl:if>\par
+    <xsl:if test="(name(.)='document') or (name(.)='faqs')">\par
+      <li>\par
+      <xsl:choose>\par
+        <xsl:when test="$sectparm != string(@id)">\par
+          <xsl:element name="a">\par
+            <xsl:attribute name="href">\par
+              <xsl:value-of select="concat(@id,'.html')"/>\par
+            </xsl:attribute>\par
+            <xsl:value-of select="@label"/>\par
+          </xsl:element>\par
+        </xsl:when>\par
+        <xsl:otherwise>\par
+          <xsl:value-of select="@label"/><br/>\par
+        </xsl:otherwise>\par
+      </xsl:choose>\par
+      </li>\par
+    </xsl:if>\par
+  </xsl:for-each>\par
+  </ul>\par
+</xsl:element>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doContent">\par
+  <xsl:element name="div">\par
+    <xsl:attribute name="id">content</xsl:attribute>\par
+    <xsl:choose>\par
+      <xsl:when test="faqs">\par
+        <xsl:for-each select="faqs">\par
+          <xsl:call-template name="doFaqDocument"/>\par
+        </xsl:for-each>\par
+      </xsl:when>\par
+      <xsl:when test="resources">\par
+        <xsl:for-each select="resources">\par
+          <xsl:call-template name="doResDocument"/>\par
+        </xsl:for-each>\par
+      </xsl:when>\par
+      <xsl:when test="changes">\par
+        <xsl:for-each select="changes">\par
+          <xsl:call-template name="doChangesDoc"/>\par
+        </xsl:for-each>\par
+      </xsl:when>\par
+      <xsl:otherwise>\par
+        <xsl:apply-templates/>\par
+      </xsl:otherwise>\par
+    </xsl:choose>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doFooter">\par
+  <xsl:param name="releaseinfo"/>\par
+  <xsl:element name="div">\par
+    <xsl:attribute name="id">footer</xsl:attribute>\par
+    <!-- copyright byline information -->\par
+    <!-- &#169; is the (c) copyright symbol -->\par
+    <xsl:text>Copyright &#169; 1999-2011 The Apache Software Foundation</xsl:text><br/>\par
+    <xsl:text>Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation</xsl:text>\par
+    <xsl:element name="div">\par
+      <xsl:attribute name="class">small</xsl:attribute>\par
+      <xsl:value-of select="$releaseinfo"/>\par
+    </xsl:element>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doFaqDocument">\par
+  <h2 class="faqSubHead">Questions</h2>\par
+  <ol start="1">\par
+  <xsl:call-template name="doFaqTitles">\par
+    <xsl:with-param name="faqNbr">1</xsl:with-param> \par
+  </xsl:call-template>\par
+  </ol>\par
+  <h2 class="faqSubHead">Answers</h2>\par
+  <xsl:call-template name="doFaqContent">\par
+    <xsl:with-param name="faqNbr">1</xsl:with-param>\par
+  </xsl:call-template>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doFaqTitles">\par
+  <xsl:param name="faqNbr">1</xsl:param>\par
+  <xsl:variable name="myNbr" select="$faqNbr"/>\par
+  <xsl:if test="faq[position()=$myNbr]">\par
+    <!-- output the title reference -->\par
+    <li>\par
+    <xsl:element name="a">\par
+      <xsl:attribute name="href">\par
+        <xsl:value-of select="concat('#faq-', $myNbr)"/>\par
+      </xsl:attribute>\par
+      <xsl:value-of select="faq[position()=$myNbr]/@title"/>\par
+    </xsl:element>\par
+    </li>\par
+    <!-- get the next faq if any -->\par
+    <xsl:call-template name="doFaqTitles">\par
+      <xsl:with-param name="faqNbr" select="number($myNbr + 1)"/>\par
+    </xsl:call-template>\par
+  </xsl:if>\par
+</xsl:template> \par
+\par
+\par
+<xsl:template name="doFaqContent">\par
+  <xsl:param name="faqNbr">1</xsl:param>\par
+  <xsl:variable name="myNbr" select="$faqNbr"/>\par
+\par
+  <xsl:if test="faq[position()=$myNbr]">            <!-- output content of this element only -->\par
+\par
+<!--  <h3><xsl:value-of select="faq[position()=$myNbr]/@title"/></h3>     -->\par
+\par
+    <xsl:element name="h3">\par
+      <xsl:attribute name="id">\par
+        <xsl:value-of select="concat('faq-', $myNbr)"/>\par
+      </xsl:attribute>\par
+      <xsl:attribute name="class">\par
+        <xsl:text>faqTitle</xsl:text>\par
+      </xsl:attribute>\par
+      <xsl:value-of select="concat($myNbr, '. ', faq[position()=$myNbr]/@title)"/>\par
+    </xsl:element>\par
+\par
+<!--  The FAQ Text Part                            -->\par
+    <xsl:for-each select="faq[position()=$myNbr]/*">      <!-- children of 'faq' -->\par
+      <xsl:choose>\par
+        <xsl:when test="name(.)='q'">                  <!-- The Question Text -->\par
+          <div class="faqQuestion">\par
+            <xsl:apply-templates/>               <!-- children of 'q' -->\par
+          </div>\par
+        </xsl:when>\par
+        <xsl:when test="name(.)='a'">                  <!-- The Answer Text -->\par
+          <br/>\par
+          <hr/>\par
+          <div class="faqAnswer">\par
+            <xsl:apply-templates/>               <!-- children of 'a' -->\par
+          </div>\par
+        </xsl:when>\par
+        <xsl:otherwise>\par
+          <xsl:apply-templates/>\par
+        </xsl:otherwise>\par
+      </xsl:choose>\par
+    </xsl:for-each>\par
+\par
+    <xsl:call-template name="goToTop"/>\par
+\par
+<!--  Recurse for next faq item                    -->\par
+    <xsl:call-template name="doFaqContent">\par
+      <xsl:with-param name="faqNbr" select="number($myNbr + 1)"/>\par
+    </xsl:call-template>\par
+  </xsl:if>\par
+</xsl:template> \par
+\par
+\par
+<xsl:template name="goToTop">\par
+  <p align="right" size="2">\par
+    <a href="#content">(top)</a>\par
+  </p>\par
+</xsl:template>\par
+\par
+\par
+<xsl:template name="doResDocument">\par
+  <xsl:for-each select="resource|human-resource">\par
+    <xsl:choose>\par
+      <xsl:when test="name(.)='resource'">\par
+<!--    <h4 class="resourcetitle"><strong><xsl:value-of select="@title"/></strong><h4> -->\par
+        <xsl:element name="h4">\par
+          <xsl:attribute name="class">resourcetitle</xsl:attribute>\par
+          <strong><xsl:value-of select="@title"/></strong>\par
+        </xsl:element>\par
+        <p>id = [<xsl:value-of select="@id"/>]<br/>\par
+        <xsl:element name="a">\par
+          <xsl:attribute name="href">\par
+            <xsl:value-of select="@location"/>\par
+          </xsl:attribute>\par
+          <xsl:value-of select="@location"/>\par
+        </xsl:element><br/></p>\par
+      </xsl:when>\par
+      <xsl:when test="name(.)='human-resource'">\par
+<!--    <h4 class="resourcetitle"><strong><xsl:value-of select="@name"/></strong><h4> -->\par
+        <xsl:element name="h4">\par
+          <xsl:attribute name="class">resourcetitle</xsl:attribute>\par
+          <strong><xsl:value-of select="@name"/></strong>\par
+        </xsl:element>\par
+        <p>id = [<xsl:value-of select="@id"/>]<br/>\par
+        <xsl:element name="a">\par
+          <xsl:attribute name="href">\par
+            <xsl:value-of select="concat('mailto:',@mailto)"/>\par
+          </xsl:attribute>\par
+          <xsl:value-of select="concat('mailto:',@mailto)"/>\par
+        </xsl:element><br/></p>\par
+      </xsl:when>\par
+    </xsl:choose>\par
+  </xsl:for-each>\par
+</xsl:template>\par
+\par
+<xsl:template name="doChangesDoc">\par
+  <!-- context is <changes> element -->\par
+  <xsl:for-each select="release">\par
+    <h3 class="chgRelease">\par
+      <xsl:value-of select="concat('Release ',@version,' (',@date,')')"/>\par
+    </h3>\par
+    <xsl:if test="features">\par
+      <h4 class="chgFeatures"><xsl:text>Features</xsl:text></h4>\par
+      <xsl:for-each select="features">\par
+        <ul>\par
+          <xsl:for-each select="feat">\par
+            <li><xsl:apply-templates/></li>\par
+          </xsl:for-each>\par
+        </ul>\par
+        <hr/>\par
+      </xsl:for-each>\par
+    </xsl:if>\par
+    <xsl:if test="fixes">\par
+      <h4 class="chgFixes"><xsl:text>Bug Fixes</xsl:text></h4>\par
+      <xsl:for-each select="fixes">\par
+        <ul>\par
+          <xsl:for-each select="fix">\par
+            <li><xsl:apply-templates/></li>\par
+          </xsl:for-each>\par
+        </ul>\par
+        <hr/>\par
+      </xsl:for-each>\par
+    </xsl:if>\par
+    <xsl:call-template name="goToTop"/>\par
+  </xsl:for-each>\par
+</xsl:template>\par
+\par
+<!-- THE MATCHING TEMPLATE RULES -->\par
+\par
+<xsl:template match="s1">\par
+  <h2><xsl:value-of select="@title"/></h2>\par
+  <xsl:apply-templates/>\par
+  <xsl:call-template name="goToTop"/>\par
+</xsl:template>\par
+\par
+<xsl:template match="s2">\par
+  <xsl:call-template name="goToTop"/>\par
+  <h3><xsl:value-of select="@title"/></h3>\par
+  <xsl:apply-templates/>\par
+</xsl:template>\par
+\par
+<xsl:template match="s3">\par
+  <xsl:call-template name="goToTop"/>\par
+  <h4><xsl:value-of select="@title"/></h4>\par
+  <xsl:apply-templates/>\par
+</xsl:template>\par
+\par
+<xsl:template match="s4">\par
+  <h5><xsl:value-of select="@title"/></h5>\par
+  <xsl:apply-templates/>\par
+</xsl:template>\par
+\par
+<!--<!ENTITY % blocks "p|note|ul|ol|gloss|table|source|anchor">-->\par
+\par
+<xsl:template match="p">\par
+  <p><xsl:apply-templates/></p>\par
+</xsl:template>\par
+\par
+<xsl:template match="ul">\par
+  <ul><xsl:apply-templates/></ul>\par
+</xsl:template>\par
+\par
+<xsl:template match="ol">\par
+  <ol><xsl:apply-templates/></ol>\par
+</xsl:template>\par
+\par
+<xsl:template match="li">\par
+  <li><xsl:apply-templates/></li>\par
+</xsl:template>\par
+\par
+<xsl:template match="table">\par
+  <table border="1"><xsl:apply-templates/></table>\par
+</xsl:template>\par
+\par
+<xsl:template match="tr">\par
+  <tr><xsl:apply-templates/></tr>\par
+</xsl:template>\par
+\par
+<xsl:template match="tn">\par
+ <td class="empty"/><!-- empty table element -->\par
+</xsl:template>\par
+\par
+<xsl:template match="th">\par
+  <xsl:element name="th">\par
+    <xsl:attribute name="class">content</xsl:attribute>\par
+    <xsl:if test="@rowspan">\par
+      <xsl:attribute name="rowspan">\par
+        <xsl:value-of select="@rowspan"/>\par
+      </xsl:attribute>\par
+    </xsl:if>\par
+    <xsl:if test="@colspan">\par
+      <xsl:attribute name="colspan">\par
+        <xsl:value-of select="@colspan"/>\par
+      </xsl:attribute>\par
+    </xsl:if>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<xsl:template match="td">\par
+  <xsl:element name="td">\par
+    <xsl:attribute name="class">content</xsl:attribute>\par
+    <xsl:if test="@rowspan">\par
+      <xsl:attribute name="rowspan">\par
+        <xsl:value-of select="@rowspan"/>\par
+      </xsl:attribute>\par
+    </xsl:if>\par
+    <xsl:if test="@colspan">\par
+      <xsl:attribute name="colspan">\par
+        <xsl:value-of select="@colspan"/>\par
+      </xsl:attribute>\par
+    </xsl:if>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<!--\par
+<xsl:template match="note">\par
+  <blockquote class="note"><xsl:apply-templates/></blockquote>\par
+</xsl:template>\par
+-->\par
+\par
+<xsl:template match="note">\par
+    <xsl:element name="table">\par
+      <xsl:attribute name="class">note</xsl:attribute>\par
+      <tr>\par
+        <xsl:element name="td">\par
+          <xsl:attribute name="class">noteImg</xsl:attribute>\par
+          <xsl:element name="img">\par
+            <xsl:attribute name="src">resources/note.gif</xsl:attribute>\par
+            <xsl:attribute name="alt">note</xsl:attribute>\par
+          </xsl:element>\par
+        </xsl:element>\par
+        <xsl:element name="td">\par
+          <xsl:attribute name="class">noteTxt</xsl:attribute>\par
+          <xsl:apply-templates/>\par
+        </xsl:element>\par
+      </tr>\par
+    </xsl:element>\par
+</xsl:template>\par
+\par
+<xsl:template match="source">\par
+  <blockquote class="source"><pre><xsl:value-of select="."/></pre></blockquote>\par
+</xsl:template>\par
+\par
+<xsl:template match="hidden">\par
+<!-- content is hidden -->\par
+</xsl:template>\par
+\par
+<!--<!ENTITY % markup "em|ref|code|br">-->\par
+\par
+<xsl:template match="br">\par
+  <br/>\par
+</xsl:template>\par
+\par
+<xsl:template match="em">\par
+  <b><xsl:apply-templates/></b>\par
+</xsl:template>\par
+\par
+<xsl:template match="code">\par
+  <code><xsl:apply-templates/></code>\par
+</xsl:template>\par
+\par
+<xsl:template match="ref">\par
+  <b><i><xsl:apply-templates/></i></b>\par
+</xsl:template>\par
+\par
+<!-- Glossary Items <label> <item> -->\par
+\par
+<xsl:template match="label">\par
+  <p class="label"><xsl:apply-templates/></p>\par
+</xsl:template>\par
+\par
+<xsl:template match="item">\par
+  <p class="item"><xsl:apply-templates/></p>\par
+</xsl:template>\par
+\par
+<!--<!ENTITY % links "link|anchor|jump|img|resource-ref|human-resource-ref">-->\par
+\par
+<xsl:template match="anchor">\par
+  <xsl:element name="a">\par
+    <xsl:attribute name="name">\par
+       <xsl:value-of select="@name"/>\par
+    </xsl:attribute>\par
+    <xsl:text>&#8204;</xsl:text> <!-- (zero-width non-join) character -->\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<xsl:template match="img">\par
+  <xsl:copy-of select="."/>\par
+</xsl:template>\par
+\par
+<!-- Glossary elements "gloss (label|item)* -->\par
+\par
+<xsl:template match="gloss">\par
+  <xsl:element name="div">\par
+    <xsl:attribute name="class">glossary</xsl:attribute>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<xsl:template match="label">\par
+  <p class="label"><em>\par
+  <xsl:apply-templates/>\par
+  </em></p>\par
+</xsl:template>\par
+\par
+<xsl:template match="item">\par
+  <xsl:element name="blockquote">\par
+    <xsl:attribute name="class">item</xsl:attribute>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<!-- ********\par
+<!ELEMENT link (#PCDATA|img)*>\par
+<!ATTLIST link idref NMTOKEN #IMPLIED\par
+    anchor CDATA  #IMPLIED>\par
+\par
+<!ELEMENT jump (#PCDATA|img)*>\par
+<!ATTLIST jump href CDATA #REQUIRED>\par
+*************\par
+-->\par
+\par
+<xsl:template match="link">\par
+  <xsl:element name="a">\par
+    <xsl:attribute name="href">\par
+      <xsl:if test="@idref">\par
+        <xsl:value-of select="concat(@idref, '.html')"/>\par
+      </xsl:if>\par
+      <xsl:if test="@anchor">\par
+        <xsl:value-of select="concat('#', @anchor)"/>\par
+      </xsl:if>\par
+    </xsl:attribute>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<xsl:template match="jump">\par
+  <xsl:element name="a">\par
+    <xsl:attribute name="href">\par
+      <xsl:value-of select="@href"/>\par
+    </xsl:attribute>\par
+    <xsl:apply-templates/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<!-- cross-reference resource elements -->\par
+\par
+<!--\par
+ Resolve Resource References through "resources.xml" document\par
+-->\par
+\par
+<xsl:template match="resource-ref">\par
+  <xsl:variable name="idval" select="@idref"/>\par
+  <xsl:variable name="resref" \par
+        select="document('xalan/resources.xml')//resource[@id=$idval]"/>\par
+  <xsl:element name="a">\par
+    <xsl:attribute name="href">\par
+      <xsl:value-of select="$resref/@location"/>\par
+    </xsl:attribute>\par
+    <xsl:value-of select="$resref/@title"/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+<!--\par
+ Resolve Mailbox References through "resources.xml" document\par
+-->\par
+\par
+<xsl:template match="human-resource-ref">\par
+  <xsl:variable name="idval" select="@idref"/>\par
+  <xsl:variable name="resref" \par
+        select="document('xalan/resources.xml')//human-resource[@id=$idval]"/>\par
+  <xsl:element name="a">\par
+    <xsl:attribute name="href">\par
+      <xsl:value-of select="concat('mailto:',$resref/@mailto)"/>\par
+    </xsl:attribute>\par
+    <xsl:value-of select="$resref/@name"/>\par
+  </xsl:element>\par
+</xsl:template>\par
+\par
+</xsl:stylesheet>\f0\par
+\par
+-------<end of xslt stylesheet>-------\par
+\par
+\par
+\fs28 CSS Stylesheet for Xalan-C Web Pages\fs20\par
+\par
+This is the CSS Stylesheet I use to render the Xalan-C/C++ web pages to a browser.  It needs to be reachable by the XHTML files that are created.  Note that the XHTML files are created with the \b html\b0  extension in support of transitional browsers.\par
+\par
+\f1 /* Xalan-C/C++ Project Web Pages (css) Stylesheet */\par
+\par
+/*\par
+ * Licensed to the Apache Software Foundation (ASF) under one\par
+ * or more contributor license agreements. See the NOTICE file\par
+ * distributed with this work for additional information\par
+ * regarding copyright ownership. The ASF licenses this file\par
+ * to you under the Apache License, Version 2.0 (the  "License");\par
+ * you may not use this file except in compliance with the License.\par
+ * You may obtain a copy of the License at\par
+ *\par
+ *     http://www.apache.org/licenses/LICENSE-2.0\par
+ *\par
+ * Unless required by applicable law or agreed to in writing, software\par
+ * distributed under the License is distributed on an "AS IS" BASIS,\par
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\par
+ * See the License for the specific language governing permissions and\par
+ * limitations under the License.\par
+*/\par
+\par
+/* This (css) stylesheet renders the xhtml web pages that were generated\par
+ * from StyleBook XML markup using the "xalan-book.xslt" transformation.\par
+*/\par
+\par
+html > bod  \{left:0;\}\par
+body \{\par
+  background-color: white;\par
+  color: black;\par
+  padding: 0;\par
+  margin: 0;\par
+  font-family: arial, "lucida console", san-serif;\par
+\}\par
+\par
+/* Emulate table align=center */\par
+div.centered, td.centered \{\par
+  text-align: center;\par
+\}\par
+\par
+div.centered table \{\par
+  margin: 0 auto;\par
+  text-align: left;\par
+\}\par
+\par
+/*\par
+ * ID Sections\par
+ */\par
+\par
+#content \{\par
+  width: 80%;\par
+  float: left;\par
+  font-size: 12pt;\par
+  padding-top: 1em;\par
+  padding-left: 5px;\par
+  margin-left: 10px;\par
+  border-left: 1px solid #ddd;\par
+\}\par
+\par
+#navLeft \{\par
+  clear: left;\par
+  width: 15%;\par
+  float: left;\par
+  padding: 2px;\par
+  margin-left: 1%;\par
+  color: red;\par
+  position: relative;\par
+  left: 1px;\par
+\}\par
+\par
+#title \{\par
+  color: black;\par
+  background-color: #eee;\par
+  text-align: center;\par
+  border-bottom: 1px solid #ccc;\par
+  padding: 0;\par
+  font-size: 16pt;\par
+  height: 86px;\par
+  vertical-align: middle;\par
+\}\par
+\par
+\par
+#footer \{\par
+    clear: both;\par
+    margin: 0 2em;\par
+    color: #444;\par
+    background-color: #eee;\par
+    text-align: center;\par
+    padding: .5em 0;\par
+    font-size: 75%;\par
+    border-top: 1px solid #ccc;\par
+\}\par
+\par
+/*\par
+ * Anchors\par
+ */\par
+\par
+a \{\par
+  color: blue;\par
+  text-decoration: undedrline;\par
+\}\par
+\par
+a img \{\par
+  border: 0;\par
+\}\par
+\par
+a:hover \{\par
+  text-decoration: none;\par
+  background-color: #d7c9c9;\par
+\}\par
+\par
+/*\par
+ * Headers\par
+ */\par
+\par
+h1 \{\}\par
+\par
+#title h1 \{\par
+  padding: 1px 0;\par
+  margin: 0;\par
+  float: right;\par
+  width: 60%;\par
+  font-size: 20pt;\par
+  text-align: center;\par
+\}\par
+\par
+#content h1 \{ background-color: #ee5 \}\par
+\par
+h2 \{\}\par
+\par
+#title h2 \{\par
+  font-size: 14pt;\par
+  width: 60%;\par
+  text-alignment: center;\par
+  padding: 1px 0;\par
+  margin: 0;\par
+\}\par
+\par
+#content h2 \{ background-color: #ee5 \}\par
+\par
+#content h2.year \{\par
+  background-color: #ddd;\par
+  text-align: center;\par
+\}\par
+\par
+h3 \{\}\par
+\par
+#content h3.monthName \{\par
+  background-color: #333;\par
+  text-align: center;\par
+\}\par
+\par
+#content h3 \{ background-color: #ee5 \}\par
+\par
+h4\{\}\par
+\par
+#content h4.eventTitle \{\par
+  margin-left: 1%;\par
+  border-bottom: 1px solid blue;\par
+\}\par
+\par
+/*\par
+ * Tables\par
+ */\par
+\par
+th \{\}\par
+\par
+td \{\}\par
+\par
+th.content \{background-color: #0BC \}\par
+td.content \{background-color: #0EF \}\par
+\par
+/*\par
+ * Lists and navLeft\par
+ */\par
+\par
+ul \{\}\par
+\par
+#navLeft ul \{\par
+  list-style-type: none;\par
+  margin: 0;\par
+  padding: 0;\par
+\}\par
+\par
+#navLeft ul li \{\par
+  margin: 0;\par
+\}\par
+\par
+#navLeft ul li p \{\par
+  margin: 0;\par
+\}\par
+\par
+#navLeft ul li ul \{\par
+  list-style-type: none;\par
+  font-size: 90%;\par
+  margin: 0 2em;\par
+\}\par
+\par
+#navLeft ul li ul li \{\par
+  margin: 0;\par
+\}\par
+\par
+/*\par
+ * Paragraphs\par
+ */\par
+\par
+p \{\}\par
+\par
+#navLeft p \{\par
+  text-align: center;\par
+  padding: 0 auto;\par
+  margin: 0;\par
+\}\par
+\par
+#footer p \{\par
+  padding: 0;\par
+\}\par
+\par
+#content p.topalign \{\par
+  vertical-align: middle;\par
+  height: 2em;\par
+  text-align: center;\par
+  width: 100%;\par
+  padding: .5em;\par
+  border: 1px solid #ddd;\par
+\}\par
+\par
+#content p.topalign img \{\par
+  vertical-align: middle;\par
+  text-align: text-middle;\par
+\}\par
+\par
+#content p.quote \{\par
+  color:black;\par
+  font-style: italic;\par
+  font-size: 110%;\par
+  margin-left: 10%;\par
+  margin-right: 10%;\par
+  padding 1em;\par
+  border: 1px solid #ddd;\par
+  text-align: center;\par
+\}\par
+\par
+#content p.navbar \{\par
+  font-size: 90%;\par
+  text-align: center;\par
+  border-top: 1px solid #ddd;\par
+  border-bottom: 1px solid #ddd;\par
+\}\par
+\par
+blockquote \{\}\par
+\par
+blockquote.note \{\par
+  font-size: 80%;\par
+  border: 1px solid #ddd;\par
+  background-color: #eee;\par
+\}\par
+\par
+td.noteImg \{\par
+  background-color: white;\par
+  border: 0;\par
+\}\par
+\par
+td.noteTxt \{\par
+  background-color: white;\par
+  font-size: 120%;\par
+  border: 2px solid #ddd;\par
+  background-color: #eee;\par
+\}\par
+\par
+/**\par
+ ** UNSPECIFIED IN APACHE STYLEBOOK DTD\par
+ ** <caution>..</caution> and <warning>..</warning>\par
+ **\par
+ * \par
+ * td.cautionImg \{\par
+ *   background-color: white;\par
+ *   border: 0;\par
+ * \}\par
+ * \par
+ * td.cautionTxt \{\par
+ *   background-color: white;\par
+ *   font-size: 120%;\par
+ *   border: 2px solid #ddd;\par
+ *   background-color: #eee;\par
+ * \}\par
+ * \par
+ * \par
+ * td.warningImg \{\par
+ *   background-color: white;\par
+ *   border: 0;\par
+ * \}\par
+ * \par
+ * td.warningTxt \{\par
+ *   background-color: white;\par
+ *   font-size: 120%;\par
+ *   border: 2px solid #ddd;\par
+ *   background-color: #eee;\par
+ * \}\par
+ * \par
+**/\par
+\par
+\par
+blockquote.source \{\par
+  font-size: 75%;\par
+\}\par
+\par
+code \{\par
+  font-size: 75%;\par
+\}\par
+\par
+\par
+/*\par
+ * Special Table (note)\par
+ */\par
+\par
+#notediv div \{ background-color: white \}\par
+\par
+table.note \{\par
+  width: 90%;\par
+\}\par
+\par
+td.noteImg \{\par
+  background-color: white;\par
+  vertical-align: top;\par
+  border: 0;\par
+  width: 24;\par
+\}\par
+\par
+td.noteTxt \{\par
+  color: black;\par
+  background-color: #eee;\par
+  font-size: 90%;\par
+  border: 2px solid;\par
+  border-color: #ccc;\par
+\}\par
+\par
+\par
+/*\par
+ * Images\par
+ */\par
+\par
+img \{\}\par
+\par
+Title img \{\par
+  float: left;\par
+  border: 0;\par
+  padding: 2px;\par
+\}\par
+\par
+#footer img \{\par
+  border: 0;\par
+\}\par
+\par
+\par
+/*\par
+ * Document Divisions\par
+ */\par
+\par
+div \{\}\par
+\par
+/*\par
+ * Pre\par
+ */\par
+\par
+pre \{\}\par
+\par
+\par
+/*\par
+ * Generic Classes\par
+ */\par
+\par
+.indented \{\par
+  margin-left: 3%;\par
+\}\par
+\par
+.topBanner \{\par
+  float: right;\par
+  margin: 0;\par
+  border: 0;\par
+  vertical-align: middle;\par
+\}\par
+\par
+.noborder \{\par
+  border: 0;\par
+  margin: 0;\par
+\}\f0\par
+\par
+--------<end of css stylesheet>-------\par
+\par
+\par
+\par
+}
+ 

@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Building Xalan-C/C++</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Building Xalan-C/C++</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>Build Libraries<br />
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Building Xalan-C/C++</h2>
+<ul>
+<li>
+<a href="#winbldenv">Windows Build Environment</a>
+</li>
+<ul>
+<li>
+<a href="#winbldcmd">Sample Windows Build Command File</a>
+</li>
+<li>
+<a href="#winbldinst">Installing the Xalan Library on Windows</a>
+</li>
+</ul>
+<li>
+<a href="#unixbldenv">UNIX Build Environment</a>
+</li>
+<ul>
+<li>
+<a href="#unixlibpath">Finding Runtime Libraries</a>
+</li>
+<li>
+<a href="#unixbldxalan">Building the Xalan-C/C++ XSLT Libraries for UNIX</a>
+</li>
+</ul>
+<li>
+<a href="#unixcompileref">Reference on Unix Platforms and C++ Compilers</a>
+</li>
+<li>
+<a href="#xercesmodules">Xerces-C/C++ Transcoders and Plug-in Modules</a>
+</li>
+
+</ul>
+
+<br />
+<p>The Xalan-C/C++ XSLT library is built upon the Xerces-C/C++ XML Parser library. Before compiling the Xalan-C/C++ XSLT library, you must have a usable Xerces-C/C++ library.
+</p>
+<p>You can either install a compatible binary distribution of Xerces-C/C++ or build your own from a source distribution of Xerces-C/C++.  You can gain additional capability if you build the Xerces-C/C++ XML Parser library from sources.  The Xerces-C/C++ binary distribution is not built for the IBM-ICU libraries.  The IBM-ICU libraries provide additional transcoding services.
+</p>
+<p>Building the source code packages ensures that the resulting packages are proper for your system.  There are various binary distributions available, but incompatibilities between C++ compilers (even between compiler versions) are known to cause issues with sharing of libraries.
+</p>
+<p>We don't have persons yet committed to build binary distribution releases.
+</p>
+<p>You can get more information on the Xerces-C/C++ distributions at the <a href="http://xml.apache.org/xerces-c">http://xml.apache.org/xerces-c</a> web site.
+</p>
+
+<a name="winbldenv">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Windows Build Environment</h3>
+
+<p>Build support for Microsoft Visual Studio (VC6) is deprecated.
+</p>
+<p>Building Xalan-C/C++ with Microsoft Visual Studio (VC6) requires the Xerces-C/C++ version 2.8 or older releases.  Microsoft VC6 is removed from the Xerces-C/C++ Version 3.x releases.
+</p>
+<p>Building Xalan-C/C++ with Microsoft Visual Studio .NET 2008 (VC9) requires Xerces-C/C++ version 3.1 or newer.  Building with Microsoft Visual Studio .NET 2010 (VC10) requires Xerces-C/C++ version 3.1.1 or newer.
+</p>
+<p>The Microsoft Visual Studio .NET 2010 (VC10) build is not fully integrated into the source tree.  You will probably need to copy the {SourceDir}/Projects/Win32/VC9 directory to a (VC10) directory and allow Microsoft to attempt an automatic upgrade.  A (VC10) directory will become part of the source tree after the product passes quality control inspection.
+</p>
+<p>Environment variables XERCESCROOT and XALANCROOT are required.  Environment ICUROOT is used only if building Xalan-C/C++ with IBM-ICU library support.
+</p>
+<table border="1">
+<tr>
+   <td class="content" rowspan="1" colspan="1">XERCESCROOT</td>
+<td class="content" rowspan="1" colspan="1">The Xerces-C/C++ installation directory</td>
+</tr>
+<tr>
+   <td class="content" rowspan="1" colspan="1">XALANCROOT</td>
+<td class="content" rowspan="1" colspan="1">The Xalan-C/C++ source directory</td>
+</tr>
+<tr>
+   <td class="content" rowspan="1" colspan="1">ICUROOT</td>
+<td class="content" rowspan="1" colspan="1">The IBM-ICU installation directory (only if building with ICU support)</td>
+</tr>
+</table>
+
+<p>I like to create command or batch files to setup the build environment variables and start the Visual Studio .NET development system using the custom build environment.  I find this much easier than navigating the graphical interface to add custom build environments. The Microsoft *.vsprops custom property files are not available in the early versions of Visual Studio .NET platforms.
+</p>
+
+<a name="winbldcmd">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Sample Windows Build Command File</h4>
+
+<p>I like to use this template for both Xerces-C and Xalan-C builds from sources.  The sample shown here is for Xalan-C/C++ because the installation of Xerces-C/C++ should already have been done.
+</p>
+<blockquote class="source">
+<pre>
+SET XERCESCROOT="path to xerces-c installation"
+SET XALANCROOT="sources\xalan\c\"
+</pre>
+</blockquote>
+<p>Set the xalan project path for your version of Microsoft Visual Studio .NET.
+</p>
+<blockquote class="source">
+<pre>
+:: VS 2003 (VC7.1)
+SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC7.1
+
+:: VS 2005 (VC8)
+SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC8
+
+:: VS 2008 (VC9)
+SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC9
+
+:: VS 2010 (VC10) - experimental
+SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC10
+</pre>
+</blockquote>
+<p>Set some environment variables so we can easily copy or install the products after they have been built.
+</p>
+<blockquote class="source">
+<pre>
+:: VS 2003 (VC7.1)
+SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC7.1
+
+:: VS 2005 (VC8)
+SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC8
+
+:: VS 2008 (VC9)
+SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC9
+
+:: VS 2010 (VC10) - experimental
+SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC10
+</pre>
+</blockquote>
+<p>We use this Visual Studio .NET solution file.
+</p>
+<blockquote class="source">
+<pre>
+SET XALANCBUILDSLN=%XALANCPROJDIR%\xalan.sln
+</pre>
+</blockquote>
+<p>The <code>$(variable)</code> is expanded inside Visual Studio.<br />
+The <code>%variable%</code> is expanded by the cmd utility before launching the Visual Studio.
+</p>
+<blockquote class="source">
+<pre>
+SET PATH=%WINDIR%\system32;%WINDIR%;%WINDIR%\system32\Wbem
+SET INCLUDE=
+SET LIB=
+SET LIBPATH=
+SET SOURCE=
+</pre>
+</blockquote>
+<p>Set the default environment variables for your version of Microsoft Visual Studio .NET.
+</p>
+<blockquote class="source">
+<pre>
+:: VS 2000 (VC7) - obsolete
+call "%VS70COMNTOOLS%vsvars32.bat"
+
+:: VS 2003 (VC7.1)
+call "%VS71COMNTOOLS%vsvars32.bat"
+
+:: VS 2005 (VC8)
+call "%VS80COMNTOOLS%vsvars32.bat"
+
+:: VS 2008 (VC9)
+call "%VS90COMNTOOLS%vsvars32.bat"
+
+:: VS 2010 (VC10) - experimental
+call "%VS100COMNTOOLS%vsvars32.bat"
+</pre>
+</blockquote>
+<p>The LIBPATH and SOURCE environment variables may not be properly 
+set by the vsvars32.bat command file.  You may wish to start your 
+Visual Studio .NET application without any custom environment 
+and examine the Tools -&gt; C/C++ project defaults for the various libraries. 
+Then specifically set the paths in your build command file.
+</p>
+<p>The Xalan-C and Xerces-C libraries do not use the Microsoft Framework, 
+the "mfc" and the "atl" directives. Microsoft is deprecating their "mfc"
+Microsoft Foundation Classes.
+</p>
+<blockquote class="source">
+<pre>
+:: VS 2003 (VC7.1)
+:: SET LIBPATH=$(FrameWorkDir)$(FrameWorkVersion)
+:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
+:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
+
+:: VS 2005 (VC8)
+:: SET LIBPATH=%(FrameworkDir)$(FrameWorkVersion)
+:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
+:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
+
+:: VS 2008 (VC9)
+:: SET LIBPATH=%(FrameworkDir)$(FrameWorkVersion)
+:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
+:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
+</pre>
+</blockquote>
+<p>Define the necessary environment variables for building the Xalan-C/C++ libraries and sample programs.
+</p>
+<blockquote class="source">
+<pre>
+SET PATH=%PATH%;%XERCESCROOT%\bin
+
+SET INCLUDE=%INCLUDE%;%XERCESCROOT%\include;%XERCESCROOT%\src
+SET INCLUDE=%INCLUDE%;%XALANCROOT%\src
+
+SET LIB=%LIB%;%XERCESCROOT%\lib
+</pre>
+</blockquote>
+<p>If you are going to build for IBM-ICU support, then add the following environments.
+</p>
+<blockquote class="source">
+<pre>
+SET ICUROOT="path to ibm-icu installation"
+
+SET PATH=%PATH%;%ICUROOT%\bin
+SET INCLUDE=%INCLUDE%;%ICUROOT%\include
+SET LIB=%LIB%;%ICUROOT%\lib;%ICUROOT%\data
+</pre>
+</blockquote>
+<p>Now we should be ready to start the Microsoft Visual Studio .NET using our custom environment using the <code>%XALANCBUILDSLN%</code> solution.
+</p>
+<blockquote class="source">
+<pre>
+devenv.exe "%XALANCBUILDSLN%" /useenv
+</pre>
+</blockquote>
+
+<a name="winbldinst">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Installing the Xalan Library on Windows</h4>
+
+<p>The following command script will install the binary and header files to a target directory that is compatible with the XALANCROOT environment variable for creating applications. Environment variables other than XALANCTARGET are defined in the previous section, the <a href="#winbldcmd">Visual Studio .NET build example</a>.
+</p>
+<blockquote class="source">
+<pre>
+SET XALANCTARGET="path-to-target-directory"
+
+MKDIR "%XALANCTARGET%\bin"
+MKDIR "%XALANCTARGET%\include"
+MKDIR "%XALANCTARGET%\lib"
+
+CD "%XALANCBUILDDIR%\Release\Nls"
+COPY *.hpp "%XALANCTARGET%"\include
+
+CD "%XALANCBUILDDIR%\Release"
+COPY *.DLL "%XALANCTARGET%\bin"
+COPY *.LIB "%XALANCTARGET%\lib"
+COPY *.EXP "%XALANCTARGET%\lib"
+
+CD "%XALANCBUILDDIR%\Debug"
+COPY *.DLL "%XALANCTARGET%\bin"
+COPY *.PDB "%XALANCTARGET%\bin"
+COPY *.LIB "%XALANCTARGET%\lib"
+COPY *.EXP "%XALANCTARGET%\lib"
+
+CD "%XALANCROOT%\src
+XCOPY xalanc\*.hpp "%XALANCTARGET%\include\xalanc" /E /C /I /R /Y
+XCOPY xalanc\*.h   "%XALANCTARGET%\include\xalanc" /E /C /I /R /Y
+</pre>
+</blockquote>
+
+<a name="unixbldenv">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>UNIX Build Environment</h3>
+
+<p>I don't like building sources using root or superuser login.  I like to do builds in a directory separated from the source tree.  A debug build and release build will create shared objects of the same name.  I like to target these builds to separate directory trees.
+</p>
+<p>Release builds are targeted at the <code>/usr/local</code> file system.
+</p>
+<p>Debug builds are targeted at the <code>/opt/apache/debug</code> file system.
+</p>
+<p>Source trees are referenced wherever convenient.  Using the (<code>--srcdir</code>) configuration parameter allows the source tree to be separate from the build tree.  The source tree can even reside on read-only media.
+</p>
+<p>Product builds are done in a build directory path separate from the source tree.  This is the working directory from where you perform your builds and installs.
+</p>
+<p>
+<b>Source Trees:</b> (<code>--srcdir</code>) configuration parameter
+</p>
+<p>
+  	<code>/opt/xerces/c/&lt;trunk&gt;/</code>&lt;the Xerces-C/C++ XML parser library source distribution&gt;
+<br />
+  	<code>/opt/xalan/c/&lt;trunk&gt;</code>/&lt;the Xalan-C/C++ XSLT library source distribution&gt;
+</p>
+<p>If the source distribution is well-constructed, the source directory trees can be read-only.
+</p>
+<p>
+<b>Binary Installation Trees:</b> (<code>--prefix</code>) configuration parameter
+</p>
+<p>
+  	<code>/usr/local/</code>  &lt;the target for the 
+release binary installation&gt;
+<br />
+      	<code>./bin</code>    	The sample programs
+<br />
+      	<code>./lib</code>    	The shared and static library files
+<br />
+      	<code>./include</code>  	The library header files
+<br />
+<br />
+  	<code>/opt/apache/debug/</code>  &lt;the target for the 
+debug binary installation&gt;
+<br />
+      	<code>./bin</code>    	The sample programs
+<br />
+      	<code>./lib</code>    	The shared and static library files
+<br />
+      	<code>./include</code>  	The library header files
+</p>
+
+<p>The default (<code>--prefix</code>) value is <code>/usr/local</code> which I use for release builds.
+</p>
+<p>I choose (<code>--prefix</code>) value of <code>/opt/apache/debug</code> for debug builds.
+</p>
+
+<p>
+<b>Build Tree:</b> The build working directory tree
+</p>
+<p>  	<code>/&lt;user-directory&gt;/Build/</code>
+</p>
+
+<p>You can use any empty file system or directory path with write access.  Starting with an empty directory is a quick way to do a clean build.  Make this empty directory to be your current working directory.
+</p>
+<p>I also like to make some shell scripts so that the build process can be automated. I locate these scripts outside of the Build directory so they don't get lost when I purge directory content.
+</p>
+<p>
+  	<code>../build-xerces-lib.sh</code>
+</p>
+<p>
+  	<code>../build-xalan-lib.sh</code>
+</p>
+<p>
+  	<code>../build-xalan-app.sh</code>
+</p>
+<p>I generate these shell scripts with a text editor and use them to minimize keyboard typing errors.
+</p>
+<a name="unixlibpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Finding Runtime Libraries</h4>
+
+<p>The various types of UNIX operating systems have differing requirements for finding libraries at runtime.
+</p>
+<table border="1">
+<tr>
+<th class="content" rowspan="1" colspan="1">Operating System</th>
+<th class="content" rowspan="1" colspan="1">Library Path Environment</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">Solaris and Linux</td>
+<td class="content" rowspan="1" colspan="1">LD_LIBRARY_PATH</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">HP-UX</td>
+<td class="content" rowspan="1" colspan="1">SHLIB_PATH</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">AIX and BSD</td>
+<td class="content" rowspan="1" colspan="1">LIBPATH</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">Mac OS X</td>
+<td class="content" rowspan="1" colspan="1">DYLD_LIBRARY_PATH</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">Cygwin and  MinGW</td>
+<td class="content" rowspan="1" colspan="1">PATH</td>
+</tr>
+</table>
+
+<p>The Xalan-C/C++ and Xerces-C/C++ shared library objects must be installed in a reachable library path for your platform.  The <code>make</code> step creates the libraries in the <code>lib</code> subdirectory of your working directory.  The <code>make install</code> step installs these shared objects to the designated <code>{prefix}/lib</code> directory or another directory defined by the <code>--libdir</code> configuration parameter.
+</p>
+<p>In many cases, the <code>/usr/local/lib</code> is already cached in <code>/etc/ld.so.cache</code> or included by <code>/etc/ld.so.conf</code>.  The library path environment variable is then used for exceptions.  The explicit library path environment variable usually takes precedence over the other methods of finding shared library runtimes.  This is useful if you wish to use a debug environment on the same platform that also includes release libraries of the same name.
+</p>
+
+
+<a name="unixbldxalan">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Building the Xalan-C/C++ XSLT Libraries for UNIX</h4>
+
+
+<p>I don't like building sources from a root or superuser login.  I also like to do builds in a directory separated from the source tree.
+</p>
+
+<p>If your sources tree is read-only and some required files are not executable, then you need to copy the source to writable media and change the execute attributes of specific files.  This command sequence will copy an entire directory tree from <code>{source-dir}</code> to <code>{dest-dir}</code>.
+</p>
+<blockquote class="source">
+<pre>
+	cd {source-dir}
+	find . | cpio -pdmuv {dest-dir}
+</pre>
+</blockquote>
+<p>Connect to the <code>{xalan-src}</code> directory and make specific files executable.
+</p>
+<blockquote class="source">
+<pre>
+	cd {xalan-src}
+	chmod 755 runConfigure configure install-sh
+</pre>
+</blockquote>
+<p>Connect to your empty build directory and construct a script for building the Xalan-C/C++ XSLT products.
+</p>
+
+<p>The Xalan-C/C++ configuration process uses the <code>runConfigure</code> script as a front-end to the automake <code>configure</code> script. Your shell command script should therefore use the <code>runConfigure</code> script.
+</p>
+
+<table border="1">
+<tr>
+<th class="content" rowspan="1" colspan="2">runConfigure Options</th>
+</tr>
+<tr>
+<th class="content" rowspan="1" colspan="1">Option</th>
+<th class="content" rowspan="1" colspan="1">Description</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-p</td>
+<td class="content" rowspan="1" colspan="1">Build platform: aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp11-ia64, 
+   irix, tru64, macosx, cygwin</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-c</td>
+<td class="content" rowspan="1" colspan="1">C compiler name: gcc, cc, c89, xlc, xlc_r, acc (default = gcc)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-x</td>
+<td class="content" rowspan="1" colspan="1">C++ compiler name: g++, CC, C89, xlC, xlC_r, aCC (default = g++)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-d</td>
+<td class="content" rowspan="1" colspan="1">Indicates a debug build, takes no values, default is No Debug</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-t</td>
+<td class="content" rowspan="1" colspan="1">Transcoder to use: 'icu', (Default is null, the Xerces-C/C++ transcoder)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-m</td>
+<td class="content" rowspan="1" colspan="1">Type of localization support: inmem, icu, nls (default is inmem)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-M</td>
+<td class="content" rowspan="1" colspan="1">Locale for message localization: "en_US"</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-r</td>
+<td class="content" rowspan="1" colspan="1">Threads option: pthread, dce (default is pthread)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-b</td>
+<td class="content" rowspan="1" colspan="1">Specify 32 or 64 bit build (Default is 32-bit)<br />
+    On Linux, the 32/64 build is determined by the compiler, kernel, and glibc.</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-P</td>
+<td class="content" rowspan="1" colspan="1">Install root directory: value is assigned to the <code>--prefix</code> configure parameter</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-l</td>
+<td class="content" rowspan="1" colspan="1">Extra link options (assigned to <code>LDFLAGS</code>)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-z</td>
+<td class="content" rowspan="1" colspan="1">Extra compiler options (assigned to <code>CFLAGS</code> and <code>CXXFLAGS</code>)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-C</td>
+<td class="content" rowspan="1" colspan="1">Extra configuration options (i.e. <code>--srcdir=${SourceDir}</code>)</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">-h</td>
+<td class="content" rowspan="1" colspan="1">Print the <code>runConfigure</code> help and exit</td>
+</tr>
+</table>
+
+<p>Here are the names of some C/C++ compilers associated with commercial UNIX operating systems used to build Xalan-C/C++ and Xerces-C/C++ packages.
+</p>
+
+<table border="1">
+<tr>
+<th class="content" rowspan="1" colspan="1">System</th>
+<th class="content" rowspan="1" colspan="1">Platform</th>
+<th class="content" rowspan="1" colspan="1">C Compiler</th>
+<th class="content" rowspan="1" colspan="1">C++ Compiler</th>
+<th class="content" rowspan="1" colspan="1">Comment</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">AIX</td>
+<td class="content" rowspan="1" colspan="1">aix</td>
+<td class="content" rowspan="1" colspan="1">xlc_r</td>
+<td class="content" rowspan="1" colspan="1">xlC_r</td>
+<td class="content" rowspan="1" colspan="1">thread support</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">AIX</td>
+<td class="content" rowspan="1" colspan="1">aix</td>
+<td class="content" rowspan="1" colspan="1">xlc</td>
+<td class="content" rowspan="1" colspan="1">xlC</td>
+<td class="content" rowspan="1" colspan="1">no thread support</td>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">Cygwin</td>
+<td class="content" rowspan="1" colspan="1">cygwin</td>
+<td class="content" rowspan="1" colspan="1">gcc</td>
+<td class="content" rowspan="1" colspan="1">g++</td>
+<td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">HP-UX</td>
+<td class="content" rowspan="1" colspan="1">hp-11</td>
+<td class="content" rowspan="1" colspan="1">cc</td>
+<td class="content" rowspan="1" colspan="1">aCC</td>
+<td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">HP-UX</td>
+<td class="content" rowspan="1" colspan="1">hp-11-ia64</td>
+<td class="content" rowspan="1" colspan="1">cc</td>
+<td class="content" rowspan="1" colspan="1">aCC</td>
+<td class="content" rowspan="1" colspan="1" />
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="1">Solaris</td>
+<td class="content" rowspan="1" colspan="1">solaris</td>
+<td class="content" rowspan="1" colspan="1">cc</td>
+<td class="content" rowspan="1" colspan="1">CC</td>
+<td class="content" rowspan="1" colspan="1" />
+</tr>
+</table>
+
+<p>The following example shows you how to construct a usable script with your favorite text editor.
+</p>
+
+<blockquote class="source">
+<pre>
+#!/bin/sh
+# Script to build and install Xalan-C/C++ products from sources
+
+# The Source and Target Directories for Debug Build
+
+# SourceDir="--srcdir=/opt/xalan/c/trunk"
+# DestDir="--prefix=/opt/apache/debug"
+
+# The Source and Target Directories for Release Build
+
+SourceDir="--srcdir=/opt/xalan/c/trunk"
+DestDir="--prefix=/usr/local"
+
+# The Xerces and Xalan package directories
+
+export XALANCROOT=${SourceDir}
+export XERCESCROOT=${DestDir}
+
+# If compiling with IBM-ICU support, the ICUROOT environment variable 
+# needs to be defined to specify where the ICU libraries are installed.
+# Specifically, the following directories are accessed:
+#	${ICUROOT}/lib, ${ICUROOT}/include, ${ICUROOT}/data
+#	export ICUROOT=/usr/local
+
+export PATH=$PATH:${SourceDir}
+
+# Debug Configure
+
+# runConfigure -p linux -d -c gcc -x g++ -P "${DestDir}" \
+#   -C "--srcdir=${SourceDir}"
+
+# Release Configure
+
+runConfigure -p linux -c gcc -x g++ -P "${DestDir}" \
+   -C "--srcdir=${SourceDir}"
+
+# Connect to configured src subdirectory to build the library without
+# sample programs. If you run make from your build directory, then the
+# library and all sample programs will be built.
+
+cd src
+make clean
+make
+
+# As a user with permissions to write to ${DestDir} install the Xalan-C/C++ products
+#   ${DestDir}/bin   the Xalan command-line utility and sample programs
+#   ${DestDir)/lib    the Xalan-C/C++ static and dynamic libraries
+#   ${DestDir}/include/xalanc/*    The header files.
+
+make install
+
+## End of sample build script.
+</pre>
+</blockquote>
+
+
+
+<a name="unixcompileref">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Reference on Unix Platforms and C++ Compilers</h3>
+
+<p>Some compilers and platforms may need configuration options and variables that differ from the default Linux build.  Beware that the runConfigure script for Xalan-C/C++ is a front-end that calls the configure script.  The following table is reference information for the build of Xerces-C/C++ version 3.x.  The C++ compiler for Xerces should be the same as used for Xalan builds.
+</p>
+
+<table border="1">
+<tr>
+<th class="content" rowspan="1" colspan="2">Configuration Options For Unix Platforms</th>
+</tr>
+<tr>
+<th class="content" rowspan="1" colspan="1">Solaris x86</th>
+<th class="content" rowspan="1" colspan="1">Sun CC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=CC CC=cc</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Solaris x86-64</th>
+<th class="content" rowspan="1" colspan="1">Sun CC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=cc CC=cc CFLAGS=-xarch=amd64 CXXFLAGS=-xarch=amd64<br />
+(newer Sun CC versions use -m64 instead of -arch=amd64)</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Solaris Sparc</th>
+<th class="content" rowspan="1" colspan="1">Sun CC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=CC CC=cc</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Solaris Sparc v9</th>
+<th class="content" rowspan="1" colspan="1">Sun CC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=cc CC=cc CFLAGS=-xarch=v9 CXXFLAGS=-xarch=v9<br />
+(newer Sun CC versions use -m64 instead of -arch=v9)</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">AIX PowerPC</th>
+<th class="content" rowspan="1" colspan="1">IBM XLC++</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=xlc_r CC=xlc_r<br />
+gmake libxerces_c_1a LDFLAGS=-qmkshrobj</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">AIX PowerPC-64</th>
+<th class="content" rowspan="1" colspan="1">IBM XLC++</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=xlc_r CC=xlc_r CXXFLAGS=-q64 CFLAGS=-q64<br />
+gmake libxerces_c_1a LDFLAGS=-qmkshrobj</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">HP-UX 1a-64-32</th>
+<th class="content" rowspan="1" colspan="1">HP aCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=aCC CC=aCC CFLAGS=-mt CXXFLAGS=-mt LDFLAGS=-mt</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">HP-UX 1a-64</th>
+<th class="content" rowspan="1" colspan="1">HP aCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CXX=aCC CC=aCC CFLAGS=-mt CXXFLAGS=-"mt +DD64" LDFLAGS="-mt +DD64"</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Mac OS X x86-64</th>
+<th class="content" rowspan="1" colspan="1">GCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64"</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Mac OS X PowerPC-64</th>
+<th class="content" rowspan="1" colspan="1">GCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure CFLAGS="-arch ppc64" CXXFLAGS="-arch ppc64"</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Mac OS X x86/PowerPC</th>
+<th class="content" rowspan="1" colspan="1">GCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure --disable-dependency-tracking CFLAGS="arch i386 -arch ppc"<br />
+CXXFLAGS="-arch i386 -arch ppc"</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">MinGW x86</th>
+<th class="content" rowspan="1" colspan="1">GCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure LDFLAGS=-no-undefined</td>
+</tr>
+
+<tr>
+<th class="content" rowspan="1" colspan="1">Cygwin x86</th>
+<th class="content" rowspan="1" colspan="1">GCC</th>
+</tr>
+<tr>
+<td class="content" rowspan="1" colspan="2">./configure LDFLAGS=-no-undefined</td>
+</tr>
+</table>
+
+
+<a name="xercesmodules">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Xerces-C/C++ Transcoders and Plug-in Modules</h3>
+<p>Xerces-C/C++ XML Parsers have undergone some additional modularity features. In the version 3 series, the transcoders are now being implemented as runtime modules. Use of the transcoding modules is still experimental for Xalan-C/C++ transformation applications. The basic transcoder capability still exists. Xerces-C/C++ version 2 series had transcoder libraries explicitly built and installed.
+</p>
+<p>A plug-in memory management architecture was introduced in Xerces-C/C++ version 2.7. The plug-in memory management of Xerces-C/C++ is also supported by Xalan-C/C++ applications.
+</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

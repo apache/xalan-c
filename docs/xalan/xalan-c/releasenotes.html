@@ -1,0 +1,1108 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-C++ Release Notes</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-C++ Release Notes</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-C++ Release Notes</h2>
+<p>Release notes for Xalan-C++ Version 1.11</p>
+ <ul>
+  <li>
+<a href="#status">Status</a>
+</li>
+  <li>
+<a href="#build">Rebuilding Xalan-C++ and the sample applications</a>
+</li> 
+  <li>
+<a href="#contact">Getting in touch</a>
+</li>
+  <li>
+<a href="#history">History of software changes</a>
+</li>  
+ </ul>
+ <a name="status">&#8204;</a>
+ <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Status</h3>
+   <ul>
+    <li>
+<a href="#done">Changes for Xalan-C++ version 1.8</a>
+</li>
+    <li>
+<a href="#bugs">Bug reporting</a>
+</li>    
+    <li>
+<a href="#xml4c">Version of Xerces-C++ to use</a>
+</li>
+    <li>
+<a href="#to-do">To-do tasks for future Xalan-C++ releases</a>
+</li>
+   </ul>
+   <a name="done">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.8</h4>
+     <p>Major updates since version 1.7 include:</p>
+     <ul>
+      <li>
+<a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10582&amp;version=10833">XalanC bugs fixed for this release</a>.</li>
+      <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
+      <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
+          HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
+      <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
+          is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
+          on this platform.  Please see <a href="#dotNet">"Step for doing a Windows Build with Visual Studio .NET"</a> for details.</li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these changes to your build environment, please see <a href="#xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"</a>
+</li>
+      
+      <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes". See bugzilla <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24304">24304</a> and <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</a>.</li>
+     </ul>  
+     
+
+   <a name="bugs">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Bug reporting</h4>
+     <p>All known Xalan-C++ bugs are listed in <a href="https://issues.apache.org/jira/browse/XALANC">JIRA (the Apache bug database)</a>. For a list of open bugs with links to each bug
+      report, see <a href="https://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;jqlQuery=project+%3D+XALANC+AND+resolution+%3D+Unresolved+ORDER+BY+updated+DESC">XalanC open bugs</a>. If you find a new bug, please enter a XalanC bug report in this
+      database.</p>
+     <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Before you can enter your first bug report, you must submit your email address to Jira and receive a password.</td>
+</tr>
+</table> 
+     <p>We strongly encourage you write patches for problems you find and submit them to
+      xalan-dev@xml.apache.org. We review the patches we receive to make sure they do not break something else, and (assuming they 
+     do not) include them in our next release. In the interest of fixing bugs, adding enhancements, and addressing outstanding design
+     issues, we sincerely want (and need!) your active participation in the ongoing development of Xalan.</p>
+     <a name="xml4c">&#8204;</a>     
+     <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Version of Xerces-C++ to use</h4> 
+<p>Xalan-C++ Version 1.11 has been tested with Xerces-C++ version 3.1.1.</p>
+<p>For information about including the Xerces-C++ libraries on the path, see <a href="install.html#path">Setting up the system path</a>.</p>
+<p>
+<b>Important:</b> You may experience unpredictable anomalies if your Xalan and Xerces builds are not in synch. If you download an update to Xalan, check the release notes to determine which version of Xerces you should use.</p>
+<p>If you compile both Xalan-C++ and Xerces-C++ from distribution sources using the same platform and compiler, you will avoid most of the compatibility issues.</p>
+
+<a name="to-do">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>To-do tasks for future Xalan-C++ releases</h4>
+    <ul>
+       <li>Update the documentation</li>
+       <li>Performance improvements</li>
+       <li>Add a more complete set of EXSLT functions</li>
+       <li>Add support for extension elements</li>
+       <li>Fix any conformance bugs we or our users find</li>
+       <li>Fix compiler and platform support issues</li>
+       <li>Add XPath2 support into Xalan-C++</li>
+    </ul>
+ <p>Watch the <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a> for more information and for ideas about how you can get involved.
+</p>
+    
+     
+  <a name="build">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Rebuilding Xalan-C++</h3>
+<ul>
+<li>
+<a href="#jar">Rebuilding Xalan-C++</a>
+</li>
+<li>
+<a href="#samples">Rebuilding sample applications</a>
+</li>
+</ul>
+<a name="jar">&#8204;</a> 
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Rebuilding Xalan-C++</h4>
+   <ul>
+    <li>
+<a href="#needed">What you need from the distributions</a>
+</li>   
+    <li>
+<a href="#win32">Steps for doing a Windows Build</a>
+</li>
+    <li>
+<a href="#dotNet">Steps for doing a Windows Build with Visual Studio .NET</a>
+</li>
+    <li>
+<a href="#unix">Steps for doing a UNIX build</a>
+</li>       
+    <li>
+<a href="#locale">Steps for doing a Build with Message Localization Support</a>
+</li>
+    <li>
+<a href="#xercesdepdom">Steps for doing a Build with Xerces Deprecated DOM Support</a>
+</li>
+   </ul>
+<a name="needed">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>What you need from the distributions</h4>
+   <p>To rebuild Xalan-C++, you need the Xalan-C++ source files, the Xerces-C++ header files, and
+   for Windows the Xerces-C++ .lib file. If you want to rebuild with the ICU, you will need to download the ICU source package to build the ICU libraries. </p>
+
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also download Xalan-C++ source distributions from <a href="http://www.apache.org/dyn/closer.cgi/xml/xalan-c">Xalan-C downloads</a>: Xalan-C_1_11_0-src.zip and Xalan-C_1_11_0-src.tar.gz. Xerces-C++ source distributions are available from <a href="http://www.apache.org/dyn/closer.cgi/xerces/c">Xerces-C downloads</a>: 
+xerces-c-3.1.1-src.zip and xerces-c-3.1.1-src.tar.gz.</td>
+</tr>
+</table>
+<p>Keep in mind that at any given point in time the Xalan-C++ and Xerces-C++ source trees in the Apache XML repository may not be consistent. When we release a version of Xalan-C++ we certify that it is compatible with a given version of Xerces-C++. To be safe, use the Xerces distributions that we certify as compatible. Reminder: Xalan-C++ Version 1.11 is compatible with Xerces-C++ version 3.1.1.</p>
+   <p>For information on using the <a href="http://oss.software.ibm.com/icu/index.html">International Components for Unicode (ICU)</a>, see
+   <a href="usagepatterns.html#icu">Using the ICU</a>.
+   The recommended version of ICU for Xalan-C++ Version 1.11 is International Components for Unicode(ICU) version 3.2. You may be able to use newer ICU releases as they appear.</p>
+   <a name="win32">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Steps for doing a Windows build</h4>
+  <p>To build Xalan-C++ on Windows, you need Xerces-C++ and MS Visual C++ 6.0 installed with Service Pack 5 for Visual C++ and Visual Studio .NET.</p> 
+  <p>If you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
+<p>Before you do the following, be sure you have <a href="getstarted.html#windowspath">provided Visual C++ the paths to the Xerces headers and libraries</a>.</p>
+  <ol>    
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of Xerces-C++.</li>
+    <li>Use Visual C++ to open the Xalan workspace (.dsw) from the xml-xalan\c\Projects\Win32\VC6.  If you are building with ICU, then use XalanICU.dsw.  Otherwise, open the Xalan.dsw workspace.<br />
+<br />
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</td>
+</tr>
+</table>
+    <br />
+    As an alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual C++.  From the "Options" window, click on the "Directories" tab and do the following:
+    <ol>
+    <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
+    <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
+    <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
+    </ol>
+</li>
+  </ol>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</td>
+</tr>
+</table>
+  <p>
+<img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change" />
+</p>
+
+<a name="dotNet">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Steps for doing a Windows Build with Microsoft Visual Studio .NET</h4>
+  <p>For users who want to build with Visual Studio .NET,</p>
+  <ol>
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of Xerces-C++.</li>
+    <li>Use Visual Studio .NET to open the Xalan solution (.sln) from the xml-xalan\c\Projects\Win32\VC7.  If you are building with ICU, then use XalanICU.sln.  Otherwise, open the Xalan.sln solution file.<br />
+<br />
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</td>
+</tr>
+</table>
+    <br />
+    An alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual Studio .NET.  From the "Options" window, click on the "Projects" folder to expand the list.  Select "VC++ Directories" from the list and do the following:
+    <ol>
+    <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
+    <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
+    <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
+    </ol>
+</li>
+  </ol>
+  <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</td>
+</tr>
+</table>
+  <p>
+<img src="NET_options.jpg" alt="Visual Studio .NET Include Directories change" />
+</p>
+  <a name="unix">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Steps for doing a UNIX build</h4>
+    <p>For users who want to build in the UNIX environment,</p>
+    <ol>
+      <li>The Xalan build files are written for GNU make, and will not work with other make utilities.<br />
+<br />
+</li>    
+      <li>Set the XERCESCROOT environment variable to the path to the root of Xerces-C++.<br />
+<br />
+</li>    
+      <li>Set the XALANCROOT environment variable to the path to the c directory in the root of the Xalan-C++
+       distribution.  For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to "/home/mydir/xml-xalan/c". <br />
+<br />
+</li>
+      <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <a href="usagepatterns.html#icu">Using the ICU</a>).  Note that building Xalan with ICU requires that Xerces must also be built with ICU.<br />
+<br />
+</li>
+      <li>Change directory to XALANCROOT. You can also 
+          build Xalan-C outside of the source tree, but you will need to adjust the path to the
+          runConfigure script in the next step.<br />
+<br />
+</li>      
+      <li>Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as 
+          indicated below.  The runConfigure utility is used to generate the appropriate Makefile for 
+          the desired build platform based on the options specified by the user. Valid options for the 
+          runConfigure utility are:<br />
+<br />
+          <code>./runConfigure -p &lt;value&gt; -c &lt;value&gt; -x &lt;value&gt; [-[flag] &lt;value&gt;]</code>
+<br />
+<br />
+          <table border="1">
+          <tr>
+<th class="content" rowspan="1" colspan="1">flag</th>
+<th class="content" rowspan="1" colspan="1">Description</th>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">p</td>
+<td class="content" rowspan="1" colspan="1">Build platform. Option must be provided by user. Valid values <br />include: 
+          aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,<br /> tru64, macosx, cygwin. </td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">c</td>
+<td class="content" rowspan="1" colspan="1">C compiler name. Example: gcc, cc, c89, xlc_r, etc.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">x</td>
+<td class="content" rowspan="1" colspan="1">C++ compiler name. Example: g++, xlC_r, CC, etc.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">d</td>
+<td class="content" rowspan="1" colspan="1">Indicates build is a debug build. Takes no values. Default is no <br />debug.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">t</td>
+<td class="content" rowspan="1" colspan="1">Transcoder to use. Valid value is 'icu'. Default is null.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">m</td>
+<td class="content" rowspan="1" colspan="1">Type of localization support method. Valid values include: inmem, <br />icu, and nls. 
+          Default is inmem.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">M</td>
+<td class="content" rowspan="1" colspan="1">Locale for Message Localization Support. Default is "en_US"</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">r</td>
+<td class="content" rowspan="1" colspan="1">Threads option. Valid values include: pthread or dce. Default is <br />dce</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">b</td>
+<td class="content" rowspan="1" colspan="1">Specify whether it is a 32-bit or 64-bit build. Valid values are 32 <br />and 64. 
+          Default is 32-bit</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">P</td>
+<td class="content" rowspan="1" colspan="1">Install root directory. Used if invoking build with gmake install or <br />gmake 
+          install-package. Default install root directory is /usr/local</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">l</td>
+<td class="content" rowspan="1" colspan="1">Extra link options other than the default. Default is null</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">z</td>
+<td class="content" rowspan="1" colspan="1">Extra compiler options other than the default. Default is null</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">C</td>
+<td class="content" rowspan="1" colspan="1">Extra configuration options.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">h</td>
+<td class="content" rowspan="1" colspan="1">To get help on the above commands. Default is no help.</td>
+</tr>
+          </table>
+<br />
+          <b>
+<i>Linux using GCC:</i>
+</b>  <code>./runConfigure -p linux -c gcc -x c++</code>
+<br />
+          <b>
+<i>Linux using the Intel compiler:</i>
+</b>  <code>./runConfigure -p linux -c icc -x icpc</code>
+<br />
+          <b>
+<i>AIX (32-bit):</i>
+</b>    <code>./runConfigure -p aix -c xlc_r -x xlC_r</code>
+<br />
+<br />
+          <b>
+<i>AIX (64-bit):</i>
+</b>    <code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64</code>
+<br />
+<br />
+          <b>
+<i>Cygwin (32-bit):</i>
+</b>  <code>./runConfigure -p cygwin -c gcc -x g++</code>
+<br />
+<br />
+          <b>
+<i>HP-UX 11 (32-bit):</i>
+</b>  <code>./runConfigure -p hp-11 -c cc -x aCC</code>
+<br />
+<br />
+          <b>
+<i>HP-UX 11 (64-bit):</i>
+</b>  <code>./runConfigure -p hp-11 -c cc -x aCC -b 64</code>
+<br />
+<br />
+          <b>
+<i>HP-UX 11 for Itanium (32-bit):</i>
+</b>  <code>./runConfigure -p hp-11-ia64 -c cc -x aCC</code>
+<br />
+<br />
+          <b>
+<i>HP-UX 11 for Itanium (64-bit):</i>
+</b>  <code>./runConfigure -p hp-11-ia64 -c cc -x aCC -b 64</code>
+<br />
+<br />
+          <b>
+<i>Solaris (32-bit):</i>
+</b>  <code>./runConfigure -p solaris -c cc -x CC</code>
+<br />
+<br />
+          <b>
+<i>Solaris (64-bit):</i>
+</b>  <code>./runConfigure -p solaris -c cc -x CC -b 64</code>
+<br />
+<br />
+          If you choose to install the distribution after building the libraries and executables, 
+          then you will need to indicate where you would like the distribution to be installed. 
+          To specify the install directory for your distribution, specify the flag -P &lt;install directory&gt;. 
+          For example, building and installing on the AIX platform:<br />
+<br />
+          <code>./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan</code>
+<br />
+<br />
+          <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The standard binary directories bin, lib, and include are created in the specified directory only if the install or install-package option is 
+          specified in the build process.<br />
+<br />
+</td>
+</tr>
+</table>
+          To see the other runConfigure flags you may include, use the help flag:<br />
+<br />
+               <code>./runConfigure -h</code>
+<br />
+<br />
+</li>
+      <li>Purge the previous build:<br />
+<br />
+          <code>     make clean</code>
+<br />
+<br />
+</li>
+      <li>Run the new build:<br />
+<br />
+               <code>make</code>
+<br />
+          or<br />
+               <code>make <b>
+<i>targ</i>
+</b>
+</code>
+<br />
+<br />
+          where <b>
+<i>targ</i>
+</b> can be one of:
+          <table border="1">
+          <tr>
+<th class="content" rowspan="1" colspan="1">targ</th>
+<th class="content" rowspan="1" colspan="1">Description</th>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">all</td>
+<td class="content" rowspan="1" colspan="1">Build the libraries and Xalan executable. This is the default target <br />if no targ 
+          is specified.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">clean</td>
+<td class="content" rowspan="1" colspan="1">Deletes existing binaries, executables, libraries, tests, and <br />samples.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">install</td>
+<td class="content" rowspan="1" colspan="1">Build the library, executables and copy them (along with <br />the header files) 
+          the specified install location.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">install-package</td>
+<td class="content" rowspan="1" colspan="1">Installs the library, executables, samples to the <br />specified location.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">Samples</td>
+<td class="content" rowspan="1" colspan="1">Builds the samples.</td>
+</tr>
+          <tr>
+<td class="content" rowspan="1" colspan="1">Tests</td>
+<td class="content" rowspan="1" colspan="1">Builds the tests.</td>
+</tr>
+          </table>
+      </li>
+    </ol>
+    <table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">To recompile existing applications without changing your source code, be sure to modify the command line in your Makefile to pick up the Xalan headers from it's new location. e.g:  if your xalan source location is in /home/xml-xalan/c,</td>
+</tr>
+</table>
+<p>
+    <br />       <code>CC ... -I/home/xml-xalan/c/src -I/home/xml-xalan/c/src/xalanc mysrc.cpp</code>
+<a name="64">&#8204;</a>
+</p>
+   
+   <a name="locale">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Steps for doing a Build with Message Localization Support</h4>
+   <p>Message Localization Support is a new feature to allow users to build Xalan-C++  such that 
+   diagnostic messages are issued in the language of their choice. Message localization support 
+   comes in three flavours:</p>
+   <ul>
+   <li>Building static messages in the form of a library (DLL or shared object) which can be bound 
+   to the Xalan executable. This method is referred to as "in memory".  By default, Xalan-C++ is built using "in memory" method.
+   </li>
+   <li>Building messages in the form of a library using localization support provided by the 
+   International Components for Unicode (ICU). </li>
+   <li>Building messages in the form of a message catalog. This method utilizes the localization 
+   support provided by the Unix National Language Support (NLS) system. This method is supported 
+   for UNIX platforms only. </li>
+   </ul>
+   <p>Regardless of which method you choose, a message file containing translated messages in the 
+   language of your choice must be provided. The standard message file provided in the Xalan-C++ 
+   version 1.8 source package is in XML Localization Interchange File Format (XLIFF) format 
+   and conforms to the XLIFF 1.1 standard (please see 
+   <a href="http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm">
+   http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm</a> for more 
+   information.) All message files must be written and conform with the XLIFF 1.1 standard.</p>
+   <p>Once an XLIFF message file has been created, the XLIFF file should be stored under 
+   xml-xalan/c/src/xalanc/NLS/&lt;locale_name&gt; directory (for example, the default XLIFF message file 
+   provided is XalanMsg_en_US.xlf). To build, you will need to follow the same steps 
+   as shown above for building in Unix or Windows but with a small change.</p>
+   <p>For building on Windows platform with "In Memory" method:</p>
+   <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of Xerces-C++.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
+   <li>Open the Xalan.dsw workspace using Microsoft Visual C++. The "inmem" localization method should be configured by default.</li>
+   <li>Select the Localization project, and go to Settings and click on the "General" tab.Verify 
+   the build command line to use "nmake /f BuildMessages.mak TYPE=inmem LOCAL=en_US"</li>
+   <li>Run "Build all" with the configuration of your choice. </li>
+   </ol>
+   <p>For building on the Windows platform with ICU method:</p>
+   <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of Xerces-C++.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
+   <li>Open the XalanICU.dsw workspace using Microsoft Visual C++. </li>
+   <li>Select the AllInOneWithICU project, and ensure that the project depends on the LocalizationWithICU 
+   project. </li>
+   <li>Select the LocalizationWithICU project, and go to Settings and click on the "General" tab. Modify 
+   the build command line to use "nmake /f BuildMessages.mak TYPE=icu LOCAL=en_US"</li>
+   <li>Open the tools.ini file under Projects\Win32\VC6\Utils\Localization and add the ICU root 
+   directory to the ICUROOT variable setting.</li>
+   <li>Run "Build all" with the configuration of your choice. </li>
+   </ol>
+   <p>For building on the Unix platform:</p>
+   <ol>
+   <li>Repeat steps 1 through 5 as outlined under "Steps for doing a UNIX Build" </li>
+   <li>Run the runConfigure and provide the platform, C compiler, C++ compiler, the message locale 
+   system flavour you are intending to build, and the locale support.<br />
+<br />
+   Example 1: to use the NLS method for localization support using the default locale en_US:<br />
+<br />
+   <b>
+<i>AIX (32-bit):</i>
+</b>  <code>./runConfigure -p aix -c xlc_r -x xlC -m nls</code>
+<br />
+<br />
+   <b>
+<i>AIX (64-bit):</i>
+</b>  .<code>/runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m nls</code>
+<br />
+<br />
+   Example 2: to use the 'icu' method for localization support using the locale fr_FR:<br />
+<br />
+   <b>
+<i>AIX (32-bit):</i>
+</b>  <code>./runConfigure -p aix -c xlc_r -x xlC_r -m icu -M fr_Fr</code>
+<br />
+<br />
+   <b>
+<i>AIX (64-bit):</i>
+</b>  <code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m icu -M fr_Fr</code>
+<br />
+<br />
+   </li>
+   <li>Perform steps 7 and 8 as outlined under "Steps for doing a UNIX Build" </li>
+   </ol>
+   <p>After Xalan-C++ and associated libraries have been successfully built, the message catalog 
+   will be stored in the directory xml-xalan/c/bin.<br />
+<br />
+   <table border="1">
+   <tr>
+<th class="content" rowspan="1" colspan="1">Localization Build Type</th>
+<th class="content" rowspan="1" colspan="1">File Name</th>
+</tr>
+   <tr>
+<td class="content" rowspan="1" colspan="1">
+<b>
+<i>ICU or "in memory" method:</i>
+</b>
+</td>
+<td class="content" rowspan="1" colspan="1">libxalanMsg18.so (for UNIX)<br />
+   XalanMessages_1_8.dll and XalanMessages_1_8.lib (for Windows)
+   </td>
+</tr>
+   <tr>
+<td class="content" rowspan="1" colspan="1">
+<b>
+<i>NLS method:</i>
+</b>
+</td>
+<td class="content" rowspan="1" colspan="1">xalanMsg1_8.cat can be found in $XALANCROOT/nls/&lt;locale_name&gt;/ directory</td>
+</tr>
+   </table>
+   </p>
+   <p>The location of the message library, Xalan-C++ and Xerces-C++ binaries need to be added to the PATH and 
+   library path variables. Depending on the Message Localization Support method you've chosen, the 
+   following steps will need to be performed such that Xalan-C++ will be able to utilize the message 
+   library. </p>
+   <ul>
+   <li>For an "in memory" or "icu" build, the location of the Xalan-C++ and Xerces-C++ executables need to 
+   be added to the PATH variable. The location of the message library will need to be added to: 
+   <ul>
+   <li>the LIBPATH variable for AIX users </li>
+   <li>the LD_LIBRARY_PATH variable for RedHat, SuSE, and Solaris users </li>
+   <li>the SHLIB_PATH variable for HP-UX users. </li>
+   </ul>
+</li>
+   <li>For an NLS build, the message catalog will need to be added to the NLSPATH. </li>
+   </ul>   
+      
+   <a name="xercesdepdom">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Steps for doing a Build with Xerces Deprecated DOM Support</h4>
+   <p>If you application is dependent on the XercesBridge classes to interface with the deprecated Xerces DOM, then the following steps must be taken.</p>
+   <p>For a Windows build using Microsoft Visual C++ version 6.0:</p>
+   <ol>
+   <li>Open the Xalan.dsw workspace</li>
+   <li>Go to "Projects" and select "Settings".  From the "Project Settings panel", highlight the AllInOne project.</li>
+   <li>Click on the "C/C++" tab on the right hand side.  From the "Category" pull down menu, scroll down to find "Preprocessor" and click to highlight this category.</li>
+   <li>Under the "Preprocessor Definitions" box, add "XALAN_BUILD_DEPRECATED_DOM_BRIDGE" to the list of definitions.</li>
+   <li>Rebuild Xalan-C++ as described under <a href="#win32">"Steps for doing a Windows Build"</a>
+</li>
+   </ol>
+   <p>For a UNIX build, the following parameter should be added to your runConfigure step: <code>-z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code>.  for example,</p>
+       <code>./runConfigure -p aix -c xlc_r -x xlC_r -z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code>
+<br />
+<br />
+
+   
+   <a name="samples">&#8204;</a>
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Rebuilding a Sample application</h4>
+   <p>In the 32-bit Windows distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace.</p>
+<p>The Makefile that come with the UNIX distributions include targets for rebuilding one or all of the sample applications . To rebuild one or more sample applications, go to the root directory of your source package or the samples directory of your binary package, and run<br />
+<br />
+     <code>gmake <b>
+<i>Target</i>
+</b>
+</code>
+<br />
+<br />
+where <b>
+<i>Target</i>
+</b> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, <code>ThreadSafe</code> (Windows only), <code>TraceListen</code>, <code>TransformToXercesDOM</code>, <code>UseStylesheetParam</code>, <code>XPathWrapper</code>, <code>XalanTransform</code>, or <code>XalanTransformerCallback</code>.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For information on building Apache Module, see <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a>
+</td>
+</tr>
+</table>
+   
+ <a name="contact">&#8204;</a>
+ <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Getting in Touch</h3>
+  <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of Xalan-C++.</p> 
+<p>Please email your comments, questions, suggestions, bug reports, and offers to help to <a href="mailto:xalan-dev@xml.apache.org">Xalan Development Mailing List</a>.</p>
+ <a name="history">&#8204;</a>
+ <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Cumulative history of software changes</h3>
+   <p>The following sections list the changes in each release since Xalan-C++ version 0.40.0.</p>
+   
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.11</h4>
+<p>This is a general bug fix release with added stability features.</p>
+<p>Major updates since version 1.10 include:</p>
+<ul>
+  <li>Upgrade from Xerces-C 2.7 to Xerces-C 2.8 and Xerces-C 3.1.1.</li>
+  <li>Fix support issues for AIX 5.3</li>
+  <li>Fix support issues for Solaris 2.8</li>
+  <li>Fix support issues for GCC-4.3</li>
+  <li>Add support for Microsoft .NET 2010 (VC10)</li>
+  <li>
+<a href="#bugfix11">Bugs fixed in this release</a>.</li>
+</ul>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.10</h4>
+<p>Major updates since version 1.9 include:</p>
+<ul>
+  <li>Support for XML 1.1 and Namespaces in XML 1.1.</li>
+  <li>Added support for IBM XLC 7.0 compiler on AIX.</li>
+  <li>Improved and stabilized C pluggable memory management functionality.</li> 
+  <li>Various improvements in Xalan XML serializers for better performance and stability.</li>
+  <li>Upgrade from Xerces-C 2.6 to Xerces-C 2.7.</li>
+ </ul>  
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.9</h4>
+<p>Major updates since version 1.8 include:</p>
+<ul>
+  <li>Pluggable Memory Management.  This feature allows applications to maintain precise control over memory allocations.  This 
+      will allow users, with knowledge of their application's characteristics, to provide a more efficient allocation method 
+      than the general purpose procedures provided by the system.  for more information on how to use this feature, please see
+      the <a href="programming.html#memory">Pluggable Memory Management</a> section of the Programming page.</li>
+  <li>Improved stability on the execution of large stylesheets and XML documents.  Because the current implementation relies on 
+      function recursion, certain stylesheets/input documents may cause the program stack to overflow and cause the application 
+      to fail.  It also may inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will 
+      prevent these types of failure. </li>
+  <li>Provided a global option to pool all text node strings.  This feature allows developers to set a flag to determine if a 
+      parsed source tree will pool the values of all of the text nodes in the XML document.  By doing so, this can result in a 
+      significant reduction in memory usage, particularly if there are a lot of repeated values in text nodes.  Please see 
+      the class descriptions for <a href="apiDocs/classXalanSourceTreeDocument.html">XalanSourceTreeDocument</a>,  
+      <a href="apiDocs/classXalanDefaultParsedSource.html">XalanDefaultParsedSource</a>, and
+      <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> in the <a href="apiDocs/index.html">
+      API Reference</a> section for more information.</li> 
+  <li>Added support for Microsoft Studio .NET V7.1.  Project files for Microsoft Studio .NET V7.1 have been provided under the 
+      directory xml-xalan\c\Projects\Win32\VC7.1.</li>
+  <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
+ </ul>  
+
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.8</h4>
+     <p>Major updates since version 1.7 include:</p>
+     <ul>
+      <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
+      <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
+          HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
+      <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
+          is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
+          on this platform.  Please see <a href="build_instruct.html#dotNet">"Step for doing a Windows Build with Visual Studio .NET"</a> 
+          for details.</li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users 
+          are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these 
+          changes to your build environment, please see <a href="#xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"
+          </a>
+</li>
+      
+      <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes".</li>
+
+     </ul>  
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.7</h4>
+     <p>Major updates since version 1.6 include:</p>
+     <ul>
+      <li>Message Localization Support. This feature enables Xalan-C++ to issue diagnostic messages 
+      in languages other than the default language (English). In order to utilize this feature, 
+      the user must provide a version of the Xalan-C++ message catalog that has been translated in 
+      their language of choice. For more information on how to exploit this feature, please see  
+      <a href="#locale">Steps for doing a Build with Message Localization Support</a>.</li>
+      <li>Build, packaging, and installation improvements. Changes to the Xalan-C++ makefiles now 
+      allow for a more flexible build, packaging, and install process. Each step in a typical 
+      build process can be invoked by specifying the appropriate target, for example to build the 
+      executable, and/or samples, or install the build at user-specified location. For more 
+      information on building Xalan-C++, please see <a href="#unix">Steps for doing a Unix build
+      </a>.</li>
+      <li>Deprecated DOM Support. The XercesBridge classes have been marked deprecated and moved 
+      into an exclusive directory within the xalanc/XercesParserLiaison directory called 
+      'Deprecated'. If your application is dependent on these classes to interface with the 
+      deprecated Xerces DOM you must alter your include directive with the 'Deprecated' directory. 
+      For example:<br />
+<br />
+      <code>#include "xalanc/XercesParserLiaison/XercesDocumentBridge.hpp"</code>
+<br />
+<br />
+      should be changed to:<br />
+<br />
+      <code>#include "xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp"</code>
+<br />
+<br />
+</li>
+      <li>Upgrade from Xerces-C 2.3 to Xerces-C 2.4. </li>
+      <li>Porting of ThreadSafe example to UNIX platform.</li>
+      <li>Implementation of EXSLT string extension functions encode-uri() and decode-uri(). </li>
+      <li>Implementation of EXSLT dynamic extension function evaluate(). </li>
+      <li>Implementation of EXSLT date-time extension function date-time().</li>
+     </ul>  
+     
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.6</h4>
+     <p>Major updates since version 1.5 include:</p>
+     <ul>
+	<li>Directory "sane include" reorganization.  A new sub-directory called 'xalanc' has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  
+            For example: <br />
+<br />
+            <code>#include &lt;XPath/XObject.hpp&gt;</code>
+<br />
+<br />
+            will need to be changed to <br />
+<br />
+            <code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code>
+<br />
+<br />
+            For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <a href="#unix">Steps for doing a UNIX build</a> for migration considerations.</li>
+     </ul>  
+     
+
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.5</h4>
+     <p>Major updates since version 1.4 include:</p>
+     <ul>
+	<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
+	<li>Support for Xerces-C++ DOMNode classes.</li>
+	<li>New sample <b>TransformToXercesDOM</b> that illustrates how to perform a transform resulting in a Xerces-C++ DOMDocument</li>
+	<li>Usage of the Xerces-C++ C++ namespace and creation of Xalan-C++ namespace.</li>
+     </ul>  
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.4</h4>
+     <p>Major updates since version 1.3 include:</p>
+     <ul>
+       <li>The Xalan-C++ distributions no longer include the Xerces-C++ headers and libraries. Accordingly, you must download the appropriate Xerces-C++ distribution (see <a href="getstarted.html#download">Downloading what you need</a>.</li>
+       <li>64-bit build for HP-11; <a href="#64">untested 64-bit support</a> for Solaris and AIX.</li>
+       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1.</li>
+       <li>
+<a href="http://www.stlport.org/">STLport</a> is no longer required on any of our supported platforms.</li> 
+       <li>
+<a href="extensionslib.html#exslt">Alpha support for a number of EXSLT functions</a>.</li>       
+       <li>
+<a href="samples.html#parsedsourcewrappers">ParsedSourceWrappers</a>, a sample that
+       illustrates how to perform transformations with input in the form of a pre-built
+       XalanDOM or XalanSourceTree.</li>
+     </ul>  
+     
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.3</h4>
+    <p>Major updates since version 1.2 include:</p>
+     <ul>
+       <li>A new and simplified command-line utility: <a href="commandline.html#xalanexe">the Xalan executable</a>
+</li>
+       <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <a href="samples.html#simplexpathcapi">SimpleXPathCAPI</a> and <a href="samples.html#serializenodeset">SerializeNodeSet</a>
+</li>
+       <li>A new <a href="usagepatterns.html#xercesdomwrapperparsedsource">wrapper class</a> that lets you pass in a Xerces DOM as input for a transformation</li>
+       <li>Bug fixes.</li>
+       <li>Changed XPathException to XalanXPathException because of a clash with a new Xerces class of the same name.</li>
+      </ul>
+     
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.2</h4>
+    <p>Major updates since version 1.1 include:</p>
+     <ul>
+      <li>
+<a href="extensionslib.html">Introduction of a library of extension functions</a>
+</li>
+      <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
+      <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> and the C API.</li>
+      <li>Support for stylesheet params in <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> 
+      and the C API</li>
+      <li>Support for extension functions in <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a>
+</li>
+      <li>Performance enhancements</li>
+      </ul>
+     
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.1</h4>
+   <p>In addition to adding to the list of platforms on which Xalan-C++ builds, our focus for this release has been on bug fixes, performance enhancements, 
+      and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>
+   <ul>
+     <li>Added HP-UX 11 build.</li>
+     <li>Added Solaris build.</li>
+     <li>Greatly improved performance.</li>
+     <li>Improved conformance to the XSLT specification.</li>
+     <li>Simplified the C++ API and provided a C API for performing standard transformations with the <a href="usagepatterns.html#xalantransformer">XalanTransformer</a> class and associated header files.</li>
+     <li>Added sample illustrating use of XalanTransformer and the new C++ API: 
+         <a href="samples.html#xalantransform">XalanTransform</a>.</li> 
+     <li>Added sample illustrating use of XalanTransformer, the new C API, and how to run Xalan-C++ and perform transformations on an 
+         Apache Web server: <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a>.</li>
+     <li>Added the <a href="samples.html#streamtransform">StreamTransform</a> sample.</li>
+     <li>Eliminated dependencies on non-public Xerces headers; accordingly can now build with the Xerces distribution.</li>
+     <li>Fixed namespace mapping and inheritance problems.</li>
+     <li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.</li>
+     <li>Fixed bug sorting in reverse document order based on position. </li>
+     <li>Fixed &lt;xsl:number&gt; bug with use of letter-value="traditional" for "classical" Greek numbering.</li>
+     <li>Fixed use of &lt;xsl:fallback&gt; within a top-level extension function.</li>
+     <li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.</li>
+     <li>Fixed bug using key() in match patterns to find descendants.</li>
+     <li>Fixed bug using the id() function in complex match patterns.</li>
+     <li>Fixed problem outputting multiple single-character CDATA sections.</li>
+     <li>Fixed problem outputting whitespace characters.</li>
+     <li>Fixed problem transforming from a stream on UNIX platforms.</li>
+     <li>Fixed a bug with the document() function, which was generating a syntax error if called in the following manner: document(<b>
+<i>string</i>
+</b>,/).</li>
+     <li>Fixed named templates bug accepting global parameter when called with a parameter of the same name that the named template does not 
+         recognize.</li>
+   </ul> 
+   
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 1.0</h4>
+   <p>Major updates since version 0.40.0 include:</p>
+   <ul>
+     <li>Full support for namespace handling</li>
+     <li>Full implementation of the format-number() function and support for the decimal-format element</li>
+     <li>Integration with the <a href="http://oss.software.ibm.com/icu/index.html">International Components for Unicode (ICU)</a> for number formatting, sorting, and output encoding</li>
+     <li>Support for the exclude-result-prefixes attribute</li>
+     <li>Support for the output encoding attribute</li>
+   </ul>
+   
+   <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Changes for Xalan-C++ version 0.40.0</h4>
+   <p>Major updates since version 0.30.0 include:</p>
+   <ul>
+     <li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT</li>
+     <li>Stricter compliance for HTML and XML output</li>
+     <li>Improved handling of relative URI's</li>
+     <li>Improved handling of Import and Include</li>
+     <li>Better namespace handling (although there are still problems here)</li>
+     <li>Support for Document() function</li>
+     <li>Support for XPath predicates</li>
+     <li>ProblemListener with a different output stream and call 
+         XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
+   </ul>
+   
+
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

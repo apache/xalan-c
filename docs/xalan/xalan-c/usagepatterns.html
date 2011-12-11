@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-C++ Basic usage patterns</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-C++ Basic usage patterns</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li>
+<li>Usage Patterns<br />
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-C++ Basic usage patterns</h2>
+<ul>
+  <li>
+<a href="#intro">Introduction</a>
+</li>
+  <li>
+<a href="#xalantransformer">Basic usage pattern with the XalanTransformer C++ API</a>
+</li>
+  <li>
+<a href="#stylepi">Using a stylesheet processing instruction</a>
+</li>
+  <li>
+<a href="#params">Setting stylesheet parameters</a>
+</li>
+  <li>
+<a href="#incremental">Processing output incrementally</a>
+</li>
+  <li>
+<a href="#compiled">Performing a series of transformations</a>
+</li>
+  <li>
+<a href="#dom">Working with DOM input and output</a>
+</li>
+  <li>
+<a href="#xercesdomwrapperparsedsource">Using a Xerces DOM as the source for a Xalan transformation</a>
+</li>
+  <li>
+<a href="#xpath">Working with XPath expressions</a>
+</li>
+  <li>
+<a href="#tracelistener">Using the TraceListener</a>
+</li>
+  <li>
+<a href="#icu">Using the International Components for Unicode (ICU)</a>
+</li>
+  <li>
+<a href="#capi">Basic usage pattern with the XalanTransformer C API</a>
+</li>
+  <li>
+<a href="#cvar">Variations with the XalanTransformer C API</a>
+</li>
+  <li>See also: <a href="extensions.html">Creating and using extension functions</a>
+</li>
+</ul>
+  
+<a name="intro">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Introduction</h3>  
+<p>To perform a transformation, use one of the <a href="apiDocs/classXalanTransformer.html">XalanTransformer
+   </a> transform() methods. The transformation requires an XML source document and an XSL stylesheet. Both of these objects 
+   may be represented by instances of <a href="apiDocs/classXSLTInputSource.html">XSLTInputSource </a>. You can construct 
+   an XSLTInputSource with a string (the system ID for a file or URI), an input stream, or a DOM.</p>
+<p>If you are using an XSL stylesheet to perform a series of transformations, you can improve performance by calling transform() 
+   with a compiled stylesheet, an instance of <a href="apiDocs/classXalanCompiledStylesheet.html">XalanCompiledStylesheet</a>. 
+   If you are transforming an XML source more than once, you should call transform() with a parsed XML source, an instance of 
+   <a href="apiDocs/classXalanParsedSource.html">XalanParsedSource</a>. See <a href="#compiled">Performing a series of 
+   transformations</a>.</p>
+<p>If you XML source document contains a stylesheet Processing Instruction (PI), you do not need to include a stylesheet object 
+  when you call transform().</p>
+<p>The transformation output is represented by an <a href="apiDocs/classXSLTResultTarget.html">XSLTResultTarget</a>, which 
+   you can set up to refer to an output stream, the system ID for a file or URI, or a Formatter for one of the various styles of 
+   DOM output.</p>
+<p>For detailed API documentation, see <a href="apiDocs/index.html">Xalan-C++ API</a>. For an overview of the command-line 
+   utility, see <a href="commandline.html">Command-Line Utility</a>.</p>
+
+
+<a name="xalantransformer">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Basic usage patten with the XalanTransformer C++ API</h3>
+<p>Using <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> and the C++ API, you can perform one or more 
+   transformations as described in the following steps.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">For a working sample that illustrates these steps, see the <a href="samples.html#xalantransform">XalanTransform</a> 
+      sample.</td>
+</tr>
+</table>
+      
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>1. Include the required header files.</h4>
+<p>Always start with xalanc/Include/PlatformDefinitions.hpp, the Xalan-C++ base header file. Also include xercesc/util/PlatformUtils.hpp, 
+   xalanc/XalanTransformer/XalanTransformer.hpp, and any other header files your particular application requires.</p>
+<blockquote class="source">
+<pre>
+#include &lt;xalanc/Include/PlatformDefinitions.hpp&gt;
+#include &lt;xercesc/util/PlatformUtils.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
+...
+</pre>
+</blockquote>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>2. Define namespaces</h4>
+<p>As of version 1.5, Xalan-C++ now uses C++ namespaces for those platforms which support them.  A number of macros are provided to 
+   make using the Xalan-C++ (and Xerces-C++) namespaces easier.</p>
+<p>In the following example, the <b>XALAN_USING_XERCES</b> and <b>XALAN_USING_XALAN</b> macros are used to declare that the 
+   program is using <b>XMLPlatformUtils</b> and <b>XalanTransformer</b> from the Xerces-C++ and Xalan-C++ namespaces respectively.</p>
+<blockquote class="source">
+<pre>
+XALAN_USING_XERCES(XMLPlatformUtils)
+XALAN_USING_XALAN(XalanTransformer)
+</pre>
+</blockquote>
+
+<p>These macros can be used immediately after the included header files (for global applicability in a given source file) or within 
+   functions and methods for local applicability.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Whilst you can use the standard C++ namespace syntax directly, the Xerces-C++ and Xalan-C++ namespaces are linked to the version 
+      number.  For example, the Xalan namespace is currently <b>xalanc_1_9</b>.  The macros will automatically take care of this 
+      when code is re-compiled against a new version of the libraries.  Using the namespaces directly will require each namespace 
+      related statement be updated by hand.</td>
+</tr>
+</table>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>3. Initialize Xerces and Xalan.</h4>
+<p>Use the static initializers to initialize the Xalan-C++ and Xerces-C++ platforms. You must initialize Xerces-C++ once per process. You 
+   may initialize and terminate Xalan-C++ multiple times, but this is not recommended: it is inefficient and is not thread safe.</p>  
+<blockquote class="source">
+<pre>
+XMLPlatformUtils::Initialize();
+XalanTransformer::initialize();
+</pre>
+</blockquote>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>4. Create a XalanTransformer.</h4>
+<blockquote class="source">
+<pre>
+XalanTransformer theXalanTransformer;
+</pre>
+</blockquote>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>5. Perform each transformation.</h4>
+<p>You can explicitly instantiate <a href="apiDocs/classXSLTInputSource.html">XSLTInputSource</a> objects for the XML 
+   source document and XSL stylesheet, and an <a href="apiDocs/classXSLTResultTarget.html">XSLTResultTarget</a> object 
+   for the output, and then call <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> transform() with those 
+   objects as parameters. For example:</p>
+<blockquote class="source">
+<pre>
+XSLTInputSource xmlIn("foo.xml");
+XSLTInputSource xslIn("foo.xsl");
+XSLTResultTarget xmlOut("foo-out.xml");
+int theResult =
+    theXalanTransformer.transform(xmlIn,xslIn,xmlOut)
+</pre>
+</blockquote>
+
+<p>Alternatively, you can call transform() with the strings (system identifiers), streams, and/or DOMs that the compiler needs 
+   to implicitly construct the <a href="apiDocs/classXSLTInputSource.html">XSLTInputSource</a> and 
+   <a href="apiDocs/classXSLTResultTarget.html">XSLTResultTarget</a> objects. For example:</p>
+<blockquote class="source">
+<pre>
+const char* xmlIn = "foo.xml";
+const char* xslIn = "foo.xsl";
+const char* xmlOut = "foo-out.xml";
+int theResult =
+    theXalanTransformer.transform(xmlIn,xslIn,xmlOut)
+</pre>
+</blockquote>
+<p>Keep in mind that <a href="apiDocs/classXSLTInputSource.html">XSLTInputSource</a> and 
+   <a href="apiDocs/classXSLTResultTarget.html">XSLTResultTarget</a> provide a variety of single-argument constructors that 
+   you can use in this manner:</p>
+<ul>
+  <li>
+<code>XSLTInputSource(const char* systemID);</code>
+</li>
+  <li>
+<code>XSLTInputSource(const XMLCh* systemID);//Unicode chars</code>
+</li>
+  <li>
+<code>XSLTInputSource(istream* stream);</code>
+</li>
+  <li>
+<code>XSLTInputSource(XalanNode* node);</code>
+<br />
+<br />
+</li>
+  <li>
+<code>XSLTResultTarget(char* fileName);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(XalanDOMString&amp; fileName);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(ostream* stream);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(ostream&amp; stream);</code>
+</li>  
+  <li>
+<code>XSLTResultTarget(Writer* characterStream);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(XalanDocument* document);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(XalanDocumentFragment* documentFragment);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(XalanElement* element);</code>
+</li>
+  <li>
+<code>XSLTResultTarget(FormatterListener&amp; flistener);</code>
+</li>
+</ul>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">Each transform() method returns an integer code, 0 for success. If an error occurs, you can use the getLastError() method 
+      to return a pointer to the error message.</td>
+</tr>
+</table>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>6. Shut down Xalan.</h4>
+<p>When you shut down Xalan, you may also want to shut down Xerces and ICU support (if enabled). Keep the following considerations 
+   in mind:</p>
+<ul>
+  <li>Once you have shut down Xerces, you can no longer make Xalan or Xerces calls in the current process.<br />
+<br />
+</li>
+  <li>Shut down ICU support if you have enabled it (see <a href="#icusupport">enabling ICU support</a>) and if the 
+      application is exiting or no longer requires the ICU. The <code>XMLPlatformUtils::Terminate()</code> call does nothing 
+      if ICU support has not been enabled.</li>
+  <li>Ensure that there are no Xalan-C++ or Xerces-C++ objects extant at the point of termination.  Any deletion of objects after 
+      termination could cause errors.</li>
+</ul>
+<p>Use the static terminators.</p>
+<blockquote class="source">
+<pre>
+XalanTransformer::terminate();
+XMLPlatformUtils::Terminate();
+XalanTransformer::ICUCleanUp();
+</pre>
+</blockquote>
+
+
+
+<a name="stylepi">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using a stylesheet processing instruction</h3>
+<p>If you want to use the stylesheet referred to by a stylesheet processing instruction in the XML document, simply call 
+   transform() without the second XSLTInputSource argument. For example:</p>
+<blockquote class="source">
+<pre>
+// foo.xml contains a stylesheet PI
+const char* xmlIn = "foo.xml";
+const char* xmlOut = "foo-out.xml";
+int theResult =
+    theXalanTransformer.transform(xmlIn,xmlOut)
+</pre>
+</blockquote>
+
+
+<a name="params">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Setting stylesheet parameters</h3>
+<p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate 
+   the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each 
+   XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
+<p>To set a stylesheet parameter, use the <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> 
+   setStylesheetParam() method. The setStylesheetParam() method takes two arguments: the parameter name and the expression. 
+   For example:</p>
+<blockquote class="source">
+<pre>
+const XalanDOMString key("param1");
+const XalanDOMString expression("'Hello World'");
+theXalanTransformer.setStylesheetParam(key, expression);
+// foo.xsl defines a stylesheet parameter named param1.
+theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")
+</pre>
+</blockquote>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If the expression is a string, enclose it in single quotes to make it a string expression.</td>
+</tr>
+</table>
+<p>You can include the -param flag with two arguments when you call the <a href="commandline.html">command line utility</a>. 
+   The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
+<p>
+<code>Xalan -p param1 'boo' foo.xml foo.xsl</code>
+</p>
+<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes 
+   so Xalan-C++ interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as 
+   a single argument. For example:</p>
+<p>
+<code>Xalan -p "'hello there'" foo.xml foo.xsl</code>
+</p>
+<p>The <a href="samples.html#usestylesheetparam">UseStylesheetParam</a> sample application also uses a command-line parameter.
+</p>
+
+
+<a name="incremental">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Processing output incrementally</h3>
+<p>
+<a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> provides a transform() method that sends the output in blocks 
+to a callback function, which enables you to begin processing the output while the transformation is still in process:</p>
+<blockquote class="source">
+<pre>
+int
+transform(const XSLTInputSource&amp; xmlIn,
+          const XSLTInputSource&amp; xslIn,
+          void* theOutputHandle,
+          XalanOutputHandlerType theOutputHandler,
+          XalanFlushHanderType theFlushHandler = 0);
+</pre>
+</blockquote>
+<p>For an example, see <a href="samples.html#xalantransformercallback">XalanTransformerCallback</a>.</p>
+
+
+<a name="compiled">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Performing a series of transformations</h3>
+<p>Before Xalan performs a standard transformation, it must parse the XML document and compile the XSL stylesheet into binary 
+   representations. If you plan to use the same XML document or stylesheet in a series of transformations, you can improve performance 
+   by parsing the XML document or compiling the stylesheet once and using the binary representation when you call transform().</p>
+<p>
+<a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> includes methods for creating compiled stylesheets and 
+   parsed XML documents: the compileStylesheet() method returns a pointer to a <a href="apiDocs/classXalanCompiledStylesheet.html">
+   XalanCompiledStylesheet</a>; the parseSource() method returns a pointer to a <a href="apiDocs/classXalanParsedSource.html">
+   XalanParsedSource</a>.</p>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">In the case of failure, both methods return 0.</td>
+</tr>
+</table>
+<p>Example using a XalanCompiledStylesheet to perform multiple transformations:</p>
+<blockquote class="source">
+<pre>
+XalanCompiledStylesheet* compiledStylesheet = 0;
+compiledStylesheet = theXalanTransformer.compileStylesheet("foo.xsl");
+assert(compiledStylesheet!=0);
+theXalanTransformer.transform("foo1.xml", *compiledStylesheet, "foo1.out.");
+theXalanTransformer.transform("foo2.xml", *compiledStylesheet, "foo2.out");
+...
+</pre>
+</blockquote>
+<p>For a working sample, see the <a href="samples.html#compilestylesheet">CompileStylesheet</a> sample.</p>
+<p>Example using a XalanParsedSource for multiple transformations:</p>
+<blockquote class="source">
+<pre>
+XalanParsedSource* parsedXML = 0;
+parsedXML = theXalanTransformer.parseSource("foo.xml");
+assert(parsedXML!=0);
+theXalanTransformer.transform(*parsedXML, "foo1.xsl", "foo-xsl1.out");
+theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
+...
+</pre>
+</blockquote>
+<p>For a sample that uses both a parsed XML source and a compiled stylesheet, see <a href="samples.html#threadsafe">ThreadSafe
+</a>.</p>
+
+
+<a name="dom">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Working with DOM input and output</h3>
+<p>You can set up an <a href="apiDocs/classXSLTResultTarget.html">XSLTResultTarget</a> to produce a DOM when you perform a 
+   transformation. You can also use a DOM as input for a transformation.</p>
+<p>The following code fragment illustrates the procedures for working with DOM output :</p>
+<blockquote class="source">
+<pre>
+
+// Use the Xerces DOM parser to create a DOMDocument.
+
+#include &lt;xercesc/dom/DOMDocument.hpp&gt;
+#include &lt;xercesc/dom/DOMImplementation.hpp&gt;
+
+#include &lt;xalanc/XMLSupport/FormatterToXML.hpp&gt;
+#include &lt;xalanc/XMLSupport/XalanTransformer.hpp&gt;
+
+XALAN_USING_XERCES(DOMDocument)
+XALAN_USING_XERCES(DOMImplementation)
+
+XALAN_USING_XALAN(FormatterToXML)
+XALAN_USING_XALAN(XalanTransformer)
+
+
+    // If you want to produce DOM output, create an empty Xerces Document
+    // to contain the transformation output.
+    
+    DOMDocument * theDOM = 
+        DOMImplementation::getImplementation()-&gt;createDocument();    
+
+    // Now create a FormatterListener which can be used by the transformer
+    // to send each output node to the new Xerces document
+
+    FormatterToXercesDOM theFormatter(theDOM);
+
+    // Now do the transform as normal
+    XalanTransformer theXalanTransformer
+    int theResult = theXalanTransformer.transform(
+        "foo.xml", 
+        "foo.xsl", 
+        theFormatter);
+...
+
+    // After you perform the transformation, the DOMDocument contains
+    // the output.
+</pre>
+</blockquote>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">You can also follow the same process but use a <b>FormatterToDeprecatedXercesDOM</b> if you require a DOM_Document
+      output.  However this is discouraged, as support for the deprecated DOM may be removed in future releases of Xalan-C++</td>
+</tr>
+</table>
+<p>If you want to use a Xerces DOM object as input for a transformation without wrapping the DOM in a XercesParserLiaison, see 
+   <a href="#xercesdomwrapperparsedsource">passing in a Xerces DOM</a>.</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Limitations</h4>
+<p>Performance is much better when Xalan-C++ uses native source tree handling rather than interacting with the Xerces DOMParser.</p>
+<p>If you are using the deprecated DOM, the Xerces DOMParser by default, creates a DOM_XMLDecNode in the DOM tree to represent 
+   the XML declaration. The Xalan bridge for the Xerces DOM does not support this non-standard node type. Accordingly, you must 
+   call DOMParser::setToCreateXMLDeclTypeNode(false) <b>before</b> you parse the XML file. If not, the behavior is undefined, 
+   and your application may crash.</p>
+
+
+<a name="xercesdomwrapperparsedsource">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Passing in a Xerces DOM to a transformation</h4>
+<p>You may want to use a Xerces DOM that was created without using the XalanTransformer class. As the following code snippet 
+   illustrates, you can use <a href="apiDocs/classXercesDOMWrapperParsedSource.html">XercesDOMWrapperParsedSource</a> to 
+   pass in a Xerces DOM as the source for an XSL transformation.</p>
+<blockquote class="source">
+<pre>
+#include &lt;xercesc/parsers/DOMParser.hpp&gt;
+#include &lt;xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp&gt;
+
+void parseWithXerces(XalanTransformer &amp;xalan, 
+                     const XSLTInputSource &amp;xmlInput,
+                     const XalanCompiledStylesheet* styleSheet,
+                     const XSLTResultTarget &amp;output,
+                     XMLFileReporter &amp;logFile)
+{
+    XercesDOMParser theParser;
+  
+    // Turn on validation and namespace support.
+    theParser.setDoValidation(true);
+    theParser.setDoNamespaces(true);
+
+    // Parse the document
+  
+    theParser.parse(xmlInput);
+    DOMDocument *theDOM = theParser.getDocument();
+    theDOM-&gt;normalize();
+
+    XercesDOMSupport theDOMSupport;
+    XercesParserLiaison theParserLiaison;
+  
+    // Use the DOM to create a XercesDOMWrapperParsedSource, 
+    // which you can pass to the transform method.
+    try
+    {
+        const XercesDOMWrapperParsedSource parsedSource(
+                                   theDOM,
+                                   theParserLiaison,
+                                   theDOMSupport,
+                                   XalanDOMString(xmlInput.getSystemId()));
+
+        xalan.transform(parsedSource, stylesheet, output);
+
+    }
+    catch (....)
+    {
+      ...
+    }
+}  
+</pre>
+</blockquote>
+
+
+
+<a name="xpath">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Working with XPath expressions</h3>
+<p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. XPath 
+   provides an API that you can call directly. For example, you may want to select nodes programmatically and do your own 
+   processing without a stylesheet. Xalan-C++ provides an XPathEvaluator interface to simplify the process of executing XPath 
+   expressions.</p>
+<p>For an example that executes XPath expressions against XML source files, see <a href="samples.html#simplexpathapi">
+   SimpleXPathAPI</a> (takes advantage of the XPathEvaluator interface) and <a href="samples.html#xpathwrapper">
+   XPathWrapper</a>.</p>
+
+
+<a name="tracelistener">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using TraceListener</h3>
+<p>TraceListener is a debugging abstract base class implemented by TraceListenerDefault. You can use TraceListener to trace 
+   any combination of the following:</p>
+<ul>
+  <li>Calls to templates</li>
+  <li>Calls to template children</li>
+  <li>Selection events</li>    
+  <li>Result tree generation events</li>
+</ul>
+<p>To construct a TraceListener with TraceListenerDefault, you need a PrintWriter and a boolean for each of these four 
+   tracing options. You can then use the XSLTEngimeImpl setTraceSelects and addTraceListener methods to add the TraceListener 
+   to an XSLTProcessor. See the <a href="samples.html#tracelisten">TraceListen</a> sample application.</p>
+<p>The TraceListen uses TraceListenerDefault to write events to the screen.</p>
+
+
+<a name="icu">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using the ICU</h3>
+<p>You can use the <a href="http://oss.software.ibm.com/icu/index.html">International Components for Unicode (ICU)</a> to extend support for encoding, number formatting, and sorting.</p>
+<ul>
+  <li>
+<b>Encoding</b>
+      <br /> Xerces-C++ and Xalan-C++ use UTF-16 encoding to work with Unicode data.  If you integrate the ICU with Xerces-C++, both 
+      Xerces-C++ and Xalan-C++ use ICU support for input and output transcoding.<br />
+<br />
+</li>
+  <li>
+<b>format-number()</b>
+      <br />This XSLT function includes two or three arguments (the third is optional): number, format pattern, and decimal-format 
+      name. Xalan-C++ ignores the format pattern and optional decimal-format name. If you install ICU support for format-number(), 
+      this function is fully supported with all its arguments.<br />
+<br />
+</li>
+  <li>
+<b>xsl:sort</b>
+      <br />If you install ICU support for xml:sort, Xalan-C++ implements Unicode-style collation.</li>
+</ul>
+
+<p>If you choose to build Xalan with ICU, you will need to rebuild Xerces with ICU as well.</p>
+<p>To get the ICU:</p> 
+<ol>
+  <li>Download and unzip the <a href="http://oss.software.ibm.com/icu/download/index.html">International Components for Unicode(ICU) 3.2 source files</a> from the IBM developerWorks open source zone.<br />
+<br />
+</li>
+  <li>Do an ICU build -- see the Windows NT or Unix build instructions in the build_instruct.html that accompanies the download.<br />
+      <b>Important</b> For Windows, define the environment variable ICUROOT and then restart Visual C++ or Visual Studio .NET. 
+      in order for the ICUROOT variable to take effect.<br />
+<br />
+</li>
+</ol>
+
+<a name="icusupport">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Enabling ICU support for encoding</h4>
+<p>If you want to enable ICU support for encoding, you must integrate ICU with your Xerces-C++ build. Xerces-C++ uses ICU for input 
+   encoding. See <a href="http://xml.apache.org/xerces-c/build.html#BuildICU">Building ICU for Xerces-C++</a>.</p>
+<p>Once you have integrated the ICU with Xerces-C++, Xalan-C++ automatically uses ICU support for output encoding (the xsl:output 
+   encoding attribute).</p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Enabling ICU support for number formatting and sorting</h4> 
+<p>If you only want to use the ICU to support number formatting and sorting, you do not need to integrate the ICU with Xalan-C++, 
+   but you must do the following in the application where you want to enable ICU support:</p>
+<ol>
+  <li>Define the environment variable ICUROOT.<br />
+<br />
+</li>
+  <li>Substitute ICU support for format-number(), xsl:number, and/or xsl:sort.<br />
+<br />
+</li>
+  <li>Rebuild the Xalan library to include the ICUBridge.</li>
+</ol>
+<p>
+<b>ICUBridge</b>
+</p>
+<p>All Xalan-C++ references to ICU are centralized in the ICUBridge module, which supplies the infrastructure for enabling ICU 
+   support for number formatting and sorting.</p>
+<blockquote class="source">
+<pre>
+#include &lt;xalanc/ICUBridge/ICUBridge.hpp&gt;
+#include &lt;xalanc/ICUBridge/FunctionICUFormatNumber.hpp&gt;
+#include &lt;xalanc/ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
+#include &lt;xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;
+</pre>
+</blockquote>
+<p>For Windows, do a clean build of the Xalan library using the "XalanICU.dsw" workspace (for Visual C++ users) or 
+   "XalanICU.sln" solution (for Visual Studio .NET users).</p>
+<p>For UNIX:</p>
+<ol>
+  <li>Define the XALAN_USE_ICU environment variable.<br />
+<br />
+</li>
+  <li>Set the XALANROOT environment variable to the path to to the ICU root (unless you have copied the ICU library to
+      /usr/lib).<br />
+<br />
+</li> 
+  <li>
+<a href="build_instruct.html#unix">Rebuild the Xalan library</a> (libxalan-c.so.111 for Linux, libxalan-c111.so for AIX,
+      libxalan-c.sl.111.0 for HP-UX 11, and libxalan-c1_11.so for Solaris).<br />
+<br />
+</li>
+  <li>Be sure the Xalan library is on the library path (LD_LIBRARY_PATH for Red Hat Linux, LIBPATH for AIX, SHLIB_PATH for 
+      HP-UX 11, LD_LIBRARY_PATH for Solaris).</li>
+</ol>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">The command you use for setting environment variables depends on the shell you are using.<br />
+      For Bourne Shell, K Shell, or Bash use <b>export</b> ENVAR="val"<br />
+      For C Shell, use <b>setenv</b> ENVAR "val"<br />
+      where ENVAR is the environment variable name and val is the environment variable
+      setting. You can check the setting of an environment variable with <b>echo</b> $ENVAR<br />To define XALAN_USE_ICU, 
+      set its value to "1".
+</td>
+</tr>
+</table>
+<p>
+<b>Number formatting</b>
+</p>
+<p>To enable ICU support for the XSLT format-number() function, do the following:</p>
+<blockquote class="source">
+<pre>
+// Install ICU support for the format-number() function.
+FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;
+</pre>
+</blockquote>
+
+<p>
+<b>Sorting</b>
+</p> 
+<p>To enable ICU support for xsl:sort, do the following:</p>
+<blockquote class="source">
+<pre>
+// Set up a StylesheetExecutionContextDefaultobject
+// (named theExecutionContext in the following fragment),
+// and install the ICUCollationCompareFunctor.
+ICUBridgeCollationCompareFunctortheICUFunctor;
+theExecutionContext.installCollationCompareFunctor(&amp;theICUFunctor);
+</pre>
+</blockquote>
+
+
+
+<a name="capi">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Basic XalanTransformer usage pattern with the C API</h3>
+<p>We also include a simple C interface for using the XalanTransformer class. See <a href="apiDocs/XalanCAPI_8h.html">
+   XalanTransformer/XalanCAPI.h</a>. The <a href="samples.html#apachemodulexslt">ApacheModuleXSLT</a> sample 
+   illustrates the use of this C API.</p>
+<p>Basic strategy:</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>1. Include the XalanTransformer C API header</h4>
+<blockquote class="source">
+<pre>#include &lt;XalanTransformer/XalanCAPI.h&gt;</pre>
+</blockquote>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>2. Initialize Xalan and Xerces</h4>
+<blockquote class="source">
+<pre>XalanInitialize();</pre>
+</blockquote> 
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>3. Create a Xalan transformer</h4>
+<blockquote class="source">
+<pre>
+XalanHandle xalan = NULL;
+xalan = CreateXalanTransformer();
+</pre>
+</blockquote>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>4. Perform each transformation</h4>
+<p>  For example:</p>
+<blockquote class="source">
+<pre>
+const char * xmlfilename = "foo.xml";
+const char* xslfilename = "foo.xsl";
+const char* outfilename = "foo.out";
+int theResult = 0;
+theResult = XalanTransformToFile(xmlfilename,
+                                 xslfilename,
+                                 outfilename,
+                                 xalan);
+</pre>
+</blockquote>
+<table class="note">
+<tr>
+<td class="noteImg">
+<img src="resources/note.gif" alt="note" />
+</td>
+<td class="noteTxt">If the XML input file contains a stylesheet processing instruction that you want to use, use an empty XSLTInputSource 
+      for the stylesheet argument.</td>
+</tr>
+</table>
+                             
+    
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>5. Shut down Xalan</h4>
+<blockquote class="source">
+<pre>XalanTerminate();</pre>
+</blockquote>
+
+
+
+<a name="cvar">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Variations with the XalanTransformer C API</h3>
+<p>The <a href="apiDocs/XalanCAPI_8h.html">Xalan C API</a> supports approximately the same set of options as the C++ API. 
+   In particular, you can</p>
+<ul>
+  <li>Use stylesheet processing instructions (PI) to indicate the URI of the stylesheet. Supply NULL for the stylesheet argument.<br />
+<br />
+</li>
+  <li>Set stylesheet parameters. Use the SetStylesheetParam() function.<br />
+<br />
+</li>
+  <li>Compile stylesheets. Use the CompileStylesheet() method to compile a stylesheet, and the TransformToFileCSS() or TransformToDataCSS() function to use the compiled stylesheet in a transformation.<br />
+<br />
+</li>
+  <li>Parse XML sources. Use the XalanParseSource() or XalanParseSouceUseXalan() method.<br />
+<br />
+</li>
+  <li>Place the transformation output in a character array. Use the TransformToData() or TransformToDataCSS() function. After you perform the transformation, use the XalanFreeData() function to free memory allocated for the output data.<br />
+<br />
+</li>
+  <li>Send the output to a callback function to process blocks of output data as they arrive.</li>
+</ul> 
+<p>For a sample that sends output in blocks to a callback function, see <a href="samples.html#apachemodulexslt">
+   ApacheModuleXSLT</a>.</p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

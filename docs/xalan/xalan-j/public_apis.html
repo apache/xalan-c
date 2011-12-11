@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Supported Interfaces in Xalan-Java</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan XSL Transformer User's Guide</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Supported Interfaces in Xalan-Java</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="../index.html">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-J 2.7.1</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="readme.html">Release Notes</a>
+</li></ul><hr /><ul>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="downloads.html">Download/Build</a>
+</li>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="xsltc_usage.html">Using XSLTC</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>
+<a href="commandline.html">Command Line</a>
+</li></ul><hr /><ul>
+<li>
+<a href="features.html">Features</a>
+</li>
+<li>
+<a href="trax.html">Transform API</a>
+</li>
+<li>
+<a href="xpath_apis.html">XPath API</a>
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="apidocs/index.html">Xalan-J API</a>
+</li>
+<li>Public APIs<br />
+</li>
+<li>
+<a href="dtm.html">DTM</a>
+</li></ul><hr /><ul>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="extensions_xsltc.html">XSLTC Exts</a>
+</li></ul><hr /><ul>
+<li>
+<a href="design/design2_0_0.html">Xalan 2 Design</a>
+</li>
+<li>
+<a href="xsltc/index.html">XSLTC Design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="builds.html">Building a release</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/overview.html">Testing</a>
+</li>
+<li>
+<a href="bugreporting.html">Bug Reporting</a>
+</li></ul><hr /><ul>
+<li>
+<a href="contact_us.html">Contact us</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Supported Interfaces in Xalan-Java</h2>
+  <ul>
+    <li>
+<a href="#public">Public interfaces</a>
+</li>
+    <li>
+<a href="#experimental">Experimental interfaces</a>
+</li>
+    <li>
+<a href="#internal">Internal interfaces</a>
+</li>
+  </ul>
+<a name="public">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Public interfaces</h3>
+  <p>A public interface of Xalan-Java 2 is an API that a typical client developer
+     should code against.  Such interfaces are usually based upon
+     World-Wide Web Consortium (W3C) recommendations, such as XSLT 1.0 and
+     XPath 1.0, or Java Specification Requests (JSR's) with a status of
+     "Final Release", such as JAXP.</p>
+  <p>The Xalan-Java 2 team will support use of public interfaces, and will
+     attempt to fix severe bugs in such interfaces.</p>
+  <p>A particular version of a public interface will be supported for all
+     the maintenance drops of a particular version and release of Xalan-Java 2
+     (that is, for a release that changes just the third digit of the
+     version number).  At the point a new version of Xalan-Java 2 is made
+     available, (that is, a release that changes the first or second digit
+     of the version number) such interfaces could change to reflect the
+     latest standard specifications.</p>
+  <p>The public interfaces of Xalan-Java 2 are:</p>
+  <ul>
+    <li>
+<a href="http://java.sun.com/xml/jaxp/">JAXP 1.3</a>
+        interfaces found in the
+        <a href="apidocs/javax/xml/parsers/package-summary.html">
+           <code>javax.xml.parsers</code>
+</a>,
+        <a href="apidocs/javax/xml/transform/package-summary.html">
+           <code>javax.xml.transform</code>
+</a>,
+        <a href="apidocs/org/xml/sax/package-summary.html">
+           <code>org.xml.sax</code>
+</a>,
+        <a href="apidocs/org/w3c/dom/package-summary.html">
+           <code>org.w3c.dom</code>
+</a> and
+        <a href="apidocs/javax/xml/xpath/package-summary.html">
+           <code>javax.xml.xpath</code>
+</a> packages. </li>
+    <li>The Xalan-Java 2 specific XPath API, defined by the classes
+      <ul>
+        <li>
+<a href="apidocs/org/apache/xpath/XPathAPI.html">
+          <code>org.apache.xpath.XPathAPI</code>
+</a>
+</li>
+        <li>
+<a href="apidocs/org/apache/xpath/CachedXPathAPI.html">
+          <code>org.apache.xpath.CachedXPathAPI</code>
+</a>
+</li>
+      </ul>
+    </li>
+    <li>API's for using, configuring or defining a serializer, from the
+        <code>org.apache.xml.serializer</code> package:
+      <ul>
+        <li>
+<a href="apidocs/org/apache/xml/serializer/OutputPropertiesFactory.html">
+                <code>OutputPropertiesFactory</code>
+</a>
+</li>
+        <li>
+<a href="apidocs/org/apache/xml/serializer/SerializerFactory.html">
+                <code>SerializerFactory</code>
+</a>
+</li>
+        <li>
+<a href="apidocs/org/apache/xml/serializer/Serializer.html">
+                <code>Serializer</code>
+</a>
+</li>
+      </ul>
+    </li>
+    <li>Properties files for configuring a serializer.  (See
+        <a href="usagepatterns.html#outputprops">Setting output
+        properties in your stylesheets</a> for more information.)
+      <ul>
+        <li>
+<code>org/apache/xml/serializer/output_xml.properties</code>
+</li>
+        <li>
+<code>org/apache/xml/serializer/output_html.properties</code>
+</li>
+        <li>
+<code>org/apache/xml/serializer/output_text.properties</code>
+</li>
+      </ul>
+    </li>
+    <li>Command-line interfaces for performing transformations:
+      <ul>
+        <li>
+<a href="commandline.html">Xalan-Java Command-line utility</a>
+</li>
+        <li>
+<a href="xsltc_usage.html#compile">Compiling translets
+              from the command line</a>
+</li>
+        <li>
+<a href="xsltc_usage.html#run">Running translets
+              from the command line</a>
+</li>
+      </ul>
+    </li>
+  </ul>
+  <a name="experimental">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Experimental interfaces</h3>
+  <p>Interfaces and classes that are designated experimental reflect recent
+     World-Wide Web Consortium (W3C) draft recommendations or draft
+     Java Specification Requests (JSR's).  Such an API is based upon
+     a specification that is subject to change, and so is itself subject
+     to change as the relevant standards body makes changes to the
+     specification.</p>
+  <p>If and when the specification upon which the API is based reaches its
+     final published form, the API could become a Public interface in
+     a subsequent release of Xalan-Java 2, although the Xalan-Java 2 team could
+     decide to simply withdraw the API, if it decided that making the API
+     a public interface would not be appropriate.</p>
+  <p>As the name suggests, experimental interfaces are provided in order to
+     give users the opportunity to experiment with new features so that they
+     can provide feed-back on those features.  They should not be used in
+     production-level code.  The Xalan-Java 2 team may fix severe bugs in
+     experimental interfaces.</p>
+  <p>The experimental interfaces of Xalan-Java 2 are:</p>
+  <ul>
+    <li>The
+        <a href="http://www.w3.org/TR/2004/NOTE-DOM-Level-3-XPath-20040226">
+           DOM Level 3 XPath API</a> found in the
+        <a href="apidocs/org/apache/xpath/domapi/package-summary.html">
+           <code>org.apache.xpath.domapi</code>
+</a> package.</li>
+  </ul>
+  <a name="internal">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Internal interfaces</h3>
+  <p>All other classes are considered to be part of the internal interface of
+     Xalan-Java 2.  Some such classes or members of such classes may themselves
+     be designated as <code>public</code> using the Java keyword, but that is
+     a consequence of the internal organization of Xalan-Java 2.</p>
+  <p>Users who have complex and specific needs, such as the need to build
+     their own XSLT or XPath processors, might use these internal interfaces,
+     but their use is not supported.  In addition these interfaces are subject
+     to change without notice.</p>
+  
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

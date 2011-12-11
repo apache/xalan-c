@@ -1,0 +1,700 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fswiss\fprq2\fcharset0 Lucida Sans Unicode;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\lang1033\f0\fs20\par
+\fs32 EXSLT Extension Functions Library\fs20\par
+\par
+The standard library for EXSLT is defined at [http://www.exslt.org] to provide extensions to XSLT.\par
+\par
+MODULES\par
+\par
+\b   Common\tab\tab Namespace = http://exslt.org/common\par
+\b0\par
+    (Other Elements)\par
+\par
+\tab These are extension elements, not XPath functions.\par
+\tab Support for extension elements is not yet implemented in Xalan-C/C++ Version 1.11.\par
+\par
+    exsl:document\par
+\par
+\pard\li720 The exsl:document element is used to create multiple result documents. As well as the main result document, there can be subsidiary result documents. Each subsidiary result document is created using an exsl:document element. \par
+\pard\par
+\f1\tab <exsl:document\par
+\tab     href = \{ uri-reference \}\par
+\tab     method = \{ "xml" | "html" | "text" | qname-but-not-noname \}\par
+\tab     version = \{ nmtoken \}\par
+\tab     encoding = \{ string \}\par
+\tab     omit-xml-declaration = \{ "yes" | "no" \}\par
+\tab     standalone = \{ "yes" | "no" \}\par
+\tab     doctype-public = \{ string \}\par
+\tab     doctype-system = \{ string \}\par
+\tab     cdata-section-elements = \{ qnames \}\par
+\tab     indent = \{ "yes" | "no" \}\par
+\tab     media-type = \{ string \}>\par
+\tab     <-- Content: template -->\par
+\tab </exsl:document>\f0\par
+\par
+    (Core Functions)\par
+\par
+    exsl:node-set()\par
+\par
+\tab\b node-set exsl:node-set(object)\b0\par
+\par
+\pard\li720 The exsl:node-set function returns a node-set from a result tree fragment (which is what you get when you use the content of xsl:variable rather than its select attribute to give a variable value). This enables you to process the XML that you create within a variable, and therefore do multi-step processing.\par
+\par
+You can also use this function to turn a string into a text node, which is helpful if you want to pass a string to a function that only accepts a node-set. \par
+\pard\par
+    exsl:object-type()\par
+\par
+\tab\b node-set exsl:object-type(object)\b0\par
+\par
+\pard\li720 The exsl:object-type function returns a string giving the type of the object passed as the argument. The possible object types are: 'string', 'number', 'boolean', 'node-set', 'RTF' or 'external'.\par
+\par
+Most XSLT object types can be coerced to each other without error. However, there are certain coercions that raise errors, most importantly treating anything other than a node set as a node set. Authors of utilities such as named templates or user-defined extension functions may wish to give some flexibility in the parameter and argument values that are accepted by the utility; the exsl:object-type function enables them to do so. \par
+\pard\par
+\par
+\b   Math\tab\tab\tab Namespace = http://exslt.org/math\par
+\b0\par
+    (Core Functions)\par
+\par
+    math:min()\par
+\par
+\tab\b number math:min(node-set)\b0\par
+\par
+\tab Sort the node-set by numeric value and return the numeric value of the first node.\par
+\tab If the node-set is empty or any node-set node has a non-numeric value, return the value of NaN.\par
+\par
+    math:max()\par
+\par
+\b\tab number math:max(node-set)\b0\par
+\par
+\tab Sort the node-set by numeric value and return the numeric value of the last node.\par
+\tab If the node-set is empty or any node-set node has a non-numeric value, return the value of NaN.\par
+\par
+    math:highest()\par
+\par
+\b\tab node-set math:highest(node-set)\b0\par
+\par
+\tab Return the result tree fragment of all nodes having the math:max() numeric value.\par
+\tab If the node-set is empty or any node-set node has a non-numeric value, the empty set is returned.\par
+\par
+    math:lowest()\par
+\par
+\b\tab node-set math:lowest(node-set)\b0\par
+\par
+\tab Return the result tree fragment of all nodes having the math:min() numeric value.\par
+\tab If the node-set is empty or any node-set node has a non-numeric value, the empty set is returned.\par
+\par
+    (Other Functions)\par
+\par
+\tab Geometric functions operate on radian values, not degrees.\par
+\par
+    math:abs()\par
+\par
+\b\tab number math:abs(number)\b0\par
+\par
+\tab Return the absolute value of a number.\par
+\par
+    math:acos()\par
+\par
+\b\tab number math:acos(number)\b0\par
+\par
+\tab Return the arccosine value of a number in radians.\par
+\par
+    math:asin()\par
+\par
+\b\tab number math:asin(number)\b0\par
+\par
+\tab Return the arcsine value of a number in radians.\par
+\par
+    math:atan()\par
+\par
+\b\tab number math:atan(number)\b0\par
+\par
+\tab Return the arctangent value of a number in radians.\par
+\par
+    math:atan2()\par
+\par
+\b\tab number math:atan2(number, number)\b0\par
+\par
+\tab Operates on a flat plain in an equi-linear cartesian coordinate system of two dimensions.\par
+\tab Returns the angle in radians from the x axis at location (0,0) to location (y,x).\par
+\par
+    math:constant()\par
+\par
+\b\tab number math:constant(string,number)\b0\par
+\par
+\tab Returns a specified global constant to the requested precision.\par
+\par
+\tab "PI"\tab\tab Return the value of Pi.\par
+\tab "E"\tab\tab Return the base value of the Naperian Logarithms (Euler's Number)\par
+\tab "SQRRT2"\tab Return the value of the square-root of 2.\par
+\tab "LN2"\tab\tab Return the Log-Base-E of 2\par
+\tab "LN10"\tab\tab Return the Log-Base-E of 10\par
+\tab "LOG2E"\tab Return the Log-Base-2 of E\par
+\tab "SQRT1_2"\tab Return the value of the square-root of 1/2 (0.5).\par
+\par
+    math:cos()\par
+\par
+\b\tab number math:cos(number)\b0\par
+\par
+\tab Return the cosine of the passed argument in radians.\par
+\par
+    math:exp()\par
+\par
+\b\tab number math:exp(number)\b0\par
+\par
+\tab Returns e (base of natural logarithms) raised to a power.\par
+\tab The constant e is Euler's constant, approximately 2.178.\par
+\par
+    math:log()\par
+\par
+\b\tab number math:log(number)\b0\par
+\par
+\tab Returns the natural logarithm (base e) of a number.\par
+\par
+    math:power()\par
+\par
+\b\tab number math:power(number, number)\b0\par
+\par
+\tab Returns the value of a base expression taken to a specific power.\par
+\par
+    math:random()\par
+\par
+\b\tab number math:random()\b0\par
+\par
+\tab Returns a random number value between zero and 1.\par
+\par
+    math:sin()\par
+\par
+\b\tab number math:sin(number)\b0\par
+\par
+\tab Return the sine of the number in radians.\par
+\par
+    math:sqrt()\par
+\par
+\b\tab number math:sqrt(number)\b0\par
+\par
+\tab Return the square root of a number.\par
+\par
+    math:tan()\par
+\par
+\b\tab number math:tan(number)\b0\par
+\par
+\tab Retun the tangent of the number passed as an argument in radians.\par
+\par
+\b   Sets\tab\tab\tab Namespace = http://exslt.org/sets\par
+\b0\par
+    (Core Functions)\par
+\par
+    set:difference()\par
+\par
+\b\tab node-set set:difference(node-set, node-set)\b0\par
+\par
+\tab Returns a set of nodes from the first node-set that are not in the second node-set.\par
+\par
+    set:intersection()\par
+\par
+\b\tab node-set set:intersection(node-set, node-set)\b0\par
+\par
+\tab Return the set of nodes that are matched in both node-sets.\par
+\par
+    set:distinct()\par
+\par
+\b\tab node-set set:distinct(node-set)\b0\par
+\par
+\tab Return the set of unique nodes in document order based on the string value of each node.\par
+\par
+    set:has-same-node()\par
+\par
+\b\tab boolean set:has-same-node(node-set, node-set)\b0\par
+\par
+\tab Return true if the first node-set shares any node in the second node-set.\par
+\tab Return false if there are no nodes common between both sets.\par
+\par
+    set:leading()\par
+\par
+\b\tab node-set set:leading(node-set, node-set)\b0\par
+\par
+\tab Return the nodes from the first node-set that precede the first node in the second node-set.\par
+\tab If the first node in the second node-set is not contained in the first node-set,\par
+\tab then an empty set is returned.\par
+\tab If the second node-set is empty, the entire first node-set is returned.\par
+\tab The nodes returned are in document order as determined by the first node-set.\par
+\par
+    set:trailing()\par
+\par
+\b\tab node-set set:trailing(node-set, node-set)\b0\par
+\par
+\tab Return the nodes from the first node-set that follow the first node in the second node-set.\par
+\tab If the first node in the second node-set is not contained in the first node-set, \par
+\tab then an empty set is returned.\par
+\tab If the second node-set is empty, the entire first node-set is returned.\par
+\tab The nodes returned are in document order as determined by the first node-set.\par
+\par
+\b   Functions\tab\tab Namespace = http://exslt.org/functions\par
+\b0\par
+    (Other Elements)\par
+\par
+\tab These are extension elements, not XPath functions.\par
+\tab Support for extension elements is not yet implemented in Xalan-C/C++ Version 1.11.\par
+\par
+    func:function\par
+\par
+\pard\li720 The func:function element can only occur at the top level of the stylesheet. The func:function element declares an extension function that is visible everywhere: the extension function is added to the function library available to the expressions and patterns used in the XSLT stylesheet. \par
+\pard\par
+\f1\tab <func:function\par
+\tab     name = QName>\par
+\tab     <-- Content: (xsl:param* | template) -->\par
+\tab </func:function>\f0\par
+\par
+    func:result\par
+\par
+\pard\li720 When an func:result element is instantiated, during the instantiation of a func:function element, the function returns with its value. The value of the func:result element is determined in a similar way to variable-binding elements as described in [11.2 Values of Variables and Parameters] of [XSLT]. \par
+\pard\par
+\f1\tab <func:result\par
+\tab     select = expression>\par
+\tab     <-- Content: template -->\par
+\tab </func:result>\f0\par
+\par
+    func:script\par
+\par
+\pard\li720 The top-level func:script element provides an implementation of extension functions in a particular namespace. The function implementations may be provided as a separate resource. Some language bindings also allow the function implementations to be provided directly in the content of the func:script. \par
+\pard\par
+\f1\tab <func:script\par
+\tab     implements-prefix = noname\par
+\tab     language = qname-and-not-noname\par
+\tab     src = uri-reference\par
+\tab     archive = uri-reference />\f0\par
+\par
+\b   Dates and Times\tab Namespace = http://exslt.org/dates-and-times\par
+\b0\par
+    (Other Elements)\par
+\par
+\tab These are extension elements, not XPath functions.\par
+\tab Support for extension elements is not yet implemented in Xalan-C/C++ Version 1.11.\par
+\par
+    date:date-format\par
+\par
+\pard\li720 The date:date-format element declares a date format, which controls the interpretation of a format pattern used by the date:format-date and date:parse-date functions. The "gregorian" calendar is default.\par
+\pard\par
+\f1\tab <date:date-format\par
+\tab     name = qname\par
+\tab     calendar = "gregorian" | qname-but-not-noname\par
+\tab     lang = language\par
+\tab     first-day-of-week = "sunday" | "monday" | "tuesday" | "wednesday" | "thursday" |\par
+\tab\tab "friday" | "saturday" | string \par
+\tab />\f0\par
+\par
+    (Core Functions)\par
+\par
+    date:date-time()\par
+\par
+\b\tab string date:date-time()\b0\par
+\par
+\pard\li720 Return the current date and time as a date/time string as defined as the lexical representation of xs:dateTime.  The returned date/time string format must include a time zone, either a Z to indicate Coordinated Universal Time or a + or - followed by the difference between the difference from UTC represented as hh:mm. \par
+\pard\par
+    date:date()\par
+\par
+\b\tab string date:date(string?)\b0\par
+\par
+\pard\li720 Return the date specified in the string.  If no argument is given, the current local date as returned by date:date-time() is used as the argument.  If the argument is of bad format, an empty string is returned. If the argument specifies a time zone, the returned date must include a time zone. If the argument has no time zone, the return date does not include a time zone.\par
+\pard\par
+    date:time()\par
+\par
+\b\tab string date:time(string?)\b0\par
+\par
+\pard\li720 Return the time specified in the string.  If no argument is given, then the current local time as returned by date:date-time() is used as the argument. If the argument is of bad format, an empty string is returned. If the argument specifies a time zone, the returned time must include a time zone. If the argument has no time zone, the returned time does not include a time zone.\par
+\pard\par
+    date:year()\par
+\par
+\b\tab number date:year(string?)\par
+\b0\par
+\pard\li720 Return the year of the date as a number.  If no argument is given, then the current local date/time, as returned by date:date-time() is used as a default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+    date:leap-year()\par
+\par
+\b\tab boolean date:leap-year(string?)\b0\par
+\par
+\pard\li720 Return 'true' if the argument is a leap year. Return 'false' if the argument is not a leap year.  If no argument is given, then the current local date/time, as returned by date:date-time() is used as a default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\par
+    date:month-in-year()\par
+\par
+\b\tab number date:month-in-year(string?)\b0\par
+\par
+\pard\li720 Return the month of a date as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+    date:month-name()\par
+\par
+\b\tab string date:month-name(string?)\b0\par
+\par
+\pard\li720 Return the full name of the month with English spelling. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then an empty string is returned.\par
+\par
+String return values are one of 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', or 'December'.\par
+\pard\par
+    date:month-abbreviation()\par
+\par
+\b\tab string date:month-abbreviation(string?)\b0\par
+\par
+\pard\li720 Return the abbreviated name of the month with English spelling. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then an empty string is returned.\par
+\par
+String return values are one of 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', or 'Dec'.\par
+\pard\par
+    date:week-in-year()\par
+\par
+\b\tab number date:week-in-year(string?)\b0\par
+\par
+\pard\li720 Return the numeric value of the week of the year. If no argument is given, then the current local date/time, as returned by date:date-time() is used as the default argument.  If the arguement is bad, then NaN is returned.\par
+\pard\par
+\pard\li720 For the purposes of numbering, counting follows ISO 8601: week 1 in a year is the week containing the first Thursday of the year, with new weeks beginning on a Monday. \par
+\pard\par
+    date:day-in-year()\par
+\par
+\tab number date:day-in-year(string?)\par
+\par
+\pard\li720 Return the day of a date in a year as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+    date:day-in-month()\par
+\par
+\b\tab number date:day-in-month(string?)\b0\par
+\par
+\pard\li720 Return the day in the month as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\par
+    date:day-of-week-in-month()\par
+\par
+\tab\b number date:day-of-week-in-month(string?)\b0\par
+\par
+\pard\li720 Return the day of the week in a month as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\par
+The interpretation is non-specific (e.g. 3 for the 3rd Tuesday in May).\par
+\pard\par
+    date:day-in-week()\par
+\par
+\b\tab number date:day-in-week(string?)\b0\par
+\par
+\pard\li720 Return the day of the week as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\pard\li720 The numbering of days of the week starts at 1 for Sunday, 2 for Monday and so on up to 7 for Saturday.\par
+\pard\par
+    date:day-name()\par
+\par
+\b\tab string date:day-name(string?)\b0\par
+\par
+\pard\li720 Return the full name of the day of the week of a date. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, an empty string is returned.\par
+\pard\par
+\pard\li720 The result is an English day name: one of 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday' or 'Friday'.\par
+\pard\par
+    date:day-abbreviation()\par
+\par
+\b\tab string date:day-abbreviation(string?)\b0\par
+\par
+\pard\li720 Return the abbreviated name of the day of the week of a date. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, an empty string is returned.\par
+\pard\par
+\pard\li720 The result is a three-letter English day abbreviation: one of 'Sun', 'Mon', 'Tue', 'Wed', 'Thu' or 'Fri'.\par
+\pard\par
+    date:hour-in-day()\par
+\par
+\b\tab number date:hour-in-day(string?)\b0\par
+\par
+\pard\li720 Return the hour in the day as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\pard\li720 If the argument is bad, then NaN is returned.\par
+\pard\par
+    date:minute-in-hour()\par
+\par
+\tab\b number date:minute-in-hour(string?)\b0\par
+\par
+\pard\li720 Return the minute in the hour of a date as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\tab If the argument is bad, then NaN is returned.\par
+\par
+\par
+    date:second-in-minute()\par
+\par
+\b\tab number date:second-in-minute(string?)\b0\par
+\par
+\pard\li720 Return the second in a minute of a date as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument.  If the argument is bad, then NaN is returned.\par
+\pard\par
+\tab If the argument is bad, then NaN is returned.\par
+\par
+\par
+    (Other Functions)\par
+\par
+    date:format-date()\par
+\par
+\b\tab string date:format-date(string, string)\b0\par
+\par
+\pard\li720 Return a string representing a date/time string formatted according to a pattern.  The first argument is the date,  The second argument is the format.\par
+\par
+The second argument is a string that gives the format pattern used to format the date. The format pattern must be in the syntax specified by the JDK 1.1 SimpleDateFormat class. The format pattern string is interpreted as described for the JDK 1.1 SimpleDateFormat class.\par
+\par
+If the date/time format is right-truncated (i.e. in a format other than xs:time, or xs:dateTime) then any missing components are assumed to be as follows: if no month is specified, it is given a month of 01; if no day is specified, it is given a day of 01; if no time is specified, it is given a time of 00:00:00.\par
+\par
+If the date/time format is left-truncated (i.e. xs:time, xs:gMonthDay, xs:gMonth or xs:gDay) and the format pattern has a token that uses a component that is missing from the date/time format used, then that token is replaced with an empty string ('') within the result. \par
+\pard\par
+    date:parse-date()\par
+\par
+\tab\b string date:parse-date(string, string)\b0\par
+\pard\li720\par
+Return an interpreted date/time string as the result of a parse.  The first argument is a standard date/time string.  The second argument defines what values from the date/time string are to be returned as the interpreted date/time.\par
+\pard\par
+\pard\tx720\tx3240\tab\b Return String Type\tab Format Text\b0\par
+\f1\tab xs:dateTime\tab (CCYY-MM-DDThh:mm:ss)\par
+\tab xs:date\tab (CCYY-MM-DD)\par
+\tab xs:time\tab (hh:mm:ss)\par
+\tab xs:gYearMonth\tab (CCYY-MM)\par
+\tab xs:gYear\tab (CCYY)\par
+\tab xs:gMonthDay\tab (--MM-DD)\par
+\tab xs:gMonth\tab (--MM--)\par
+\tab xs:gDay\tab (---DD) \f0\par
+\pard\par
+    date:week-in-month()\par
+\par
+\b\tab number date:week-in-month(string?)\b0\par
+\par
+\pard\li720 Return the week in a month of a date as a number. If no argument is given, then the current local date/time, as returned by date:date-time() is used the default argument. For the purposes of numbering, the first day of the month is in week 1 and new weeks begin on a Monday (so the first and last weeks in a month will often have less than 7 days in them).\par
+\par
+If the date argument is invalid, the NaN is returned.\par
+\pard\par
+    date:difference()\par
+\par
+\tab\b string date:difference(string, string)\b0\par
+\par
+\pard\li720 Return the duration between the first date and the second date. If the first date occurs before the second date, then the result is a positive duration; if it occurs after the second date, the result is a negative duration. If either date has invalid format, an empty string is returned.\par
+\par
+The two dates must both be right-truncated date/time strings. The date/time with the most specific format (i.e. the least truncation) is converted into the same format as the date with the least specific format (i.e. the most truncation).\par
+\par
+If the date/time string with the least specific format is in either xs:gYearMonth or xs:gYear format, then the number of days, hours, minutes and seconds in the duration string must be equal to zero. (The format of the string will be PnYnM.) The number of months specified in the duration must be less than 12. \par
+\par
+Otherwise, the number of years and months in the duration string must be equal to zero. (The format of the string will be PnDTnHnMnS.) The number of seconds specified in the duration string must be less than 60; the number of minutes must be less than 60; the number of hours must be less than 24. \par
+\pard\par
+    date:add()\par
+\par
+\b\tab string date:add(string, string)\b0\par
+\par
+\pard\li720 Return the date/time resulting from adding a duration to a date/time.\par
+\par
+The first argument must be right-truncated date/time string. The second argument is a string in the format defined for xs:duration.\par
+\pard\par
+    date:add-duration()\par
+\par
+\b\tab string date:add-duration(string, string)\par
+\b0\par
+\pard\li720 Return the duration resulting from adding two durations together. Both arguments are strings in the format defined for xs:duration.  If either argument is not a valid duration, the empty string is returned.  If the durations are differently signed, the empty string is returned.\par
+\pard\par
+    date:sum\par
+\par
+\b\tab string date:sum(node-set)\b0\par
+\par
+\pard\li720 Return the duration resulting from adding all durations in a node-set.  If the node-set is empty or any node is not a duration, then the empty string is returned.\par
+\pard\par
+    date:seconds()\par
+\par
+\b\tab number date:seconds(string?)\b0\par
+\par
+\pard\li720 Return the number of seconds and fraction specified by the argument string. If no argument is given, then the current local date/time, as returned by date:date-time() is used as a default argument.\par
+\par
+If the argument is defined as a duration, the number returned is the result of converting the duration to seconds by assuming that 1 day = 24 hours, 1 hour = 60 minutes and 1 minute = 60 seconds. \par
+\pard\par
+\tab If the argument is bad, the NaN value is returned.\par
+\par
+    date:duration()\par
+\par
+\b\tab string date:duration(number?)\b0\par
+\par
+\pard\li720 Return a duration string representing the number of seconds specified by the argument string. If no argument is given, then the result of calling date:seconds() without any arguments is used as a default argument.\par
+\pard\par
+\tab If the argument is bad, an empty string is returned.\par
+\par
+\par
+\b   Strings\tab\tab Namespace = http://exslt.org/strings\par
+\b0\par
+    (Other Functions)\par
+\par
+    str:tokenize()\par
+\par
+\tab node-set str:tokenize(string, string?)\par
+\tab The first argument is a string to separate into tokens.\par
+\tab The second argument is a string of delimiting characters.\par
+\tab Return a node-set of <token> elements having the string value segments (without delimiters).\par
+\tab The default delimiting string is the whitespace characters( '&#x9;&#xA;&#xD;&#x20;').\par
+\tab If the delimiting string is an empty string, then each character in the first string is a <token> value.\par
+\tab If the first string is empty or contains only delimiters, the result is the empty node-set.\par
+\par
+    str:replace()\par
+\par
+\tab\b node-set str:replace(string, object, object)\b0\par
+\par
+\pard\li720 The str:replace() function replaces any occurrences of search strings within a string with replacement nodes to create a node set.\par
+\par
+The first argument gives the string within which strings are to be replaced.\par
+\par
+The second argument is an object which specifies a search string list. If the second argument is a node set, then the search string list consists of the result of converting each of the nodes in the node set to a string as by the string() function, listed in document order. If the second argument is not a node set, then the second argument is converted to a string as by the string() function and the search string list consists of this string only.\par
+\par
+The third argument is an object which specifies a replacement node list. If the third argument is a node set, then the replacement node list consists of the nodes in the node set in document order. If the third argument is not a node set, then the replacement node list consists of a single text node whose string value is the same as the result of converting the third argument to a string as by the string() function.\par
+\par
+It is an error if any of the nodes in the replacement node list are attribute nodes or namespace nodes. An XSLT processor may recover from this error by treating these nodes as text nodes with an empty string value.\par
+\par
+The str:replace function works by replacing each occurence of a string in the search string list within the first argument string by the equivalently positioned node in the replacement node list. If there is no equivalently positioned node in the replacement node list then the search string is deleted from the string.\par
+\par
+The longest search strings are replaced first. If a search string is empty, then the equivalently positioned replacement node is inserted between every character in the string. \par
+\pard\par
+    str:padding()\par
+\par
+\b\tab string str:padding(number,string?)\b0\par
+\par
+\pard\li720 The str:padding function creates a padding string of a certain length.\par
+\par
+The first argument gives the length of the padding string to be created.\par
+\par
+The second argument gives a string to be used to create the padding. This string is repeated as many times as is necessary to create a string of the length specified by the first argument; if the string is more than a character long, it may have to be truncated to produce the required length. If no second argument is specified, it defaults to a space (' '). If the second argument is an empty string, str:padding returns an empty string. \par
+\pard\par
+    str:align()\par
+\par
+\b\tab string str:align(string, string, string?)\b0\par
+\par
+\pard\li720 The str:align function aligns a string within another string.\par
+\par
+The first argument gives the target string to be aligned. The second argument gives the padding string within which it is to be aligned.\par
+\par
+If the target string is shorter than the padding string then a range of characters in the padding string are repaced with those in the target string. Which characters are replaced depends on the value of the third argument, which gives the type of alignment. It can be one of 'left', 'right' or 'center'. If no third argument is given or if it is not one of these values, then it defaults to left alignment.\par
+\par
+With left alignment, the range of characters replaced by the target string begins with the first character in the padding string. With right alignment, the range of characters replaced by the target string ends with the last character in the padding string. With center alignment, the range of characters replaced by the target string is in the middle of the padding string, such that either the number of unreplaced characters on either side of the range is the same or there is one less on the left than there is on the right.\par
+\par
+If the target string is longer than the padding string, then it is truncated to be the same length as the padding string and returned. \par
+\pard\par
+    str:encode-uri()\par
+\par
+\b\tab string str:encode-uri(string, string, string?)\b0\par
+\par
+\pard\li720 This function applies the URI escaping rules defined in section 2 of [RFC 2396], as amended by [RFC 2732], to the string supplied as the first argument, which typically represents all or part of a URI, URI reference or IRI. The effect of the function is to replace any special character in the string by an escape sequence of the form %xx%yy..., where xxyy... is the hexadecimal representation of the octets used to represent the character in US-ASCII for characters in the ASCII repertoire, and a different character encoding for non-ASCII characters.\par
+\par
+The set of characters that are escaped depends on the setting of the second argument.\par
+\par
+If the second argument is true, all characters are escaped other than lower case letters a-z, upper case letters A-Z, digits 0-9, and the characters referred to in [RFC 2396] as "marks": specifically, "-" | "_" | "." | "!" | "~" | "*" | "'" | "(" | ")". The "%" character itself is escaped only if it is not followed by two hexadecimal digits (that is, 0-9, a-f, and A-F).\par
+\par
+If the second argument is false, the behavior differs in that characters referred to in [RFC 2396] and [RFC 2732] as reserved characters are not escaped. These characters are ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | "," | "[" | "]".\par
+\par
+[RFC 2396] does not define whether escaped URIs should use lower case or upper case for hexadecimal digits. To ensure that escaped URIs can be compared using string comparison functions, this function must always use the upper-case letters A-F.\par
+\par
+Generally, the second argument should be set to true when escaping a string that is to form a single part of a URI, URI reference or IRI, and to false when escaping an entire URI, URI reference or IRI.\par
+\par
+The character encoding used as the basis for determining the octets depends on the setting of the optional third argument. If the argument is given, it should be an encoding name listed in [Charsets], and may be given case-insensitively. The default encoding, if the argument is not given, is UTF-8. UTF-8 is the only encoding required to be supported by an implementation of this function. If the given encoding is not supported, then the function returns an empty string. If the encoding is supported but a character in the string cannot be represented in that encoding, then the character is escaped as if it were a question mark ("%3F"). \par
+\pard\par
+\b     str:decode-uri()\b0\par
+\par
+\tab string str:decode-uri(string, string)\par
+\par
+\pard\li720 The str:decode-uri() function returns its first argument string with URI escape sequences, as described in [RFC 2396] section 2.4.1, converted back to the characters they represent.\par
+\par
+The optional second argument to the function supplies a character encoding name, which can be given case-insensitively, and should be listed in [Charsets]. If the named encoding is supported by the function implementation, then it is used as the basis for interpreting the octet sequences obtained when unescaping non-ASCII characters. UTF-8 is the default encoding, and is the only encoding required to be supported by this function. If the encoding is given as an empty string or is not supported, then an empty string is returned. If the encoding is supported, but an escaped octet sequence in the string cannot be decoded to a character in that encoding, then the sequence is ignored. \par
+\pard\par
+    str:concat()\par
+\par
+\b\tab string str:concat(node-set)\b0\par
+\par
+\pard\li720 The str:concat function takes a node set and returns the concatenation of the string values of the nodes in that node set. If the node set is empty, it returns an empty string. \par
+\pard\par
+    str:split()\par
+\par
+\b\tab node-set str:split(string, string?)\b0\par
+\par
+\pard\li720 The str:split() function splits up a string and returns a node set of token elements, each containing one token from the string.\par
+\par
+The first argument is the string to be split. The second argument is a pattern string. The string given by the first argument is split at any occurrence of this pattern.\par
+\par
+str:split('a, simple, list', ', ')      \par
+      \par
+Gives the node set consisting of:\par
+\par
+<token>a</token>\par
+<token>simple</token>\par
+<token>list</token>\par
+\par
+If the second argument is omitted, the default is the string '&#x20;' (i.e. a space). Thus:\par
+\par
+str:split('date math str')      \par
+      \par
+Gives the node set consisting of:\par
+\par
+<token>date</token>\par
+<token>math</token>\par
+<token>str</token>\par
+\par
+If the second argument is an empty string, the function returns a set of token elements, each of which holds a single character.\par
+\pard\par
+\par
+\b   Regular Expressions\tab Namespace = http://exslt.org/regular-expressions\b0\par
+\par
+    (Other Functions)\par
+\par
+    regexp:test()\par
+\par
+\tab boolean regexp:test(string, string, string?)\par
+\par
+    regexp:match()\par
+\par
+\tab object regexp:match(string, string, string?)\par
+\par
+    regexp:replace()\par
+\par
+\tab string regexp:replace(string, string, string, string)\par
+\par
+\par
+\b   Dynamic\tab\tab Namespace = http://exslt.org/dynamic\b0\par
+\par
+    (Other Functions)\par
+\par
+    dyn:evaluate()\par
+\par
+\tab object dyn:evaluate(string)\par
+\par
+    dyn:min()\par
+\par
+\tab number dyn:min(node-set, string)\par
+\par
+    dyn:max()\par
+\par
+\tab number dyn:max(node-set, strng)\par
+\par
+    dyn:sum()\par
+\par
+\tab number dyn:sum(node-set, string)\par
+\par
+    dyn:map()\par
+\par
+\tab node-set dyn:map(node-set, string)\par
+\par
+    dyn:closure()\par
+\par
+\tab node-set dyn:closure(node-set, string)\par
+\par
+\par
+  \b Random\tab\tab Namespace = http://exslt.org/random\par
+\b0\par
+    (Core Functions)\par
+\par
+    random-sequence()\par
+\par
+\b\tab number+ random:random-sequence(number?, number?)\b0\par
+\par
+\tab Returns a list of random numbers between 0 and 1.\par
+\tab The first parameter indicates the number of values to generate, default is 1.\par
+\tab The second parameter indicates a seed value.\par
+\par
+\fs32 Source Files for EXSLT Functions\fs20\par
+\par
+Xalan-C/C++ supports the EXSLT initiative to provide a set of standard extension functions to XSLT users.  Xalan-C/C++ includes beta implementations for functions in several of the namespaces.\par
+\par
+\pard\tx720\tx3600\f1\tab [Common]\tab XalanEXSLTCommonImpl.hpp\par
+\tab [Math]\tab XalanEXSLTMathImpl.hpp\par
+\tab [Set]\tab XalanEXSLTSetImpl.hpp\par
+\tab [String]\tab XalanEXSLTStringImpl.hpp\par
+\tab [Dynamic]\tab XalanEXSLTDynamicImpl.hpp\par
+\tab [Date-Time]\tab XalanDateTimeImpl.hpp\f0\par
+\pard\par
+Anyone who would like to participate in the Xalan-C/C++ initiative to support EXSLT by testing these implementations or implementing other EXSLT functions is more than welcome. Please email us at the  [mailto:xalan-dev@xml.apache.org] Xalan Development Mailing List.\par
+\par
+\par
+}
+ 

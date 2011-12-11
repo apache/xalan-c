@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: XSLTC Documentation</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">XSLTC Documentation</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>Overview<br />
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>
+<a href="xsl_variable_design.html">Variable|Param design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>XSLTC Documentation</h2>
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>User Documentation</h3>
+    <p>The following user documentation is currently available:</p>
+    <ul>
+      <li>Command-line <a href="README.xsltc">compiler</a> and
+      <a href="README.xslt">runtime</a> man pages.</li>
+      <li>
+<a href="xsltc_native_api.html">XSLTC Native API reference</a>
+</li>
+      <li>
+<a href="xsltc_trax_api.html">XSLTC TrAX API reference</a>
+</li>
+      <li>
+<a href="xsltc_performance.html">XSLTC Performance Hints</a>
+</li>
+    </ul>
+  
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Design Documents</h3>
+    <p>The following design documents are currently available:</p>
+    <ul>
+      <li>
+<a href="#overall">XSLTC overall design</a>
+</li>
+      <li>
+<a href="#compiler">XSLTC compiler design</a>
+</li>
+      <li>
+<a href="#runtime">XSLTC runtime library design</a>
+</li>
+      <li>
+<a href="#runtime">XSLTC internal DOM design</a>
+</li>
+      <li>
+<a href="#trax">XSLTC TrAX implementation design</a>
+</li>
+    </ul>
+
+
+    
+    <a name="overall">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XSLTC overall design</h4>
+
+    <p>The figure below describes the overall design of XSLTC's compiler:</p>
+    <p>
+<img src="overall_design.gif" alt="overall_design.gif" />
+</p>
+    <p>
+<b>
+<i>Figure 1: Architectural overview of XSLTC</i>
+</b>
+</p>
+
+    <p>A client application can use XSLTC either through its
+    <a href="xsltc_native_api.html">native API</a> or through or
+    implementation of the <a href="xsltc_trax_api.html">TrAX API</a>. The
+    <a href="#compiler">compiler</a> generates one or more Java classes
+    (we have chosen to call them 'translets').
+    The <a href="#runtime">runtime library</a> contains classes that
+    can load these translets and use them to transform XML documents to some
+    markup language or plain text. There is also a detailed document describing
+    <a href="xsltc_namespace.html">namespace handling</a> in all parts of
+    XSLTC (compiler, internal DOM, and output handler).</p>
+
+    
+
+    
+    <a name="compiler">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XSLTC compiler design</h4>
+
+    <p>The figure below describes the overall design of XSLTC's compiler:</p>
+    <p>
+<img src="compiler_design.gif" alt="compiler_design.gif" />
+</p>
+    <p>
+<b>
+<i>Figure 2: Compiler architecture overview</i>
+</b>
+</p>
+
+    <p>There is also a <a href="xsltc_compiler.html">high-level design</a>
+    document for XSLTC's compiler. Apart from that you can also find separate
+    design documents for some XSL elements and XPath expressions, patterns
+    and functions:</p>
+
+    <h5>XSL elements</h5>
+      <ul>
+        <li>
+<a href="xsl_sort_design.html">&lt;xsl:sort&gt;</a>
+</li>
+        <li>
+<a href="xsl_key_design.html">&lt;xsl:key&gt;</a>
+</li>
+        <li>
+<a href="xsl_whitespace_design.html">&lt;xsl:preserve-space&gt;</a>
+</li>
+        <li>
+<a href="xsl_whitespace_design.html">&lt;xsl:strip-space&gt;</a>
+</li>
+        <li>
+<a href="xsl_comment_design.html">&lt;xsl:comment&gt;</a>
+</li>
+        <li>
+<a href="xsl_comment_design.html">&lt;xsl:message&gt;</a>
+</li>
+        <li>
+<a href="xsl_if_design.html">&lt;xsl:if&gt;</a>
+</li>
+        <li>
+<a href="xsl_choose_design.html">&lt;xsl:choose&gt;</a>
+</li>
+        <li>
+<a href="xsl_variable_design.html">&lt;xsl:variable&gt;</a>
+</li>
+        <li>
+<a href="xsl_variable_design.html">&lt;xsl:param&gt;</a>
+</li>
+        <li>
+<a href="xsl_include_design.html">&lt;xsl:include&gt;</a>
+</li>
+        <li>
+<a href="xsl_include_design.html">&lt;xsl:import&gt;</a>
+</li>
+      </ul>
+    
+    <h5>XPath functions</h5>
+      <ul>
+        <li>
+<a href="xsl_key_design.html">key()</a>
+</li>
+        <li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+        <li>
+<a href="xsl_unparsed_design.html">unparsed-entity-uri()</a>
+</li>
+      </ul>
+    
+    <h5>XPath expressons</h5>
+      <ul>
+        <li>
+<a href="xsltc_predicates.html">Predicates</a>
+</li>
+      </ul>
+    
+
+    <h5>XPath patterns</h5>
+      <ul>
+        <li>
+<a href="xsltc_predicates.html#step-pattern">StepPattern</a>
+</li>
+        <li>
+<a href="xsl_key_design.html#patterns">IdPattern</a>
+</li>
+        <li>
+<a href="xsl_key_design.html#patterns">KeyPattern</a>
+</li>
+      </ul>
+    
+    
+
+    
+    <a name="runtime">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XSLTC runtime library design</h4>
+
+    <p>The runtime portion of XSLTC has four main components; the internal DOM
+    implementation (not W3C), the translet class(es), the runtime
+    library and the output processor:</p>
+
+    <p>
+<img src="runtime_design.gif" alt="runtime_design.gif" />
+</p>
+    <p>
+<b>
+<i>Figure 3: Runtime library architecture overview</i>
+</b>
+</p>
+
+    <p>The <a href="xsltc_runtime.html">runtime library design</a> document
+    describes the structure of the compiled translet as well as the translet
+    runtime library.</p>
+
+    <p>The <a href="xsltc_dom.html">Internal DOM design</a> document
+    describes the components and structure of the internal DOM, support for
+    DOM2 navigation, the DOM adapter, DOM multiplexer, and DOM builder.</p>
+
+    <p>The <a href="xsltc_iterators.html">iterator design</a> document
+    describes the general design of the internal DOM iterators and describes
+    some of the more complicated iterators in detail.</p>
+
+    
+
+    
+    <a name="trax">&#8204;</a>
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>XSLTC TrAX Implementation</h4>
+
+    <p>An implementation of the JAXP/ TrAX interface was added on to XSLTC
+    at a late stage. Special care was taken to preserve the small footprint
+    and high performance of XSLTC. The following design was used to wrap
+    XSLTC behind a lightweight (but complete) TrAX implementation:</p>
+
+    <p>
+<img src="trax_translet_wrapping.gif" alt="trax_translet_wrapping.gif" />
+</p>
+    <p>
+<b>
+<i>Figure 4: XSLTC TrAX interface implementation</i>
+</b>
+</p>
+
+    <p>The <a href="xsltc_trax.html">TrAX design</a> document contains
+    details of XSLTC's TrAX implementation.</p>
+
+    <p>XSLTC also has a 'smart' TrAX <code>TransformerFactory</code> class
+    that will alternate between using XSLTC and Xalan for transformations.
+    This factory class will make its choices based on usage patterns. This will
+    be described in a separate design document.</p>
+
+    
+
+    
+
+  <p>
+<b>
+<i>Design documents by <a href="mailto:morten@xml.apache.org">Morten Jørgensen</a> - updated 13.12.2001</i>
+</b>
+</p>
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,399 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fmodern\fprq1\fcharset0 Courier New;}{\f2\fswiss\fprq2\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\lang1033\f0\fs20 [Build-API-Documents]\par
+\par
+\b\fs36 Building the Xalan-C API Reference\par
+\b0\fs20\par
+This section shows how to build the Xalan-C/C++ application program interface (API) documents using the \b Doxygen\b0  [http://www.doxygen.org] and \b GraphViz\b0  [http://www.graphviz.org] programs.  These required software packages are available for most Unix systems.\par
+\par
+\par
+\b\fs28 Configuration Source Tree\b0\fs20\par
+\par
+\f1 xalan/c/trunk/src/xalanc/\par
+\tab The [*.h, *.hpp] source files being documented\par
+\par
+xalan/c/trunk/xdocs/\par
+\tab DoxyfileXalan\tab\tab -- The doxygen configuration file\par
+\par
+xalan/c/trunk/xdocs/html/apiDocs/\par
+\tab asf_logo_wide.gif\tab\tab -- The wide ASF trademark logo\par
+\tab footer.html\tab\tab\tab -- The footer html fragment for copyright\par
+\tab header.html\tab\tab\tab -- Header html fragment for document title\par
+\tab header-local.html\tab\tab -- Header html fragment for optional title\par
+\par
+Note: (ApacheLogo.jpg) is replaced with (asf_logo_wide.gif).\par
+\par
+Note: (diagramnotes.html) is replaced with (graph_legend.html) created by doxygen.\par
+\f0\par
+\par
+\b\fs28 Destination Path for API Web Pages\b0\fs20\par
+\par
+\f1 xalan/c/trunk/build/docs/apiDocs/html\par
+\tab The Xalan-C/C++ API pages are constructed here.\par
+\f0\par
+\par
+\b\fs28 Build the API Web Pages\fs24\par
+\b0\fs20\par
+You must have usable "doxygen" and "dot" programs in your path.  The "dot" program is part of the GraphViz distribution.\par
+\par
+Connect to your development sources or SVN snapshot.\par
+\par
+\f1 xalan/c/trunk/xdocs/\f0\par
+\par
+Run the doxygen (or doxywizard) program.\par
+\par
+\f1 doxygen DoxyfileXalan 2>errors.log | tee doxygen.log\f0\par
+\par
+Examine the (errors.log) file for any fatal errors.  Lots of warnings are ok.\par
+\par
+You can examine the constructed web pages with your favorite browser.\par
+\par
+\f1 % cd xalan/c/trunk/build/docs/apiDocs/html\par
+% iceweasel index.html &\f0\par
+\par
+\par
+\line\b\fs28 Integrate API With Xalan-C Project Web Pages\par
+\b0\fs20\par
+Copy the contents of\par
+\par
+\f1\tab xalan/c/trunk/build/docs/apiDocs/html/*\f0\par
+\par
+to the Xalan-C Project Web Pages found at\par
+\par
+\f1\tab xalan/c/trunk/build/docs/html/apiDocs/\f0\par
+\par
+Copy the trademark logo\par
+\par
+\f1\tab xalan/c/trunk/xdocs/html/apiDocs/asf_logo_wide.gif\f0\par
+\par
+to its final resting place\par
+\par
+\f1\tab xalan/c/trunk/build/docs/html/apiDocs/\f0\par
+\par
+\par
+\b\fs28 The DoxyfileXalan Content\b0\fs20\par
+\par
+\f1\par
+#---------------------------------------------------------------------------\par
+# Project related configuration options\par
+#---------------------------------------------------------------------------\par
+DOXYFILE_ENCODING      = UTF-8\par
+PROJECT_NAME           = "Xalan-C++ API"\par
+PROJECT_NUMBER         = \par
+OUTPUT_DIRECTORY       = ../build/docs/apiDocs\par
+CREATE_SUBDIRS         = NO\par
+OUTPUT_LANGUAGE        = English\par
+BRIEF_MEMBER_DESC      = YES\par
+REPEAT_BRIEF           = YES\par
+ABBREVIATE_BRIEF       = "The $name class" \\\par
+                         "The $name widget" \\\par
+                         "The $name file" \\\par
+                         is \\\par
+                         provides \\\par
+                         specifies \\\par
+                         contains \\\par
+                         represents \\\par
+                         a \\\par
+                         an \\\par
+                         the\par
+ALWAYS_DETAILED_SEC    = NO\par
+INLINE_INHERITED_MEMB  = NO\par
+FULL_PATH_NAMES        = NO\par
+STRIP_FROM_PATH        = \par
+STRIP_FROM_INC_PATH    = \par
+SHORT_NAMES            = NO\par
+JAVADOC_AUTOBRIEF      = YES\par
+QT_AUTOBRIEF           = NO\par
+MULTILINE_CPP_IS_BRIEF = NO\par
+INHERIT_DOCS           = YES\par
+SEPARATE_MEMBER_PAGES  = NO\par
+TAB_SIZE               = 8\par
+ALIASES                = \par
+OPTIMIZE_OUTPUT_FOR_C  = NO\par
+OPTIMIZE_OUTPUT_JAVA   = NO\par
+OPTIMIZE_FOR_FORTRAN   = NO\par
+OPTIMIZE_OUTPUT_VHDL   = NO\par
+EXTENSION_MAPPING      = \par
+BUILTIN_STL_SUPPORT    = NO\par
+CPP_CLI_SUPPORT        = NO\par
+SIP_SUPPORT            = NO\par
+IDL_PROPERTY_SUPPORT   = YES\par
+DISTRIBUTE_GROUP_DOC   = NO\par
+SUBGROUPING            = YES\par
+TYPEDEF_HIDES_STRUCT   = NO\par
+SYMBOL_CACHE_SIZE      = 0\par
+\par
+#---------------------------------------------------------------------------\par
+# Build related configuration options\par
+#---------------------------------------------------------------------------\par
+EXTRACT_ALL            = YES\par
+EXTRACT_PRIVATE        = NO\par
+EXTRACT_STATIC         = NO\par
+EXTRACT_LOCAL_CLASSES  = YES\par
+EXTRACT_LOCAL_METHODS  = NO\par
+EXTRACT_ANON_NSPACES   = NO\par
+HIDE_UNDOC_MEMBERS     = NO\par
+HIDE_UNDOC_CLASSES     = NO\par
+HIDE_FRIEND_COMPOUNDS  = NO\par
+HIDE_IN_BODY_DOCS      = NO\par
+INTERNAL_DOCS          = NO\par
+CASE_SENSE_NAMES       = YES\par
+HIDE_SCOPE_NAMES       = NO\par
+SHOW_INCLUDE_FILES     = YES\par
+FORCE_LOCAL_INCLUDES   = NO\par
+INLINE_INFO            = YES\par
+SORT_MEMBER_DOCS       = YES\par
+SORT_BRIEF_DOCS        = NO\par
+SORT_MEMBERS_CTORS_1ST = NO\par
+SORT_GROUP_NAMES       = NO\par
+SORT_BY_SCOPE_NAME     = NO\par
+GENERATE_TODOLIST      = YES\par
+GENERATE_TESTLIST      = YES\par
+GENERATE_BUGLIST       = YES\par
+GENERATE_DEPRECATEDLIST= YES\par
+ENABLED_SECTIONS       = \par
+MAX_INITIALIZER_LINES  = 30\par
+SHOW_USED_FILES        = YES\par
+SHOW_DIRECTORIES       = NO\par
+SHOW_FILES             = YES\par
+SHOW_NAMESPACES        = YES\par
+FILE_VERSION_FILTER    = \par
+LAYOUT_FILE            = \par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to warning and progress messages\par
+#---------------------------------------------------------------------------\par
+QUIET                  = NO\par
+WARNINGS               = YES\par
+WARN_IF_UNDOCUMENTED   = YES\par
+WARN_IF_DOC_ERROR      = YES\par
+WARN_NO_PARAMDOC       = NO\par
+WARN_FORMAT            = "$file:$line: $text"\par
+WARN_LOGFILE           = \par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the input files\par
+#---------------------------------------------------------------------------\par
+INPUT                  = ../src/xalanc \\\par
+                         ../src/xalanc/Utils/MsgCreator \\\par
+                         ../src/xalanc/Utils/XalanMsgLib \\\par
+                         ../src/xalanc/XalanExtensions \\\par
+                         ../src/xalanc/Harness \\\par
+                         ../src/xalanc/TestXSLT \\\par
+                         ../src/xalanc/XalanSourceTree \\\par
+                         ../src/xalanc/XSLT \\\par
+                         ../src/xalanc/NLS \\\par
+                         ../src/xalanc/Include \\\par
+                         ../src/xalanc/XalanTransformer \\\par
+                         ../src/xalanc/ICUBridge \\\par
+                         ../src/xalanc/DOMSupport \\\par
+                         ../src/xalanc/PlatformSupport \\\par
+                         ../src/xalanc/TestXPath \\\par
+                         ../src/xalanc/XalanExe \\\par
+                         ../src/xalanc/XPathCAPI \\\par
+                         ../src/xalanc/XalanDOM \\\par
+                         ../src/xalanc/XercesParserLiaison \\\par
+                         ../src/xalanc/XercesParserLiaison/Deprecated \\\par
+                         ../src/xalanc/XalanEXSLT \\\par
+                         ../src/xalanc/XMLSupport \\\par
+                         ../src/xalanc/XPath\par
+INPUT_ENCODING         = UTF-8\par
+FILE_PATTERNS          = *.hpp \\\par
+                         *.h\par
+RECURSIVE              = NO\par
+EXCLUDE                = \par
+EXCLUDE_SYMLINKS       = NO\par
+EXCLUDE_PATTERNS       = \par
+EXCLUDE_SYMBOLS        = \par
+EXAMPLE_PATH           = \par
+EXAMPLE_PATTERNS       = *\par
+EXAMPLE_RECURSIVE      = NO\par
+IMAGE_PATH             = \par
+INPUT_FILTER           = \par
+FILTER_PATTERNS        = \par
+FILTER_SOURCE_FILES    = NO\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to source browsing\par
+#---------------------------------------------------------------------------\par
+SOURCE_BROWSER         = YES\par
+INLINE_SOURCES         = NO\par
+STRIP_CODE_COMMENTS    = NO\par
+REFERENCED_BY_RELATION = NO\par
+REFERENCES_RELATION    = NO\par
+REFERENCES_LINK_SOURCE = YES\par
+USE_HTAGS              = NO\par
+VERBATIM_HEADERS       = YES\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the alphabetical class index\par
+#---------------------------------------------------------------------------\par
+ALPHABETICAL_INDEX     = YES\par
+COLS_IN_ALPHA_INDEX    = 3\par
+IGNORE_PREFIX          = \par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the HTML output\par
+#---------------------------------------------------------------------------\par
+GENERATE_HTML          = YES\par
+HTML_OUTPUT            = html\par
+HTML_FILE_EXTENSION    = .html\par
+HTML_HEADER            = html/apiDocs/header-local.html\par
+HTML_FOOTER            = html/apiDocs/footer.html\par
+HTML_STYLESHEET        = \par
+HTML_COLORSTYLE_HUE    = 220\par
+HTML_COLORSTYLE_SAT    = 100\par
+HTML_COLORSTYLE_GAMMA  = 80\par
+HTML_TIMESTAMP         = YES\par
+HTML_ALIGN_MEMBERS     = NO\par
+HTML_DYNAMIC_SECTIONS  = NO\par
+GENERATE_DOCSET        = NO\par
+DOCSET_FEEDNAME        = "Doxygen generated docs"\par
+DOCSET_BUNDLE_ID       = org.doxygen.Project\par
+DOCSET_PUBLISHER_ID    = org.doxygen.Publisher\par
+DOCSET_PUBLISHER_NAME  = Publisher\par
+GENERATE_HTMLHELP      = NO\par
+CHM_FILE               = \par
+HHC_LOCATION           = \par
+GENERATE_CHI           = NO\par
+CHM_INDEX_ENCODING     = \par
+BINARY_TOC             = NO\par
+TOC_EXPAND             = NO\par
+GENERATE_QHP           = NO\par
+QCH_FILE               = \par
+QHP_NAMESPACE          = org.doxygen.Project\par
+QHP_VIRTUAL_FOLDER     = doc\par
+QHP_CUST_FILTER_NAME   = \par
+QHP_CUST_FILTER_ATTRS  = \par
+QHP_SECT_FILTER_ATTRS  = \par
+QHG_LOCATION           = \par
+GENERATE_ECLIPSEHELP   = NO\par
+ECLIPSE_DOC_ID         = org.doxygen.Project\par
+DISABLE_INDEX          = NO\par
+ENUM_VALUES_PER_LINE   = 4\par
+GENERATE_TREEVIEW      = NO\par
+USE_INLINE_TREES       = NO\par
+TREEVIEW_WIDTH         = 250\par
+EXT_LINKS_IN_WINDOW    = NO\par
+FORMULA_FONTSIZE       = 10\par
+FORMULA_TRANSPARENT    = YES\par
+SEARCHENGINE           = NO\par
+SERVER_BASED_SEARCH    = NO\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the LaTeX output\par
+#---------------------------------------------------------------------------\par
+GENERATE_LATEX         = NO\par
+LATEX_OUTPUT           = latex\par
+LATEX_CMD_NAME         = latex\par
+MAKEINDEX_CMD_NAME     = makeindex\par
+COMPACT_LATEX          = NO\par
+PAPER_TYPE             = a4wide\par
+EXTRA_PACKAGES         = \par
+LATEX_HEADER           = \par
+PDF_HYPERLINKS         = YES\par
+USE_PDFLATEX           = YES\par
+LATEX_BATCHMODE        = NO\par
+LATEX_HIDE_INDICES     = NO\par
+LATEX_SOURCE_CODE      = NO\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the RTF output\par
+#---------------------------------------------------------------------------\par
+GENERATE_RTF           = NO\par
+RTF_OUTPUT             = rtf\par
+COMPACT_RTF            = NO\par
+RTF_HYPERLINKS         = NO\par
+RTF_STYLESHEET_FILE    = \par
+RTF_EXTENSIONS_FILE    = \par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the man page output\par
+#---------------------------------------------------------------------------\par
+GENERATE_MAN           = NO\par
+MAN_OUTPUT             = man\par
+MAN_EXTENSION          = .3\par
+MAN_LINKS              = NO\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the XML output\par
+#---------------------------------------------------------------------------\par
+GENERATE_XML           = NO\par
+XML_OUTPUT             = xml\par
+XML_SCHEMA             = \par
+XML_DTD                = \par
+XML_PROGRAMLISTING     = YES\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options for the AutoGen Definitions output\par
+#---------------------------------------------------------------------------\par
+GENERATE_AUTOGEN_DEF   = NO\par
+\par
+#---------------------------------------------------------------------------\par
+# configuration options related to the Perl module output\par
+#---------------------------------------------------------------------------\par
+GENERATE_PERLMOD       = NO\par
+PERLMOD_LATEX          = NO\par
+PERLMOD_PRETTY         = YES\par
+PERLMOD_MAKEVAR_PREFIX = \par
+\par
+#---------------------------------------------------------------------------\par
+# Configuration options related to the preprocessor\par
+#---------------------------------------------------------------------------\par
+ENABLE_PREPROCESSING   = YES\par
+MACRO_EXPANSION        = YES\par
+EXPAND_ONLY_PREDEF     = NO\par
+SEARCH_INCLUDES        = YES\par
+INCLUDE_PATH           = \par
+INCLUDE_FILE_PATTERNS  = \par
+PREDEFINED             = \par
+EXPAND_AS_DEFINED      = \par
+SKIP_FUNCTION_MACROS   = YES\par
+\par
+#---------------------------------------------------------------------------\par
+# Configuration::additions related to external references\par
+#---------------------------------------------------------------------------\par
+TAGFILES               = \par
+GENERATE_TAGFILE       = \par
+ALLEXTERNALS           = NO\par
+EXTERNAL_GROUPS        = YES\par
+PERL_PATH              = /usr/bin/perl\par
+\par
+#---------------------------------------------------------------------------\par
+# Configuration options related to the dot tool\par
+#---------------------------------------------------------------------------\par
+CLASS_DIAGRAMS         = NO\par
+MSCGEN_PATH            = \par
+HIDE_UNDOC_RELATIONS   = YES\par
+HAVE_DOT               = YES\par
+DOT_NUM_THREADS        = 0\par
+DOT_FONTNAME           = FreeSans.ttf\par
+DOT_FONTSIZE           = 10\par
+DOT_FONTPATH           = \par
+CLASS_GRAPH            = YES\par
+COLLABORATION_GRAPH    = YES\par
+GROUP_GRAPHS           = YES\par
+UML_LOOK               = NO\par
+TEMPLATE_RELATIONS     = NO\par
+INCLUDE_GRAPH          = YES\par
+INCLUDED_BY_GRAPH      = YES\par
+CALL_GRAPH             = NO\par
+CALLER_GRAPH           = NO\par
+GRAPHICAL_HIERARCHY    = YES\par
+DIRECTORY_GRAPH        = YES\par
+DOT_IMAGE_FORMAT       = png\par
+DOT_PATH               = \par
+DOTFILE_DIRS           = \par
+DOT_GRAPH_MAX_NODES    = 80\par
+MAX_DOT_GRAPH_DEPTH    = 0\par
+DOT_TRANSPARENT        = NO\par
+DOT_MULTI_TARGETS      = NO\par
+GENERATE_LEGEND        = YES\par
+DOT_CLEANUP            = YES\par
+\f2\par
+--------<end of DoxyfileXalan>----------\par
+\f0\par
+\par
+\par
+\par
+}
+ 

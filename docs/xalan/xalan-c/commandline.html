@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: Xalan-C++ Command-Line Utilities</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanC-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">Xalan-C/C++ Version 1.11</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">Xalan-C++ Command-Line Utilities</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="resources.html">Resources</a>
+<br />
+</li>
+<li>
+<a href="http://xalan.apache.org/">Home</a>
+</li></ul><hr /><ul>
+<li>
+<a href="index.html">Xalan-C++ 1.11</a>
+</li>
+<li>
+<a href="whatsnew.html">What's New</a>
+</li>
+<li>
+<a href="license.html">Licenses</a>
+</li></ul><hr /><ul>
+<li>
+<a href="getstarted.html">Getting Started</a>
+</li>
+<li>
+<a href="overview.html">Overview</a>
+</li>
+<li>
+<a href="charter.html">Charter</a>
+</li></ul><hr /><ul>
+<li>
+<a href="download.html">Download</a>
+</li>
+<li>
+<a href="buildlibs.html">Build Libraries</a>
+</li>
+<li>
+<a href="install.html">Installation</a>
+</li>
+<li>
+<a href="builddocs.html">Build Documents</a>
+</li></ul><hr /><ul>
+<li>
+<a href="samples.html">Sample Apps</a>
+</li>
+<li>Command Line<br />
+</li>
+<li>
+<a href="usagepatterns.html">Usage Patterns</a>
+</li></ul><hr /><ul>
+<li>
+<a href="programming.html">Programming</a>
+</li>
+<li>
+<a href="extensions.html">Extensions</a>
+</li>
+<li>
+<a href="extensionslib.html">Extensions Library</a>
+</li>
+<li>
+<a href="apiDocs/index.html">API Reference</a>
+</li></ul><hr /><ul>
+<li>
+<a href="faq.html">FAQs</a>
+</li></ul><hr /><ul>
+<li>
+<a href="whatsnew.html#bugs">Bugs</a>
+</li>
+<li>
+<a href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c">Testing</a>
+</li>
+<li>
+<a href="secureweb.html">Web Security</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>Xalan-C++ Command-Line Utilities</h2>
+<ul>
+<li>
+<a href="#use">Using a command-line utility</a>
+</li>
+<li>
+<a href="#xalanexe">Using the Xalan executable</a>
+</li>
+
+</ul>
+<a name="use">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using a command-line utility</h3>
+<p>To perform a transformation, you can call Xalan-C++ from the command line (or script), 
+   or from within an application (see <a href="usagepatterns.html">Usage Patterns</a>).</p>
+<p>To perform a transformation from the command line or a script, do the following:</p>
+  <ol>
+    <li>
+<a href="download.html">Download Xalan-C++</a>.<br />
+<br />
+</li> 
+    <li>
+<a href="install.html">Set the path/library path</a> to include the Xalan executable and the Xalan and Xerces 
+        libraries.<br />
+<br />
+</li>
+    <li>Call the Xalan executable with the appropriate flags and arguments (described below).</li>
+  </ol>  
+
+<a name="xalanexe">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Using the Xalan executable</h3>
+<p>Call the Xalan executable as follows:<br />
+<br /> 
+   <code>Xalan <b>
+<i>[options]</i>
+</b> <b>
+<i>xmlSource</i>
+</b> <b>
+<i>xslStylesheet</i>
+</b>
+</code>
+<br />
+<br />
+   where <b>
+<i>xmlSource</i>
+</b> is the XML source document, <b>
+<i>xslStylesheet</i>
+</b> is the stylesheet to apply, and 
+   <b>
+<i>[options]</i>
+</b> are any (or none) of the following:</p>
+<table border="1">
+  <tr>
+<th class="content" rowspan="1" colspan="1">Option</th>
+<th class="content" rowspan="1" colspan="1">Description</th>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-a</td>
+<td class="content" rowspan="1" colspan="1">Use stylesheet processing instruction, not the stylesheet argument.</td>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-e encoding</td>
+<td class="content" rowspan="1" colspan="1">Force the specified encoding for the output.</td>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-i integer</td>
+<td class="content" rowspan="1" colspan="1">Indent the specified amount.</td>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-m</td>
+<td class="content" rowspan="1" colspan="1">Omit the META tag in HTML output.</td>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-o filename</td>
+<td class="content" rowspan="1" colspan="1">Write transformation result to this file (rather than to the console).</td>
+</tr>
+  <tr>
+<td class="content" rowspan="1" colspan="1">-p name expr</td>
+<td class="content" rowspan="1" colspan="1">Set a stylesheet parameter with this expression.</td>
+</tr> 
+  <tr>
+<td class="content" rowspan="1" colspan="1">-t name expr</td>
+<td class="content" rowspan="1" colspan="1">Display timing information.</td>
+</tr> 
+  <tr>
+<td class="content" rowspan="1" colspan="1">-u name expr</td>
+<td class="content" rowspan="1" colspan="1">Disable escaping of URLs in HTML output.</td>
+</tr> 
+  <tr>
+<td class="content" rowspan="1" colspan="1">-v</td>
+<td class="content" rowspan="1" colspan="1">Validate the XML source document.</td>
+</tr> 
+  <tr>
+<td class="content" rowspan="1" colspan="1">-</td>
+<td class="content" rowspan="1" colspan="1">A dash as the 'source' argument reads from stdin.<br />A dash as the 'stylesheet' argument reads 
+                    from stdin.<br />('-' cannot be used for both arguments.)</td>
+</tr> 
+</table>
+<p>To display a list of the options call the Xalan executable as follows:</p>
+<p>
+<code>Xalan -?</code>
+</p>
+
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>

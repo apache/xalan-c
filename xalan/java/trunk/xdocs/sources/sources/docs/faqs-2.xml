@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE faqs SYSTEM "../../style/dtd/faqs.dtd">
+
+<faqs title="Third FAQS simple file">
+  <faq title="Title for question 1 of Third file">
+    <q>Question 1 of Third file</q>
+    <a>
+      <p>
+        Answer 1 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 2 of Third file</q>
+    <a>
+      <p>
+        Answer 2 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 3 of Third file">
+    <q>Question 3 of Third file</q>
+    <a>
+      <p>
+        Answer 3 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 4 of Third file</q>
+    <a>
+      <p>
+        Answer 4 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 5 of Third file">
+    <q>Question 5 of Third file</q>
+    <a>
+      <p>
+        Answer 5 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 6 of Third file</q>
+    <a>
+      <p>
+        Answer 6 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 7 of Third file">
+    <q>Question 7 of Third file</q>
+    <a>
+      <p>
+        Answer 7 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq>
+    <q>Question 8 of Third file</q>
+    <a>
+      <p>
+        Answer 8 of Third file
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Title for question 9 of Third file">
+    <q>Question 9 of Third file</q>
+    <a>
+      <p>
+        Answer 9 of Third file
+      </p>
+    </a>
+  </faq>
+
+</faqs>

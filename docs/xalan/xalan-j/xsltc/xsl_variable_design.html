@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>ASF: &lt;xsl:variable&gt; / &lt;xsl:param&gt;</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" type="text/css" href="resources/apache-xalan.css" />
+</head>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+<body>
+<div id="title">
+<table class="HdrTitle">
+<tbody>
+<tr>
+<th rowspan="2">
+<a href="../index.html">
+<img alt="Trademark Logo" src="resources/XalanJ-Logo-tm.png" width="190" height="90" />
+</a>
+</th>
+<th text-align="center" width="75%">
+<a href="index.html">XSLTC Design</a>
+</th>
+</tr>
+<tr>
+<td valign="middle">&lt;xsl:variable&gt; / &lt;xsl:param&gt;</td>
+</tr>
+</tbody>
+</table>
+<table class="HdrButtons" align="center" border="1">
+<tbody>
+<tr>
+<td>
+<a href="http://www.apache.org">Apache Foundation</a>
+</td>
+<td>
+<a href="http://xalan.apache.org">Xalan Project</a>
+</td>
+<td>
+<a href="http://xerces.apache.org">Xerces Project</a>
+</td>
+<td>
+<a href="http://www.w3.org/TR">Web Consortium</a>
+</td>
+<td>
+<a href="http://www.oasis-open.org/standards">Oasis Open</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="navLeft">
+<ul>
+<li>
+<a href="index.html">Overview</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_compiler.html">Compiler design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_whitespace_design.html">Whitespace</a>
+</li>
+<li>
+<a href="xsl_sort_design.html">xsl:sort</a>
+</li>
+<li>
+<a href="xsl_key_design.html">Keys</a>
+</li>
+<li>
+<a href="xsl_comment_design.html">Comment design</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_lang_design.html">lang()</a>
+</li>
+<li>
+<a href="xsl_unparsed_design.html">Unparsed entities</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsl_if_design.html">If design</a>
+</li>
+<li>
+<a href="xsl_choose_design.html">Choose|When|Otherwise design</a>
+</li>
+<li>
+<a href="xsl_include_design.html">Include|Import design</a>
+</li>
+<li>Variable|Param design<br />
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_runtime.html">Runtime</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_dom.html">Internal DOM</a>
+</li>
+<li>
+<a href="xsltc_namespace.html">Namespaces</a>
+</li></ul><hr /><ul>
+<li>
+<a href="xsltc_trax.html">Translet &amp; TrAX</a>
+</li>
+<li>
+<a href="xsltc_predicates.html">XPath Predicates</a>
+</li>
+<li>
+<a href="xsltc_iterators.html">Xsltc Iterators</a>
+</li>
+<li>
+<a href="xsltc_native_api.html">Xsltc Native API</a>
+</li>
+<li>
+<a href="xsltc_trax_api.html">Xsltc TrAX API</a>
+</li>
+<li>
+<a href="xsltc_performance.html">Performance Hints</a>
+</li>
+</ul>
+</div>
+<div id="content">
+<h2>&lt;xsl:variable&gt; / &lt;xsl:param&gt;</h2>
+
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Contents</h3>
+  <ul>
+    <li>
+<a href="#functionality">Functionality</a>
+</li>
+    <li>
+<a href="#implementation">Implementation</a>
+</li>    
+  </ul>
+  
+
+  <a name="functionality">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Functionality</h3>
+
+  <p>Variables in XSLT are not really variables, as their values cannot be
+  changed. They resemble constants from conventional programming languages. The
+  only way in which a variable can be changed is by declaring it inside a
+  for-each loop, in which case its value will be updated for every iteration.
+  Top-level variables (variables that are direct child nodes of the
+  <code>&lt;xsl:stylesheet&gt;</code> element) can never be changed.</p>
+
+  <blockquote class="source">
+<pre>
+    &lt;xsl:for-each select="/foo/bar"&gt;
+      &lt;xsl:variable name="some-bar" select="."/&gt;
+      &lt;xsl:value-of select="$some-bar"/&gt;
+    &lt;/xsl:for-each&gt;</pre>
+</blockquote>
+
+  <p>Parameters are assigned a value either from the process that invoked
+  the stylesheet (top-level parameter), or from a
+  <code>&lt;xsl:with-param&gt;</code> or from a default value (in which case it
+  behaves as if it was a variable).</p>
+
+  <blockquote class="source">
+<pre>
+    &lt;xsl:template match="/"&gt;
+      &lt;xsl:call-template name="blob"&gt;
+        &lt;xsl:with-param name="par" select="'some-value'"/&gt;
+      &lt;/xsl:call-template&gt;
+    &lt;/xsl:template&gt;
+
+    &lt;xsl:template name="blob"&gt;
+      &lt;xsl:param name="par" select="'default-value'"/&gt;
+      &lt;xsl:value-of select="$param"/&gt;
+    &lt;/xsl:template&gt;</pre>
+</blockquote>
+
+  
+
+  <a name="implementation">&#8204;</a>
+  <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Implementation</h3>
+
+    <p>Variables and parameters share a common base class
+    <code>VariableBase</code> that contains a lot of common methods. This class
+    handles both global and local variables/parameters.</p>
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Top-level parameters and variables</h4>
+
+    <p>All top-level (ie. global) parameters and variables are stored inside
+    fields in the translet class. Variables are stored as objects or basic
+    data types (such as boolean, char, int, etc.) while parameters have to be
+    "boxed" inside an object. This is because parameters are also stored as
+    objects inside the translet. The <code>addParameter()</code> method of the
+    <code>AbstractTranslet</code> class stores the parameter in a Hashtable
+    (the Hashtable maps the parameter name to the parameter value). The
+    "boxing" of the parameter's value is done by the class that handles the
+    parameters type. This class is a subclass of
+    <code>org.apache.xalan.xsltc.compiler.util.Type</code>.</p>
+
+    <p>Note that all top-level parameters and variables from all imported and
+    included stylesheets will be placed as direct children of the top-level
+    stylesheet in the AST. This done to make global variables truly global and
+    not just global in the stylesheet where it was declared.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Local parameters and variables</h4>
+
+    <p>Local variables that are accessible from a given syntax tree node will
+    first be put on the JVM's stack and stored in a local variable slot. This
+    makes the variable or parameter accessible from all code within that
+    method. But, in some special cases, the code that is compiled to handle an
+    element/expression within the variable scope is not put inside the same
+    method as the actual variable. This is the case for some predicates.
+    All syntax-tree nodes implement the <code>isClosureBoundary()</code> method
+    to indicate if its child an ancestor nodes will end up in a different method
+    then itself. This method is used by the <code>Variable</code> and
+    <code>Param</code> classes to determine if the variable or parameter will
+    "escape" the variable frame.</p>
+
+    <blockquote class="source">
+<pre>
+    &lt;xsl:for-each select="/foo/bar/baz"&gt;
+        &lt;xsl:variable name="pos" select="3"/&gt;
+        &lt;xsl:apply-templates select="/foo/bar[$pos]"/&gt;
+    &lt;/xsl:for-each&gt;</pre>
+</blockquote>
+
+    <p>The predicate in this stylesheet fragment is compiled into a separate
+    auxiliary class that implements the <code>Filter</code> interface. It will
+    therefore not have access to the variable "pos" in the current stack frame.
+    A common technique for cases like this is to use a <b>"closure"</b>. A
+    closure is a record that contains references to all variables that are in
+    scope for a certain part of the compiled scope. This is done in a very
+    simple manner in XSLTC. All variables or parameters that can "escape" the
+    stack are passed to the translet via its <code>addVariable()</code> method.
+    They can then later be retrieved by the <code>getVariable()</code> method.
+    </p>
+
+    <p>
+<b>Important note 1:</b> A predicate does not always result in a
+    auxiliary class. In some cases we optimize the code by using tailored
+    iterators and goodies like that instead. We may want to update the
+    predicate code to check if an auxiliary class will be generated before
+    returning true or false from the <code>isClosureBoundary()</code>
+    method.</p>
+
+    <p>
+<b>Important note 2:</b> There could be other closure boundaries
+    that we have not yet discovered or considered. This could be, for instance,
+    sort records and other auxiliary classes:</p>
+
+    <blockquote class="source">
+<pre>
+    &lt;xsl:variable name="sort-order" select="'decending'"/&gt;
+    &lt;xsl:for-each select="/foo/bar/baz"&gt;
+        &lt;xsl:sort select="@name" order="$sort-order"/&gt;
+        &lt;xsl:value-of select="."/&gt;
+    &lt;/xsl:for-each&gt;</pre>
+</blockquote>
+
+    <p>I would not be surprised if this fails. A fix could be to implement the
+    <code>isClosureBoundary()</code> in the <code>Sort</code> class and have the
+    method return 'true' in all cases.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Parameter and variable references</h4>
+
+    <p>A parameter or variable reference does the oposite of a parameter or
+    variable. The value is read from either a global field, a local variable
+    slot or from a call to <code>getVariable()</code> /
+    <code>getParameter()</code>. The chosen method depends is we're dealing with
+    a parameter or a variable, a global or a local, an escaping variable or not.
+    </p>
+
+    <p>The XPath parser identifies all variable references and instanciates
+    either a <code>VariableRef</code> or a <code>ParameterRef</code>. The XPath
+    parser calls the parser's <code>lookupVariable</code> method in an initial
+    attempt to find the variable/parameter instance. If that fails, it goes on
+    to call the symbol table's <code>lookupName()</code> method. If that also
+    fails this means that either:</p>
+
+    <ul>
+      <li>a variable or parameter with the given name does not exist</li>
+      <li>the variable will be declared at a later stage
+      (but within the same scope)</li>
+    </ul>
+
+    <p>The XPath parser creates an instance of the <code>UnresolvedRef</code>
+    class. This class attempts to locate the variable after the whole AST has
+    been built, when the <code>typeCheck()</code> method is called. If this
+    fails an error is reported and the compilation stops. Otherwise the class
+    creates a <code>VariableRef</code> or a <code>ParameterRef</code> instance
+    and lets that handle the reference.</p>
+
+    
+
+    <p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Forward references</h4>
+
+    <p>XSLTC allows for forward references to global variables and parameters.
+    You can even reference variables in not-yet included/imported stylesheets.
+    In most cases, this is handled by changing the order of top-level elements.
+    (Variables are placed first so that they are handled before any includes
+    or imports).  But when a variable contains references to other variables,
+    then this requires some extra code in the <code>Stylesheet</code> and
+    <code>VariableBase</code> classes. The <code>VariableBase</code> has a
+    method that returns a vector containing all variables that are referenced
+    in the variable definition.</p>
+
+    <blockquote class="source">
+<pre>
+    &lt;xsl:variable name="C" select="$A &lt; $B"/&gt;
+    &lt;xsl:variable name="A" select="1"/&gt;
+    &lt;xsl:variable name="B" select="2"/&gt;</pre>
+</blockquote>
+
+    <p>In this case, the <code>getDependencies()</code> method for variable
+    C will return the variables A and B. The stylesheet has a method called
+    <code>resolveReferences</code> that will order the variables accordingly
+    so that the variable values are computed in the desired order. This method
+    will issue an error message and terminate the compilation if there are
+    circular variable/parameter dependencies.</p>
+
+    
+
+  
+
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+</div>
+<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+</div>
+</body>
+</html>
