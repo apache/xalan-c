@@ -22,7 +22,7 @@
 
   <property name="name" value="xalan"/>
   <property name="Name" value="Xalan-C++"/>
-  <property name="year" value="2004"/>
+  <property name="year" value="2012"/>
   
   <property name="version.VERSION" value="1"/>
   <property name="version.RELEASE" value="10"/>
