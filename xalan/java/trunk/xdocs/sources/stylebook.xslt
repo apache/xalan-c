@@ -469,7 +469,7 @@
     <xsl:attribute name="id">footer</xsl:attribute>
     <!-- copyright byline information -->
     <!-- &#169; is the (c) copyright symbol -->
-    <xsl:text>Copyright &#169; 1999-2011 The Apache Software Foundation</xsl:text><br/>
+    <xsl:text>Copyright &#169; 1999-2012 The Apache Software Foundation</xsl:text><br/>
     <xsl:text>Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation</xsl:text>
     <xsl:element name="div">
       <xsl:attribute name="class">small</xsl:attribute>
