@@ -224,7 +224,7 @@ extern "C"
      * @param theOutputHandle   A void pointer passed through to callback.
      * @param theOutputHandler  A user-defined callback function pointer.
      * @param theFlushHandler   A user-defined callback function pointer, which can be null.
-     * @return	0 for success
+     * @return  0 for success
      */
     XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
     XalanTransformToHandler(
@@ -253,7 +253,7 @@ extern "C"
      * @param theOutputHandle   A void pointer passed through to callback.
      * @param theOutputHandler  A user-defined callback function pointer.
      * @param theFlushHandler   A user-defined callback function pointer, which can be null.
-     * @return	0 for success 
+     * @return  0 for success 
      */
     XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
     XalanTransformToHandlerPrebuilt(
@@ -313,7 +313,7 @@ extern "C"
      * @param theXalanHandle The handle of XalanTransformer instance.
      * @param thePSHandle A pointer to a XalanPSHandle
      * @return 0 for success.
-     */	
+     */ 
     XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
     XalanParseSource(
             const char*     theXMLFileName,
@@ -328,7 +328,7 @@ extern "C"
      * @param theXalanHandle The handle of XalanTransformer instance
      * @param thePSHandle A pointer to a XalanPSHandle
      * @return 0 for success.
-     */	
+     */ 
     XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
     XalanParseSourceFromStream(
             const char*     theXMLStream,
@@ -370,12 +370,83 @@ extern "C"
      *
      * @param key name of the param
      * @param expression expression that will be evaluated
-     * @param theXalanHandle	handle of XalanTransformer instance.
+     * @param theXalanHandle    handle of XalanTransformer instance.
      */
     XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
     XalanSetStylesheetParamUTF(
                 const XalanUTF16Char*   key,
                 const XalanUTF16Char*   expression,
+                XalanHandle             theXalanHandle);
+
+
+    /**
+     * Set a top-level stylesheet nodeset parameter.  This value can be
+     * evaluated via xsl:param-variable.  The value is a parsed document.
+     *
+     * @param key name of the param
+     * @param theNodeset a preparsed document
+     * @param theXalanHandle  handle of the XalanTransformer instance.
+     */
+    XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+    XalanSetStylesheetParamNodeset(
+                const char*             key,
+                XalanPSHandle           theNodeset,
+                XalanHandle             theXalanHandle);
+
+    /**
+     * Set a top-level stylesheet nodeset parameter.  This value can be
+     * evaluated via xsl:param-variable.  The value is a parsed document.
+     * The key name is a UTF-16 string.
+     *
+     * @param key name of the param
+     * @param theNodeset a preparsed document
+     * @param theXalanHandle  handle of the XalanTransformer instance.
+     */
+    XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+    XalanSetStylesheetParamUTFNodeset(
+                const XalanUTF16Char*   key,
+                XalanPSHandle           theNodeset,
+                XalanHandle             theXalanHandle);
+        
+    /**
+     * Set a top-level stylesheet number parameter.  This value can be
+     * evaluated via xsl:param-variable.  The value is a parsed document.
+     *
+     * @param key name of the param
+     * @param theNumber a double floating point number
+     * @param theXalanHandle  handle of the XalanTransformer instance.
+     */
+    XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+    XalanSetStylesheetParamNumber(
+                const char*             key,
+                double                  theNumber,
+                XalanHandle             theXalanHandle);
+
+    /**
+     * Set a top-level stylesheet number parameter.  This value can be
+     * evaluated via xsl:param-variable.  The value is a parsed document.
+     * The key name is a UTF-16 string.
+     *
+     * @param key name of the param
+     * @param theNumber a double floating point number
+     * @param theXalanHandle  handle of the XalanTransformer instance.
+     */
+    XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+    XalanSetStylesheetParamUTFNumber(
+                const XalanUTF16Char*   key,
+                double                  theNumber,
+                XalanHandle             theXalanHandle);
+
+    /**
+     * Clear the top-level stylesheet parameters.  Top-level stylesheet
+     * parameters are sticky.  When set, they can be used for multiple
+     * transformations. Use the XalanClearStylesheetParams function
+     * to clear or reset the top-level stylesheet parameters.
+     *
+     * @param theXalanHandle  handle of the XalanTransformer instance.
+     */
+    XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+    XalanClearStylesheetParams(
                 XalanHandle             theXalanHandle);
 
     /**
@@ -386,7 +457,7 @@ extern "C"
      * const char*
      * XalanGetLastError(XalanHandle theXalanHandle) const;
      *
-     * @return	error message const character pointer.
+     * @return  error message const character pointer.
      */
     XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
     XalanGetLastError(XalanHandle   theXalanHandle);
@@ -397,4 +468,4 @@ extern "C"
 
 
 
-#endif	// XALAN_CAPI_HEADER_GUARD_1357924680
+#endif  // XALAN_CAPI_HEADER_GUARD_1357924680

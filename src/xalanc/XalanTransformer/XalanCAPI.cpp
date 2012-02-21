@@ -17,11 +17,7 @@
  */
 #include "XalanTransformerDefinitions.hpp"
 
-
-
 #include <xercesc/util/PlatformUtils.hpp>
-
-
 
 #include <cassert>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
@@ -30,15 +26,11 @@
 #include <strstream>
 #endif
 
-
-
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
-
-
+#include "XalanParsedSource.hpp"
 
 #include "xalanc/Include/XalanMemoryManagement.hpp"
-
 
 XALAN_USING_STD(istrstream)
 
@@ -56,7 +48,6 @@ XALAN_USING_XALAN(XSLTInputSource)
 XALAN_USING_XALAN(XSLTResultTarget)
 
 static bool fInitialized = false;
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -80,7 +71,6 @@ XalanInitialize()
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanTerminate(int  fCleanUpICU)
 {
@@ -97,7 +87,6 @@ XalanTerminate(int  fCleanUpICU)
         XalanTransformer::ICUCleanUp();
     }
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
@@ -120,7 +109,6 @@ CreateXalanTransformer()
 }
 
 
-
 inline XalanTransformer*
 getTransformer(XalanHandle  theHandle)
 {
@@ -128,7 +116,6 @@ getTransformer(XalanHandle  theHandle)
 
     return static_cast<XalanTransformer*>(theHandle);
 }
-
 
 
 inline const XalanCompiledStylesheet*
@@ -140,7 +127,6 @@ getStylesheet(XalanCSSHandle    theHandle)
 }
 
 
-
 inline const XalanParsedSource*
 getParsedSource(XalanPSHandle   theHandle)
 {
@@ -148,7 +134,6 @@ getParsedSource(XalanPSHandle   theHandle)
 
     return reinterpret_cast<const XalanParsedSource*>(theHandle);
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
@@ -164,7 +149,6 @@ DeleteXalanTransformer(XalanHandle theXalanHandle)
 
 
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -190,7 +174,6 @@ XalanTransformToFile(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanTransformToFilePrebuilt(
             XalanPSHandle   theParsedSource, 
@@ -204,7 +187,6 @@ XalanTransformToFilePrebuilt(
                 getStylesheet(theCSSHandle),
                 XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -254,7 +236,6 @@ XalanTransformToData(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanTransformToDataPrebuilt(
             XalanPSHandle   theParsedSource, 
@@ -285,14 +266,12 @@ XalanTransformToDataPrebuilt(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanFreeData(char* theStream)
 {
     // Delete the data.
     delete[] theStream;
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
@@ -320,7 +299,6 @@ XalanTransformToHandler(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
 XalanTransformToHandlerPrebuilt(
             XalanPSHandle           theParsedSource,
@@ -338,7 +316,6 @@ XalanTransformToHandlerPrebuilt(
             theOutputHandler,
             theFlushHandler);
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -367,7 +344,6 @@ XalanCompileStylesheet(
 
     return theResult;
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -401,7 +377,6 @@ XalanCompileStylesheetFromStream(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanDestroyCompiledStylesheet(
             XalanCSSHandle  theCSSHandle,
@@ -409,7 +384,6 @@ XalanDestroyCompiledStylesheet(
 {
     return getTransformer(theXalanHandle)->destroyStylesheet(getStylesheet(theCSSHandle));
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -438,7 +412,6 @@ XalanParseSource(
 
     return theResult;
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
@@ -472,7 +445,6 @@ XalanParseSourceFromStream(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 XalanDestroyParsedSource(
             XalanPSHandle   thePSHandle,
@@ -480,7 +452,6 @@ XalanDestroyParsedSource(
 {
     return getTransformer(theXalanHandle)->destroyParsedSource(getParsedSource(thePSHandle));
 }
-
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
@@ -495,7 +466,6 @@ XalanSetStylesheetParam(
 }
 
 
-
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanSetStylesheetParamUTF(
                 const XalanUTF16Char*   key,
@@ -507,6 +477,61 @@ XalanSetStylesheetParamUTF(
         XalanDOMString(expression, XalanMemMgrs::getDefaultXercesMemMgr()));
 }
 
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParamNodeset(
+                const char*             key,
+                XalanPSHandle           theNodeset,
+                XalanHandle             theXalanHandle)
+{
+    getTransformer(theXalanHandle)->setStylesheetParam(
+        key,
+        getParsedSource(theNodeset)->getDocument());
+}
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParamUTFNodeset(
+                const XalanUTF16Char*   key,
+                XalanPSHandle           theNodeset,
+                XalanHandle             theXalanHandle)
+{
+    getTransformer(theXalanHandle)->setStylesheetParam(
+        XalanDOMString(key, XalanMemMgrs::getDefaultXercesMemMgr()),
+        getParsedSource(theNodeset)->getDocument());
+}
+        
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParamNumber(
+                const char*             key,
+                double                  theNumber,
+                XalanHandle             theXalanHandle)
+{
+    getTransformer(theXalanHandle)->setStylesheetParam(
+        key,
+        theNumber);
+}
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParamUTFNumber(
+                const XalanUTF16Char*   key,
+                double                  theNumber,
+                XalanHandle             theXalanHandle)
+{
+    getTransformer(theXalanHandle)->setStylesheetParam(
+        XalanDOMString(key, XalanMemMgrs::getDefaultXercesMemMgr()),
+        theNumber);
+}
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanClearStylesheetParams(
+                XalanHandle             theXalanHandle)
+{
+    getTransformer(theXalanHandle)->clearStylesheetParams();
+}
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
