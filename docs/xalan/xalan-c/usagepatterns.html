@@ -263,7 +263,7 @@ XALAN_USING_XALAN(XalanTransformer)
 <img src="resources/note.gif" alt="note" />
 </td>
 <td class="noteTxt">Whilst you can use the standard C++ namespace syntax directly, the Xerces-C++ and Xalan-C++ namespaces are linked to the version 
-      number.  For example, the Xalan namespace is currently <b>xalanc_1_9</b>.  The macros will automatically take care of this 
+      number.  For example, the Xalan namespace is currently <b>xalanc_1_11</b>.  The macros will automatically take care of this 
       when code is re-compiled against a new version of the libraries.  Using the namespaces directly will require each namespace 
       related statement be updated by hand.</td>
 </tr>
@@ -431,43 +431,39 @@ int theResult =
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>Setting stylesheet parameters</h3>
-<p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate 
-   the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each 
-   XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
-<p>To set a stylesheet parameter, use the <a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> 
-   setStylesheetParam() method. The setStylesheetParam() method takes two arguments: the parameter name and the expression. 
-   For example:</p>
-<blockquote class="source">
-<pre>
-const XalanDOMString key("param1");
-const XalanDOMString expression("'Hello World'");
-theXalanTransformer.setStylesheetParam(key, expression);
-// foo.xsl defines a stylesheet parameter named param1.
-theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")
-</pre>
-</blockquote>
+<h3>Setting Stylesheet Parameters</h3>
+
+<p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place.  Traditionally, a top-level parameter value is of text string type.  The Xalan library now supports three types of top-level parameters that can be set.  One is a text string parameter.  Another is a number parameter of floating point type double.  The third is a nodeset (XalanNode *) parameter, usually implemented as a parsed document.</p>
+
+<p>Any XObject that is created outside of the transformation can be associated with a top-level parameter.  The XalanTransformer has an XObject factory whereby top-level parameters can be owned by the XalanTransformer object.</p>
+
+<p>To set a stylesheet parameter, use the 
+<a href="apiDocs/classXalanTransformer.html">XalanTransformer</a> setStylesheetParam() method. The setStylesheetParam() method takes two arguments: the parameter name and the value.  The value can be a string type, a number double type, an (XalanNode *) pointer to a nodeset or parsed document, or any XObjectPtr returned from an XObject factory.</p>
+
+<p>Top level parameters are sticky.  Once set to an instance of an XalanTransformer object, they can be used for multiple transformations.  The XalanTransformer reset() method prepares a transformer for a new transformation.  Use the clearStylesheetParams() method to release the top-level stylesheet parameters.</p>
+
+<p>The Xalan command line utility currently supports only a text string value for a top-level stylesheet parameter.  The single quotes are required to identify a text string value.</p>
+
+<p>
+<code>Xalan -p param1 "'string expression'"foo.xml foo.xsl</code>
+</p>
+
+<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so Xalan-C++ interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument.</p>
+
+<p>The <a href="samples.html#usestylesheetparam">UseStylesheetParam</a> sample application supports all three types of top-level stylesheet parameters.</p>
+
+<p>The 'C' language interface XalanCAPI also supports the three types of top-level parameters.  The sample program TestCAPIparms.c shows how to use top-level parameters with 'C' language programs.</p>
+
 <table class="note">
 <tr>
 <td class="noteImg">
 <img src="resources/note.gif" alt="note" />
 </td>
-<td class="noteTxt">If the expression is a string, enclose it in single quotes to make it a string expression.</td>
+<td class="noteTxt">The Xalan command line utility should be revised to accommodate the number and nodeset types of top-level stylesheet parameters. Only text string values are currently supported.</td>
 </tr>
 </table>
-<p>You can include the -param flag with two arguments when you call the <a href="commandline.html">command line utility</a>. 
-   The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
-<p>
-<code>Xalan -p param1 'boo' foo.xml foo.xsl</code>
-</p>
-<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes 
-   so Xalan-C++ interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as 
-   a single argument. For example:</p>
-<p>
-<code>Xalan -p "'hello there'" foo.xml foo.xsl</code>
-</p>
-<p>The <a href="samples.html#usestylesheetparam">UseStylesheetParam</a> sample application also uses a command-line parameter.
-</p>
+
+<p>Top-level stylesheet parameters of nodeset type (XalanNode *) are useful for the merging of multiple XML documents.</p>
 
 
 <a name="incremental">&#8204;</a>
@@ -729,7 +725,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 <p>If you choose to build Xalan with ICU, you will need to rebuild Xerces with ICU as well.</p>
 <p>To get the ICU:</p> 
 <ol>
-  <li>Download and unzip the <a href="http://oss.software.ibm.com/icu/download/index.html">International Components for Unicode(ICU) 3.2 source files</a> from the IBM developerWorks open source zone.<br />
+  <li>Download and unzip the <a href="http://oss.software.ibm.com/icu/download/index.html" /> from the IBM developerWorks open source zone.<br />
 <br />
 </li>
   <li>Do an ICU build -- see the Windows NT or Unix build instructions in the build_instruct.html that accompanies the download.<br />
@@ -946,7 +942,7 @@ theResult = XalanTransformToFile(xmlfilename,
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 02/26/2012</div>
 </div>
 </body>
 </html>

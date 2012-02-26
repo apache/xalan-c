@@ -137,7 +137,7 @@ h1 {}
   text-align: center;
 }
 
-#content h1 { background-color: #ee5 }
+#content h1 { background-color: #ee4 }
 
 h2 {}
 
@@ -163,7 +163,7 @@ h3 {}
   text-align: center;
 }
 
-#content h3 { background-color: #ee5 }
+#content h3 { background-color: #ee8 }
 
 h4{}
 
@@ -171,6 +171,8 @@ h4{}
   margin-left: 1%;
   border-bottom: 1px solid blue;
 }
+
+#content h4 { background-color: #eec }
 
 /*
  * Tables

@@ -228,7 +228,7 @@
 <td class="noteTxt">Each sample application looks for input files in the current directory, the directory from
       which you run the application. The input files are in the samples subdirectory along with the sample source
       files. For the UNIX builds, application executables are in the bin subdirectory. For the Windows32 build, the
-      application executable is in the bin subdirectory (Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin). To run a 
+      application executable is in the bin subdirectory (-&lt;my_Windows_distribution&gt;\bin). To run a 
       sample, be sure the executable is on the path, and run it from the samples subdirectory that contains the input 
       files.</td>
 </tr>
@@ -255,28 +255,28 @@ package. </p>
 <p>For Windows users, the Xalan Visual C++ workspace contains project configurations for building 
    each of the samples.  Users who have downloaded the source package, can find the XalanICU.dsw workspace
    file under:<br />
-<br />     <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC6</code>
+<br />     <code>-src\src\xalanc\Projects\Win32\VC6</code>
    <br />
 <br />  and XalanICU.sln solution file under:<br />
 <br />
-        <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC7.1</code>
+        <code>-src\src\xalanc\Projects\Win32\VC7.1</code>
 
    <br />
 <br />  Users who have downloaded the binary package, should use the Samples.dsw workspace file 
    located under: <br />
 <br />     
-   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code>
+   <code>-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code>
 <br />
 <br />
    or the Samples.sln solution file for .NET V7.1 users, located under: <br />
 <br />     
-   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code>
+   <code>-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code>
 <br />
 <br />
 </p>
 <p>The Makefile that comes with the UNIX distributions include targets for rebuilding one or all of 
    the sample applications.  To rebuild one or more sample applications from the UNIX source package, 
-   go to the Xalan-C_1_11_0-src directory and run<br />
+   go to the -src directory and run<br />
 <br />
         <code>gmake <b>
 <i>Target</i>
@@ -372,7 +372,7 @@ package. </p>
 </li>
   <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br />
 <br />
-      Windows: <code>LoadModule xslt_module Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code>
+      Windows: <code>LoadModule xslt_module -&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code>
 <br />
 <br />
       UNIX: <code>AddModule mod_xslt.c</code>
@@ -421,7 +421,7 @@ package. </p>
 </li>
   <li>Put xml/xsl file pairs in the &lt;Location&gt; subdirectory (xslt in the example)) under the document root directory specified in 
       httpd.conf by the DocumentRoot and &lt;Directory&gt; settings. Alternatively, you can modify these settings to point to 
-      Xalan-C_1_11_0-&lt;my_UNIX_distribution&gt;/samples/ApacheModuleXSLT, which includes an xslt subdirectory with xml/xsl file pairs 
+      -&lt;my_UNIX_distribution&gt;/samples/ApacheModuleXSLT, which includes an xslt subdirectory with xml/xsl file pairs 
       (foo.xml/xsl, apachemod.xml/xsl).<br />
 <br />
 </li>
@@ -782,31 +782,63 @@ theProcessor.addTraceListener(&amp;theTraceListener);
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h3>UseStylesheetParam</h3>    
-<p>What it does: Set a stylesheet parameter that the stylesheet uses during the transformation.</p>
+<h3>UseStylesheetParam</h3>
+
+<p>What it does: Performs a transformation using top-level stylesheet parameters.  There are three supported types of parameters.  One is a text string.  A second is a number of type double.  A nodeset or parsed document can also be used.</p>
+
 <p>You can run it from the UseStylesheetParam subdirectory with</p>
+
 <p>
 <code>UseStylesheetParam <b>
-<i>key expression</i>
-</b>
-</code>
+<i>xmlfile</i>
+</b> <b>
+<i>stylesheet</i>
+</b> <b>
+<i>outfile</i>
+</b> [options]</code>
 </p>
-<p>where <b>
-<i>key</i>
-</b> is the parameter key (or name) and <b>
-<i>expression</i>
-</b> is a string expression enclosed
-   in single quotes.</p>
-<p>The example uses a stylesheet (foo.xsl) with a parameter named param1. The stylesheet accepts any string
-   expression. Enclose the string expression in single quotes (so it is interpreted as an expression); if it
-   includes more than a single word, enclose the resulting string in double quotes so the executable interprets it
-   as a single argument. For example:</p>
-<p>
-<code>UseStylesheetParam param1 "'hello out there'"</code>
-</p>
-<p>See also: <a href="usagepatterns.html#params">Setting stylesheet parameters</a>.</p>     
 
-  
+<p>where the options are:</p>
+
+<p>
+<code>    -s key "'String-Value'"</code>
+<br />
+<code>    -n key Number</code>
+<br />
+<code>    -d key "Document-URL"</code>
+</p>
+
+<p>The files used by the sample program and the top-level parameter nodesets for this illustration are to be in working directory in which the sample program runs.</p>
+
+<p>Using the sample program:</p>
+
+<p>
+<code>UseStylesheetParam foo.xml foo.xslt foo.out \<br />
+    -s stringA "'This is a test string value'" \<br />
+    -n numberA  123.012345 \<br />
+    -d parmA "parmA.xml" \<br />
+    -d parmB "parmB.xml"</code>
+</p>
+
+<p>The <b>
+<i>parmA.xml</i>
+</b> and <b>
+<i>parmB.xml</i>
+</b> are parsed and converted to nodesets.  The stylesheet <b>
+<i>foo.xslt</i>
+</b> merges the contents of <b>
+<i>foo.xml</i>
+</b> and the parameters into the <b>
+<i>foo.out</i>
+</b> file.</p>
+
+<p>The source sample is implemented in C++.  Another example is implemented in 'C' using the XalanCAPI library <b>
+<i>TestCAPIparm.c</i>
+</b>.  The usage interface for both is the same.</p>
+
+<p>See also: <a href="usagepatterns.html#params">Setting stylesheet parameters</a>.</p>
+
+
 <a name="xalantransform">&#8204;</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
@@ -850,7 +882,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2011 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Thu 11/10/2011</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 02/26/2012</div>
 </div>
 </body>
 </html>
