@@ -15,13 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<!-- $Id: index.xml 338232 2005-07-27 19:22:57Z mcnamara $ -->
 <s1 title="The Apache Xalan Project">
-         
+
+<p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or
+other XML document types.  It uses the Xerces (XML Parser) to convert XML 
+documents to internal nodesets.</p>
+
+<p>The project name and logo are derived from the ancient Xalam musical instrument
+found in Africa. Note the difference in spelling.</p>
+
 <s2 title="Xalan">
 <p>Xalan has moved out of the XML project and is now a project in its own right. 
-You will find links to all the Xalan subprojects as well as our new charter on the menu 
+You will find links to all the Xalan subprojects as well as our charter on the menu 
 at the left of the screen. </p>
+
+<p>The old releases of Xalan still reside in the XML Project archives.</p>
+<ul>
+<!--
+* Xalan C++ Version 1.10 [xml.apache.org/xalan-c]
+* Xalan Java Version 2.7.1 [xml.apache.org/xalan-j]
+-->
+  <li><jump href="http://xml.apache.org/xalan-c">Xalan C++ Version 1.10</jump></li>
+  <li><jump href="http://xml.apache.org/xalan-j">Xalan Java Version 2.7.1</jump></li>
+</ul>
+
+<p>The links on the left navigation panel point to the current documentation.</p>
 </s2>
 
 <s2 title="What is Xalan?">
@@ -44,6 +62,7 @@ XSL also includes a vocabulary for specifying formatting semantics, however,
 this is not part of the Apache Xalan Project.  For more information on formatting objects, see the 
 <jump href="http://xml.apache.org/fop/">Apache XML FOP (Formatting Objects Project)</jump>.
  </p>
+
 <p>XSLT implementations, sometimes referred to as XSLT processors, use an XSL stylesheet to transform
 XML documents into HTML, text, or other XML document types.   In structural terms, an XSL stylesheet 
 specifies the transformation of one tree of nodes (the XML input) into another tree of nodes (the output or 
@@ -53,6 +72,35 @@ transformation result).</p>
 <s2 title="License information">
 <p>Xalan C++ and Xalan Java are made available under the <jump href="http://www.apache.org/licenses/LICENSE-2.0">
 Apache Software License, Version 2.0.</jump></p>
+</s2>
+
+<s2 title="Getting Involved"> 
+<p>We always appreciate people and organizations that wish to help
+in the development and project support efforts.</p>
+
+<p>You can follow the activity by reviewing the project
+mail lists.  Posting messages to these lists is how we
+coordinate the activites related to the our projects.</p>
+
+<p>The developers mail list [<jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump>]
+ is for communicating issues to the Apache Xalan development teams.
+Both the Java and C/C++ groups monitor the developers list.
+All project change notices are posted to the developers list.</p>
+
+<p>Each sub-project has its own mail list for project specific user
+issues.</p>
+
+<p>The user list for Xalan C++ 
+ [<jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump>] is 
+for general user comments on the Xalan C++ project.</p>
+
+<p>The user list for Xalan Java 
+ [<jump href="mailto:xalan-j-users@xml.apache.org">xalan-j-users</jump>] is
+for general user comments on the Xalan Java project.</p>
+
+<p>The Apache Software Foundation has guidance on 
+ <jump href="http://www.apache.org/foundation/getinvolved.html">how to 
+participate</jump> in the various development efforts.</p>
 </s2>
 
 </s1>

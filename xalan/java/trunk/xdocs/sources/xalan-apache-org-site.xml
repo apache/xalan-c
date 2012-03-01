@@ -16,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<!-- $Id: xalan-apache-org-site.xml 489426 2006-12-21 18:17:29Z minchau $ -->
 
 <book title="Apache Xalan Project " copyright="2011 The Apache Software Foundation">
   <document id="index" label="Apache Xalan" source="xalan-apache-org/index.xml"/>
@@ -35,6 +34,10 @@
   <external href="http://marc.theaimsgroup.com/?l=xalan-dev " label="Developers Archive"/>
   <external href="http://marc.theaimsgroup.com/?l=xalan-c-users" label="C Users Archive"/>
   <external href="http://marc.theaimsgroup.com/?l=xalan-j-users" label="J Users Archive"/>
+</group>
+  <separator/>
+<group label="Resources">
+  <external href="http://www.apache.org/foundation/getinvolved.html" label="Get Involved"/>
 </group>
   <separator/>
 </book>
