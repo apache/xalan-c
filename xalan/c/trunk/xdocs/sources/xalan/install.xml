@@ -18,6 +18,8 @@
  * limitations under the License.
 -->
 <s1 title="Installing &xslt4c;">
+<p>This page is currently being rewritten for Xalan-C/C++ Version 1.11.
+The text is inherited from the web pages for Version 1.10.</p>
 <s2 title="Setting up the path/library path">
 <ul>
   <li><link anchor="windowspath">For Windows</link></li>

@@ -20,11 +20,14 @@
 <p>This is a general bug fix release with added stability features.</p>
 <p>Major updates since version 1.10 include:</p>
 <ul>
-  <li>Upgrade from Xerces-C 2.7 to Xerces-C 2.8 and Xerces-C 3.1.1.</li>
+  <li>Add support for Xerces-C 3.0 and newer</li>
+  <li>Drop support for Microsoft Studio (VC6)</li>
   <li>Fix support issues for AIX 5.3</li>
   <li>Fix support issues for Solaris 2.8</li>
   <li>Fix support issues for GCC-4.3</li>
+  <li>Add support for Microsoft .NET 2008 (VC9) </li>
   <li>Add support for Microsoft .NET 2010 (VC10)</li>
+  <li>Add number and nodeset types as top-level stylesheet parameters</li>
   <li><link anchor="bugfix11">Bugs fixed in this release</link>.</li>
 </ul>
 </s3>

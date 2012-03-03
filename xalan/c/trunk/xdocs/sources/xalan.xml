@@ -25,14 +25,18 @@
     <resources source="../sources/xalan/resources.xml"/>
 <!--  </hidden> -->
 
+<!--
   <external href="http://xalan.apache.org/"  label="Home"/>
+-->
+
+  <external href="../index.html" label="Home"/>
  
   <separator/>
-  
+ 
   <document id="index"
             label="Xalan-C++ 1.11"
             source="xalan/index.xml"/>
-                        
+
   <document id="whatsnew" 
             label="What's New" 
             source="xalan/whatsnew.xml"/>    
@@ -42,11 +46,11 @@
             source="xalan/license.xml"/>
 
   <separator/>
-
+<!--
   <document id="getstarted"
             label="Getting Started"
             source="xalan/getstarted.xml"/>
-  
+-->
   <document id="overview" 
             label="Overview" 
             source="xalan/overview.xml"/>   
@@ -104,17 +108,20 @@
   <external href="apiDocs/index.html" 
             label="API Reference"/>
    
-  <separator/>        
-
+  <separator/>
+<!--
   <group    id="faqgroup"
             label="Faq Group">
+-->
   <faqs     id="faq"        
             label="Xalan-C FAQs"
             source="xalan/faq.xml" />
+<!--
   <faqs     id="test-faqs"
             label="Test Faqs"
             source="xalan/test-faqs" />
   </group>
+-->
   <separator/>
           
   <external href="whatsnew.html#bugs" 

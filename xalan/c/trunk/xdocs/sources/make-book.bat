@@ -24,7 +24,7 @@ call make-xalan getstarted
 call make-xalan index
 call make-xalan extensions
 call make-xalan faq
-call make-xalan test-faqs
+:: call make-xalan test-faqs
 call make-xalan license
 
 call make-xalan buildlibs

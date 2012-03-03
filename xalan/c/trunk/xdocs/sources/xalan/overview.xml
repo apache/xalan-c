@@ -82,7 +82,7 @@
 <anchor name="towork"/>
 <s2 title="Getting to work with &xslt4c;">
 <p>For instructions and some suggestions about how to get started using &xslt4c;, see <link idref="download">Downloading &xslt4c;</link>,
-   <link idref="build_instruct">Building &xslt4c;</link>, and <link idref="install">Installing &xslt4c;</link>.</p>
+   <link idref="buildlibs">Building &xslt4c;</link>, and <link idref="install">Installing &xslt4c;</link>.</p>
 </s2>
 
 <anchor name="uptospeed"/>
@@ -90,32 +90,16 @@
 <p>If you are still working through the details of the XSLT spec (the W3C 1.0 Recommendation), you may want 
    to consult one or more of the following:</p>
    <ul>
-     <li>XSLT - XSL Transformations in 
-         <jump href="http://www.brics.dk/~amoeller/XML/">The XML Revolution: Technologies for the future Web</jump> by
-         Anders M&oslash;ller and Michael I. Schwartzbach (Web pages, but designed for sequential reading)</li>
      <li>Crane Softwright's <jump href="http://www.CraneSoftwrights.com/training/">Free preview of Practical
          Transformation Using XSLT and XPath</jump><br/><br/></li>
-     <li>Doug Tidwell's <jump href="http://www.oreilly.com/catalog/xslt/">XSLT</jump>, O'Reilly, 2001<br/><br/></li>                 
+     <li>Doug Tidwell's <jump href="http://www.oreilly.com/catalog/xslt/">XSLT</jump>, O'Reilly, 2001<br/><br/>     </li>
      <li>Bob DuCharme's <jump href="http://www.manning.com/ducharme/index.html">XSLT Quickly</jump>, Manning Publications,
          2001<br/><br/></li>                 
      <li>John Robert Gardner and Zarella Rendon's 
          <jump href="http://vig.prenhall.com/catalog/academic/product/1,4096,0130404462,00.html">XSLT and XPath: A Guide to
          Transformations</jump>, Prentice-Hall, 2001<br/><br/></li>                 
-     <li>Michael Kay's <jump href="http://www.wrox.com/Books/Book_Details.asp?ISBN=1861005067">XSLT Programmer's
-         Reference</jump>, 2nd ed., Wrox Press, 2001<br/><br/></li>
-     <!-- 
-     <li>Steven Holzner's <jump href="http://www.newriders.com/books/title.cfm?isbn=0735711364">Inside XSLT</jump>, 
-         New Riders, 2001<br/><br/></li>
-     -->
-     <li>Neil Bradley's <jump href="http://www.aw-bc.com/catalog/academic/product/0,1144,0201770830,00.html">XSL Companion</jump>,
-         Addison-Wesley, 2000<br/><br/></li>                 
-     <!-- 
-     <li>Khun Yee Fung's <jump href="http://www.awlonline.com/product/0,2627,0201711036,00.html">XSLT: Working with XML and
-         HTML</jump>, Addison-Wesley, 2001<br/><br/></li>                 
-     -->
-     <li>Dave Pawson's <resource-ref idref="dpawsonxslfaq"/> to search out particular answers and techniques<br/><br/></li>
-     <li>Miloslav Nic's <jump href="http://zvon.vscht.cz/HTMLonly/XSLTutorial/Books/Book1/index.html">XSL Tutorial</jump>,
-         a collection of stylesheet examples<br/><br/></li>
+
+
      <li>Elliotte Rusty Harold's <jump href="http://www.ibiblio.org/xml/books/bible2/chapters/ch17.html">Chapter 17 of 
          the XML Bible: XSL Transformations</jump><br/><br/></li>
      <li>The Mulberry <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> 
@@ -123,12 +107,16 @@
      <li>Objects by Design's <jump href="http://www.objectsbydesign.com/projects/xmi_to_html.html">Transforming XMI to
          HTML</jump> (oriented towards XMI, "an XML-based, stream representation of a UML model," but also covers "generic"
          XML transformations) and their related <jump href="http://objectsbydesign.com/projects/xslt/xslt_by_example.html">XSLT
-         by Example</jump><br/><br/></li>         
+         by Example</jump><br/><br/></li>
+         
      <li>OASIS (the Organization for the Advancement of Structured Information Standards): 
          <jump href="http://www.oasis-open.org/cover/xsl.html">Extensible Stylesheet Language (XSL)</jump> by Robin
          Cover<br/><br/></li>
-     <li>Donald Ball's <jump href="http://www.webslingerZ.com/balld/xsl/designer_manual.xml">A Guide to XML and XSL for
-         Designers</jump><br/><br/></li>         
+     <li>Aaron Skonnard and Martin Gudgin's 
+<jump href="http://www.theserverside.net/tt/books/addisonwesley/EssentialXML/index.tss">Essential 
+XML Quick Reference:</jump> A Programmer's Reference to 
+XML, XPath, XSLT, XML Schema, SOAP and More. This reference is published by Addison Wesley, 2003, ISBN/0201740958.<br/><br/></li>
+        
    </ul>
 <p>When you come across other useful introductory or background materials, please email <human-resource-ref
    idref="xalandev"/>, so we can add them to this list.</p>
