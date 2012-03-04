@@ -18,8 +18,9 @@
 -->
 
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"
-[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent" >
-%entity-c-values; ]>
+[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent">
+ %entity-c-values;
+]>
 
 <s1 title="Getting Started with Xalan-C++">
 <ul>

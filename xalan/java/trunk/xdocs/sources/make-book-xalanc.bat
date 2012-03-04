@@ -24,7 +24,7 @@ call make-xalanc getstarted
 call make-xalanc index
 call make-xalanc extensions
 call make-xalanc faq
-call make-xalanc test-faqs
+:: call make-xalanc test-faqs
 call make-xalanc license
 
 call make-xalanc buildlibs

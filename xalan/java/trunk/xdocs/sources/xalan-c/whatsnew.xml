@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?> 
-<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"
-[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent" >
-%entity-c-values; 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"[
+<!ENTITY % entity-c-values SYSTEM "../entities-c.ent">
+ %entity-c-values;
 <!--<!ENTITY done-c SYSTEM "DONE"> -->
 <!--<!ENTITY status-c SYSTEM "STATUS"> -->
 <!--<!ENTITY todo-c SYSTEM "BUGS"> -->
@@ -41,20 +41,25 @@
 
 <p><em>Release notes for Xalan-C/C++ Version 1.11</em>
 </p>
-<p>This is primarily a bug-fix release of version 1.10.
-</p>
-<p>Xalan-C/C++ Version 1.11; has been tested with Xerces-C/C++ Version 3.1.1.
-Other versions of Xerces-C/C++ (2.8, 3.0, 3.0.1, 3.1) have also been tested, 
-but their use requires separate compilation of the Xerces-C/C++ library.
+<p>This is primarily a bug-fix release of version 1.10.  Support for number and
+nodeset types for stylesheet top-level parameters has been added. Xerces-C/C++
+versions 3.0 and newer are now supported. Xerces-C/C++ Version 3.1.1 is the
+preferred stable release.
 </p>
 <p>At present, the Xalan-C/C++ Version 1.11 has no binary releases. 
 When building Xalan-C/C++ from sources, 
 you should use the same platform that was used to 
 compile the companion Xerces-C/C++ library.
 </p>
+<p>Binary package releases for Microsoft Windows are being planned.
+</p>
 <p>If you are able to successfully create a new binary package and wish it
 to be included, then we welcome your participation on the 
 <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mail list.
+</p>
+<p>Xalan-C/C++ no longer supports Microsoft Studio (VC6).  The Microsoft Visual
+Studio .NET platforms (2003, 2005, 2008, and 2010) are supported.  This equates
+to compilers (VC71, VC8, VC9, and VC10).
 </p>
 
 </s2>
@@ -84,7 +89,15 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 <s2 title="Bug Fixes in Release 1.11">
 <p>The bugs fixed in &xslt4c-current; include:</p>
 <ul>
+<li>XALANC-723 Add Top-Level parameter support for XalanCAPI and UseStylesheetParams sample</li>
+<li>XALANC-721: Upgrade support for MS VS 2010 (VC10)</li>
+<li>XALANC-719: Xerces Parser Liaison - errors on elements with no attributes</li>
+<li>XALANC-716: incorrect buffer-size calculation in XalanUTF16Writer.hpp</li>
+<li>XALANC-715: NULL pointer access crash</li>
+<li>XALANC-713: Build Xalan-C/C++ API Reference Manual using Doxygen 1.7 or newer</li>
+<li>XALANC-710: MS-Studio 2008 Debug Build sends Xalan-C_1D.lib to wrong directory</li>
 <li>XALANC-709: Doxygen bug in XalanQName.hpp</li>
+<li>XALANC-708: Including XalanCAPI.hpp does not import Xerces typedef XMLch</li>
 <li>XALANC-705:	Crash with pure virtual function call</li>
 <li>XALANC-703:	Compiler errors while building on AIX 5.3</li>
 <li>XALANC-700:	Broken output when serializing UTF16 surrogates</li>
@@ -147,6 +160,7 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 <li>XALANC-588:	Floating point exceptions in DoubleSupport::initialize() on Solaris 10 (x86)</li>
 <li>XALANC-570: Removal of compiler warnings from STLHelper.hpp</li>
 <li>XALANC-535:	If an error/warning message contains not-displayable character for the local encoding , no message is shown at all</li>
+<li>XALANC-527: Compiling on Xerces-3.0</li>
 <li>XALANC-480:	XML1.1 and Namespaces for XML1.1 support</li>
 <li>XALANC-478:	Add support for XMLEntityResolver</li>
 <li>XALANC-432:	Minor spelling problems in XalanMsg_en_US.xlf</li>
@@ -247,7 +261,6 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 <s2 title="To-do tasks for future Xalan-C/C++ releases">
 <p>Open bugs:</p>
 <ul>
-<li>Does not support 20 or more digits of numerical precision after the decimal.</li>
 <li>The namespace axis does not return the default "xml" namespace.</li>
 <li>Does not support case-order and lang attributes in xsl:sort.</li>
 </ul>

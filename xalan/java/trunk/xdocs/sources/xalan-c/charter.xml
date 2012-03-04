@@ -1,7 +1,8 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"
-[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent" >
-%entity-c-values; ]>
+[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent">
+ %entity-c-values;
+]>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file

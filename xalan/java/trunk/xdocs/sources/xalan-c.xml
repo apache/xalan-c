@@ -19,20 +19,24 @@
  * limitations under the License.
 -->
 
-<book title="Xalan-C/C++ Version 1.11" copyright="1999-2011 The Apache Software Foundation">
+<book title="Xalan-C/C++ Version 1.11" copyright="1999-2012 The Apache Software Foundation">
 
 <!--  <hidden> -->
-    <resources source="../sources/xalan/resources.xml"/>
+    <resources source="../sources/xalan-c/resources.xml"/>
 <!--  </hidden> -->
 
+<!--
   <external href="http://xalan.apache.org/"  label="Home"/>
+-->
+
+  <external href="../index.html" label="Home"/>
  
   <separator/>
-  
+ 
   <document id="index"
             label="Xalan-C++ 1.11"
             source="xalan-c/index.xml"/>
-                        
+
   <document id="whatsnew" 
             label="What's New" 
             source="xalan-c/whatsnew.xml"/>    
@@ -42,11 +46,11 @@
             source="xalan-c/license.xml"/>
 
   <separator/>
-
+<!--
   <document id="getstarted"
             label="Getting Started"
             source="xalan-c/getstarted.xml"/>
-  
+-->
   <document id="overview" 
             label="Overview" 
             source="xalan-c/overview.xml"/>   
@@ -104,12 +108,20 @@
   <external href="apiDocs/index.html" 
             label="API Reference"/>
    
-  <separator/>        
-
+  <separator/>
+<!--
+  <group    id="faqgroup"
+            label="Faq Group">
+-->
   <faqs     id="faq"        
-            label="FAQs"
+            label="Xalan-C FAQs"
             source="xalan-c/faq.xml" />
-
+<!--
+  <faqs     id="test-faqs"
+            label="Test Faqs"
+            source="xalan-c/test-faqs" />
+  </group>
+-->
   <separator/>
           
   <external href="whatsnew.html#bugs" 

@@ -18,8 +18,9 @@
 -->
 
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"
-[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent" >
-%entity-c-values; ]>
+[<!ENTITY % entity-c-values SYSTEM "../entities-c.ent">
+ %entity-c-values;
+]>
 
 <s1 title="&xslt4c-current;">
 
@@ -32,6 +33,8 @@
 <li><link anchor="getstarted">Getting Started</link></li>
 <li><link anchor="getWhatNeeded">Getting What You Need</link></li>
 </ul>
+<p>The old Xalan-C/C++ 1.10 release can be found at 
+<jump href="http://xml.apache.org/xalan-c">xml.apache.org/xalan-c</jump>.</p>
 
 <anchor name="whatisxalan"/>
 <s2 title="What Is Xalan?">
@@ -182,7 +185,8 @@ SAX is primarily Java based. The Xerces-C/C++ project has implemented a SAX C++ 
 <p>Web Services and Web Security recommendations have been developed by the 
 <jump href="http://www.w3.org">World Wide Web Consortium (W3C)</jump> and 
 <jump href="http://www.oasis-open.org">OASIS-OPEN</jump> Advancing open standards for the information society. 
-The Xerces-C/C++ has support for custom entity resolvers.
+The Xerces-C/C++ has support for custom entity resolvers which are inherited and
+supported by the Xalan-C/C++ library.
 </p>
 </s2>
 
@@ -235,10 +239,10 @@ Binary packages comprise the compiled libraries, the Xalan command line utility,
 The documentation package contains the pre-built documentation. 
 The source package contains the sources to build everything.
 </p>
-<p>The current Xalan-C/C++ Version 1.11 will work with the stable releases of 
-<jump href="http://xerces.apache.org/xerces-c">Xerces-C/C++</jump> Version 2.8.0 and Version 3.1.1.
+<p>The current Xalan-C/C++ Version 1.11 is compatible with the stable releases of 
+<jump href="http://xerces.apache.org/xerces-c">Xerces-C/C++</jump> Version 3.0 and newer. The current stable release for Xerces-C/C++ is 3.1.1.
 </p>
-<p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Version 2.7.0.
+<p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Versions 2.7.0 and 2.8.0.
 </p>
 <p>If you are having problems using the product, 
 send your comments to the <jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump> mail list.
@@ -258,16 +262,17 @@ using the same platforms specified for the compatible Xerces-C binary packages.
 <p>What you need depends whether you plan to 
 build from the sources or download prebuilt packages.
 </p>
-<p>The development platform used to build the Xalan-C (XSLT) library 
-should be the same as the platform used to build the Xerces-C (XML) parser library.
+<p>The development platform used to build the Xalan-C/C++ (XSLT) library 
+should be the same as the platform used to build the Xerces-C/C++ (XML) parser library.
 </p>
-<p>Xalan-C (XSLT) library requires a working Xerces-C (XML) parser library. 
-The supported versions of Xerces-C are 2.8 and 3.1.1.
+<p>Xalan-C/C++ (XSLT) library requires a working Xerces-C/C++ (XML) parser library. 
+The supported versions of Xerces-C/C++ version 3.0 or newer. Version 3.1.1
+is recommended.
 </p>
 <p>If you are ambitious and willing to experiment, 
 you can download the bleeding edge development from the 
 Apache Software Foundation subversion repositories. 
-Use a subversion 'svn' utility for download.
+Use your favorite subversion 'svn' utility for download.
 </p>
 <table>
 <tr><td>Xalan-C Repository</td><td>http://svn.apache.org/repos/asf/xalan/c/trunk</td></tr>
@@ -275,7 +280,7 @@ Use a subversion 'svn' utility for download.
 </table>
 
 <p>The current stable 
-<jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces-C (XML) packages</jump> 
+<jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces-C/C++ (XML) packages</jump> 
 are available for download.
 </p>
 <note>The sources from the Xalan-C repository are current for Version 1.11 
