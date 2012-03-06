@@ -37,7 +37,12 @@
 </group>
   <separator/>
 <group label="Resources">
+  <external href="http://www.apache.org/" label="Apache"/>
   <external href="http://www.apache.org/foundation/getinvolved.html" label="Get Involved"/>
+  <external href="http://www.apache.org/licenses/" label="Licenses"/>
+  <external href="http://www.apache.org/foundation/sponsorship.html" label="Sponsorship"/>
+  <external href="http://www.apache.org/foundation/thanks.html" label="Thanks"/>
+  <external href="http://www.apache.org/security/" label="Security"/>
 </group>
   <separator/>
 </book>
