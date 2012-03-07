@@ -365,8 +365,8 @@ public:
     bool
     hasCDATASectionElements() const
     {
-        assert(m_hasCDATASectionElems == false && m_cdataSectionElems.empty() == true ||
-               m_hasCDATASectionElems == true && m_cdataSectionElems.empty() == false);
+        assert((m_hasCDATASectionElems == false && m_cdataSectionElems.empty() == true ) ||
+              ( m_hasCDATASectionElems == true && m_cdataSectionElems.empty() == false));
 
         return m_hasCDATASectionElems;
     }

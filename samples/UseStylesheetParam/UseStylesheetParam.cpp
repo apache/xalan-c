@@ -24,6 +24,9 @@
 #include <iostream>
 #endif
 
+// for 'C' strcmp function used in parsing main() parameters
+#include <string.h>
+
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>

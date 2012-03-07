@@ -605,8 +605,8 @@ public:
             size_type           thePosition = 0,
             size_type           theCount = size_type(npos)) const
     {
-        assert(theCount == size_type(npos) && thePosition < length() ||
-               thePosition + theCount <= length());
+        assert((theCount == size_type(npos) && thePosition < length() ) ||
+               (thePosition + theCount <= length()));
 
         invariants();
 
