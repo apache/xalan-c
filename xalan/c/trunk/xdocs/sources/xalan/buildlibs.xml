@@ -22,6 +22,7 @@
 <ul>
 <li><link anchor="winbldenv">Windows Build Environment</link></li>
 <ul>
+<li><link anchor="winbld">Windows Basic Build Instruction</link></li>
 <li><link anchor="winbldcmd">Sample Windows Build Command File</link></li>
 <li><link anchor="winbldinst">Installing the Xalan Library on Windows</link></li>
 </ul>
@@ -56,8 +57,6 @@
 </p>
 <p>Building Xalan-C/C++ with Microsoft Visual Studio .NET 2008 (VC9) requires Xerces-C/C++ version 3.1 or newer.  Building with Microsoft Visual Studio .NET 2010 (VC10) requires Xerces-C/C++ version 3.1.1 or newer.
 </p>
-<p>The Microsoft Visual Studio .NET 2010 (VC10) build is not fully integrated into the source tree.  You will probably need to copy the {SourceDir}/Projects/Win32/VC9 directory to a (VC10) directory and allow Microsoft to attempt an automatic upgrade.  A (VC10) directory will become part of the source tree after the product passes quality control inspection.
-</p>
 <p>Environment variables XERCESCROOT and XALANCROOT are required.  Environment ICUROOT is used only if building Xalan-C/C++ with IBM-ICU library support.
 </p>
 <table>
@@ -74,7 +73,38 @@
 
 <p>I like to create command or batch files to setup the build environment variables and start the Visual Studio .NET development system using the custom build environment.  I find this much easier than navigating the graphical interface to add custom build environments. The Microsoft *.vsprops custom property files are not available in the early versions of Visual Studio .NET platforms.
 </p>
-
+<anchor name="winbld"/>
+<s3 title="Windows Basic Build Instruction">
+<p>If you want to create binary packages from the sources, you may wish to look
+at the <link anchor="winbldcmd">Windows Build Command File</link> in the next section.
+</p>
+<p>A quick experiment in building for Windows is documented in the remainder of this section.
+</p>
+<p>I have Visual Studio 2005, 2008, 2010 on one computer and VC6 and Visual Studio 2003
+installed on another computer.
+</p>
+<p>Microsoft Visual Studio .NET products will usually install 
+a Visual Studio Command Prompt icon in the Visual Studio Tools subfolder 
+for each version of Visual Studio installed on your computer. 
+The Visual Studio Command Prompt automatically sets a basic development environment 
+using "vsvars32.bat" or "vcvarsall.bat" scripts
+for 32-bit or 64-bit platform builds, and leaves you at the command line for 
+customizing your environment.
+</p>
+<p>You then define the XERCESCROOT, XALANCROOT, and ICUROOT environment variables.
+</p>
+<p>If the Xerces-C DLL files are not in directory %XERCESCROOT%\bin, you must add
+a directory to the PATH environment variable so the Xerces-C DLL files can be
+found.
+</p>
+<p>You then launch the Visual Studio .NET by calling <code>devenv</code> with a
+path to the <code>Xalan.sln</code> file as a parameter.
+</p>
+<p>The following section describes how you can build your own scripts to create
+binary packages from Xalan-C compiled sources for the various versions of
+Microsoft Visual Studio products.
+</p>
+</s3>
 <anchor name="winbldcmd"/>
 <s3 title="Sample Windows Build Command File">
 
@@ -96,7 +126,7 @@ SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC8
 :: VS 2008 (VC9)
 SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC9
 
-:: VS 2010 (VC10) - experimental
+:: VS 2010 (VC10)
 SET XALANCPROJDIR=%XALANCROOT%\Projects\Win32\VC10
 </source>
 <p>Set some environment variables so we can easily copy or install the products after they have been built.
@@ -111,7 +141,7 @@ SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC8
 :: VS 2008 (VC9)
 SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC9
 
-:: VS 2010 (VC10) - experimental
+:: VS 2010 (VC10)
 SET XALANCBUILDDIR=%XALANCROOT%\Build\Win32\VC10
 </source>
 <p>We use this Visual Studio .NET solution file.
@@ -135,44 +165,37 @@ SET SOURCE=
 :: VS 2000 (VC7) - obsolete
 call "%VS70COMNTOOLS%vsvars32.bat"
 
-:: VS 2003 (VC7.1)
+:: VS 2003 (VC7.1) 32-bit platform
 call "%VS71COMNTOOLS%vsvars32.bat"
 
-:: VS 2005 (VC8)
+:: VS 2005 (VC8) 32-bit platform
 call "%VS80COMNTOOLS%vsvars32.bat"
 
-:: VS 2008 (VC9)
+:: VS 2005 (VC8) 64-bit platform
+call "%VS80COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
+
+:: VS 2008 (VC9) 32-bit platform
 call "%VS90COMNTOOLS%vsvars32.bat"
 
-:: VS 2010 (VC10) - experimental
+:: VS 2008 (VC9) 64-bit platform
+call "%VS90COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
+
+:: VS 2010 (VC10) 32-bit platform
 call "%VS100COMNTOOLS%vsvars32.bat"
+
+:: VS 2010 (VC10) 64-bit platform
+call "%VS100COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
 </source>
 <p>The LIBPATH and SOURCE environment variables may not be properly 
 set by the vsvars32.bat command file.  You may wish to start your 
 Visual Studio .NET application without any custom environment 
 and examine the Tools -> C/C++ project defaults for the various libraries. 
-Then specifically set the paths in your build command file.
+Then specifically set the paths in the build command file for your project.
 </p>
 <p>The Xalan-C and Xerces-C libraries do not use the Microsoft Framework, 
 the "mfc" and the "atl" directives. Microsoft is deprecating their "mfc"
 Microsoft Foundation Classes.
 </p>
-<source>
-:: VS 2003 (VC7.1)
-:: SET LIBPATH=$(FrameWorkDir)$(FrameWorkVersion)
-:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
-:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
-
-:: VS 2005 (VC8)
-:: SET LIBPATH=%(FrameworkDir)$(FrameWorkVersion)
-:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
-:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
-
-:: VS 2008 (VC9)
-:: SET LIBPATH=%(FrameworkDir)$(FrameWorkVersion)
-:: SET SOURCE=$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\atl;
-:: SET SOURCE=%SOURCE%;$(VCInstallDir)crt\src
-</source>
 <p>Define the necessary environment variables for building the Xalan-C/C++ libraries and sample programs.
 </p>
 <source>

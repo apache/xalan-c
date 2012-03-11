@@ -40,7 +40,7 @@ become available to the general public.  The current packages for download
 are in a temporary repository for developers.
 </p>
 
-<p>The subversion sources are current for Xalan-C/C++ Version 3.1.1 and are
+<p>The subversion sources are current for Xalan-C/C++ Version 1.11 and are
 available for download using your favorite subversion <code>svn</code> program.</p>
 
 <p>Apache Xalan-C/C++ Subversion Repository is accessed here.<br/> 
@@ -50,7 +50,7 @@ http://svn.apache.org/repos/asf/xalan/c/trunk</jump>
 
 <s2 title="Downloading what you need">
 
-<p>The Xalan-C/C++ library requires 
+<p>The Xalan-C/C++ library requires the
 <jump href="http:xml.apache.org/xerces-c">Xerces-C/C++ XML</jump> Parser 3.0 
 or newer, version 3.1.1 is preferred.
 </p>
