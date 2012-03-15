@@ -87,7 +87,7 @@ installed on another computer.
 a Visual Studio Command Prompt icon in the Visual Studio Tools subfolder 
 for each version of Visual Studio installed on your computer. 
 The Visual Studio Command Prompt automatically sets a basic development environment 
-using "vsvars32.bat" or "vcvarsall.bat" scripts
+using a "vsvars32.bat" or "vcvarsall.bat" script
 for 32-bit or 64-bit platform builds, and leaves you at the command line for 
 customizing your environment.
 </p>

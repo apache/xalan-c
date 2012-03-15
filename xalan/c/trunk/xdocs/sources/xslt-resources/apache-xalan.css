@@ -24,7 +24,8 @@
 
 html > bod  {left:0;}
 body {
-  background-color: white;
+/*  background-color: white; */
+  background-color: #f8f8f0;
   color: black;
   padding: 0;
   margin: 0;
@@ -52,7 +53,7 @@ div.centered table {
   padding-top: 1em;
   padding-left: 5px;
   margin-left: 10px;
-  border-left: 1px solid #ddd;
+  border-left: 1px solid #aaa;
 }
 
 #navLeft {
@@ -64,6 +65,7 @@ div.centered table {
   color: red;
   position: relative;
   left: 1px;
+  background-color: #eee;
 }
 
 .navGroup {
@@ -76,7 +78,7 @@ div.centered table {
   color: black;
   background-color: #eee;
   text-align: center;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #aaa;
   padding: 0;
   vertical-align: middle;
 }
@@ -97,11 +99,11 @@ table.HdrButtons {
     clear: both;
     margin: 0 2em;
     color: #444;
-    background-color: #eee;
+    background-color: #ddd;
     text-align: center;
     padding: .5em 0;
     font-size: 75%;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #aaa;
 }
 
 /*
@@ -137,7 +139,7 @@ h1 {}
   text-align: center;
 }
 
-#content h1 { background-color: #ee4 }
+#content h1 { background-color: #8af }
 
 h2 {}
 
@@ -149,7 +151,7 @@ h2 {}
   margin: 0;
 }
 
-#content h2 { background-color: #ee5 }
+#content h2 { background-color: #9bf }
 
 #content h2.year {
   background-color: #ddd;
@@ -163,7 +165,7 @@ h3 {}
   text-align: center;
 }
 
-#content h3 { background-color: #ee8 }
+#content h3 { background-color: #acf }
 
 h4{}
 
@@ -172,7 +174,7 @@ h4{}
   border-bottom: 1px solid blue;
 }
 
-#content h4 { background-color: #eec }
+#content h4 { background-color: #cdf }
 
 /*
  * Tables
@@ -182,8 +184,8 @@ th {}
 
 td {}
 
-th.content {background-color: #0BC }
-td.content {background-color: #0EF }
+th.content {background-color: #4BD }
+td.content {background-color: #AEF }
 
 /*
  * Lists and navLeft
