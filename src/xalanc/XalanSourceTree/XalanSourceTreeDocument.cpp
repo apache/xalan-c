@@ -1012,8 +1012,8 @@ XalanSourceTreeDocument::createAttribute(
                 m_stringBuffer,
                 false);
 
-    assert(theNamespace == 0 && m_stringBuffer.empty() == true ||
-           theNamespace != 0 && m_stringBuffer.empty() == false);
+    assert((theNamespace == 0 && m_stringBuffer.empty() == true) ||
+           (theNamespace != 0 && m_stringBuffer.empty() == false));
 
     if (theNamespace == 0 || theNamespace->empty() == true)
     {
