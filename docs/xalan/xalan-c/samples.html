@@ -72,7 +72,7 @@
 <br />
 </li>
 <li>
-<a href="http://xalan.apache.org/">Home</a>
+<a href="../index.html">Home</a>
 </li></ul><hr /><ul>
 <li>
 <a href="index.html">Xalan-C++ 1.11</a>
@@ -83,9 +83,6 @@
 <li>
 <a href="license.html">Licenses</a>
 </li></ul><hr /><ul>
-<li>
-<a href="getstarted.html">Getting Started</a>
-</li>
 <li>
 <a href="overview.html">Overview</a>
 </li>
@@ -125,7 +122,7 @@
 <a href="apiDocs/index.html">API Reference</a>
 </li></ul><hr /><ul>
 <li>
-<a href="faq.html">FAQs</a>
+<a href="faq.html">Xalan-C FAQs</a>
 </li></ul><hr /><ul>
 <li>
 <a href="whatsnew.html#bugs">Bugs</a>
@@ -228,7 +225,7 @@
 <td class="noteTxt">Each sample application looks for input files in the current directory, the directory from
       which you run the application. The input files are in the samples subdirectory along with the sample source
       files. For the UNIX builds, application executables are in the bin subdirectory. For the Windows32 build, the
-      application executable is in the bin subdirectory (-&lt;my_Windows_distribution&gt;\bin). To run a 
+      application executable is in the bin subdirectory (Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin). To run a 
       sample, be sure the executable is on the path, and run it from the samples subdirectory that contains the input 
       files.</td>
 </tr>
@@ -255,28 +252,28 @@ package. </p>
 <p>For Windows users, the Xalan Visual C++ workspace contains project configurations for building 
    each of the samples.  Users who have downloaded the source package, can find the XalanICU.dsw workspace
    file under:<br />
-<br />     <code>-src\src\xalanc\Projects\Win32\VC6</code>
+<br />     <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC6</code>
    <br />
 <br />  and XalanICU.sln solution file under:<br />
 <br />
-        <code>-src\src\xalanc\Projects\Win32\VC7.1</code>
+        <code>Xalan-C_1_11_0-src\src\xalanc\Projects\Win32\VC7.1</code>
 
    <br />
 <br />  Users who have downloaded the binary package, should use the Samples.dsw workspace file 
    located under: <br />
 <br />     
-   <code>-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code>
+   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code>
 <br />
 <br />
    or the Samples.sln solution file for .NET V7.1 users, located under: <br />
 <br />     
-   <code>-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code>
+   <code>Xalan-C_1_11_0-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code>
 <br />
 <br />
 </p>
 <p>The Makefile that comes with the UNIX distributions include targets for rebuilding one or all of 
    the sample applications.  To rebuild one or more sample applications from the UNIX source package, 
-   go to the -src directory and run<br />
+   go to the Xalan-C_1_11_0-src directory and run<br />
 <br />
         <code>gmake <b>
 <i>Target</i>
@@ -372,7 +369,7 @@ package. </p>
 </li>
   <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br />
 <br />
-      Windows: <code>LoadModule xslt_module -&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code>
+      Windows: <code>LoadModule xslt_module Xalan-C_1_11_0-&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code>
 <br />
 <br />
       UNIX: <code>AddModule mod_xslt.c</code>
@@ -421,7 +418,7 @@ package. </p>
 </li>
   <li>Put xml/xsl file pairs in the &lt;Location&gt; subdirectory (xslt in the example)) under the document root directory specified in 
       httpd.conf by the DocumentRoot and &lt;Directory&gt; settings. Alternatively, you can modify these settings to point to 
-      -&lt;my_UNIX_distribution&gt;/samples/ApacheModuleXSLT, which includes an xslt subdirectory with xml/xsl file pairs 
+      Xalan-C_1_11_0-&lt;my_UNIX_distribution&gt;/samples/ApacheModuleXSLT, which includes an xslt subdirectory with xml/xsl file pairs 
       (foo.xml/xsl, apachemod.xml/xsl).<br />
 <br />
 </li>
@@ -882,7 +879,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 02/26/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
 </div>
 </body>
 </html>

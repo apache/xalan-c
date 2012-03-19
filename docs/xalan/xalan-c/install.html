@@ -72,7 +72,7 @@
 <br />
 </li>
 <li>
-<a href="http://xalan.apache.org/">Home</a>
+<a href="../index.html">Home</a>
 </li></ul><hr /><ul>
 <li>
 <a href="index.html">Xalan-C++ 1.11</a>
@@ -83,9 +83,6 @@
 <li>
 <a href="license.html">Licenses</a>
 </li></ul><hr /><ul>
-<li>
-<a href="getstarted.html">Getting Started</a>
-</li>
 <li>
 <a href="overview.html">Overview</a>
 </li>
@@ -125,7 +122,7 @@
 <a href="apiDocs/index.html">API Reference</a>
 </li></ul><hr /><ul>
 <li>
-<a href="faq.html">FAQs</a>
+<a href="faq.html">Xalan-C FAQs</a>
 </li></ul><hr /><ul>
 <li>
 <a href="whatsnew.html#bugs">Bugs</a>
@@ -140,79 +137,245 @@
 </div>
 <div id="content">
 <h2>Installing Xalan-C++</h2>
-<p align="right" size="2">
-<a href="#content">(top)</a>
-</p>
-<h3>Setting up the path/library path</h3>
+
 <ul>
   <li>
-<a href="#windowspath">For Windows</a>
+<a href="#SourcePkgs">Install Source Packages</a>
 </li>
   <li>
-<a href="#unixpath">For UNIX</a>
-</li>  
+<a href="#BinaryPkgs">Install Binary Packages</a>
+</li>
+  <ul>
+    <li>
+<a href="#InsWin">Install Windows Packages</a>
+</li>
+    <li>
+<a href="#InsUnx">InstallUNIX Packages</a>
+</li>
+    <li>
+<a href="#InsPkgs">Other Packages</a>
+</li>
+  </ul>
+  <li>
+<a href="#XalanDocPkg">Install Documentation Packages</a>
+</li>
+  <ul>
+    <li>
+<a href="">Xalan-C User Guide</a>
+</li>
+    <li>
+<a href="">Xalan-C API Reference</a>
+</li>
+  </ul>
 </ul>
 
-<a name="windowspath">&#8204;</a>
+<p>A pre-requisite for using the Xalan-C/C++ XSLT library is to
+  have a working Xerces-C/C++ XML Parser library.  Xerces-C/C++
+  must be of version 3.0 or newer.  Xerces-C/C++ Version 3.1.1 is preferred.
+</p>
+<p>The Xalan-C/C++ project is providing several types of packages.
+</p>
+<p>Source packages contain all of the source code to build the
+  Xalan-C/C++ library, the sample programs, and the documentation.
+  There are UNIX scripts and Windows project files by which the
+  library and sample programs can be built. 
+  There are also scripts for building the User Guide web pages and
+  a Doxygen configuration for building the interactive API Reference.
+</p>
+<p>Binary packages contain compiled libraries and the Xalan
+  command line program.  The binary packages also contain C/C++
+  header files for basic software development.
+</p>
+<p>Documentation packages contain pre-built directories of web
+  page html files for the Xalan-C/C++ User Guide and the interactive
+  API Reference for programmers.
+</p> 
+
+<a name="SourcePkgs">&#8204;</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>For Windows</h4>
-<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
-<ul>
-  <li>Put -&lt;my_Windows_distribution&gt;\bin and -&lt;my_Windows_distribution&gt;\bin on the path.</li>
-</ul>
-<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it 
-   does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <a href="build_instruct.html#rebuild">rebuild Xalan</a>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
-<p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
-<ul>
-  <li>Add the path to -&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
-  <li>Add the path to -&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
-</ul>
+<h3>Install Source Packages</h3>
+<p>We have no package managers for source packages.  You just extract
+  the contents of the distribution <b>
+<i>zip</i>
+</b> file or <b>
+<i>tar</i>
+</b> file 
+  into a source directory of your choosing.
+</p>
+<p>You also need to have the necessary C/C++ compiler tools installed
+  and a working copy of the Xerces-C/C++ XML parser library.
+</p>
+<p>Building the 
+  <a href="builddocs.html#buildweb">User Guide</a> 
+  from sources requires a working Xalan command line program.
+</p>
+<p>Building the interactive 
+  <a href="builddocs.html#buildapi">API Reference</a>
+  requires a UNIX or Linux system with a current copy of 
+  Doxygen and GraphViz installed.
+</p>
+
+<p>The building of a library from sources results in a directory from which
+  a binary package can be made.  
+  <a href="buildlibs.html#unixbldenv">UNIX and Linux builds</a>
+  are automatically targeted to an install destination.  
+  <a href="buildlibs.html#winbldinst">Installing a Windows build</a>
+  requires that the specific compiled products be copied to a usable
+  destination directory.
+</p>
 
 
-<a name="unixpath">&#8204;</a>
+<a name="BinaryPkgs">&#8204;</a>
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
-<h4>For UNIX</h4>
-<p>To use one of the UNIX binary distributions, you must place the Xalan-C++ executable on the path, and the Xalan-C++ and Xerces-C++ 
-   libraries on the library path.</p>
-<p>For the Xalan-C++ AIX distributions:</p>
-<ul>
-  <li>Put -&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
-  <li>Put -&lt;my_AIX_distribution&gt;/lib and -&lt;my_AIX_distribution&gt;/lib on the library path (LIBPATH), 
-      or copy the shared libraries to /usr/lib.</li>
-</ul>
-<p>For the Xalan-C++ HP-UX 11 distributions:</p>
-<ul>
-  <li>Put -&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br />
-<br />
-</li>
-  <li>Put -&lt;my_HPUX_distribution&gt;/lib and -&lt;my_HPUX_distribution&gt;/lib on the library path 
-      (SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
-</ul>
-<p>For the Xalan-C++ Solaris distributions:</p>
-<ul>
-  <li>Put -&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br />
-<br />
-</li>
-  <li>Put -&lt;my_Solaris_distribution&gt;/lib and -&lt;my_Solaris_distribution&gt;/lib on the library path 
-     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
-</ul>
-<p>For the Xalan-C++ RedHat and SuSE Linux distributions:</p>
-<ul>
-  <li>Put -&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
-  <li>Put -&lt;my_Linux_distribution&gt;/lib and -&lt;my_Linux_distribution&gt;/lib on the library path 
-      (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
-</ul>
+<h3>Install Binary Packages</h3>
+<p>The binary packages distributed by <b>
+<i>zip</i>
+</b> files
+  and <b>
+<i>tar</i>
+</b> files are usually extracted to the install 
+  <code>{target}</code> directory.
+  After extracting the contents, you then need to manually perform
+  some minor system configuration.
+</p>
+<p>Packages that are handled by a package manager are usually
+  installed and configured according to package maintainer.</p>
+
+<a name="InsWin">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Install Windows Packages</h4>
+<p>The Xalan-C and Xerces-C packages can be installed to the same
+  <code>{target}</code>
+  directory tree.  The debug and release builds have different names
+  for the shared <code>*.DLL</code> files.
+</p>
+<p>Windows operating systems require that the <code>{target}\bin</code>
+  directory be added to the PATH environment. You can make the path
+  a permanent part of the SYSTEM or user login DESKTOP environment. 
+  The PATH environment variable should contain an entry
+  where the <code>{target}\bin\*.DLL</code> files are found.
+</p>
+<ol>
+  <li>Right-Click on the computer icon.</li>
+  <li>Select Properties.</li>
+  <li>Select Advanced System Settings.</li>
+  <li>Select Environment Variables.</li>
+  <li>Add the <code>{target}\bin</code> directory to the
+      system PATH environment variable.</li>
+</ol>
+<p>The XP, NT, 2000 and 2003 systems allow environment variables to be 
+   set explicitly to individual user accounts. 
+   The Vista, Win-7, and 2008 systems have security administration that
+   gets in the way of updating individual user environments.
+</p>
+<p>In a command window or a command environment, you can add the following
+   shell command to set a temporary path to the XALAN <code>{target}\bin</code>
+   directory.
+</p>
+<blockquote class="source">
+<pre>set PATH=%PATH%;{target}\bin</pre>
+</blockquote>
+
+
+<a name="InsUnx">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Install UNIX Packages</h4>
+  <p>The path to the <code>Xalan</code> command line executable program should be added
+  to the PATH environment variable.</p>
+  <p>The path to the shared objects should be added to the system
+  configuration or overridden by specific entry in an environment
+  by which shared objects can be found.</p>
+<p>Here is some more detailed information on 
+  <a href="buildlibs.html#unixlibpath">UNIX Runtime</a> configuration.
+</p>
+
+<a name="InsPkgs">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Install Other Packages</h4>
+<p>These packages are usually installed and configured by a package manager.
+  You should refer to the documentation provided by the package maintainer.
+</p>
+
+
+
+<a name="XalanDocPkg">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h3>Install Documentation Packages</h3>
+<p>The documentation packages are distributed as <b>
+<i>tar</i>
+</b> files
+  and <b>
+<i>zip</i>
+</b> files.  You just extract the files into a directory
+  that is reachable by your favorite web browser.  The head of the
+  documentation tree starts at the <a href="index.html">
+  <code>{docs}/xalan-c</code>
+</a> directory.
+</p>
+<p>
+<b>TO DO:</b>
+</p>
+<p>Rework the xalan/c/trunk/xdocs/sources/ scripts so that the
+   source documentation builds are
+   targeted to the xalan/c/trunk/build/docs/xalan-c/ directory path.
+</p>
+<p>Add a documentation script that performs a post-processing
+   operation when building the API Reference from Doxygen to relocate
+   the constructed products to the xalan/c/trunk/build/docs/xalan-c/apiDocs/
+   directory path.
+</p>
+<p>Details are found in our <a href="builddocs.html">Build Documents</a> pages.
+</p>
+
+<a name="DocWebPkg">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Install Xalan-C User Guide</h4>
+<p>Extract the distributed <b>
+<i>tar</i>
+</b> file or <b>
+<i>zip</i>
+</b>
+  file to the <code>{docs}</code> directory.  The package populates
+  the <code>{docs}/xalan-c/*</code> directory containing the Xalan-C
+  User Guide web pages.
+</p>
+
+
+<a name="DocApiPkg">&#8204;</a>
+<p align="right" size="2">
+<a href="#content">(top)</a>
+</p>
+<h4>Install Xalan-C API Reference</h4>
+<p>Extract the distributed <b>
+<i>tar</i>
+</b> file or <b>
+<i>zip</i>
+</b>
+  file to the <code>{docs}</code> directory.  The package populates
+  the <code>{docs}/xalan-c/apiDocs/*</code> directory containing the
+  Xalan-C API Reference for programmers.
+</p>
 
 
 <p align="right" size="2">
 <a href="#content">(top)</a>
 </p>
 </div>
-<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 02/26/2012</div>
+<div id="footer">Copyright © 1999-2012 The Apache Software Foundation<br />Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation<div class="small">Web Page created on - Sun 03/18/2012</div>
 </div>
 </body>
 </html>
