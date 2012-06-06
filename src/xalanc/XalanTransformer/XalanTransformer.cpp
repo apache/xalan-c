@@ -184,6 +184,10 @@ XalanTransformer::~XalanTransformer()
 
     XalanDestroy(
         m_memoryManager,
+        *m_topXObjectFactory);
+
+    XalanDestroy(
+        m_memoryManager,
         *m_stylesheetExecutionContext);
 }
 
