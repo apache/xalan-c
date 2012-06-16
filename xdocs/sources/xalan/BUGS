@@ -1,0 +1,6 @@
+rmation on building Xalan-C++, please see <a href="#unix">Steps for doing a Unix build
+      </a>.</li>
+      <li>Deprecated DOM Support. The XercesBridge classes have been marked deprecated and moved 
+      into an exclusive directory within the xalanc/XercesParserLiaison directory called 
+      'Deprecated'. If your application is dependent on these classes to interface with the 
+      deprecated Xerces DOM you must alter your include directive with the 'Dep

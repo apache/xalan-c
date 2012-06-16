@@ -1,0 +1,244 @@
+<?xml version="1.0" standalone="no"?>  
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="Getting Started with Xalan-C++">
+<ul>
+<li><link anchor="download">Downloading what you need</link></li>
+<li><link anchor="path">Setting up the path/library path</link></li>
+<li><link anchor="samples">Trying out the samples</link></li>
+<li><link anchor="commandline">Performing your own transformations from the command line</link></li>
+<li><link anchor="apps">Setting up your own XSLT applications</link></li>
+</ul>
+<p>This section is being rewritten. 
+<jump href="index.html#getstarted">See: new getting started</jump>
+</p>
+<anchor name="download"/>
+<s2 title="Downloading what you need">
+<p>For &xslt4c-current;, we are distributing the following: 
+<ul>
+<li>AIX 5.1 32-bit and 64-bit xlC_r builds</li> 
+<li>HP-UX 11 32-bit and 64-bit aCC builds</li>
+<li>Red Hat Linux 7.2 32-bit and 64-bit Intel C++ builds</li>
+<li>Solaris 2.7 32-bit and 64-bit Forte C++ builds</li>
+<li>SuSE Linux 8.1 for IA-32 gcc 3.2.2 build  </li>
+<li>Windows 32-bit and 64-bit Visual C++ builds</li>
+</ul>
+</p>
+<!-- Leave this section in for future releases 
+<p>New to the &xslt4c-current; binary distribution list, we are also providing the following: 
+<ul>
+</ul>
+</p>
+-->
+<p>As with previous releases, the documentation build containing this User's Guide and API documentation
+   will be provided in a separate distribution.</p> 
+<p>Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
+<p>If you do not already have it, you must also download the &xml4c-used; build as indicated below.</p> 
+<note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in 
+      <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary 
+      distribution files.  For Windows, documentation is packaged with the file name &xslt4c-docs_dist_zip;.  For UNIX, 
+      documentation is packaged with the file name of &xslt4c-docs_dist_targz;.</note>
+<br/>
+<table>
+  <tr>
+  <th>Xalan distribution files</th>
+  <th>Xerces distribution files</th>
+  <th>Platform</th>
+  </tr>
+  <tr>
+  <td>&xslt4c-aix51v6-dist;</td>
+  <td>&xml4c-aix51v6-dist;</td>
+  <td>AIX 5.1 (32-bit)</td>
+   </tr>
+  <tr>
+  <td>&xslt4c-aix51v6_64-dist;</td>
+  <td>&xml4c-aix51v6_64-dist;</td>
+  <td>AIX 5.1 (64 bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-hpux11a-dist;</td>
+  <td>&xml4c-hpux11a-dist;</td>
+  <td>HP-UX 11.0 (32 bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-hpux11a_64-dist;</td>
+  <td>&xml4c-hpux11a_64-dist;</td>
+  <td>HP-UX 11.0 (64 bit)</td>
+  </tr>    
+  <tr>
+  <td>&xslt4c-redhat72_icc-dist;</td>
+  <td>&xml4c-redhat72_icc-dist;</td>
+  <td>Redhat Linux 7.2 (32-bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-redhat72_ecc-dist;</td>
+  <td>&xml4c-redhat72_ecc-dist;</td>
+  <td>Redhat Linux 7.2 (64-bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-solaris27-dist;</td>
+  <td>&xml4c-solaris27-dist;</td>
+  <td>Solaris 2.7 (32-bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-solaris27_64-dist; </td>
+  <td>&xml4c-solaris27_64-dist;</td>
+  <td>Solaris 2.7 (64-bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-suse81_IA-dist;</td>
+  <td>&xml4c-suse81_IA-dist;</td>
+  <td>SuSE Linux 8.1 (32-bit)</td>
+  </tr>
+  <tr>
+  <td>&xslt4c-win2k-dist;<br/></td>
+  <td>&xml4c-winnt-dist;<br/></td>
+  <td>Windows 2000<br/></td>
+  </tr>
+  <tr>
+  <td>&xslt4c-win2003l_64-dist;<br/></td>
+  <td>&xml4c-win2003c_64-dist;<br/></td>
+  <td>Windows 2003 Server (64-bit)<br/></td>
+  </tr>
+</table>
+<p>The compiler version used for each platform is listed in the table below.
+    <table>
+       <tr>
+         <th>Platform - Operating System</th>
+         <th>Compilers</th>
+       </tr>
+       <tr>
+         <td>AIX 5.1</td>
+         <td>IBM C and C++ for AIX 6.00</td>
+       </tr>
+       <tr>
+         <td>HP/UX 11.0</td>
+         <td>aCC A.03.52</td>
+       </tr>
+       <tr>
+         <td>Red Hat Linux 7.2</td>
+         <td>Intel C++ Compiler, version 7.1</td>
+       </tr>
+       <tr>
+         <td>Solaris 2.7</td>
+         <td>Sun Workshop 6 update 2</td>
+       </tr>
+       <tr>
+         <td>SuSE Linux 8.1</td>
+         <td>gcc Compiler, version 3.2.2</td>
+       </tr>
+       <tr>
+         <td>Windows NT, 2000, and XP</td>
+         <td>Microsoft Visual C++ with SP5 (for 32-bit)<br/>
+         Intel C++ Compiler, version 7.1 (for 64-bit)</td>
+       </tr>
+    </table>
+</p>
+<note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris</link>.</note>
+<anchor name="xalandists"/>
+
+<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also 
+   download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive 
+      directory</jump>.</note>
+</s2>
+
+<anchor name="path"/>
+<s2 title="Setting up the path/library path">
+<ul>
+  <li><link anchor="windowspath">For Windows</link></li>
+  <li><link anchor="unixpath">For UNIX</link></li>  
+</ul>
+
+<anchor name="windowspath"/>
+<s3 title="For Windows">
+<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+</ul>
+<p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, 
+   but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications 
+   or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers 
+   and libraries.</p> 
+<p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
+<ul>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\include to the list of directories of Include files.</li>
+  <li>Add the path to &xml4c-dist;-&lt;my_Windows_distribution&gt;\lib to the list of directories of Library files.</li>
+</ul>
+</s3>
+
+<anchor name="unixpath"/>
+<s3 title="For UNIX">
+<p>To use one of the UNIX binary distributions, you must place the &xslt4c; executable on the path, and the &xslt4c; and &xml4c; 
+   libraries on the library path.</p>
+<p>For the &xslt4c; AIX distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+  <li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
+      on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; HP-UX 11 distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path 
+      SHLIB_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; Solaris distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+  <li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_Solaris_distribution&gt;/lib on the library path 
+     (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
+</ul>
+<p>For the &xslt4c; RedHat and SuSE Linux distributions:</p>
+<ul>
+  <li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+<li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/lib and &xml4c-dist;-&lt;my_Linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
+or copy the shared libraries to /usr/lib.</li>
+</ul>
+</s3>
+</s2><anchor name="samples"/>
+<s2 title="Trying out the samples">
+<p>The &xslt4c; distribution includes a number of basic sample applications. We have precompiled these samples for you so they are ready to run, and you can review the source files to see just how they work. </p>
+<p>To run the samples, do the following:</p>
+<ol>
+<li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
+&xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin. In the UNIX distributions, the executables are in &xslt4c-dist;-&lt;my_UNIX_distribution&gt;/bin.</li>
+<li>Go to the samples subdirectory containing the sample.</li>
+<li>Run the sample from the command line (in Windows, use the DOS shell).</li>
+<li>Examine the application source files.</li>
+</ol>
+<p>For example, go to the SimpleTransform subdirectory and issue the following command:</p>
+<p><code>SimpleTransform</code></p>
+<p>SimpleTransform uses the foo.xsl stylesheet to transform foo.xml, and writes the transformation result to foo.out. To see how the example works, examine the source files: foo.xml, foo.xsl, foo.out, and SimpleTransform.cpp.</p>
+<p>For more information about the samples, see <link idref="samples">&xslt4c; Samples</link>.</p>
+</s2><anchor name="commandline"/>
+<s2 title="Performing your own transformations from the command line">
+<p>The Xalan executable lets you perform transformations from the command line. The command line for 
+most standard transformations is as follows:</p>
+<p><code>Xalan -o <ref>outputfile</ref> <ref>xmlSource</ref> <ref>stylesheet</ref></code></p>
+<p>where <ref>xmlSource</ref> is the XML source file name, <ref>stylesheet</ref> is the XSL stylesheet file name, and <ref>outputfile</ref> is the output file name.</p>
+<p>If you want the output to be displayed on the screen, simply omit the -o flag and <ref>outputfile</ref>.</p>
+<p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement or Schema hint in your XML source files and include the -v flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE or Schema). For more information, see <link idref="commandline">Command-Line Utility</link>.</p>
+</s2><anchor name="apps"/>
+<s2 title="Setting up your own XSLT applications">
+<p>You can start by using your own XML source files and XSL stylesheets with the sample applications, which illustrate a number of usage patterns. For more information on setting up applications, see <link idref="usagepatterns">Basic Usage Patterns</link>.</p>
+</s2>
+</s1>

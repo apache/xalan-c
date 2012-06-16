@@ -1,0 +1,79 @@
+<?xml version="1.0" standalone="no"?> 
+
+<!--
+    This is a StyleBook XML test for <faqs> containing <group> constructs
+-->
+
+<!DOCTYPE faqs SYSTEM "../../style/dtd/faqs.dtd">
+
+<faqs title="Frequently asked questions">
+<group title="Faq-Group 1">
+<faq title="Faq #1">
+ <q>Test Question #1</q>
+ <a><p>Test Answer #1</p></a>
+</faq>
+<faq title="Faq #2">
+ <q>Test Question #2</q>
+ <a><p>Test Answer #2</p></a>
+</faq>
+<faq title="Faq #3">
+ <q>Test Question #3</q>
+ <a><p>Test Answer #3</p></a>
+</faq>
+</group>
+
+<group title="Faq-Group 2">
+<faq title="Faq #4">
+ <q>Test Question #4</q>
+ <a><p>Test Answer #4</p></a>
+</faq>
+<faq title="Faq #5">
+ <q>Test Question #5</q>
+ <a><p>Test Answer #5</p></a>
+</faq>
+</group>
+
+<group title="Faq-Group 3">
+<faq title="Faq #6 with Multiple Answers">
+ <q>Test Question #6</q>
+ <a><p>Test Answer #6</p></a>
+ <a><p>This item has more than one answer</p></a>
+</faq>
+</group>
+
+<group title="Faq-Group 4 = Empty">
+</group>
+
+<group title="Faq-Group 5">
+<faq title="Faq #7">
+ <q>Test Question #7</q>
+ <a><p>Test Answer #7</p></a>
+</faq>
+<faq title="Faq #8">
+ <q>Test Question #8</q>
+ <a><p>Test Answer #8</p></a>
+</faq>
+<faq title="Faq #9 with no Answer">
+ <q>Test Question #9</q>
+</faq>
+<faq title="Faq #10 with no Question">
+ <a><p>Test Answer #10</p></a>
+</faq>
+<faq title="Faq #11">
+ <q>Test Question #11</q>
+ <a><p>Test Answer #11</p></a>
+</faq>
+</group>
+
+<group title="Faq-Group 6">
+<faq title="Faq #12">
+ <q>Test Question #12</q>
+ <a><p>Test Answer #12</p></a>
+</faq>
+<faq title="Faq #13">
+ <q>Test Question #13</q>
+ <a><p>Test Answer #13</p></a>
+</faq>
+</group>
+
+</faqs>

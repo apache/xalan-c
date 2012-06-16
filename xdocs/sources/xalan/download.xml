@@ -1,0 +1,210 @@
+<?xml version="1.0" standalone="no"?> 
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+<s1 title="Downloading &xslt4c;">
+<anchor name="download"/>
+<p>This section is being rewritten for Xalan-C/C++ Version 1.11.  You
+can find the old 
+<jump href="http://xml.apache.org/xalan-c">Version 1.10</jump> here.
+</p>
+
+<p>We are providing a source package, a documentation package, and
+some compiled binary packages.
+</p>
+
+<p>The binary packages are currently for Windows systems.  We can
+use your help <jump href="buildlibs.html">creating binary packages</jump> for 
+UNIX and Linux systems.
+</p>
+
+<p><em>THIS IS STILL A PRE-RELEASE PRODUCT</em></p>
+
+<p>A distribution will be mirrored and these pages updated when the packages
+become available to the general public.  The current packages for download
+are in a temporary repository for developers.
+</p>
+
+<p>The subversion sources are current for Xalan-C/C++ Version 1.11 and are
+available for download using your favorite subversion <code>svn</code> program.</p>
+
+<p>Apache Xalan-C/C++ Subversion Repository is accessed here.<br/> 
+<jump href="http://svn.apache.org/repos/asf/xalan/c/trunk">
+http://svn.apache.org/repos/asf/xalan/c/trunk</jump>
+</p>
+
+<s2 title="Downloading what you need">
+
+<p>The Xalan-C/C++ library requires the
+<jump href="http:xml.apache.org/xerces-c">Xerces-C/C++ XML</jump> Parser 3.0 
+or newer, version 3.1.1 is preferred.
+</p>
+
+<p>The source package contains all the scripts needed to build the
+library, sample programs, and documentation for a wide variety
+of Windows and UNIX platforms.  The documentation package provides
+usable html documentation for your web browsers.
+</p>
+
+<p>Building the API Reference documents requires a current version of the 
+<jump href="http://www.doxygen.org">Doxygen</jump> and 
+<jump href="http://www.graphviz.org">GraphViz</jump> programs for UNIX or Linux. 
+We have not tried building the API Reference on a Windows platform.
+A usable API Reference is included with the documentation package.
+</p>
+
+<s3 title="Source Packages">
+<p>We are distributing the source package for the Xalan-C/C++
+library, sample programs, and documentation.  The source package
+has the StyleBook XML sources for the web pages and a Doxygen
+configuration file to construct the API Reference.
+</p>
+
+<ul>
+ <li>Xalan-C-1.11.source.tar.gz</li>
+ <li>Xalan-C-1.11.source.zip</li>
+</ul>
+</s3>
+
+<s3 title="Documentation Packages">
+<p>We are distributing a package of html web pages for the User
+Guide and interactive API Reference. The documentation package 
+describes how to build and use the library for Windows and UNIX
+platforms.
+</p>
+
+<ul>
+ <li>Xalan-C-1.11.docs-html.tar.gz</li>
+ <li>Xalan-C-1.11.docs-html.zip</li>
+ <li>Xalan-C-1.11.docs-api.tar.gz</li>
+ <li>Xalan-C-1.11.docs-api.zip</li>
+</ul>
+</s3>
+
+<s3 title="Binary Packages">
+<p>We are distributing compiled binary packages for several
+platforms.  The Xalan-C/C++ documentation is provided as a
+separate package.  We would like to distribute
+binary packages for platforms that have compiled Xerces-C/C++
+distribution support.
+</p>
+
+<p>The following binary packages are being prepared for distribution.</p>
+
+<ul>
+ <li>Xalan-C-1.11.windows-x86-vc71.zip</li>
+ <li>Xalan-C-1.11.windows-x86-vc8.zip</li>
+ <li>Xalan-C-1.11.windows-x86-vc9.zip</li>
+ <li>Xalan-C-1.11.windows-x86-vc10.zip</li>
+ <li>Xalan-C-1.11.windows-x86_64-vc8.zip</li>
+ <li>Xalan-C-1.11.windows-x86_64-vc9.zip</li>
+ <li>Xalan-C-1.11.windows-x86_64-vc10.zip</li>
+</ul>
+
+<p>We currently have no one committed to release UNIX and Linux
+binary packages.  If you have scripts to build these packages,
+your help would be appreciated. 
+You can contribute by posting your comments to the 
+<jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mailing list.
+</p>
+</s3>
+<!-- PLATFORM COMPATIBILITY TABLE GOES HERE
+-->
+<s3 title="Platform Compatibility">
+<p>The compiler version used for each platform is listed in the table below.
+The build platforms shown here have Xerces-C/C++ binary package support.
+    <table>
+       <tr>
+         <th>Platform - Operating System</th>
+         <th>Compilers</th>
+       </tr>
+       <tr>
+         <td>Windows X86</td>
+         <td>VC7.1, VC8, VC9, VC10</td>
+       </tr>
+       <tr>
+         <td>Windows X86_64</td>
+         <td>VC8, VC9, VC10</td>
+       </tr>
+       <tr>
+         <td>HPUX ia64</td>
+         <td>ACC 6</td>
+       </tr>
+       <tr>
+         <td>HPUX ia64_64</td>
+         <td>ACC 6</td>
+       </tr>
+       <tr>
+         <td>AIX powerpc</td>
+         <td>xlc 7.0</td>
+       </tr>
+       <tr>
+         <td>AIX powerpc_64</td>
+         <td>xlc 7.0</td>
+       </tr>
+       <tr>
+         <td>SOLARIS sparc</td>
+         <td>cc 5.10</td>
+       </tr>
+       <tr>
+         <td>SOLARIS sparc_64</td>
+         <td>cc 5.10</td>
+       </tr>
+       <tr>
+         <td>SOLARIS X86</td>
+         <td>cc 5.10</td>
+       </tr>
+       <tr>
+         <td>SOLARIS X86_64</td>
+         <td>cc 5.10</td>
+       </tr>
+       <tr>
+         <td>LINUX X86</td>
+         <td>gcc 3.4</td>
+       </tr>
+       <tr>
+         <td>Linux X86_64</td>
+         <td>gcc 3.4</td>
+       </tr>
+       <tr>
+         <td>MAC OSX X86</td>
+         <td>gcc 4.0</td>
+       </tr>
+    </table>
+</p>
+<p>Building for platforms other than those listed will require
+a build of the Xerces-C/C++ XML Parser library from the sources.
+Use of Xalan and Xerces libraries compiled with different versions
+of compilers may cause problems</p>
+
+<note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="faq-11">A tar checksum error on Solaris
+      </link>.
+</note>
+
+<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download 
+   and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+
+<p>The IBM ICU is supported with Xerces-C version 2.8.  Xerces-C version 3 has introduced transcoding support modules, currently being evaluated for Xalan XSLT transcoders.
+</p>
+
+<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive 
+      directory</jump>.
+</note>
+</s3>
+</s2>
+</s1>
