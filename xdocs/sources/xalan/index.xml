@@ -31,7 +31,7 @@
 <li><link anchor="getWhatNeeded">Getting What You Need</link></li>
 </ul>
 <p>The old Xalan-C/C++ 1.10 release can be found at 
-<jump href="../old/xalan-c">xml.apache.org/xalan-c</jump>.</p>
+<jump href="../old/xalan-c/index.html">xml.apache.org/xalan-c</jump>.</p>
 
 <anchor name="whatisxalan"/>
 <s2 title="What Is Xalan?">
