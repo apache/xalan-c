@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!--
@@ -28,7 +28,7 @@
   doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
   omit-xml-declaration="no"
-  encoding="ISO-8859-1"
+  encoding="UTF-8"
   standalone="no"
 />
 
@@ -126,7 +126,7 @@
     <xsl:element name='title'>
       <xsl:value-of select="concat('ASF: ',$xalantitle)"/>
     </xsl:element><!--/title-->
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="Content-Style-Type" content="text/css"/>
     <link rel="stylesheet" type="text/css" href="resources/apache-xalan.css"/>
   </xsl:element><!--/head-->
