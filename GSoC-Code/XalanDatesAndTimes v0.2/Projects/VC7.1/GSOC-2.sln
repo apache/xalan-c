@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeLib", "DateTimeLib\DateTimeLib.vcproj", "{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDateTime", "TestDateTime\TestDateTime.vcproj", "{C3FE428D-14A7-47EE-AB3E-F6ABBF521963}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6} = {A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}.Debug.ActiveCfg = Debug|Win32
+		{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}.Debug.Build.0 = Debug|Win32
+		{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}.Release.ActiveCfg = Release|Win32
+		{A40D54D7-2E85-4E56-BC7E-B672FEAB24B6}.Release.Build.0 = Release|Win32
+		{C3FE428D-14A7-47EE-AB3E-F6ABBF521963}.Debug.ActiveCfg = Debug|Win32
+		{C3FE428D-14A7-47EE-AB3E-F6ABBF521963}.Debug.Build.0 = Debug|Win32
+		{C3FE428D-14A7-47EE-AB3E-F6ABBF521963}.Release.ActiveCfg = Release|Win32
+		{C3FE428D-14A7-47EE-AB3E-F6ABBF521963}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

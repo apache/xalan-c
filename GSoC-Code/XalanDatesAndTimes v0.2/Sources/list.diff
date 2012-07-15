@@ -1,0 +1,620 @@
+--- v0.1/Tester.cpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/Tester.cpp	2012-07-14 02:38:34.000000000 -0700
+@@ -1,6 +1,6 @@
+-//[...]
++#include "XalanDateTime.hpp"
+ 
+-void XalanDatesAndTimesTester::dateTimeFromStringTest()
++void dateTimeFromStringTest()
+ {
+     char * invalidRepresentations[] =
+     {
+@@ -183,7 +183,7 @@
+     }
+ }
+ 
+-void XalanDatesAndTimesTester::durationFromStringTest()
++void durationFromStringTest()
+ {
+     char * invalidRepresentations[] =
+     {
+@@ -319,5 +319,3 @@
+         }
+     }
+ }
+-
+-[...]
+\ No newline at end of file
+--- v0.1/XalanCalendar.hpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanCalendar.hpp	2012-07-14 02:38:34.000000000 -0700
+@@ -137,28 +137,36 @@
+     static const char NULL_CHAR = '\0';
+     
+     /**
+-     * Given a string, analyses it and gives the length of the number
+-     * that have its string representation starten at the init of the
+-     * string. Numbers are any sequence of digits and points. Numbers
+-     * must have at most one point character and this method considers
+-     * that the number representation is already validated.
++     * Given a string, analyses it and gives the location of the point
++     * character of the number that have its string representation
++     * starten at the init of the string. Numbers are any sequence of
++     * digits and may include one point.
++     * Futhermore, this method stores into the location pointed by
++     * nLength the length of the number.
+      *
+-     * @param info The information containing the number to have its
+-     *     length known.
++     * @param info The information containing the number to have
++     *     information known.
+      *
+-     * @return The length of the number representation starting in the
+-     *     init of the string.
++     * @param nLength The pointer to the location at memory to store
++     *     the length of the number.
++     *
++     * @return The location of the point character into the number
++     *     representation.
+      */
+-    static int getNumberLength(char * info)
++    static int getNumberInfo(char * info, int * nLength)
+     {
+-        int length = 0;
+-        while (isdigit(*info) || *info == '.')
++        int len = 0;
++        int pointAt = 0;
++        while (isdigit(*info) 
++            || (!pointAt && (pointAt = (*info == '.') ? len + 1 : 0)))
+         {
++            len++;
+             info++;
+-            length++;
+         }
+ 
+-        return length;
++        *nLength = *info == '.' ? 0 : len;
++
++        return pointAt;
+     }
+ 
+     /**
+@@ -210,6 +218,20 @@
+     }
+ };
+ 
++/**
++ * Often, moments in the time are represented as strings. This class
++ * represents exceptions thrown when those strings are not in valid
++ * formats.
++ */
++class InvalidFormat : public std::invalid_argument
++{
++public:
++    InvalidFormat(const char * message)
++        : invalid_argument(message)
++    {
++    }
++};
++
+ XALAN_CPP_NAMESPACE_END
+ 
+ #endif
+\ No newline at end of file
+--- v0.1/XalanDatesAndTimes.cpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanDatesAndTimes.cpp	2012-07-14 02:38:34.000000000 -0700
+@@ -20,8 +20,6 @@
+ #include "XalanDateTime.hpp"
+ #include "XalanDuration.hpp"
+ 
+-XALAN_CPP_NAMESPACE_USE
+-
+ char * XalanDatesAndTimes::add(char * dateTime, char * duration)
+ {
+     XalanDateTime * dtTm = XalanDateTime::fromString(dateTime);
+--- v0.1/XalanDateTime.cpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanDateTime.cpp	2012-07-14 02:38:34.000000000 -0700
+@@ -18,7 +18,31 @@
+ 
+ #include "XalanDateTime.hpp"
+ 
+-XALAN_CPP_NAMESPACE_USE
++const char * XalanDateTime::INVALID_DATETIME_ERR =
++{
++    "The representation must be a right-truncated date/time string in "
++    "one of the formats defined in [XML Schema Part 2: Datatypes]. "
++    "The permitted formats are: xs:dateTime (CCYY-MM-DDThh:mm:ss); "
++    "xs:date (CCYY-MM-DD); xs:gYearMonth (CCYY-MM) and xs:gYear (CCYY). "
++    "An optional minus signal is accepted at the beginning, representing "
++    "a BC time. These formats are accurately described at the following "
++    "links, respectively: "
++    "http://www.w3.org/TR/xmlschema-2/#dateTime; "
++    "http://www.w3.org/TR/xmlschema-2/#date; "
++    "http://www.w3.org/TR/xmlschema-2/#gYearMonth"" and "
++    "http://www.w3.org/TR/xmlschema-2/#gYear"
++};
++
++const char * XalanDateTime::INVALID_TIMEZONE_ERR =
++{
++    "The representation of timezone must be a duration with "
++    "(integer-valued) hour and minute properties (with the hour "
++    "magnitude limited to at most 14, and the minute magnitude limited "
++    "to at most 59, except that if the hour magnitude is 14, the minute "
++    "value must be 0); they may be both positive or both negative. The "
++    "lexical representation of a timezone is a string of the form: "
++    "(('+' | '-') hh ':' mm) | 'Z'"
++};
+ 
+ void XalanDateTime::addDuration(
+     XalanDuration * duration)
+@@ -59,12 +83,12 @@
+     
+     // Adjusting day, month and year
+     bool negDay;
+-    while ((negDay = rDay < 1) || rDay > maximumDayInMonthFor(rYear, rMonth))
++    while ((negDay = (rDay < 1)) || rDay > maximumDayInMonthFor(rYear, rMonth))
+     {
+         if (negDay)
+         {
+             tCarry = -1;
+-            rDay += maximumDayInMonthFor(rYear, rMonth);
++            rDay += maximumDayInMonthFor(rYear, rMonth - 1);
+         }
+         else
+         {
+@@ -74,7 +98,7 @@
+ 
+         tInteger = rMonth + tCarry;
+         rMonth = modulo(tInteger, 1, 13);
+-        rYear = rYear + fQuotient(tInteger, 1, 13);
++        rYear += fQuotient(tInteger, 1, 13);
+     }
+ 
+     /* Verifying if the year value has crossed the year zero.
+@@ -107,6 +131,55 @@
+     return strcat(dateTime, timeZone);
+ }
+ 
++bool XalanDateTime::isTimeZoneValid(char * timeZone)
++{
++    if (*timeZone == '+' || *timeZone == '-')
++    {
++        timeZone += SEPR_FLD;
++
++        int hoursMinutes[2];
++        int upperBounds[] = {14, 59};
++        int fieldsLens[] = {HH_FLD, MM_FLD};
++    
++        int nLength;
++        int iPointer = 0;
++        do
++        {
++            if (getNumberInfo(timeZone, &nLength)
++                || (nLength != fieldsLens[iPointer]))
++            {
++                return false;
++            }
++
++            if ((hoursMinutes[iPointer] = getInteger(timeZone, fieldsLens[iPointer]))
++                    > upperBounds[iPointer])
++            {
++                return false;
++            }
++
++            timeZone += nLength;
++
++            if (*timeZone && (*timeZone != TM_SEPR_SYM))
++            {
++                return false;
++            }
++
++            timeZone += !iPointer ? SEPR_FLD : 0;
++        } while (*timeZone && ++iPointer);
++
++        if (hoursMinutes[0] == 14 && hoursMinutes[1])
++        {
++            return false;
++        }
++    }
++    else if (*timeZone != UTC_TMZN_SYM || *(++timeZone))
++    {
++        return false;
++    }
++
++    return true;
++}
++
+ XalanDateTime * XalanDateTime::fromString(char * dateTime)
+ {
+     double seconds = 0;
+@@ -115,45 +188,95 @@
+ 
+     // The timezone is a string in format '+hh:mm', '-hh:mm' or 'Z'
+     char * timeZone = new char[6];
+-
++    
+     // Verifying if it is a negative date/time
+     bool negDate;
+     if (negDate = *dateTime == '-')
+     {
+         dateTime++;
+     }
+-    
++
+     int * fieldsPointers[] =
+         {&year, &month, &day, &hours, &minutes};
+     int fieldsLens[] =
+-        {getNumberLength(dateTime), MN_FLD, DD_FLD, HH_FLD, MM_FLD};
+-
++        {YY_FLD, MN_FLD, DD_FLD, HH_FLD, MM_FLD};
++    int upperBounds[] =
++        {32767, 12, 31, 23, 59};
++    
+     // Getting the values for each date/time field
++
++    
+     int iPointer = 0;
++    int pointAt, nLength;
+     do
+     {
+-        *fieldsPointers[iPointer] = negDate && !iPointer
+-            ? -getInteger(dateTime, fieldsLens[iPointer])
+-            : getInteger(dateTime, fieldsLens[iPointer]);
+-        dateTime += fieldsLens[iPointer];
++        if (getNumberInfo(dateTime, &nLength)
++            || (iPointer ? nLength != fieldsLens[iPointer]
++                : nLength < fieldsLens[iPointer]))
++        {
++            throw InvalidFormat(INVALID_DATETIME_ERR);
++        }
++
++        if (abs(*fieldsPointers[iPointer] = negDate && !iPointer
++                ? -getInteger(dateTime, fieldsLens[iPointer])
++                : getInteger(dateTime, fieldsLens[iPointer]))
++            > upperBounds[iPointer] || (iPointer < 3 && !*fieldsPointers[iPointer]))
++        {
++            throw InvalidFormat(INVALID_DATETIME_ERR);
++        }
++
++        dateTime += nLength;
+ 
+         if (!*dateTime || isTimeZone(dateTime))
+         {
+             break;
+         }
+ 
++        if (*dateTime && *dateTime
++            != (iPointer == 2 ? DTTM_SEPR_SYM : iPointer < 2 ? DT_SEPR_SYM : TM_SEPR_SYM))
++        {
++            throw InvalidFormat(INVALID_DATETIME_ERR);
++        }
++
+         dateTime += SEPR_FLD;
+ 
+         if (iPointer++ == (sizeof(fieldsLens)/sizeof(*fieldsLens)) -1)
+         {
+-            int numberLength = getNumberLength(dateTime);
++            pointAt = getNumberInfo(dateTime, &nLength);
+             
+-            seconds = getDouble(dateTime, numberLength);
+-            dateTime += numberLength;
++            if (pointAt)
++            {
++                if (pointAt - 1 != SS_FLD)
++                {
++                    throw InvalidFormat(INVALID_DATETIME_ERR);
++                }
++                else if (!(nLength - pointAt))
++                {
++                    throw InvalidFormat(INVALID_DATETIME_ERR);
++                }
++            }
++            else if (nLength != SS_FLD)
++            {
++                throw InvalidFormat(INVALID_DATETIME_ERR);
++            }
++
++            seconds = getDouble(dateTime, nLength);
++            dateTime += nLength;
+ 
+             break;
+         }
+     } while (*dateTime);
++    
++    if (iPointer == 3 || iPointer == 4
++        || day > maximumDayInMonthFor(year, month))
++    {
++        throw InvalidFormat(INVALID_DATETIME_ERR);
++    }
++
++    if (*dateTime && !isTimeZoneValid(dateTime))
++    {
++        throw InvalidFormat(INVALID_TIMEZONE_ERR);
++    }
+ 
+     // Getting the timezone
+     strcpy(timeZone, dateTime);
+--- v0.1/XalanDateTime.hpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanDateTime.hpp	2012-07-14 02:38:34.000000000 -0700
+@@ -16,16 +16,11 @@
+  * limitations under the License.
+  */
+ 
+-
+-#ifndef _XALANDATETIME_H
+-#define _XALANDATETIME_H
+-
+-#include <xalanc/Include/PlatformDefinitions.hpp>
+-
+ #include "XalanCalendar.hpp"
+ #include "XalanDuration.hpp"
+ 
+-XALAN_CPP_NAMESPACE_BEGIN
++#ifndef _XALANDATETIME_H
++#define _XALANDATETIME_H
+ 
+ /**
+  * This class defines date/time objects
+@@ -129,12 +124,39 @@
+      *     the date/time received as argument are loaded in the
+      *     instance's fields.
+      *
+-     * @exception std::invalid_argument Thrown when the date/time
++     * @exception InvalidFormat Thrown when the date/time
+      *     represented as string received as argument is not in one of
+-     *     the accepted formats.
++     *     the accepted formats. Also, when the timezone representation
++     *     is not valid, see isTimeZoneValid method.
+      */
+     static XalanDateTime * fromString(char * dateTime);
+ 
++    /**
++     * Given a string representation of a timezone, this method
++     * evaluates it and determines if it is valid or not.
++     * The representation of timezone must be a duration with
++     * (integer-valued) hour and minute properties (with the hour
++     * magnitude limited to at most 14, and the minute magnitude limited
++     * to at most 59, except that if the hour magnitude is 14, the minute
++     * value must be 0); they may be both positive or both negative. The
++     * lexical representation of a timezone is a string of the form:
++     * (('+' | '-') hh ':' mm) | 'Z'
++     *
++     * @param timeZone The string representation of a timezone to be
++     *     evaluated.
++     *
++     * @return true, if the timezone is valid; false, otherwise.
++     */
++    static bool isTimeZoneValid(char * timeZone);
++
++    /* The error message when a string representation of date/time is
++       not valid. */
++    static const char * INVALID_DATETIME_ERR;
++
++    /* The error message when a string representation of timezone is
++       not valid. */
++    static const char * INVALID_TIMEZONE_ERR;
++
+ private:
+ 
+     /* The format of the string representation for the date/time object.
+@@ -164,10 +186,12 @@
+      */
+     enum DateTimeFieldsSize
+     {
++        YY_FLD = 4,
+         MN_FLD = 2,
+         DD_FLD = 2,
+         HH_FLD = 2,
+-        MM_FLD = 2
++        MM_FLD = 2,
++        SS_FLD = 2
+     };
+ 
+     /**
+@@ -273,6 +297,11 @@
+      */
+     static int maximumDayInMonthFor(int yearValue, int monthValue)
+     {
++        if (yearValue < 0)
++        {
++            yearValue = abs(yearValue) - 1;
++        }
++
+         return ((monthValue < 8 && monthValue % 2 != 0)
+             || (monthValue >= 8 && monthValue % 2 == 0))
+             ? 31
+@@ -301,6 +330,4 @@
+     }
+ };
+ 
+-XALAN_CPP_NAMESPACE_END
+-
+ #endif
+\ No newline at end of file
+--- v0.1/XalanDuration.cpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanDuration.cpp	2012-07-14 02:38:34.000000000 -0700
+@@ -18,7 +18,19 @@
+ 
+ #include "XalanDuration.hpp"
+ 
+-XALAN_CPP_NAMESPACE_USE
++const char * XalanDuration::INVALID_DURATION_ERR =
++{
++    "The string representation must conforms with the format "
++    "PnYnMnDTnHnMnS, where nY represents the number of "
++    "years, nM the number of months, nD the number of days, "
++    "'T' is the date/time separator, nH the number of "
++    "hours and nM the number of minutes, where each one is represented "
++    "as an unsigned integer. nS is the number of seconds, that may be "
++    "represented as a floating-point number. An optional minus signal "
++    "is accepted at the beginning, representing a negative duration. "
++    "For detailed information, see "
++    "http://www.w3.org/TR/xmlschema-2/#duration"
++};
+ 
+ char * XalanDuration::toString()
+ {
+@@ -34,49 +46,95 @@
+ 
+     // Verifying if it is a negative duration
+     bool negDuration;
+-    if (negDuration = *duration++ == '-')
++    if (negDuration = (*duration == '-'))
+     {
+         duration++;
+     }
+ 
++    if (*duration != PD_SYM)
++    {
++        throw InvalidFormat(INVALID_DURATION_ERR);
++    }
++
++    duration += SEPR_FLD;
++
+     char fieldsSym[] =
+-        {YY_SYM, MN_SYM, DD_SYM, HH_SYM, MM_SYM};
++        {YY_SYM, MN_SYM, DD_SYM, HH_SYM, MM_SYM, SS_SYM};
+     int * fieldsPointers[] =
+         {&year, &month, &day, &hours, &minutes};
+ 
+     // Getting the values for each duration field
++    int pointAt = 0;
++    int numberLength = 0;
++    bool gotTime = false;
++    
+     int iPointer = 0;
+-    int numberLength;
+     while (*duration)
+     {
+         if (*duration == DTTM_SEPR_SYM)
+         {
++            if (gotTime || (iPointer > 3))
++            {
++                throw InvalidFormat(INVALID_DURATION_ERR);
++            }
++
+             iPointer = 3;
++            gotTime = true;
+             duration += SEPR_FLD;
+         }
+ 
+-        duration += numberLength = getNumberLength(duration);
++        pointAt = getNumberInfo(duration, &numberLength);
++        duration += numberLength;
+ 
+-        while (*duration != fieldsSym[iPointer])
++        if ((pointAt == 1)
++            || !(numberLength - pointAt))
+         {
+-            if (++iPointer == sizeof(fieldsSym)/sizeof(*fieldsSym))
+-            {
+-                seconds = negDuration
+-                    ? -getDouble(duration - numberLength, numberLength)
+-                    : getDouble(duration - numberLength, numberLength);
++            throw InvalidFormat(INVALID_DURATION_ERR);
++        }
+ 
+-                return new XalanDuration(year, month, day, hours,
+-                    minutes, seconds);
++        while ((*duration != fieldsSym[iPointer])
++            && ((iPointer + 1) < (sizeof(fieldsSym)/sizeof(*fieldsSym))))
++        {
++            iPointer++;
++        }
++
++        if (*duration == SS_SYM)
++        {
++            if (!gotTime || *(duration + SEPR_FLD))
++            {
++                throw InvalidFormat(INVALID_DURATION_ERR);
+             }
++
++            seconds = negDuration
++                ? -getDouble(duration - numberLength, numberLength)
++                : getDouble(duration - numberLength, numberLength);
++
++            return new XalanDuration(year, month, day, hours,
++                minutes, seconds);
++        }
++        else if ((iPointer + 1) == (sizeof(fieldsSym)/sizeof(*fieldsSym)))
++        {
++            throw InvalidFormat(INVALID_DURATION_ERR);
++        }
++
++        if (pointAt || (iPointer >= 3 && !gotTime))
++        {
++            throw InvalidFormat(INVALID_DURATION_ERR);
+         }
+ 
+         *fieldsPointers[iPointer] = negDuration
+             ? -getInteger(duration - numberLength, numberLength)
+             : getInteger(duration - numberLength, numberLength);
+ 
+-        duration += SEPR_FLD;
++        iPointer++;
++        duration++;
++    }
++
++    if (!iPointer)
++    {
++        throw InvalidFormat(INVALID_DURATION_ERR);
+     }
+ 
+     return new XalanDuration(year, month, day, hours,
+         minutes, seconds);
+-}
+\ No newline at end of file
++}
+--- v0.1/XalanDuration.hpp	2012-07-14 02:41:04.000000000 -0700
++++ v0.2/XalanDuration.hpp	2012-07-14 02:38:34.000000000 -0700
+@@ -16,14 +16,10 @@
+  * limitations under the License.
+  */
+ 
+-#ifndef _XALANDURATION_H
+-#define _XALANDURATION_H
+-
+-#include <xalanc/Include/PlatformDefinitions.hpp>
+-
+ #include "XalanCalendar.hpp"
+ 
+-XALAN_CPP_NAMESPACE_BEGIN
++#ifndef _XALANDURATION_H
++#define _XALANDURATION_H
+ 
+ /**
+  * This class defines Duration Objects
+@@ -90,11 +86,15 @@
+      *     the duration received as argument are loaded in the
+      *     instance's fields.
+      *
+-     * @exception std::invalid_argument Thrown when the date/time represented
++     * @exception InvalidFormat Thrown when the date/time represented
+      *     as string received as argument is not in the accepted format.
+      */
+     static XalanDuration * fromString(char * duration);
+ 
++    /* The error message when a string representation of duration is
++       not valid. */
++    static const char * INVALID_DURATION_ERR;
++
+ private:
+     /**
+      * Representing durations as strings, there are specifc symbols
+@@ -102,6 +102,7 @@
+      */
+     enum PeriodSymbols
+     {
++        PD_SYM = 'P',
+         YY_SYM = 'Y',
+         MN_SYM = 'M',
+         DD_SYM = 'D',
+@@ -109,7 +110,7 @@
+         MM_SYM = 'M',
+         SS_SYM = 'S'
+     };
++
+ };
+ 
+-XALAN_CPP_NAMESPACE_END
+ #endif
+\ No newline at end of file
