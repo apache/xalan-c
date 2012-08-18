@@ -105,11 +105,11 @@
 
 <human-resource id="xalandev" 
                 name="Xalan Development Mailing List" 
-                mailto="xalan-dev@xml.apache.org"/>
+                mailto="dev@xalan.apache.org"/>
 
 <human-resource id="xalancusers"
                 name="Xalan-C/C++ Users Mailing List"
-                mailto="xalan-c-users@xml.apache.org"/>
+                mailto="c-users@xalan.apache.org"/>
   
 <resource id="bugzilla"
           title="Bugzilla (the Apache bug database)"

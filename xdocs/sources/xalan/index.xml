@@ -95,13 +95,13 @@ that are provided by the Apache Xalan community.
 You will need to subscribe if you wish to receive mail from the lists. 
 Some lists require a subscription in order to post messages.
 </p>
-<p>The <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mailing list 
+<p>The <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list 
 is used to communicate product development issues with the software development team. 
 The xalan-dev messages are 
 <jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-dev">archived here</jump> 
 and on <jump href="http://marc.info/?l=xalan-dev">Marc.info</jump>.
 </p>
-<p>The <jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump> mailing list 
+<p>The <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mailing list 
 is used to discuss issues regarding the use of the Xalan-C/C++ software and libraries. 
 The xalan-c-users messages are 
 <jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-c-users">archived here</jump> 
@@ -242,10 +242,10 @@ The source package contains the sources to build everything.
 <p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Versions 2.7.0 and 2.8.0.
 </p>
 <p>If you are having problems using the product, 
-send your comments to the <jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump> mail list.
+send your comments to the <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mail list.
 </p>
 <p>If you think a change needs to be made or have suggestions for future releases, 
-send your comments to the <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mail list.
+send your comments to the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
 </p>
 <p>Binary releases are not yet available. 
 We would like to distribute Xalan-C/C++ Version 1.11 binary releases 

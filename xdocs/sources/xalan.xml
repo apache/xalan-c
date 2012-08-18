@@ -127,7 +127,7 @@
   <external href="whatsnew.html#bugs" 
             label="Bugs"/>
 
-  <external href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c" 
+  <external href="http://xalan.apache.org/old/xalan-j/test/run.html#how-to-run-c" 
             label="Testing"/>
 
   <document id="secureweb"

@@ -53,7 +53,7 @@ compile the companion Xerces-C/C++ library.
 </p>
 <p>If you are able to successfully create a new binary package and wish it
 to be included, then we welcome your participation on the 
-<jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mail list.
+<jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
 </p>
 <p>Xalan-C/C++ no longer supports Microsoft Studio (VC6).  The Microsoft Visual
 Studio .NET platforms (2003, 2005, 2008, and 2010) are supported.  This equates
@@ -246,7 +246,7 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 </note> 
 <p>We strongly encourage you write patches for problems you find and 
   submit them to JIRA and the
-  <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mailing list. 
+  <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list. 
   We review the patches we receive to make sure they do not break   something else, and (assuming they do not) 
   include them in our next release. 
   In the interest of fixing bugs, adding enhancements, and 
