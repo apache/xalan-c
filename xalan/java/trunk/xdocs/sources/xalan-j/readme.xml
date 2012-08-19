@@ -362,8 +362,9 @@
       <jump href="http://issues.apache.org/jira/secure/ViewIssue.jspa?key=XALANJ-2176">2176</jump>,
       <jump href="http://issues.apache.org/jira/secure/ViewIssue.jspa?key=XALANJ-2183">2183</jump>
      </li>
-     <li>For a list of &xslt4j; commits, see xalan-cvs@xml.apache.org in the
-      <resource-ref idref="apache-mail-archives"/>.
+     <li>For a list of &xslt4j; commits, see xalan-cvs@xml.apache.org and commits@xalan.apache.org in the
+      <resource-ref idref="apache-mail-archives"/>.  The commits@xalan.apache.org list was activated on
+      August 18, 2012.
      </li>        
      </ul>
    </s2>

@@ -21,7 +21,7 @@
   <ul>
   <li>If doubt exists whether the behaviour in question is a bug or a feature, 
       please post a message to the 
-      <jump href="http://xml.apache.org/mail.html#xalan-j-users">xalan-j-users@xml.apache.org</jump>
+      <jump href="mailto:j-users@xalan.apache.org">xalan-j-users@apache.org</jump>
       list for clarification.</li>
   <li>To help eliminate duplicate or invalid bug reports, please take a quick look at
       bugs in JIRA to see whether the bug has been already reported and/or fixed. 

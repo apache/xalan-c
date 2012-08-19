@@ -51,7 +51,7 @@
   <external href="xsltc/index.html" label="XSLTC Design"/>
   <separator/>
   <document id="builds" label="Building a release" source="xalan-j/builds.xml"/>
-  <external href="http://xml.apache.org/xalan-j/test/overview.html" label="Testing"/>
+  <external href="http://xalan.apache.org/old/xalan-j/test/overview.html" label="Testing"/>
   <document id="bugreporting" label="Bug Reporting" source="xalan-j/bugreporting.xml"/>  
   <separator/>
   <document id="contact_us"  label="Contact us"      source="xalan-j/contact_us.xml"/>  

@@ -38,7 +38,7 @@
   <p>
     Please email your comments, questions, suggestions, 
     and offers to join the Xalan team to <human-resource-ref idref="xalandev"/>
-    (xalan-dev@xml.apache.org).</p>
+    (xalan-dev@apache.org).</p>
  </s2>
 <anchor name="reporting-bugs"/>
 <s2 title="Reporting bugs">
@@ -54,7 +54,7 @@
     If you think you have encountered a bug, but you aren't sure because 
     it might be a usage problem, or if you have other questions about Xalan 
     post a note to
-    <jump href="mailto:xalan-j-users@xml.apache.org">xalan-j-users&#64;xml.apache.org</jump>
+    <jump href="mailto:xalan-j-users@apache.org">xalan-j-users&#64;apache.org</jump>
     This mailing list pertains to only to the Java version of Xalan.
   </p>
   <p>
@@ -70,7 +70,7 @@
   <p>
     The participating developers of the Xalan meet and discuss issues, 
     code changes/additions, etc. at 
-    <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev@xml.apache.org</jump>.
+    <jump href="mailto:xalan-dev@apache.org">xalan-dev@apache.org</jump>.
     This mailing list pertains to both the Java and C++ versions of Xalan.
   </p>
   <p>
@@ -88,17 +88,18 @@
   </p>
   <p>
     To subscribe an email account to the Xalan user mailing list send a note to 
-    xalan-j-users-subscribe&#64;xml.apache.org from that account. To unsubscribe
+    xalan-j-users-subscribe&#64;apache.org from that account. To unsubscribe
     do the same, except replace <em>subscribe</em> with <em>unsubscribe</em>.
   </p>
   <p>
     To subscribe to the Xalan developer mailing list send a note to 
-    xalan-dev-subscribe&#64;xml.apache.org. To unsubscribe
+    xalan-dev-subscribe&#64;apache.org. To unsubscribe
     do the same, except replace <em>subscribe</em> with <em>unsubscribe</em>.
   </p>  
   <p>
     For more information on XML related Apache mailing lists go to
-    <jump href="http://xml.apache.org/mail.html">Apache mailing lists</jump>. 
+    <jump href="http://xml.apache.org/mail.html">Apache XML mailing lists</jump>.
+    These lists are obsolete since Xalan has become its own Apache project. 
   </p>  
 </s2>
 </s1> 

@@ -60,15 +60,16 @@
 <s2 title="Developer Guidelines">
 <note>This section is meant to become a set of guidelines for all &xslt4j;
 committers and developers who wish to submit patches.  It's still in progress; 
-suggestions to xalan-dev@xml.apache.org appreciated.</note> 
+suggestions to xalan-dev@apache.org appreciated.</note> 
   <p>The project's technical mailing list for all committers and developers 
   interested in the API and inner workings is 
-  <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev@xml.apache.org</jump>; 
+  <jump href="mailto:xalan-dev@apache.org">xalan-dev@apache.org</jump>; 
   it's a good idea to 
   <link idref="contact_us" anchor="dev-mailing-list">subscribe</link>
   if you plan to work on &xslt4j;.  Logs of all Subversion 
-  commits are automatically sent to <jump href="mailto:xalan-cvs@xml.apache.org">xalan-cvs@xml.apache.org</jump>, although 
-  discussions should happen on xalan-dev.  You can read more <jump href="http://xml.apache.org/mail.html">about mailing lists.</jump></p>
+  commits are automatically sent to <jump href="mailto:commits@xalan.apache.org">commits@xalan.apache.org</jump>, although 
+  discussions should happen on xalan-dev.  You can read more 
+  <jump href="http://www.apache.org/foundation/mailinglists.html">about mailing lists.</jump></p>
   <p>&xslt4j; is a fairly mature project; one where most committers and many 
   users expect that the daily build will be mostly functional.  Very risky changes 
   or major architecture updates should be discussed ahead of time or committed onto 
@@ -79,7 +80,7 @@ suggestions to xalan-dev@xml.apache.org appreciated.</note>
   it's OK to break the Smoketest temporarily.  The Smoketest is a selection of 
   API functionality tests and a pass through a wide variety of XSLT conformance 
   tests that ensure basic functionality.  You can also read a full set of 
-  <jump href="http://xml.apache.org/xalan-j/test/overview.html">documentation about the tests</jump>.</p>
+  <jump href="../old/xalan-j/test/overview.html">documentation about the tests</jump>.</p>
   <p>
   (Smoketest doc is TBD!)
 <source>cvs co xml-xalan/java xml-xalan/test
@@ -395,7 +396,7 @@ a couple of the highlights of the new build, and a link to the
 distribution area.</p>
 
 <p>Make the subject something like:  [ANN] Xalan-J 2.x Point/Developers/Whatever Release posted to xml.apache.org
-and send your email to:  general@xml.apache.org, xalan-dev@xml.apache.org, xalan-j-users@xml.apache.org.  Note 
+and send your email to:  general@xml.apache.org, xalan-dev@apache.org, xalan-j-users@apache.org.  Note 
 that for developers releases, you can omit the general@xml.apache.org address if you 
 don't think it will be of interest to the larger audience.
 </p>

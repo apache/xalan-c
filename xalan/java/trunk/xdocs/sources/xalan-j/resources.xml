@@ -15,10 +15,10 @@
 <resources> 	
   <resource id="xslt4j" 
             title="&xslt4j;" 
-            location="http://xml.apache.org/xalan-j"/>
+            location="http://xalan.apache.org/xalan-j"/>
   <resource id="xslt4j-current" 
             title="&xslt4j-current;" 
-            location="http://xml.apache.org/xalan-j"/>
+            location="http://xalan.apache.org/xalan-j"/>
 
   <resource id="xslt4j-distdir" 
             title="xalan-j distribution directory" 
@@ -130,7 +130,7 @@
 
   <human-resource id="xalandev" 
                   name="Xalan Development Mailing List" 
-                  mailto="xalan-dev@xml.apache.org"/>
+                  mailto="xalan-dev@apache.org"/>
 
   <human-resource id="sboag"
                   name="Scott Boag"
