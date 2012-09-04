@@ -50,6 +50,9 @@
     <Filter Include="ICUBridge">
       <UniqueIdentifier>{e28a39ff-8fdb-4b96-a90e-a3ebcfda152f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XalanDateTime">
+      <UniqueIdentifier>{84e2e852-fd84-4ebd-9ac7-84947fa78159}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\src\xalanc\Include\PlatformDefinitions.hpp">
@@ -1279,6 +1282,45 @@
     <ClInclude Include="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.hpp">
       <Filter>Harness</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendar.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendarFormatter.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendarIFormatter.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTime.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeDefinitons.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeExceptions.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFormatter.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunction.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunctions.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeMath.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDuration.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDurationFormatter.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanSystemClock.hpp">
+      <Filter>XalanDateTime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp">
@@ -2354,6 +2396,27 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.cpp">
       <Filter>ICUBridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTime.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFormatter.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunction.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunctions.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeMath.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDuration.cpp">
+      <Filter>XalanDateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDurationFormatter.cpp">
+      <Filter>XalanDateTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

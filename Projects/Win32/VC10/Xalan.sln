@@ -52,6 +52,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perf", "Performance\perf.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EntityResolver", "EntityResolver\EntityResolver.vcxproj", "{5008A0C4-7F75-4C41-BB25-D6DF75713A80}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDatesAndTimes", "TestDatesAndTimes\TestDatesAndTimes.vcxproj", "{E748026A-44D1-4148-83F3-1C7705C17E30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug with ICU|Win32 = Debug with ICU|Win32
@@ -480,6 +482,17 @@ Global
 		{5008A0C4-7F75-4C41-BB25-D6DF75713A80}.Release|Win32.Build.0 = Release|Win32
 		{5008A0C4-7F75-4C41-BB25-D6DF75713A80}.Release|x64.ActiveCfg = Release|x64
 		{5008A0C4-7F75-4C41-BB25-D6DF75713A80}.Release|x64.Build.0 = Release|x64
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug with ICU|Win32.ActiveCfg = Debug with ICU|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug with ICU|Win32.Build.0 = Debug with ICU|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug with ICU|x64.ActiveCfg = Debug|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug|Win32.Build.0 = Debug|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Debug|x64.ActiveCfg = Debug|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Release with ICU|Win32.ActiveCfg = Release with ICU|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Release with ICU|x64.ActiveCfg = Release|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Release|Win32.ActiveCfg = Release|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Release|Win32.Build.0 = Release|Win32
+		{E748026A-44D1-4148-83F3-1C7705C17E30}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
