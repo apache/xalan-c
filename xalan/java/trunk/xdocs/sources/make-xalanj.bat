@@ -52,7 +52,7 @@ SET XALANCMD=..\..\bin\xalan.exe
 
 SET XALANSTYLE=stylebook.xslt
 
-SET XALANSRCDIR=xalan-j
+SET XALANSRCDIR=xalan
 
 SET XALANOUTDIR=..\..\build\docs\xalan\xalan-j
 

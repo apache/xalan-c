@@ -3,13 +3,13 @@
 :: http://xalan.apache.org
 ::
 
-call make-book-org.bat
+:: call make-book-org.bat
 
 ::
 :: http://xml.apache.org/xalan-c
 ::
 
-call make-book-xalanc.bat
+:: call make-book-xalanc.bat
 
 ::
 :: http://xml.apache.org/xalan-j

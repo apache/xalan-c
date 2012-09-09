@@ -24,7 +24,7 @@
   <external href="../index.html" label="Home"/>
 
   <separator/>
-  <document id="index" label="Xalan-J 2.7.1" source="xalan/index.xml"/>
+  <document id="index" label="Xalan-J 2.7.D2" source="xalan/index.xml"/>
   <document id="charter" label="Charter" source="xalan-j/charter.xml"/>
   <separator/>  
   <document id="whatsnew" label="What's New" source="xalan-j/whatsnew.xml"/>
