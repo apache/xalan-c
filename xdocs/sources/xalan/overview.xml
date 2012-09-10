@@ -36,7 +36,7 @@
    discussion groups, frequently asked questions, and tutorials on XSLT, see <link anchor="uptospeed">Getting up to speed with 
    XSLT</link>.</p> 
 <note>XSL also includes a vocabulary for formatting documents, which is not part of &xslt4c;.  For more information, see 
-      <resource-ref idref="XSL"/> and the <jump href="http://xml.apache.org/fop">Apache XML FOP (Formatting Objects Project)
+      <resource-ref idref="XSL"/> and the <jump href="http://xmlgraphics.apache.org/fop">Apache XML FOP (Formatting Objects Project)
       </jump>.
 </note>
 <p>You use the XSLT language to compose XSL stylesheets. An XSL stylesheet contains instructions for transforming XML documents 
@@ -68,7 +68,7 @@
 <ul> 
   <li>&xslt4c; fully implements the <resource-ref idref="XSLT"/>.</li>
   <li>&xslt4c; incorporates the <resource-ref idref="XPath"/>.<br/><br/></li>
-  <li>&xslt4c; uses <jump href="http://xml.apache.org/xerces-c/index.html">&xml4c;</jump> to parse XML documents and XSL
+  <li>&xslt4c; uses <jump href="http://xerces.apache.org/xerces-c/index.html">&xml4c;</jump> to parse XML documents and XSL
       stylesheets.<br/><br/>
       The input may appear in the form of a file or URL, a stream, or a <resource-ref idref="DOM"/>. 
       &xslt4c; performs the transformations specified in the XSL stylesheet and produces a file, a stream, or a DOM as you

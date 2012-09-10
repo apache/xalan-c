@@ -21,7 +21,7 @@
 <anchor name="download"/>
 <p>This section is being rewritten for Xalan-C/C++ Version 1.11.  You
 can find the old 
-<jump href="http://xml.apache.org/xalan-c">Version 1.10</jump> here.
+<jump href="../old/xalan-c">Version 1.10</jump> here.
 </p>
 
 <p>We are providing a source package, a documentation package, and
@@ -51,7 +51,7 @@ http://svn.apache.org/repos/asf/xalan/c/trunk</jump>
 <s2 title="Downloading what you need">
 
 <p>The Xalan-C/C++ library requires the
-<jump href="http:xml.apache.org/xerces-c">Xerces-C/C++ XML</jump> Parser 3.0 
+<jump href="http://www.apache.org/dyn/closer.cgi/xerces/c">Xerces-C/C++ XML</jump> Parser 3.0 
 or newer, version 3.1.1 is preferred.
 </p>
 

@@ -34,18 +34,13 @@
  	
 <resource id="xslt4c-current" 
           title="&xslt4c-current;" 
-          location="http://xml.apache.org/xalan-c"/>
+          location="http://xalan.apache.org/xalan-c"/>
 <resource id="xml4c-used" 
           title="&xml4c-used;" 
-          location="http://xml.apache.org/xerces-c/index.html"/>   
+          location="http://xerces.apache.org/xerces-c/index.html"/>   
 <resource id="xslt4c-distdir" 
           title="Xalan-C downloads" 
-          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
-<!--
-<resource id="xml4c-distdir" 
-          title="Xerces-C downloads" 
-          location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c"/>
--->
+          location="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c"/>
 <resource id="xml4c-distdir" 
           title="Xerces-C downloads" 
           location="http://www.apache.org/dyn/closer.cgi/xerces/c"/>
@@ -101,7 +96,7 @@
 
 <resource id="xercesmm" 
           title="Pluggable Memory Manager" 
-          location="http://xml.apache.org/xerces-c/program-others.html#PluggableMemoryManager"/>
+          location="http://xerces.apache.org/c/program-others.html#PluggableMemoryManager"/>
 
 <human-resource id="xalandev" 
                 name="Xalan Development Mailing List" 
