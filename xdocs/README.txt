@@ -1,14 +1,15 @@
 
          XALAN-C++ USER GUIDE     DEVELOPER NOTES
+Edited:  2012-09-16
 
+UNIX platforms can make both the xalan-c API document and the xalan-c website.
 
-These are some notes for creating the XALAN-C++ User Guide from
-StyleBook XML sources.
+WINDOWS platforms can only make the xalan-c website without the xalan-C apiDocs.
 
-Java and the Apache StyleBook program are no longer required.
-The XML transformations are now done using a standard XSLT transformation
-utility.
-
+Java and the Apache StyleBook program are no longer reuired.
+The XML transformations are now done using a standard XSLT
+command-line stylesheet transformation utility.  The Apache Xalan
+program or Xalan.exe program is used for this transformation.
 The resulting web pages have static content without any javascript
 or other scripting requirements.
 
@@ -17,92 +18,127 @@ The browsers should support xhtml version 1.0.  Even thou the pages
 are rendered as strict, the productions accommodate most browsers that
 only render the loose or transitional implementation.
 
+Download the source package from repository or subversion
 
--------------------------------------------------------------------------
+   http://www.apache.org/dyn/closer/xalan/xalan-c
+   http://svn.apache.org/repos/asf/xalan/c/trunk
+
+The documentation products will be built to the target directories
+
+   c/trunk/build/docs/apiDocs
+   c/trunk/build/docs/xalan-c
+
+UNIX Build xalan-c apiDocs
+
+   Prerequisite: The Doxygen package must be installed (doxygen) program.
+   Prerequisite: The GraphViz package must be installed (dot) program.
+
+   cd {c/trunk/xdocs}
+   Edit the "make-apiDocs.sh" script
+
+   Run the "make-apiDocs.sh" script
+
+UNIX Build xalan-c website pages
+
+   Prerequisite: The "Xalan" command-line executable must be available
+
+   cd {c/trunk/xdocs/sources}
+   Run the "make-book.sh" script
+
+WINDOWS Build the xalan-c website pages
+
+   Prerequisite: The "xalan.exe" command-line executable must be available
+
+   cd {c/trunk/xdocs/sources}
+   Run the "make-book.bat" script
+
+-------------------------------------------------------------------
+The "sbk:" prefix is non-standard and was recognized by the deprecated
+Apache Stylebook Java program.  The "sbk:" prefix has now been replaced
+with relative URLs for use with a standard XSLT stylesheet processor.
+
 MANIFEST
 
-sbk:(Source Tree) = trunk\xdocs
+  {xalan/c/trunk}
 
-  html\                             Where StyleBook web pages are created
-  html\apiDocs\                     Where doxygen API web pages are located
+  bin/
+        Placeholder for Xalan.exe and DLL files for Windows Binary executables.
 
-  style\dtd\                        The StyleBook DOCTYPE Definitions
+  build/ 
+        Placeholder where products are constructed.
 
-  sources\                          Where my processing scripts are located
-  sources\xalan\                    The StyleBook XML for Xalan User Guide
-  sources\docs\                     The StyleBook - XML test suite
-  sources\xalan-graphic\            Image files for xalan StyleBook XML
-  sources\xslt-resources\           Resource files for html StyleBook web pages
+  build/docs/appDocs/
+        Placeholder for construction of xalan-c apiDocs.
 
-  sources\entities.ent              Version entities for xalan StyleBook XML
-  sources\xalan-book.xslt           StyleBook XSLT for Xalan StyleBook XML
-  sources\make-xalan.bat            Transform single xalan StyleBook XML chapter
-  sources\make-book.bat             Transform all xalan StyleBook XML chapters
+  build/docs/xalan-c/
+        Placeholder for construction of xalan-c webpages.
 
-  sources\mybook.xslt               StyleBook XSLT for StyleBook XML Tests
-  sources\make-doc.bat              Transform a single StyleBook XML Test
-  sources\make-tests.bat            Transform all StyleBook XML Tests
+  src/
+        Source tree of C/C++ sources for making the xalan library and 
+        Xalan command-line processor.  The *.hpp source files contain
+        the structured components from which the apiDocs document is 
+        constructed.
 
-  sources\xslt-resources\apache-xalan.css     The html (css) stylesheet
-  sources\xslt-resources\asf_logo.png         The ASF logo for header section
+  xdocs/ 
+        Directory tree of documentation sources and build scripts.
 
--------------------------------------------------------------------------
+  xdocs/DoxyfileXalan     The configuration file for doxygen program.
 
-xalan and stylebook source edit is required to replace (sbk:) prefix.
+* xdocs/make-apiDocs.sh   The Bourne shell script to build apiDocs.
 
-The (sbk:) uri prefix is non-standard and since replaced with relative
-system URLs.  In the (sources\xalan, sources\docs) directories, thex
-(sbk:) is replaced with (../../).
+  xdocs/html/apiDocs/
+        Directory of doxygen include files and Apache feather logo
+        for apiDocs pages.
 
-The transformed XML places a copyright byline on each web page created.
-You should edit the (make-xalan.bat, make-doc.bat) files to supply a 
-proper create-date.
+  xdocs/style/dtd/        The Stylebook validation DTD files.
 
-You should also edit the (make-xalan.bat, make-doc.bat) to invoke your
-XSLT command line transformation utility.
+  xdocs/sources/
+        Directory tree of sources and scripts to build the xalan-c
+        webpages or User Guide.
 
-The exslt.exe processor I use for XML transformation is based on the
-xalan command-line transformer.  The critical capability is the ability
-to insert top-level xslt parameters into the transformation process.
+  xdocs/sources/entities.ent
+        Some included DTD entity definitions.
 
-The xslt top-level parameters are:
+  xdocs/sources/xalan-xml
+        The Stylebook XML page navigation source.
 
-   $sectionid   =   ($sectionid).xml  // chapter to transform
-   $createdate  =   "date string"     // date of web page creation
+  xdocs/sources/stylebook.xslt
+        The standardized Xalan stylebook transformation stylesheet.
 
-The $sectionid is used in creating the <div id="navLeft"> html.
+  xdocs/sources/xalan/
+        Directory of Stylebook XML page sources for xalan-c User Guide.
 
-The $createdate is used in creating the <div id="footer"> html.
+  xdocs/sources/xalan-graphic/
+        Special graphics required by some xdocs/sources/xalan/ sources.
+        These files are copied to build/docs/xalan-c/
 
--------------------------------------------------------------------------
+  xdocs/sources/xslt-resources/
+        The Xalan LOGOs and css stylesheets for rendering web pages.
+        These files are copied to build/docs/xalan-c/resources/
 
-After doing the transformations, the following files should be copied
-to the target (html) directory paths.
+* xdocs/sources/make-book.sh
+        The UNIX Bourne shell script to build the xalan-c web pages.
 
-   sources\xslt-resources\*  -> html\resources\
+* xdocs/sources/make-book.bat
+        The Windows command script to build the xalan-c web pages.
 
-   sources\xalan-graphic\*   -> html\
+-------------------------------------------------------------------
+The Xalan-C website is published to "svnpubsub" by copying 
 
-The Xalan-C++ API Reference Manual created by the Doxygen and GraphVue
-programs is to be copied into the (html\apiDocs\) directory.
+  build/docs/xalan-c/*
 
--------------------------------------------------------------------------
+to the "svnpubsub" repository tree
 
-=====
-TO DO
-=====
+  {svn}/xalan/site/docs/xalan/xalan-c/
 
-Resolve the broken linkages.
+then perform a repository subversion check-in.
+-------------------------------------------------------------------
 
-Resolve the version packaging information.
+These notes are provided by Steven J. Hathaway for the
+Xalan Documentation Project.
 
-Prepare an updated product revision history.
-
-Prepare an SVN branch for documentation pre-release (v1.11)
-
-Prepare an SVN branch for source code pre-release (v1.11)
-
-Prepare a repository for specific binary releases (v1.11)
+Current information is available on the Xalan website
+http://xalan.apache.org/xalan-c
 
 
 
