@@ -476,7 +476,7 @@ endif
 
   endif
    
-  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c31
+  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c
   ICU_LIB= -L$(ICUROOT)/lib -licuuc32 -L$(ICUI18NROOT)/lib -licui18n32
 
   LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
