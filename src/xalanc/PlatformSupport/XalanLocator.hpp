@@ -67,17 +67,19 @@ public:
     static const XalanDOMChar*
     getPublicId(
             const Locator*          theLocator,
-            const XalanDOMChar*     theAlternateId = 0)
+            const XalanDOMChar*     theAlternateId = &s_dczero)
     {
-        return theLocator == 0 ? theAlternateId : theLocator->getPublicId();
+        return theLocator == 0 ? theAlternateId : (theLocator->getPublicId() ?
+            theLocator->getPublicId() : theAlternateId);
     }
 
     static const XalanDOMChar*
     getSystemId(
             const Locator*          theLocator,
-            const XalanDOMChar*     theAlternateId = 0)
+            const XalanDOMChar*     theAlternateId = &s_dczero)
     {
-        return theLocator == 0 ? theAlternateId : theLocator->getSystemId();
+        return theLocator == 0 ? theAlternateId : (theLocator->getSystemId() ?
+            theLocator->getPublicId() : theAlternateId);
     }
 
     static XalanFileLoc
@@ -122,6 +124,8 @@ private:
 
     XalanLocator&
     operator=(const XalanLocator&);
+
+    const static XalanDOMChar s_dczero = 0;
 };
 
 
