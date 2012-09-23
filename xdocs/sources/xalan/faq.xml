@@ -33,16 +33,15 @@
 <faq title="Asking questions about &xslt4c;">
 <q>Where can I ask a question?</q>
 <a><p>For specific questions on &xslt4c;, see list archives: 
-      <jump href="http://mark.info/?l=xalan-c-users">xalan-c-users</jump>
-      and <jump href="http://marc.info/?l=xalan-dev">xalan-dev</jump>.
-      You must subscribe to these Apache mailing lists before posting your questions.</p>
-   <p>You can get help on subscribing to the lists at the following links:<br/>
-      <jump href="c-users-help@xalan.apache.org">Help for xalan-c-users list</jump>. (Less traffic)<br/>
-      <jump href="dev-help@xalan.apache.org">Help for xalan-dev list</jump>. (Significant traffic)</p>
-   <p>You can post messages to the lists by sending mail to:<br/>
-      <jump href="mailto:c-users@xalan.apache.org">Post message to xalan-c-users</jump>. (User's list)<br/>
-      <jump href="mailto:dev@xalan.apache.org">Post message to xalan-dev list</jump>. (Developer's list)</p>
-   <p>Again, please review the archives before posting a new question.</p>
+   <jump href="http://mark.info/?l=xalan-c-users">xalan-c-users</jump>
+   and <jump href="http://marc.info/?l=xalan-dev">xalan-dev</jump>.
+   You must subscribe to these Apache mailing lists before posting your questions.</p>
+<p>The Apache Software Foundation has information on how you can subscribe to
+   the <jump href="http://www.apache.org/foundation/mailinglists.html">mailing lists</jump>.</p>
+<p>You can post messages to the lists by sending mail to:<br/>
+   <jump href="mailto:c-users@xalan.apache.org">Post message to xalan-c-users</jump>. (User's list)<br/>
+   <jump href="mailto:dev@xalan.apache.org">Post message to xalan-dev list</jump>. (Developer's list)</p>
+<p>Again, please review the archives before posting a new question.</p>
 </a>
 </faq>
 
