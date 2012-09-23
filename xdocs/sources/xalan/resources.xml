@@ -90,9 +90,6 @@
 <resource id="DOM" 
           title="DOM" 
           location="http://www.w3.org/DOM"/>
-<resource id="dpawsonxslfaq" 
-          title="XSL Frequently Asked Questions" 
-          location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
 
 <resource id="xercesmm" 
           title="Pluggable Memory Manager" 
@@ -105,7 +102,7 @@
 <human-resource id="xalancusers"
                 name="Xalan-C/C++ Users Mailing List"
                 mailto="c-users@xalan.apache.org"/>
-  
+ 
 <resource id="bugzilla"
           title="Bugzilla (the Apache bug database)"
           location="http://nagoya.apache.org/bugzilla"/>
