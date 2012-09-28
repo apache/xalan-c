@@ -27,6 +27,9 @@
 <li><link anchor="commandline">Performing your own transformations from the command line</link></li>
 <li><link anchor="apps">Setting up your own XSLT applications</link></li>
 </ul>
+<p>This section is being rewritten. 
+<jump href="index.html#getstarted">See: new getting started</jump>
+</p>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
 <p>For &xslt4c-current;, we are distributing the following: 
@@ -53,6 +56,7 @@
       <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary 
       distribution files.  For Windows, documentation is packaged with the file name &xslt4c-docs_dist_zip;.  For UNIX, 
       documentation is packaged with the file name of &xslt4c-docs_dist_targz;.</note>
+<br/>
 <table>
   <tr>
   <th>Xalan distribution files</th>

@@ -119,8 +119,8 @@ package. </p>
    has been completed.</p>
 <note>You may need to adjust the Visual C++ or Makefile settings to locate the required Apache header files. As shipped, the Visual C++ 
       project file looks in \Apache Group\Apache\src\include, and the UNIX Makefile looks in usr/lib.</note>
-<p>To build the Apache module, follow the instructions in <link idref="build_instruct" anchor="win32">Steps for doing a Windows 
-   build</link> or <link idref="build_instruct" anchor="unix">Steps for doing a UNIX build</link>. For UNIX platforms, you do the build with<br/> 
+<p>To build the Apache module, follow the instructions in <link idref="buildlibs" anchor="winbldenv">Steps for doing a Windows 
+   build</link> or <link idref="buildlibs" anchor="unixbldenv">Steps for doing a UNIX build</link>. For UNIX platforms, you do the build with<br/> 
    <code>gmake ApacheModuleXSLT</code>.</p>
   
 <s3 title="Setting up and using ApacheModuleXSLT">
@@ -341,20 +341,37 @@ theProcessor.addTraceListener(&amp;theTraceListener);
 </s2>
 
 <anchor name="usestylesheetparam"/>    
-<s2 title="UseStylesheetParam">    
-<p>What it does: Set a stylesheet parameter that the stylesheet uses during the transformation.</p>
+<s2 title="UseStylesheetParam">
+
+<p>What it does: Performs a transformation using top-level stylesheet parameters.  There are three supported types of parameters.  One is a text string.  A second is a number of type double.  A nodeset or parsed document can also be used.</p>
+
 <p>You can run it from the UseStylesheetParam subdirectory with</p>
-<p><code>UseStylesheetParam <ref>key expression</ref></code></p>
-<p>where <ref>key</ref> is the parameter key (or name) and <ref>expression</ref> is a string expression enclosed
-   in single quotes.</p>
-<p>The example uses a stylesheet (foo.xsl) with a parameter named param1. The stylesheet accepts any string
-   expression. Enclose the string expression in single quotes (so it is interpreted as an expression); if it
-   includes more than a single word, enclose the resulting string in double quotes so the executable interprets it
-   as a single argument. For example:</p>
-<p><code>UseStylesheetParam param1 "'hello out there'"</code></p>
-<p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet parameters</link>.</p>     
+
+<p><code>UseStylesheetParam <ref>xmlfile</ref> <ref>stylesheet</ref> <ref>outfile</ref> [options]</code></p>
+
+<p>where the options are:</p>
+
+<p><code>    -s key "'String-Value'"</code><br/>
+<code>    -n key Number</code><br/>
+<code>    -d key "Document-URL"</code></p>
+
+<p>The files used by the sample program and the top-level parameter nodesets for this illustration are to be in working directory in which the sample program runs.</p>
+
+<p>Using the sample program:</p>
+
+<p><code>UseStylesheetParam foo.xml foo.xslt foo.out \<br/>
+    -s stringA "'This is a test string value'" \<br/>
+    -n numberA  123.012345 \<br/>
+    -d parmA "parmA.xml" \<br/>
+    -d parmB "parmB.xml"</code></p>
+
+<p>The <ref>parmA.xml</ref> and <ref>parmB.xml</ref> are parsed and converted to nodesets.  The stylesheet <ref>foo.xslt</ref> merges the contents of <ref>foo.xml</ref> and the parameters into the <ref>foo.out</ref> file.</p>
+
+<p>The source sample is implemented in C++.  Another example is implemented in 'C' using the XalanCAPI library <ref>TestCAPIparm.c</ref>.  The usage interface for both is the same.</p>
+
+<p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet parameters</link>.</p>
 </s2>
-  
+
 <anchor name="xalantransform"/>
 <s2 title="XalanTransform">
 <p>What it does: XalanTransform uses the XalanTransformer class and the associated C++ API to apply an XSL stylesheet 

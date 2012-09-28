@@ -19,6 +19,8 @@
 -->
 <s1 title="Building &xslt4c;">
 <anchor name="build"/>
+<p>This section is obsolete and is being rewritten.
+See: <jump href="BUILD-LIBS.html">BUILD-LIBS.html</jump></p>
 <p>This page was created for users who have downloaded the source distribution of &xslt4c; and are looking for guidance on how to
    build the &xslt4c; libraries themselves.</p>
 <ul>
@@ -79,9 +81,11 @@
         lib directory to the list as well.</li>
   </ol></li>
 </ol>
-<!-- note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the 
+<!-- -->
+<note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the 
       Xalan headers in its new location. (see image below)</note>
-<p><img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change"/></p -->
+<p><img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change"/></p>
+<!-- -->
 </s3>
 
 <anchor name="dotNet"/>
@@ -104,9 +108,11 @@
         lib directory to the list as well.</li>
   </ol></li>
 </ol>
-<!-- note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the 
+<!-- -->
+<note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the 
       Xalan headers in its new location. (see image below)</note>
-<p><img src="NET_options.jpg" alt="Visual Studio .NET Include Directories change"/></p -->
+<p><img src="NET_options.jpg" alt="Visual Studio .NET Include Directories change"/></p>
+<!-- -->
 </s3>
 
 <anchor name="unix"/>

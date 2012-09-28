@@ -25,8 +25,6 @@
 <q>Where do I go to learn about XSLT?</q>
 <a><p>The definitive sources are the W3C XSLT and XPath recommendations: <resource-ref idref="XSLT"/> and 
       <resource-ref idref="XPath"/>.</p>
-   <p>For general questions not specific to &xslt4c;, see Dave Pawson's <resource-ref idref="dpawsonxslfaq"/> and Michael Kay's 
-      <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</jump>.</p>
    <p>For a brief listing of tutorials, discussion forums, and other materials, see <link idref="overview"
       anchor="uptospeed">Getting up to speed with XSLT</link>.</p>
 </a>
@@ -34,13 +32,16 @@
   
 <faq title="Asking questions about &xslt4c;">
 <q>Where can I ask a question?</q>
-<a><p>For generic questions about XSL stylesheets and transformations, use the <jump href="http://www.mulberrytech.com/xsl/xsl-list/">
-      XSL-List -- Open Forum on XSL</jump> hosted by Mulberry Technologies. There is an archive that can be searched as well. Please 
-      review the archive before posting a new question.</p>
-   <p>For specific questions on &xslt4c;, see xalan-c-users@xml.apache.org and xalan-dev@xml.apache.org on 
-      <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>. To subscribe to these mailing lists, see 
-      <jump href="http://xml.apache.org/mail.html">Mailing Lists</jump>. Again, please review the archives before posting a new 
-      question.</p>
+<a><p>For specific questions on &xslt4c;, see list archives: 
+   <jump href="http://marc.info/?l=xalan-c-users">xalan-c-users</jump>
+   and <jump href="http://marc.info/?l=xalan-dev">xalan-dev</jump>.
+   You must subscribe to these Apache mailing lists before posting your questions.</p>
+<p>The Apache Software Foundation has information on how you can subscribe to
+   the <jump href="http://www.apache.org/foundation/mailinglists.html">mailing lists</jump>.</p>
+<p>You can post messages to the lists by sending mail to:<br/>
+   <jump href="mailto:c-users@xalan.apache.org">Post message to xalan-c-users</jump>. (User's list)<br/>
+   <jump href="mailto:dev@xalan.apache.org">Post message to xalan-dev list</jump>. (Developer's list)</p>
+<p>Again, please review the archives before posting a new question.</p>
 </a>
 </faq>
 
@@ -48,7 +49,7 @@
 <q>What is &xml4c; and why do I need it?</q>
 <a><p>&xml4c; is a validating XML parser written in a portable subset of C++. &xml4c; makes it easy to give your application the ability 
       to read and write XML data. Like &xslt4c;, &xml4c; is available from the Apache XML site:  
-      <jump href="http://xml.apache.org/xerces-c/index.html">http://xml.apache.org/xerces-c/index.html</jump></p><!--xml4cNote--></a>
+      <jump href="http://xerces.apache.org/index.html">http://xerces.apache.org</jump></p><!--xml4cNote--></a>
 </faq>
 
 <faq title="Which version of Xerces should I be using?">  
@@ -93,21 +94,30 @@
 
 <faq title="Building on Windows">
 <q>What do I need to rebuild &xslt4c; on Windows?</q>
-<a><p>In order to build &xslt4c; on Windows, you will need the supported version of &xml4c; and MS Visual C++ 6.0 installed with Service 
-      Pack 5 for Visual C++ and Visual Studio. In previous versions of &xslt4c;, the requirement on MS Visual C++ 6.0 was to have Service 
-      Pack 3 installed.  In this case, you should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. 
-      These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">
-      http://www.dinkumware.com/vc_fixes.html</jump>.</p>
-   <p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces 
-      and Xalan binaries.</p>
-   <p>For more details, see <link idref="build_instruct" anchor="win32">Steps for doing a Windows build</link>.</p>
+<a><p>In order to build Xalan-C++ on Windows, you will need the following:</p>
+<ul>
+<li>The Xalan-C/C++ source distribution package.</li>
+<li>The Xerces-C/C++ source distribution package or a compatible binary distribution package.</li>
+<li>A compatible Microsoft Visual Studio .NET (2003, 2005, 2008, 2010) software development platform.</li>
+</ul>
+<p>The Xalan-C/C++ Version 1.11 (pre-release) is available from the Apache Subversion
+   repository at <em>http://svn.apache.org/repos/asf/xalan/c/trunk/.</em></p>
+<p>After Xalan-C/C++ Version 1.11 is released, it can be downloaded from:
+   <jump href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c">Xalan Distributions</jump>.</p>
+<p>The Xerces-C/C++ Version 3.1.1 is can be downloaded from:
+   <jump href="http://www.apache.org/dyn/closer.cgi/xerces/c/3">Xerces Distributions</jump>.</p>
+<p>If you are building with the 
+   <jump href="http://www.ibm.com/software/globalization/icu/">IBM-ICU</jump>
+   International Components for Unicode library, you will
+   need to rebuild both the Xerces and Xalan libraries.</p>
+<p>For more details, see <link idref="buildlibs" anchor="winbldenv">Steps for doing a Windows build</link>.</p>
 </a>
 </faq>
 
 <faq title="Building on UNIX">
 <q>What do I need to rebuild &xslt4c; on UNIX?</q>
 <a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c;, the GNU make utility, and a supported C++ compiler.  For more 
-      details see: <link idref="build_instruct" anchor="unix">Steps for doing a UNIX build</link>.</p>
+      details see: <link idref="buildlibs" anchor="unixbldenv">Steps for doing a UNIX build</link>.</p>
 </a>
 </faq>
 
@@ -118,11 +128,14 @@
 
 <faq title="What is ICU">
 <q>What is ICU and why do I need it?</q>
-<a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on 
-      a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
+<a><p>The <jump href="http://www.ibm.com/software/globalization/icu/">IBM-ICU</jump>
+      International Components for Unicode(ICU) is a C and C++ library that provides robust and 
+      full-featured Unicode support on a wide variety of platforms. 
+      &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
    <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">
       http://oss.software.ibm.com/icu/index.html</jump>.</p>
-   <p>This release of Xalan was tested with &icu-current;.</p>
+   <p>Xalan release 1.10 was tested with &icu-current;. The curent Xalan
+      release 1.11 is not fully tested with IBM-ICU.</p>
    <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
    <!--icuNote-->
 </a>
@@ -209,7 +222,25 @@
     
 <faq title="Submitting Patches">
 <q>Who do I submit patches to?</q>
-<a><p>Your contributions are much appreciated! Please e-mail your patches to <human-resource-ref idref="xalandev"/>.</p></a>
+<a><p>Your contributions are much appreciated! You can e-mail your patches to 
+      <human-resource-ref idref="xalandev"/> or raise an issue on the 
+      <jump href="https://issues.apache.org/jira/browse/XALANC">Jira issue tracking system</jump>.</p>
+   <p>The Xalan projects use Jira as the issue tracking system.  Any significant bug or feature request is
+      posted to this system.  You must subscribe to the system in order to submit patches and raise
+      issues.</p>
+<ul>
+<li>Subscribe to Jira at: 
+    <jump href="https://issues.apache.org/jira">https://issues.apache.org/jira</jump>
+</li>
+<li>Browse the issues at: 
+    <jump href="https://issues.apache.org/jira/browse/XALANC">https://issues.apache.org/jira/browse/XALANC</jump>
+</li>
+</ul>
+    <p>Issues posted to the project on Jira at XALANC are automatically posted to the
+       <human-resource-ref idref="xalandev"/></p>
+    <p>Our mailing lists are moderated.  You should subscribe to the mailing list in order to
+      post a message, otherwise message delivery requires manual intervention or may be dropped.</p>
+</a>
 </faq>
 
 <faq title="Transformation Output Methods">
@@ -303,8 +334,7 @@
 <q>Why can't I ouput my results to a file on Windows 95/98?</q>
 <a><p>Well, you can, but it doesn't always work. Neither Windows 95 or 98 are supported or tested. There have been reports of 
       problems on it, especially regarding Unicode support. See 
-      <jump href="http://marc.theaimsgroup.com/?l=xalan-dev&amp;m=99840914524755&amp;w=2">this post</jump> and 
-      <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=3825">this bug</jump>.</p>
+      <jump href="http://marc.info/?l=xalan-dev&amp;m=99840914524755&amp;w=2">this post</jump>.</p>
 </a>
 </faq>
 
@@ -329,8 +359,8 @@
    <p>On Windows, the LocalMsgIndex.hpp header is generated by the Localization project.  By building any project that has a 
       dependency on the Localization project, will trigger the Message Localization component to built and the LocalMsgIndex.hpp 
       to be generated.</p>
-   <p>To understand more on how to build with message localization support, see <link idref="build_instruct" anchor="locale">Steps for 
-      Building with Message Localization Support</link>.</p>
+   <p>On Windows binary distributions, the LocalMsgIndex.hpp file is a member of the "<code>Include</code>" directory.</p>
+   <p>On Unix binary distributions, the LocalMsgIndex.hpp file is a member of the "<code>include/xalanc/PlatformSupport</code>" directory.</p>
 </a>
 </faq>
 	

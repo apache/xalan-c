@@ -34,16 +34,16 @@
  	
 <resource id="xslt4c-current" 
           title="&xslt4c-current;" 
-          location="http://xml.apache.org/xalan"/>
+          location="http://xalan.apache.org/xalan-c"/>
 <resource id="xml4c-used" 
           title="&xml4c-used;" 
-          location="http://xml.apache.org/xerces-c/index.html"/>   
+          location="http://xerces.apache.org/xerces-c/index.html"/>   
 <resource id="xslt4c-distdir" 
           title="Xalan-C downloads" 
-          location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
+          location="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c"/>
 <resource id="xml4c-distdir" 
           title="Xerces-C downloads" 
-          location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c/"/>
+          location="http://www.apache.org/dyn/closer.cgi/xerces/c"/>
 <resource id="xslt4c-win32-download" 
           title="&xslt4c-dist;-win32.zip" 
           location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-win32.zip"/>
@@ -73,8 +73,8 @@
           title="STLport" 
           location="http://www.stlport.org/"/>
 <resource id="ApacheLicense" 
-          title="The Apache Software License, Version 1.1" 
-          location="http://xml.apache.org/dist/LICENSE.txt"/>
+          title="The Apache Software License, Version 2.0" 
+          location="http://www.apache.org/licenses/LICENSE-2.0"/>
 <resource id="Readme" 
           title="Xalan Repository Release Notes" 
           location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
@@ -90,32 +90,34 @@
 <resource id="DOM" 
           title="DOM" 
           location="http://www.w3.org/DOM"/>
-<resource id="dpawsonxslfaq" 
-          title="XSL Frequently Asked Questions" 
-          location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
 
 <resource id="xercesmm" 
           title="Pluggable Memory Manager" 
-          location="http://xml.apache.org/xerces-c/program-others.html#PluggableMemoryManager"/>
+          location="http://xerces.apache.org/c/program-others.html#PluggableMemoryManager"/>
 
 <human-resource id="xalandev" 
                 name="Xalan Development Mailing List" 
-                mailto="xalan-dev@xml.apache.org"/>
-  
+                mailto="dev@xalan.apache.org"/>
+
+<human-resource id="xalancusers"
+                name="Xalan-C/C++ Users Mailing List"
+                mailto="c-users@xalan.apache.org"/>
+ 
 <resource id="bugzilla"
           title="Bugzilla (the Apache bug database)"
           location="http://nagoya.apache.org/bugzilla"/>
 
 <resource id="jira"
           title="JIRA (the Apache bug database)"
-          location="http://nagoya.apache.org/jira"/>
+          location="https://issues.apache.org/jira/browse/XALANC"/>
 
 <resource id="buglist"
           title="XalanC open bugs"         
-          location="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time"/>
+          location="https://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;jqlQuery=project+%3D+XALANC+AND+resolution+%3D+Unresolved+ORDER+BY+updated+DESC"/>
 
 <resource id="bugsfixedforthisrelease"
           title="XalanC bugs fixed for this release"
-          location="http://nagoya.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=10582&amp;statusIds=1"/>
+          location="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=10582&amp;version=10833"/>
+
 
 </resources>

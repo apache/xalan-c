@@ -16,6 +16,32 @@
  * limitations under the License.
 -->
 
+<s3 title="Changes for &xslt4c; version 1.11">
+<p>This is a general bug fix release with added stability features.</p>
+<p>Major updates since version 1.10 include:</p>
+<ul>
+  <li>Add support for Xerces-C 3.0 and newer</li>
+  <li>Drop support for Microsoft Studio (VC6)</li>
+  <li>Fix support issues for AIX 5.3</li>
+  <li>Fix support issues for Solaris 2.8</li>
+  <li>Fix support issues for GCC-4.3</li>
+  <li>Add support for Microsoft .NET 2008 (VC9) </li>
+  <li>Add support for Microsoft .NET 2010 (VC10)</li>
+  <li>Add number and nodeset types as top-level stylesheet parameters</li>
+  <li><link anchor="bugfix11">Bugs fixed in this release</link>.</li>
+</ul>
+</s3>
+
+<s3 title="Changes for &xslt4c; version 1.10">
+<p>Major updates since version 1.9 include:</p>
+<ul>
+  <li>Support for XML 1.1 and Namespaces in XML 1.1.</li>
+  <li>Added support for IBM XLC 7.0 compiler on AIX.</li>
+  <li>Improved and stabilized C pluggable memory management functionality.</li> 
+  <li>Various improvements in Xalan XML serializers for better performance and stability.</li>
+  <li>Upgrade from Xerces-C 2.6 to Xerces-C 2.7.</li>
+ </ul>  
+</s3>  
 
 <s3 title="Changes for &xslt4c; version 1.9">
 <p>Major updates since version 1.8 include:</p>
@@ -59,9 +85,11 @@
       <li>Porting of conf utility to the UNIX platform.  The conf utility is a test harness designed to run the conformance tests located under the xml-xalan/test/tests directory.  After the tests have been run, a results report is generated in HTML format for easy viewing.  For more information on how to use this tool, please see <link idref="commandline" anchor="confexe">"Using the command line utility"</link>.</li>
       -->
       <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
-      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes". See bugzilla 
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes".</li>
+<!-- See bugzilla 
           <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24304">24304</jump> and 
-          <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</jump>.</li>
+          <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</jump>. 
+-->
      </ul>  
    </s3>  
    <s3 title="Changes for &xslt4c; version 1.7">
@@ -154,30 +182,30 @@
    <p>In addition to adding to the list of platforms on which &xslt4c; builds, our focus for this release has been on bug fixes, performance enhancements, 
       and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>
    <ul>
-     <li>Added HP-UX 11 build.<br/><br/></li>
-     <li>Added Solaris build.<br/><br/></li>
-     <li>Greatly improved performance.<br/><br/></li>
-     <li>Improved conformance to the XSLT specification.<br/><br/></li>
+     <li>Added HP-UX 11 build.</li>
+     <li>Added Solaris build.</li>
+     <li>Greatly improved performance.</li>
+     <li>Improved conformance to the XSLT specification.</li>
      <li>Simplified the C++ API and provided a C API for performing standard transformations with the <link idref="usagepatterns" 
-         anchor="xalantransformer">XalanTransformer</link> class and associated header files.<br/><br/></li>
+         anchor="xalantransformer">XalanTransformer</link> class and associated header files.</li>
      <li>Added sample illustrating use of XalanTransformer and the new C++ API: 
-         <link idref="samples" anchor="xalantransform">XalanTransform</link>.<br/><br/></li> 
+         <link idref="samples" anchor="xalantransform">XalanTransform</link>.</li> 
      <li>Added sample illustrating use of XalanTransformer, the new C API, and how to run &xslt4c; and perform transformations on an 
-         Apache Web server: <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>.<br/><br/></li>
-     <li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.<br/><br/></li>
-     <li>Eliminated dependencies on non-public Xerces headers; accordingly can now build with the Xerces distribution.<br/><br/></li>
-     <li>Fixed namespace mapping and inheritance problems.<br/><br/></li>
-     <li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.<br/><br/></li>
-     <li>Fixed bug sorting in reverse document order based on position. <br/><br/></li>
-     <li>Fixed &lt;xsl:number&gt; bug with use of letter-value="traditional" for "classical" Greek numbering.<br/><br/></li>
-     <li>Fixed use of &lt;xsl:fallback&gt; within a top-level extension function.<br/><br/></li>
-     <li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.<br/><br/></li>
-     <li>Fixed bug using key() in match patterns to find descendants.<br/><br/></li>
-     <li>Fixed bug using the id() function in complex match patterns.<br/><br/></li>
-     <li>Fixed problem outputting multiple single-character CDATA sections.<br/><br/></li>
-     <li>Fixed problem outputting whitespace characters.<br/><br/></li>
-     <li>Fixed problem transforming from a stream on UNIX platforms.<br/><br/></li>
-     <li>Fixed a bug with the document() function, which was generating a syntax error if called in the following manner: document(<ref>string</ref>,/).<br/><br/></li>
+         Apache Web server: <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>.</li>
+     <li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.</li>
+     <li>Eliminated dependencies on non-public Xerces headers; accordingly can now build with the Xerces distribution.</li>
+     <li>Fixed namespace mapping and inheritance problems.</li>
+     <li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.</li>
+     <li>Fixed bug sorting in reverse document order based on position. </li>
+     <li>Fixed &lt;xsl:number&gt; bug with use of letter-value="traditional" for "classical" Greek numbering.</li>
+     <li>Fixed use of &lt;xsl:fallback&gt; within a top-level extension function.</li>
+     <li>Fixed HTML output method bug. The &lt;HEAD&gt; element was not including a &lt;META&gt; tag with the encoding.</li>
+     <li>Fixed bug using key() in match patterns to find descendants.</li>
+     <li>Fixed bug using the id() function in complex match patterns.</li>
+     <li>Fixed problem outputting multiple single-character CDATA sections.</li>
+     <li>Fixed problem outputting whitespace characters.</li>
+     <li>Fixed problem transforming from a stream on UNIX platforms.</li>
+     <li>Fixed a bug with the document() function, which was generating a syntax error if called in the following manner: document(<ref>string</ref>,/).</li>
      <li>Fixed named templates bug accepting global parameter when called with a parameter of the same name that the named template does not 
          recognize.</li>
    </ul> 
@@ -185,25 +213,24 @@
    <s3 title="Changes for &xslt4c; version 1.0">
    <p>Major updates since version 0.40.0 include:</p>
    <ul>
-     <li>Full support for namespace handling<br/><br/></li>
-     <li>Full implementation of the format-number() function and support for the decimal-format element<br/><br/></li>
-     <li>Integration with the <resource-ref idref="icu"/> for number formatting, sorting, and output encoding<br/><br/></li>
-     <li>Support for the exclude-result-prefixes attribute<br/><br/></li>
+     <li>Full support for namespace handling</li>
+     <li>Full implementation of the format-number() function and support for the decimal-format element</li>
+     <li>Integration with the <resource-ref idref="icu"/> for number formatting, sorting, and output encoding</li>
+     <li>Support for the exclude-result-prefixes attribute</li>
      <li>Support for the output encoding attribute</li>
    </ul>
    </s3>
    <s3 title="Changes for &xslt4c; version 0.40.0">
    <p>Major updates since version 0.30.0 include:</p>
    <ul>
-     <li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT<br/><br/></li>
-     <li>Stricter compliance for HTML and XML output<br/><br/></li>
-     <li>Improved handling of relative URI's<br/><br/></li>
-     <li>Improved handling of Import and Include<br/><br/></li>
-     <li>Better namespace handling (although there are still problems here)<br/><br/></li>
-     <li>Support for Document() function<br/><br/></li>
-     <li>Support for XPath predicates<br/><br/></li>
-     <li>Better handling of parameters to stylesheet and templates<br/><br/></li>
-     <li>Full implementation of axes ( with the exception of namespace:: )<br/><br/></li>
+     <li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT</li>
+     <li>Stricter compliance for HTML and XML output</li>
+     <li>Improved handling of relative URI's</li>
+     <li>Improved handling of Import and Include</li>
+     <li>Better namespace handling (although there are still problems here)</li>
+     <li>Support for Document() function</li>
+     <li>Support for XPath predicates</li>
+     <li>ProblemListener with a different output stream and call 
+         XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
    </ul>
    </s3>
-	

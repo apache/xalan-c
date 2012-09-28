@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE book SYSTEM "sbk:/style/dtd/book.dtd">
+<!DOCTYPE book SYSTEM "../style/dtd/book.dtd">
 
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,20 +19,38 @@
  * limitations under the License.
 -->
 
-<book title="Xalan-C++ XSLT User's Guide" copyright="1999-2012 The Apache Software Foundation">
+<book title="Xalan-C/C++ Version 1.11" copyright="1999-2012 The Apache Software Foundation">
 
-  <resources source="sbk:/sources/xalan/resources.xml"/>
-    
-  <external href="http:/xalan.apache.org/"  label="Home"/>
-  
+<!--  <hidden> -->
+    <resources source="../sources/xalan/resources.xml"/>
+<!--  </hidden> -->
+
+<!--
+  <external href="http://xalan.apache.org/"  label="Home"/>
+-->
+
+  <external href="../index.html" label="Home"/>
+ 
   <separator/>
-  
+ 
   <document id="index"
-            label="Xalan-C++ 1.10"
+            label="Xalan-C++ 1.11"
             source="xalan/index.xml"/>
-            
-  <separator/>            
-  
+
+  <document id="whatsnew" 
+            label="What's New" 
+            source="xalan/whatsnew.xml"/>    
+
+  <document id="license"
+            label="Licenses"
+            source="xalan/license.xml"/>
+
+  <separator/>
+<!--
+  <document id="getstarted"
+            label="Getting Started"
+            source="xalan/getstarted.xml"/>
+-->
   <document id="overview" 
             label="Overview" 
             source="xalan/overview.xml"/>   
@@ -40,10 +58,6 @@
   <document id="charter" 
             label="Charter" 
             source="xalan/charter.xml"/>   
-                        
-  <document id="whatsnew" 
-            label="What's New" 
-            source="xalan/whatsnew.xml"/> 
 
   <separator/>                      
 
@@ -51,16 +65,19 @@
             label="Download"
             source="xalan/download.xml"/>
 
-  <document id="build_instruct"
-            label="Building"
-            source="xalan/build_instruct.xml"/>
+  <document id="buildlibs"
+            label="Build Libraries"
+            source="xalan/buildlibs.xml"/>
 
   <document id="install"
             label="Installation"
             source="xalan/install.xml"/>
 
-  <separator/>  
+  <document id="builddocs"
+            label="Build Documents"
+            source="xalan/builddocs.xml"/>
 
+  <separator/>  
             
   <document id="samples"
             label="Sample Apps"
@@ -88,19 +105,34 @@
             label="Extensions Library" 
             source="xalan/extensionslib.xml"/>            
 
-  <external href="apiDocs/index.html" label="API Reference"/>
+  <external href="apiDocs/index.html" 
+            label="API Reference"/>
    
-  <separator/>        
-
+  <separator/>
+<!--
+  <group    id="faqgroup"
+            label="Faq Group">
+-->
   <faqs     id="faq"        
-            label="FAQs"
+            label="Xalan-C FAQs"
             source="xalan/faq.xml" />
-
+<!--
+  <faqs     id="test-faqs"
+            label="Test Faqs"
+            source="xalan/test-faqs" />
+  </group>
+-->
   <separator/>
           
-  <external href="whatsnew.html#bugs" label="Bugs"/>
+  <external href="whatsnew.html#bugs" 
+            label="Bugs"/>
 
-  <external href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c" label="Testing"/>
+  <external href="http://xalan.apache.org/old/xalan-j/test/run.html#how-to-run-c" 
+            label="Testing"/>
+
+  <document id="secureweb"
+            label="Web Security"
+            source="xalan/secureweb.xml" />
           
 </book>
-  
+
