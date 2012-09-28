@@ -64,30 +64,48 @@ public:
     virtual XalanFileLoc
     getColumnNumber() const = 0;
 
+    /**
+     * Get the public identifier from a locator object.
+     * @param theLocator  A locator object inherited from Xerces.
+     * @param theAlternateId  A default name for a public identifier.
+     * @return a null terminated XalanDOMChar string.
+     */
     static const XalanDOMChar*
     getPublicId(
             const Locator*          theLocator,
-            const XalanDOMChar*     theAlternateId = &s_dczero)
+            const XalanDOMChar*     theAlternateId = getEmptyPtr())
     {
         return theLocator == 0 ? theAlternateId : (theLocator->getPublicId() ?
             theLocator->getPublicId() : theAlternateId);
     }
 
+    /**
+     * Get the system identifier from a locator object.
+     * @param theLocator  A locator object inherited from Xerces.
+     * @param theAlternateId  A default name for a public identifier.
+     * @return a null terminated XalanDOMChar string.
+     */
     static const XalanDOMChar*
     getSystemId(
             const Locator*          theLocator,
-            const XalanDOMChar*     theAlternateId = &s_dczero)
+            const XalanDOMChar*     theAlternateId = getEmptyPtr())
     {
         return theLocator == 0 ? theAlternateId : (theLocator->getSystemId() ?
             theLocator->getPublicId() : theAlternateId);
     }
 
+    /**
+     * Get the line number from a locator object.
+     */
     static XalanFileLoc
     getLineNumber(const ParentType*     theLocator)
     {
         return theLocator == 0 ? getUnknownValue() : theLocator->getLineNumber();
     }
 
+    /**
+     * Get the column number from a locator object.
+     */
     static XalanFileLoc
     getColumnNumber(const ParentType*   theLocator)
     {
@@ -122,13 +140,24 @@ private:
     // Not defined...
     XalanLocator(const XalanLocator&);
 
-    XalanLocator&
+    XalanLocator& 
     operator=(const XalanLocator&);
 
-    const static XalanDOMChar s_dczero = 0;
+    /**
+     * Return static pointer to null XalanDOMChar.
+     * This is crafted to overcome issues with compilers/linkers that
+     * have problems initializing static integer members within a class.
+     *
+     * Replaces:    static const int s_zero = 0;
+     * Reference:   &s_zero;
+     */
+    static const XalanDOMChar * getEmptyPtr()
+    {
+        static const XalanDOMChar theZero = 0;
+        static const XalanDOMChar * theEmpty = &theZero;
+        return theEmpty;
+    }
 };
-
-
 
 XALAN_CPP_NAMESPACE_END
 
