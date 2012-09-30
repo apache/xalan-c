@@ -68,7 +68,7 @@
           location="http://oss.software.ibm.com/icu/download/index.html"/>
 <resource id="xerces-build-icu" 
           title="Building ICU for &xml4c;" 
-          location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
+          location="http://xerces.apache.org/xerces-c/build.html#BuildICU"/>
 <resource id="stlport" 
           title="STLport" 
           location="http://www.stlport.org/"/>

@@ -19,9 +19,10 @@
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 <s1 title="Downloading &xslt4c;">
 <anchor name="download"/>
-<p>This section is being rewritten for Xalan-C/C++ Version 1.11.  You
-can find the old 
-<jump href="../old/xalan-c">Version 1.10</jump> here.
+<p>The downloads for Xalan-C/C++ for Version 1.11 will be available here when published 
+   (<jump href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c">xalan-c distribution</jump>).</p>
+<p>You can find the old 
+<jump href="../old/xalan-c/index.html">version 1.10 release</jump> here.
 </p>
 
 <p>We are providing a source package, a documentation package, and
@@ -32,8 +33,6 @@ some compiled binary packages.
 use your help <jump href="buildlibs.html">creating binary packages</jump> for 
 UNIX and Linux systems.
 </p>
-
-<p><em>THIS IS STILL A PRE-RELEASE PRODUCT</em></p>
 
 <p>A distribution will be mirrored and these pages updated when the packages
 become available to the general public.  The current packages for download

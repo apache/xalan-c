@@ -45,7 +45,8 @@
 </p>
 <p>We don't have persons yet committed to build binary distribution releases.
 </p>
-<p>You can get more information on the Xerces-C/C++ distributions at the <jump href="http://xml.apache.org/xerces-c">http://xml.apache.org/xerces-c</jump> web site.
+<p>You can get more information on the Xerces-C/C++ distributions at the 
+   <jump href="http://xerces.apache.org/xerces-c">http://xerces.apache.org/xerces-c</jump> web site.
 </p>
 
 <anchor name="winbldenv"/>
