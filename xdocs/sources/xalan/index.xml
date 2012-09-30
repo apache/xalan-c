@@ -98,17 +98,17 @@ Some lists require a subscription in order to post messages.
 <p>The <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list 
 is used to communicate product development issues with the software development team. 
 The xalan-dev messages are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-dev">archived here</jump> 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-dev">archived here</jump> 
 and on <jump href="http://marc.info/?l=xalan-dev">Marc.info</jump>.
 </p>
 <p>The <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mailing list 
 is used to discuss issues regarding the use of the Xalan-C/C++ software and libraries. 
 The xalan-c-users messages are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-c-users">archived here</jump> 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-c-users">archived here</jump> 
 and on <jump href="http://marc.info/?l=xalan-c-users">Marc.info</jump>.
 </p>
-<p>The subversion repository changes are logged on the xalan-cvs mailing list and are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-cvs">archived here</jump>
+<p>The subversion repository changes are logged on the xalan-commits mailing list and are 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-commits">archived here</jump>
 and on <jump href="http://marc.info/?l=xalan-cvs">Marc.info</jump>.
 </p>
 <p>You can review the project sources and change history in the subversion repository at 
