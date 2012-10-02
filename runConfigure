@@ -19,6 +19,10 @@
 #
 #
 # $Log$
+# Revision 1.15  2012/10/02           shathaway
+# Allow CFLAGS and CXXFLAGS to inherit external environment.
+# Fix for XALANC-734
+#
 # Revision 1.14  2005/08/16 23:48:26  dmitryh
 # Addional fix for XALANC-541
 #
@@ -654,10 +658,10 @@ fi
 # Set the extra C and C++ compiler flags
 #
 
-CXXFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
 export CXXFLAGS
 
-CFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
+CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
 export CFLAGS
 
 LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink $threadingDefines"
