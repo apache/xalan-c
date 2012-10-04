@@ -9,7 +9,7 @@
 # Various OS's have different ways of specifying the library path
 #
 # Solaris and Linux
-  LD_LIBRARY_PATH=/usr/local/lib
+# LD_LIBRARY_PATH=/usr/local/lib
 #
 # HP-UX
 # SHLIB_PATH=/usr/local/lib
