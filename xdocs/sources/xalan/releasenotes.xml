@@ -48,9 +48,17 @@
       <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
           is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
           on this platform.  Please see <link anchor="dotNet">"Step for doing a Windows Build with Visual Studio .NET"</link> for details.</li>
-      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these changes to your build environment, please see <link anchor="xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"</link></li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  
+          Users are encouraged to modify their applications to interface with the new Xerces DOM support.  
+          For more information on the effects of these changes to your build environment, please see 
+          <link anchor="xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"</link></li>
       <!--
-      <li>Porting of conf utility to the UNIX platform.  The conf utility is a test harness designed to run the conformance tests located under the xml-xalan/test/tests directory.  After the tests have been run, a results report is generated in HTML format for easy viewing.  For more information on how to use this tool, please see <link idref="commandline" anchor="confexe">"Using the command line utility"</link>.</li>
+      <li>Porting of conf utility to the UNIX platform. 
+          The conf utility is a test harness designed to run the conformance tests located under 
+          the xml-xalan/test/tests directory.  After the tests have been run, a results 
+          report is generated in HTML format for easy viewing.  For more information on how to use 
+          this tool, please see <link idref="commandline" anchor="confexe">"Using the 
+          command line utility"</link>.</li>
       -->
       <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
       <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes". See bugzilla <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24304">24304</jump> and <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</jump>.</li>

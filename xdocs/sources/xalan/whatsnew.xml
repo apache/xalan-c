@@ -40,20 +40,15 @@
 <p><em>Release notes for Xalan-C/C++ Version 1.11</em>
 </p>
 <p>This is primarily a bug-fix release of version 1.10.  Support for number and
-nodeset types for stylesheet top-level parameters has been added. Xerces-C/C++
+nodeset types for stylesheet top-level parameters have been added. Xerces-C/C++
 versions 3.0 and newer are now supported. Xerces-C/C++ Version 3.1.1 is the
 preferred stable release.
 </p>
-<p>At present, the Xalan-C/C++ Version 1.11 has no binary releases. 
-When building Xalan-C/C++ from sources, 
-you should use the same platform that was used to 
-compile the companion Xerces-C/C++ library.
-</p>
-<p>Binary package releases for Microsoft Windows are being planned.
-</p>
-<p>If you are able to successfully create a new binary package and wish it
-to be included, then we welcome your participation on the 
-<jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
+<p>There are few binary releases for Xalan-C/C++.  The current binary releases
+are primarily for Windows platforms.  If you are able to successfully create a 
+new binary package and wish it to be included, then we welcome your participation 
+on the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
+You may also wish to check our <link idref="download">download</link> page.
 </p>
 <p>Xalan-C/C++ no longer supports Microsoft Studio (VC6).  The Microsoft Visual
 Studio .NET platforms (2003, 2005, 2008, and 2010) are supported.  This equates
@@ -87,12 +82,17 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 <s2 title="Bug Fixes in Release 1.11">
 <p>The bugs fixed in &xslt4c-current; include:</p>
 <ul>
-<li>XALANC-723 Add Top-Level parameter support for XalanCAPI and UseStylesheetParams sample</li>
+<li>XALANC-734: Allow runConfigure CFLAGS and CXXFLAGS to inherit environment</li>
+<li>XALANC-732: Fix makefile errors for AIX builds</li>
+<li>XALANC-730: Fixed XalanTransformer memory leaks</li>
+<li>XALANC-723: Add Top-Level parameter support for XalanCAPI and UseStylesheetParams samples</li>
+<li>XALANC-723: The XalanTransformer Top-Level parameters now include nodeset and number types</li>
 <li>XALANC-721: Upgrade support for MS VS 2010 (VC10)</li>
 <li>XALANC-719: Xerces Parser Liaison - errors on elements with no attributes</li>
 <li>XALANC-716: incorrect buffer-size calculation in XalanUTF16Writer.hpp</li>
 <li>XALANC-715: NULL pointer access crash</li>
 <li>XALANC-713: Build Xalan-C/C++ API Reference Manual using Doxygen 1.7 or newer</li>
+<li>XALANC-712: Rewrite of Xalan-C++ V1.11 User Guide Web Pages</li>
 <li>XALANC-710: MS-Studio 2008 Debug Build sends Xalan-C_1D.lib to wrong directory</li>
 <li>XALANC-709: Doxygen bug in XalanQName.hpp</li>
 <li>XALANC-708: Including XalanCAPI.hpp does not import Xerces typedef XMLch</li>
@@ -270,7 +270,9 @@ and offers to help to <human-resource-ref idref="xalandev"/>.
 <li>Add more EXSLT extension functions</li>
 <li>Add the EXSLT document extension function</li>
 <li>Add support for user-defined extension modules</li>
-<li>Add support for node-set to be declared as top-level XSLT parameter</li>
+<li>Retire runConfigure script, use GNU AutoTools for platform maintenance</li>
+<li>Add number and nodeset top-level parameters to the Xalan command-line</li>
+<li>Add noNamespace file schema capability to the Xalan command-line</li>
 </ul>
 </s2>
 </s1>

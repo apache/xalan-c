@@ -18,46 +18,35 @@
 -->
 <!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
 <s1 title="Downloading &xslt4c;">
-<anchor name="download"/>
-<p>The downloads for Xalan-C/C++ for Version 1.11 will be available here when published 
-   (<jump href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c">xalan-c distribution</jump>).</p>
-<p>You can find the old 
-<jump href="../old/xalan-c/index.html">version 1.10 release</jump> here.
+<ul>
+  <li><link anchor="DownloadWhat">Downloading What You Need</link></li>
+  <li><link anchor="DownloadNotes">Downloading Notes</link></li>
+<!--  <li><link anchor="SelectMirror">Select Another Mirror</link></li> -->
+  <li><link anchor="SourcePkgs">Source Packages</link></li>
+  <li><link anchor="DocPkgs">Documentation Packages</link></li>
+  <li><link anchor="BinaryPkgs">Binary Packages</link></li>
+  <li><link anchor="VerifyPkgs">Verify Downloaded Packages</link></li>
+  <li><link anchor="PlatformComp">Platform Compatibility</link></li>
+</ul>
+
+<anchor name="DownloadWhat"/>
+<s2 title="Downloading What You Need">
+
+<p>We are distributing the source package for the Xalan-C/C++
+library, sample programs, and documentation.  We are also
+distributing assembled documentation packages for your 
+browser.  Some selected platforms also have binary packages.
 </p>
 
-<p>We are providing a source package, a documentation package, and
-some compiled binary packages.
-</p>
-
-<p>The binary packages are currently for Windows systems.  We can
-use your help <jump href="buildlibs.html">creating binary packages</jump> for 
-UNIX and Linux systems.
-</p>
-
-<p>A distribution will be mirrored and these pages updated when the packages
-become available to the general public.  The current packages for download
-are in a temporary repository for developers.
-</p>
-
-<p>The subversion sources are current for Xalan-C/C++ Version 1.11 and are
-available for download using your favorite subversion <code>svn</code> program.</p>
-
-<p>Apache Xalan-C/C++ Subversion Repository is accessed here.<br/> 
-<jump href="http://svn.apache.org/repos/asf/xalan/c/trunk">
-http://svn.apache.org/repos/asf/xalan/c/trunk</jump>
-</p>
-
-<s2 title="Downloading what you need">
-
-<p>The Xalan-C/C++ library requires the
-<jump href="http://www.apache.org/dyn/closer.cgi/xerces/c">Xerces-C/C++ XML</jump> Parser 3.0 
-or newer, version 3.1.1 is preferred.
+<p>The Xalan-C/C++ 1.11 library requires the
+<jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xerces/c">Xerces-C/C++ XML</jump> 
+Parser 3.0 or newer, version 3.1.1 is preferred.
 </p>
 
 <p>The source package contains all the scripts needed to build the
 library, sample programs, and documentation for a wide variety
 of Windows and UNIX platforms.  The documentation package provides
-usable html documentation for your web browsers.
+usable html documentation that is already assembled for your web browsers.
 </p>
 
 <p>Building the API Reference documents requires a current version of the 
@@ -67,64 +56,204 @@ We have not tried building the API Reference on a Windows platform.
 A usable API Reference is included with the documentation package.
 </p>
 
+</s2>
+<anchor name="DownloadNotes"/>
+<s2 title="Downloading Notes">
+ 	
+<p>Releases are distributed via various mirror sites around the world, 
+and the links below will direct you to a mirror near you. 
+Alternative mirror locations are also provided.</p>
+
+<note>You must <link anchor="VerifyPkgs">verify the integrity</link> of the downloaded files 
+using signatures downloaded from the Apache master distribution directory.</note>
+
+<p>Access to the latest (and possibly unstable) source can be accessed via 
+<jump href="http://svn.apache.org/repos/asf/xalan/xalan-c/trunk">SVN</jump></p>
+ 
+<p>Archives of old Xalan-C/C++ releases can be found at the 
+<jump href="http:archive.apache.org/dist/xalan/xalan-c">Apache Xalan Archives</jump>
+and the
+<jump href="http:archive.apache.org/dist/xml/xalan-c">Old Apache XML Archives</jump>.</p>
+
+<p>Archives of old Xerces-C/C++ parser distributions can be found at the
+<jump href="http:archive.apache.org/dist/xerces/c">Apache Xerces Archives</jump>
+and the
+<jump href="http:archive.apache.org/dist/xml/xalan-c">Old Apache XML Archives</jump>.</p>
+
+
+<!-- 
+  Special use of &lt; &gt are required here to get the <form>,,,</form> to pass through 
+  StyleBook stylesheet transformation. (I hope to add the <form> capability to StyleBook.)
+  You should then edit the product html, converting the form for use as a cgi template.
+ --> 
+<!-- Include the "altmirror" file when ready for this capability
+  &altmirror;
+-->
+
+<anchor name="SourcePkgs"/>
 <s3 title="Source Packages">
-<p>We are distributing the source package for the Xalan-C/C++
-library, sample programs, and documentation.  The source package
-has the StyleBook XML sources for the web pages and a Doxygen
-configuration file to construct the API Reference.
-</p>
-
+<p><em>Xalan-C/C++ <jump href="http://www.apache.org/dist/xalan/xalan-c/KEYS">KEYS</jump></em></p>
 <ul>
- <li>Xalan-C-1.11.source.tar.gz</li>
- <li>Xalan-C-1.11.source.zip</li>
+ <li>xalan-c-1.11-src.tar.gz</li>
+ <li>xalan-c-1.11-src.zip</li>
 </ul>
+<p>You can download the Xalan-C/C++ source packages from the 
+   <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/sources">
+   Apache Mirrors</jump>.</p>
+<p>You should <link anchor="VerifyPkgs">verify</link> your packages against
+   the trusted signatures posted on the Apache master distribution site</p>
 </s3>
 
+<anchor name="DocPkgs"/>
 <s3 title="Documentation Packages">
-<p>We are distributing a package of html web pages for the User
-Guide and interactive API Reference. The documentation package 
-describes how to build and use the library for Windows and UNIX
-platforms.
+<p>These documentation packages can be built from the Xalan-C/C++ 
+<link anchor="SourcePkgs">source distributions</link> on Linux or UNIX systems.
+Windows systems can only build the basic webpages without the apiDocs 
+interactive API (Application Program Interface) pages.
 </p>
-
+<p>The <em>html-full</em> is a very large package (355+ MB).  It contains the
+   interactive graphics images that map the include file relationships and
+   class relationships.  The <em>html-nograf</em> (42 MB) just contains tabular
+   relationships without the large volume of generated graphics.
+</p>
+<p><em>Xalan-C/C++ <jump href="http://www.apache.org/dist/xalan/xalan-c/KEYS">KEYS</jump></em></p>
 <ul>
- <li>Xalan-C-1.11.docs-html.tar.gz</li>
- <li>Xalan-C-1.11.docs-html.zip</li>
- <li>Xalan-C-1.11.docs-api.tar.gz</li>
- <li>Xalan-C-1.11.docs-api.zip</li>
+ <li>xalan-c-1.11-docs-html-full.tar.gz</li>
+ <li>xalan-c-1.11-docs-html-full.zip</li>
+ <li>xalan-c-1.11-docs-html-nograf.tar.gz</li>
+ <li>xalan-c-1.11-docs-html-nograf.zip</li>
 </ul>
+<p>You can download the Xalan-C/C++ documentation packages from the 
+   <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/docs">
+   Apache Mirrors</jump>.</p>
+<p>You should <link anchor="VerifyPkgs">verify</link> your packages against
+   the trusted signatures posted on the Apache master distribution site</p>
 </s3>
 
+<anchor name="BinaryPkgs"/>
 <s3 title="Binary Packages">
 <p>We are distributing compiled binary packages for several
-platforms.  The Xalan-C/C++ documentation is provided as a
-separate package.  We would like to distribute
-binary packages for platforms that have compiled Xerces-C/C++
-distribution support.
+platforms.  The Xalan-C/C++ <link anchor="DocPkgs">documentation</link> 
+is provided as a separate package.  We would like to distribute binary packages 
+for platforms on which Xerces-C/C++ has binary packages distributed.
+</p>
+<p>Both the Xalan (XSLT) and Xerces (XML Parser) libraries should
+both be compiled with the same version of C++ compiler.  A mismatch
+of compiler versions is known to create runtime library reference
+errors.  If you cannot find a compatible Xerces library, you should
+obtain the Xerces sources and compile both libraries.
+</p>
+<p>Binary packages labeled <em>xalan_combined</em> have compiled
+libraries for both Xalan-C/C++ and Xerces-C/C++.  All binary
+packages include the <em>Xalan</em> or <em>xalan.exe</em>
+command line styleshet transformation processor.
 </p>
 
-<p>The following binary packages are being prepared for distribution.</p>
+<note>The development cycles for Xerces-C/C++ and Xalan-C/C++ are
+separately managed.  There is no synchronization of product distribution.</note>
 
+<p><em>Windows Packages - 32 BIT</em></p>
 <ul>
- <li>Xalan-C-1.11.windows-x86-vc71.zip</li>
- <li>Xalan-C-1.11.windows-x86-vc8.zip</li>
- <li>Xalan-C-1.11.windows-x86-vc9.zip</li>
- <li>Xalan-C-1.11.windows-x86-vc10.zip</li>
- <li>Xalan-C-1.11.windows-x86_64-vc8.zip</li>
- <li>Xalan-C-1.11.windows-x86_64-vc9.zip</li>
- <li>Xalan-C-1.11.windows-x86_64-vc10.zip</li>
+ <li>xalan-c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan-c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan-c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan-c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
 </ul>
+<p>Combined with Xerces Parser</p>
+<ul>
+ <li>xalan_combined-c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan_combined-c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan_combined-c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_combined-c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
+</ul> 
+<p><em>Windows Packages - 64 BIT</em></p>
+<ul>
+ <li>xalan-c-1.11-x86_64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan-c-1.11-x86_64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan-c-1.11-x86_64-windows-vc10.zip for MS VS 2010</li>
+</ul>
+<p>Combined with Xerces Parser</p>
+<ul>
+ <li>xalan_combined-c-1.11-x86_64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan_combined-c-1.11-x86_64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_combined-c-1.11-x86_64-windows-vc10.zip for MS VS 2010</li>
+</ul>
+<p><em>BSD Packages - 64 BIT</em></p>
+<ul>
+ <li>xalan-c-1.11-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
+ <li>xalan_combined-c-1.11-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
+</ul>
+<p><em>Linux Packages</em></p>
+<ul>
+ <li>xalan-c-1.11-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
+ <li>xalan_combined-c-1.11-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
+</ul>
+<p>You can download the Xalan-C/C++ compiled binary packages from the 
+   <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/binaries">
+   Apache Mirrors</jump>.</p>
+<p>You should <link anchor="VerifyPkgs">verify</link> your packages against
+   the trusted signatures posted on the Apache master distribution site</p>
+</s3>
+</s2>
+<anchor name="VerifyPkgs"/>
+<s2 title="Verify The Integrity of the Files">
+
+<p>It is essential that you verify the integrity of the downloaded 
+   files using the PGP or MD5 signatures. You should only download the
+   <jump href="http://www.apache.org/dist/xalan/xalan-c/KEYS">KEYS</jump>
+   and the (asc/md5) signature files from the Apache Master Distribution.
+   The Apache Mirrors of previous sections should be used to download
+   the products.</p>
+<ul>
+  <li><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/sources">
+      Apache Mirror Xalan-C Sources</jump></li>
+  <li><jump href="http://www.apache.org/dist/xalan/xalan-c/source">
+      Apache Master Xalan-C Sources - for Signature Files</jump></li>
+  <li><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/docs">
+      Apache Mirror Xalan-C Documentation</jump></li>
+  <li><jump href="http://www.apache.org/dist/xalan/xalan-c/docs">
+      Apache Master Xalan-C Documentation - for Signature Files</jump></li>
+  <li><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/binaries">
+      Apache Mirror Xalan-C Binary Packages</jump></li>
+  <li><jump href="http://www.apache.org/dist/xalan/xalan-c/binaries">
+      Apache Master Xalan-C Binary Packages - for Signature Files</jump></li>
+</ul>
+
+<p>Make sure you get the signature file for the particular distribution from the master directory, 
+   rather than from a mirror. 
+   Then verify the signatures using:</p>
+<source>
+   % pgpk -a KEYS
+   % pgpv &lt;archive-name&gt;.tar.gz.asc
+</source>
+<em>or</em>
+<source>
+   % pgp -ka KEYS
+   % pgp &lt;archive-name&gt;.tar.gz.asc
+</source>
+<em>or</em>
+<source>
+   % gpg --import KEYS
+   % gpg --verify &lt;archive-name&gt;.tar.gz.asc
+</source>
+<p>Alternatively, you can verify the MD5 signature on the files. 
+A unix program called md5 or md5sum is included in many unix distributions. 
+It is also available as part of 
+<jump href="http://www.gnu.org/directory/text/wordproc/textutils.html">GNU Textutils</jump>.
+ Windows users can get binary md5 programs from 
+<jump href="http://www.fourmilab.ch/md5/">here</jump>,
+<jump href="http://www.pc-tools.net/win32/freeware/console/">here</jump>, or 
+<jump href="http://www.slavasoft.com/fsum/">here</jump>.</p>
+</s2>
+<anchor name="PlatformComp"/>
+<s2 title="Platform Compatibility">
 
 <p>We currently have no one committed to release UNIX and Linux
 binary packages.  If you have scripts to build these packages,
 your help would be appreciated. 
 You can contribute by posting your comments to the 
-<jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list.
-</p>
-</s3>
-<!-- PLATFORM COMPATIBILITY TABLE GOES HERE
--->
-<s3 title="Platform Compatibility">
+<jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list.</p>
+
 <p>The compiler version used for each platform is listed in the table below.
 The build platforms shown here have Xerces-C/C++ binary package support.
     <table>
@@ -191,19 +320,23 @@ a build of the Xerces-C/C++ XML Parser library from the sources.
 Use of Xalan and Xerces libraries compiled with different versions
 of compilers may cause problems</p>
 
-<note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="faq-11">A tar checksum error on Solaris
-      </link>.
+<note>Use GNU tar to untar the Solaris distribution file; see 
+  <link idref="faq" anchor="faq-11">A tar checksum error on Solaris</link>.
 </note>
 
-<p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download 
-   and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
-
-<p>The IBM ICU is supported with Xerces-C version 2.8.  Xerces-C version 3 has introduced transcoding support modules, currently being evaluated for Xalan XSLT transcoders.
+<p>If you want to take advantage of the support for number formatting, sorting, 
+   and encoding the ICU provides, you should also download 
+   and install the <resource-ref idref="icu"/>; see 
+   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
 </p>
 
-<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive 
-      directory</jump>.
+<p>The IBM ICU is supported with Xerces-C version 2.8.  Xerces-C version 3 has 
+   introduced transcoding support modules, currently being evaluated 
+   for Xalan XSLT transcoders.
+</p>
+
+<note>To access previous releases of &xslt4c;, visit the 
+  <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive directory</jump>
 </note>
-</s3>
 </s2>
 </s1>
