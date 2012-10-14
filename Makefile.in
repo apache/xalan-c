@@ -49,10 +49,10 @@ install-package: install-extras
 	$(MAKE) -C samples $@
 
 install-extras:
-	$(MKINSTALLDIRS) $(DESTDIR)/$(prefix)
-	$(INSTALL_DATA) $(XALANCROOT)/KEYS        $(DESTDIR)/$(prefix)
-	$(INSTALL_DATA) $(XALANCROOT)/LICENSE     $(DESTDIR)/$(prefix)
-	$(INSTALL_DATA) $(XALANCROOT)/NOTICE      $(DESTDIR)/$(prefix)
+	$(MKINSTALLDIRS) $(DESTDIR)/$(datadir)/doc/libxalan-c
+	$(INSTALL_DATA) $(XALANCROOT)/LICENSE     $(DESTDIR)/$(datadir)/doc/libxalan-c
+	$(INSTALL_DATA) $(XALANCROOT)/NOTICE      $(DESTDIR)/$(datadir)/doc/libxalan-c
+	$(INSTALL_DATA) $(XALANCROOT)/README      $(DESTDIR)/$(datadir)/doc/libxalan-c
 
 	
 	

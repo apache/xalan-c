@@ -44,6 +44,7 @@ exec_prefix = @exec_prefix@
 bindir = @bindir@
 libdir = @libdir@
 includedir = @includedir@
+datadir = @datadir@
 
 XSL_OBJ_DIR = ${OUTDIR}/obj
 XSL_LIB_DIR = ${OUTDIR}/lib
