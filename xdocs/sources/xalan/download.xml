@@ -38,11 +38,25 @@ distributing assembled documentation packages for your
 browser.  Some selected platforms also have binary packages.
 </p>
 
+<p><em>Download Xalan-C/C++ Distributions from Apache Mirrors</em></p>
+<table>
+ <tr><td><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c">
+   The Xalan-C/C++ Distribution Tree</jump></td></tr>
+ <tr><td><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/sources">
+   The Xalan-C/C++ Source Packages</jump></td></tr>
+ <tr><td><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/docs">
+   The Xalan-C/C++ Documentation Packages</jump></td></tr>
+ <tr><td><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/binaries">
+   The Xalan-C/C++ Binary Packages</jump></td></tr>
+</table>
+
+<p><em>Download Xerces-C/C++ XML Parser Library</em></p>
 <p>The Xalan-C/C++ 1.11 library requires the
 <jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xerces/c">Xerces-C/C++ XML</jump> 
 Parser 3.0 or newer, version 3.1.1 is preferred.
 </p>
 
+<p><em>Our Xalan Packages</em></p>
 <p>The source package contains all the scripts needed to build the
 library, sample programs, and documentation for a wide variety
 of Windows and UNIX platforms.  The documentation package provides
@@ -60,7 +74,7 @@ A usable API Reference is included with the documentation package.
 <anchor name="DownloadNotes"/>
 <s2 title="Downloading Notes">
  	
-<p>Releases are distributed via various mirror sites around the world, 
+<p>Apache package releases are distributed via various mirror sites around the world, 
 and the links below will direct you to a mirror near you. 
 Alternative mirror locations are also provided.</p>
 
@@ -68,7 +82,7 @@ Alternative mirror locations are also provided.</p>
 using signatures downloaded from the Apache master distribution directory.</note>
 
 <p>Access to the latest (and possibly unstable) source can be accessed via 
-<jump href="http://svn.apache.org/repos/asf/xalan/xalan-c/trunk">SVN</jump></p>
+<jump href="http://svn.apache.org/repos/asf/xalan/c/trunk">SVN</jump></p>
  
 <p>Archives of old Xalan-C/C++ releases can be found at the 
 <jump href="http:archive.apache.org/dist/xalan/xalan-c">Apache Xalan Archives</jump>
@@ -154,29 +168,29 @@ separately managed.  There is no synchronization of product distribution.</note>
 
 <p><em>Windows Packages - 32 BIT</em></p>
 <ul>
- <li>xalan-c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
- <li>xalan-c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
- <li>xalan-c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
- <li>xalan-c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan_c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan_c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p>Combined with Xerces Parser</p>
 <ul>
- <li>xalan_combined-c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
- <li>xalan_combined-c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
- <li>xalan_combined-c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_combined-c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_comb-1.11-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan_comb-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan_comb-1.11-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_comb-1.11-x86-windows-vc10.zip for MS VS 2010</li>
 </ul> 
 <p><em>Windows Packages - 64 BIT</em></p>
 <ul>
- <li>xalan-c-1.11-x86_64-windows-vc8.zip for MS VS 2005</li>
- <li>xalan-c-1.11-x86_64-windows-vc9.zip for MS VS 2008</li>
- <li>xalan-c-1.11-x86_64-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_c-1.11-amd64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan_c-1.11-amd64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_c-1.11-amd64-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p>Combined with Xerces Parser</p>
 <ul>
- <li>xalan_combined-c-1.11-x86_64-windows-vc8.zip for MS VS 2005</li>
- <li>xalan_combined-c-1.11-x86_64-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_combined-c-1.11-x86_64-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_comb-1.11-amd64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan_comb-1.11-amd64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_comb-1.11-amd64-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p><em>BSD Packages - 64 BIT</em></p>
 <ul>
