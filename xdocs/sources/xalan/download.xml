@@ -221,7 +221,7 @@ separately managed.  There is no synchronization of product distribution.</note>
 <ul>
   <li><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/sources">
       Apache Mirror Xalan-C Sources</jump></li>
-  <li><jump href="http://www.apache.org/dist/xalan/xalan-c/source">
+  <li><jump href="http://www.apache.org/dist/xalan/xalan-c/sources">
       Apache Master Xalan-C Sources - for Signature Files</jump></li>
   <li><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/docs">
       Apache Mirror Xalan-C Documentation</jump></li>
