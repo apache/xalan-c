@@ -470,19 +470,6 @@
     <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanSet.hpp" />
     <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVector.hpp" />
     <ClInclude Include="..\..\..\..\src\xalanc\Include\XalanVersion.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendar.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendarFormatter.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanCalendarIFormatter.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTime.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeDefinitons.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeExceptions.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFormatter.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunction.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunctions.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeMath.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDuration.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDurationFormatter.hpp" />
-    <ClInclude Include="..\..\..\..\src\xalanc\XalanDateTime\XalanSystemClock.hpp" />
     <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.hpp" />
     <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDATASection.hpp" />
     <ClInclude Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.hpp" />
@@ -928,13 +915,6 @@
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTime.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFormatter.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunction.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeFunctions.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDateTimeMath.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDuration.cpp" />
-    <ClCompile Include="..\..\..\..\src\xalanc\XalanDateTime\XalanDurationFormatter.cpp" />
     <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp" />
     <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCDataSection.cpp" />
     <ClCompile Include="..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.cpp" />

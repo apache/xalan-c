@@ -28,7 +28,7 @@
 #if defined(_MSC_VER)
 #include <float.h>
 #endif
-#include <math.h>
+#include <cmath>
 #include <functional>
 
 
@@ -80,7 +80,11 @@ public:
 #if defined(_MSC_VER)
         return _isnan(theNumber) != 0;
 #elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
-        return isnan(theNumber) != 0;
+#if defined(XALAN_NO_STD_NAMESPACE)
+        return isnam(theNumber) != 0;
+#else
+        return std::isnan(theNumber) != 0;
+#endif
 #else
         return s_NaN == theNumber;
 #endif

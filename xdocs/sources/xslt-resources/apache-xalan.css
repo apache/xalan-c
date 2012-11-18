@@ -1,0 +1,414 @@
+/* Xalan-C/C++ Project Web Pages (css) Stylesheet */
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+/* This (css) stylesheet renders the xhtml web pages that were generated
+ * from StyleBook XML markup using the "xalan-book.xslt" transformation.
+*/
+
+html > bod  {left:0;}
+body {
+/*  background-color: white; */
+  background-color: #f8f8f0;
+  color: black;
+  padding: 0;
+  margin: 0;
+  font-family: arial, "lucida console", san-serif;
+}
+
+/* Emulate table align=center */
+div.centered, td.centered {
+  text-align: center;
+}
+
+div.centered table {
+  margin: 0 auto;
+  text-align: left;
+}
+
+/*
+ * ID Sections
+ */
+
+#content {
+  width: 80%;
+  float: left;
+  font-size: 12pt;
+  padding-top: 1em;
+  padding-left: 5px;
+  margin-left: 10px;
+  border-left: 1px solid #aaa;
+}
+
+#navLeft {
+  clear: left;
+  width: 15%;
+  float: left;
+  padding: 2px;
+  margin-left: 1%;
+  color: red;
+  position: relative;
+  left: 1px;
+  background-color: #eee;
+}
+
+.navGroup {
+  color: Black;
+  font-size: 14pt;
+}
+
+
+#title {
+  color: black;
+  background-color: #eee;
+  text-align: center;
+  border-bottom: 1px solid #aaa;
+  padding: 0;
+  vertical-align: middle;
+}
+
+table.HdrTitle {
+  font-size: 18pt;
+}
+
+table.HdrButtons {
+  font-size: 8pt;
+  background-color: #ccf;
+  align: "center";
+  border: "1";
+
+}
+
+#footer {
+    clear: both;
+    margin: 0 2em;
+    color: #444;
+    background-color: #ddd;
+    text-align: center;
+    padding: .5em 0;
+    font-size: 75%;
+    border-top: 1px solid #aaa;
+}
+
+/*
+ * Anchors
+ */
+
+a {
+  color: blue;
+  text-decoration: undedrline;
+}
+
+a img {
+  border: 0;
+}
+
+a:hover {
+  text-decoration: none;
+  background-color: #d7c9c9;
+}
+
+/*
+ * Headers
+ */
+
+h1 {}
+
+#title h1 {
+  padding: 1px 0;
+  margin: 0;
+  float: right;
+  width: 60%;
+  font-size: 20pt;
+  text-align: center;
+}
+
+#content h1 { background-color: #8af }
+
+h2 {}
+
+#title h2 {
+  font-size: 14pt;
+  width: 60%;
+  text-alignment: center;
+  padding: 1px 0;
+  margin: 0;
+}
+
+#content h2 { background-color: #9bf }
+
+#content h2.year {
+  background-color: #ddd;
+  text-align: center;
+}
+
+h3 {}
+
+#content h3.monthName {
+  background-color: #333;
+  text-align: center;
+}
+
+#content h3 { background-color: #acf }
+
+h4{}
+
+#content h4.eventTitle {
+  margin-left: 1%;
+  border-bottom: 1px solid blue;
+}
+
+#content h4 { background-color: #cdf }
+
+/*
+ * Tables
+ */
+
+th {}
+
+td {}
+
+th.content {background-color: #4BD }
+td.content {background-color: #AEF }
+
+/*
+ * Lists and navLeft
+ */
+
+ul {}
+
+#navLeft ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#navLeft ul li {
+  margin: 0;
+}
+
+#navLeft ul li p {
+  margin: 0;
+}
+
+#navLeft ul li ul {
+  list-style-type: none;
+  font-size: 90%;
+  margin: 0 2em;
+}
+
+#navLeft ul li ul li {
+  margin: 0;
+}
+
+/*
+ * Paragraphs
+ */
+
+p {}
+
+#navLeft p {
+  text-align: center;
+  padding: 0 auto;
+  margin: 0;
+}
+
+#footer p {
+  padding: 0;
+}
+
+#content p.topalign {
+  vertical-align: middle;
+  height: 2em;
+  text-align: center;
+  width: 100%;
+  padding: .5em;
+  border: 1px solid #ddd;
+}
+
+#content p.topalign img {
+  vertical-align: middle;
+  text-align: text-middle;
+}
+
+#content p.quote {
+  color:black;
+  font-style: italic;
+  font-size: 110%;
+  margin-left: 10%;
+  margin-right: 10%;
+  padding 1em;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+#content p.navbar {
+  font-size: 90%;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+blockquote {}
+
+blockquote.note {
+  font-size: 80%;
+  border: 1px solid #ddd;
+  background-color: #eee;
+}
+
+td.noteImg {
+  background-color: white;
+  border: 0;
+}
+
+td.noteTxt {
+  background-color: white;
+  font-size: 120%;
+  border: 2px solid #ddd;
+  background-color: #eee;
+}
+
+/**
+ ** UNSPECIFIED IN APACHE STYLEBOOK DTD
+ ** <caution>..</caution> and <warning>..</warning>
+ **
+ * 
+ * td.cautionImg {
+ *   background-color: white;
+ *   border: 0;
+ * }
+ * 
+ * td.cautionTxt {
+ *   background-color: white;
+ *   font-size: 120%;
+ *   border: 2px solid #ddd;
+ *   background-color: #eee;
+ * }
+ * 
+ * 
+ * td.warningImg {
+ *   background-color: white;
+ *   border: 0;
+ * }
+ * 
+ * td.warningTxt {
+ *   background-color: white;
+ *   font-size: 120%;
+ *   border: 2px solid #ddd;
+ *   background-color: #eee;
+ * }
+ * 
+**/
+
+
+blockquote.source {
+  font-size: 75%;
+}
+
+code {
+  font-size: 75%;
+}
+
+
+/*
+ * Special Table (note)
+ */
+
+#notediv div { background-color: white }
+
+table.note {
+  width: 90%;
+}
+
+td.noteImg {
+  background-color: white;
+  vertical-align: top;
+  border: 0;
+  width: 24;
+}
+
+td.noteTxt {
+  color: black;
+  background-color: #eee;
+  font-size: 90%;
+  border: 2px solid;
+  border-color: #ccc;
+}
+
+
+/*
+ * Images
+ */
+
+img {}
+
+
+#footer img {
+  border: 0;
+}
+
+
+/*
+ * Document Divisions
+ */
+
+div {}
+
+/*
+ * Pre
+ */
+
+pre {}
+
+
+/*
+ * Generic Classes
+ */
+
+.indented {
+  margin-left: 3%;
+}
+
+.topBanner {
+  float: right;
+  margin: 0;
+  border: 0;
+  vertical-align: middle;
+}
+
+.noborder {
+  border: 0;
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -270,10 +270,16 @@
 
 <faq title="Problems Using Sun's Forte/Workshop Compiler with code containing std::istrstream">
 <q>Why won't XSLTInputSource work with std::istrstream on Sun Solaris using Forte/Sun Workshop compiler?</q>
-<a><p>There is a bug in Sun's C++ standard library implementation; see 
-      <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=14176">this bug</jump>. The short answer is that you need to 
-      get a patch. The bug report includes the code for a simple program which you can use to see if your environment has the bug. 
-      There is also a link to the patch.</p>
+<!-- first answer -->
+<a><p>There is a bug in Sun's C++ standard library implementation 
+      for the Forte/Workshop compiler.
+      The short answer is that you need to get a patch.
+      The bugzilla subsystem for Xalan issue tracking is no longer available.  The ticket recorded
+      here included a patch.</p>
+</a>
+<!-- second answer -->
+<a><p>The issue is resolved if you use the SunStudio platform for your code development.
+      The Solaris SunStudio is now available from Oracle.</p>
 </a>
 </faq>
 

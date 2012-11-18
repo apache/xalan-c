@@ -451,7 +451,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
   <li>Define the XALAN_USE_ICU environment variable.<br/><br/></li>
   <li>Set the XALANROOT environment variable to the path to to the ICU root (unless you have copied the ICU library to
       /usr/lib).<br/><br/></li> 
-  <li><link idref="build_instruct" anchor="unix">Rebuild the Xalan library</link> (&xslt4c-linuxlib; for Linux, &xslt4c-aixlib; for AIX,
+  <li><link idref="buildlibs" anchor="unixbldenv">Rebuild the Xalan library</link> (&xslt4c-linuxlib; for Linux, &xslt4c-aixlib; for AIX,
       &xslt4c-hplib; for HP-UX 11, and &xslt4c-solarislib; for Solaris).<br/><br/></li>
   <li>Be sure the Xalan library is on the library path (LD_LIBRARY_PATH for Red Hat Linux, LIBPATH for AIX, SHLIB_PATH for 
       HP-UX 11, LD_LIBRARY_PATH for Solaris).</li>

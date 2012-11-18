@@ -1,48 +1,169 @@
+
+Apache Xalan-C/C++ XSLT Library Version 1.11
+
+Project Description:
+    The Apache Xalan C/C++ Project provides a library and a 
+    comand line program to transform XML documents using a
+    stylesheet that conforms to XSLT 1.0 standards.
+
+    The source package contains all the code to create the library,
+    a command line transform utility and the documentation.
+
+    The documentation packages provide pre-built html documents
+    for web browser use.
+
+    Binary prebuilt packages are available for some platforms.
+    We could use help providing packages for more platforms.
+
+    Xalan is a project of the Apache Software Foundation.
+
+Project Website:
+    http://xalan.apache.org/xalan-c/
+
+Subversion Repository:
+    http://svn.apache.org/repos/asf/xalan/c/trunk
+
+Mirror Download Site:
+    http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c
+
+Prerequisite:
+    Apache Xerces-C/C++ XML Parser Library
+        Version 3.0 or newer
+        Version 3.1.1 preferred
+
+Prerequisite:
+    Gnu Make
+        This is required when building the Xalan-C library
+        on UNIX/Linux platforms.
+
+UNIX PACKAGE INSTALL PROJECTS:
+
+(prefix)/share/doc/xalan-c-1.11/
+    README        - This Document
+    LICENSE       - The Software License
+    NOTICE        - The Software Attributions
+    html/         - The HTML documentation package when available
+
+(prefix)/bin/
+    Xalan         - command line XSLT stylesheet transform utility
+
+(prefix)/include/xalanc/
+    - directory containing library header files
+
+(prefix)/lib/
+    libxalan-c.so             -> libxalan-c.so.111.0
+    lib/libxalan-c.so.111     -> libxalan-c.so.111.0
+    libxalan-c.so.111.0
+    libxalanMsg.so            -> libxalanMsg.so.111.0
+    libxalanMsg.so.111        -> libxalanMsg.so.111.0
+    libxalanMsg.so.111.0
+
+WINDOWS PACKAGE INSTALL PRODUCTS:
+
+(prefix)/doc/xalan-c-1.11/
+    README        - This Document
+    LICENSE       - The Software License
+    NOTICE        - The Software Attributions
+    html/         - The HTML documentation package when available
+
+(prefix)/bin/
+    Xalan.exe     - command line XSLT stylesheet transform utility
+    Xalan-C_1_11.dll         - Release build library
+    Xalan-C_1_11D.dll        - Debug build library
+    XalanMessages_1_11.dll   - Release build messages
+    XalanMessages_1_11D.dll  - Debug build messages
+
+(prefix)/include/xalanc/
+    - directory containing library header files
+
+(prefix)/lib/
+    Xalan-C_1.exp            - Windows DLL export definitions
+    Xalan-C_1.lib            - Windows DLL library definitions
+    Xalan-C_1D.exp           - Windows DLL export definitions
+    Xalan-C_1D.lib           - Windows DLL library definitions
+    XalanMessages_1_11.exp   - Windows DLL export definitions
+    XalanMessages_1_11.lib   - Windows DLL library definitions
+    XalanMessages_1_11D.exp  - Windows DLL export definitions
+    XalanMessages_1_11D.lib  - Windows DLL library defnitions
+
+SUPPORTED PLATFORMS:
+    - This is only a partial list
+    Linux/Gnu      GCC 4.4
+    Windows        VC7.1         Visual Studio .NET 2003
+    Windows        VC8           Visual Studio .NET 2005
+    Windows        VC9           Visual Studio .NET 2008
+    Windows        VC10          Visual Studio .NET 2010
+    Solaris-10     CC            SunStudio 12
+    OpenBSD 5.1    GCC 4.1
+    FreeBSD 9      GCC 4.2
+    - Known from previous releases
+    AIX            GCC
+    AIX            ALC
+    BSD            GCC
+    HPUX           ACC
+    Mac OS X       GCC
+    Cygwin         GCC
+    MinGW          GCC
+
+
+===============================================================
+
 README for XalanC project at xalan.apache.org
 
-
-	Steps for doing a UNIX build	
-		
- 	
-
+Steps for doing a UNIX build from source distributions
 For users who want to build in the UNIX environment,
 
-   1. The Xalan build files are written for GNU make, and will not work with other make utilities.
+   1. The Xalan build files are written for GNU make, and will not work with 
+      other make utilities.
 
-   2. Set the XERCESCROOT environment variable to the path to the root directory of Xerces-C++.
+   2. Set the XERCESCROOT environment variable to the path to the root directory 
+      of Xerces-C++.
 
-   3. Set the XALANCROOT environment variable to the path to the c directory in the root directory of the Xalan-C++ distribution. For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to "/home/mydir/xml-xalan/c".
+   3. Set the XALANCROOT environment variable to the path to the c directory in 
+      the root directory of the Xalan-C++ distribution. For example, if the 
+      distribution is located in "/home/mydir", you would set the XALANCROOT to 
+      "/home/mydir/xml-xalan/c".
 
-   4. (Optional) If you decide to build with ICU, integrate the build with ICU by installing the ICU (see Using the ICU) and defining XALAN_USE_ICU to a value, for example: export XALAN_USE_ICU=true. Set the ICUROOT environment variable to the path to the root directory of ICU. Note that building Xalan with ICU requires that Xerces must also be built with ICU.
+   4. (Optional) If you decide to build with ICU, integrate the build with ICU 
+      by installing the ICU (see Using the ICU) and defining XALAN_USE_ICU to a 
+      value, for example: export XALAN_USE_ICU=true. Set the ICUROOT environment 
+      variable to the path to the root directory of ICU. Note that building Xalan 
+      with ICU requires that Xerces must also be built with ICU.
 
-   5. Change directory to XALANCROOT. You can also build Xalan-C outside of the source tree, but you will need to adjust the path to the runConfigure script in the next step.
+   5. Change directory to XALANCROOT. You can also build Xalan-C outside of the 
+      source tree, but you will need to adjust the path to the runConfigure script 
+      in the next step.
 
-   6. Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as indicated below. The runConfigure utility is used to generate the appropriate Makefile for the desired build platform based on the options specified by the user. Valid options for the runConfigure utility are:
+   6. Run the runConfigure utility and provide the platform, C compiler, and 
+      C++ compiler flags as indicated below. The runConfigure utility is used to 
+      generate the appropriate Makefile for the desired build platform based on 
+      the options specified by the user. Valid options for the runConfigure 
+      utility are:
 
       ./runConfigure -p <value> -c <value> -x <value> [-[flag] <value>]
 
-      flag  	Description 
-      p  	Build platform. Option must be provided by user. Valid values
+      flag      Description 
+      p         Build platform. Option must be provided by user. Valid values
       include: aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,
       tru64, macosx, cygwin.  
-      c  	C compiler name. Example: gcc, cc, c89, xlc_r, etc. 
-      x  	C++ compiler name. Example: g++, xlC_r, CC, etc. 
-      d  	Indicates build is a debug build. Takes no values. Default is no
+      c         C compiler name. Example: gcc, cc, c89, xlc_r, etc. 
+      x         C++ compiler name. Example: g++, xlC_r, CC, etc. 
+      d         Indicates build is a debug build. Takes no values. Default is no
       debug. 
-      t  	Transcoder to use. Valid value is 'icu'. Default is null. 
-      m  	Type of localization support method. Valid values include: inmem,
+      t         Transcoder to use. Valid value is 'icu'. Default is null. 
+      m         Type of localization support method. Valid values include: inmem,
       icu, and nls. Default is inmem. 
-      M  	Locale for Message Localization Support. Default is "en_US" 
-      r  	Threads option. Valid values include: pthread or dce. Default is
+      M         Locale for Message Localization Support. Default is "en_US" 
+      r         Threads option. Valid values include: pthread or dce. Default is
       pthread. (valid on HP-UX only) 
-      b  	Specify whether it is a 32-bit or 64-bit build. Valid values are 32
+      b         Specify whether it is a 32-bit or 64-bit build. Valid values are 32
       and 64. Default is 32-bit 
-      P  	Install root directory. Used if invoking build with gmake install or
+      P         Install root directory. Used if invoking build with gmake install or
       gmake install-package. Default install root directory is /usr/local 
-      l  	Extra link options other than the default. Default is null 
-      z  	Extra compiler options other than the default. Default is null 
-      C  	Extra configuration options. 
-      h  	To get help on the above commands. Default is no help. 
+      l         Extra link options other than the default. Default is null 
+      z         Extra compiler options other than the default. Default is null 
+      C         Extra configuration options. 
+      h         To get help on the above commands. Default is no help. 
 
       Linux using GCC:  ./runConfigure -p linux -c gcc -x g++
       Linux using the Intel compiler:  ./runConfigure -p linux -c icc -x icc
@@ -64,11 +185,17 @@ For users who want to build in the UNIX environment,
 
       Solaris (64-bit):  ./runConfigure -p solaris -c cc -x CC -b 64
 
-      if you choose to install the distribution after building the libraries and executables, then you will need to indicate where you would like the distribution to be installed. To specify the install directory for your distribution, specify the flag -P <install directory>. for example, building and installing on the AIX platform:
+      if you choose to install the distribution after building the libraries and 
+      executables, then you will need to indicate where you would like the distribution 
+      to be installed. To specify the install directory for your distribution, specify 
+      the flag -P <install directory>. for example, building and installing on the 
+      AIX platform:
 
       ./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan
 
-      Note	The standard binary directories bin, lib, and include are created in the specified directory only if the install or install-package option is specified in the build process.
+      Note      The standard binary directories bin, lib, and include are created in 
+      the specified directory only if the install or install-package option is specified 
+      in the build process.
 
       To see the other runConfigure flags you may include, use the help flag:
 
@@ -85,20 +212,16 @@ For users who want to build in the UNIX environment,
            make targ
 
       where targ can be one of:
-      targ  	Description 
-      all  	Build the libraries and Xalan executable. This is the default target
-      if no targ is specified. 
-      clean  	Deletes existing binaries, executables, libraries, tests, and
-      samples. 
-      install  	Build the library, executables, and samples, and copy them (along with
-      the header files) the specified install location. 
-      install-package  	Installs the library, executables, and samples to the
-      specified location. 
-      Samples  	Builds the samples. 
-      Tests  	Builds the tests. 
-
-
-
-
+      targ      Description 
+      all       Build the libraries and Xalan executable. This is the default target
+                if no targ is specified. 
+      clean     Deletes existing binaries, executables, libraries, tests, and
+                samples. 
+      install   Build the library, executables, and samples, and copy them (along with
+                the header files) the specified install location. 
+      install-package   Installs the library, executables, and samples to the
+                specified location. 
+      Samples   Builds the samples. 
+      Tests     Builds the tests. 
 
 

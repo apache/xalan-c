@@ -62,13 +62,13 @@
   
 <resource id="icu" 
           title="International Components for Unicode (ICU)" 
-          location="http://oss.software.ibm.com/icu/index.html"/>
+          location="http://icu-project.org"/>
 <resource id="icu-download" 
           title="&icu-used;" 
-          location="http://oss.software.ibm.com/icu/download/index.html"/>
+          location="http://icu-project.org/download"/>
 <resource id="xerces-build-icu" 
           title="Building ICU for &xml4c;" 
-          location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
+          location="http://xerces.apache.org/xerces-c/build-3.html"/>
 <resource id="stlport" 
           title="STLport" 
           location="http://www.stlport.org/"/>

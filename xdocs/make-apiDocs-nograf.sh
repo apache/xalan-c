@@ -41,9 +41,9 @@ if [ ! -d ../build/docs/xalan-c ] ; then
   mkdir -p ../build/docs/xalan-c
 fi
 
-# Create the xalan-c apiDocs using (doxygen) and (dot).
+# Create the xalan-c apiDocs using (doxygen) only.
 
-doxygen DoxyfileXalan
+doxygen DoxyfileXalan-nograf
 
 # We may not want the many *.md5 files
 
