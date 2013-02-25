@@ -119,8 +119,13 @@ void XalanParsedURI::parse(
         {
             ++index;
         }
-        m_authority = XalanDOMString(uriString + authority, getMemoryManager(), index - authority);
-        m_defined |= d_authority;
+        if (index != authority)
+        {
+            m_authority = XalanDOMString(uriString + authority, getMemoryManager(), index - authority);
+            m_defined |= d_authority;
+        }
+        else
+            m_authority.clear();
     }
     else
     {
@@ -183,10 +188,16 @@ void XalanParsedURI::resolve(
     else if ((m_defined & (d_scheme | d_authority | d_query)) == 0 &&
         m_path.empty())
     {
-        m_scheme    = base.m_scheme;
-        m_authority = base.m_authority;
+        m_defined = base.m_defined;
+        if (base.m_defined & d_scheme)
+            m_scheme    = base.m_scheme;
+        if (base.m_defined & d_authority)
+            m_authority = base.m_authority;
+
         m_path      = base.m_path;
-        m_query     = base.m_query;
+
+        if (base.m_defined & d_query)
+            m_query     = base.m_query;
 
         // There is an error/unclarity in the specification in step 2 in that
         // it doesn't state that the fragment should be inherited; however
@@ -206,15 +217,21 @@ void XalanParsedURI::resolve(
             && equalsIgnoreCaseASCII(m_scheme, base.m_scheme)))
     {
         // Inherit the base scheme
-        m_scheme = base.m_scheme;
-        m_defined |= d_scheme;
+        if (base.m_defined & d_scheme)
+        {
+            m_scheme = base.m_scheme;
+            m_defined |= d_scheme;
+        }
 
         // Step 4: If the authority is unm_defined then inherit it, otherwise skip to step 7
         if (!(m_defined & d_authority))
         {
             // Inherit the base authority
-            m_authority = base.m_authority;
-            m_defined |= d_authority;
+            if (base.m_defined & d_authority)
+            {
+                m_authority = base.m_authority;
+                m_defined |= d_authority;
+            }
 
             // Step 5: if the path starts with a / then it is absolute
             if (!(m_path.length() > 0 && m_path[0] == XalanUnicode::charSolidus))
