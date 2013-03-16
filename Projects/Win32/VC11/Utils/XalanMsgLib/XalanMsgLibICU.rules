@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="XalanMsgLibICU rules"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="XLF rule"
+			DisplayName="XLF rule"
+			CommandLine="$(outdir)\MsgCreator  [inputs] -TYPE icu -LOCALE en_US -OUTDIR $(outdir)\Nls\Include"
+			Outputs="$(outdir)\Nls\Include\en_US.txt; $(outdir)\Nls\Include\LocalMsgIndex.hpp"
+			FileExtensions="*.xlf"
+			ExecutionDescription="Processing XLIFF file"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+		<CustomBuildRule
+			Name="TXT rule"
+			DisplayName="TXT rule"
+			CommandLine="$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_11 --destdir $(IntDir)  $(OutDir)\Nls\Include\en_US.txt"
+			Outputs="$(IntDir)\XalanMessages_1_11_en_US.res"
+			FileExtensions="*.txt"
+			ExecutionDescription="Processing ICU resource file"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+		<CustomBuildRule
+			Name="RES rule"
+			DisplayName="RES rule"
+			CommandLine="echo $(IntDir)\$(InputName).res &gt;$(IntDir)\$(InputName).lst"
+			Outputs="$(IntDir)\$(InputName).lst"
+			FileExtensions="*.res"
+			ExecutionDescription="Creating resource list"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+		<CustomBuildRule
+			Name="LST rule"
+			DisplayName="LST rule"
+			CommandLine="$(ICUROOT)\bin\pkgdata --name XalanMessages_1_11 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(INTDIR)\$(InputName).lst"
+			Outputs="$(OutDir)\XalanMessages_1_11.dll,$(OutDir)\XalanMessages_1_11.lib,$(OutDir)\XalanMessages_1_11.dat,$(OutDir)\XalanMessages_1_11.exp"
+			FileExtensions="*.lst"
+			ExecutionDescription="Building resource DLL"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>
