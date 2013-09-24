@@ -31,6 +31,9 @@
 #include <cmath>
 #include <functional>
 
+#if defined(SOLARIS)
+#include <math.h>
+#endif
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
@@ -81,9 +84,13 @@ public:
         return _isnan(theNumber) != 0;
 #elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
 #if defined(XALAN_NO_STD_NAMESPACE)
-        return isnam(theNumber) != 0;
+        return isnan(theNumber) != 0;
+#else
+#if defined(SOLARIS)
+        return isnan(theNumber) != 0;
 #else
         return std::isnan(theNumber) != 0;
+#endif
 #endif
 #else
         return s_NaN == theNumber;
