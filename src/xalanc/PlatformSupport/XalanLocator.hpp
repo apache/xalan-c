@@ -91,7 +91,7 @@ public:
             const XalanDOMChar*     theAlternateId = getEmptyPtr())
     {
         return theLocator == 0 ? theAlternateId : (theLocator->getSystemId() ?
-            theLocator->getPublicId() : theAlternateId);
+            theLocator->getSystemId() : theAlternateId);
     }
 
     /**
