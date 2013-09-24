@@ -46,6 +46,7 @@ dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-k*bsd*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;

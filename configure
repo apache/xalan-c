@@ -2816,6 +2816,7 @@ host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-k*bsd*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-netbsd*)    platform=NETBSD ;;
         *-*-openbsd*)    platform=OPENBSD ;;
