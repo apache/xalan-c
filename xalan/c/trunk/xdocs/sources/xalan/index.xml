@@ -30,8 +30,17 @@
 <li><link anchor="getstarted">Getting Started</link></li>
 <li><link anchor="getWhatNeeded">Getting What You Need</link></li>
 </ul>
-<p>The old Xalan-C/C++ 1.10 release can be found at 
-<jump href="http://xml.apache.org/xalan-c">xml.apache.org/xalan-c</jump>.</p>
+
+<p>Xalan-C Version 1.11.1 is a minor patch release.  The patch
+overcomes a significant issue with Windows debug builds regarding a
+Microsoft CRT runtime assertion on null pointers.</p>
+
+<p>Microsoft VS 2012 is also supported, currently requiring Xerces-C
+sources from the subversion trunk. The VS 2012 platform is currently
+experimental. Backward XP compatibility for VS 2012 builds is not tested.</p>
+
+<p>Xerces-C Version 3.2 release of the XML parser is being planned.
+Release of Xalan-C 1.12 for XSLT stylesheet transforms should shortly follow.</p>
 
 <anchor name="whatisxalan"/>
 <s2 title="What Is Xalan?">
@@ -95,20 +104,20 @@ that are provided by the Apache Xalan community.
 You will need to subscribe if you wish to receive mail from the lists. 
 Some lists require a subscription in order to post messages.
 </p>
-<p>The <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mailing list 
+<p>The <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list 
 is used to communicate product development issues with the software development team. 
 The xalan-dev messages are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-dev">archived here</jump> 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-dev">archived here</jump> 
 and on <jump href="http://marc.info/?l=xalan-dev">Marc.info</jump>.
 </p>
-<p>The <jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump> mailing list 
+<p>The <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mailing list 
 is used to discuss issues regarding the use of the Xalan-C/C++ software and libraries. 
 The xalan-c-users messages are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-c-users">archived here</jump> 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-c-users">archived here</jump> 
 and on <jump href="http://marc.info/?l=xalan-c-users">Marc.info</jump>.
 </p>
-<p>The subversion repository changes are logged on the xalan-cvs mailing list and are 
-<jump href="http://mail-archives.apache.org/mod_mbox/xml-xalan-cvs">archived here</jump>
+<p>The subversion repository changes are logged on the xalan-commits mailing list and are 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-commits">archived here</jump>
 and on <jump href="http://marc.info/?l=xalan-cvs">Marc.info</jump>.
 </p>
 <p>You can review the project sources and change history in the subversion repository at 
@@ -242,10 +251,10 @@ The source package contains the sources to build everything.
 <p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Versions 2.7.0 and 2.8.0.
 </p>
 <p>If you are having problems using the product, 
-send your comments to the <jump href="mailto:xalan-c-users@xml.apache.org">xalan-c-users</jump> mail list.
+send your comments to the <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mail list.
 </p>
 <p>If you think a change needs to be made or have suggestions for future releases, 
-send your comments to the <jump href="mailto:xalan-dev@xml.apache.org">xalan-dev</jump> mail list.
+send your comments to the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
 </p>
 <p>Binary releases are not yet available. 
 We would like to distribute Xalan-C/C++ Version 1.11 binary releases 
@@ -263,7 +272,7 @@ build from the sources or download prebuilt packages.
 should be the same as the platform used to build the Xerces-C/C++ (XML) parser library.
 </p>
 <p>Xalan-C/C++ (XSLT) library requires a working Xerces-C/C++ (XML) parser library. 
-The supported versions of Xerces-C/C++ version 3.0 or newer. Version 3.1.1
+The supported versions of Xerces-C/C++ are version 3.0 or newer. Version 3.1.1
 is recommended.
 </p>
 <p>If you are ambitious and willing to experiment, 
@@ -276,25 +285,58 @@ Use your favorite subversion 'svn' utility for download.
 <tr><td>Xerces-C Repository</td><td>http://svn.apache.org/repos/asf/xerces/c/trunk</td></tr>
 </table>
 
-<p>The current stable 
-<jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces-C/C++ (XML) packages</jump> 
-are available for download.
+<p>The current stable release is available from the Apache mirrors.  The PGP(asc)
+signatures and MD5(md5) hash files are available from the main Apache distribution.
+The signature and hash files are no longer available from the Apache mirrors.
 </p>
-<note>The sources from the Xalan-C repository are current for Version 1.11 
-until released packages are available. 
-You can help us prepare for a Version 1.11 release 
-by providing packages for your platforms 
-and let us know of your building issues.
-</note><br/>
 
-<p>The previous version packages can still be downloaded until officially replaced.
+<table>
+<tr><td>Xalan-C Version 1.11</td>
+    <td><jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c">Mirror Packages</jump></td>
+    <td><jump href="http://www.apache.org/dist/xalan/xalan-c">PGP,MD5</jump></td>
+</tr>
+<tr><td>Xerces-C Version 3.1.1</td>
+    <td><jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces Downloads</jump></td>
+    <td></td>
+</tr>
+</table>
+
+<p>The previous stable releases are available from the archives.
 </p>
+
 <table>
 <tr><td>Xalan-C Version 1.10</td><td><jump 
-href="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/">Xalan Package Downloads</jump></td></tr>
+href="http://archive.apache.org/dist/xml/xalan-c/">Xml Xalan Archive Downloads</jump></td></tr>
 <tr><td>Xerces-C Version 2.7</td><td><jump 
-href="http://www.apache.org/dyn/closer.cgi/xml/xerces-c/">Xerces Package Downloads</jump></td></tr>
+href="http://archive.apache.org/dist/xml/xerces-c/">Xml Xerces Archive Downloads</jump></td></tr>
+<tr><td>Xerces-C Version 2.8/3.x</td><td><jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces Archive Downloads</jump></td></tr>
 </table>
+
+<p>Make sure you get the signature file for the particular distribution from the master directory, 
+   rather than from a mirror. 
+   Then verify the signatures using:</p>
+<source>
+   % pgpk -a KEYS
+   % pgpv &lt;archive-name&gt;.tar.gz.asc
+</source>
+<em>or</em>
+<source>
+   % pgp -ka KEYS
+   % pgp &lt;archive-name&gt;.tar.gz.asc
+</source>
+<em>or</em>
+<source>
+   % gpg --import KEYS
+   % gpg --verify &lt;archive-name&gt;.tar.gz.asc
+</source>
+<p>Alternatively, you can verify the MD5 signature on the files. 
+A unix program called md5 or md5sum is included in many unix distributions. 
+It is also available as part of 
+<jump href="http://www.gnu.org/directory/text/wordproc/textutils.html">GNU Textutils</jump>.
+ Windows users can get binary md5 programs from 
+<jump href="http://www.fourmilab.ch/md5/">here</jump>,
+<jump href="http://www.pc-tools.net/win32/freeware/console/">here</jump>, or 
+<jump href="http://www.slavasoft.com/fsum/">here</jump>.</p>
 
 </s2>
 </s1>
