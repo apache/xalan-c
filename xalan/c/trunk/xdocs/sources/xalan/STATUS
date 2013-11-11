@@ -1,0 +1,25 @@
+<s3 title="Version of &xml4c; to use"> 
+<p>&xslt4c-current; has been tested with &xml4c-used;.</p>
+<p>For information about including the Xerces-C++ libraries on the path, 
+   see <link idref="install" anchor="path">Setting up the system path</link>.</p>
+<p><em>Important:</em> You may experience unpredictable anomalies if your 
+   Xalan and Xerces builds are not in synch. If you download an update to Xalan, 
+   check the release notes to determine which version of Xerces you should use.</p>
+<p>If you compile both &xslt4c; and &xml4c; from distribution sources using the same 
+   platform and compiler, you will avoid most of the compatibility issues.</p>
+
+</s3><anchor name="to-do"/>
+<s3 title="To-do tasks for future &xslt4c; releases">
+    <ul>
+       <li>Update the documentation</li>
+       <li>Performance improvements</li>
+       <li>Add a more complete set of EXSLT functions</li>
+       <li>Add support for extension elements</li>
+       <li>Fix any conformance bugs we or our users find</li>
+       <li>Fix compiler and platform support issues</li>
+       <li>Add XPath2 support into &xslt4c;</li>
+    </ul>
+ <p>Watch the <human-resource-ref idref="xalandev"/> for more information and for 
+    ideas about how you can get involved.
+</p>
+</s3>    

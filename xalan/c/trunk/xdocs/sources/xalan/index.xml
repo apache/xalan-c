@@ -1,0 +1,300 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<s1 title="&xslt4c-current;">
+
+<ul>
+<li><link anchor="licenses">Licenses</link></li>
+<li><link anchor="getinvolved">Getting Involved</link></li>
+<li><link anchor="xsltStandards">XSLT Standards Implemented</link></li>
+<li><link anchor="xmlParserLib">XML Parser Library</link></li>
+<li><link anchor="securityIssues">Security Issues</link></li>
+<li><link anchor="getstarted">Getting Started</link></li>
+<li><link anchor="getWhatNeeded">Getting What You Need</link></li>
+</ul>
+<p>The old Xalan-C/C++ 1.10 release can be found at 
+<jump href="../old/xalan-c/index.html">xml.apache.org/xalan-c</jump>.</p>
+
+<anchor name="whatisxalan"/>
+<s2 title="What Is Xalan?">
+
+<p>Xalan is an XSLT processor for transforming XML documents 
+into HTML, text, or other XML document types. 
+It uses for input an XML document and an XSLT stylesheet. 
+The engine also supports the entry of top-level stylesheet parameters. 
+Documentation exists on how to extend the library with 
+your own custom XPath functions.
+</p>
+<p>Xalan-C++ version 1.11 is a robust implementation of the 
+W3C Recommendations for 
+<jump href="http://www.w3.org/TR/xslt">XSL Transformations (XSLT)</jump> 
+and the 
+<jump href="http://www.w3.org/TR/xpath">XML Path Language (XPath)</jump>. 
+It works with the 
+<jump href="http://xerces.apache.org/xerces-c">Xerces-C++ version 3.1.1</jump> 
+release of XML parsers. 
+The focus for this Xalan release is on bug fixes and 
+compatibility with newer development platforms.
+</p>
+<p>The Xalan-C/C++ project creates and distributes a 
+standard XSLT library and a simple Xalan command-line 
+utility for transforming XML documents.
+</p>
+<p>This project is written in a reduced set of the C++ programming language. 
+This makes the library directly usable on numerous platforms. 
+A set of 'C' language APIs is also available so that 
+XSLT and XPath functionality is easily deployed to 'C' language applications.
+</p>
+<p><jump href="samples.html">Sample programs</jump> are available 
+for you to test and experiment with as you learn the Xalan library.
+</p>
+<p>Some of the <jump href="http://www.exslt.org">EXSLT extension functions</jump> 
+for XPath are available. 
+We need to write and validate more of the EXSLT functions. 
+Apache also provides some of their own 
+<jump href="extensionslib.html">XPath extensions</jump> for use. 
+Documentation and examples are available for you to write 
+your own custom <jump href="extensions.html">XPath extensions</jump>.
+</p>
+<p>There is a library of <jump href="extensionslib.html">XPath extensions</jump> 
+that are provided by the Apache Xalan community.
+</p>
+</s2>
+
+<anchor name="licenses"/>
+<s2 title="Licenses">
+
+<p>The Xalan-C/C++ software conforms to The Apache Software Foundation 
+<jump href="license.html">License, Version 2.0</jump>.
+</p>
+</s2>
+
+<anchor name="getinvolved"/>
+<s2 title="Getting Involved">
+
+<p>You are invited to participate in 
+<jump href="http://www.apache.org/foundation/getinvolved.html">The Apache Software Foundation</jump>. 
+You will need to subscribe if you wish to receive mail from the lists. 
+Some lists require a subscription in order to post messages.
+</p>
+<p>The <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list 
+is used to communicate product development issues with the software development team. 
+The xalan-dev messages are 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-dev">archived here</jump> 
+and on <jump href="http://marc.info/?l=xalan-dev">Marc.info</jump>.
+</p>
+<p>The <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mailing list 
+is used to discuss issues regarding the use of the Xalan-C/C++ software and libraries. 
+The xalan-c-users messages are 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-c-users">archived here</jump> 
+and on <jump href="http://marc.info/?l=xalan-c-users">Marc.info</jump>.
+</p>
+<p>The subversion repository changes are logged on the xalan-commits mailing list and are 
+<jump href="http://mail-archives.apache.org/mod_mbox/xalan-commits">archived here</jump>
+and on <jump href="http://marc.info/?l=xalan-cvs">Marc.info</jump>.
+</p>
+<p>You can review the project sources and change history in the subversion repository at 
+<jump href="http://svn.apache.org/viewvc/xalan/c">http://svn.apache.org/viewvc/xalan/c</jump>. 
+</p>
+<p>You can get a private copy of the subversion snapshot of the development sources at 
+<jump href="http://svn.apache.org/repos/asf/xalan/c/trunk">http://svn.apache.org/repos/asf/xalan/c/trunk</jump> 
+using your favorite SVN program.
+</p>
+<p>The JIRA system is used for issue tracking. 
+You must create an account before you can post messages and files to the JIRA tracking system. 
+You can view the issues at 
+<jump href="https://issues.apache.org/jira/browse/XALANC">https://issues.apache.org/jira/browse/XALANC</jump>.
+</p>
+</s2>
+
+<anchor name="xsltStandards"/>
+<s2 title="XSLT Standards Implemented">
+
+<p>Xalan-C/C++ implements the following specifications from the World Wide Web Consortium (W3C).
+</p>
+<ul>
+<li><jump href="http://www.w3.org/TR/xslt">XSL Transformations (XSLT) Version 1.0</jump></li>
+<li><jump href="http://www.w3.org/TR/xpath">XML Path Language (XPath) Version 1.0</jump></li>
+<li><jump href="http://www.w3.org/TR/xml-stylesheet">Associating Style Sheets with XML documents 1.0 (Second Edition)</jump></li>
+</ul>
+
+<p>The next major release of Xalan-C/C++ will hopefully be compatible with following standards.  This added support will require a major version change from 1 to 2.
+</p>
+<ul>
+<li><jump href="http://www.w3.org/TR/xslt20">XSL Transformations (XSLT) Version 2.0</jump></li>
+<li><jump href="http://www.w3.org/TR/xslt-xquery-serialization">XSLT 2.0 and XQuery 1.0 Serialization</jump></li>
+<li><jump href="http://www.w3.org/TR/xpath20">XML Path Language (XPath) Version 2.0 (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xquery-semantics">XQuery 1.0 and XPath 2.0 Formal Semantics (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xpath-datamodel">XQuery 1.0 and XPath 2.0 Data Model (XDM) (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xpath-functions">XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition)</jump></li>
+</ul>
+
+</s2>
+
+<anchor name="xmlParserLib"/>
+<s2 title="XML Parser Library">
+
+<p>Xalan-C/C++ uses the The Apache Software Foundation Xerces-C project that implements parsers for XML 1.0 and XML 1.1. 
+The following standards as specified by the 
+<jump href="http://www.w3.org/TR">World Wide Web Consortium (W3C)</jump> are implemented by the 
+<jump href="http://xerces.apache.org/xerces-c">Xerces-C</jump> XML parser library.
+</p>
+<ul>
+<li><jump href="http://www.w3.org/TR/xml">Extensible Markup Language (XML) 1.0 (Third Edition) - currently (Fifth Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xml11">Extensible Markup Language (XML) 1.1 (First Edition) - currently (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xml-id">xml:id Version 1.0</jump></li>
+<li><jump href="http://www.w3.org/TR/xmlbase">XML Base (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xml-infoset">XML Information Set (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xml-names">Namespaces in XML 1.0 (Third Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xml-names11">Namespaces in XML 1.1 (Second Edition)</jump></li>
+<li><jump href="http://www.w3.org/TR/xmlschema-1">XML Schema Part 1: Structures Second Edition</jump></li>
+<li><jump href="http://www.w3.org/TR/xmlschema-2">XML Schema Part 2: Datatypes Second Edition</jump></li>
+<li><jump href="http://www.w3.org/TR/REC-DOM-Level-1">Document Object Model (DOM) Level 1</jump></li>
+<li><jump href="http://www.w3.org/TR/ElementTraversal">Element Traversal Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/DOM-Level-2-Core">Document Object Model (DOM) Level 2 Core Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range">Document Object Model (DOM) Level 2 Traversal and Range Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/DOM-Level-3-Core">Document Object Model (DOM) Level 3 Core Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/DOM-Level-3-Val">Document Object Model (DOM) Level 3 Validation Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/DOM-Level-3-LS">Document Object Model (DOM) Level 3 Load and Save Specification</jump></li>
+<li><jump href="http://www.w3.org/TR/xinclude">XML Inclusions (XInclude) 1.0 (Second Edition)</jump></li>
+</ul>
+<p>The Xerces-C/C++ also supports the <jump href="http://sax.sourceforge.net/">SAX 1.0 and SAX 2.0</jump> projects. 
+SAX is primarily Java based. The Xerces-C/C++ project has implemented a SAX C++ API that looks much like the SAX Java API.
+</p>
+<p>Web Services and Web Security recommendations have been developed by the 
+<jump href="http://www.w3.org">World Wide Web Consortium (W3C)</jump> and 
+<jump href="http://www.oasis-open.org">OASIS-OPEN</jump> Advancing open standards for the information society. 
+The Xerces-C/C++ has support for custom entity resolvers which are inherited and
+supported by the Xalan-C/C++ library.
+</p>
+</s2>
+
+<anchor name="securityIssues"/>
+<s2 title="Security Issues">
+
+<p>The Xalan-C/C++ library has hooks so that custom entity resolvers can be deployed. 
+The entity resolvers are actually interfaces into the Xerces-C/C++ XML Parser Library. 
+Use of trusted entity resolvers greatly increases the security of XML based applications.
+</p>
+<p>The Web Services Architecture uses specifications and recommendations 
+that are documented by the following organizations.
+</p>
+<ul>
+<li>World Wide Web Consortium (W3C)<br/>
+  [<jump href="http://www.w3.org">http://www.w3.org]</jump>]</li>
+<li>Advancing open standards for the information society (OASIS-OPEN)<br/>
+  [<jump href="http://www.oasis-open.org">http://www.oasis-open.org</jump>]</li>
+<li>The Sourceforge SAX Project (SAX1, SAX2)<br/>
+  [<jump href="http://sax.sourceforge.net">http://sax.sourceforge.net</jump>]</li>
+<li>Internet Engineering Task Force (IETF)<br/>
+  [<jump href="http://www.ietf.org">http://www.ietf.org</jump>]</li>
+</ul>
+<p>There are some <jump href="secureweb.html">architecture security</jump> issues 
+that should be addressed by any XML parser or XSLT transformation application. 
+Other than validating and cleaning the content of XML elements, 
+the access to untrusted external entities is a big problem for security management.
+</p>
+<p>The "Xalan" comman-line transformation program does not deploy 
+an OASIS catalog or perform other security measures. 
+URLs are resolved using the system directory of the local machine 
+and DNS to resolve host locations. 
+The "Xalan" program should be used only with 
+trusted XSLT stylesheets and XML documents on a trusted computer.
+</p>
+<p>A future release of the "Xalan" command-line transformation program 
+may include support for an OASIS entity resolver catalog.
+</p>
+<p>Information on creating Secure Web Service Applications is useful for review. 
+This <jump href="secureweb.html">security overview document</jump> goes beyond the scope of 
+XSLT transformations and asks many pertinent security based questions.
+</p>
+</s2>
+
+<anchor name="getstarted"/>
+<s2 title="Getting Started">
+
+<p>The source code and documentation are delivered in separate packages. 
+Binary packages comprise the compiled libraries, the Xalan command line utility, and the C/C++ header files. 
+The documentation package contains the pre-built documentation. 
+The source package contains the sources to build everything.
+</p>
+<p>The current Xalan-C/C++ Version 1.11 is compatible with the stable releases of 
+<jump href="http://xerces.apache.org/xerces-c">Xerces-C/C++</jump> Version 3.0 and newer. The current stable release for Xerces-C/C++ is 3.1.1.
+</p>
+<p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Versions 2.7.0 and 2.8.0.
+</p>
+<p>If you are having problems using the product, 
+send your comments to the <jump href="mailto:c-users@xalan.apache.org">xalan-c-users</jump> mail list.
+</p>
+<p>If you think a change needs to be made or have suggestions for future releases, 
+send your comments to the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
+</p>
+<p>Binary releases are not yet available. 
+We would like to distribute Xalan-C/C++ Version 1.11 binary releases 
+using the same platforms specified for the compatible Xerces-C binary packages.
+</p>
+</s2>
+
+<anchor name="getWhatNeeded"/>
+<s2 title="Getting What You Need">
+
+<p>What you need depends whether you plan to 
+build from the sources or download prebuilt packages.
+</p>
+<p>The development platform used to build the Xalan-C/C++ (XSLT) library 
+should be the same as the platform used to build the Xerces-C/C++ (XML) parser library.
+</p>
+<p>Xalan-C/C++ (XSLT) library requires a working Xerces-C/C++ (XML) parser library. 
+The supported versions of Xerces-C/C++ version 3.0 or newer. Version 3.1.1
+is recommended.
+</p>
+<p>If you are ambitious and willing to experiment, 
+you can download the bleeding edge development from the 
+Apache Software Foundation subversion repositories. 
+Use your favorite subversion 'svn' utility for download.
+</p>
+<table>
+<tr><td>Xalan-C Repository</td><td>http://svn.apache.org/repos/asf/xalan/c/trunk</td></tr>
+<tr><td>Xerces-C Repository</td><td>http://svn.apache.org/repos/asf/xerces/c/trunk</td></tr>
+</table>
+
+<p>The current stable 
+<jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces-C/C++ (XML) packages</jump> 
+are available for download.
+</p>
+<note>The sources from the Xalan-C repository are current for Version 1.11 
+until released packages are available. 
+You can help us prepare for a Version 1.11 release 
+by providing packages for your platforms 
+and let us know of your building issues.
+</note><br/>
+
+<p>The previous version packages can still be downloaded until officially replaced.
+</p>
+<table>
+<tr><td>Xalan-C Version 1.10</td><td><jump 
+href="http://archive.apache.org/dist/xml/xalan-c/">Xalan Package Downloads</jump></td></tr>
+<tr><td>Xerces-C Version 2.7</td><td><jump 
+href="http://archive.apache.org/dist/xml/xerces-c/">Xerces Package Downloads</jump></td></tr>
+</table>
+
+</s2>
+</s1>

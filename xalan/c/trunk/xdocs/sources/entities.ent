@@ -1,0 +1,125 @@
+<?xml encoding="US-ASCII"?>
+<!-- 
+ * Copyright 1999-2011 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+
+<!ENTITY xslt4c "Xalan-C++">
+<!ENTITY xslt4c-dist "Xalan-C_1_11_0">
+<!ENTITY xslt4c-current "Xalan-C++ Version 1.11">
+<!ENTITY xslt4c-windll "Xalan-C_1_11.dll">
+<!ENTITY xslt4c-linuxlib "libxalan-c.so.111">
+<!ENTITY xslt4c-aixlib "libxalan-c111.so">
+<!ENTITY xslt4c-hplib "libxalan-c.sl.111.0">
+<!ENTITY xslt4c-solarislib "libxalan-c1_11.so">
+<!ENTITY xslt4c-msgdll "XalanMessages_1_11.dll">
+<!ENTITY xslt4c-msglib "XalanMessages_1_11.lib">
+<!ENTITY xslt4c-msgsho "libxalanMsg111.so">
+<!ENTITY xslt4c-msgcat "xalanMsg1_11.cat">
+<!ENTITY xslt4c-win_root "xml-xalan\c">
+<!ENTITY xslt4c-unix_root "xml-xalan/c">
+
+<!ENTITY aix43v5-dist "-aix_433-xlc_50">
+<!ENTITY aix51v5-dist "-aix_510-xlc_50">
+<!ENTITY aix51v5_64-dist "-aix_510_64-xlc_50">
+<!ENTITY aix51v6-dist "-aix_510-xlc_60_050623">
+<!ENTITY aix51v6_64-dist "-aix_510_64-xlc_60_050623">
+<!ENTITY redhat_72_icc-dist "-redhat_72-icc_71">
+<!ENTITY redhat_72_ecc-dist "-redhat_72_64-ecc_71">
+<!ENTITY redhat_AS4_gcc-dist "-redhat_AS4-gcc_343">
+<!ENTITY hpux11a-dist "-hpux_11-acc_a03">
+<!ENTITY hpux11a_64-dist "-hpux_11_64-acc_a03">
+<!ENTITY hpux11c-dist "-hpux_11-acc_c03">
+<!ENTITY hpux11c_64-dist "-hpux_11_64-acc_c03">
+<!ENTITY hpux11i-dist "-hpux_11i-acc_c03">
+<!ENTITY hpux11i_64-dist "-hpux_11i_64-acc_c03">
+<!ENTITY solaris_28-dist "-solaris_28-cc_62">
+<!ENTITY solaris_28_64-dist "-solaris_28_64-cc_62">
+<!ENTITY suse_72_zOS-dist "-suse_72_zOS-gcc_29">
+<!ENTITY suse_80_AMD_64-dist "-suse_80_AMD_64-gcc_32">
+<!ENTITY suse_81_IA-dist "-suse_81-gcc_32">
+<!ENTITY win32-dist "-win32-msvc_60">
+<!ENTITY win2003c_64-dist "-windows_2003_64-ecc_71">
+<!ENTITY win2003l_64-dist "-windows_2003_64-ecl_71">
+<!ENTITY winnt-dist "-windows_nt-msvc_60">
+<!ENTITY win2k-dist "-windows_2000-msvc_60">
+<!ENTITY winxp-dist "-windows_xp-msvc_60">
+<!ENTITY win_ext ".zip">
+<!ENTITY unix_ext ".tar.gz">
+
+<!ENTITY xslt4c-aix43v5-dist "&xslt4c-dist;&aix43v5-dist;&unix_ext;">
+<!ENTITY xslt4c-aix51v5-dist "&xslt4c-dist;&aix51v5-dist;&unix_ext;">
+<!ENTITY xslt4c-aix51v5_64-dist "&xslt4c-dist;&aix51v5_64-dist;&unix_ext;">
+<!ENTITY xslt4c-aix51v6-dist "&xslt4c-dist;&aix51v6-dist;&unix_ext;">
+<!ENTITY xslt4c-aix51v6_64-dist "&xslt4c-dist;&aix51v6_64-dist;&unix_ext;">
+<!ENTITY xslt4c-hpux11i-dist "&xslt4c-dist;&hpux11i-dist;&unix_ext;">
+<!ENTITY xslt4c-hpux11i_64-dist "&xslt4c-dist;&hpux11i_64-dist;&unix_ext;">
+<!ENTITY xslt4c-redhat72_icc-dist "&xslt4c-dist;&redhat_72_icc-dist;&unix_ext;">
+<!ENTITY xslt4c-redhat72_ecc-dist "&xslt4c-dist;&redhat_72_ecc-dist;&unix_ext;">
+<!ENTITY xslt4c-redhatAS4-dist "&xslt4c-dist;&redhat_AS4_gcc-dist;&unix_ext;">
+<!ENTITY xslt4c-solaris28-dist "&xslt4c-dist;&solaris_28-dist;&unix_ext;">
+<!ENTITY xslt4c-solaris28_64-dist "&xslt4c-dist;&solaris_28_64-dist;&unix_ext;">
+<!ENTITY xslt4c-suse72_zOS-dist "&xslt4c-dist;&suse_72_zOS-dist;&unix_ext;">
+<!ENTITY xslt4c-suse80_AMD_64-dist "&xslt4c-dist;&suse_80_AMD_64-dist;&unix_ext;">
+<!ENTITY xslt4c-suse81_IA-dist "&xslt4c-dist;&suse_81_IA-dist;&unix_ext;">
+<!ENTITY xslt4c-winnt-dist "&xslt4c-dist;&winnt-dist;&win_ext;">
+<!ENTITY xslt4c-win2k-dist "&xslt4c-dist;&win2k-dist;&win_ext;">
+<!ENTITY xslt4c-winxp-dist "&xslt4c-dist;&winxp-dist;&win_ext;">
+<!ENTITY xslt4c-win32-dist "&xslt4c-dist;&win32-dist;&win_ext;">
+<!ENTITY xslt4c-win2003l_64-dist "&xslt4c-dist;&win2003l_64-dist;&win_ext;">
+<!ENTITY xslt4c-src_dist_zip "&xslt4c-dist;-src&win_ext;">
+<!ENTITY xslt4c-src_dist_targz "&xslt4c-dist;-src&unix_ext;">
+<!ENTITY xslt4c-docs_dist_zip "&xslt4c-dist;-docs&win_ext;">
+<!ENTITY xslt4c-docs_dist_targz "&xslt4c-dist;-docs&unix_ext;">
+
+<!ENTITY xml4c "Xerces-C++">
+<!ENTITY xml4c-used "Xerces-C++ version 3.1.1">
+<!ENTITY xml4c-dist "xerces-c-3.1.1">
+<!ENTITY xml4c-windll "xerces-c_3_1.dll">
+<!ENTITY xml4c-winlib "xerces-c_3.lib">
+<!ENTITY xml4c-linuxlib "libxerces-c.so.31">
+<!ENTITY xml4c-aixlib "libxerces-c31">
+<!ENTITY xml4c-hplib "libxerces-c.sl.31">
+<!ENTITY xml4c-solarislib "libxerces-c.so.31">
+
+<!ENTITY xml4c-aix43v5-dist "&xml4c-dist;&aix43v5-dist;&unix_ext;">
+<!ENTITY xml4c-aix51v5-dist "&xml4c-dist;&aix51v5-dist;&unix_ext;">
+<!ENTITY xml4c-aix51v6-dist "&xml4c-dist;&aix51v6-dist;&unix_ext;">
+<!ENTITY xml4c-aix51v5_64-dist "&xml4c-dist;&aix51v5_64-dist;&unix_ext;">
+<!ENTITY xml4c-aix51v6_64-dist "&xml4c-dist;&aix51v6_64-dist;&unix_ext;">
+<!ENTITY xml4c-hpux11i-dist "&xml4c-dist;&hpux11i-dist;&unix_ext;">
+<!ENTITY xml4c-hpux11i_64-dist "&xml4c-dist;&hpux11i_64-dist;&unix_ext;">
+<!ENTITY xml4c-redhat72_icc-dist "&xml4c-dist;&redhat_72_icc-dist;&unix_ext;">
+<!ENTITY xml4c-redhat72_ecc-dist "&xml4c-dist;&redhat_72_ecc-dist;&unix_ext;">
+<!ENTITY xml4c-redhatAS4-dist "&xml4c-dist;&redhat_AS4_gcc-dist;&unix_ext;">
+<!ENTITY xml4c-solaris28-dist "&xml4c-dist;&solaris_28-dist;&unix_ext;">
+<!ENTITY xml4c-solaris28_64-dist "&xml4c-dist;&solaris_28_64-dist;&unix_ext;">
+<!ENTITY xml4c-suse72_zOS-dist "&xml4c-dist;&suse_72_zOS-dist;&unix_ext;">
+<!ENTITY xml4c-suse80_AMD_64-dist "&xml4c-dist;&suse_80_AMD_64-dist;&unix_ext;">
+<!ENTITY xml4c-suse81_IA-dist "&xml4c-dist;&suse_81_IA-dist;&unix_ext;">
+<!ENTITY xml4c-winnt-dist "&xml4c-dist;&winnt-dist;&win_ext;">
+<!ENTITY xml4c-win2k-dist "&xml4c-dist;&win2k-dist;&win_ext;">
+<!ENTITY xml4c-winxp-dist "&xml4c-dist;&winxp-dist;&win_ext;">
+<!ENTITY xml4c-win2003c_64-dist "&xml4c-dist;&win2003c_64-dist;&win_ext;">
+
+<!ENTITY xslt4j "Xalan-Java">
+<!ENTITY icu-used "International Components for Unicode(ICU) 3.2 source files">
+<!ENTITY icu-current "International Components for Unicode(ICU) version 3.2">
+<!ENTITY icu-windlls "icui32n.dll, icuuc.dll">
+<!ENTITY icubridge-win "ICUBridge.dll">
+
+<!ENTITY license SYSTEM "xalan/License">
+<!ENTITY status SYSTEM "xalan/STATUS">
+<!ENTITY bugs SYSTEM "xalan/BUGS">
+

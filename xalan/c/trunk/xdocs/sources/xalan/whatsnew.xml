@@ -1,0 +1,278 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd"[
+<!--<!ENTITY done-c SYSTEM "DONE"> -->
+<!--<!ENTITY status-c SYSTEM "STATUS"> -->
+<!--<!ENTITY todo-c SYSTEM "BUGS"> -->
+<!ENTITY history-c SYSTEM "history.xml">]>
+
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<s1 title="What's New in this Release">
+
+ <ul>
+  <li><link anchor="status">Status</link></li>
+  <li><link anchor="contact">Getting in Touch</link></li>
+  <li><link anchor="history">History of Software Changes</link></li>
+  <li><link anchor="bugfix11">Bug Fixes in Release 1.11</link></li>
+  <li><link anchor="bugfix10">Bug Fixes in Release 1.10</link></li>
+  <li><link anchor="bugs">Bug reporting</link></li>    
+  <li><link anchor="to-do">To-do tasks for future Xalan-C/C++ releases</link></li>
+ </ul>
+
+<anchor name="status"/>
+<s2 title="Status">
+
+<p><em>Release notes for Xalan-C/C++ Version 1.11</em>
+</p>
+<p>This is primarily a bug-fix release of version 1.10.  Support for number and
+nodeset types for stylesheet top-level parameters have been added. Xerces-C/C++
+versions 3.0 and newer are now supported. Xerces-C/C++ Version 3.1.1 is the
+preferred stable release.
+</p>
+<p>There are few binary releases for Xalan-C/C++.  The current binary releases
+are primarily for Windows platforms.  If you are able to successfully create a 
+new binary package and wish it to be included, then we welcome your participation 
+on the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
+You may also wish to check our <link idref="download">download</link> page.
+</p>
+<p>Xalan-C/C++ no longer supports Microsoft Studio (VC6).  The Microsoft Visual
+Studio .NET platforms (2003, 2005, 2008, and 2010) are supported.  This equates
+to compilers (VC71, VC8, VC9, and VC10).
+</p>
+
+</s2>
+
+<anchor name="contact"/>
+<s2 title="Getting in Touch">
+<p>Your feedback is more than welcome. Offers of help are even more so! 
+Perhaps you would like to contribute to the ongoing development, 
+testing, or documentation of &xslt4c;.
+</p> 
+<p>Please email your comments, questions, suggestions, bug reports, 
+and offers to help to <human-resource-ref idref="xalandev"/>.
+</p>
+<p>Your general user comments on &xslt4c; usage are also welcome on 
+<human-resource-ref idref="xalancusers"/>.
+</p>
+</s2>
+
+<anchor name="history"/>
+<s2 title="Cumulative history of software changes">
+<p>The following sections list the changes in each release since &xslt4c; version 0.40.0.</p>
+&history-c;
+</s2> 
+
+
+<anchor name="bugfix11"/>
+<s2 title="Bug Fixes in Release 1.11">
+<p>The bugs fixed in &xslt4c-current; include:</p>
+<ul>
+<li>XALANC-734: Allow runConfigure CFLAGS and CXXFLAGS to inherit environment</li>
+<li>XALANC-732: Fix makefile errors for AIX builds</li>
+<li>XALANC-730: Fixed XalanTransformer memory leaks</li>
+<li>XALANC-723: Add Top-Level parameter support for XalanCAPI and UseStylesheetParams samples</li>
+<li>XALANC-723: The XalanTransformer Top-Level parameters now include nodeset and number types</li>
+<li>XALANC-721: Upgrade support for MS VS 2010 (VC10)</li>
+<li>XALANC-719: Xerces Parser Liaison - errors on elements with no attributes</li>
+<li>XALANC-716: incorrect buffer-size calculation in XalanUTF16Writer.hpp</li>
+<li>XALANC-715: NULL pointer access crash</li>
+<li>XALANC-713: Build Xalan-C/C++ API Reference Manual using Doxygen 1.7 or newer</li>
+<li>XALANC-712: Rewrite of Xalan-C++ V1.11 User Guide Web Pages</li>
+<li>XALANC-710: MS-Studio 2008 Debug Build sends Xalan-C_1D.lib to wrong directory</li>
+<li>XALANC-709: Doxygen bug in XalanQName.hpp</li>
+<li>XALANC-708: Including XalanCAPI.hpp does not import Xerces typedef XMLch</li>
+<li>XALANC-705:	Crash with pure virtual function call</li>
+<li>XALANC-703:	Compiler errors while building on AIX 5.3</li>
+<li>XALANC-700:	Broken output when serializing UTF16 surrogates</li>
+<li>XALANC-699:	Compile using Visual C++ 2010 (VC10)</li>
+<li>XALANC-698:	Buffer overflow from XalanMessageLoader::load()</li>
+<li>XALANC-690:	The document function does not handle fragment IDs in URLs correctly</li>
+<li>XALANC-689:	XalanC transformation of a 600 kb file takes 43 seconds</li>
+<li>XALANC-684:	XPath single quate-comma bug</li>
+<li>XALANC-683:	xsl:number with level any does not always count all of the preceeding nodes in the document</li>
+<li>XALANC-681:	NamedNodeMapAttributeList constructor asserts when the provided NamedNodeMap is empty</li>
+<li>XALANC-680:	Error in match pattern with // and abbreviated attribute node test</li>
+<li>XALANC-679:	Possible wrong evaluation of abbreviated XPath in template match</li>
+<li>XALANC-677:	Debug assertion switching to HTML mode when the outputter is producing a DOM</li>
+<li>XALANC-675:	No error is reported for an unknown key</li>
+<li>XALANC-675:	GCC-4.3 cleanup</li>
+<li>XALANC-673:	Assertion failed with XalanDOMString::substr</li>
+<li>XALANC-671:	Incorrect handling of default namespace in xsl:element</li>
+<li>XALANC-669:	XalanOtherEncodingWriter reports an incorrect error message</li>
+<li>XALANC-667:	setUseValidation doesn't work</li>
+<li>XALANC-664:	Testing harness writes strings to the output XML in the local code page.</li>
+<li>XALANC-661:	PlatformSupport/DoubleSupport.cpp compile error on AIX 5.3</li>
+<li>XALANC-660:	Compilation errors in Tests/Performance/TestHarness.hpp on some platforms</li>
+<li>XALANC-659:	Unnecessary casting in ReusableArenaBlock</li>
+<li>XALANC-658:	Misplaced assert in ReusableArenaAllocator::destroyObject()</li>
+<li>XALANC-657:	Add Windows x64 targets to the project files</li>
+<li>XALANC-655:	Boolean value incorrectly converted ot string in attribute value templates</li>
+<li>XALANC-653:	Xalan-C not including namespace declaration in output</li>
+<li>XALANC-650:	XPathProcessorImpl uses XalanDOMString copy constructor instead of referring to an existing instance</li>
+<li>XALANC-648:	XalanUTF8Writer::write(const XalanDOMChar*, XalanDOMString::size_type) does not handle surrogates properly</li>
+<li>XALANC-647:	XalanOtherEncodingWriter::writeNumericCharacterReference() is inefficient</li>
+<li>XALANC-646:	During transcoding XalanC fails to append '0' to the transcoded string </li>
+<li>XALANC-645:	Pluggin of DOMStringPrintWriter into FormatterToXML leads to assert</li>
+<li>XALANC-641:	Class used as exception needs accessible copy constructor</li>
+<li>XALANC-640:	Path problem in Makefile under cygwin</li>
+<li>XALANC-638:	Performance test program does not build on HP-UX</li>
+<li>XALANC-635:	Build fails on Solaris 2.8</li>
+<li>XALANC-634:	Build fails with VC6</li>
+<li>XALANC-633:	The processor should ignore xsl:fallback element in LRE </li>
+<li>XALANC-632:	@use-attribute-sets attribute has to have no effect on xsl:copy when the context item is a documen node.</li>
+<li>XALANC-631:	The next stylesheet crashes XalanC</li>
+<li>XALANC-630:	Incorrect cast in XalanUTF16Writer</li>
+<li>XALANC-629:	Performance improvements for text node stripping</li>
+<li>XALANC-628:	Inconsistent flusing of serializers</li>
+<li>XALANC-627:	Broken cast in ElemTemplateElement::findTemplateToTransformChild()</li>
+<li>XALANC-626:	Fix copyrights in Apache XalanC source</li>
+<li>XALANC-625:	Spurious (though harmless) assert failure in XPath::findNodeSet() when an expression contains an empty node-set enclosed in parenthesis</li>
+<li>XALANC-624:	The key() function does not work when the context node is the root node of a result tree fragment obtained through exsl:node-set()</li>
+<li>XALANC-623:	Compatibility issues with Xerces-C 3.0</li>
+<li>XALANC-621:	Selection of compiler definitions file fails on Linux PPC in client code</li>
+<li>XALANC-618:	uninstallExternalFunction can run past the end of the array</li>
+<li>XALANC-617:	Leak in XalanTransformer</li>
+<li>XALANC-616:	xsl:strip-space element doesn't work proprely</li>
+<li>XALANC-615:	Xalan resolves a namespace prefix when it should report an error</li>
+<li>XALANC-614:	MsgCreator Makefile needs link option</li>
+<li>XALANC-613:	Cannot pass value to stylesheet parameter if parameter name is namespace-qualified</li>
+<li>XALANC-609:	Template with built-in template rules for namespaces gives and assert</li>
+<li>XALANC-604:	ConstructWithNoMemoryManager has a bug which prevents proper default initialization of built-in types.</li>
+<li>XALANC-603:	Source does not compile properly on HP-UX with newer versions of the HP compiler</li>
+<li>XALANC-595:	EXSLT date-time function missing + or - before timezone offset</li>
+<li>XALANC-588:	Floating point exceptions in DoubleSupport::initialize() on Solaris 10 (x86)</li>
+<li>XALANC-570: Removal of compiler warnings from STLHelper.hpp</li>
+<li>XALANC-535:	If an error/warning message contains not-displayable character for the local encoding , no message is shown at all</li>
+<li>XALANC-527: Compiling on Xerces-3.0</li>
+<li>XALANC-480:	XML1.1 and Namespaces for XML1.1 support</li>
+<li>XALANC-478:	Add support for XMLEntityResolver</li>
+<li>XALANC-432:	Minor spelling problems in XalanMsg_en_US.xlf</li>
+<li>XALANC-430:	"StylesheetExecutionContext::getVariable(name)" crahes if variable "name" was not found.</li>
+<li>XALANC-421:	omit-xml-declaration ignored</li>
+<li>XALANC-416:	Wrong access to out-of-scope xsl:variable not detected in certain circumstances</li>
+<li>XALANC-415:	Encoding attribute is not returning properly in output XML header</li>
+<li>XALANC-413:	Crash while using transform method on MacOSX</li>
+<li>XALANC-412:	XalanEXSLTDateTime not threadsafe, crashing application</li>
+<li>XALANC-409:	compilation error on g++ on SunOS 2.8</li>
+<li>XALANC-408:	runConfigure help does not include new HP platform</li>
+<li>XALANC-407:	XalanC output format is not suitable as a document entity</li>
+<li>XALANC-376:	Result tree fragment attributes are created without proper namespace and local name </li>
+</ul>
+</s2>
+
+<anchor name="bugfix10"/>
+<s2 title="Bugs Fixed in Release 1.10">
+<p>The bugs fixed in the 1.10 release include:</p>
+<ul>
+  <li>XALANC-572: Compile failure on SuSE80AMD_64b_GCC322 </li>
+  <li>XALANC-569: Compile-time assert on 32-bit Solaris and HPUX due to IEEE754 issue </li>
+  <li>XALANC-568: Pattern "/" does not match the pseudo root document of a node-set obtained from a result-tree fragment via exsl:node-set </li>
+  <li>XALANC-511: Crash during XalanTransformer::initialize on AIX </li>
+  <li>XALANC-554: Xalan-C does not implement erratum 25 </li>
+  <li>XALANC-552: Problems with the new serializers with CDATA and unrepresentable or special characters </li>
+  <li>XALANC-558: Latest source code does not build with the Intel compiler on Windows </li>
+  <li>XALANC-555: XalanEXSLTDateTime.cpp has too many platform-specifc ifdefs </li>
+  <li>XALANC-421: omit-xml-declaration ignored </li>
+  <li>XALANC-529: Xalan-C sometimes creates empty text nodes in RTFs or sends empty characters() events to FormatterListeners </li>
+  <li>XALANC-530: Serializers filter attributes unnecessarily </li>
+  <li>XALANC-245: substring-before and substring-after </li>
+  <li>XALANC-115: Need to catch use of variables in xsl:key attributes </li>
+  <li>XALANC-540: XPath absolute location path does not work when the context node was obtained from a result tree fragment through exsl:node-set() </li>
+  <li>XALANC-544: Assert failure, then crash, during "variable undefined" error recovery in certain circumstances. </li>
+  <li>XALANC-543: Crash when calling a template that wrongly uses xsl:with-param instead of xsl:param to declare its parameter. </li>
+  <li>XALANC-539: XalanMap needs to compact buckets to prevent long search times and ever-increasing memory usage. </li>
+  <li>XALANC-542: XalanDocumentFragmentXNodeSetBaseProxy::dereferenced() is not implemented properly </li>
+  <li>XALANC-538: Better handling for non-existent node test </li>
+  <li>XALANC-541: Fixes for zOS build </li>
+  <li>XALANC-455: Problem when releasing InputSource obtained through an EntityResolver </li>
+  <li>XALANC-535: If an error/warning message contains not-displayable character for the local encoding , no message is shown at all </li>
+  <li>XALANC-532: FormatterToXMLUnicode does not serialize UTF-8 </li>
+  <li>XALANC-536: ElemNumber uses extra temporary strings </li>
+  <li>XALANC-537: XalanC source code quotes incorrectly license protected documents </li>
+  <li>XALANC-526: Use of undefined stricmp breaks compilation on Linux </li>
+  <li>XALANC-513: ICUFormatNumberFunctor has some MemoryManager issues </li>
+  <li>XALANC-507: Safety improvements for XalanVector::insert() </li>
+  <li>XALANC-506: Remove references to stlport directory in Makefile.incl.in </li>
+  <li>XALANC-505: DirectoryEnumerator.hpp will not build on Solaris 10 with Sun Workshop 10 </li>
+  <li>XALANC-502: XalanDOMStringCache has initializer list out of order </li>
+  <li>XALANC-501: Creation of comments and PIs needs to detect illegal values </li>
+  <li>XALANC-500: Remove old "diagnostic" output from StylesheetRoot and XSLTEngineImpl </li>
+  <li>XALANC-497: Local variables or parameters in EXSLT-functions are interpreted as global </li>
+  <li>XALANC-496: Glitches in header files </li>
+  <li>XALANC-493: Problem with XALAN_STATIC_CHECK on HP-UX IA64 </li>
+  <li>XALANC-492: Various pluggable memory management bugs. </li>
+  <li>XALANC-490: XalanFileReporter is inconsistent in its usage of pluggable memory management </li>
+  <li>XALANC-489: XalanMemMgrs has a thread-safety issue </li>
+  <li>XALANC-488: XSLTInputSource does not support pluggable memory management </li>
+  <li>XALANC-487: URISupport does not provide explicit MemoryManager </li>
+  <li>XALANC-485: GCC warns about order of members in initializer list </li>
+  <li>XALANC-484: Remove compiler warnings about placement delete for HP's aCC compiler </li>
+  <li>XALANC-483: XercesParserLiaison does not create Xerces-C DOM instances with namespaces support enabled. </li>
+  <li>XALANC-482: Remove compiler warnings </li>
+  <li>XALANC-470: runConfigure does not pass link options to Makefile for AIX platform </li>
+  <li>XALANC-465: Add alt tag to footer.html page under html/apiDocs tree. </li>
+  <li>XALANC-463: Transforming an XML DOM document encapsulated within an XercesDOMWrapperParsedSource object triggers an invalid heap pointer exception if XSL opens other XML document with 'document()' function. </li>
+  <li>XALANC-460: Linux/xlC port </li>
+  <li>XALANC-448: TestXSLT/process.cpp compilation fails, interface broken in FormatterToText.hpp </li>
+  <li>XALANC-445: generate-id() inserts periods into name which limits usage </li>
+</ul>
+</s2>
+
+
+<anchor name="bugs"/>
+<s2 title="Bug reporting">
+<p>All known &xslt4c; bugs are listed in <resource-ref idref="jira"/>. For a list of open bugs with links to each bug
+   report, see <resource-ref idref="buglist"/>. If you find a new bug, please enter a XalanC bug report in this
+   database.</p>
+<note>Before you can enter your first bug report, 
+  you must submit your email address to 
+  <jump href="https://issues.apache.org/jira">JIRA</jump> 
+  and receive a password.
+</note> 
+<p>We strongly encourage you write patches for problems you find and 
+  submit them to JIRA and the
+  <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mailing list. 
+  We review the patches we receive to make sure they do not break   something else, and (assuming they do not) 
+  include them in our next release. 
+  In the interest of fixing bugs, adding enhancements, and 
+  addressing outstanding design issues, we sincerely want
+  (and need!) your active participation in the ongoing development of Xalan.
+</p>
+</s2>
+
+<anchor name="to-do"/>
+<s2 title="To-do tasks for future Xalan-C/C++ releases">
+<p>Open bugs:</p>
+<ul>
+<li>The namespace axis does not return the default "xml" namespace.</li>
+<li>Does not support case-order and lang attributes in xsl:sort.</li>
+</ul>
+<p>Items to do:</p>
+<ul>
+<li>Add support for new specifications (XPath-20, XSLT-2.0)</li>
+<li>Add transcoding support using Xerces-C modules</li>
+<li>Add XSLT extension elements</li>
+<li>Add more EXSLT extension functions</li>
+<li>Add the EXSLT document extension function</li>
+<li>Add support for user-defined extension modules</li>
+<li>Retire runConfigure script, use GNU AutoTools for platform maintenance</li>
+<li>Add number and nodeset top-level parameters to the Xalan command-line</li>
+<li>Add noNamespace file schema capability to the Xalan command-line</li>
+</ul>
+</s2>
+</s1>

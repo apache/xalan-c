@@ -1,0 +1,373 @@
+<?xml version="1.0" standalone="no"?> 
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!DOCTYPE faqs SYSTEM "../../style/dtd/faqs.dtd">
+
+<faqs title="Frequently asked questions">
+
+<faq title="Where do I go to learn about XSLT">  
+<q>Where do I go to learn about XSLT?</q>
+<a><p>The definitive sources are the W3C XSLT and XPath recommendations: <resource-ref idref="XSLT"/> and 
+      <resource-ref idref="XPath"/>.</p>
+   <p>For a brief listing of tutorials, discussion forums, and other materials, see <link idref="overview"
+      anchor="uptospeed">Getting up to speed with XSLT</link>.</p>
+</a>
+</faq>
+  
+<faq title="Asking questions about &xslt4c;">
+<q>Where can I ask a question?</q>
+<a><p>For specific questions on &xslt4c;, see list archives: 
+   <jump href="http://marc.info/?l=xalan-c-users">xalan-c-users</jump>
+   and <jump href="http://marc.info/?l=xalan-dev">xalan-dev</jump>.
+   You must subscribe to these Apache mailing lists before posting your questions.</p>
+<p>The Apache Software Foundation has information on how you can subscribe to
+   the <jump href="http://www.apache.org/foundation/mailinglists.html">mailing lists</jump>.</p>
+<p>You can post messages to the lists by sending mail to:<br/>
+   <jump href="mailto:c-users@xalan.apache.org">Post message to xalan-c-users</jump>. (User's list)<br/>
+   <jump href="mailto:dev@xalan.apache.org">Post message to xalan-dev list</jump>. (Developer's list)</p>
+<p>Again, please review the archives before posting a new question.</p>
+</a>
+</faq>
+
+<faq title="What is &xml4c;?">
+<q>What is &xml4c; and why do I need it?</q>
+<a><p>&xml4c; is a validating XML parser written in a portable subset of C++. &xml4c; makes it easy to give your application the ability 
+      to read and write XML data. Like &xslt4c;, &xml4c; is available from the Apache XML site:  
+      <jump href="http://xerces.apache.org/index.html">http://xerces.apache.org</jump></p><!--xml4cNote--></a>
+</faq>
+
+<faq title="Which version of Xerces should I be using?">  
+<q>Which version of Xerces should I be using?</q>
+<a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated 
+      and tested. See <link idref="whatsnew" anchor="status">Status</link></p><!--xml4cNote--></a>
+</faq>
+
+<faq title="Should I be using the Xerces DOM or Xalan DOM?">
+<q>Should I be using the Xerces DOM or Xalan DOM?</q>
+<a><p>The Xalan DOM implementation is highly optimised for transformations.  However, whilst you can build documents in the Xalan DOM, 
+      subsequent modification will not work.  The Xalan DOM is designed to be either an input or an output from a transformation, not 
+      as a general DOM implementation.</p>
+   <p>So in cases where you want to simply transform documents using Xalan, using the internal DOM implementation is the best approach.</p>
+   <p>In cases where you want to modify the DOM document on the fly, you should use the Xerces DOM as the base document.  You can wrap 
+      the Xerces DOM in a wrapper (see  <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource"> passing in a Xerces DOM</link>) 
+      to then use as an input to a Xalan transformation.  Alternatively you can output the result of a transformation to a Xerces DOM 
+      document (see <link idref="usagepatterns" anchor="dom">working with DOM input and output</link>).  In either case, the Xerces document 
+      can be freely modified.  However, after you modify the document, you need to re-build the wrapper so that any changes are replicated 
+      in the Xalan wrappers.</p></a>
+</faq>
+  
+<faq title="Problems with samples in Windows">
+<q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
+   When I tried to execute the sample, I receive the error message 
+   "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)".</q>
+<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, 
+      then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link 
+      libraries.</p>
+   <p>You must also make sure your application is linking with the Debug multithreaded DLL run-time library or the Multithreaded DLL 
+      run-time library.  To check this setting do the following in Visual C++:</p>
+   <ol>
+     <li>Select Settings from the Project menu.<br/><br/></li>
+     <li>Click the C/C++ tab.<br/><br/></li>
+     <li>In the Category drop-down list, select Code Generation.<br/><br/></li>
+     <li>In the Use run-time library drop-down list, select Multithreaded DLL for the Win32 Release configuration, or select Debug 
+         Multithreaded DLL for the Win32 Debug configuration.</li>
+   </ol>
+   <p>Once you have changed this setting, you must rebuild your project.</p>
+</a>
+</faq>
+
+<faq title="Building on Windows">
+<q>What do I need to rebuild &xslt4c; on Windows?</q>
+<a><p>In order to build Xalan-C++ on Windows, you will need the following:</p>
+<ul>
+<li>The Xalan-C/C++ source distribution package.</li>
+<li>The Xerces-C/C++ source distribution package or a compatible binary distribution package.</li>
+<li>A compatible Microsoft Visual Studio .NET (2003, 2005, 2008, 2010) software development platform.</li>
+</ul>
+<p>The Xalan-C/C++ Version 1.11 (pre-release) is available from the Apache Subversion
+   repository at <em>http://svn.apache.org/repos/asf/xalan/c/trunk/.</em></p>
+<p>After Xalan-C/C++ Version 1.11 is released, it can be downloaded from:
+   <jump href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c">Xalan Distributions</jump>.</p>
+<p>The Xerces-C/C++ Version 3.1.1 is can be downloaded from:
+   <jump href="http://www.apache.org/dyn/closer.cgi/xerces/c/3">Xerces Distributions</jump>.</p>
+<p>If you are building with the 
+   <jump href="http://www.ibm.com/software/globalization/icu/">IBM-ICU</jump>
+   International Components for Unicode library, you will
+   need to rebuild both the Xerces and Xalan libraries.</p>
+<p>For more details, see <link idref="buildlibs" anchor="winbldenv">Steps for doing a Windows build</link>.</p>
+</a>
+</faq>
+
+<faq title="Building on UNIX">
+<q>What do I need to rebuild &xslt4c; on UNIX?</q>
+<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c;, the GNU make utility, and a supported C++ compiler.  For more 
+      details see: <link idref="buildlibs" anchor="unixbldenv">Steps for doing a UNIX build</link>.</p>
+</a>
+</faq>
+
+<faq title="Make errors on UNIX platforms">
+<q>I get errors in the Makefile when running the make utility.  What's wrong?</q>
+<a><p>You must use the GNU make utility.  Other make utilities may not work with the Xalan Makefile</p></a>
+</faq>
+
+<faq title="What is ICU">
+<q>What is ICU and why do I need it?</q>
+<a><p>The <jump href="http://www.ibm.com/software/globalization/icu/">IBM-ICU</jump>
+      International Components for Unicode(ICU) is a C and C++ library that provides robust and 
+      full-featured Unicode support on a wide variety of platforms. 
+      &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
+   <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">
+      http://oss.software.ibm.com/icu/index.html</jump>.</p>
+   <p>Xalan release 1.10 was tested with &icu-current;. The curent Xalan
+      release 1.11 is not fully tested with IBM-ICU.</p>
+   <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
+   <!--icuNote-->
+</a>
+</faq>
+
+<faq title="A tar checksum error on Solaris">
+<q>I am getting a tar checksum error on Solaris. What's the problem?</q>
+<a><p>The Solaris tar utility you are using does not properly handle files with long pathnames.  You must use GNU tar (gtar), which 
+      handles arbitrarily long pathnames and is freely available on every platform on which &xslt4c; is supported.  If you don't already 
+      have GNU tar installed on your system, you can obtain it from the Free Software Foundation
+      <jump href="http://www.gnu.org/software/tar/tar.html">http://www.gnu.org/software/tar/tar.html</jump>.  For additional background 
+      information on this problem, see the online manual<jump href="http://www.gnu.org/manual/tar/html_chapter/tar_8.html#SEC112">
+      GNU tar and POSIX tar </jump> for the utility.</p>
+</a>
+</faq>
+   
+<faq title="&xslt4c; in Apache">
+<q>Is it possible to run &xslt4c; from an Apache server?</q>
+
+<a><p>A simple Apache module called <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> is provided as a sample. 
+      It demonstrates how to integrate &xslt4c; with Apache.</p></a>
+</faq>
+    
+<faq title="Is &xslt4c; thread-safe?">
+<q>Is &xslt4c; thread-safe?</q>
+<a><p>Instances of XalanTransformer are not thread-safe; each thread should use its own instance.</p>
+   <p>In order to support very efficient use in multi-threaded applications, &xslt4c; is designed to avoid synchronization as much as
+      possible. Each thread of execution is required to have its own set of "support" objects that contain the state of the
+      transformation.  Accordingly, no synchronization is required when multiple threads are executing.</p>     
+   <p>Parsed ("compiled") stylesheets (see <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>) and parsed
+      source documents may be freely shared by multiple threads of execution without worrying about providing synchronized access to 
+      them. The <em>only</em> exception to this rule: You use XercesParserLiaison to parse a document after calling 
+      XercesParserLiaison::setBuildBridgeNodes(false) or XercesParserLiaison::setThreadSafe(false). In this case, the document 
+      <em>cannot</em> be shared by multiple threads of execution. For reasons of performance, we do not recommend the use of
+      XercesParserLiaison, so this should not be an issue for most applications.</p>
+   <p>All other objects in &xslt4c; are <em>not</em> thread-safe. Each thread must have its own instance of each object.</p>
+   <p>See the <link idref="samples" anchor="threadsafe">ThreadSafe</link> sample program for more information.</p>
+</a>
+</faq>
+   
+<faq title="What can I do to speed up transformations?">
+<q>What can I do to speed up transformations?</q>
+<a><p>To maximize performance, here are some suggestions for you to keep in mind as you set up your applications:</p>
+   <ul>
+     <li>Use a compiled stylesheet when you expect to use the stylesheet more than once.<br/><br/></li>     
+     <li>Set up your stylesheets to function efficiently.<br/><br/></li>
+       <ul>
+         <li>Don't use "//" (descendant axes) patterns near the root of a large document.<br/><br/></li>
+         <li>Use xsl:key elements and the key() function as an efficient way to retrieve node sets.<br/><br/></li>
+         <li>Where possible, use pattern matching rather than xsl:if or xsl:when statements.<br/><br/></li>
+         <li>xsl:for-each is fast because it does not require pattern matching.<br/><br/></li>
+         <li>Keep in mind that xsl:sort prevents incremental processing.<br/><br/></li>
+         <li>When you create variables, &lt;xsl:variable name="fooElem" select="foo"/&gt; is usually faster than
+         &lt;xsl:variable name="fooElem"&gt;&lt;xsl:value-of-select="foo"/&gt;&lt;/xsl:variable&gt;.<br/><br/></li>
+         <li>Be careful using the last() function.<br/><br/></li>
+         <li>The use of index predicates within match patterns can be expensive.<br/><br/></li>
+       </ul>
+   </ul>
+</a>
+</faq>
+
+<faq title="Stylesheet validation">
+<q>Can I validate an XSL stylesheet?</q>
+<a><p>An XSL stylesheet is an XML document, so it can have a DOCTYPE and be subject to validation, but you probably will have
+      to write a custom DTD for the purpose.</p>
+   <p>The XSLT Recommendation includes a <jump href="http://www.w3.org/TR/xslt#dtd">DTD Fragment 
+      for XSL Stylesheets</jump> with some indications of what you need to do to create a complete DTD for a given
+      stylesheet. Keep in mind that stylesheets can include literal result elements and produce output that is not valid
+      XML.</p>
+   <p>You can use the xsl:stylesheet doctype defined in xsl-html40s.dtd for stylesheets that generate HTML.</p>
+</a>
+</faq>
+    
+<faq title="What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?">
+<q>What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?</q>
+<a><p>It means that an attempt was made to add a node to a DOM that would create an invalid structure.  For example, text nodes 
+      are not allowed as children of the document node.</p>
+   <p>This is a common error when attempting to transform to DOM.  Source documents and stylesheets that might produce valid serialized XML
+      might not produce value DOM.  The usual suspect is text nodes being generated before the document element is generated.</p>
+   <p>If you think you have seen this error because of a bug in Xalan-C++'s source tree implementation, please post a bug report on Bugzilla, and attach a minimal source document 
+      and stylesheet that produce the problem to the bug report.</p>
+</a>
+</faq>
+    
+<faq title="Submitting Patches">
+<q>Who do I submit patches to?</q>
+<a><p>Your contributions are much appreciated! You can e-mail your patches to 
+      <human-resource-ref idref="xalandev"/> or raise an issue on the 
+      <jump href="https://issues.apache.org/jira/browse/XALANC">Jira issue tracking system</jump>.</p>
+   <p>The Xalan projects use Jira as the issue tracking system.  Any significant bug or feature request is
+      posted to this system.  You must subscribe to the system in order to submit patches and raise
+      issues.</p>
+<ul>
+<li>Subscribe to Jira at: 
+    <jump href="https://issues.apache.org/jira">https://issues.apache.org/jira</jump>
+</li>
+<li>Browse the issues at: 
+    <jump href="https://issues.apache.org/jira/browse/XALANC">https://issues.apache.org/jira/browse/XALANC</jump>
+</li>
+</ul>
+    <p>Issues posted to the project on Jira at XALANC are automatically posted to the
+       <human-resource-ref idref="xalandev"/></p>
+    <p>Our mailing lists are moderated.  You should subscribe to the mailing list in order to
+      post a message, otherwise message delivery requires manual intervention or may be dropped.</p>
+</a>
+</faq>
+
+<faq title="Transformation Output Methods">
+<q>How do I output a transformation to a DOM, a file, an in-memory buffer, or as input to another transformation?  Since the C++ 
+   language can automatically construct an XSLTResultTarget from any of its constructor's argument types, you usually don't need 
+   to create one explicitly.</q>
+<a><p>The output parameter of XalanTransformer::transform() is an XSLTResultTarget which has many constructors.</p>
+   <p>Output to a file:</p>
+   <ul>
+     <li>The easiest way is to use a null-terminated string containing the file name to create an XSLTResultTarget.  Or, use an 
+         instance of std::ofstream.  The command line executables, and many of the sample applications use file names, so take a 
+         look through the source code for more information.</li>
+   </ul>
+   <p>Output to an in-memory buffer:</p>
+   <ul>
+     <li>Use an instance of std::ostrstream or std::ostringstream to create an XSLTResultTarget.  See the StreamTransform sample 
+         for more information.</li>
+   </ul>
+   <p>Input to another transformation:</p>
+   <ul>
+     <li>Any of the previous output targets could be used as the input to another transformation, but the FormatterToSourceTree 
+         is probably the best for efficiency reasons.  See the source code for the TestXSLT command line program for more 
+         information.</li>
+   </ul>
+</a>
+</faq>
+
+<faq title="Problems Using Sun's Forte/Workshop Compiler with code containing std::istrstream">
+<q>Why won't XSLTInputSource work with std::istrstream on Sun Solaris using Forte/Sun Workshop compiler?</q>
+<!-- first answer -->
+<a><p>There is a bug in Sun's C++ standard library implementation 
+      for the Forte/Workshop compiler.
+      The short answer is that you need to get a patch.
+      The bugzilla subsystem for Xalan issue tracking is no longer available.  The ticket recorded
+      here included a patch.</p>
+</a>
+<!-- second answer -->
+<a><p>The issue is resolved if you use the SunStudio platform for your code development.
+      The Solaris SunStudio is now available from Oracle.</p>
+</a>
+</faq>
+
+<faq title="Modifying an instance of XalanDocument">
+<q>My transformation outputs to a XalanDocument (actually XalanSourceTreeDocument underneath) but W3C DOM functions like 
+   DOMElement::setAttribute don't work! Am I going crazy or what?</q>
+<a><p>No, you aren't going crazy. Xalan's default source tree is read-only for efficiency. If you need a DOM that supports 
+      modifications, use the Xerces DOM instead.  See the TransformToXercesDOM sample for more information.</p>
+</a>
+</faq>
+
+<faq title="Changing Where Error Output is Sent">
+<q>XalanTransformer outputs errors to the console. How do I, for example, output error to a file?</q>
+<a><p>By default, XalanTransformer creates a XalanTransformerProblemListener (a subclass of ProblemListener) that writes 
+      output to std::cerr. To change this you can:</p>
+   <ul>
+     <li>Redirect std::cerr from the command line.</li>
+     <li>Call XalanTranformer::setWarningStream with a different std::ostream before calling XalanTransformer::transform.</li>
+     <li>Instantiate your own XalanTransformerProblemListener with a different output stream and call 
+         XalanTransformer::setProblemListener() before calling XalanTransformer::transform().</li>
+     <li>Subclass some ProblemListener type and do custom handling of errors (you still then need to tell XalanTransformer 
+         instances to use your ProblemListener.)</li>
+   </ul>
+   <p>In most case you probably want to do one of the first two.</p>
+</a>
+</faq>
+
+<faq title="Programmatic Error Information">
+<q>How do I programmatically get the file name, line number, and column number for an error in an XML file?</q>
+<a><p>Create a custom ErrorHandler (a &xml4c; class) and call XalanTransformer::setErrorHandler before parsing any sources.</p>
+</a>
+</faq>
+
+<faq title="String Transcoding">
+<q>How do I make a char* out of XalanDOMString (or vice-versa)?</q>
+<a>
+<p>See the static method XalanDOMString::transcode, or the functions TranscodeToLocalCodePage in the API documentation.  
+   However, you should be very careful when transcoding Unicode characters to the local code page, because not all Unicode 
+   characters can be represented.</p>
+</a>
+</faq>
+
+<faq title="Error Code/Exception Summary">
+<q>Is there a table of error codes somewhere? How about a summary of what methods throw which exceptions?</q>
+<a><p>There isn't, but we're working on it.</p>
+</a>
+</faq>
+
+<faq title="Extension Functions">
+<q>The Xalan extension functions (xalan:node-set, etc.) don't work for me. Help!</q>
+<a><p>Did you declare the namespace on the xsl:stylesheet or xsl:transform element? It should look like this: </p>
+   <p>&lt;xsl:stylesheet version="1.0" xmlns:xalan="http://xml.apache.org/xalan"&gt; ...rest of stylesheet</p>
+   <p>If you did and you still have problems, you might want to ask the mailing list.</p>
+</a>
+</faq>
+
+<faq title="Outputting results to a file on Windows 95/98">
+<q>Why can't I ouput my results to a file on Windows 95/98?</q>
+<a><p>Well, you can, but it doesn't always work. Neither Windows 95 or 98 are supported or tested. There have been reports of 
+      problems on it, especially regarding Unicode support. See 
+      <jump href="http://marc.info/?l=xalan-dev&amp;m=99840914524755&amp;w=2">this post</jump>.</p>
+</a>
+</faq>
+
+<faq title="Using format-number and ICU">
+<q>Why does Xalan emit a warning when using the XSLT function format-number()?</q>
+<a><p>Did you build with ICU support? See <link idref="usagepatterns" anchor="icu">Using the International Components for 
+      Unicode (ICU)</link>.</p>
+</a>
+</faq>
+
+<faq title="Perl wrapper for &xslt4c;?">
+<q>Is there a Perl wrapper for &xslt4c;?</q>
+<a><p>There is no Apache Perl wrapper, however Edwin Pratomo has written a wrapper for &xslt4c; version 1.4 that can be found 
+      on CPAN</p>
+</a>
+</faq>
+
+<faq title="Missing LocalMsgIndex.hpp file">
+<q>Why can't I find the LocalMsgIndex.hpp file?</q>
+<a><p>The LocalMsgIndex.hpp file is not shipped with the distributions because this file is generated during compile time.  This 
+      file is created at the start of the build process and customized for the locale and message set you are using.</p>
+   <p>On Windows, the LocalMsgIndex.hpp header is generated by the Localization project.  By building any project that has a 
+      dependency on the Localization project, will trigger the Message Localization component to built and the LocalMsgIndex.hpp 
+      to be generated.</p>
+   <p>On Windows binary distributions, the LocalMsgIndex.hpp file is a member of the "<code>Include</code>" directory.</p>
+   <p>On Unix binary distributions, the LocalMsgIndex.hpp file is a member of the "<code>include/xalanc/PlatformSupport</code>" directory.</p>
+</a>
+</faq>
+	
+</faqs>

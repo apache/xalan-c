@@ -1,0 +1,44 @@
+This file contains the PGP keys of various Xalan developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Xalan users: pgp < KEYS
+Xalan developers: pgp -kxa <your name> and append it to this file.
+
+
+Robert Weir <robert_weir@lotus.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: PGPfreeware 6.5.1 for non-commercial use <http://www.pgp.com>
+
+mQGiBDgkhusRBADPjF2sbjCOC9A6CSwukoXCWMOaSLT1WPo2HH+xYOofXpMUxNNc
+bpNsgsV8PDhptd4bPfTCDtKl4/9oJQr36fgM6FuIoq+i3VCtyxwTvzaVClteh6bo
+y8I3OrYow1e+adFmjpWc3bX5kj8X1vAP+Kq61KEQwk4BU7BVzt5ROJyYBwCg/678
+cy/aq7P/ToxSFNOPxqEBsyED/i8oOYzVXo0w9rC4khsJ9ST0qfvu9a1NMW7djlCn
+QarFjrOcA8OpKjQNxkcgMrRHgPQM0diAKAKDCfIQeM8cmfw+tTb7znOrlrhIas6Y
+2f13UiKOoeT1NlMsojVWQ/LCGCF7sYIZrbmeOgA+6tCazxpHl+ggZ5/fNPM/Ct52
+zNnxA/9Wr3MzzH/JuYFwyFXFn9pDL/hYtbZKGJhT3hzp4R50J+UBDTZ+6ff6/g6a
+6MRTNqdgk9O/V9yrSZpMuQEna/fwjm5OcG9DsgpD23KuUl0l7VoDS6/3brPdMg2G
+16gh+nW78S2Ctx5G/LiTKZ06dmZ5pVaTxG9op9Vd5jCZF2i7P7QmUm9iZXJ0IEMu
+IFdlaXIgPHJvYmVydF93ZWlyQGxvdHVzLmNvbT6JAE4EEBECAA4FAjgkhusECwMC
+AQIZAQAKCRBR6z7xV3Za8g+SAKDl8D33vCcGP8M1asMRkMdvLlyrEgCg3izyhGfJ
+iaDay5TTmzsiWKiP3je0I1JvYmVydCBDLiBXZWlyIDxyd2VpckBjeWJlcmNvbS5u
+ZXQ+iQBLBBARAgALBQI4JIffBAsDAgEACgkQUes+8Vd2WvJu/gCeJFgUuR+wcdan
+oJx4wpf9NHvXv+MAoP28cqLzv15cZPC5RvbtXymsNol+tCRSb2JlcnQgQy4gV2Vp
+ciA8cm9id2VpckBob3RtYWlsLmNvbT6JAEsEEBECAAsFAjgkiCMECwMCAQAKCRBR
+6z7xV3Za8uk1AJ9I7PcEkKcRuKuwzuShKyHblJAKPwCgxO4ZaV0h/VQ4Rmu26Zyr
+6/bHZA65Ag0EOCSG6xAIAPZCV7cIfwgXcqK61qlC8wXo+VMROU+28W65Szgg2gGn
+VqMU6Y9AVfPQB8bLQ6mUrfdMZIZJ+AyDvWXpF9Sh01D49Vlf3HZSTz09jdvOmeFX
+klnN/biudE/F/Ha8g8VHMGHOfMlm/xX5u/2RXscBqtNbno2gpXI61Brwv0YAWCvl
+9Ij9WE5J280gtJ3kkQc2azNsOA1FHQ98iLMcfFstjvbzySPAQ/ClWxiNjrtVjLhd
+ONM0/XwXV0OjHRhs3jMhLLUq/zzhsSlAGBGNfISnCnLWhsQDGcgHKXrKlQzZlp+r
+0ApQmwJG0wg9ZqRdQZ+cfL2JSyIZJrqrol7DVekyCzsAAgIIALZiDVEp4qPLEi4X
+5cJVcNvqmsft2qvfxiesiOJc1a7IbECXXUjYbSFG4GkOAd3LFqgznakus4BqNxyL
+PZPZ5qDpimFEAspELAwNaVFwYHnu8YLaf1V2R22WImDXjssSKaDY0iJT68v+69FU
+BlMbHpKmK4uVCflBdfGEmVBoZaNMqWjcr4KfvwRTwPa06GcF11Ol5ld/ZBdVCrQb
+lRpnMpriiRqdY81uWAvc3zONwjoU5InTryQp7RVe8uCDdDskJbSXUgAOiE8w8jXf
+cDFq482nSu5maqE7Qhr4sv5CMb5LjiZeAyVxNdYg2VMd2afef+TnkiBM91ITbOCA
+AquWEJ+JAEYEGBECAAYFAjgkhusACgkQUes+8Vd2WvLlLACg/LAuccXl5181u2vP
+8j2yaW7cdyYAoOYLdsQGtHv+5DYuqCTjVjJtevqb
+=fA+F
+-----END PGP PUBLIC KEY BLOCK-----

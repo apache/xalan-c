@@ -1,0 +1,235 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<s1 title="Installing &xslt4c;">
+<!--
+File:  Xalan-Install-Chapter.rtf
+-->
+
+<ul>
+<li><link anchor="InstSrcPkgs">Install Source Packages</link></li>
+<li><link anchor="InstBinPkgs">Install Binary Packages</link></li>
+  <ul>
+  <li><link anchor="InstUnixBinPkgs">Install UNIX Binary Packages</link></li>
+    <ul>
+    <li><link anchor="ConfigUnixSys">Configure UNIX and Linux Systems</link></li>
+    </ul>
+  <li><link anchor="InstWinBinPkgs">Install Windows Binary Packages</link></li>
+    <ul>
+    <li><link anchor="ConfWinPath">Configure Windows PATH</link></li>
+    </ul>
+  </ul>
+<li><link anchor="InstDocPkgs">Install Documentation Package</link></li>
+</ul>
+
+<anchor name="InstSrcPkgs"/>
+<s2 title="Install Source Packages">
+
+<p>We have no package managers for source packages.  
+You just extract the contents of the distribution <em>zip</em> or <em>tar</em> file 
+into a source directory of your choosing.</p>
+
+<p>The supplemental package building scripts for Linux and UNIX look for the 
+Xalan-C sources to be found in a directory named <code><em>xalan-src</em></code>. 
+The Xerces-C sources are expected to be found in a directory named <code><em>xerces-src</em></code>.</p>
+
+<p>The supplemental package building scripts for Windows look for the Xalan-C 
+sources to be found in a directory named <code><em>xalan-src-11</em></code> 
+and the Xerces-C sources to be found in a directory named <code><em>xerces-src-31</em></code>.</p>
+
+<p>When building the Xalan-C library and sample programs, 
+you also need the necessary C/C++ compiler tools installed. 
+A working copy of the Xerces-C XML parser library must be available 
+before you can build the Xalan-C library. 
+You may build the Xerces-C XML parser library from a source distribution 
+or use a compatible Xerces-C binary distribution.</p>
+
+<p>Building the User Guide web pages from sources requires a 
+working Xalan command line program.  The Xalan command-line program must support 
+top-level parameters as strings.</p>
+
+<p>Building the interactive API Reference pages requires a UNIX or Linux 
+system with a current copy of Doxygen and GraphViz software installed.</p>
+
+</s2>
+<anchor name="InstBinPkgs"/>
+<s2 title="Install Binary Packages">
+
+<p>The binary packages distributed by <em>zip</em> and <em>tar</em> files are 
+usually extracted to an install directory of your choosing. 
+After extracting the contents, and possibly relocating some items, 
+you may then need to manually perform some minor system configuration.</p>
+
+<anchor name="InstUnixBinPkgs"/>
+<s3 title="Install UNIX Binary Packages">
+
+<p>Binary packages for Linux and UNIX systems only distribute a <em>release</em> build of binaries. 
+A debug build of binaries requires you to compile from the sources. 
+Binary packages for Linux and UNIX systems have the following directory structure.</p>
+
+<table>
+<tr><td>./bin/</td><td>Contains the Xalan.exe command line and DLLs</td></tr>
+<tr><td>./lib/</td><td>Contains the linker libraries</td></tr>
+<tr><td>./include/xalanc/</td><td>Contains the Xalan-C header files</td></tr>
+<tr><td>./doc/xalanc-1.11/</td><td>Contains license and other information</td></tr>
+</table>
+
+<p>Supplemental scripts for Linux and UNIX builds are available in the 
+source distribution by which binary packages can be made. 
+The release builds are targeted to <code>${prefix} = /opt/apache/</code>. 
+The debug buids are targeted to <code>${prefix} = /opt/apache/debug/</code>.</p>
+
+<p>Packages that are released by a UNIX or Linux package manager are 
+usually installed and configured by the package manager.</p>
+
+<anchor name="ConfigUnixSys"/>
+<s4 title="Configure UNIX and Linux Systems">
+
+<p>The Xalan command line executable should be in a directory 
+accessible by the PATH environment.</p>
+
+<p>The lib directories containing the <code><em>libxalan-c.so</em></code> and 
+<code><em>libxerces-c.so</em></code> objects must be known to the shared object loader. 
+The system loader environment variable usually takes precedence 
+over the shared object cache. 
+I use the shared object cache for installed applications and reserve 
+the overriding environment for prototype builds and debugging purposes.</p>
+
+<table>
+<tr><th>Operating System</th><th>Library Path Environment</th></tr>
+<tr><td>Solaris and Linux</td><td>LD_LIBRARY_PATH</td></tr>
+<tr><td>BSD/GNU</td><td>LD_LIBRARY_PATH</td></tr>
+<tr><td>HP-UX</td><td>SHLIB_PATH</td></tr>
+<tr><td>AIX and BSD</td><td>LIBPATH</td></tr>
+<tr><td>MacOSX</td><td>DYLD_LIBRARY_PATH</td></tr>
+<tr><td>Cygwin and MinGW</td><td>PATH</td></tr>
+</table>
+
+<p>The library search path order is significant. 
+In many cases, the <code><em>/usr/lib</em></code>, <code><em>/lib</em></code>, 
+and <code><em>/usr/local/lib</em></code> paths are already cached 
+in <code><em>/etc/ld.so.cache</em></code> or included by <code><em>/etc/ld.so.conf</em></code>.</p>
+
+</s4>
+</s3>
+<anchor name="InstWinBinPkgs"/>
+<s3 title="Install Windows Binary Packages">
+
+<p>Binary packages for Windows systems include a directory name 
+related to the Windows Studio platform used to build the product.  
+The <code>{<em>bin</em>, <em>lib</em>, <em>include</em>, <em>doc</em>}</code> directories 
+are subdirectories of the platform directory. 
+Libraries for several Visual Studio development systems 
+can be installed on the same Windows computer.</p>
+<table>
+<tr><td>XALANCPKG-11-31-VC71</td><td>for Visual Studio 2003 (Win32)</td></tr>
+<tr><td>XALANCPKG-11-31-VC80</td><td>for Visual Studio 2005 (Win32)</td></tr>
+<tr><td>XALANCPKG-11-31-VC90</td><td>for Visual Studio 2008 (Win32)</td></tr>
+<tr><td>XALANCPKG-11-31-VC100</td><td>for Visual Studio 2010 (Win32)</td></tr>
+<tr><td>XALANCPKG-11-31-X64-VC80</td><td>for Visual Studio 2005 (amd64)</td></tr>
+<tr><td>XALANCPKG-11-31-X64-VC90</td><td>for Visual Studio 2008 (amd64)</td></tr>
+<tr><td>XALANCPKG-11-31-X64-VC100</td><td>for Visual Studio 2010 (amd64)</td></tr>
+</table>
+
+<p>Supplemental scripts for Windows builds are available in the source distribution 
+by which these above binary packages can be made.  
+Also included are scripts for building the Xerces-C sources 
+to the following binary package directories. 
+These directories are mostly compatible with the required 
+XALANCROOT and XERCESCROOT environment variables when building your own applications.</p>
+
+<table>
+<tr><td>XERCESCPKG-31-VC71</td><td>for Visual Studio 2003 (Win32)</td></tr>
+<tr><td>XERCESCPKG-31-VC80</td><td>for Visual Studio 2005 (Win32)</td></tr>
+<tr><td>XERCESCPKG-31-VC90</td><td>for Visual Studio 2008 (Win32)</td></tr>
+<tr><td>XERCESCPKG-31-VC100</td><td>for Visual Studio 2010 (Win32)</td></tr>
+<tr><td>XERCESCPKG-31-X64-VC80</td><td>for Visual Studio 2005 (amd64)</td></tr>
+<tr><td>XERCESCPKG-31-X64-VC90</td><td>for Visual Studio 2008 (amd64)</td></tr>
+<tr><td>XERCESCPKG-31-X64-VC100</td><td>for Visual Studio 2010 (amd64)</td></tr>
+</table>
+
+<p>Supplemental scripts for Windows builds will also handle the packaging of older 
+Xalan-C and Xerces-C releases.  A similar naming of package directories and 
+source directories is supported for these older releases.</p>
+
+<note>You MUST NOT merge the <em>bin</em> and <em>lib</em> directories from packages 
+compiled with different compilers or different target (Win32 or amd64) platforms.</note>
+
+<p>It is safe to merge the <em>bin</em> directories of compatible Xalan-C and Xerces-C 
+distributions into a common directory known by the system PATH environment. 
+You can safely merge the <em>lib</em> directories of Xalan-C and Xerces-C into a common directory.
+ You can safely merge the <em>include</em> directories of both Xalan-C and Xerces-C 
+as long as the subdirectories of <em>xalanc</em> and <em>xercesc</em> remain intact.</p>
+
+<anchor name="ConfWinPath"/>
+<s4 title="Configure Windows PATH">
+
+<p>Windows systems require that the bin directories be added to the 
+PATH environment so the library DLL files can be found. 
+The <em>Xalan.exe</em> program is dynamically linked to these libraries.</p>
+
+<p>You can make the PATH environment a permanent part of the SYSTEM or user login DESKTOP environment.
+Any PATH you add to the user login DESKTOP environment gets automatically prepended to the
+SYSTEM PATH environment and is effective upon successful user DESKTOP login.  If your
+computer also starts Windows Services that run on behalf of a user, the user environment
+is assumed.</p>
+
+<ol>
+<li>Right-Click on the computer icon.</li>
+<li>Select Properties</li>
+<li>Select Advanced System Settings.</li>
+<li>SelectEnvironment Variables.</li>
+<li>Add the bin directory to the system PATH environment.</li>
+</ol>
+
+<p>The XP, NT, 2000, and 3000 systems allow environment variables to be 
+set explicitly to individual user accounts.  
+The Vista, Win-7, and 2008 systems have security administration 
+that gets in the way of updating individual user environments.</p>
+
+<p>Or you can add the <em>bin</em> directories temporarily to your environment by program control 
+or invoking a shell command script, or using a command window. 
+The following command line will append your <code>{target}/<em>bin</em></code> directory
+to the PATH environment.</p>
+<source>
+set PATH=%PATH%;{target}/bin
+</source>
+</s4>
+</s3>
+</s2>
+<anchor name="InstDocPkgs"/>
+<s2 title="Install Documentation Packages">
+
+<p>There are actually two distributed documentation packages.  
+One contains the website pages and full interactive apiDoc images (355+ megabytes).  
+The other contains the website pages and the apiDoc descriptions (47 megabytes) 
+without the apiDoc images.  
+Except for the absence of interactive apiDoc images, 
+the documentation packages are identical.</p>
+
+<p>The documentation packages are distributed as <em>tar</em> and <em>zip</em> files. 
+You just extract the contents into a directory that is reachable by your favorite web browser. 
+The documentation tree starts with the <em>./xalan-c/</em> directory. 
+The top documentation page is the <em>./xalan-c/index.html</em> file.</p>
+
+<p>The documentation is initially a snapshot of the 
+<jump href="http://xalan.apache.org/xalan-c/index.html">Apache Xalan-C/C++ website</jump> 
+at the time the product was released.</p>
+</s2>
+</s1>

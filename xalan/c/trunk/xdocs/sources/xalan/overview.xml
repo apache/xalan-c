@@ -1,0 +1,161 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "../../style/dtd/document.dtd">
+
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+ 
+<s1 title="&xslt4c; Overview">
+<ul>
+  <li><link anchor="intro">Introduction</link></li>
+  <li><link anchor="features">&xslt4c; Features</link></li>
+  <li><link anchor="towork">Getting to work with &xslt4c;</link></li>
+  <li><link anchor="uptospeed">Getting up to speed with XSLT</link></li>
+  <li><link anchor="glossary">Glossary</link></li>
+</ul>
+
+<anchor name="intro"/>
+<s2 title="Introduction">
+<p>&xslt4c; (named after a rare musical instrument) implements the <resource-ref idref="XSLT"/> and the 
+   <resource-ref idref="XPath"/>. XSLT is the first part of the XSL stylesheet language for XML. It includes the XSL
+   Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials, 
+   discussion groups, frequently asked questions, and tutorials on XSLT, see <link anchor="uptospeed">Getting up to speed with 
+   XSLT</link>.</p> 
+<note>XSL also includes a vocabulary for formatting documents, which is not part of &xslt4c;.  For more information, see 
+      <resource-ref idref="XSL"/> and the <jump href="http://xmlgraphics.apache.org/fop">Apache XML FOP (Formatting Objects Project)
+      </jump>.
+</note>
+<p>You use the XSLT language to compose XSL stylesheets. An XSL stylesheet contains instructions for transforming XML documents 
+   from one document type to another document type (XML, HTML, or other). In structural terms, an XSL stylesheet specifies the 
+   transformation of one tree of nodes (the XML input) into another tree of nodes (the output or transformation result).</p>
+<note>The XSL stylesheet may generate and refer to cascading style sheets (<jump href="http://www.w3.org/Style/CSS/">CSS</jump>) 
+      as part of its output.
+</note>  
+<p>In the following example, the foo.xsl stylesheet is used to transform foo.xml into foo.out:</p>
+<p>foo.xml:</p>
+<source>
+&lt;?xml version="1.0"?>
+&lt;doc>Hello&lt;/doc>
+</source>
+<p>foo.xsl:</p>
+<source>
+&lt;?xml version="1.0"?> 
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+&lt;xsl:template match="doc">
+&lt;out>&lt;xsl:value-of select="."/>&lt;/out>
+&lt;/xsl:template>
+&lt;/xsl:stylesheet>
+</source>
+<p>foo.out:</p>
+<source>&lt;out>Hello&lt;/out></source>
+
+</s2><anchor name="features"/>
+<s2 title="&xslt4c; Features">
+<ul> 
+  <li>&xslt4c; fully implements the <resource-ref idref="XSLT"/>.</li>
+  <li>&xslt4c; incorporates the <resource-ref idref="XPath"/>.<br/><br/></li>
+  <li>&xslt4c; uses <jump href="http://xerces.apache.org/xerces-c/index.html">&xml4c;</jump> to parse XML documents and XSL
+      stylesheets.<br/><br/>
+      The input may appear in the form of a file or URL, a stream, or a <resource-ref idref="DOM"/>. 
+      &xslt4c; performs the transformations specified in the XSL stylesheet and produces a file, a stream, or a DOM as you
+      specify when you set up the transformation.<br/><br/></li>
+  <li>Along with a complete API for performing transformations in your C++ applications, &xslt4c; provides a <link
+      idref="commandline">command line</link> utility for convenient file-to-file transformations.<br/><br/></li>
+  <li>&xslt4c; supports C++ <link idref="extensions">extension functions</link></li>
+</ul> 
+</s2>
+
+<anchor name="towork"/>
+<s2 title="Getting to work with &xslt4c;">
+<p>For instructions and some suggestions about how to get started using &xslt4c;, see <link idref="download">Downloading &xslt4c;</link>,
+   <link idref="buildlibs">Building &xslt4c;</link>, and <link idref="install">Installing &xslt4c;</link>.</p>
+</s2>
+
+<anchor name="uptospeed"/>
+<s2 title="Getting up to speed with XSLT">
+<p>If you are still working through the details of the XSLT spec (the W3C 1.0 Recommendation), you may want 
+   to consult one or more of the following:</p>
+   <ul>
+     <li>Crane Softwright's <jump href="http://www.CraneSoftwrights.com/training/">Free preview of Practical
+         Transformation Using XSLT and XPath</jump><br/><br/></li>
+     <li>Doug Tidwell's <jump href="http://www.oreilly.com/catalog/xslt/">XSLT</jump>, O'Reilly, 2001<br/><br/>     </li>
+     <li>Bob DuCharme's <jump href="http://www.manning.com/ducharme/index.html">XSLT Quickly</jump>, Manning Publications,
+         2001<br/><br/></li>                 
+     <li>John Robert Gardner and Zarella Rendon's 
+         <jump href="http://vig.prenhall.com/catalog/academic/product/1,4096,0130404462,00.html">XSLT and XPath: A Guide to
+         Transformations</jump>, Prentice-Hall, 2001<br/><br/></li>                 
+
+
+     <li>Elliotte Rusty Harold's <jump href="http://www.ibiblio.org/xml/books/bible2/chapters/ch17.html">Chapter 17 of 
+         the XML Bible: XSL Transformations</jump><br/><br/></li>
+     <li>The Mulberry <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> 
+         (of interest to XSL users at all levels)<br/><br/></li>
+     <li>Objects by Design's <jump href="http://www.objectsbydesign.com/projects/xmi_to_html.html">Transforming XMI to
+         HTML</jump> (oriented towards XMI, "an XML-based, stream representation of a UML model," but also covers "generic"
+         XML transformations) and their related <jump href="http://objectsbydesign.com/projects/xslt/xslt_by_example.html">XSLT
+         by Example</jump><br/><br/></li>
+         
+     <li>OASIS (the Organization for the Advancement of Structured Information Standards): 
+         <jump href="http://www.oasis-open.org/cover/xsl.html">Extensible Stylesheet Language (XSL)</jump> by Robin
+         Cover<br/><br/></li>
+     <li>Aaron Skonnard and Martin Gudgin's 
+<jump href="http://www.theserverside.net/tt/books/addisonwesley/EssentialXML/index.tss">Essential 
+XML Quick Reference:</jump> A Programmer's Reference to 
+XML, XPath, XSLT, XML Schema, SOAP and More. This reference is published by Addison Wesley, 2003, ISBN/0201740958.<br/><br/></li>
+        
+   </ul>
+<p>When you come across other useful introductory or background materials, please email <human-resource-ref
+   idref="xalandev"/>, so we can add them to this list.</p>
+   
+</s2>
+
+<anchor name="glossary"/>
+<s2 title="Glossary">
+<gloss>
+       <label>XSLT Namespace</label>
+       <item>The <jump href="http://www.w3.org/TR/REC-xml-names/">XML namespace</jump> for XSLT. An XML namespace is a 
+             collection of element and attribute names, identified by a Unique Resource Identifier (URI), which often takes 
+             the form of a URL, but is really just a unique string, not a pointer to a web page. The XSLT namespace URI is
+             http://www.w3.org/1999/XSL/Transform. In each XSLT stylesheet, you must declare this namespace in the stylesheet 
+             element tag and bind it to a local prefix. Like the XSLT specification, we always use xsl as the XSLT namespace 
+             prefix in our descriptions and examples, although you are free to bind any prefix to this namespace.<br/><br/></item>
+        
+       <label>XSL Instruction</label>
+       <item>Any tag associated with the XSLT namespace.<br/><br/></item>
+        
+       <label>Template</label>
+       <item>An element, usually with child elements, that specifies a "rule" or set of instructions to perform when a 
+             particular kind of node is encountered in the source tree.<br/><br/></item>
+                
+       <label>XSL Template Instruction</label>
+       <item>Any tag that occurs inside an xsl:template element and is associated with the XSLT namespace.<br/><br/></item>
+                   
+       <label>Source Tree</label>
+       <item>The XML tree input to the XSL process.<br/><br/></item>
+        
+       <label>Result Tree</label>
+       <item>The tree that is output by the XSL process.<br/><br/></item>
+                
+       <label>Match Pattern</label>
+       <item>The part of a template that defines the kind(s) of nodes to which the template applies.<br/><br/></item>
+
+</gloss>
+<p>For more definitions of XSLT terminology, see Dave Pawson's <jump href="http://www.dpawson.co.uk/xsl/xslvocab.html">XSLT 
+   Terminology Clarification</jump> and the Glossary in Michael Kay's 
+   <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</jump>.</p>
+</s2>
+</s1> 
