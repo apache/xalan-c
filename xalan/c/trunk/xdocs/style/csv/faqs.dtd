@@ -1,0 +1,27 @@
+<?xml encoding='US-ASCII'?>
+
+<!-- STYLEBOOK FAQS DTD -->
+
+<!-- import the external blocks.ent dtd -->
+<!ENTITY % blocksEntity SYSTEM "blocks.ent">
+%blocksEntity;
+
+<!ELEMENT faqs (group,faq)+>
+<!ATTLIST faqs title CDATA #REQUIRED>
+
+<!-- XALAN-J: (group) Allow for grouping of faqs -->
+
+<!ELEMENT group (faq)*>
+<!ATTLIST group id      CDATA #IMPLIED
+                label   CDATA #IMPLIED
+                title   CDATA #REQUIRED>
+
+<!-- Allow multiple Answers for a given FAQ Question -->
+<!ELEMENT faq (q,a+)>
+<!ATTLIST faq title CDATA #IMPLIED>
+
+<!ELEMENT q (#PCDATA)>
+<!ELEMENT a (%blocks;)+>
+
+<!-- CVS $Revision: 1.1 $ $Date: 1999/12/01 14:19:18 $ -->
+<!-- Revision by (shathaway@apache.org) 2011/09/01 -->

@@ -30,7 +30,7 @@
 
 <anchor name="intro"/>
 <s2 title="Introduction">
-<p>&xslt4c; (named after a rare musical instrument) implements the <resource-ref idref="XSLT"/> and the 
+<p>&xslt4c; (named after a rare African musical instrument) implements the <resource-ref idref="XSLT"/> and the 
    <resource-ref idref="XPath"/>. XSLT is the first part of the XSL stylesheet language for XML. It includes the XSL
    Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials, 
    discussion groups, frequently asked questions, and tutorials on XSLT, see <link anchor="uptospeed">Getting up to speed with 

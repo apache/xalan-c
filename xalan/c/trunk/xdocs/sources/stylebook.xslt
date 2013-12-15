@@ -193,7 +193,7 @@
      </xsl:with-param>
    </xsl:call-template>
 
-   <!-- THE COPYRIGHT FOOTER -->
+   <!-- THE do fGHT FOOTER -->
 
    <xsl:call-template name="doFooter">
      <xsl:with-param name="releaseinfo">
@@ -469,7 +469,7 @@
     <xsl:attribute name="id">footer</xsl:attribute>
     <!-- copyright byline information -->
     <!-- &#169; is the (c) copyright symbol -->
-    <xsl:text>Copyright &#169; 1999-2012 The Apache Software Foundation</xsl:text><br/>
+    <xsl:text>Copyright &#169; 1999-2013 The Apache Software Foundation</xsl:text><br/>
     <xsl:text>Apache, Xalan, and the Feather logo are trademarks of The Apache Software Foundation</xsl:text>
     <xsl:element name="div">
       <xsl:attribute name="class">small</xsl:attribute>
@@ -984,5 +984,79 @@
   </xsl:element>
 </xsl:template>
 
+<xsl:template match="asfmirror">
+  <xsl:element name="a">
+    <xsl:attribute name="name">SelectMirror</xsl:attribute>
+    <xsl:text>&#8204;</xsl:text> <!-- (zero-width non-join) character -->
+  </xsl:element>
+  <form action="[location]" method="get" id="SelectMirror">Other Mirrors: <select name="Preferred">
+   <xsl:comment>[if-any http] [for http]</xsl:comment><option value="[http]">[http]</option>
+   <xsl:comment>[end] [end]</xsl:comment>
+   <xsl:comment>[if-any ftp] [for ftp]</xsl:comment><option value="[ftp]">[ftp]</option>
+   <xsl:comment>[end] [end]</xsl:comment>
+   <xsl:comment>[if-any backup] [for backup]</xsl:comment><option value="[backup]">[backup] (backup)</option>
+   <xsl:comment>[end] [end]</xsl:comment></select>
+   <input type="submit" value="Change"/>
+  </form>
+</xsl:template>
+
+<!-- The stylebook "comment" element specifically generates HTML/XML comments -->
+
+<xsl:template match="comment">
+  <xsl:comment><xsl:value-of select="."/></xsl:comment>
+</xsl:template>
+
+<!-- Groups of <packages> are rendered into <ul><li> lists.  The stylebook
+     markup for <packages> contains children of <basefile> and <keyfile>.
+     The <basefile> is also rendered for the [preferred] mirror access.
+     The <basefile validators="asc md5 sha"> reference asf main distribution.
+
+     <packages location="distro/subpath/">
+       <basefile validators="asc md5 sha">package-artifact-file-1</basefile>
+       <basefile validators="asc md5 sha">package-artifact-file-2</basefile>
+       <keyfile>distro/path/KEYS</keyfile>
+     </packages>
+-->
+
+<xsl:template match="packages">
+  <xsl:variable name="subdir" select="@location"/>
+  <ul>
+  <xsl:for-each select="basefile | keyfile">
+    <xsl:if test="node(basefile)">
+    </xsl:if>
+      <li><xsl:element name="a">
+          <xsl:attribute name="href" select="concat('[preferred]/',$subdir,text(.))"/>
+          <xsl:value-of select="."/>
+          </xsl:element>
+          <xsl:if test="contains(@validators, 'asc')">
+            <xsl:element name="a">
+              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.asc')"/>
+              <xsl:text>[PGP]</xsl:text>
+            <xsl:element>
+          </xsl:if>
+          <xsl:if test="contains(@validators, 'md5')">
+            <xsl:element name="a">
+              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.md5')"/>
+              <xsl:text>[MD5]</xsl:text>
+            </xsl:element>
+          </xsl:if>
+          <xsl:if test="contains(@validators, 'sha')">
+            <xsl:element name="a">
+              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.sha')"/>
+              <xsl:text>[SHA]</xsl:text>
+            </xsl:element>
+          </xsl:if>
+      </li>
+    <xsl:if test="node(keyfile)">
+      <li><xsl:text>Package Validation </xsl:text>
+          <xsl:element name="a">
+            <xsl:attribute name="href" select="concat(&asfdist,text(.))"/>
+            <xsl:text>[KEYS]</xsl:text>
+          </xsl:element>
+      </li>
+    </xsl:if>
+  </xsl:for-each>
+  </ul>
+</xsl:template>
 
 </xsl:stylesheet>

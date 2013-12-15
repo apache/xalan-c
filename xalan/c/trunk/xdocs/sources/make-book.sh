@@ -5,7 +5,7 @@
 # SET THE LIBRARY PATH FOR YOUR OPERATING SYSTEM, REQUIRED BY "Xalan" PROGRAM
 #
 #  SOLARIS AND LINUX
-# export LD_LIBRARY_PATH=/usr/local/lib
+ export LD_LIBRARY_PATH=/usr/local/lib
 #
 #  AIX AND BSD
 # export LIBPATH=/usr/local/lib

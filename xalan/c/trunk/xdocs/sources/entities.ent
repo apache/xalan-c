@@ -16,8 +16,8 @@
  -->
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_11_0">
-<!ENTITY xslt4c-current "Xalan-C++ Version 1.11">
+<!ENTITY xslt4c-dist "Xalan-C_1_11_1">
+<!ENTITY xslt4c-current "Xalan-C++ Version 1.11.1">
 <!ENTITY xslt4c-windll "Xalan-C_1_11.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c.so.111">
 <!ENTITY xslt4c-aixlib "libxalan-c111.so">

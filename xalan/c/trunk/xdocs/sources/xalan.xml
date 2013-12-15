@@ -61,9 +61,14 @@
 
   <separator/>                      
 
+<!--
   <document id="download"
             label="Download"
             source="xalan/download.xml"/>
+-->
+  <external href="download.cgi" 
+            label="Download"/>
+
 
   <document id="buildlibs"
             label="Build Libraries"

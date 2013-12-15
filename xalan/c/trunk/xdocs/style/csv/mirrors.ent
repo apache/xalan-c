@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?> 
+<!-- included by markup.ent -->
+
+<!-- The "mirrors.ent" file defines the markup elements used by the XSLT stylebook.xslt
+     transformation to create web pages for ASF software package downloads.  The
+     prepared download.html or mirrors.html contains the production of <asfmirror> code.
+     A companion download.cgi or mirrors.cgi must be available as a wrapper so that
+     the ASF Python program module environment can be used with the *.html files.
+-->
+
+<!-- The <asfmirror> element causes the Stylebook.xslt to output the proper
+     active comments to select a [preferred] mirror and gives the
+     web user the opportunity to select another mirror.
+
+     The <asfmirror> element produces a choice of ASF software distribution mirrors. 
+     A python based CGI does the actual rewriting of [http] [ftp] [backup] [ent]
+     [if-any http] [if-any ftp] and [if-any backup] tokens.
+     Refer to: /www/www.apache.org/dyn/mirrors/mirrors.cgi
+
+     The entities &asfdist; &asfarch; &asfsvn; are shortcuts to three well-known
+     ASF repository trees.
+-->
+
+<!ENTITY asfdist "http://www.apache.org/dist/">
+<!ENTITY asfarch "http://archive.apache.org/dist/">
+<!ENTITY asfsvn  "https://svn.apache.org/repos/asf/">
+
+<!ELEMENT asfmirror EMPTY>
+
+<!-- The <packages> element defines the distribution subdirectory.
+     The <basefile> element defines the artifact filename and validators.
+     The <keyfile>  element defines the relative path to the PGP keyfile.
+     The path values are relative to the ASF distribution (asfdist).
+     The following example shows a possible stylebook markup usage.
+
+     <packages location="xalan/xalan-c/sources/">
+        <keyfile>xalan/xalan-c/KEYS</keyfile>
+        <basefile validators="asc md5 sha">release-file-name.gz</basefile>
+        <basefile validators="asc md5>next-release-file.zip</basefile>
+     </packages>
+-->
+
+<!ELEMENT packages (basefile|keyfile)*>
+<!ATTLIST packages location CDATA #REQUIRED>
+
+<!ELEMENT basefile (#PCDATA)>
+<!ATTLIST basefile validators NMTOKENS #IMPLIED>
+
+<!ELEMENT keyfile (#PCDATA)>
+
