@@ -1,7 +1,15 @@
 <?xml encoding='US-ASCII'?>
 
+<!-- Revisions:
+     2013-07-09  Hathaway - Add mirrors.ent (select ASF distribution mirror)
+-->
+
 <!-- MARKUP ENTITY -->
 <!ENTITY % markup "em|ref|code|br">
+
+<!-- import the asfmirror element -->
+<!ENTITY % externalAsfMirrors SYSTEM "mirrors.ent">
+%externalAsfMirrors;
 
 <!-- import the external source-specific dtd -->
 <!ENTITY % externalEntity SYSTEM "../../sources/entities.ent">
@@ -18,4 +26,4 @@
 <!ELEMENT code (#PCDATA|%links;|ref)*>
 <!ELEMENT br EMPTY>
 
-<!-- CVS $Revision: 1.2 $ $Date: 1999/12/01 23:03:37 $ -->
+<!ELEMENT comment (#PCDATA)>
