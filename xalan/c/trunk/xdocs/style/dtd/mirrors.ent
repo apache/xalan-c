@@ -40,7 +40,7 @@
      </packages>
 -->
 
-<!ELEMENT packages (basefile|keyfile)*>
+<!ELEMENT packages (pkgfile|keyfile)*>
 <!ATTLIST packages location CDATA #REQUIRED>
 
 <!ELEMENT pkgfile (#PCDATA)>
