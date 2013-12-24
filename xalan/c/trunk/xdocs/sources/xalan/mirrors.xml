@@ -87,23 +87,10 @@ or newer, version 3.1.1 is preferred.
 </p>
 
 <packages name="xalan/xalan-c/sources/">
-  <basefile validators="asc md5 sha">Xalan-C-1.11.1.source.tar.gz</basefile>
-  <basefile validators="asc md5 sha">Xalan-C-1.11.1.source.zip</basefile>
-  <keyfile>&asfdist;xalan/xalan-c/KEYS</keyfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.source.tar.gz</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.source.zip</pkgfile>
+  <keyfile>xalan/xalan-c/KEYS</keyfile>
 </packages>
-
-<!--
-<ul>
- <li><jump href="[preferred]/xalan/xalan-c/sources/Xalan-C-1.11.1.source.tar.gz">Xalan-C-1.11.1.source.tar.gz</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/sources/Xalan-C-1.11.1.source.tar.gz.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/sources/Xalan-C-1.11.1.source.tar.gz.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/sources/Xalan-C-1.11.1.source.zip">Xalan-C-1.11.source.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/sources/Xalan-C-1.11.1.source.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/sources/Xalan-C-1.11.1.source.zip.md5">[MD5]</jump>
-</li>
-</ul>
--->
 
 </s3>
 
@@ -113,32 +100,12 @@ The documentation package describes how to build and use the library for Windows
 </p>
 
 <packages name="xalan/xalan-c/docs/">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.docs-html.tar.gz</basename>
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.docs-html.zip</basename>
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.docs-api.tar.gz</basename>
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.docs-api.zip</basename>
-  <keyfile>&asfdist;xalan/xalan-c/KEYS</keyfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.docs-html.tar.gz</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.docs-html.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.docs-api.tar.gz</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.docs-api.zip</pkgfile>
+  <keyfile>xalan/xalan-c/KEYS</keyfile>
 </packages>
-<!--
-<ul>
- <li><jump href="[preferred]/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.tar.gz">Xalan-C-1.11.1.docs-html.tar.gz</jump>
-     <jump href="http://www.apache.org.dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.tar.gz.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org.dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.tar.gz.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.zip">Xalan-C-1.11.1.docs-html.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-html.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.tar.gz">Xalan-C-1.11.1.docs-api.tar.gz</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.tar.gz.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.tar.gz.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.zip">Xalan-C-1.11.1.docs-api.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/docs/Xalan-C-1.11.1.docs-api.zip.md5">[MD5]</jump>
- </li>
-</ul>
--->
 </s3>
 
 <s3 title="Binary Packages">
@@ -151,56 +118,23 @@ The documentation package describes how to build and use the library for Windows
 <p>The following 32-bit binary packages are available for distribution.</p>
 
 <packages name="xalan/xalan-c/binaries/">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc71.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc8.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc9.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc10.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc11.zip">
-  <keyfile>&asfdist;xalan/xalan-c/KEYS</keyfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc71.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc8.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc9.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc10.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86-vc11.zip</pkgfile>
+  <keyfile>xalan/xalan-c/KEYS</keyfile>
 </packages>
 
 <p> The following 64-bit binary packages are available for distribution.</p>
 
 <packages name="xalan/xalan-c/binaries/">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc8.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc9.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc10.zip">
-  <basename validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc11.zip">
-  <keyfile>&asfdist;xalan/xalan-c/KEYS</keyfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc8.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc9.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc10.zip</pkgfile>
+  <pkgfile validators="asc md5 sha">Xalan-C-1.11.1.windows-x86_64-vc11.zip</pkgfile>
+  <keyfile>xalan/xalan-c/KEYS</keyfile>
 </packages>
-
-<!--
-<ul>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc71.zip">Xalan-C-1.11.1.windows-x86-vc71.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc71.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc71.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc8.zip">Xalan-C-1.11.1.windows-x86-vc8.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc8.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc8.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc9.zip">Xalan-C-1.11.1.windows-x86-vc9.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc9.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc9.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc10.zip">Xalan-C-1.11.1.windows-x86-vc10.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc10.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86-vc10.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc8.zip">Xalan-C-1.11.1.windows-x86_64-vc8.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc8.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc8.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc9.zip">Xalan-C-1.11.1.windows-x86_64-vc9.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc9.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc9.zip.md5">[MD5]</jump>
- </li>
- <li><jump href="[preferred]/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc10.zip">Xalan-C-1.11.1.windows-x86_64-vc10.zip</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc10.zip.pgp">[PGP]</jump>
-     <jump href="http://www.apache.org/dist/xalan/xalan-c/binaries/Xalan-C-1.11.1.windows-x86_64-vc10.zip.md5">[MD5]</jump>
- </li>
-</ul>
--->
 
 <p>We currently have no one committed to release UNIX and Linux binary packages. 
    If you have scripts to build these packages, your help would be appreciated. 
@@ -220,11 +154,11 @@ The build platforms shown here have Xerces-C/C++ binary package support.
        </tr>
        <tr>
          <td>Windows X86</td>
-         <td>VC7.1, VC8, VC9, VC10</td>
+         <td>VC7.1, VC8, VC9, VC10, VC11</td>
        </tr>
        <tr>
          <td>Windows X86_64</td>
-         <td>VC8, VC9, VC10</td>
+         <td>VC8, VC9, VC10, VC11</td>
        </tr>
        <tr>
          <td>HPUX ia64</td>
@@ -311,7 +245,7 @@ The build platforms shown here have Xerces-C/C++ binary package support.
 </s3>
 </s2>
 
-<anchor name="Verify">
+<anchor name="Verify"/>
 <s2 title="Verfy Integrity of Files">
 
 <p>It is essential that you verify the integrity of the downloaded files using the PGP or MD5 signatures. 

@@ -74,6 +74,10 @@
 
 <xsl:param name="xmlsources">xalan</xsl:param>
 
+<!--
+<xsl:param name="asfdist">http://www.apache.org/dist/</xsl:param>
+-->
+
 
 <!-- THE ROOT TEMPLATE TO BUILD ASF STYLEBOOK WEB PAGE -->
 
@@ -1007,50 +1011,61 @@
 </xsl:template>
 
 <!-- Groups of <packages> are rendered into <ul><li> lists.  The stylebook
-     markup for <packages> contains children of <basefile> and <keyfile>.
-     The <basefile> is also rendered for the [preferred] mirror access.
-     The <basefile validators="asc md5 sha"> reference asf main distribution.
+     markup for <packages> contains children of <pkgfile> and <keyfile>.
+     The <pkgfile> is also rendered for the [preferred] mirror access.
+     The <pkgfile validators="asc md5 sha"> reference asf main distribution.
 
      <packages location="distro/subpath/">
-       <basefile validators="asc md5 sha">package-artifact-file-1</basefile>
-       <basefile validators="asc md5 sha">package-artifact-file-2</basefile>
+       <pkgfile validators="asc md5 sha">package-artifact-file-1</pkgfile>
+       <pkgfile validators="asc md5 sha">package-artifact-file-2</pkgfile>
        <keyfile>distro/path/KEYS</keyfile>
      </packages>
 -->
 
 <xsl:template match="packages">
   <xsl:variable name="subdir" select="@location"/>
+  <xsl:variable name="asfdist">http://www.apache.org/dist/</xsl:variable>
   <ul>
-  <xsl:for-each select="basefile | keyfile">
-    <xsl:if test="node(basefile)">
-    </xsl:if>
+  <xsl:for-each select="pkgfile | keyfile">
+    <xsl:if test="name(.) = 'pkgfile'">
       <li><xsl:element name="a">
-          <xsl:attribute name="href" select="concat('[preferred]/',$subdir,text(.))"/>
+          <xsl:attribute name="href">
+            <xsl:value-of select="concat('[preferred]/',$subdir,text())"/>
+          </xsl:attribute>
           <xsl:value-of select="."/>
           </xsl:element>
           <xsl:if test="contains(@validators, 'asc')">
             <xsl:element name="a">
-              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.asc')"/>
+              <xsl:attribute name="href">
+                <xsl:value-of select="concat($asfdist,text(),'.asc')"/>
+              </xsl:attribute>
               <xsl:text>[PGP]</xsl:text>
-            <xsl:element>
+            </xsl:element>
           </xsl:if>
           <xsl:if test="contains(@validators, 'md5')">
             <xsl:element name="a">
-              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.md5')"/>
+              <xsl:attribute name="href">
+                <xsl:value-of select="concat($asfdist,text(),'.md5')"/>
+              </xsl:attribute>
               <xsl:text>[MD5]</xsl:text>
             </xsl:element>
           </xsl:if>
           <xsl:if test="contains(@validators, 'sha')">
             <xsl:element name="a">
-              <xsl:attribute name="href" select="concat(&asfdist,text(.),'.sha')"/>
+              <xsl:attribute name="href">
+                <xsl:value-of select="concat($asfdist,text(),'.sha')"/>
+              </xsl:attribute>
               <xsl:text>[SHA]</xsl:text>
             </xsl:element>
           </xsl:if>
       </li>
-    <xsl:if test="node(keyfile)">
+    </xsl:if>
+    <xsl:if test="name(.) = 'keyfile'">
       <li><xsl:text>Package Validation </xsl:text>
           <xsl:element name="a">
-            <xsl:attribute name="href" select="concat(&asfdist,text(.))"/>
+            <xsl:attribute name="href">
+              <xsl:value-of select="concat($asfdist,text())"/>
+            </xsl:attribute> 
             <xsl:text>[KEYS]</xsl:text>
           </xsl:element>
       </li>
