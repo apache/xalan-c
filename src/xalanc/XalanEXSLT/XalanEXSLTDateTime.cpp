@@ -112,51 +112,51 @@ using std::tm;
 
 #if defined(XALAN_NO_REENTRANT_TIME_FUNCTIONS)
 
+namespace
+{
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-using std::gmtime;
-using std::localtime;
+    using std::gmtime;
+    using std::localtime;
 #endif
 
-static struct tm*
-localtime_r(const time_t *clock, struct tm *res)
-{
-    assert( res != 0 );
-
-    struct tm * tmpTime = localtime(clock);
-
-    if (tmpTime == 0 )
+    static struct tm*
+    localtime_r(const time_t *clock, struct tm *res)
     {
-        return 0;
-    }
-    else
-    {
-        *res = *tmpTime;
+        assert( res != 0 );
 
-        return res;
+        struct tm * tmpTime = localtime(clock);
+
+        if (tmpTime == 0 )
+        {
+            return 0;
+        }
+        else
+        {
+            *res = *tmpTime;
+
+            return res;
+        }
     }
-    
+
+    static struct tm *
+    gmtime_r(const time_t *clock, struct tm *res)
+    {
+        assert( res != 0 );
+
+        struct tm * tmpTime = gmtime(clock);
+
+        if (tmpTime == 0 )
+        {
+            return 0;
+        }
+        else
+        {
+            *res = *tmpTime;
+
+            return res;
+        }
+    }
 }
-
-static struct tm *
-gmtime_r(const time_t *clock, struct tm *res)
-{
-    assert( res != 0 );
-
-    struct tm * tmpTime = gmtime(clock);
-
-    if (tmpTime == 0 )
-    {
-        return 0;
-    }
-    else
-    {
-        *res = *tmpTime;
-
-        return res;
-    }
-    
-}
-
 #endif
 
 
