@@ -29,7 +29,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(MemoryManager)
+namespace XERCES_CPP_NAMESPACE { class MemoryManager; }
 
 
 

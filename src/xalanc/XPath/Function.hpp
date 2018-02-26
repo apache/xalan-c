@@ -34,7 +34,7 @@
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE { class Locator; }
 
 
 

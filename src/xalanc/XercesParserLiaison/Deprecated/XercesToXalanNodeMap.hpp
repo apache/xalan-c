@@ -40,7 +40,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(NodeImpl)
+namespace XERCES_CPP_NAMESPACE { class NodeImpl; }
 
 
 

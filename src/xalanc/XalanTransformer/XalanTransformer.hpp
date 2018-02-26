@@ -50,9 +50,9 @@ class ostream;
 
 
 
-XALAN_DECLARE_XERCES_CLASS(EntityResolver)
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
-XALAN_DECLARE_XERCES_CLASS(XMLEntityResolver)
+namespace XERCES_CPP_NAMESPACE { class EntityResolver; }
+namespace XERCES_CPP_NAMESPACE { class ErrorHandler; }
+namespace XERCES_CPP_NAMESPACE { class XMLEntityResolver; }
 
 
 

@@ -48,8 +48,8 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE { class AttributeList; }
+namespace XERCES_CPP_NAMESPACE { class Locator; }
 
 
 

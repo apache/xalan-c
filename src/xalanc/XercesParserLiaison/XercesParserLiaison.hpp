@@ -47,11 +47,11 @@
 
 
 #if XERCES_VERSION_MAJOR >= 2
-XALAN_DECLARE_XERCES_CLASS(XercesDOMParser)
+namespace XERCES_CPP_NAMESPACE { class XercesDOMParser; }
 #else
-XALAN_DECLARE_XERCES_CLASS(DOMParser)
+namespace XERCES_CPP_NAMESPACE { class DOMParser; }
 #endif
-XALAN_DECLARE_XERCES_CLASS(SAXParser)
+namespace XERCES_CPP_NAMESPACE { class SAXParser; }
 
 
 

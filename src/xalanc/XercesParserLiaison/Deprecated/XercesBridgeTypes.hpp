@@ -24,31 +24,31 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOM_Attr)
-XALAN_DECLARE_XERCES_CLASS(DOM_CharacterData)
-XALAN_DECLARE_XERCES_CLASS(DOM_Comment)
-XALAN_DECLARE_XERCES_CLASS(DOM_CDATASection)
-XALAN_DECLARE_XERCES_CLASS(DOM_Document)
-XALAN_DECLARE_XERCES_CLASS(DOM_DocumentFragment)
-XALAN_DECLARE_XERCES_CLASS(DOM_DocumentType)
-XALAN_DECLARE_XERCES_CLASS(DOM_DOMImplementation)
-XALAN_DECLARE_XERCES_CLASS(DOM_Element)
-XALAN_DECLARE_XERCES_CLASS(DOM_Entity)
-XALAN_DECLARE_XERCES_CLASS(DOM_EntityReference)
-XALAN_DECLARE_XERCES_CLASS(DOM_Node)
-XALAN_DECLARE_XERCES_CLASS(DOM_Text)
-XALAN_DECLARE_XERCES_CLASS(DOM_NamedNodeMap)
-XALAN_DECLARE_XERCES_CLASS(DOM_NodeList)
-XALAN_DECLARE_XERCES_CLASS(DOM_Notation)
-XALAN_DECLARE_XERCES_CLASS(DOM_ProcessingInstruction)
-XALAN_DECLARE_XERCES_CLASS(DOM_Text)
-XALAN_DECLARE_XERCES_CLASS(DOM_DocumentType)
-XALAN_DECLARE_XERCES_CLASS(DOM_DOMException)
-XALAN_DECLARE_XERCES_CLASS(DOMString)
-XALAN_DECLARE_XERCES_CLASS(AttrImpl)
-XALAN_DECLARE_XERCES_CLASS(ElementImpl)
-XALAN_DECLARE_XERCES_CLASS(NodeImpl)
-XALAN_DECLARE_XERCES_CLASS(TextImpl)
+namespace XERCES_CPP_NAMESPACE { class DOM_Attr; }
+namespace XERCES_CPP_NAMESPACE { class DOM_CharacterData; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Comment; }
+namespace XERCES_CPP_NAMESPACE { class DOM_CDATASection; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Document; }
+namespace XERCES_CPP_NAMESPACE { class DOM_DocumentFragment; }
+namespace XERCES_CPP_NAMESPACE { class DOM_DocumentType; }
+namespace XERCES_CPP_NAMESPACE { class DOM_DOMImplementation; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Element; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Entity; }
+namespace XERCES_CPP_NAMESPACE { class DOM_EntityReference; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Node; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Text; }
+namespace XERCES_CPP_NAMESPACE { class DOM_NamedNodeMap; }
+namespace XERCES_CPP_NAMESPACE { class DOM_NodeList; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Notation; }
+namespace XERCES_CPP_NAMESPACE { class DOM_ProcessingInstruction; }
+namespace XERCES_CPP_NAMESPACE { class DOM_Text; }
+namespace XERCES_CPP_NAMESPACE { class DOM_DocumentType; }
+namespace XERCES_CPP_NAMESPACE { class DOM_DOMException; }
+namespace XERCES_CPP_NAMESPACE { class DOMString; }
+namespace XERCES_CPP_NAMESPACE { class AttrImpl; }
+namespace XERCES_CPP_NAMESPACE { class ElementImpl; }
+namespace XERCES_CPP_NAMESPACE { class NodeImpl; }
+namespace XERCES_CPP_NAMESPACE { class TextImpl; }
 
 
 

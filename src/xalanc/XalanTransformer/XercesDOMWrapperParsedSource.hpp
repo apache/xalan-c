@@ -33,8 +33,8 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOM_Document)
-XALAN_DECLARE_XERCES_CLASS(DOMDocument)
+namespace XERCES_CPP_NAMESPACE { class DOM_Document; }
+namespace XERCES_CPP_NAMESPACE { class DOMDocument; }
 
 
 

@@ -45,7 +45,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOM_CharacterData)
+namespace XERCES_CPP_NAMESPACE { class DOM_CharacterData; }
 
 
 

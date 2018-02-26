@@ -29,7 +29,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
+namespace XERCES_CPP_NAMESPACE { class AttributeList; }
 
 
 

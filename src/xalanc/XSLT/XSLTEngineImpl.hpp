@@ -78,8 +78,8 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(InputSource)
-XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
+namespace XERCES_CPP_NAMESPACE { class InputSource; }
+namespace XERCES_CPP_NAMESPACE { class DocumentHandler; }
 
 
 

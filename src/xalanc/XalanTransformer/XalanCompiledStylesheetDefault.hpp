@@ -42,8 +42,8 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(EntityResolver)
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+namespace XERCES_CPP_NAMESPACE { class EntityResolver; }
+namespace XERCES_CPP_NAMESPACE { class ErrorHandler; }
 
 
 

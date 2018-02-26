@@ -30,7 +30,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(XMLTranscoder)
+namespace XERCES_CPP_NAMESPACE { class XMLTranscoder; }
 
 
 

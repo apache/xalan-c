@@ -32,9 +32,9 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(ContentHandler)
-XALAN_DECLARE_XERCES_CLASS(DTDHandler)
-XALAN_DECLARE_XERCES_CLASS(LexicalHandler)
+namespace XERCES_CPP_NAMESPACE { class ContentHandler; }
+namespace XERCES_CPP_NAMESPACE { class DTDHandler; }
+namespace XERCES_CPP_NAMESPACE { class LexicalHandler; }
 
 
 

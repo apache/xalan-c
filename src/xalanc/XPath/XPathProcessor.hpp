@@ -31,7 +31,7 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE { class Locator; }
 
 
 
