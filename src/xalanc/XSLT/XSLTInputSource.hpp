@@ -52,7 +52,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 typedef xercesc::BinInputStream   BinInputStreamType;
 typedef xercesc::InputSource      InputSourceType;
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 class XalanDOMString;

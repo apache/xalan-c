@@ -56,10 +56,10 @@ typedef xercesc::LexicalHandler       LexicalHandlerType;
 typedef xercesc::SAX2XMLReader        SAX2XMLReaderType;
 */
 
-XALAN_USING_XERCES(ContentHandler)
-XALAN_USING_XERCES(DTDHandler)
-XALAN_USING_XERCES(LexicalHandler)
-XALAN_USING_XERCES(SAX2XMLReaderImpl)
+using xercesc::ContentHandler;
+using xercesc::DTDHandler;
+using xercesc::LexicalHandler;
+using xercesc::SAX2XMLReaderImpl;
 
 
 class XALAN_XALANSOURCETREE_EXPORT  XalanSourceTreeParserLiaison : public XMLParserLiaison

@@ -55,7 +55,7 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
         XALAN_USING_XALAN(XalanTransformer)
 

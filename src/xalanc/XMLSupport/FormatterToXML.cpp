@@ -795,7 +795,7 @@ FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&   str)
 
 
 
-XALAN_USING_XERCES(SAXException)
+using xercesc::SAXException;
 
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
@@ -829,7 +829,7 @@ FormatterToXML::throwInvalidCharacterException(
             XalanMessages::InvalidScalar_1Param,
             NumberToHexDOMString(ch, theBuffer));
 
-    XALAN_USING_XERCES(SAXException)
+    using xercesc::SAXException;
 
     throw SAXException(theMessage.c_str(), &theManager);
 }

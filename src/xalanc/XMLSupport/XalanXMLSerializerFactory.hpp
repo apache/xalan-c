@@ -41,7 +41,7 @@ class XalanDOMString;
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 

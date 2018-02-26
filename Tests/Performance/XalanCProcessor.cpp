@@ -38,7 +38,7 @@
 
 
 
-XALAN_USING_XERCES(XMLPlatformUtils)
+using xercesc::XMLPlatformUtils;
 XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XALAN(XalanMemMgrs)
 

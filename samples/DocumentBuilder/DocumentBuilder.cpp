@@ -50,7 +50,7 @@ XALAN_USING_XALAN(XalanTransformer)
 void
 BuildDocument(XalanDocumentBuilder*     theBuilder)
 {
-    XALAN_USING_XERCES(ContentHandler)
+    using xercesc::ContentHandler;
     XALAN_USING_XALAN(AttributesImpl)
     XALAN_USING_XALAN(XalanDOMChar)
     XALAN_USING_XALAN(XalanDOMString)
@@ -195,8 +195,8 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
         // Call the static initializer for Xerces.
         try

@@ -41,7 +41,7 @@
 #include <stdlib.h>
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
@@ -80,7 +80,7 @@ public:
 
         if (ptr == 0)
         {
-            XALAN_USING_XERCES(OutOfMemoryException)
+            using xercesc::OutOfMemoryException;
 
             throw OutOfMemoryException();
         }
@@ -96,7 +96,7 @@ public:
                         0,              //DWORD dwFlags,
                         pDataPointer ) )//*LPVOID lpMem 
         {
-            XALAN_USING_XERCES(OutOfMemoryException)
+            using xercesc::OutOfMemoryException;
 
             throw OutOfMemoryException();
         }
@@ -165,7 +165,7 @@ public:
         {
         }
 
-        XALAN_USING_XERCES(OutOfMemoryException)
+        using xercesc::OutOfMemoryException;
 
         throw OutOfMemoryException();
     }   

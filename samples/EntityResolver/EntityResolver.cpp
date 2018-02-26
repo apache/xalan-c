@@ -41,12 +41,12 @@
 
 
 
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(MemBufInputSource)
+using xercesc::EntityResolver;
+using xercesc::InputSource;
+using xercesc::MemBufInputSource;
 XALAN_USING_XALAN(MemoryManager)
-XALAN_USING_XERCES(XMLEntityResolver)
-XALAN_USING_XERCES(XMLResourceIdentifier)
+using xercesc::XMLEntityResolver;
+using xercesc::XMLResourceIdentifier;
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanTransformer)
 
@@ -315,8 +315,8 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
         // Call the static initializer for Xerces.
         try

@@ -292,8 +292,8 @@ testCase5(
             const XalanDOMString&   theGoldFile,
             XalanFileUtility&       h)
 {
-    XALAN_USING_XERCES(XercesDOMParser)
-    XALAN_USING_XERCES(DOMDocument)
+    using xercesc::XercesDOMParser;
+    using xercesc::DOMDocument;
 
     h.data.testOrFile = "InputSource-TestCase5";
     const XSLTInputSource   xmlInputSource(xml);
@@ -430,7 +430,7 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

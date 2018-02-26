@@ -39,7 +39,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 // An auto_ptr-like class that supports the MemoryManager class.
 template<class Type>

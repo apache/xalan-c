@@ -32,7 +32,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XALAN_USING_XERCES(XMLString)
+using xercesc::XMLString;
 
 
 

@@ -52,9 +52,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef xercesc::AttributeList    AttributeListType;
 typedef xercesc::DocumentHandler  DocumentHandlerType;
 
-XALAN_USING_XERCES(AttributeList)
-XALAN_USING_XERCES(DocumentHandler)
-XALAN_USING_XERCES(Locator)
+using xercesc::AttributeList;
+using xercesc::DocumentHandler;
+using xercesc::Locator;
 
 
 

@@ -151,7 +151,7 @@ XalanXMLSerializerBase::decodeUTF16SurrogatePair(
 
 
 
-XALAN_USING_XERCES(SAXException)
+using xercesc::SAXException;
 
 void
 XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(

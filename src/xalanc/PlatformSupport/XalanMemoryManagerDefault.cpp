@@ -45,7 +45,7 @@ XalanMemoryManagerDefault::~XalanMemoryManagerDefault()
 void*
 XalanMemoryManagerDefault::allocate(size_type   size)
 {
-    XALAN_USING_XERCES(OutOfMemoryException)
+    using xercesc::OutOfMemoryException;
 
     void*   thePointer;
 

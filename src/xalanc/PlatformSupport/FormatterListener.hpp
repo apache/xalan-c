@@ -45,8 +45,8 @@ class Writer;
 typedef xercesc::Locator          LocatorType;
 typedef xercesc::AttributeList    AttributeListType;
 
-XALAN_USING_XERCES(Locator)
-XALAN_USING_XERCES(AttributeList)
+using xercesc::Locator;
+using xercesc::AttributeList;
 
 
 /**

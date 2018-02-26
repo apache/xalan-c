@@ -91,7 +91,7 @@ Usage()
     XALAN_USING_XALAN(XalanMessageLoader)
     XALAN_USING_XALAN(XalanMessages)
     XALAN_USING_XALAN(XalanMemMgrs)
-    XALAN_USING_XERCES(MemoryManager)
+    using xercesc::MemoryManager;
 
     MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
@@ -723,7 +723,7 @@ transform(
 {
     XALAN_USING_XALAN(XalanDOMString)
     XALAN_USING_XALAN(XSLTResultTarget)
-    XALAN_USING_XERCES(MemoryManager)
+    using xercesc::MemoryManager;
 
     MemoryManager&  theManager = theTransformer.getMemoryManager();
 
@@ -826,7 +826,7 @@ transform(
 
 #if defined(XALAN_WINDOWS)
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 class WindowsMemoryManager : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
 {
@@ -910,7 +910,7 @@ xsltMain(
 {
     int theResult = -1;
 
-    XALAN_USING_XERCES(XMLPlatformUtils)
+    using xercesc::XMLPlatformUtils;
 
 #if defined(XALAN_WINDOWS) && defined(NDEBUG)
     WindowsMemoryManager  theMemoryManager;
@@ -925,7 +925,7 @@ xsltMain(
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize();
 
-    XALAN_USING_XERCES(MemoryManager)
+    using xercesc::MemoryManager;
  
     MemoryManager&  theMemoryManager =
             *XMLPlatformUtils::fgMemoryManager;

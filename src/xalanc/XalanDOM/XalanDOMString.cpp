@@ -860,7 +860,7 @@ doXercesTranscode(
 
     bool            fSuccess = false;
 
-    XALAN_USING_XERCES(XMLString)
+    using xercesc::XMLString;
 
     fSuccess = XMLString::transcode(
         theRealSourceString,
@@ -974,7 +974,7 @@ doXercesTranscode(
 
     do
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         fSuccess = XMLString::transcode(
                     theRealSourceString,

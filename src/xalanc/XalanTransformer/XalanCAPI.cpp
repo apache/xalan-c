@@ -39,8 +39,8 @@ XALAN_USING_XALAN(XalanCompiledStylesheet)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanParsedSource)
 XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::XMLPlatformUtils;
+using xercesc::MemoryManager;
 
 XALAN_USING_XALAN(XalanMemMgrAutoPtr)
 XALAN_USING_XALAN(XalanMemMgrs)

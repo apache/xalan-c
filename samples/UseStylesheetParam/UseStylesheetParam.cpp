@@ -97,8 +97,8 @@ main(
     }
 
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
         XALAN_USING_XALAN(XalanTransformer)
         XALAN_USING_XALAN(XSLTInputSource)

@@ -47,7 +47,7 @@ class XalanOutputStream;
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 

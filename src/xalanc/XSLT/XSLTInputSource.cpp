@@ -257,7 +257,7 @@ XSLTInputSource::makeStream() const
 
         if (theSystemId != 0)
         {
-            XALAN_USING_XERCES(XMLURL)
+            using xercesc::XMLURL;
 
             XMLURL  theURL(theManager);
 

@@ -322,7 +322,7 @@ main(
 #if defined(TEST_XALAN_CPP)
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
         XALAN_USING_XALAN(XalanTransformer)
 

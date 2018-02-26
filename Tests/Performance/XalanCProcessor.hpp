@@ -66,7 +66,7 @@
 
 
 
-XALAN_USING_XERCES(DOMDocument);
+using xercesc::DOMDocument;;
 XALAN_CPP_NAMESPACE_USE
 
 

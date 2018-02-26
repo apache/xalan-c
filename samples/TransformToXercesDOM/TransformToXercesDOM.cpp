@@ -74,7 +74,7 @@ XALAN_USING_STD(cerr)
 XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
 
-XALAN_USING_XERCES(DOMDocument)
+using xercesc::DOMDocument;
 
 XALAN_USING_XALAN(XalanCompiledStylesheet)
 XALAN_USING_XALAN(XalanParsedSource)
@@ -118,8 +118,8 @@ transformAndSerialize(
             const XalanParsedSource&        theParsedSource,
             const XalanCompiledStylesheet&  theStylesheet)
 {
-    XALAN_USING_XERCES(DOMDocument)
-    XALAN_USING_XERCES(DOMImplementation)
+    using xercesc::DOMDocument;
+    using xercesc::DOMImplementation;
     XALAN_USING_XALAN(FormatterToXercesDOM)
     XALAN_USING_XALAN(XalanAutoPtr)
 
@@ -178,7 +178,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             XMLPlatformUtils::Initialize();
 

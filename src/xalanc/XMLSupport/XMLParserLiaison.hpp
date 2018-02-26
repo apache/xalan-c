@@ -46,11 +46,11 @@ typedef xercesc::EntityResolver   EntityResolverType;
 typedef xercesc::ErrorHandler     ErrorHandlerType;
 typedef xercesc::InputSource      InputSourceType;
 
-XALAN_USING_XERCES(DocumentHandler)
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(ErrorHandler)
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(XMLEntityResolver)
+using xercesc::DocumentHandler;
+using xercesc::EntityResolver;
+using xercesc::ErrorHandler;
+using xercesc::InputSource;
+using xercesc::XMLEntityResolver;
 
 
 

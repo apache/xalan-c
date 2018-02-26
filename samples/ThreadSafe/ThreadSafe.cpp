@@ -293,7 +293,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             // Call the static initializer for Xerces.
             XMLPlatformUtils::Initialize();

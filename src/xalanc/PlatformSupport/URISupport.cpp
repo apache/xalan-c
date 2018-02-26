@@ -124,11 +124,11 @@ URISupport::getURLStringFromString(
         }
         else
         {
-            XALAN_USING_XERCES(ArrayJanitor)
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::ArrayJanitor;
+            using xercesc::XMLPlatformUtils;
 
             // Assume it's a file specification...
-            XALAN_USING_XERCES(MemoryManager)
+            using xercesc::MemoryManager;
 
             MemoryManager&  theMemoryManager = theNormalizedURI.getMemoryManager();
 

@@ -84,7 +84,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             XALAN_USING_XALAN(XPathEvaluator)
 
@@ -94,7 +94,7 @@ main(
             XPathEvaluator::initialize();
 
             {
-                XALAN_USING_XERCES(LocalFileInputSource)
+                using xercesc::LocalFileInputSource;
 
                 XALAN_USING_XALAN(NodeRefList)
                 XALAN_USING_XALAN(XalanDocument)

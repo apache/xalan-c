@@ -207,7 +207,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
                         << theData.m_size
                         << " bytes long.\n";
 
-            XALAN_USING_XERCES(XMLPlatformUtils);
+            using xercesc::XMLPlatformUtils;;
 
             const size_type     theHeaderSize =
                 XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));

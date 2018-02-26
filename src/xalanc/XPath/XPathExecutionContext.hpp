@@ -67,7 +67,7 @@ class XalanText;
 
 
 
-XALAN_USING_XERCES(ErrorHandler)
+using xercesc::ErrorHandler;
 
 
 

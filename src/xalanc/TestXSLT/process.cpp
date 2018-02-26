@@ -232,10 +232,10 @@ printArgOptions()
 
 
 // We only need a few things from the Xerces namespace...
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(SAXException)
-XALAN_USING_XERCES(XMLException)
+using xercesc::XMLPlatformUtils;
+using xercesc::SAXParseException;
+using xercesc::SAXException;
+using xercesc::XMLException;
 
 
 

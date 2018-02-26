@@ -632,7 +632,7 @@ XSLTEngineImpl::parseXML(
         }
         else if (theXMLResolver != 0)
         {
-            XALAN_USING_XERCES(XMLResourceIdentifier);
+            using xercesc::XMLResourceIdentifier;;
 
             XMLResourceIdentifier   theIndentifier(
                 XMLResourceIdentifier::ExternalEntity,

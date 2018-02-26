@@ -34,7 +34,7 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-XALAN_USING_XERCES(XMLMsgLoader)
+using xercesc::XMLMsgLoader;
 
 static const char* const    MSG_FILE_NAME = "XalanMsg_";
 

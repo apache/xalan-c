@@ -401,7 +401,7 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
         XALAN_USING_XALAN(XalanTransformer)
 
         // Call the static initializers for xerces and xalan, and create a transformer

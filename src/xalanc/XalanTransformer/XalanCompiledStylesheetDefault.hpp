@@ -54,8 +54,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef xercesc::EntityResolver   EntityResolverType;
 typedef xercesc::ErrorHandler     ErrorHandlerType;
 
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(ErrorHandler)
+using xercesc::EntityResolver;
+using xercesc::ErrorHandler;
 
 
 class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet

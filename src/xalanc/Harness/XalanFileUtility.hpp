@@ -54,7 +54,7 @@ class XalanXMLFileReporter;
 class XSLTInputSource;
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 

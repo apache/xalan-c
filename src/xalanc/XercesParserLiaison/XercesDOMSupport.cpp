@@ -74,11 +74,11 @@ XercesDOMSupport::getUnparsedEntityURI(
 
     if (theWrapper != 0)
     {
-        XALAN_USING_XERCES(DOMDocument)
-        XALAN_USING_XERCES(DOMDocumentType)
-        XALAN_USING_XERCES(DOMEntity)
-        XALAN_USING_XERCES(DOMNamedNodeMap)
-        XALAN_USING_XERCES(DOMNode)
+        using xercesc::DOMDocument;
+        using xercesc::DOMDocumentType;
+        using xercesc::DOMEntity;
+        using xercesc::DOMNamedNodeMap;
+        using xercesc::DOMNode;
 
         const DOMDocument* const    theDOMDocument =
             theWrapper->getXercesDocument();

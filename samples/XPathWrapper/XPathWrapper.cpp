@@ -116,11 +116,11 @@ public:
 
             XalanElement*   rootElem = 0;
 
-            XALAN_USING_XERCES(XMLException)
+            using xercesc::XMLException;
 
             try
             {
-                XALAN_USING_XERCES(MemBufInputSource)
+                using xercesc::MemBufInputSource;
 
                 // parse XML and get root element
                 MemBufInputSource   inStream((XMLByte*)xml, strlen(xml), "foo", false);

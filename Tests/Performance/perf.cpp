@@ -66,7 +66,7 @@ XALAN_USING_STD(cerr);
 XALAN_USING_STD(endl);
 
 
-XALAN_USING_XERCES(XMLPlatformUtils)
+using xercesc::XMLPlatformUtils;
 
 
 

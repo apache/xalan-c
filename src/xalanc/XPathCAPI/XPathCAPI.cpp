@@ -86,7 +86,7 @@ XalanXPathAPIInitialize()
 
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             XMLPlatformUtils::Initialize();
 
@@ -144,7 +144,7 @@ XalanXPathAPITerminate()
 
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             delete theSourceTreeInit;
 
@@ -513,7 +513,7 @@ XalanEvaluateXPathAsBoolean(
     {
         int theError = XALAN_XPATH_API_SUCCESS;
 
-        XALAN_USING_XERCES(SAXException)
+        using xercesc::SAXException;
 
         try
         {
@@ -533,7 +533,7 @@ XalanEvaluateXPathAsBoolean(
             // Hook the two together...
             theDOMSupport.setParserLiaison(&theLiaison);
 
-            XALAN_USING_XERCES(MemBufInputSource)
+            using xercesc::MemBufInputSource;
 
             // Create an input source...
             const MemBufInputSource     theInputSource(

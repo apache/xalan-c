@@ -74,7 +74,7 @@ transformXercesDOM(
             const XalanCompiledStylesheet*  theStylesheet,
             const XSLTResultTarget&         theResultTarget)
 {
-    XALAN_USING_XERCES(URLInputSource)
+    using xercesc::URLInputSource;
 
     XALAN_USING_XALAN(XercesParserLiaison)
     XALAN_USING_XALAN(XercesDOMSupport)
@@ -111,7 +111,7 @@ transformXalanSourceTree(
             const XalanCompiledStylesheet*  theStylesheet,
             const XSLTResultTarget&         theResultTarget)
 {
-    XALAN_USING_XERCES(URLInputSource)
+    using xercesc::URLInputSource;
 
     XALAN_USING_XALAN(XalanDocument)
     XALAN_USING_XALAN(XalanSourceTreeDocument)
@@ -223,7 +223,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             // Call the static initializer for Xerces.
             XMLPlatformUtils::Initialize();

@@ -61,8 +61,8 @@ typedef xercesc::AttributeList    AttributeListType;
 typedef xercesc::Locator          LocatorType;
 
 
-XALAN_USING_XERCES(AttributeList)
-XALAN_USING_XERCES(Locator)
+using xercesc::AttributeList;
+using xercesc::Locator;
 class ElemTemplate;
 class ElemTextLiteral;
 class NamespacesHandler;

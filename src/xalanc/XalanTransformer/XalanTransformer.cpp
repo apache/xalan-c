@@ -431,9 +431,9 @@ XalanTransformer::transform(
 
 
 
-XALAN_USING_XERCES(XMLException)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(SAXException)
+using xercesc::XMLException;
+using xercesc::SAXParseException;
+using xercesc::SAXException;
 
 
 

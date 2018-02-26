@@ -87,7 +87,7 @@ XALAN_CPP_NAMESPACE_USE
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -337,8 +337,8 @@ parseWithXerces(
             XalanXMLFileReporter&           logFile,
             XalanFileUtility&               h)
 {
-    XALAN_USING_XERCES(XercesDOMParser)
-    XALAN_USING_XERCES(DOMDocument)
+    using xercesc::XercesDOMParser;
+    using xercesc::DOMDocument;
 
     MemoryManager&  mgr = h.getMemoryManager();
 
@@ -640,8 +640,8 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLUni)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLUni;
 
         XalanMemoryManagerDefault       theGlobalMemoryManager;
         XalanDiagnosticMemoryManager    theDiagnosticMemoryManager(theGlobalMemoryManager, true, &cerr);

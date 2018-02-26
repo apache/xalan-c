@@ -90,8 +90,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef xercesc::InputSource      InputSourceType;
 typedef xercesc::DocumentHandler  DocumentHandlerType;
 
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(DocumentHandler)
+using xercesc::InputSource;
+using xercesc::DocumentHandler;
 
 
 

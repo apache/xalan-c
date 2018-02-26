@@ -207,7 +207,7 @@ XalanMessageLoader::load(
     if (!loadMsg(msgToLoad, toFill, maxChars))
         return false;
 
-    XALAN_USING_XERCES(XMLString)
+    using xercesc::XMLString;
 
     // And do the token replacement
     XMLString::replaceTokens(

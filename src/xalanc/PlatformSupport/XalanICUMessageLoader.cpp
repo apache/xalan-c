@@ -96,9 +96,9 @@ extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-XALAN_USING_XERCES(XMLMsgLoader)
+using xercesc::XMLMsgLoader;
 
-XALAN_USING_XERCES(XMLString)
+using xercesc::XMLString;
 
 
 

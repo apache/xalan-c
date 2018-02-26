@@ -47,7 +47,7 @@ public :
     // -----------------------------------------------------------------------
     StrX(const XMLCh* const toTranscode)
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         // Call the private transcoding method
         fLocalForm = XMLString::transcode(toTranscode);
@@ -55,7 +55,7 @@ public :
 
     ~StrX()
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         XMLString::release(&fLocalForm);
     }

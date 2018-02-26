@@ -71,7 +71,7 @@ public:
     virtual void*
     allocate(size_type /*   size */ )
     {
-        XALAN_USING_XERCES(OutOfMemoryException)
+        using xercesc::OutOfMemoryException;
 
         throw OutOfMemoryException();
     }   
@@ -79,7 +79,7 @@ public:
     virtual void
     deallocate(void*    /* pDataPointer */ )
     {
-        XALAN_USING_XERCES(OutOfMemoryException)
+        using xercesc::OutOfMemoryException;
 
         throw OutOfMemoryException();
     }
@@ -108,7 +108,7 @@ XalanMemMgrs::getDummyMemMgr()
 MemoryManager&
 XalanMemMgrs::getDefaultXercesMemMgr()
 {
-    XALAN_USING_XERCES(XMLPlatformUtils)
+    using xercesc::XMLPlatformUtils;
 
     assert(XMLPlatformUtils::fgMemoryManager != 0);
 

@@ -91,9 +91,9 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
             
-            XALAN_USING_XERCES(XMLUni)
+            using xercesc::XMLUni;
 
             XALAN_USING_XALAN(XalanTransformer)
 

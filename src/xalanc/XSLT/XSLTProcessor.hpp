@@ -42,7 +42,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XALAN_USING_XERCES(Locator);
+using xercesc::Locator;;
 
 
 
