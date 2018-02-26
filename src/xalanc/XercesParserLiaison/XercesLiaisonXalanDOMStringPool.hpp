@@ -43,8 +43,8 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesLiaisonXalanDOMStringPool : public 
 public:
 
     typedef XalanDOMStringPool  ParentType;
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex         XMLMutexType;
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock     XMLMutexLockType;
+    typedef xercesc::XMLMutex         XMLMutexType;
+    typedef xercesc::XMLMutexLock     XMLMutexLockType;
 
     explicit
     XercesLiaisonXalanDOMStringPool(MemoryManager& theManager);

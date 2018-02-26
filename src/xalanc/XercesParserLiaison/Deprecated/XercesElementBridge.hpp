@@ -62,7 +62,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridge : public XalanElement
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element  DOM_ElementType;
+    typedef xercesc::DOM_Element  DOM_ElementType;
 
     XercesElementBridge(
             const DOM_ElementType&          theXercesElement,

@@ -53,7 +53,7 @@ XercesNamedNodeMapBridge::XercesNamedNodeMapBridge(
     m_xercesNamedNodeMap(theXercesNamedNodeMap),
     m_navigator(theNavigator)
 {
-    assert(m_xercesNamedNodeMap != (const XERCES_CPP_NAMESPACE_QUALIFIER DOM_NullPtr*)0);
+    assert(m_xercesNamedNodeMap != (const xercesc::DOM_NullPtr*)0);
 }
 
 

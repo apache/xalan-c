@@ -53,7 +53,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapBridge : public XalanNa
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NamedNodeMap     DOM_NamedNodeMapType;
+    typedef xercesc::DOM_NamedNodeMap     DOM_NamedNodeMapType;
 
     XercesNamedNodeMapBridge(
             const DOM_NamedNodeMapType&     theXercesNamedNodeMap,

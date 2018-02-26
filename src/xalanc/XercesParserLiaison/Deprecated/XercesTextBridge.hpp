@@ -55,7 +55,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesTextBridge : public XalanText
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text     DOM_TextType;
+    typedef xercesc::DOM_Text     DOM_TextType;
 
     XercesTextBridge(
             const DOM_TextType&             theXercesText,

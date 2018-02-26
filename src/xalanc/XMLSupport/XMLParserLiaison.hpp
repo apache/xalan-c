@@ -41,10 +41,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
+typedef xercesc::EntityResolver   EntityResolverType;
+typedef xercesc::ErrorHandler     ErrorHandlerType;
+typedef xercesc::InputSource      InputSourceType;
 
 XALAN_USING_XERCES(DocumentHandler)
 XALAN_USING_XERCES(EntityResolver)

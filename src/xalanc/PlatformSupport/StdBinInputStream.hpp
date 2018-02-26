@@ -42,11 +42,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream
+class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public xercesc::BinInputStream
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream   ParentType;
+    typedef xercesc::BinInputStream   ParentType;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
     typedef istream         StreamType;

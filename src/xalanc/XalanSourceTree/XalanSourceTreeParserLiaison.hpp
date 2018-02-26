@@ -50,10 +50,10 @@ class XalanSourceTreeDocument;
 
 
 /*
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler       ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler           DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler       LexicalHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader        SAX2XMLReaderType;
+typedef xercesc::ContentHandler       ContentHandlerType;
+typedef xercesc::DTDHandler           DTDHandlerType;
+typedef xercesc::LexicalHandler       LexicalHandlerType;
+typedef xercesc::SAX2XMLReader        SAX2XMLReaderType;
 */
 
 XALAN_USING_XERCES(ContentHandler)

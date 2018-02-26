@@ -29,7 +29,7 @@
 #include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLException     XMLExceptionType;
+typedef xercesc::XMLException     XMLExceptionType;
 
 
 

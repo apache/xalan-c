@@ -50,8 +50,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream   BinInputStreamType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
+typedef xercesc::BinInputStream   BinInputStreamType;
+typedef xercesc::InputSource      InputSourceType;
 XALAN_USING_XERCES(MemoryManager)
 
 

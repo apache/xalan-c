@@ -56,7 +56,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentFragmentBridge : public Xal
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment     DOM_DocumentFragmentType;
+    typedef xercesc::DOM_DocumentFragment     DOM_DocumentFragmentType;
 
     XercesDocumentFragmentBridge(
             const DOM_DocumentFragmentType&     theXercesDOMDocumentFragment,

@@ -47,7 +47,7 @@ class XALAN_XPATH_EXPORT XalanQNameByValue : public XalanQName
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+    typedef xercesc::Locator  LocatorType;
 
     /**
      * Construct an empty XalanQNameByValue.

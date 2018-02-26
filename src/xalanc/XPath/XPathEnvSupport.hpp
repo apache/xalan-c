@@ -58,7 +58,7 @@ class XALAN_XPATH_EXPORT XPathEnvSupport : public ProblemListenerBase
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+    typedef xercesc::Locator  LocatorType;
 
     typedef Function::XObjectArgVectorType  XObjectArgVectorType;
 

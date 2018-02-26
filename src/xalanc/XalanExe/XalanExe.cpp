@@ -862,7 +862,7 @@ public:
 
         if (value == 0)
         {
-            throw XERCES_CPP_NAMESPACE_QUALIFIER OutOfMemoryException();
+            throw xercesc::OutOfMemoryException();
         }
 
         return value;
@@ -917,7 +917,7 @@ xsltMain(
 
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize(
-        XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescDefaultLocale,
+        xercesc::XMLUni::fgXercescDefaultLocale,
         0,
         0,
         &theMemoryManager);

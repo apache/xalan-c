@@ -49,8 +49,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
 
 XALAN_USING_XERCES(AttributeList)
 XALAN_USING_XERCES(DocumentHandler)

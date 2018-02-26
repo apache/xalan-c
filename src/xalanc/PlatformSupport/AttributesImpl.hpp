@@ -41,7 +41,7 @@ class AttributeVectorEntryExtended;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes   AttributesType;
+typedef xercesc::Attributes   AttributesType;
 
 
 

@@ -166,7 +166,7 @@ FormatterToDeprecatedXercesDOM::startElement(
 
         m_currentElem = elem;
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -192,7 +192,7 @@ FormatterToDeprecatedXercesDOM::endElement(const    XMLCh* const    /* name */)
             m_currentElem = 0;
         }
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -221,7 +221,7 @@ FormatterToDeprecatedXercesDOM::charactersRaw(
 
         cdata(chars, length);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -243,7 +243,7 @@ FormatterToDeprecatedXercesDOM::entityReference(const XMLCh* const  name)
 
         append(theXercesNode);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -269,7 +269,7 @@ FormatterToDeprecatedXercesDOM::ignorableWhitespace(
 
         append(theXercesNode);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -293,7 +293,7 @@ FormatterToDeprecatedXercesDOM::processingInstruction(
 
         append(theXercesNode);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -322,7 +322,7 @@ FormatterToDeprecatedXercesDOM::comment(const XMLCh* const  data)
 
         append(theXercesNode);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -348,7 +348,7 @@ FormatterToDeprecatedXercesDOM::cdata(
 
         append(theXercesNode);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }

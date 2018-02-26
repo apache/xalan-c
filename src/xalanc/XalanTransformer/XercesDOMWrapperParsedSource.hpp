@@ -42,8 +42,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document DOM_Document_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument  DOMDocument_Type;
+typedef xercesc::DOM_Document DOM_Document_Type;
+typedef xercesc::DOMDocument  DOMDocument_Type;
 
 
 

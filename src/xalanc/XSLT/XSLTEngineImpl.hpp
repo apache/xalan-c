@@ -87,8 +87,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
+typedef xercesc::InputSource      InputSourceType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
 
 XALAN_USING_XERCES(InputSource)
 XALAN_USING_XERCES(DocumentHandler)

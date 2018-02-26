@@ -160,7 +160,6 @@ namespace
 #endif
 
 
-
 XObjectPtr
 XalanEXSLTFunctionDateTime::execute(
             XPathExecutionContext&          executionContext,

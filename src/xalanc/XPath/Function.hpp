@@ -55,7 +55,7 @@ class XALAN_XPATH_EXPORT Function
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+    typedef xercesc::Locator  LocatorType;
 
     explicit
     Function();

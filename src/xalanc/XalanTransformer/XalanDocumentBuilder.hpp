@@ -42,9 +42,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler       ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler           DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler       LexicalHandlerType;
+typedef xercesc::ContentHandler       ContentHandlerType;
+typedef xercesc::DTDHandler           DTDHandlerType;
+typedef xercesc::LexicalHandler       LexicalHandlerType;
 
 
 

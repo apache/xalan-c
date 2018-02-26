@@ -99,8 +99,8 @@ XALAN_USING_STD(endl)
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutex         XMLMutexType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLMutexLock     XMLMutexLockType;
+typedef xercesc::XMLMutex         XMLMutexType;
+typedef xercesc::XMLMutexLock     XMLMutexLockType;
 
 
 

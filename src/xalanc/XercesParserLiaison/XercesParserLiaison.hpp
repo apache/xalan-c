@@ -66,7 +66,7 @@ class XercesDocumentBridge;
 class XercesDocumentWrapper;
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException    SAXParseExceptionType;
+typedef xercesc::SAXParseException    SAXParseExceptionType;
 
 
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
@@ -76,7 +76,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison :
     
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParser            SAXParserType;
+    typedef xercesc::SAXParser            SAXParserType;
 
     /**
      * Construct a XercesParserLiaison instance.
@@ -673,7 +673,7 @@ public:
         m_buildMaps = newState;
     }
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser  DOMParserType;
+    typedef xercesc::XercesDOMParser  DOMParserType;
 
 protected:
 

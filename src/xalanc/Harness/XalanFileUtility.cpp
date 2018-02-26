@@ -919,22 +919,22 @@ XalanFileUtility::checkDOMResults(
 
 
 
-class DummyErrorHandler : public XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler
+class DummyErrorHandler : public xercesc::ErrorHandler
 {
     virtual void
-    warning(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    warning(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
 
     virtual void
-    error(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    error(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
 
     virtual void
-    fatalError(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    fatalError(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
@@ -991,7 +991,7 @@ XalanFileUtility::compareSerializedResults(
     // This exception is being reported prior to this Catch, however, however, I clarify that it's a SAX exception.
     // It's a good indication that the Gold file is not a valid XML.  When this happens the transform result needs
     // to be compared with the Gold,  with a character by character basis,  not via the DOM compair. 
-    catch (const XERCES_CPP_NAMESPACE_QUALIFIER SAXException&)
+    catch (const xercesc::SAXException&)
     {
         if (m_verbose == true)
         {

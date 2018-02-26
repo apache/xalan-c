@@ -559,7 +559,7 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&   inputSource)
             {
                 URISupport::getURLStringFromString(theSystemID, xmlIdentifier);
             }
-            catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+            catch(const xercesc::XMLException&)
             {
                 xmlIdentifier = theSystemID;
             }
@@ -932,7 +932,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
                             localXSLURLString);
             }
         }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        catch(const xercesc::XMLException&)
         {
         }
 

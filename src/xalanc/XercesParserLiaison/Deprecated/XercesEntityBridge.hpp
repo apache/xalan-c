@@ -56,7 +56,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesEntityBridge : public XalanEntity
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Entity           DOM_EntityType;
+    typedef xercesc::DOM_Entity           DOM_EntityType;
 
     XercesEntityBridge(
             const DOM_EntityType&           theXercesDOMEntity,

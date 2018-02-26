@@ -138,7 +138,7 @@ Stylesheet::Stylesheet(
                 m_baseIdent = urlString;
             }
         }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtilsException&)
+        catch(const xercesc::XMLPlatformUtilsException&)
         {
             // Assume that any exception here relates to get the urlString from
             // m_baseIdent.  We'll assume that it's just a fake base identifier

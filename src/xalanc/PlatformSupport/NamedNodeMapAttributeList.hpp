@@ -38,11 +38,11 @@ class XalanNamedNodeMap;
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public XERCES_CPP_NAMESPACE_QUALIFIER AttributeList
+class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public xercesc::AttributeList
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    ParentType;
+    typedef xercesc::AttributeList    ParentType;
 
     explicit
     NamedNodeMapAttributeList(

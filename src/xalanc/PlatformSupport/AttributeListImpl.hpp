@@ -42,7 +42,7 @@ class AttributeVectorEntry;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
+typedef xercesc::AttributeList    AttributeListType;
 
 
 

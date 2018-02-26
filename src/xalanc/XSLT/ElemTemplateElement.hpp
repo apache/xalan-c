@@ -57,8 +57,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator          LocatorType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::Locator          LocatorType;
 
 
 XALAN_USING_XERCES(AttributeList)

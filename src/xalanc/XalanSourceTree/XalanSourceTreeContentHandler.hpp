@@ -57,12 +57,12 @@ XALAN_USING_XERCES(Locator)
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes       AttributesType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler   ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler       DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler   LexicalHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator          LocatorType;
+typedef xercesc::Attributes       AttributesType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::ContentHandler   ContentHandlerType;
+typedef xercesc::DTDHandler       DTDHandlerType;
+typedef xercesc::LexicalHandler   LexicalHandlerType;
+typedef xercesc::Locator          LocatorType;
 
 
 

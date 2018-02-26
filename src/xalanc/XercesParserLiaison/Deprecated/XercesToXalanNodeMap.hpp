@@ -60,8 +60,8 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesToXalanNodeMap
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node     DOM_NodeType;
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl     NodeImplType;
+    typedef xercesc::DOM_Node     DOM_NodeType;
+    typedef xercesc::NodeImpl     NodeImplType;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
     typedef map<XalanNode*, NodeImplType*, less<XalanNode*> >   XalanNodeMapType;
