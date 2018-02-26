@@ -29,7 +29,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 
 

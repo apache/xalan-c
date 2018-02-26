@@ -33,7 +33,7 @@
 #include <iostream>
 #endif
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)

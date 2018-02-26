@@ -95,7 +95,7 @@
 
 
 XALAN_CPP_NAMESPACE_USE
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 
 
