@@ -30,7 +30,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class Locator; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 

@@ -32,9 +32,12 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class ContentHandler; }
-namespace XERCES_CPP_NAMESPACE { class DTDHandler; }
-namespace XERCES_CPP_NAMESPACE { class LexicalHandler; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class ContentHandler;
+    class DTDHandler;
+    class LexicalHandler;
+}
 
 
 

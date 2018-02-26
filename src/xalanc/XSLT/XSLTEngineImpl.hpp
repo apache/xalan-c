@@ -78,8 +78,11 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class InputSource; }
-namespace XERCES_CPP_NAMESPACE { class DocumentHandler; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class InputSource;
+    class DocumentHandler;
+}
 
 
 

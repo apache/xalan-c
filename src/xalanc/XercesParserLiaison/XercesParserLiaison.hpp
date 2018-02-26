@@ -46,13 +46,15 @@
 
 
 
+namespace XERCES_CPP_NAMESPACE
+{
 #if XERCES_VERSION_MAJOR >= 2
-namespace XERCES_CPP_NAMESPACE { class XercesDOMParser; }
+    class XercesDOMParser;
 #else
-namespace XERCES_CPP_NAMESPACE { class DOMParser; }
+    class DOMParser;
 #endif
-namespace XERCES_CPP_NAMESPACE { class SAXParser; }
-
+    class SAXParser;
+}
 
 
 XALAN_CPP_NAMESPACE_BEGIN

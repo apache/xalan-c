@@ -29,7 +29,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class AttributeList; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class AttributeList;
+}
 
 
 

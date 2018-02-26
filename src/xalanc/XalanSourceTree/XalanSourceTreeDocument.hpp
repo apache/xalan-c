@@ -53,8 +53,11 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class Attributes; }
-namespace XERCES_CPP_NAMESPACE { class AttributeList; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class Attributes;
+    class AttributeList;
+}
 
 
 

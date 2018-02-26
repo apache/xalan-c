@@ -24,25 +24,28 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class DOMAttr; }
-namespace XERCES_CPP_NAMESPACE { class DOMCharacterData; }
-namespace XERCES_CPP_NAMESPACE { class DOMComment; }
-namespace XERCES_CPP_NAMESPACE { class DOMCDATASection; }
-namespace XERCES_CPP_NAMESPACE { class DOMDocument; }
-namespace XERCES_CPP_NAMESPACE { class DOMDocumentFragment; }
-namespace XERCES_CPP_NAMESPACE { class DOMImplementation; }
-namespace XERCES_CPP_NAMESPACE { class DOMElement; }
-namespace XERCES_CPP_NAMESPACE { class DOMEntity; }
-namespace XERCES_CPP_NAMESPACE { class DOMEntityReference; }
-namespace XERCES_CPP_NAMESPACE { class DOMNode; }
-namespace XERCES_CPP_NAMESPACE { class DOMText; }
-namespace XERCES_CPP_NAMESPACE { class DOMNamedNodeMap; }
-namespace XERCES_CPP_NAMESPACE { class DOMNodeList; }
-namespace XERCES_CPP_NAMESPACE { class DOMNotation; }
-namespace XERCES_CPP_NAMESPACE { class DOMProcessingInstruction; }
-namespace XERCES_CPP_NAMESPACE { class DOMText; }
-namespace XERCES_CPP_NAMESPACE { class DOMDocumentType; }
-namespace XERCES_CPP_NAMESPACE { class DOMException; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOMAttr;
+    class DOMCharacterData;
+    class DOMComment;
+    class DOMCDATASection;
+    class DOMDocument;
+    class DOMDocumentFragment;
+    class DOMImplementation;
+    class DOMElement;
+    class DOMEntity;
+    class DOMEntityReference;
+    class DOMNode;
+    class DOMText;
+    class DOMNamedNodeMap;
+    class DOMNodeList;
+    class DOMNotation;
+    class DOMProcessingInstruction;
+    class DOMText;
+    class DOMDocumentType;
+    class DOMException;
+}
 
 
 

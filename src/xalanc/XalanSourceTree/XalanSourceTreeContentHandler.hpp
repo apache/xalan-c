@@ -40,12 +40,15 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class Attributes; }
-namespace XERCES_CPP_NAMESPACE { class AttributeList; }
-namespace XERCES_CPP_NAMESPACE { class ContentHandler; }
-namespace XERCES_CPP_NAMESPACE { class DTDHandler; }
-namespace XERCES_CPP_NAMESPACE { class LexicalHandler; }
-namespace XERCES_CPP_NAMESPACE { class Locator; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class Attributes;
+    class AttributeList;
+    class ContentHandler;
+    class DTDHandler;
+    class LexicalHandler;
+    class Locator;
+}
 
 
 

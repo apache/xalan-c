@@ -50,9 +50,12 @@ class ostream;
 
 
 
-namespace XERCES_CPP_NAMESPACE { class EntityResolver; }
-namespace XERCES_CPP_NAMESPACE { class ErrorHandler; }
-namespace XERCES_CPP_NAMESPACE { class XMLEntityResolver; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class EntityResolver;
+    class ErrorHandler;
+    class XMLEntityResolver;
+}
 
 
 

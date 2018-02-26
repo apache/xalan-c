@@ -48,8 +48,11 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class AttributeList; }
-namespace XERCES_CPP_NAMESPACE { class Locator; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class AttributeList;
+    class Locator;
+}
 
 
 

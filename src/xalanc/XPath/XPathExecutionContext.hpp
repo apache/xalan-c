@@ -46,7 +46,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class ErrorHandler; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class ErrorHandler;
+}
 
 
 

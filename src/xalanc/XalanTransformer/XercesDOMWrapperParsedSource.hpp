@@ -33,8 +33,11 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class DOM_Document; }
-namespace XERCES_CPP_NAMESPACE { class DOMDocument; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOM_Document;
+    class DOMDocument;
+}
 
 
 

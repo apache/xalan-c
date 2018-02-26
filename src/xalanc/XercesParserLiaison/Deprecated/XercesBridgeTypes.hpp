@@ -24,31 +24,34 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class DOM_Attr; }
-namespace XERCES_CPP_NAMESPACE { class DOM_CharacterData; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Comment; }
-namespace XERCES_CPP_NAMESPACE { class DOM_CDATASection; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Document; }
-namespace XERCES_CPP_NAMESPACE { class DOM_DocumentFragment; }
-namespace XERCES_CPP_NAMESPACE { class DOM_DocumentType; }
-namespace XERCES_CPP_NAMESPACE { class DOM_DOMImplementation; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Element; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Entity; }
-namespace XERCES_CPP_NAMESPACE { class DOM_EntityReference; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Node; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Text; }
-namespace XERCES_CPP_NAMESPACE { class DOM_NamedNodeMap; }
-namespace XERCES_CPP_NAMESPACE { class DOM_NodeList; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Notation; }
-namespace XERCES_CPP_NAMESPACE { class DOM_ProcessingInstruction; }
-namespace XERCES_CPP_NAMESPACE { class DOM_Text; }
-namespace XERCES_CPP_NAMESPACE { class DOM_DocumentType; }
-namespace XERCES_CPP_NAMESPACE { class DOM_DOMException; }
-namespace XERCES_CPP_NAMESPACE { class DOMString; }
-namespace XERCES_CPP_NAMESPACE { class AttrImpl; }
-namespace XERCES_CPP_NAMESPACE { class ElementImpl; }
-namespace XERCES_CPP_NAMESPACE { class NodeImpl; }
-namespace XERCES_CPP_NAMESPACE { class TextImpl; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOM_Attr;
+    class DOM_CharacterData;
+    class DOM_Comment;
+    class DOM_CDATASection;
+    class DOM_Document;
+    class DOM_DocumentFragment;
+    class DOM_DocumentType;
+    class DOM_DOMImplementation;
+    class DOM_Element;
+    class DOM_Entity;
+    class DOM_EntityReference;
+    class DOM_Node;
+    class DOM_Text;
+    class DOM_NamedNodeMap;
+    class DOM_NodeList;
+    class DOM_Notation;
+    class DOM_ProcessingInstruction;
+    class DOM_Text;
+    class DOM_DocumentType;
+    class DOM_DOMException;
+    class DOMString;
+    class AttrImpl;
+    class ElementImpl;
+    class NodeImpl;
+    class TextImpl;
+}
 
 
 

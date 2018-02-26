@@ -45,7 +45,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class DOM_CharacterData; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOM_CharacterData;
+}
 
 
 

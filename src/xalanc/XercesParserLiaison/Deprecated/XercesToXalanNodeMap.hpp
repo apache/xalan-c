@@ -40,7 +40,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class NodeImpl; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class NodeImpl;
+}
 
 
 

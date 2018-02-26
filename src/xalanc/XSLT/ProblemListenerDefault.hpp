@@ -30,7 +30,10 @@
 
 
 
-namespace XERCES_CPP_NAMESPACE { class MemoryManager; }
+namespace XERCES_CPP_NAMESPACE
+{
+    class MemoryManager;
+}
 
 
 
