@@ -102,16 +102,6 @@
 #define XALAN_USING_XALAN(NAME) XALAN_USING(XALAN_CPP_NAMESPACE, NAME)
 
 
-#if defined(XERCES_HAS_CPP_NAMESPACE)
-#else
-    #define xercesc::
-    #define XERCES_CPP_NAMESPACE_BEGIN
-    #define XERCES_CPP_NAMESPACE_END
-    #define XERCES_CPP_NAMESPACE_USE
-#endif
-
-
-
 #include <cstddef>
 
 
