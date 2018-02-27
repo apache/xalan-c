@@ -65,8 +65,8 @@ main(
         using xercesc::XMLPlatformUtils;
         using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XalanCompiledStylesheet)
+        using xalanc::XalanTransformer;
+        using xalanc::XalanCompiledStylesheet;
 
         // Call the static initializer for Xerces.
         try

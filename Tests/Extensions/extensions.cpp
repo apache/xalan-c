@@ -73,12 +73,12 @@ XALAN_USING_STD(endl)
 const char* const   resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
 
 
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanXMLFileReporter)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanFileUtility;
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
+using xalanc::XalanXMLFileReporter;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -220,7 +220,7 @@ void TestCase3(
             XalanXMLFileReporter&   logFile,
             XalanFileUtility&       h)
 {
-    XALAN_USING_XALAN(FunctionNodeSet)
+    using xalanc::FunctionNodeSet;
 
     XalanDOMString  xml, xsl, theOutputFile, theGoldFile;
     
@@ -292,7 +292,7 @@ void TestCase4(
             XalanXMLFileReporter&   logFile,
             XalanFileUtility&       h)
 {
-    XALAN_USING_XALAN(FunctionNodeSet)
+    using xalanc::FunctionNodeSet;
     
     XalanDOMString  xml, xsl, theOutputFile, theGoldFile;
 

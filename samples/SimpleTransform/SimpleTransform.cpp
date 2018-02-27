@@ -95,7 +95,7 @@ main(
             
             using xercesc::XMLUni;
 
-            XALAN_USING_XALAN(XalanTransformer)
+            using xalanc::XalanTransformer;
 
             XalanMemoryManagerImpl memoryManager;
 

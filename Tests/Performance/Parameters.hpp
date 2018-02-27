@@ -41,10 +41,10 @@
 
 
 
-XALAN_USING_XALAN(XalanDOMChar)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanFileUtility)
+using xalanc::XalanDOMChar;
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
+using xalanc::XalanFileUtility;
 
 
 

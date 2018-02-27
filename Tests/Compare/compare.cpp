@@ -70,7 +70,7 @@ XALAN_USING_STD(endl)
 
 
 
-XALAN_USING_XALAN(XalanFileUtility)
+using xalanc::XalanFileUtility;
 
 
 
@@ -106,17 +106,17 @@ runTests(
 
     if (h.getParams(argc, argv, "DOMCOM-RESULTS", setGold) == true)
     {
-        XALAN_USING_XALAN(FormatterToSourceTree)
-        XALAN_USING_XALAN(XalanCompiledStylesheet)
-        XALAN_USING_XALAN(XalanDOMString)
-        XALAN_USING_XALAN(XalanParsedSource)
-        XALAN_USING_XALAN(XalanSourceTreeDocument)
-        XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-        XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XalanXMLFileReporter)
-        XALAN_USING_XALAN(XSLTInputSource)
-        XALAN_USING_XALAN(XSLTResultTarget)
+        using xalanc::FormatterToSourceTree;
+        using xalanc::XalanCompiledStylesheet;
+        using xalanc::XalanDOMString;
+        using xalanc::XalanParsedSource;
+        using xalanc::XalanSourceTreeDocument;
+        using xalanc::XalanSourceTreeDOMSupport;
+        using xalanc::XalanSourceTreeParserLiaison;
+        using xalanc::XalanTransformer;
+        using xalanc::XalanXMLFileReporter;
+        using xalanc::XSLTInputSource;
+        using xalanc::XSLTResultTarget;
 
         //
         // Call the static initializers for xerces and xalan, and create a transformer
@@ -233,7 +233,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

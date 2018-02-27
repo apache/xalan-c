@@ -90,12 +90,12 @@ XALAN_USING_STD(ostrstream)
 
 
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 

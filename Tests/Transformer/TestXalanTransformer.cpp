@@ -96,8 +96,8 @@ runTests()
 
 #if defined(TEST_XALAN_CPP)
 
-    XALAN_USING_XALAN(XalanTransformer)
-    XALAN_USING_XALAN(XalanCompiledStylesheet)
+    using xalanc::XalanTransformer;
+    using xalanc::XalanCompiledStylesheet;
 
     XalanTransformer    xalan;
 
@@ -324,7 +324,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

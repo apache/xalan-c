@@ -52,10 +52,10 @@
 
 
 
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(CharVectorType)
-XALAN_USING_XALAN(TranscodeToLocalCodePage)
-XALAN_USING_XALAN(c_str)
+using xalanc::XalanMemMgrs;
+using xalanc::CharVectorType;
+using xalanc::TranscodeToLocalCodePage;
+using xalanc::c_str;
 
 
 

@@ -199,10 +199,10 @@ ThreadInfo
 
 
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMChar)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanParsedSource)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMChar;
+using xalanc::XalanDOMString;
+using xalanc::XalanParsedSource;
 
 
 
@@ -281,15 +281,15 @@ thePreparsedThreadRoutine(void*     param)
 
     theInfo->m_counter->increment();
 
-    XALAN_USING_XALAN(MemoryManager)
-    XALAN_USING_XALAN(XalanMemMgrs)
+    using xalanc::MemoryManager;
+    using xalanc::XalanMemMgrs;
 
     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
     try
     {
-        XALAN_USING_XALAN(NumberToDOMString)
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::NumberToDOMString;
+        using xalanc::XalanTransformer;
 
         // Our input file.  The assumption is that the executable will be run
         // from same directory as the input files.
@@ -303,7 +303,7 @@ thePreparsedThreadRoutine(void*     param)
         // Create a transformer...
         XalanTransformer    theTransformer(theManager);
 
-        XALAN_USING_XALAN(XSLTResultTarget)
+        using xalanc::XSLTResultTarget;
 
         // Do the transform...
         theTransformer.transform(*glbParsedSource, glbCompiledStylesheet, XSLTResultTarget( theOutputFile, theManager));
@@ -350,14 +350,14 @@ theUnparsedThreadRoutine(void*      param)
 
     try
     {
-        XALAN_USING_XALAN(NumberToDOMString)
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::NumberToDOMString;
+        using xalanc::XalanTransformer;
 
         // Our input file.  The assumption is that the executable will be run
         // from same directory as the input files.
 
-        XALAN_USING_XALAN(MemoryManager)
-        XALAN_USING_XALAN(XalanMemMgrs)
+        using xalanc::MemoryManager;
+        using xalanc::XalanMemMgrs;
 
         MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
@@ -372,7 +372,7 @@ theUnparsedThreadRoutine(void*      param)
 
         assert(theSourceFileName != 0 && theStylesheetFileName != 0);
 
-        XALAN_USING_XALAN(XSLTResultTarget)
+        using xalanc::XSLTResultTarget;
 
         // Do the transform...
         theTransformer.transform(
@@ -580,7 +580,7 @@ doThreads(
 
     cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
-    XALAN_USING_XALAN(XalanArrayAutoPtr)
+    using xalanc::XalanArrayAutoPtr;
 
     XalanArrayAutoPtr<ThreadInfo>   theThreadInfo(new ThreadInfo[theThreadCount]);
 
@@ -708,7 +708,7 @@ main(
             {
                 using xercesc::XMLPlatformUtils;
 
-                XALAN_USING_XALAN(XalanTransformer)
+                using xalanc::XalanTransformer;
 
                 // Initialize Xerces...
                 XMLPlatformUtils::Initialize();
@@ -723,8 +723,8 @@ main(
                     // pre-parsed source document.  Note that we can't let the individual
                     // threads use this as a factory without serializing access to it, but
                     // we can share the stylesheet and source document.
-                    XALAN_USING_XALAN(MemoryManager)
-                    XALAN_USING_XALAN(XalanMemMgrs)
+                    using xalanc::MemoryManager;
+                    using xalanc::XalanMemMgrs;
 
                     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 

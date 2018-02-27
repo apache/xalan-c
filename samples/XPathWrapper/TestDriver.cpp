@@ -71,7 +71,7 @@ main(
     
     using xercesc::XMLPlatformUtils;
     using xercesc::XMLException;
-    XALAN_USING_XALAN(XalanTransformer)
+    using xalanc::XalanTransformer;
 
         //initialize Xerces...
     try

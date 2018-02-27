@@ -87,10 +87,10 @@ using std::strlen;
 void
 Usage()
 {
-    XALAN_USING_XALAN(XalanDOMString)
-    XALAN_USING_XALAN(XalanMessageLoader)
-    XALAN_USING_XALAN(XalanMessages)
-    XALAN_USING_XALAN(XalanMemMgrs)
+    using xalanc::XalanDOMString;
+    using xalanc::XalanMessageLoader;
+    using xalanc::XalanMessages;
+    using xalanc::XalanMemMgrs;
     using xercesc::MemoryManager;
 
     MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
@@ -163,9 +163,9 @@ Usage()
 
 
 
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -568,8 +568,8 @@ reportElapsedMilliseconds(
 
 
 
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanCompiledStylesheet)
+using xalanc::XalanParsedSource;
+using xalanc::XalanCompiledStylesheet;
 
 
 typedef XalanTransformer::EnsureDestroyParsedSource         SourceGuard;
@@ -721,8 +721,8 @@ transform(
             const XSLTInputSource&  theSource,
             const XSLTInputSource&  theStylesheetSource)
 {
-    XALAN_USING_XALAN(XalanDOMString)
-    XALAN_USING_XALAN(XSLTResultTarget)
+    using xalanc::XalanDOMString;
+    using xalanc::XSLTResultTarget;
     using xercesc::MemoryManager;
 
     MemoryManager&  theManager = theTransformer.getMemoryManager();

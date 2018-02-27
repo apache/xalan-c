@@ -25,8 +25,8 @@
 
 
 
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(CharVectorType)
+using xalanc::XalanMemMgrs;
+using xalanc::CharVectorType;
 
 
 XALAN_USING_STD(ostringstream)

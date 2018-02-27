@@ -70,10 +70,10 @@ using xercesc::XMLPlatformUtils;
 
 
 
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanXMLFileReporter)
-XALAN_USING_XALAN(XalanFileUtility)
+using xalanc::XalanTransformer;
+using xalanc::XalanDOMString;
+using xalanc::XalanXMLFileReporter;
+using xalanc::XalanFileUtility;
 
 
 

@@ -74,8 +74,8 @@ const char* const   excludeStylesheets[] =
 
 
 
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanFileUtility;
+using xalanc::XalanDOMString;
 
 
 
@@ -117,8 +117,8 @@ runTests(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_XALAN(MemoryManager)
-    XALAN_USING_XALAN(XalanMemMgrs)
+    using xalanc::MemoryManager;
+    using xalanc::XalanMemMgrs;
 
     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
@@ -132,10 +132,10 @@ runTests(
 
     if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
     {
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-        XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-        XALAN_USING_XALAN(XalanXMLFileReporter)
+        using xalanc::XalanTransformer;
+        using xalanc::XalanSourceTreeDOMSupport;
+        using xalanc::XalanSourceTreeParserLiaison;
+        using xalanc::XalanXMLFileReporter;
 
         XalanTransformer                xalan;
 
@@ -195,10 +195,10 @@ runTests(
 
                     for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
                     {
-                        XALAN_USING_XALAN(XSLTInputSource)
-                        XALAN_USING_XALAN(XSLTResultTarget)
-                        XALAN_USING_XALAN(XalanCompiledStylesheet)
-                        XALAN_USING_XALAN(XalanParsedSource)
+                        using xalanc::XSLTInputSource;
+                        using xalanc::XSLTResultTarget;
+                        using xalanc::XalanCompiledStylesheet;
+                        using xalanc::XalanParsedSource;
 
                         XalanXMLFileReporter::Hashtable     attrs(theManager);
 
@@ -327,7 +327,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

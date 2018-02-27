@@ -71,7 +71,7 @@ main(
         {
             using xercesc::XMLPlatformUtils;
 
-            XALAN_USING_XALAN(XalanTransformer)
+            using xalanc::XalanTransformer;
 
 
             // Call the static initializer for Xerces.
@@ -118,8 +118,8 @@ main(
                 istrstream  theXMLStream(theInputDocument, strlen(theInputDocument));
                 istrstream  theXSLStream(theStylesheet, strlen(theStylesheet));
 
-                XALAN_USING_XALAN(XalanDOMString)
-                XALAN_USING_XALAN(XSLTInputSource)
+                using xalanc::XalanDOMString;
+                using xalanc::XSLTInputSource;
 
                 XSLTInputSource     inputSource(&theXSLStream);
 

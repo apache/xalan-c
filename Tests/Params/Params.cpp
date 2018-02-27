@@ -63,8 +63,8 @@ XALAN_USING_STD(endl)
 
 
 
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanFileUtility;
+using xalanc::XalanDOMString;
 
 
 
@@ -131,8 +131,8 @@ runTests(
         }
         else
         {
-            XALAN_USING_XALAN(XalanTransformer)
-            XALAN_USING_XALAN(XalanXMLFileReporter)
+            using xalanc::XalanTransformer;
+            using xalanc::XalanXMLFileReporter;
 
             XalanTransformer    xalan;
 
@@ -190,8 +190,8 @@ runTests(
                     theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + fileName;
                     theGoldFile = h.generateFileName(theGoldFile, "out");
 
-                    XALAN_USING_XALAN(XSLTResultTarget);
-                    XALAN_USING_XALAN(XSLTInputSource);
+                    using xalanc::XSLTResultTarget;;
+                    using xalanc::XSLTInputSource;;
 
                     const XSLTResultTarget  theResultTarget(theOutputFile);
                     const XSLTInputSource   xslInputSource(theXSLFile);
@@ -295,7 +295,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

@@ -116,7 +116,7 @@ doTransform(
     XALAN_USING_STD(cerr)
     XALAN_USING_STD(endl)
 
-    XALAN_USING_XALAN(XalanTransformer)
+    using xalanc::XalanTransformer;
 
     // Create a XalanTransformer...
     XalanTransformer    theXalanTransformer;
@@ -165,7 +165,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializer for Xerces.
         XMLPlatformUtils::Initialize();

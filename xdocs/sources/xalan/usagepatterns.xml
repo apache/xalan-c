@@ -80,7 +80,7 @@
    program is using <em>XMLPlatformUtils</em> and <em>XalanTransformer</em> from the &xml4c; and &xslt4c; namespaces respectively.</p>
 <source>
 using xercesc::XMLPlatformUtils;
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanTransformer;
 </source>
 
 <p>These macros can be used immediately after the included header files (for global applicability in a given source file) or within 
@@ -277,8 +277,8 @@ theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
 using xercesc::DOMDocument;
 using xercesc::DOMImplementation;
 
-XALAN_USING_XALAN(FormatterToXML)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::FormatterToXML;
+using xalanc::XalanTransformer;
 
 
     // If you want to produce DOM output, create an empty Xerces Document

@@ -34,18 +34,18 @@
 
 XALAN_USING_STD(istrstream)
 
-XALAN_USING_XALAN(XalanAllocationGuard)
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanAllocationGuard;
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
 using xercesc::XMLPlatformUtils;
 using xercesc::MemoryManager;
 
-XALAN_USING_XALAN(XalanMemMgrAutoPtr)
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanMemMgrAutoPtr;
+using xalanc::XalanMemMgrs;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 static bool fInitialized = false;
 

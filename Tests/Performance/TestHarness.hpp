@@ -58,13 +58,13 @@
 
 
 
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(XalanVector)
-XALAN_USING_XALAN(XalanMap)
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanXMLFileReporter)
+using xalanc::XalanMemMgrs;
+using xalanc::XalanVector;
+using xalanc::XalanMap;
+using xalanc::XalanNode;
+using xalanc::XalanDOMString;
+using xalanc::XalanFileUtility;
+using xalanc::XalanXMLFileReporter;
 
 
 
@@ -206,8 +206,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
         if (testCase.inputMode == XalanDOMString("stream"))
         {
 #if defined(XALAN_CLASSIC_IOSTREAMS)
-            XALAN_USING_XALAN(CharVectorType)
-            XALAN_USING_XALAN(c_str)
+            using xalanc::CharVectorType;
+            using xalanc::c_str;
 
             XALAN_USING_STD(istringstream)
 
@@ -272,8 +272,8 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
                 !parsedInputSource)
             {
 #if defined(XALAN_CLASSIC_IOSTREAMS)
-                XALAN_USING_XALAN(CharVectorType)
-                XALAN_USING_XALAN(c_str)
+                using xalanc::CharVectorType;
+                using xalanc::c_str;
 
                 XALAN_USING_STD(istringstream)
 

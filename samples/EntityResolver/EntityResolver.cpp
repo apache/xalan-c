@@ -44,11 +44,11 @@
 using xercesc::EntityResolver;
 using xercesc::InputSource;
 using xercesc::MemBufInputSource;
-XALAN_USING_XALAN(MemoryManager)
+using xalanc::MemoryManager;
 using xercesc::XMLEntityResolver;
 using xercesc::XMLResourceIdentifier;
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
 
 
 
@@ -214,8 +214,8 @@ transform(
             const char*             theOutputFile,
             bool                    fUseDOM)
 {
-    XALAN_USING_XALAN(XalanCompiledStylesheet)
-    XALAN_USING_XALAN(XalanParsedSource)
+    using xalanc::XalanCompiledStylesheet;
+    using xalanc::XalanParsedSource;
 
     typedef XalanTransformer::EnsureDestroyCompiledStylesheet   EnsureDestroyCompiledStylesheet;
     typedef XalanTransformer::EnsureDestroyParsedSource         EnsureDestroyParsedSource;

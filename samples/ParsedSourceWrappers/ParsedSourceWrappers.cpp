@@ -59,11 +59,11 @@
 
 
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -76,9 +76,9 @@ transformXercesDOM(
 {
     using xercesc::URLInputSource;
 
-    XALAN_USING_XALAN(XercesParserLiaison)
-    XALAN_USING_XALAN(XercesDOMSupport)
-    XALAN_USING_XALAN(XercesDOMWrapperParsedSource)
+    using xalanc::XercesParserLiaison;
+    using xalanc::XercesDOMSupport;
+    using xalanc::XercesDOMWrapperParsedSource;
 
 
     const URLInputSource    theInputSource(theURI.c_str());
@@ -113,11 +113,11 @@ transformXalanSourceTree(
 {
     using xercesc::URLInputSource;
 
-    XALAN_USING_XALAN(XalanDocument)
-    XALAN_USING_XALAN(XalanSourceTreeDocument)
-    XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-    XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-    XALAN_USING_XALAN(XalanSourceTreeWrapperParsedSource)
+    using xalanc::XalanDocument;
+    using xalanc::XalanSourceTreeDocument;
+    using xalanc::XalanSourceTreeParserLiaison;
+    using xalanc::XalanSourceTreeDOMSupport;
+    using xalanc::XalanSourceTreeWrapperParsedSource;
 
 
     const URLInputSource            theInputSource(theURI.c_str());
@@ -167,7 +167,7 @@ transform()
         }
         else
         {
-            XALAN_USING_XALAN(URISupport)
+            using xalanc::URISupport;
 
             assert(theStylesheet != 0);
 

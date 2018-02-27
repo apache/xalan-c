@@ -44,14 +44,14 @@
 
 
 
-XALAN_USING_XALAN(Function)
-XALAN_USING_XALAN(Locator)
-XALAN_USING_XALAN(XPathExecutionContext)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XObjectPtr)
-XALAN_USING_XALAN(MemoryManager)
-XALAN_USING_XALAN(XalanCopyConstruct)
+using xalanc::Function;
+using xalanc::Locator;
+using xalanc::XPathExecutionContext;
+using xalanc::XalanDOMString;
+using xalanc::XalanNode;
+using xalanc::XObjectPtr;
+using xalanc::MemoryManager;
+using xalanc::XalanCopyConstruct;
 
 // This class defines a function that will return the square root
 // of its argument.
@@ -346,7 +346,7 @@ main(
         using xercesc::XMLPlatformUtils;
         using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializer for Xerces.
         try

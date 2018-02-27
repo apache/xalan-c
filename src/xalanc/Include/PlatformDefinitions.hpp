@@ -91,11 +91,8 @@
     #define XALAN_STD_QUALIFIER  std ::
 #endif
 
-#define XALAN_USING_XALAN(NAME) XALAN_USING(XALAN_CPP_NAMESPACE, NAME)
-
 
 #include <cstddef>
-
 
 
 namespace XALAN_CPP_NAMESPACE {

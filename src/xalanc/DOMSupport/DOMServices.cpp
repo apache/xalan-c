@@ -43,14 +43,14 @@
 
 
 
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanDOMString;
 
 
 // These XalanDOMString instances will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
 
-XALAN_USING_XALAN(XalanMemMgrs)
+using xalanc::XalanMemMgrs;
 
 static XalanDOMString   s_XMLString(XalanMemMgrs::getDummyMemMgr());
 static XalanDOMString   s_XMLStringWithSeparator(XalanMemMgrs::getDummyMemMgr());

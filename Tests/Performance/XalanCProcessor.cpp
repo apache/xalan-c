@@ -39,8 +39,8 @@
 
 
 using xercesc::XMLPlatformUtils;
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanMemMgrs)
+using xalanc::XalanTransformer;
+using xalanc::XalanMemMgrs;
 
 
 typedef XalanCProcessor::CompiledStylesheetType CompiledStylesheetType;

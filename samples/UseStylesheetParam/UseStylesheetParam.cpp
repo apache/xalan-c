@@ -44,7 +44,7 @@ struct {
 } Parameter[15];
 
 // The Parsed Document Nodesets
-XALAN_USING_XALAN(XalanParsedSource)
+using xalanc::XalanParsedSource;
 const XalanParsedSource * NodesetParam[15] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
@@ -100,8 +100,8 @@ main(
         using xercesc::XMLPlatformUtils;
         using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XSLTInputSource)
+        using xalanc::XalanTransformer;
+        using xalanc::XSLTInputSource;
 
         // Call the static initializer for Xerces.
         try
@@ -125,7 +125,7 @@ main(
             XalanTransformer::initialize();
 
             {
-                XALAN_USING_XALAN(XalanDOMString)
+                using xalanc::XalanDOMString;
 
                 // Create a XalanTransformer.
                 XalanTransformer    theXalanTransformer;

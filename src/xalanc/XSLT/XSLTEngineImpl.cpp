@@ -3229,9 +3229,9 @@ XSLTEngineImpl::uninstallFunctions()
 }
 
 
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanDOMString;
 
-XALAN_USING_XALAN(XalanMemMgrs)
+using xalanc::XalanMemMgrs;
 
 static XalanDOMString   s_XSLNameSpaceURL(XalanMemMgrs::getDummyMemMgr());
 

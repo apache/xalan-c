@@ -42,8 +42,8 @@
 
 
 
-XALAN_USING_XALAN(XalanDocumentBuilder)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanDocumentBuilder;
+using xalanc::XalanTransformer;
 
 
 
@@ -51,9 +51,9 @@ void
 BuildDocument(XalanDocumentBuilder*     theBuilder)
 {
     using xercesc::ContentHandler;
-    XALAN_USING_XALAN(AttributesImpl)
-    XALAN_USING_XALAN(XalanDOMChar)
-    XALAN_USING_XALAN(XalanDOMString)
+    using xalanc::AttributesImpl;
+    using xalanc::XalanDOMChar;
+    using xalanc::XalanDOMString;
 
     // Get the SAX2 ContentHandler from the builder...
     ContentHandler* const   theContentHandler = theBuilder->getContentHandler();

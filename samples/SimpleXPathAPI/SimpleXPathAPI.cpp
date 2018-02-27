@@ -74,13 +74,13 @@ main(
     }
     else
     {
-        XALAN_USING_XALAN(XSLException)
+        using xalanc::XSLException;
 
         try
         {
             using xercesc::XMLPlatformUtils;
 
-            XALAN_USING_XALAN(XPathEvaluator)
+            using xalanc::XPathEvaluator;
 
 
             XMLPlatformUtils::Initialize();
@@ -90,14 +90,14 @@ main(
             {
                 using xercesc::LocalFileInputSource;
 
-                XALAN_USING_XALAN(XalanDocument)
-                XALAN_USING_XALAN(XalanDocumentPrefixResolver)
-                XALAN_USING_XALAN(XalanDOMString)
-                XALAN_USING_XALAN(XalanNode)
-                XALAN_USING_XALAN(XalanSourceTreeInit)
-                XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-                XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-                XALAN_USING_XALAN(XObjectPtr)
+                using xalanc::XalanDocument;
+                using xalanc::XalanDocumentPrefixResolver;
+                using xalanc::XalanDOMString;
+                using xalanc::XalanNode;
+                using xalanc::XalanSourceTreeInit;
+                using xalanc::XalanSourceTreeDOMSupport;
+                using xalanc::XalanSourceTreeParserLiaison;
+                using xalanc::XObjectPtr;
 
                 // Initialize the XalanSourceTree subsystem...
                 XalanSourceTreeInit     theSourceTreeInit;
@@ -167,7 +167,7 @@ main(
         }
         catch(const XSLException&   theException)
         {
-            XALAN_USING_XALAN(XalanDOMString)
+            using xalanc::XalanDOMString;
 
             XalanDOMString  theError;
 

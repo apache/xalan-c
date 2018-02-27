@@ -37,7 +37,7 @@
 #endif
 
 
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanDOMString;
 
 
 

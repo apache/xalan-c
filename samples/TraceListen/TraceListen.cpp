@@ -105,7 +105,7 @@ main(
     {
         using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Initialize Xerces...
         XMLPlatformUtils::Initialize();
@@ -114,12 +114,12 @@ main(
         XalanTransformer::initialize();
 
         {
-            XALAN_USING_XALAN(TraceListenerDefault)
-            XALAN_USING_XALAN(XalanDOMString)
-            XALAN_USING_XALAN(XalanOutputStreamPrintWriter)
-            XALAN_USING_XALAN(XalanStdOutputStream)
-            XALAN_USING_XALAN(XSLTInputSource)
-            XALAN_USING_XALAN(XSLTResultTarget)
+            using xalanc::TraceListenerDefault;
+            using xalanc::XalanDOMString;
+            using xalanc::XalanOutputStreamPrintWriter;
+            using xalanc::XalanStdOutputStream;
+            using xalanc::XSLTInputSource;
+            using xalanc::XSLTResultTarget;
 
             // Create a XalanTransformer.
             XalanTransformer    theXalanTransformer;
