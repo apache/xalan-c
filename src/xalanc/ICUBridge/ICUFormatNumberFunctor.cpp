@@ -76,7 +76,7 @@ ICUFormatNumberFunctor::create(MemoryManager& theManager)
 
 ICUFormatNumberFunctor::~ICUFormatNumberFunctor()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(
         m_decimalFormatCache.begin(),
@@ -116,7 +116,7 @@ ICUFormatNumberFunctor::operator() (
 DecimalFormatType * 
 ICUFormatNumberFunctor::getCachedDecimalFormat(const XalanDecimalFormatSymbols &theDFS) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     DecimalFormatCacheListType::iterator i =
         find_if(

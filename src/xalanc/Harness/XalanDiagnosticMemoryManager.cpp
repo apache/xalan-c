@@ -196,7 +196,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
             const void* const   thePointer = i->first;
             const Data&         theData = i->second;
 
-            XALAN_USING_STD(dec);
+            using std::dec;;
 
             *diagStream << "Block at address "
                         << thePointer
@@ -221,7 +221,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
             if (theBytesToDump != 0)
             {
-                XALAN_USING_STD(hex);
+                using std::hex;;
 
                 const size_type     theCount =
                     theBytesToDump > theData.m_size ?

@@ -57,10 +57,10 @@ main(
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(ifstream)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
+    using std::ifstream;
 
     if (argc < 4)
     {

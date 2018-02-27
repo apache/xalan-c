@@ -1268,7 +1268,7 @@ StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplat
 {
     assert(theElement != 0);
 
-    XALAN_USING_STD(find)
+    using std::find;
 
     const ElementTemplateElementStackType::const_iterator   i =
                 find(m_elementRecursionStack.begin(),
@@ -2571,7 +2571,7 @@ StylesheetExecutionContextDefault::XPathCacheReturnFunctor::operator()(const XPa
 void
 StylesheetExecutionContextDefault::clearXPathCache()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     assert(m_matchPatternCache.empty() == true || m_xsltProcessor != 0);
 
@@ -2651,7 +2651,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 void
 StylesheetExecutionContextDefault::cleanUpTransients()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(m_formatterListeners.begin(),
              m_formatterListeners.end(),

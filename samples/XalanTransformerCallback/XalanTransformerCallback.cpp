@@ -113,8 +113,8 @@ doTransform(
             const char*     theXSLFile,
             FILE*           theOutputFile)
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     using xalanc::XalanTransformer;
 
@@ -148,9 +148,9 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
 
     if (argc < 3 || argc > 4)
     {

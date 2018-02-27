@@ -602,8 +602,8 @@ XercesParserLiaison::fatalError(const SAXParseExceptionType&    e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }
@@ -636,8 +636,8 @@ XercesParserLiaison::error(const SAXParseExceptionType&     e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }
@@ -671,8 +671,8 @@ XercesParserLiaison::warning(const SAXParseExceptionType&   e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }

@@ -54,8 +54,8 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::endl;
 
 
 
@@ -80,7 +80,7 @@ XPathEnvSupportDefault::initialize(MemoryManager&   theManager)
 void
 XPathEnvSupportDefault::terminate()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Clean up the extension namespaces vector
     for_each(s_externalFunctions.begin(),
@@ -106,7 +106,7 @@ XPathEnvSupportDefault::XPathEnvSupportDefault(MemoryManager&   theManager) :
 
 XPathEnvSupportDefault::~XPathEnvSupportDefault()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Clean up the extension namespaces vector
     for_each(m_externalFunctions.begin(),

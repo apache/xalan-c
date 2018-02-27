@@ -203,7 +203,7 @@ StylesheetConstructionContextDefault::problem(
 void
 StylesheetConstructionContextDefault::reset()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(
             m_stylesheets.begin(),
@@ -319,7 +319,7 @@ StylesheetConstructionContextDefault::create(
 void
 StylesheetConstructionContextDefault::destroy(StylesheetRoot*   theStylesheetRoot)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const StylesheetVectorType::iterator    i =
         find(

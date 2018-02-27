@@ -81,7 +81,7 @@ XalanDOMStringCache::get()
 bool
 XalanDOMStringCache::release(XalanDOMString&    theString)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     StringListType::iterator    i =
         find(m_busyList.begin(),

@@ -33,9 +33,9 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
@@ -515,7 +515,7 @@ runTests(
                         const XSLTInputSource   xmlInputSource(theXMLFile, theMemoryManager);
                         const XSLTResultTarget  resultFile(theOutputFile, theMemoryManager);
 
-                        XALAN_USING_STD(ostrstream)
+                        using std::ostrstream;
 
                         // Setting a warning stream will swallow output in non-verbose mode.
                         ostrstream  theDummyStream;

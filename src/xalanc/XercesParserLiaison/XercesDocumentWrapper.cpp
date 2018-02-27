@@ -275,7 +275,7 @@ XercesDocumentWrapper::mapNode(const DOMElementType*    theXercesNode) const
 void
 XercesDocumentWrapper::destroyWrapper()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Set this to null, since it will be deleted
     // by the next for_each...
@@ -800,7 +800,7 @@ XercesDocumentWrapper::createWrapperNode(
 void
 XercesDocumentWrapper::destroyNode(XalanNode*   theNode)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const NodeVectorType::iterator  i =
         find(m_nodes.begin(), m_nodes.end(), theNode);

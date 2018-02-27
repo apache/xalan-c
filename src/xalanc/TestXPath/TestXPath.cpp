@@ -1341,7 +1341,7 @@ main(
             int     /* argc */,
             char*   /* argv */ [])
 {
-    XALAN_USING_STD(cout)
+    using std::cout;
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);

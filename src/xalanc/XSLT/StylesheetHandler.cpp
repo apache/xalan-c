@@ -1747,7 +1747,7 @@ StylesheetHandler::processAccumulatedText()
 bool
 StylesheetHandler::inExtensionElement() const
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     if (!(find(
             m_inExtensionElementStack.begin(),

@@ -141,13 +141,13 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cin)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(hex)
-XALAN_USING_STD(pair)
-XALAN_USING_STD(vector)
+using std::cerr;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::hex;
+using std::pair;
+using std::vector;
 
 
 

@@ -67,7 +67,7 @@ XPathFactoryDefault::~XPathFactoryDefault()
 void
 XPathFactoryDefault::reset()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(m_xpaths.begin(),
              m_xpaths.end(),

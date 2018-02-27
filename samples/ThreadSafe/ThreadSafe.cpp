@@ -83,10 +83,10 @@ extern "C" void  *theThread(void   *param);
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostrstream)
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ostrstream;
 
 
 
@@ -203,7 +203,7 @@ doThreads(size_t    nThreads)
     size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
-    XALAN_USING_STD(vector)
+    using std::vector;
 
     vector<theThreadType>   hThreads;
 

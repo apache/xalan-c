@@ -236,7 +236,7 @@ VariablesStack::pushParams(const ParamsVectorType&  theParams)
     // parameters, the stack stays in a consistent state.
     CommitPushParams    thePusher(*this);
 
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(theParams.begin(), theParams.end(), PushParamFunctor(*this));
 
@@ -385,7 +385,7 @@ VariablesStack::findXObject(
                 XalanNode* const    doc = executionContext.getRootDocument();
                 assert(doc != 0);
 
-                XALAN_USING_STD(find)
+                using std::find;
 
                 // See if the ElemVariable instance is already being evaluated...
                 if (find(m_guardStack.begin(), m_guardStack.end(), var) != m_guardStack.end())

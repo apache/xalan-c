@@ -188,7 +188,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&     construction
     }
     else if (m_cdataSectionElems.empty() == false)
     {
-        XALAN_USING_STD(sort)
+        using std::sort;
 
         sort(
             m_cdataSectionElems.begin(),
@@ -758,7 +758,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&  constructionCont
 bool
 StylesheetRoot::isCDATASectionElementName(const XalanQName&     theQName) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     return find_if(
             m_cdataSectionElems.begin(),

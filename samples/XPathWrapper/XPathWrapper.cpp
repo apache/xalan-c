@@ -70,9 +70,9 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostream)
+using std::cerr;
+using std::endl;
+using std::ostream;
 
 
 

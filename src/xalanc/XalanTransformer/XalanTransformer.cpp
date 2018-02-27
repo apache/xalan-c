@@ -150,7 +150,7 @@ XalanTransformer::~XalanTransformer()
     // Clean up Top-Level Parameters
     clearStylesheetParams();
 
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Clean up the XalanCompiledStylesheet vector.
     for_each(
@@ -545,7 +545,7 @@ LoadErrorMessage(
         theMessage.resize(theLength + 1);
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-            XALAN_USING_STD(strncpy);
+            using std::strncpy;;
 #endif
 
             strncpy(
@@ -709,7 +709,7 @@ XalanTransformer::compileStylesheet(
 int
 XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*  theStylesheet)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const CompiledStylesheetPtrVectorType::iterator     i =
         find(
@@ -836,7 +836,7 @@ XalanTransformer::parseSource(
 int
 XalanTransformer::destroyParsedSource(const XalanParsedSource*  theParsedSource)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const ParsedSourcePtrVectorType::iterator   i =
         find(
@@ -947,7 +947,7 @@ XalanTransformer::setStylesheetParam(
 bool
 XalanTransformer::removeTraceListener(TraceListener*    theTraceListener)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const TraceListenerVectorType::iterator     i =
         find(

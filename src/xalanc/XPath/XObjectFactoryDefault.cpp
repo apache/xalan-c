@@ -233,7 +233,7 @@ XObjectFactoryDefault::doReturnObject(
 
     default:
         {
-            XALAN_USING_STD(find)
+            using std::find;
 
             const XObjectCollectionType::iterator   i =
                     find(m_xobjects.begin(), m_xobjects.end(), theXObject);

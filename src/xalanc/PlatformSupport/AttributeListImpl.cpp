@@ -332,8 +332,8 @@ AttributeListImpl::addAttribute(
 
     bool    fResult = false;
 
-    XALAN_USING_STD(find_if)
-    XALAN_USING_STD(copy)
+    using std::find_if;
+    using std::copy;
 
     typedef AttributeVectorEntry::XMLChVectorType   XMLChVectorType;
 

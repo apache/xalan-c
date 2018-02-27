@@ -53,8 +53,8 @@ const XalanParsedSource * NodesetParam[15] = {
 
 int Usage()
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
     cerr << "Usage: UseStylesheetParam xmlFile xslFile outFile [parameters]" <<endl
          << "   Parameters are:" <<endl
          << "   -s name \"'String Value'\"" <<endl
@@ -70,8 +70,8 @@ main(
           int       argc,
           char*     argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = 0;
     int i, j;

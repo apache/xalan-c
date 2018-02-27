@@ -58,7 +58,7 @@ public:
 
         if (m_heapHandle == NULL)
         {
-            XALAN_USING_STD(runtime_error)
+            using std::runtime_error;
 
             char buffer[20];
             buffer[0] = 0;
@@ -113,7 +113,7 @@ public:
     {
         if (0 == HeapDestroy(m_heapHandle))
         {
-            XALAN_USING_STD(runtime_error)
+            using std::runtime_error;
 
             char buffer[20];
             buffer[0] = 0;

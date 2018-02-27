@@ -70,7 +70,7 @@ NodeSorter::sort(StylesheetExecutionContext&    executionContext)
                     m_scratchVector,
                     m_keys);
 
-    XALAN_USING_STD(stable_sort)
+    using std::stable_sort;
 
     // Use the stl sort algorithm, which will use our compare functor,
     // which returns true if first less than second
@@ -306,7 +306,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
     {
         theCache[theKeyIndex].resize(m_nodes.size(), 0);
 
-        XALAN_USING_STD(fill)
+        using std::fill;
 
         // Fill with the dummy value...
         fill(

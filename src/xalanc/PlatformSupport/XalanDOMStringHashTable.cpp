@@ -150,7 +150,7 @@ XalanDOMStringHashTable::find(
         *theBucketIndex = theLocalBucketIndex;
     }
 
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     const BucketType::const_iterator    i =
         find_if(

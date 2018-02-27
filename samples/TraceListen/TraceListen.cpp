@@ -54,8 +54,8 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strcmp;

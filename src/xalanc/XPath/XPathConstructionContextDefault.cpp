@@ -125,7 +125,7 @@ XPathConstructionContextDefault::problem(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    XALAN_USING_STD(cerr)
+    using std::cerr;
 
     XalanStdOutputStream            theStream(cerr, theManager);
     XalanOutputStreamPrintWriter    thePrintWriter(theStream);
@@ -155,7 +155,7 @@ XPathConstructionContextDefault::problem(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    XALAN_USING_STD(cerr)
+    using std::cerr;
 
     XalanStdOutputStream            theStream(cerr, theManager);
     XalanOutputStreamPrintWriter    thePrintWriter(theStream);

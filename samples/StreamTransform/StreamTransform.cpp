@@ -46,12 +46,12 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(istrstream)
-    XALAN_USING_STD(ofstream)
-    XALAN_USING_STD(ostrstream)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
+    using std::istrstream;
+    using std::ofstream;
+    using std::ostrstream;
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strlen;

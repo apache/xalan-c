@@ -224,7 +224,7 @@ XercesDocumentBridge::mapNode(const DOM_ElementType&    theXercesNode) const
 void
 XercesDocumentBridge::destroyBridge()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Set this to null, since it will be deleted
     // by the next for_each...
@@ -714,7 +714,7 @@ XercesDocumentBridge::createBridgeNode(
 void
 XercesDocumentBridge::destroyNode(XalanNode*    theNode)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const NodeVectorType::iterator  i =
         find(m_nodes.begin(), m_nodes.end(), theNode);

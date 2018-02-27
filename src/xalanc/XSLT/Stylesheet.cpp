@@ -967,7 +967,7 @@ Stylesheet::addObjectIfNotFound(
             const XalanMatchPatternData*    thePattern,
             PatternTableVectorType&         theVector)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const PatternTableVectorType::const_iterator    theResult =
         find(

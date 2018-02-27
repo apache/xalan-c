@@ -604,8 +604,8 @@ convertHelper(
     else
     {
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(localeconv)
-        XALAN_USING_STD(atof)
+        using std::localeconv;
+        using std::atof;
 #endif
 
         const char  theDecimalPointChar =

@@ -135,7 +135,7 @@ NodeRefList::getLength() const
 NodeRefList::size_type
 NodeRefList::indexOf(const XalanNode*   theNode) const
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     // Look for the node in the list.
     NodeListVectorType::const_iterator  i =

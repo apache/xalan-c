@@ -478,7 +478,7 @@ private:
             flushBuffer();
         }
 
-        XALAN_USING_STD(copy)
+        using std::copy;
 
         assert(theString.size() <= m_bufferRemaining);
 

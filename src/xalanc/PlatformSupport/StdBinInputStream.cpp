@@ -66,7 +66,7 @@ StdBinInputStream::readBytes(
     }
     else
     {
-        XALAN_USING_STD(streamsize)
+        using std::streamsize;
 
         assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
 

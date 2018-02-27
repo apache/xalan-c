@@ -209,14 +209,14 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             using xalanc::CharVectorType;
             using xalanc::c_str;
 
-            XALAN_USING_STD(istringstream)
+            using std::istringstream;
 
             CharVectorType  buffer;
             fileToStream(testCase.stylesheet, buffer);
 
             istrstream      compilerStream(c_str(buffer));
 #else
-            XALAN_USING_STD(istringstream)
+            using std::istringstream;
 
             istringstream compilerStream; 
             fileToStream(testCase.stylesheet, compilerStream);
@@ -237,7 +237,7 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
         }
         else 
         {
-            XALAN_USING_STD(endl)
+            using std::endl;
 
             m_logger->error() 
                     << "Mode: " 
@@ -275,14 +275,14 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
                 using xalanc::CharVectorType;
                 using xalanc::c_str;
 
-                XALAN_USING_STD(istringstream)
+                using std::istringstream;
 
                 CharVectorType  buffer;
                 fileToStream(testCase.inputDocument, buffer);
 
                 istrstream      inputStream(c_str(buffer));
 #else
-                XALAN_USING_STD(istringstream)
+                using std::istringstream;
 
                 istringstream inputStream;
                 fileToStream(testCase.inputDocument, inputStream);
@@ -304,7 +304,7 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             }
             else
             {
-                XALAN_USING_STD(endl)
+                using std::endl;
 
                 m_logger->error() 
                     << "Mode: " 
@@ -401,7 +401,7 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
     }
     catch (const XalanDOMString& exception)
     {
-        XALAN_USING_STD(endl)
+        using std::endl;
 
         m_logger->error()  
                 << "Error encountered during transformation: "

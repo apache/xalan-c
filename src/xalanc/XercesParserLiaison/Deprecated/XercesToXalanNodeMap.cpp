@@ -85,7 +85,7 @@ XercesToXalanNodeMap::clear()
 XercesToXalanNodeMap::NodeImplType*
 XercesToXalanNodeMap::getNodeImpl(const XalanNode*  theXalanNode) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     const XercesNodeMapType::const_iterator     i =
         find_if(

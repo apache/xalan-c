@@ -131,7 +131,7 @@ ElemForEach::ElemForEach(
 
 ElemForEach::~ElemForEach()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
      MemoryManager& theManager = m_sortElems.getMemoryManager();
 

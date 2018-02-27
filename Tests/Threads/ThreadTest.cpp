@@ -78,9 +78,9 @@ typedef long sigjmp_buf[_JBLEN];
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
     

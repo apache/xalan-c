@@ -32,7 +32,7 @@
 
 #include "xalanc/Include/XalanMemoryManagement.hpp"
 
-XALAN_USING_STD(istrstream)
+using std::istrstream;
 
 using xalanc::XalanAllocationGuard;
 using xalanc::XalanCompiledStylesheet;
@@ -196,7 +196,7 @@ XalanTransformToData(
             char**          theOutput,
             XalanHandle     theXalanHandle)
 {
-    XALAN_USING_STD(ostrstream)
+    using std::ostrstream;
 
     int status = 0;     
 
@@ -243,7 +243,7 @@ XalanTransformToDataPrebuilt(
             char**          theOutput,
             XalanHandle     theXalanHandle)
 {
-    XALAN_USING_STD(ostrstream)
+    using std::ostrstream;
 
     ostrstream  theOutputStream;    
 

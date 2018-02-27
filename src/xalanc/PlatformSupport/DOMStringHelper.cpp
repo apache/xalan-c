@@ -326,11 +326,11 @@ OutputString(XalanOutputStream&     theStream,
 
 
 
-XALAN_USING_STD(ostream)
+using std::ostream;
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 typedef int     streamsize;
 #else
-XALAN_USING_STD(streamsize)
+using std::streamsize;
 #endif
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
@@ -1399,7 +1399,7 @@ PointerToDOMString(
     char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-    XALAN_USING_STD(sprintf);
+    using std::sprintf;;
 #endif
 
     const int   theCharsWritten = sprintf(theBuffer, "%p", theValue);
@@ -1457,9 +1457,9 @@ DOMStringHelper::NumberToCharacters(
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(sprintf)
-        XALAN_USING_STD(atof)
-        XALAN_USING_STD(isdigit)
+        using std::sprintf;
+        using std::atof;
+        using std::isdigit;
 #endif
 
         const char* const *     thePrintfString = thePrintfStrings;
@@ -1759,9 +1759,9 @@ NumberToDOMString(
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(sprintf)
-        XALAN_USING_STD(atof)
-        XALAN_USING_STD(isdigit)
+        using std::sprintf;
+        using std::atof;
+        using std::isdigit;
 #endif
 
         const char* const *     thePrintfString = thePrintfStrings;

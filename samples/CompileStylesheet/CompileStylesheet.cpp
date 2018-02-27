@@ -48,9 +48,9 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(ostrstream)
+    using std::cerr;
+    using std::endl;
+    using std::ostrstream;
 
     int theResult = 0;
 

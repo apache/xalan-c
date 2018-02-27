@@ -46,10 +46,10 @@
 #endif
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostrstream)
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ostrstream;
 
 #else
 

@@ -260,8 +260,8 @@ public:
     {
         const ConstructableType     defaultValue(*m_memoryManager);
 
-        XALAN_USING_STD(fill_n)
-        XALAN_USING_STD(back_inserter)
+        using std::fill_n;
+        using std::back_inserter;
 
         fill_n(
             back_inserter(*this),
@@ -278,8 +278,8 @@ public:
                     theRHS.size() / theRHS.m_blockSize + (theRHS.size() % theRHS.m_blockSize == 0 ? 0 : 1)),
         m_freeBlockVector(theMemoryManager)
     {
-        XALAN_USING_STD(copy)
-        XALAN_USING_STD(back_inserter)
+        using std::copy;
+        using std::back_inserter;
 
         copy(
             theRHS.begin(),
@@ -469,8 +469,8 @@ public:
     {
         if (this != &theRHS)
         {
-            XALAN_USING_STD(copy)
-            XALAN_USING_STD(back_inserter)
+            using std::copy;
+            using std::back_inserter;
 
             clear();
 

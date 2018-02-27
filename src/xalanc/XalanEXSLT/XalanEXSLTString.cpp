@@ -374,7 +374,7 @@ XalanEXSLTFunctionEncodeURI::execute(
     const GetCachedString   theGuard1(executionContext);
     XalanDOMString&     theBuffer = theGuard1.get();
 
-    XALAN_USING_STD(find)
+    using std::find;
 
     for (XalanDOMString::size_type i = 0; i < theString.length(); ++i)
     {

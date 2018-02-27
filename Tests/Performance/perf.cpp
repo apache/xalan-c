@@ -61,9 +61,9 @@ using std::strcmp;
 
 
 
-XALAN_USING_STD(cout);
-XALAN_USING_STD(cerr);
-XALAN_USING_STD(endl);
+using std::cout;;
+using std::cerr;;
+using std::endl;;
 
 
 using xercesc::XMLPlatformUtils;

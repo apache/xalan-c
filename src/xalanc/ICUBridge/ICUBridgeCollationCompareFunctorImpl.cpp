@@ -134,7 +134,7 @@ ICUBridgeCollationCompareFunctorImpl::create(
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     delete m_defaultCollator;
 
@@ -413,7 +413,7 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 CollatorType*
 ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*     theLocale) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     CollatorCacheListType::iterator i =
         find_if(

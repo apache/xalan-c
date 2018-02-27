@@ -476,7 +476,7 @@ struct DirectoryEnumeratorFunctor
             const StringType&    theFullSearchSpec,
             CollectionType&      theCollection) const
     {
-        XALAN_USING_STD(back_inserter)
+        using std::back_inserter;
 
         EnumerateDirectory(
             m_memoryManager,

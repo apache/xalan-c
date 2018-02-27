@@ -29,7 +29,7 @@ using xalanc::XalanMemMgrs;
 using xalanc::CharVectorType;
 
 
-XALAN_USING_STD(ostringstream)
+using std::ostringstream;
 
 
 

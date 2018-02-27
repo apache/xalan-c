@@ -1026,7 +1026,7 @@ XSLTEngineImpl::addTraceListener(TraceListener* tl)
 void
 XSLTEngineImpl::removeTraceListener(TraceListener*  tl)
 {
-    XALAN_USING_STD(remove)
+    using std::remove;
 
     const TraceListenerVectorType::iterator     i =
         remove(
@@ -1042,7 +1042,7 @@ XSLTEngineImpl::removeTraceListener(TraceListener*  tl)
 void
 XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&  ge)
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(
         m_traceListeners.begin(),
@@ -1055,7 +1055,7 @@ XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&  ge)
 void
 XSLTEngineImpl::fireSelectEvent(const SelectionEvent&   se)
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(
         m_traceListeners.begin(),
@@ -1068,7 +1068,7 @@ XSLTEngineImpl::fireSelectEvent(const SelectionEvent&   se)
 void
 XSLTEngineImpl::fireTraceEvent(const TracerEvent& te)
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(
         m_traceListeners.begin(),
@@ -2805,7 +2805,7 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&    src)
 
             const XalanDOMString&   nodeName = attr->getNodeName();
 
-            XALAN_USING_STD(find_if)
+            using std::find_if;
 
             if (find_if(
                     m_attributeNamesVisited.begin(),
