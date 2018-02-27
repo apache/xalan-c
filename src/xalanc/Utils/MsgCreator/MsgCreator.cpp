@@ -338,7 +338,7 @@ int main(int argC, char* argV[])
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-    XALAN_CPP_NAMESPACE_USE
+    using namespace xalanc;
 
     CmdLineParams   theParams;
 

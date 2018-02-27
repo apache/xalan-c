@@ -64,7 +64,7 @@
 #include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
 #include &lt;xalanc/XPath/XObjectFactory.hpp&gt;
 
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 // This class defines a function that will return the square root
 // of its argument.

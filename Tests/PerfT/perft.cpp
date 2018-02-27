@@ -123,7 +123,7 @@ runTests(
             char*   argv[])
 {
     // Just hoist everything...
-    XALAN_CPP_NAMESPACE_USE
+    using namespace xalanc;
 
     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 

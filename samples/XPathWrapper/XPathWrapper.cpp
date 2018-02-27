@@ -100,7 +100,7 @@ public:
 
         {
             // Just hoist everything...
-            XALAN_CPP_NAMESPACE_USE
+            using namespace xalanc;
 
             typedef XPathConstructionContext::GetAndReleaseCachedString     GetAndReleaseCachedString;
 

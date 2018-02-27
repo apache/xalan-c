@@ -60,7 +60,6 @@
 // Define namespace symbols if the compiler supports it.
 // ---------------------------------------------------------------------------
 #if defined(XALAN_HAS_CPP_NAMESPACE)
-    #define XALAN_CPP_NAMESPACE_USE using namespace XALAN_CPP_NAMESPACE;
     #define XALAN_CPP_NAMESPACE_QUALIFIER XALAN_CPP_NAMESPACE::
     #define XALAN_USING(NAMESPACE,NAME) using NAMESPACE :: NAME;
     #define XALAN_DECLARE_CLASS(NAMESPACE,NAME) namespace NAMESPACE { class NAME; }
@@ -74,7 +73,6 @@
     #endif
 
     #define XALAN_CPP_NAMESPACE
-    #define XALAN_CPP_NAMESPACE_USE
     #define XALAN_CPP_NAMESPACE_QUALIFIER
     #define XALAN_USING(NAMESPACE,NAME)
     #define XALAN_DECLARE_CLASS(NAMESPACE,NAME) class NAME;

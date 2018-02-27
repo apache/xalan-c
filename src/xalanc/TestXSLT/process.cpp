@@ -240,7 +240,7 @@ using xercesc::XMLException;
 
 
 // We need lots of things from the Xalan namespace, so hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 

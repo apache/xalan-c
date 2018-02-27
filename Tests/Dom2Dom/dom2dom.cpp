@@ -86,7 +86,7 @@ XALAN_USING_STD(endl)
 
 
 // Just hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 

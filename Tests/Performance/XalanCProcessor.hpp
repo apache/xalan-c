@@ -67,7 +67,7 @@
 
 
 using xercesc::DOMDocument;;
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 
