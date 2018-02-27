@@ -61,7 +61,6 @@
 // ---------------------------------------------------------------------------
 #if defined(XALAN_HAS_CPP_NAMESPACE)
     #define XALAN_CPP_NAMESPACE_QUALIFIER XALAN_CPP_NAMESPACE::
-    #define XALAN_USING(NAMESPACE,NAME) using NAMESPACE :: NAME;
 
     namespace XALAN_CPP_NAMESPACE { }
     namespace xalanc = XALAN_CPP_NAMESPACE;
@@ -72,7 +71,6 @@
 
     #define XALAN_CPP_NAMESPACE
     #define XALAN_CPP_NAMESPACE_QUALIFIER
-    #define XALAN_USING(NAMESPACE,NAME)
     #if !defined(XALAN_NO_STD_NAMESPACE)
         #define XALAN_NO_STD_NAMESPACE
     #endif
