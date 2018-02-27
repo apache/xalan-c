@@ -113,11 +113,7 @@ public:
 
     typedef FormatterListener::size_type    fl_size_type;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     explicit
     StylesheetExecutionContext(

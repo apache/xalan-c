@@ -1136,11 +1136,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const CharVectorType&   theString);
 
 
@@ -1168,11 +1164,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const XalanDOMChar*     theString,
             MemoryManager&          theMemoryManager);
 
@@ -1210,11 +1202,7 @@ OutputString(
  */
 inline void
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const XalanDOMString&   theString,
             MemoryManager&          theMemoryManager)
 {
@@ -1254,15 +1242,9 @@ operator<<(
  * @param theString the string to output
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const CharVectorType&   theString)
 {
     OutputString(
@@ -1302,15 +1284,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const XalanDOMChar*     theString)
 {
     OutputString(
@@ -1350,15 +1326,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const XalanDOMString&   theString)
 {
     OutputString(
@@ -1378,15 +1348,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&            theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&       theStream,
-#endif
             XalanDOMString&     theString)
 {
     OutputString(

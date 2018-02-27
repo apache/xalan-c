@@ -501,9 +501,7 @@ XObjectFactoryDefault::reset()
 
     m_xtokenStringAdapterAllocator.reset();
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::for_each;
-#endif
 
     for_each(m_xobjects.begin(),
              m_xobjects.end(),

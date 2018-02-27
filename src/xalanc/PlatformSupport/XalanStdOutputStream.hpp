@@ -48,20 +48,12 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStre
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
     typedef int                 StreamSizeType;
 #else
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef streamsize          StreamSizeType;
-#else
     typedef std::streamsize     StreamSizeType;
-#endif
 #endif
 
     /**

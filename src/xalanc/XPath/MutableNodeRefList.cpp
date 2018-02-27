@@ -712,11 +712,7 @@ MutableNodeRefList::clearNulls()
 void
 MutableNodeRefList::reverse()
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    ::reverse(
-#else
     std::reverse(
-#endif
         m_nodeList.begin(),
         m_nodeList.end());
 

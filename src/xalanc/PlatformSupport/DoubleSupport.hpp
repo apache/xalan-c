@@ -83,14 +83,10 @@ public:
 #if defined(_MSC_VER)
         return _isnan(theNumber) != 0;
 #elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
-#if defined(XALAN_NO_STD_NAMESPACE)
-        return isnan(theNumber) != 0;
-#else
 #if defined(SOLARIS)
         return isnan(theNumber) != 0;
 #else
         return std::isnan(theNumber) != 0;
-#endif
 #endif
 #else
         return s_NaN == theNumber;

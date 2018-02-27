@@ -279,7 +279,7 @@ private:
         const char*     m_expression;
     };
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanArrayAutoPtr<ParamPair>  ArrayAutoPtrType;
+    typedef XALAN_CPP_NAMESPACE::XalanArrayAutoPtr<ParamPair>  ArrayAutoPtrType;
 
     ArrayAutoPtrType        m_params;
 
@@ -828,11 +828,11 @@ transform(
 
 using xercesc::MemoryManager;
 
-class WindowsMemoryManager : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class WindowsMemoryManager : public XALAN_CPP_NAMESPACE::XalanMemoryManager
 {
 public:
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+    typedef XALAN_CPP_NAMESPACE::XalanSize_t   XalanSize_t;
 
     WindowsMemoryManager() :
         XalanMemoryManager(),

@@ -96,11 +96,7 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformer
 
 public:
     
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
     typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;

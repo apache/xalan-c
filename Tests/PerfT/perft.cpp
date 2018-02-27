@@ -63,11 +63,11 @@ const char* const   excludeStylesheets[] =
 
 
 inline bool
-checkForExclusion(const XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString&   currentFile)
+checkForExclusion(const XALAN_CPP_NAMESPACE::XalanDOMString&   currentFile)
 {
     for (int i=0; excludeStylesheets[i] != 0; i++)
     {   
-        if (currentFile == XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString(excludeStylesheets[i]))
+        if (currentFile == XALAN_CPP_NAMESPACE::XalanDOMString(excludeStylesheets[i]))
         {
             return true;
         }
@@ -97,7 +97,7 @@ calculateAvgTime(
 
 
 void
-setHelp(XALAN_CPP_NAMESPACE_QUALIFIER XalanFileUtility& h)
+setHelp(XALAN_CPP_NAMESPACE::XalanFileUtility& h)
 {
     h.args.getHelpStream() << endl
          << "Perft dir [-out -sub -i -iter]"

@@ -50,11 +50,7 @@ class XALAN_XSLT_EXPORT XSLTResultTarget
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE   FILE;

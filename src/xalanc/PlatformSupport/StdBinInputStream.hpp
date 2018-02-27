@@ -48,11 +48,7 @@ public:
 
     typedef xercesc::BinInputStream   ParentType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef istream         StreamType;
-#else
     typedef std::istream    StreamType;
-#endif
 
 
     StdBinInputStream(StreamType&   theStream);

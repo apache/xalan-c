@@ -367,11 +367,7 @@ public:
 
         m_data.swap(theOther.m_data);
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-        ::swap(m_size, theOther.m_size);
-#else
         std::swap(m_size, theOther.m_size);
-#endif
     }
 
     XalanDOMString&

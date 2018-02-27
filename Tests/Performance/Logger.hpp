@@ -42,11 +42,7 @@ class Logger
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     Logger(StreamType&  stream);
 

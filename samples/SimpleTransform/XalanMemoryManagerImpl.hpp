@@ -43,7 +43,7 @@
 
 using xercesc::MemoryManager;
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE::XalanMemoryManager
 {
 public:
 
@@ -138,11 +138,11 @@ private:
 
 #else
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE::XalanMemoryManager
 {
 public:
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+    typedef XALAN_CPP_NAMESPACE::XalanSize_t   XalanSize_t;
 
     virtual
     ~XalanMemoryManagerImpl()

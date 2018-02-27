@@ -51,11 +51,7 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformerProblemListener : public ProblemL
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     XalanTransformerProblemListener(
             MemoryManager&  theManager,

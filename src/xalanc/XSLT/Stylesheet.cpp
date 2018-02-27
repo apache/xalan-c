@@ -172,9 +172,7 @@ Stylesheet::create(
 
 Stylesheet::~Stylesheet()
 {
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::for_each;
-#endif
 
     // Clean up all entries in the imports vector.
     for_each(

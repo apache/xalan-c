@@ -450,15 +450,9 @@ public:
 
     void swap(ThisType& theRHS)
     {
-    #if defined(XALAN_NO_STD_NAMESPACE)
-        ::swap(m_memoryManager, theRHS.m_memoryManager);
-        ::swap(m_listHead, theRHS.m_listHead);
-        ::swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
-    #else
         std::swap(m_memoryManager, theRHS.m_memoryManager);
         std::swap(m_listHead, theRHS.m_listHead);
         std::swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
-    #endif
     }
 
 

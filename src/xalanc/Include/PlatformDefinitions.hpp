@@ -60,8 +60,6 @@
 // Define namespace symbols if the compiler supports it.
 // ---------------------------------------------------------------------------
 #if defined(XALAN_HAS_CPP_NAMESPACE)
-    #define XALAN_CPP_NAMESPACE_QUALIFIER XALAN_CPP_NAMESPACE::
-
     namespace XALAN_CPP_NAMESPACE { }
     namespace xalanc = XALAN_CPP_NAMESPACE;
 #else
@@ -70,10 +68,6 @@
     #endif
 
     #define XALAN_CPP_NAMESPACE
-    #define XALAN_CPP_NAMESPACE_QUALIFIER
-    #if !defined(XALAN_NO_STD_NAMESPACE)
-        #define XALAN_NO_STD_NAMESPACE
-    #endif
 #endif
 
 
@@ -110,7 +104,7 @@ typedef unsigned long long XALAN_UINT64;
 typedef long long  XALAN_INT64;
 #endif
 
-#define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE_QUALIFIER XalanCompileErrorBoolean<bool(expr)>()
+#define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE::XalanCompileErrorBoolean<bool(expr)>()
 
 
 

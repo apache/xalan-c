@@ -73,9 +73,7 @@ using xalanc::XSLTInputSource;
 
 
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
 using std::endl;
-#endif
 
 
 

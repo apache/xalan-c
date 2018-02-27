@@ -93,7 +93,7 @@ getTestNumber(const XalanDOMString&     theFile)
 {
     assert(8 < theFile.length());
 
-    return theFile[7] - XALAN_CPP_NAMESPACE_QUALIFIER XalanUnicode::charDigit_0;
+    return theFile[7] - XALAN_CPP_NAMESPACE::XalanUnicode::charDigit_0;
 }
 
 

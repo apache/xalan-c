@@ -144,9 +144,7 @@ public:
     {
         reset();
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::for_each;
-#endif
 
         for_each(
                 m_availableList.begin(),
@@ -182,9 +180,7 @@ public:
     bool
     release(ObjectType*     theInstance)
     {
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::find;
-#endif
 
         typedef typename VectorType::iterator   IteratorType;
 
@@ -285,9 +281,7 @@ public:
     {
         reset();
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::for_each;
-#endif
 
         for_each(
                 m_availableList.begin(),

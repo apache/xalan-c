@@ -67,11 +67,7 @@ class XALAN_XSLT_EXPORT XSLTInputSource : public InputSourceType
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef istream         StreamType;
-#else
     typedef std::istream    StreamType;
-#endif
 
     explicit
     XSLTInputSource(MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());

@@ -119,11 +119,7 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
     m_externalNoNamespaceSchemaLocation(m_memoryManager),
     m_problemListener(0),
     m_errorStream(0),
-#if defined(XALAN_NO_STD_NAMESPACE)
-    m_warningStream(&cerr),
-#else
     m_warningStream(&std::cerr),
-#endif
     m_outputEncoding(m_memoryManager),
     m_topXObjectFactory(XObjectFactoryDefault::create(m_memoryManager)),
     m_stylesheetExecutionContext(StylesheetExecutionContextDefault::create(m_memoryManager))

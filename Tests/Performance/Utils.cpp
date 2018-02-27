@@ -106,10 +106,8 @@ void fileToStream(
     CharVectorType resultFileName;
     fileName.transcode(resultFileName);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::ifstream;
     using std::ostringstream;
-#endif
 
     ifstream resultFile(c_str(resultFileName));
 
@@ -144,10 +142,8 @@ void copyFile(
     CharVectorType sourceFileName;
     sourceFile.transcode(sourceFileName);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::ifstream;
     using std::ofstream;
-#endif
 
     ifstream sourceFileStream(c_str(sourceFileName));
 

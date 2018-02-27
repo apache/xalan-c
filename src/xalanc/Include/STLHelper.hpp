@@ -389,9 +389,7 @@ public:
     {
         if (m_collection != 0)
         {
-#if !defined(XALAN_NO_STD_NAMESPACE)
             using std::for_each;
-#endif
 
             // Delete all of the objects in the temp vector.
             for_each(m_collection->begin(),
@@ -470,9 +468,7 @@ struct pointer_less
     {
         assert(theLHS != 0 && theRHS != 0);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::less;
-#endif
 
         return less<T>()(*theLHS, *theRHS);
     }

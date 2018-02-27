@@ -67,9 +67,8 @@ public:
 
     ~XalanObjectStackCache()
     {
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::for_each;
-#endif
+
         for_each(
                 m_stack.begin(),
                 m_stack.end(),

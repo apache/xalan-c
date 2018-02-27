@@ -66,15 +66,9 @@ public:
     typedef xercesc::DOM_Node     DOM_NodeType;
     typedef xercesc::NodeImpl     NodeImplType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef map<XalanNode*, NodeImplType*, less<XalanNode*> >   XalanNodeMapType;
-
-    typedef map<NodeImplType*, XalanNode*, less<NodeImplType*> >    XercesNodeMapType;
-#else
     typedef std::map<XalanNode*, NodeImplType*>     XalanNodeMapType;
 
     typedef std::map<NodeImplType*, XalanNode*>     XercesNodeMapType;
-#endif
 
     XercesToXalanNodeMap();
 

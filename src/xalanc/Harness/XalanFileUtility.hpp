@@ -98,11 +98,7 @@ public:
     {
     private:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-        typedef ostrstream          StreamType;
-#else
         typedef std::ostrstream     StreamType;
-#endif
 
         StreamType  help;
 
