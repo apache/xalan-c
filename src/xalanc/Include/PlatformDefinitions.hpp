@@ -59,16 +59,8 @@
 // ---------------------------------------------------------------------------
 // Define namespace symbols if the compiler supports it.
 // ---------------------------------------------------------------------------
-#if defined(XALAN_HAS_CPP_NAMESPACE)
-    namespace XALAN_CPP_NAMESPACE { }
-    namespace xalanc = XALAN_CPP_NAMESPACE;
-#else
-    #if defined(XALAN_CPP_NAMESPACE)
-    #undef XALAN_CPP_NAMESPACE
-    #endif
-
-    #define XALAN_CPP_NAMESPACE
-#endif
+namespace XALAN_CPP_NAMESPACE { }
+namespace xalanc = XALAN_CPP_NAMESPACE;
 
 
 #include <cstddef>

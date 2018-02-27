@@ -35,7 +35,6 @@
 
 // This next line enables standard IO streams.
 #define __USE_STD_IOSTREAM
-#define XALAN_HAS_CPP_NAMESPACE
 #define XALAN_POSIX2_AVAILABLE
 #define XALAN_INLINE_INITIALIZATION
 #define XALAN_HAS_STD_ITERATORS

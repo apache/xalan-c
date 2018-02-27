@@ -50,11 +50,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 typedef StylesheetExecutionContextDefault::FormatNumberFunctor FormatNumberFunctor;
 
-#if defined(XALAN_HAS_CPP_NAMESPACE)
     typedef U_ICU_NAMESPACE::DecimalFormat  DecimalFormatType;
-#else
-    typedef DecimalFormat                   DecimalFormatType;
-#endif
 
 struct DecimalFormatCacheStruct
 {
