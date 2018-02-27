@@ -229,7 +229,7 @@ protected:
 
         // Use less<>, since it's guaranteed to do pointer
         // comparisons correctly...
-        XALAN_STD_QUALIFIER less<const ObjectType*>     functor;
+        std::less<const ObjectType*>     functor;
 
         if (functor(theObject, m_objectBlock) == false &&
             functor(theObject, m_objectBlock + rightBoundary) == true)

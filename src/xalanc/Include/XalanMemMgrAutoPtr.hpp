@@ -47,7 +47,7 @@ class XalanMemMgrAutoPtr
 {
 public:
 
-    typedef XALAN_STD_QUALIFIER pair<MemoryManager*, Type*> AutoPtrPairType;
+    typedef std::pair<MemoryManager*, Type*> AutoPtrPairType;
 
     class MemMgrAutoPtrData : public AutoPtrPairType
     {

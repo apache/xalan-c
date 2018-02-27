@@ -209,7 +209,7 @@ URISupport::NormalizeURIText(XalanDOMString&    uriString)
     {
         // Start replacing at the index point, since that's the
         // first one...
-        XALAN_STD_QUALIFIER replace(
+        std::replace(
                 uriString.begin() + index,
                 uriString.end(),
                 XalanUnicode::charReverseSolidus,

@@ -77,13 +77,6 @@
 #endif
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    #define XALAN_STD_QUALIFIER 
-#else
-    #define XALAN_STD_QUALIFIER  std ::
-#endif
-
-
 #include <cstddef>
 
 

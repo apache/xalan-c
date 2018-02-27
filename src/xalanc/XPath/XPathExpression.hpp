@@ -63,7 +63,7 @@ class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
 
-    typedef XALAN_STD_QUALIFIER ostream         OstreamType;
+    typedef std::ostream         OstreamType;
 
     typedef XalanVector<int>                    OpCodeMapType;
     typedef XalanVector<XToken>                 TokenQueueType;

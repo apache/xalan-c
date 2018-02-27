@@ -354,7 +354,7 @@ protected:
 #if defined(XALAN_CLASSIC_IOSTREAMS)
         ostrstream                          stringstream;
 #else
-        XALAN_STD_QUALIFIER ostringstream   stringstream;
+        std::ostringstream   stringstream;
 #endif
     };
 

@@ -489,7 +489,7 @@ struct pointer_equal
         const T*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
-        return XALAN_STD_QUALIFIER equal_to<T>()(*theLHS, *theRHS);
+        return std::equal_to<T>()(*theLHS, *theRHS);
     }
 };
 

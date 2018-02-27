@@ -72,7 +72,7 @@ XalanCopy(
             InputIteratorType   end,
             OutputIteratorType  iterator)
 {
-    return XALAN_STD_QUALIFIER copy(begin, end, iterator);
+    return std::copy(begin, end, iterator);
 }
 
 
@@ -85,7 +85,7 @@ XalanTransform(
             OutputIteratorType  iterator,
             UnaryFunction       function)
 {
-    return XALAN_STD_QUALIFIER transform(begin, end, iterator);
+    return std::transform(begin, end, iterator);
 }
 
 

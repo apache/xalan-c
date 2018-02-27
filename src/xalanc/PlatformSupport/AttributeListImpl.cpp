@@ -92,7 +92,7 @@ void
 AttributeListImpl::deleteEntries(AttributeVectorType&   theVector)
 {
     // Delete all of the objects in the vector.
-    XALAN_STD_QUALIFIER for_each(
+    std::for_each(
         theVector.begin(),
         theVector.end(),
         DeleteFunctor<AttributeVectorEntry>(theVector.getMemoryManager()));
@@ -268,7 +268,7 @@ AttributeListImpl::getType(const XMLCh* const name) const
     assert(name != 0);
 
     const AttributeVectorType::const_iterator   i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_AttributeVector.begin(),
             m_AttributeVector.end(),
             NameCompareFunctor(name));
@@ -291,7 +291,7 @@ AttributeListImpl::getValue(const XMLCh* const name) const
     assert(name != 0);
 
     const AttributeVectorType::const_iterator   i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_AttributeVector.begin(),
             m_AttributeVector.end(),
             NameCompareFunctor(name));
@@ -450,7 +450,7 @@ AttributeListImpl::removeAttribute(const XMLCh*     name)
 
     // Update the attribute, if it's already there...
     const AttributeVectorType::iterator     i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_AttributeVector.begin(),
             m_AttributeVector.end(),
             NameCompareFunctor(name));

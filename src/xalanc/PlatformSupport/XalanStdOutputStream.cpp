@@ -51,7 +51,7 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 #endif
 {
     // This will make sure that cerr is not buffered...
-    if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
+    if (&m_outputStream == &std::cerr)
     {
         setBufferSize(0);
 
@@ -61,7 +61,7 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 #endif
     }
 #if defined(XALAN_NEWLINE_IS_CRLF)
-    else if (&m_outputStream == &XALAN_STD_QUALIFIER cout)
+    else if (&m_outputStream == &std::cout)
     {
         m_newlineString = s_nlString;
         m_newlineStringLength = s_nlStringLength;

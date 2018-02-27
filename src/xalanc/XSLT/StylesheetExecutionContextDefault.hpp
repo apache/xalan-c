@@ -100,7 +100,7 @@ public:
     typedef XalanVector<XalanOutputStream*>             OutputStreamVectorType;
 
     typedef XalanVector<const ElemTemplateElement*> ElementTemplateElementStackType;
-    typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>       XPathCacheEntry;
+    typedef std::pair<const XPath*, ClockType>       XPathCacheEntry;
     typedef XalanMap <XalanDOMString, XPathCacheEntry>              XPathCacheMapType;
     typedef XalanVector<const ElemTemplate*>            CurrentTemplateStackType;
 

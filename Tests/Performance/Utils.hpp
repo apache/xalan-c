@@ -76,7 +76,7 @@ fileToStream(
 #if defined(XALAN_CLASSIC_IOSTREAMS)
             XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType&   resultStream);
 #else
-            XALAN_STD_QUALIFIER istringstream&              resultStream);
+            std::istringstream&              resultStream);
 #endif
 
 

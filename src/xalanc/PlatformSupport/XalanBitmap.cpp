@@ -51,7 +51,7 @@ XalanBitmap::~XalanBitmap()
 void
 XalanBitmap::clearAll()
 {
-    XALAN_STD_QUALIFIER fill(m_bitmap.begin(), m_bitmap.end(), '\0');
+    std::fill(m_bitmap.begin(), m_bitmap.end(), '\0');
 }
 
 

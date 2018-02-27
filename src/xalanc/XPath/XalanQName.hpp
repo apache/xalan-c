@@ -437,7 +437,7 @@ template<>
 struct XalanMapKeyTraits<XalanQName>
 {
     typedef XalanHashMemberReference<XalanQName>        Hasher;
-    typedef XALAN_STD_QUALIFIER equal_to<XalanQName>    Comparator;
+    typedef std::equal_to<XalanQName>    Comparator;
 };
 
 template<>

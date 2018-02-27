@@ -456,7 +456,7 @@ TransformString(
             OutputIteratorType  theOutputIterator,
             FunctionType        theFunction)
 {
-    return XALAN_STD_QUALIFIER transform(
+    return std::transform(
             theInputBegin,
             theInputEnd,
             theOutputIterator,
@@ -478,7 +478,7 @@ TransformString(
     TransformString(
             theInputString,
             theInputString + theInputStringLength,
-            XALAN_STD_QUALIFIER back_inserter(theConvertedString),
+            std::back_inserter(theConvertedString),
             theFunction);
 
     return theConvertedString;
@@ -996,10 +996,10 @@ MakeXalanDOMCharVector(
 
         theResult.reserve(theLength);
 
-        XALAN_STD_QUALIFIER copy(
+        std::copy(
             data,
             data + theLength,
-            XALAN_STD_QUALIFIER back_inserter(theResult));
+            std::back_inserter(theResult));
     }
 
     return theResult;
@@ -1410,7 +1410,7 @@ PointerToDOMString(
     TranscodeNumber(
             theBuffer,
             theBuffer + theCharsWritten,
-            XALAN_STD_QUALIFIER back_inserter(theResult));
+            std::back_inserter(theResult));
 
     return theResult;
 }
@@ -1827,7 +1827,7 @@ NumberToDOMString(
         TranscodeNumber(
                 theBuffer,
                 theBuffer + theCharsWritten,
-                XALAN_STD_QUALIFIER back_inserter(theResult));
+                std::back_inserter(theResult));
     }
 
     return theResult;

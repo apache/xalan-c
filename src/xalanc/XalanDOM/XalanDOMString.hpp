@@ -993,7 +993,7 @@ template<>
 struct XalanMapKeyTraits<XalanDOMString>
 {
     typedef DOMStringHashFunction                           Hasher;
-    typedef XALAN_STD_QUALIFIER equal_to<XalanDOMString>    Comparator;
+    typedef std::equal_to<XalanDOMString>    Comparator;
 };
 
 

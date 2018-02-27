@@ -81,7 +81,7 @@ private :
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 inline ostream& operator<<(ostream& target, const StrX& toDump)
 #else
-inline XALAN_STD_QUALIFIER ostream& operator<<(XALAN_STD_QUALIFIER ostream& target, const StrX& toDump)
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 #endif
 {
     target << toDump.localForm();

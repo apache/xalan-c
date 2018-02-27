@@ -100,7 +100,7 @@ void fileToStream(
 #if defined(XALAN_CLASSIC_IOSTREAMS)
             CharVectorType&                     resultStream)
 #else
-            XALAN_STD_QUALIFIER istringstream&  resultStream)
+            std::istringstream&  resultStream)
 #endif
 {
     CharVectorType resultFileName;

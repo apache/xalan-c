@@ -90,25 +90,25 @@ public:
 #endif
 
 #if defined(XALAN_HAS_STD_ITERATORS)
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
+    typedef std::reverse_iterator<iterator>          reverse_iterator_;
+    typedef std::reverse_iterator<const_iterator>    const_reverse_iterator_;
 #elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
-    typedef XALAN_STD_QUALIFIER random_access_iterator_tag  iterator_category;
+    typedef std::random_access_iterator_tag  iterator_category;
 
     // This is a specific case for the Rogue Wave STL on Solaris.
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
+    typedef std::reverse_iterator<
         iterator,
         iterator_category,
         value_type> reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
+    typedef std::reverse_iterator<
         const_iterator,
         iterator_category,
         const value_type> const_reverse_iterator_;
 #else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
+    typedef std::reverse_iterator<
         iterator,
         value_type>         reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
+    typedef std::reverse_iterator<
         const_iterator,
         value_type,
         const_reference>    const_reverse_iterator_;
@@ -276,7 +276,7 @@ public:
 
         if (theFirst != theLast)
         {
-            XALAN_STD_QUALIFIER copy(
+            std::copy(
                 theLast, 
                 end(),
                 theFirst);
@@ -386,7 +386,7 @@ public:
 
                     // copy the remaining part of inserted range into 
                     // the original vector spaces
-                    XALAN_STD_QUALIFIER copy(theFirst, toInsertSplit, thePosition);
+                    std::copy(theFirst, toInsertSplit, thePosition);
                 }
                 else
                 {
@@ -403,10 +403,10 @@ public:
                     }
 
                     // reverse copy the remaining part of the "right" piece of the current vector
-                    XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
+                    std::copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
 
                     // insert into current vector
-                    XALAN_STD_QUALIFIER copy(theFirst, theLast, thePosition);
+                    std::copy(theFirst, theLast, thePosition);
                 }
             }
         }
@@ -487,7 +487,7 @@ public:
 
                     // copy the remaining part of inserted range into 
                     // the original vector spaces
-                    XALAN_STD_QUALIFIER fill(thePosition, thePosition + theRightSplitSize, theData);
+                    std::fill(thePosition, thePosition + theRightSplitSize, theData);
                 }
                 else
                 {
@@ -504,10 +504,10 @@ public:
                     }
 
                     // reverse copy the remaining part of the "right" piece of the current vector
-                    XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theCount, theOriginalEnd);
+                    std::copy_backward(thePosition, theOriginalEnd - theCount, theOriginalEnd);
 
                     // insert into current vector
-                    XALAN_STD_QUALIFIER fill(thePosition, thePosition + theCount, theData);
+                    std::fill(thePosition, thePosition + theCount, theData);
                 }
             }
         }
@@ -838,7 +838,7 @@ public:
                 }
 
                 // Copy everything that already exists...
-                XALAN_STD_QUALIFIER copy(
+                std::copy(
                     theRHS.begin(),
                     theRHSCopyEnd,
                     begin());
@@ -934,11 +934,11 @@ private:
         assert(theFirst <= theLast);
 
 #if defined(XALAN_HAS_STD_DISTANCE)
-        return XALAN_STD_QUALIFIER distance(theFirst, theLast);
+        return std::distance(theFirst, theLast);
 #else
         size_type   theDistance = size_type(0);
 
-        XALAN_STD_QUALIFIER distance(theFirst, theLast, theDistance);
+        std::distance(theFirst, theLast, theDistance);
 
         return theDistance;
 #endif
@@ -1097,7 +1097,7 @@ private:
     static void
     outOfRange()
     {
-        throw XALAN_STD_QUALIFIER out_of_range("");
+        throw std::out_of_range("");
     }
 
     void
@@ -1177,7 +1177,7 @@ operator==(
     }
     else
     {
-        return XALAN_STD_QUALIFIER equal(theLHS.begin(), theLHS.end(), theRHS.begin());
+        return std::equal(theLHS.begin(), theLHS.end(), theRHS.begin());
     }
 }
 
@@ -1200,7 +1200,7 @@ operator<(
             const XalanVector<Type>&    theLHS,
             const XalanVector<Type>&    theRHS)
 {
-    return XALAN_STD_QUALIFIER lexicographical_compare(
+    return std::lexicographical_compare(
                 theLHS.begin(),
                 theLHS.end(),
                 theRHS.begin(),

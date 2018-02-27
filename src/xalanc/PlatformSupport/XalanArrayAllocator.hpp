@@ -46,7 +46,7 @@ public:
     typedef XalanVector<Type>               VectorType;
     typedef typename VectorType::size_type  size_type;
 
-    typedef XALAN_STD_QUALIFIER pair<size_type, VectorType * >      ListEntryType;
+    typedef std::pair<size_type, VectorType * >      ListEntryType;
     typedef XalanList<ListEntryType>                                ListType;
 
     typedef Type                            value_type;

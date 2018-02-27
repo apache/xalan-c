@@ -92,7 +92,7 @@ Logger::log(eLogType    logType)
     timeStr[24] = '\0';
 
     m_stream << timeStr
-             << XALAN_STD_QUALIFIER setw(10)
+             << std::setw(10)
              << logText[logType]
              << ": ";
 

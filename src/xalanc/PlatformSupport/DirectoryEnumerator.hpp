@@ -481,7 +481,7 @@ struct DirectoryEnumeratorFunctor
         EnumerateDirectory(
             m_memoryManager,
             theFullSearchSpec,
-            XALAN_STD_QUALIFIER back_inserter(theCollection),
+            std::back_inserter(theCollection),
             m_filterPredicate,
             m_conversionFunction,
             m_includeSelfAndParent);
@@ -509,7 +509,7 @@ struct DirectoryEnumeratorFunctor
             m_memoryManager,
             theDirectory,
             theSearchSpec,
-            XALAN_STD_QUALIFIER back_inserter(theCollection),
+            std::back_inserter(theCollection),
             m_filterPredicate,
             m_conversionFunction,
             m_includeSelfAndParent);
