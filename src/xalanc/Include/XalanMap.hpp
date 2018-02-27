@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -748,7 +748,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

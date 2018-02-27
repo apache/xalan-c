@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -496,7 +496,7 @@ struct pointer_equal
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

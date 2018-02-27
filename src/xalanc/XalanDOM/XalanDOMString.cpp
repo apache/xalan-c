@@ -26,7 +26,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -804,7 +804,7 @@ XalanDOMString::length(const char*  theString)
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 
@@ -812,7 +812,7 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 const XalanDOMString::size_type     theOneTranslatedWbCharLen = 10;
@@ -1297,4 +1297,4 @@ TranscodeFromLocalCodePage(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

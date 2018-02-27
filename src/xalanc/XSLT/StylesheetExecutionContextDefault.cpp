@@ -80,7 +80,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -2980,4 +2980,4 @@ StylesheetExecutionContextDefault::FormatterToTextDOMString::~FormatterToTextDOM
 #endif
 
 
-XALAN_CPP_NAMESPACE_END
+}

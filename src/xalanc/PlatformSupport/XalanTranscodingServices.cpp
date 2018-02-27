@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -615,4 +615,4 @@ XalanTranscodingServices::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

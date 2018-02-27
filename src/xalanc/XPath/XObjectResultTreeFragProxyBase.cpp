@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -170,4 +170,4 @@ XObjectResultTreeFragProxyBase::getIndex() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

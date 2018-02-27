@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -110,4 +110,4 @@ XalanSourceTreeDOMSupport::isNodeAfter(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -286,7 +286,7 @@ private:
     static const XalanDOMString             s_emptyString;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

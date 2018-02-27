@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -280,7 +280,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

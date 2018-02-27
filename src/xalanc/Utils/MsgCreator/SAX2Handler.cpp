@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
   using std::sprintf;
@@ -243,4 +243,4 @@ SAX2Handler::endDocument()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

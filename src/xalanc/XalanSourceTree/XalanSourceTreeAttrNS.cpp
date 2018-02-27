@@ -23,7 +23,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -77,4 +77,4 @@ XalanSourceTreeAttrNS::getLocalName() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

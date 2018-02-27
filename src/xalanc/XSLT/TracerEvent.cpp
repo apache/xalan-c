@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -147,4 +147,4 @@ TracerEvent::printNodeList(const XalanNodeList& l, XalanDOMString& r)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

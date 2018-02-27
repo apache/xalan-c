@@ -24,7 +24,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -122,4 +122,4 @@ FunctionFormatNumber::getError(XalanDOMString&  theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

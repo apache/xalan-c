@@ -27,7 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -131,4 +131,4 @@ const XalanDOMString::size_type     FormatterListener::s_piDataLength;
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

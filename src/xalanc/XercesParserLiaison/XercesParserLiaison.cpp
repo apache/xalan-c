@@ -60,7 +60,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 XercesParserLiaison::XercesParserLiaison(
@@ -796,4 +796,4 @@ XercesParserLiaison::doCreateDocument(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

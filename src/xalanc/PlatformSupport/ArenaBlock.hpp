@@ -26,7 +26,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 template<class ObjectType,
@@ -152,7 +152,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

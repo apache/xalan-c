@@ -44,7 +44,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1243,4 +1243,4 @@ const SizeType      XPathFunctionTable::s_functionNamesSize =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

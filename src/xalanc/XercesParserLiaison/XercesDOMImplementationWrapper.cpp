@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -113,4 +113,4 @@ XercesDOMImplementationWrapper::createDocument(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

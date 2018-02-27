@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -53,7 +53,7 @@ struct XALAN_XSLT_EXPORT DecimalToRoman
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

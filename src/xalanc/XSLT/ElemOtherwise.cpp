@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -117,4 +117,4 @@ ElemOtherwise::execute(StylesheetExecutionContext&  executionContext) const
 #endif
 
 
-XALAN_CPP_NAMESPACE_END
+}

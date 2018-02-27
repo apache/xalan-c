@@ -31,7 +31,7 @@
 
 #include <cerrno>
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 using xercesc::XMLMsgLoader;
@@ -138,7 +138,7 @@ XalanNLSMessageLoader::loadMsg(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

@@ -56,7 +56,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -430,4 +430,4 @@ FormatterToXercesDOM::processAccumulatedText()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

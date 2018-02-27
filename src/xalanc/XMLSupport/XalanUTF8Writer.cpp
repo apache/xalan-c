@@ -19,7 +19,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -37,4 +37,4 @@ XalanUTF8Writer::XalanUTF8Writer(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

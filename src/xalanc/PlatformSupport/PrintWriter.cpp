@@ -25,7 +25,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -73,4 +73,4 @@ PrintWriter::~PrintWriter()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

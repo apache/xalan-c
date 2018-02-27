@@ -28,7 +28,7 @@
 #include <xalanc/PlatformSupport/Writer.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 template<
@@ -201,7 +201,7 @@ private:
     BoolStackType   m_preserves;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

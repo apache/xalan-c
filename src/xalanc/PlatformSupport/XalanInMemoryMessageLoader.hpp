@@ -32,7 +32,7 @@
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 class XALAN_PLATFORMSUPPORT_EXPORT XalanInMemoryMessageLoader : public XalanMessageLoader
 {
@@ -69,7 +69,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

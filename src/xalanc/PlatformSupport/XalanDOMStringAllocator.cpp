@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -123,4 +123,4 @@ XalanDOMStringAllocator::create(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

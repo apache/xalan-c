@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -251,4 +251,4 @@ XalanNumberFormat::setGroupingSeparator(const XalanDOMString&   s)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

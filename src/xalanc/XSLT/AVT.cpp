@@ -35,7 +35,7 @@
 #include "StylesheetConstructionContext.hpp"
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -376,4 +376,4 @@ AVT::nextToken(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

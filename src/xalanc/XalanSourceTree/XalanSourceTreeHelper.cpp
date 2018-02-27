@@ -37,7 +37,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -521,4 +521,4 @@ XalanSourceTreeHelper::getLastSibling(XalanNode*    theNode)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

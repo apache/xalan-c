@@ -49,7 +49,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -343,4 +343,4 @@ KeyTable::processKeyDeclaration(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

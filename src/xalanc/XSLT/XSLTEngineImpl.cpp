@@ -114,7 +114,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 const XalanDOMString    XSLTEngineImpl::s_emptyString(XalanMemMgrs::getDummyMemMgr());
@@ -3226,7 +3226,7 @@ XSLTEngineImpl::uninstallFunctions()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 XALAN_USING_XALAN(XalanDOMString)
@@ -3257,7 +3257,7 @@ static XalanDOMString   s_typeValueString4(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -3429,4 +3429,4 @@ XSLTEngineImpl::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -40,7 +40,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 static XalanDOMString   s_localBooleanString(XalanMemMgrs::getDummyMemMgr());
@@ -1477,4 +1477,4 @@ XObject::XObjectInvalidConversionException::formatErrorString(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

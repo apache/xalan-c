@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -157,4 +157,4 @@ XercesDOMFormatterWalker::endNode(const DOMNodeType*    node)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

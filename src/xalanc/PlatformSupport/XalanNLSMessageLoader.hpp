@@ -25,7 +25,7 @@
 
 #include <nl_types.h>
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 class XALAN_PLATFORMSUPPORT_EXPORT XalanNLSMessageLoader : public XalanMessageLoader 
 
@@ -62,7 +62,7 @@ private:
     MemoryManager& m_memoryManager;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif // XALAN_NLS_MSG_LOADER
 

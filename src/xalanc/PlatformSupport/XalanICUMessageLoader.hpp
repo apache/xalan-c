@@ -33,7 +33,7 @@
 #include <unicode/ures.h>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 class XALAN_PLATFORMSUPPORT_EXPORT XalanICUMessageLoader : public XalanMessageLoader 
@@ -83,7 +83,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif //  defined (XALAN_ICU_MSG_LOADER)
 

@@ -38,7 +38,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -306,4 +306,4 @@ ElemUse::processUseAttributeSets(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

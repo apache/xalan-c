@@ -30,7 +30,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -142,7 +142,7 @@ struct XalanMapKeyTraits<XalanQNameByReference> : public XalanMapKeyTraits<Xalan
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

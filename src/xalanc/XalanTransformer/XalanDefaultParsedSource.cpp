@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -274,4 +274,4 @@ XalanDefaultParsedSource::getURI() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

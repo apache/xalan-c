@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -363,4 +363,4 @@ FormatterToText::update(bool    fNormalizationOnly)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

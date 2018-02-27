@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -60,4 +60,4 @@ Writer::getStream() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

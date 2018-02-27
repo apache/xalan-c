@@ -59,7 +59,7 @@ XALAN_USING_STD(endl)
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -532,4 +532,4 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -53,7 +53,7 @@ class ostream;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -2839,7 +2839,7 @@ isXMLWhitespace(const XalanDOMChar*     theString)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

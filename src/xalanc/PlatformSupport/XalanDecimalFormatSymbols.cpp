@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -149,4 +149,4 @@ XalanDecimalFormatSymbols::operator==(const XalanDecimalFormatSymbols&  theRHS) 
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

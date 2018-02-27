@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -402,6 +402,6 @@ private:
     unsigned int    m_defined;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif // XALANPARSEDURI_HEADER_GUARD_1357924680

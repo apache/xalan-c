@@ -24,7 +24,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -56,4 +56,4 @@ XalanBitmap::clearAll()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

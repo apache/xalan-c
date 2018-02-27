@@ -73,7 +73,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1021,4 +1021,4 @@ StylesheetRoot::executeAttributeSet(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -71,7 +71,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -2052,4 +2052,4 @@ const StylesheetConstructionContextDefault::ElementTokenTableEntry&     Styleshe
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

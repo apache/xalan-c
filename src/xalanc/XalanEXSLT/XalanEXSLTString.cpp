@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -810,4 +810,4 @@ XalanEXSLTStringFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

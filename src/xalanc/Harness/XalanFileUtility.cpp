@@ -111,7 +111,7 @@ using std::time;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -2166,4 +2166,4 @@ const XalanDOMChar  XalanFileUtility::s_pathSep[] =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

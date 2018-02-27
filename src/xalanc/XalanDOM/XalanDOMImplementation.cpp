@@ -19,7 +19,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -57,4 +57,4 @@ XalanDOMImplementation::operator==(const XalanDOMImplementation&    /* theRHS */
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

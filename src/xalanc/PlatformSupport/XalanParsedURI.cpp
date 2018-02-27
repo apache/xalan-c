@@ -27,7 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 #if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
@@ -325,4 +325,4 @@ XalanDOMString& XalanParsedURI::resolve(
     return relativeURI.make(theResult);
 }
 
-XALAN_CPP_NAMESPACE_END
+}

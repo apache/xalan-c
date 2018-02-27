@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -170,4 +170,4 @@ XSLTResultTarget::~XSLTResultTarget()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -114,4 +114,4 @@ XPathFactoryDefault::create()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

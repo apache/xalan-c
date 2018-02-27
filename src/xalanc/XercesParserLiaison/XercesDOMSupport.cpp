@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -145,4 +145,4 @@ XercesDOMSupport::isNodeAfter(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -45,7 +45,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -358,4 +358,4 @@ XResultTreeFrag::dereferenced()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

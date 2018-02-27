@@ -40,7 +40,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -2031,4 +2031,4 @@ const XalanDOMString::size_type     FormatterToXML::s_maxBufferSize = 512;
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

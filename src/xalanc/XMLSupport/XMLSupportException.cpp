@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -51,4 +51,4 @@ XMLSupportException::~XMLSupportException()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

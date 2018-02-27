@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 const XalanDOMChar  XalanFileOutputStream::XalanFileOutputStreamOpenException::m_type[] = 
 {   
@@ -392,4 +392,4 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::~XalanFileOutputStre
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

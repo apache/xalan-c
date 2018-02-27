@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -37,4 +37,4 @@ StylesheetConstructionContext::~StylesheetConstructionContext()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

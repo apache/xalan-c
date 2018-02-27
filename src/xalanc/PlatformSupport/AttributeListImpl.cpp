@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -469,4 +469,4 @@ AttributeListImpl::removeAttribute(const XMLCh*     name)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

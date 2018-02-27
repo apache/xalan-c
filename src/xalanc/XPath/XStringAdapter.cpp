@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -129,4 +129,4 @@ XStringAdapter::stringLength(XPathExecutionContext&     executionContext) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

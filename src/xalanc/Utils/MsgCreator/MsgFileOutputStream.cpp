@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -263,4 +263,4 @@ MsgFileOutputStream::writeUTFPrefix()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -85,4 +85,4 @@ XalanDocumentFragmentNodeRefListBaseProxy::indexOf(const XalanNode*     theNode)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -56,7 +56,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -329,4 +329,4 @@ XSLTProcessorEnvSupportDefault::problem(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

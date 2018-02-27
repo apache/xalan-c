@@ -32,7 +32,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -811,4 +811,4 @@ DoubleSupport::round(double     theValue)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

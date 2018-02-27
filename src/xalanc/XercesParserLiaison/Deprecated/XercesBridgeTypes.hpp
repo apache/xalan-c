@@ -55,7 +55,7 @@ namespace XERCES_CPP_NAMESPACE
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -89,7 +89,7 @@ typedef xercesc::DOMString            DOMStringType;
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

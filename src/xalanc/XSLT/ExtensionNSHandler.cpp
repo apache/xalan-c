@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -218,4 +218,4 @@ ExtensionNSHandler::getScriptString(const XalanElement&     /* elem */,
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

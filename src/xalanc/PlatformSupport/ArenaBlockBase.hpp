@@ -32,7 +32,7 @@
 #endif
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
@@ -296,7 +296,7 @@ private:
     operator==(const ThisType&) const;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

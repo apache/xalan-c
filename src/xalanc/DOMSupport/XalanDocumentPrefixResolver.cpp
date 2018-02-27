@@ -30,7 +30,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -186,4 +186,4 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::endNode(XalanNode*   /* n
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

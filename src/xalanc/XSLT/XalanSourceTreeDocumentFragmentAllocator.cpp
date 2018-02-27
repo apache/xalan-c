@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -86,4 +86,4 @@ XalanSourceTreeDocumentFragmentAllocator::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

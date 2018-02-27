@@ -48,7 +48,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1557,4 +1557,4 @@ const FormatterToHTML::size_type        FormatterToHTML::s_metaStringLength =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

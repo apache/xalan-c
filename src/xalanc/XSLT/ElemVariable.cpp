@@ -40,7 +40,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -394,4 +394,4 @@ ElemVariable::getValue(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

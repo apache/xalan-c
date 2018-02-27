@@ -39,7 +39,7 @@
 #error You must provide a message loader
 #endif
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 static const size_t kMaxMessageLength = 1024;
 
@@ -328,4 +328,4 @@ XalanMessageLoader::load(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

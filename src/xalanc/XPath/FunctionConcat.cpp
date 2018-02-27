@@ -27,7 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -137,4 +137,4 @@ FunctionConcat::getError(XalanDOMString&    theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

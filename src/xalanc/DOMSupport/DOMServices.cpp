@@ -77,7 +77,7 @@ static XalanDOMString::size_type    s_XMLNamespacePrefixURILength = 0;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1268,4 +1268,4 @@ DOMServices::isNodeAfterSibling(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

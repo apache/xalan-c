@@ -91,7 +91,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 const XSLTInputSource*  XalanTransformer::s_emptyInputSource = 0;
@@ -1524,4 +1524,4 @@ XalanTransformer::EnsureFunctionsInstallation::~EnsureFunctionsInstallation()
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}

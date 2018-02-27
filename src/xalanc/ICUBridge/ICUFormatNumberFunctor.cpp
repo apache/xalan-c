@@ -44,7 +44,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -459,4 +459,4 @@ ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(
     return theResult;
 }
 
-XALAN_CPP_NAMESPACE_END
+}

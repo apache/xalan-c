@@ -19,7 +19,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -61,4 +61,4 @@ XalanDocumentFragment::operator==(const XalanDocumentFragment&  /* theRHS */) co
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

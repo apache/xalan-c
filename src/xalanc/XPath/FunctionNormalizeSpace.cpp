@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -264,4 +264,4 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&    theString) c
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

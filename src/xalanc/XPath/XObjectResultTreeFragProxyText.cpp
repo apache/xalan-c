@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -237,4 +237,4 @@ XObjectResultTreeFragProxyText::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

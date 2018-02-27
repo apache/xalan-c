@@ -24,7 +24,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 const XalanDOMChar  XSLTProcessorException::m_type[] = 
 {   
@@ -85,4 +85,4 @@ XSLTProcessorException::~XSLTProcessorException()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

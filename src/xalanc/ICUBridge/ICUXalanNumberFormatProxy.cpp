@@ -35,7 +35,7 @@ U_NAMESPACE_USE
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -191,4 +191,4 @@ ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&   s)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

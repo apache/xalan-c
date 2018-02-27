@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::FILE;
@@ -122,7 +122,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -339,4 +339,4 @@ XalanSourceTreeComment::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

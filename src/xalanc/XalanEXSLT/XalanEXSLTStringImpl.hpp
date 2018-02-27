@@ -32,7 +32,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -386,7 +386,7 @@ private:
     operator==(const XalanEXSLTFunctionDecodeURI&) const;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

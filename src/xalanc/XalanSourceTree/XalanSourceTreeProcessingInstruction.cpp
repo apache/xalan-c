@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -307,4 +307,4 @@ XalanSourceTreeProcessingInstruction::appendSiblingNode(XalanSourceTreeText*    
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -236,4 +236,4 @@ StringTokenizer::FindNextDelimiterIndex(XalanDOMString::size_type   theStartInde
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
