@@ -153,9 +153,9 @@ doCollationCompare(
 
 int
 NodeSorter::NodeSortKeyCompare::compare(
-                first_argument_type     theLHS,
-                second_argument_type    theRHS,
-                XalanSize_t             theKeyIndex) const
+                const NodeVectorType::value_type&    theLHS,
+                const NodeVectorType::value_type&    theRHS,
+                XalanSize_t                          theKeyIndex) const
 {
     assert(theLHS.m_node != 0 && theRHS.m_node != 0);
     assert(theKeyIndex < m_nodeSortKeys.size());
@@ -265,9 +265,9 @@ getResult(
 
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const
 {
     assert(theKey.getPrefixResolver() != 0);
 
@@ -423,9 +423,9 @@ cacheValue(const XalanDOMString&    theEntry)
 
 const XalanDOMString&
 NodeSorter::NodeSortKeyCompare::getStringResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const
 {
     assert(theKey.getPrefixResolver() != 0);
 

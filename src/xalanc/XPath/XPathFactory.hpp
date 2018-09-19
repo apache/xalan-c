@@ -80,11 +80,7 @@ public:
      * A functor for use with stl algorithms.
      *
      */
-#if defined(XALAN_NO_STD_NAMESPACE)
-    struct DeleteXPathFunctor : public unary_function<const XPath*, void>
-#else
-    struct DeleteXPathFunctor : public std::unary_function<const XPath*, bool>
-#endif
+    struct DeleteXPathFunctor
     {
     public:
 
@@ -96,8 +92,8 @@ public:
         {
         }
 
-        result_type
-        operator()(argument_type    theXPath) const
+        bool
+        operator()(const XPath*    theXPath) const
         {
             if (m_fInReset == true)
             {

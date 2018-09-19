@@ -46,7 +46,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef size_t  size_type;
 
 template <class Key>
-class XalanHasher : public XALAN_STD_QUALIFIER unary_function<Key, size_type>
+class XalanHasher
 {
 public:
     size_type operator()(const Key& key) const

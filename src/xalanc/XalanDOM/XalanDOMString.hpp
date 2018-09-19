@@ -847,10 +847,10 @@ private:
  * @param theKey XalanDOMString to be hashed
  * @return hash value for XalanDOMString
  */
-struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString&, size_t>
+struct DOMStringHashFunction
 {
-    result_type
-    operator() (argument_type   theKey) const
+    size_t
+    operator() (const XalanDOMString&   theKey) const
     {
         return theKey.hash();
     }
@@ -864,10 +864,10 @@ struct DOMStringHashFunction : public XALAN_STD_QUALIFIER unary_function<const X
  * @param theKey XalanDOMString to be hashed
  * @return hash value for XalanDOMString
  */
-struct DOMStringPointerHashFunction : public XALAN_STD_QUALIFIER unary_function<const XalanDOMString*, size_t>
+struct DOMStringPointerHashFunction
 {
-    result_type
-    operator() (argument_type   theKey) const
+    size_t
+    operator() (const XalanDOMString*    theKey) const
     {
         assert (theKey != 0);
 
@@ -899,15 +899,11 @@ struct XalanMapKeyTraits<const XalanDOMString*>
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringEqualsFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return XalanDOMString::equals(theLHS, theRHS);
     }
@@ -922,15 +918,11 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringNotEqualsFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringNotEqualsFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return !XalanDOMString::equals(theLHS, theRHS);
     }
@@ -945,15 +937,11 @@ struct DOMStringNotEqualsFunction : public std::binary_function<const XalanDOMSt
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHSl
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringLessThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringLessThanFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return theLHS.compare(theRHS) < 0 ? true : false;
     }
@@ -967,11 +955,11 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
  * @param theRHS second string to compare
  * @return true if the theLHS is equal to theRHS
  */
-struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_function<const XalanDOMString*, const XalanDOMString*, bool>
+struct DOMStringPointerEqualToFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString*    theLHS,
+                const XalanDOMString*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
 
@@ -987,15 +975,11 @@ struct DOMStringPointerEqualToFunction : public XALAN_STD_QUALIFIER binary_funct
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHSl
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringPointerLessThanFunction : public binary_function<const XalanDOMString*, const XalanDOMString*, bool>
-#else
-struct DOMStringPointerLessThanFunction : public std::binary_function<const XalanDOMString*, const XalanDOMString*, bool>
-#endif
+struct DOMStringPointerLessThanFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString*    theLHS,
+                const XalanDOMString*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
 

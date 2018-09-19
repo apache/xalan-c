@@ -2683,14 +2683,10 @@ MakeXalanDOMCharVector(const XalanDOMString&    data,
 
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct c_wstr_functor : public unary_function<XalanDOMString, const XalanDOMChar*>
-#else
-struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDOMChar*>
-#endif
+struct c_wstr_functor
 {
-    result_type
-    operator() (const argument_type&    theString) const
+    const XalanDOMChar*
+    operator() (const XalanDOMString&    theString) const
     {
         return theString.c_str();
     }
@@ -2705,15 +2701,11 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHS, without respect to case.
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringLessThanIgnoreCaseASCIIFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringLessThanIgnoreCaseASCIIFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
     }
@@ -2728,15 +2720,11 @@ struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<co
  * @param theRHS second string to compare
  * @return true if the theLHS is less than or equal to theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringLessThanOrEqualFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) <= 0 ? true : false;
     }
@@ -2751,15 +2739,11 @@ struct DOMStringLessThanOrEqualFunction : public std::binary_function<const Xala
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringGreaterThanFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) > 0 ? true : false;
     }
@@ -2774,15 +2758,11 @@ struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOM
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than or equal to theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringGreaterThanOrEqualFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) >= 0 ? true : false;
     }
@@ -2795,11 +2775,7 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
  * manner.  It substitutes for the default less<type*> so that the contents of wide strings
  * can be compared, rather than just the pointers.
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct less_no_case_ascii_wide_string : public binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
-#else
-struct less_no_case_ascii_wide_string : public std::binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
-#endif
+struct less_no_case_ascii_wide_string
 {
     /**
      * Compare the values of two objects.
@@ -2809,10 +2785,10 @@ struct less_no_case_ascii_wide_string : public std::binary_function<const XalanD
      * @param theRHS second object to compare
      * @return true if objects are the same
      */
-    result_type
+    bool
     operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const XalanDOMChar*    theLHS,
+            const XalanDOMChar*    theRHS) const
     {
         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
     }
