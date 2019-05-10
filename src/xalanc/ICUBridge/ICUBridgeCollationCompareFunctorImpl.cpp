@@ -46,7 +46,7 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor     ICUB
 inline CollatorType*
 createCollator(
             UErrorCode&         theStatus,
-            const Locale&       theLocale,
+            const icu::Locale&  theLocale,
             XalanDOMString*     theLocaleName = 0)
 {
 
@@ -83,14 +83,14 @@ createCollator(
     if (theLang == 0)
     {
 #if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
-        return createCollator(theStatus, Locale::US, theLocaleName);
+        return createCollator(theStatus, icu::Locale::US, theLocaleName);
 #else
-        return createCollator(theStatus, Locale::getDefault(), theLocaleName);
+        return createCollator(theStatus, icu::Locale::getDefault(), theLocaleName);
 #endif
     }
     else
     {
-        return createCollator(theStatus, Locale(theLang), theLocaleName);
+        return createCollator(theStatus, icu::Locale(theLang), theLocaleName);
     }
 }
 
@@ -250,7 +250,7 @@ createCollator(
         }
 #endif
         return CollatorType::createInstance(
-                    Locale::createFromName(theBuffer),
+                    icu::Locale::createFromName(theBuffer),
                     theStatus);
     }
 }

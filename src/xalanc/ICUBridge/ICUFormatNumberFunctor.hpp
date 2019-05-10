@@ -220,12 +220,12 @@ private:
         DecimalFormatType*                  theFormatter,
         const XalanDecimalFormatSymbols&    theDFS) const;
 
-    static DecimalFormat*
+    static DecimalFormatType*
     createDecimalFormat(
         const XalanDecimalFormatSymbols&    theXalanDFS,
         MemoryManager&                      theManager);
 
-    static DecimalFormat*
+    static DecimalFormatType*
     createDecimalFormat(MemoryManager&  theManager)
     {
         const XalanDecimalFormatSymbols     theDFS(theManager);

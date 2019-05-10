@@ -226,67 +226,67 @@ ICUFormatNumberFunctor::createDecimalFormat(
     UErrorCode theStatus = U_ZERO_ERROR;    
 
     // Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
-    XalanAutoPtr<DecimalFormatSymbols>  theDFS(new DecimalFormatSymbols(theStatus));
+    XalanAutoPtr<icu::DecimalFormatSymbols>  theDFS(new icu::DecimalFormatSymbols(theStatus));
     // We got a XalanDecimalFormatSymbols, so set the
     // corresponding data in the ICU DecimalFormatSymbols.
     theDFS->setSymbol(
-        DecimalFormatSymbols::kZeroDigitSymbol,
+        icu::DecimalFormatSymbols::kZeroDigitSymbol,
         UChar(theXalanDFS.getZeroDigit()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kGroupingSeparatorSymbol,
+        icu::DecimalFormatSymbols::kGroupingSeparatorSymbol,
         UChar(theXalanDFS.getGroupingSeparator()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kDecimalSeparatorSymbol,
+        icu::DecimalFormatSymbols::kDecimalSeparatorSymbol,
         UChar(theXalanDFS.getDecimalSeparator()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kPerMillSymbol,
+        icu::DecimalFormatSymbols::kPerMillSymbol,
         UChar(theXalanDFS.getPerMill()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kPercentSymbol,
+        icu::DecimalFormatSymbols::kPercentSymbol,
         UChar(theXalanDFS.getPercent()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kDigitSymbol,
+        icu::DecimalFormatSymbols::kDigitSymbol,
         UChar(theXalanDFS.getDigit()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kPatternSeparatorSymbol,
+        icu::DecimalFormatSymbols::kPatternSeparatorSymbol,
         UChar(theXalanDFS.getPatternSeparator()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kInfinitySymbol,
+        icu::DecimalFormatSymbols::kInfinitySymbol,
         ICUBridge::XalanDOMStringToUnicodeString(
             theManager,
             theXalanDFS.getInfinity()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kNaNSymbol,
+        icu::DecimalFormatSymbols::kNaNSymbol,
         ICUBridge::XalanDOMStringToUnicodeString(
             theManager,
             theXalanDFS.getNaN()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kMinusSignSymbol,
+        icu::DecimalFormatSymbols::kMinusSignSymbol,
         UChar(theXalanDFS.getMinusSign()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kCurrencySymbol,
+        icu::DecimalFormatSymbols::kCurrencySymbol,
         ICUBridge::XalanDOMStringToUnicodeString(
             theManager,
             theXalanDFS.getCurrencySymbol()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kIntlCurrencySymbol,
+        icu::DecimalFormatSymbols::kIntlCurrencySymbol,
         ICUBridge::XalanDOMStringToUnicodeString(
             theManager,
             theXalanDFS.getInternationalCurrencySymbol()));
 
     theDFS->setSymbol(
-        DecimalFormatSymbols::kMonetarySeparatorSymbol,
+        icu::DecimalFormatSymbols::kMonetarySeparatorSymbol,
         UChar(theXalanDFS.getMonetaryDecimalSeparator()));
 
     // Construct a DecimalFormat instance.
@@ -379,7 +379,7 @@ ICUFormatNumberFunctor::doICUFormat(
     if (U_SUCCESS(theStatus))
     {
         // Do the format...
-        UnicodeString   theUnicodeResult;
+        icu::UnicodeString   theUnicodeResult;
         theFormatter->format(theNumber, theUnicodeResult);
         ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
     }
