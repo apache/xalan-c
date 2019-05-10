@@ -123,7 +123,7 @@ openFile(
 
 #if defined(XALAN_WINDOWS)
     HandleType  theFileHandle = CreateFileW(
-            theFileName.c_str(),
+            reinterpret_cast<const wchar_t *>(theFileName.c_str()),
             GENERIC_WRITE,
             0,
             0,

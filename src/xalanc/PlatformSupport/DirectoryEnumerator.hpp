@@ -84,7 +84,7 @@ public:
     const XalanDOMChar*
     getName() const
     {
-        return name;
+        return const_cast<XalanDOMChar*>(reinterpret_cast<const XalanDOMChar*>(&name[0]));
     }
 
     /**
@@ -261,7 +261,7 @@ EnumerateDirectory(
 #pragma warning(disable: 4244)
     theHandleType   theSearchHandle =
         _wfindfirst(
-            const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
+            reinterpret_cast<wchar_t*>(const_cast<XalanDOMChar*>(theConversionFunction(theFullSearchSpec))),
             &theFindData);
 #pragma warning(pop)
 
