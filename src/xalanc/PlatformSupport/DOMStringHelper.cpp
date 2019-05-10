@@ -868,7 +868,7 @@ collationCompare(
             const XalanDOMChar*     theRHS)
 {
 #if defined(XALAN_USE_WINDOWS_COLLATION)
-    return _wcscoll_l(theLHS, theRHS, s_locale);
+    return _wcscoll_l(reinterpret_cast<const wchar_t *>(theLHS), reinterpret_cast<const wchar_t *>(theRHS), s_locale);
 #else
     return doCollationCompare(
                 theLHS,
