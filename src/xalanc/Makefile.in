@@ -145,10 +145,10 @@ ALL_OBJECTS = $(addprefix $(XSL_OBJ_DIR)/,$(addsuffix .o,$(basename $(notdir $(A
 
 vpath %.cpp \
 $(ALL_VPATH_CPP)
-${XSL_OBJ_DIR}/%.o:%.cpp
+${XSL_OBJ_DIR}/%.o:%.cpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-${XSL_OBJ_DIR}/%.o:%.hpp
+${XSL_OBJ_DIR}/%.o:%.hpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
 
 all:	 lib  testXSLT testXPath XalanExe
@@ -169,45 +169,47 @@ depend:
 
 compile:	 $(ALL_OBJECTS) 
 
+$(ALL_OBJECTS): locale
+
 ifeq (${OS390BATCH},1)
 XalanExe: lib  "//'$(LOADSAMP)(${BATCH_XALAN_UTIL_NAME})'"
 
-"//'$(LOADSAMP)(${BATCH_XALAN_UTIL_NAME})'": ${XSL_OBJ_DIR}/XalanExe.o
+"//'$(LOADSAMP)(${BATCH_XALAN_UTIL_NAME})'": ${XSL_OBJ_DIR}/XalanExe.o | lib
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $^ -o $@ $(XALAN_LIB) $(ALLLIBS)
-${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
+${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 testXSLT: lib  "//'$(LOADSAMP)(${BATCH_TEST_UTIL_NAME})'"
 
-"//'$(LOADSAMP)(${BATCH_TEST_UTIL_NAME})'": ${XSL_OBJ_DIR}/process.o
+"//'$(LOADSAMP)(${BATCH_TEST_UTIL_NAME})'": ${XSL_OBJ_DIR}/process.o | lib
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $^ -o $@ $(XALAN_LIB) $(ALLLIBS)
-${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
+${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 else # Not OS390BATCH
 
 XalanExe: lib  $(XSL_BIN_DIR)/Xalan
 
-$(XSL_BIN_DIR)/Xalan: ${XSL_OBJ_DIR}/XalanExe.o
+$(XSL_BIN_DIR)/Xalan: ${XSL_OBJ_DIR}/XalanExe.o | lib
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $^ -o $@ $(XALAN_LIB) $(ALLLIBS)	$(OTHER_LINK_PARAMETERS)
-${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp
+${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
 testXSLT: lib  $(XSL_BIN_DIR)/testXSLT
 
-$(XSL_BIN_DIR)/testXSLT: ${XSL_OBJ_DIR}/process.o
+$(XSL_BIN_DIR)/testXSLT: ${XSL_OBJ_DIR}/process.o | lib
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $^ -o $@ $(XALAN_LIB) $(ALLLIBS)	$(OTHER_LINK_PARAMETERS)
-${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp
+${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp locale
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 testXPath: lib  $(XSL_BIN_DIR)/testXPath
 
-$(XSL_BIN_DIR)/testXPath: ${XSL_OBJ_DIR}/TestXPath.o ${XSL_OBJ_DIR}/NodeNameTreeWalker.o
+$(XSL_BIN_DIR)/testXPath: ${XSL_OBJ_DIR}/TestXPath.o ${XSL_OBJ_DIR}/NodeNameTreeWalker.o | lib
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $^ -o $@ $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS)	$(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
