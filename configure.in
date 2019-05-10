@@ -64,6 +64,7 @@ case "${host}" in
         *-*-OS400*)     platform=OS400 ;;
         *-*-cygwin*)    platform=CYGWIN ;;
         *-*-mingw*)     platform=MINGW ;;
+        *-*-gnu*)       platform=HURD ;;
         *)              platform=UNKNOWN ;;
 esac
 
