@@ -1,0 +1,40 @@
+language: c
+
+sudo: false
+dist: trusty
+
+cache:
+  directories:
+    - download
+
+addons:
+  apt_packages:
+    - libxerces-c-dev
+    - libicu-dev
+    - libcurl4-openssl-dev
+    - autoconf
+    - automake
+    - libtool
+
+before_install:
+  - if test "$(uname -s)" = Darwin; then brew update; fi
+  - if test "$(uname -s)" = Darwin; then brew install xerces-c; fi
+
+os:
+  - linux
+  - osx
+
+env:
+  matrix:
+    - BUILD=autoconf TYPE=Release MSGLOADER=inmem TRANSCODER=default
+    - BUILD=cmake TOOL="Unix Makefiles" TYPE=Debug MSGLOADER=inmemory TRANSCODER=default
+    - BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
+
+matrix:
+  fast_finish: true
+  exclude:
+    - os: osx
+      env: BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
+
+script:
+  - ./scripts/ci-travis "$BUILD" "$TOOL" "$TYPE" "$MSGLOADER" "$TRANSCODER"
