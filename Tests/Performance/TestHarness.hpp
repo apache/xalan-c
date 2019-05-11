@@ -28,6 +28,7 @@
 #include <fstream.h>
 #else
 #include <fstream>
+#include <sstream>
 #endif
 
 
