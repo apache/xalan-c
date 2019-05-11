@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Xalan-C
+Description: XSLT library for C/C++
+Version: @xalan_c_version@
+Libs: -L${libdir} -lxalan-c
+Cflags: -I${includedir}

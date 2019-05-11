@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/XalanCConfigInternal.cmake)
+
+add_library(XalanC::XalanC INTERFACE IMPORTED)
+set_target_properties(XalanC::XalanC PROPERTIES INTERFACE_LINK_LIBRARIES xalan_xalan-c)
+
+# For compatibility with FindXalanC.
+set(XalanC_VERSION "@xalan-c_VERSION@")
+get_target_property(XalanC_INCLUDE_DIRS xalan_xalan-c INTERFACE_INCLUDE_DIRECTORIES)
+set(XalanC_LIBRARIES XalanC::XalanC)
