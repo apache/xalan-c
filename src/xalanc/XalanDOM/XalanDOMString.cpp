@@ -781,7 +781,7 @@ XalanDOMString::equals(
 XalanDOMString::size_type
 XalanDOMString::length(const XalanDOMChar*  theString)
 {
-    return XALAN_CPP_NAMESPACE :: length(theString);
+    return xalanc::length(theString);
 }
 
 

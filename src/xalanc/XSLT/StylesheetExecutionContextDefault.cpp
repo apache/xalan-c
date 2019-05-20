@@ -1673,7 +1673,7 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
             const XalanDOMChar*                 theRHS,
             XalanCollationServices::eCaseOrder  /* theCaseOrder */) const
 {
-    return XALAN_CPP_NAMESPACE :: collationCompare(theLHS, theRHS);
+    return xalanc::collationCompare(theLHS, theRHS);
 }
 
 

@@ -96,7 +96,7 @@ typedef unsigned long long XALAN_UINT64;
 typedef long long  XALAN_INT64;
 #endif
 
-#define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE::XalanCompileErrorBoolean<bool(expr)>()
+#define XALAN_STATIC_ASSERT(expr) xalanc::XalanCompileErrorBoolean<bool(expr)>()
 
 
 

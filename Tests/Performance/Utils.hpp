@@ -74,7 +74,7 @@ void
 fileToStream(
             const XalanDOMString&                           fileName,
 #if defined(XALAN_CLASSIC_IOSTREAMS)
-            XALAN_CPP_NAMESPACE::CharVectorType&   resultStream);
+            xalanc::CharVectorType&   resultStream);
 #else
             std::istringstream&              resultStream);
 #endif
