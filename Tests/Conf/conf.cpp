@@ -21,13 +21,8 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 
 #include <cstdio>
 

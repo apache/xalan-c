@@ -28,11 +28,7 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 
 
 

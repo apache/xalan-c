@@ -24,9 +24,7 @@
 
 
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
-#endif
 
 
 

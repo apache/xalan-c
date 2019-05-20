@@ -35,11 +35,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -326,26 +322,19 @@ OutputString(XalanOutputStream&     theStream,
 
 
 
-using std::ostream;
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-typedef int     streamsize;
-#else
-using std::streamsize;
-#endif
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-            ostream&                theStream,
+            std::ostream&           theStream,
             const CharVectorType&   theString)
 {
     if (theString.empty() == false)
     {
         assert(
-            static_cast<XALAN_UINT64>(static_cast<streamsize>(theString.size())) == theString.size());
+            static_cast<XALAN_UINT64>(static_cast<std::streamsize>(theString.size())) == theString.size());
 
         theStream.write(
             &*theString.begin(),
-            static_cast<streamsize>(theString.size()));
+            static_cast<std::streamsize>(theString.size()));
     }
 }
 
@@ -365,7 +354,7 @@ OutputString(XalanOutputStream&     theStream,
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-            ostream&                theStream,
+            std::ostream&           theStream,
             const XalanDOMChar*     theString,
             MemoryManager&          theMemoryManager)
 {

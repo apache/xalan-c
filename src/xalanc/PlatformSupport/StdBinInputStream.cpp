@@ -21,9 +21,7 @@
 
 #include <cassert>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
-#endif
 
 
 
@@ -70,13 +68,9 @@ StdBinInputStream::readBytes(
 
         assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
         m_stream.read(
             reinterpret_cast<char*>(toFill),
             static_cast<streamsize>(maxToRead));
-#else
-        m_stream.read(toFill, maxToRead);
-#endif
 
         return m_stream.gcount();
     }

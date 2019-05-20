@@ -18,11 +18,7 @@
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 // for 'C' strcmp function used in parsing main() parameters
 #include <string.h>

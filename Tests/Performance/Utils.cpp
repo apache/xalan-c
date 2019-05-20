@@ -25,9 +25,7 @@
 
 #include <stdio.h>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <sstream>
-#endif
 
 
 
@@ -97,11 +95,7 @@ const XalanDOMChar* getPathSep()
 
 void fileToStream(
             const XalanDOMString&               fileName,
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-            CharVectorType&                     resultStream)
-#else
             std::istringstream&  resultStream)
-#endif
 {
     CharVectorType resultFileName;
     fileName.transcode(resultFileName);
@@ -111,26 +105,16 @@ void fileToStream(
 
     ifstream resultFile(c_str(resultFileName));
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
     ostringstream fileOutputStream;
-#endif
 
     char ch; 
 
     while(resultFile.get(ch))
     {
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-        resultStream.push_back(ch);
-#else
         fileOutputStream.put(ch);
-#endif
     }
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-    resultStream.push_back('\0');
-#else
     resultStream.str(fileOutputStream.str());
-#endif
 }
 
 

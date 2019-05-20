@@ -24,15 +24,9 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <fstream>
 #include <iostream>
 #include <strstream>
-#endif
 
 
 

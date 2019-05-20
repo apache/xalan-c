@@ -22,9 +22,7 @@
 
 #include <cassert>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <istream>
-#endif
 
 
 

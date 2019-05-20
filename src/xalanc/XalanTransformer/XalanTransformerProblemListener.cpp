@@ -23,11 +23,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <ostream>
-#endif
 
 
 

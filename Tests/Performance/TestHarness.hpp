@@ -24,12 +24,8 @@
 
 
 #include <climits>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#else
 #include <fstream>
 #include <sstream>
-#endif
 
 
 
@@ -206,22 +202,10 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
 
         if (testCase.inputMode == XalanDOMString("stream"))
         {
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-            using xalanc::CharVectorType;
-            using xalanc::c_str;
-
-            using std::istringstream;
-
-            CharVectorType  buffer;
-            fileToStream(testCase.stylesheet, buffer);
-
-            istrstream      compilerStream(c_str(buffer));
-#else
             using std::istringstream;
 
             istringstream compilerStream; 
             fileToStream(testCase.stylesheet, compilerStream);
-#endif
             timeCompile.start();
             compiledStylesheet = m_processor.compileStylesheet(
                     compilerStream,
@@ -272,22 +256,10 @@ TestHarness<Processor>::executeTestCase(const TestCaseType& testCase)
             if (testCase.inputMode == XalanDOMString("stream") &&
                 !parsedInputSource)
             {
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-                using xalanc::CharVectorType;
-                using xalanc::c_str;
-
-                using std::istringstream;
-
-                CharVectorType  buffer;
-                fileToStream(testCase.inputDocument, buffer);
-
-                istrstream      inputStream(c_str(buffer));
-#else
                 using std::istringstream;
 
                 istringstream inputStream;
                 fileToStream(testCase.inputDocument, inputStream);
-#endif
 
                 timeInput.start();
                 parsedInputSource = m_processor.parseInputSource(

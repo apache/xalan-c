@@ -27,11 +27,7 @@
 #include <cstring>
 #include <cstdlib>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 using namespace xercesc;
 
@@ -78,11 +74,7 @@ private :
     char*   fLocalForm;
 };
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-inline ostream& operator<<(ostream& target, const StrX& toDump)
-#else
 inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
-#endif
 {
     target << toDump.localForm();
     return target;

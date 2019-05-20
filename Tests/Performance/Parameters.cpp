@@ -20,11 +20,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iomanip.h>
-#else
 #include <iomanip>
-#endif
 
 
 

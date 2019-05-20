@@ -25,11 +25,7 @@
 
 
 #include <cstdio>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 
 
 

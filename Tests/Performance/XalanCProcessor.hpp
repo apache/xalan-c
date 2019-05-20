@@ -23,11 +23,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <sstream>
-#endif
 
 
 
@@ -351,11 +347,7 @@ protected:
 
         void reset() { stringstream.flush();}
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-        ostrstream                          stringstream;
-#else
         std::ostringstream   stringstream;
-#endif
     };
 
     StreamResult    m_streamResult;

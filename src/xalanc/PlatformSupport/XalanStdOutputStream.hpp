@@ -25,12 +25,8 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iosfwd>
 #include <ios>
-#endif
 
 
 
@@ -50,11 +46,7 @@ public:
 
     typedef std::ostream    StreamType;
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-    typedef int                 StreamSizeType;
-#else
     typedef std::streamsize     StreamSizeType;
-#endif
 
     /**
      * Construct a XalanStdOutputStream instance for output to the

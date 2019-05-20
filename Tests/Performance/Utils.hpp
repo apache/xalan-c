@@ -25,11 +25,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#else
 #include <fstream>
-#endif
 
 
 #include <xalanc/Harness/XalanFileUtility.hpp>
@@ -73,11 +69,7 @@ const XalanDOMChar* getPathSep();
 void
 fileToStream(
             const XalanDOMString&                           fileName,
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-            xalanc::CharVectorType&   resultStream);
-#else
             std::istringstream&              resultStream);
-#endif
 
 
 /**

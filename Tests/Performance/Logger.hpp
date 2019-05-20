@@ -25,12 +25,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iosfwd>
-//#include <ios>
-#endif
 
 
 

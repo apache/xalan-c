@@ -29,13 +29,8 @@
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#else
 #include <fstream>
 #include <iostream>
-#endif
 
 
 

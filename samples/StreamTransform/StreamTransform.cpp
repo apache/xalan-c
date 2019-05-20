@@ -21,15 +21,9 @@
 
 
 #include <cstring>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#include <fstream.h>
-#else
 #include <iostream>
 #include <strstream>
 #include <fstream>
-#endif
 
 
 

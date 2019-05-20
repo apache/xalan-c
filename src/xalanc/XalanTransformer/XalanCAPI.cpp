@@ -20,11 +20,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <cassert>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <strstream>
-#endif
 
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"

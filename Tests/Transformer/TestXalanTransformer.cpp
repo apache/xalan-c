@@ -37,13 +37,8 @@
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 
 
 using std::cerr;

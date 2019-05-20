@@ -26,11 +26,7 @@
 #include "xalanc/Include/XalanVector.hpp"
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <strstream>
-#endif
 
 
 

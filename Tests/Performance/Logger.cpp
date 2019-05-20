@@ -28,13 +28,8 @@
 
 #include <ctime>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <iomanip.h>
-#else
 #include <iostream>
 #include <iomanip>
-#endif
 
 
 using xalanc::XalanDOMString;
