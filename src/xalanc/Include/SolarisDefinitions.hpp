@@ -42,8 +42,5 @@
 #endif
 
 #define XALAN_POSIX2_AVAILABLE
-#if defined(__sparc)
-#define XALAN_NO_STD_NUMERIC_LIMITS
-#endif
 
 #endif  // SOLARISDEFINITIONS_HEADER_GUARD_1357924680

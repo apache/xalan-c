@@ -22,9 +22,7 @@
 #include <clocale>
 #include <cmath>
 #include <climits>
-#if !defined(XALAN_NO_STD_NUMERIC_LIMITS)
 #include <limits>
-#endif
 
 
 #include "DOMStringHelper.hpp"
@@ -36,14 +34,10 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-DoubleSupport::NumberUnion          DoubleSupport::s_NaN;
-#else
 const DoubleSupport::NumberUnion    DoubleSupport::s_NaN =
 {
     std::numeric_limits<double>::quiet_NaN()
 };
-#endif
 
 const DoubleSupport::NumberUnion    DoubleSupport::s_positiveInfinity = { HUGE_VAL };
 
@@ -58,17 +52,6 @@ const DoubleSupport::NumberUnion    DoubleSupport::s_negativeZero = { -s_positiv
 void
 DoubleSupport::initialize()
 {
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-    // We initialize this at here because some
-    // platforms have had issues with signals
-    // if we call sqrt(-2.01) during static
-    // initialization.
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    s_NaN.d = std::sqrt(-2.01);
-#else
-    s_NaN.d = sqrt(-2.01);
-#endif
-#endif
     // There seems to be problems with various standard libraries, so
     // this is disabled for now.  We need to revisit this when we
     // update our autoconf/automake system to detect the right value
@@ -81,9 +64,6 @@ DoubleSupport::initialize()
 void
 DoubleSupport::terminate()
 {
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-    s_NaN.d = 0.0L;
-#endif
 }
 
 

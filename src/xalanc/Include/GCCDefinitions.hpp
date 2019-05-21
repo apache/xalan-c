@@ -37,8 +37,6 @@
 #define XALAN_HAS_STD_ITERATORS
 #define XALAN_HAS_STD_DISTANCE
 
-#define XALAN_NO_STD_NUMERIC_LIMITS
-
 #if defined(CYGWIN)
 #if defined(WIN32)
 #undef WIN32
