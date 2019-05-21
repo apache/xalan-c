@@ -89,30 +89,8 @@ public:
     typedef const value_type*       const_iterator;
 #endif
 
-#if defined(XALAN_HAS_STD_ITERATORS)
     typedef std::reverse_iterator<iterator>          reverse_iterator_;
     typedef std::reverse_iterator<const_iterator>    const_reverse_iterator_;
-#elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
-    typedef std::random_access_iterator_tag  iterator_category;
-
-    // This is a specific case for the Rogue Wave STL on Solaris.
-    typedef std::reverse_iterator<
-        iterator,
-        iterator_category,
-        value_type> reverse_iterator_;
-    typedef std::reverse_iterator<
-        const_iterator,
-        iterator_category,
-        const value_type> const_reverse_iterator_;
-#else
-    typedef std::reverse_iterator<
-        iterator,
-        value_type>         reverse_iterator_;
-    typedef std::reverse_iterator<
-        const_iterator,
-        value_type,
-        const_reference>    const_reverse_iterator_;
-#endif
 
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;

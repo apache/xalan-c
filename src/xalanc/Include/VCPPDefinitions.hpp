@@ -44,7 +44,6 @@
       #define XALAN_USE_WINDOWS_COLLATION
     #endif
   #endif
-  #define XALAN_HAS_STD_ITERATORS
   #if _MSC_VER == 1300
     #define XALAN_VCPP_USE_PTRIT
   #endif
