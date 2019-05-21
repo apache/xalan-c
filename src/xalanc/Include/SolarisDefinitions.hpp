@@ -33,7 +33,6 @@
 
 
 #if defined(_STLP_CONFIG_H)
-#define XALAN_HAS_STD_DISTANCE
 #else
 #define XALAN_RW_NO_CLASS_PARTIAL_SPEC
 #endif

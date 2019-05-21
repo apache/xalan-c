@@ -53,7 +53,6 @@
 #endif
 
 #define XALAN_NEWLINE_IS_CRLF
-#define XALAN_HAS_STD_DISTANCE
 #define XALAN_NO_REENTRANT_TIME_FUNCTIONS
 
 // long long is not supported on all MS compilers.

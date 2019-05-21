@@ -34,7 +34,6 @@
 
 
 #define XALAN_INLINE_INITIALIZATION
-#define XALAN_HAS_STD_DISTANCE
 
 #if defined(CYGWIN)
 #if defined(WIN32)

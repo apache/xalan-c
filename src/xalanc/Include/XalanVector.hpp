@@ -911,15 +911,7 @@ private:
         // assert this...
         assert(theFirst <= theLast);
 
-#if defined(XALAN_HAS_STD_DISTANCE)
         return std::distance(theFirst, theLast);
-#else
-        size_type   theDistance = size_type(0);
-
-        std::distance(theFirst, theLast, theDistance);
-
-        return theDistance;
-#endif
     }
 
     value_type*
