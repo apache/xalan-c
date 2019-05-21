@@ -192,11 +192,7 @@ protected:
         m_allocator(theManager),
         m_objectCount(0),
         m_blockSize(theBlockSize),
-#if defined(XALAN_NEW_STD_ALLOCATOR)
         m_objectBlock(m_allocator.allocate(m_blockSize))
-#else
-        m_objectBlock(m_allocator.allocate(m_blockSize, 0))
-#endif
     {
         assert(theBlockSize > 0);
 
