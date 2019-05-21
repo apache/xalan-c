@@ -19,7 +19,7 @@
 
 #include <algorithm>
 #include <iostream>
-
+#include <cstring>
 
 
 #include <xercesc/sax/SAXParseException.hpp>
@@ -536,9 +536,7 @@ LoadErrorMessage(
 
         theMessage.resize(theLength + 1);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             using std::strncpy;;
-#endif
 
             strncpy(
                 &*theMessage.begin(),

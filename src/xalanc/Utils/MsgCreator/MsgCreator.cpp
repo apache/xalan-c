@@ -147,9 +147,7 @@ getArgs(
             ++i;
             if( i < argc && argv[i][0] != '-' )
             {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
                 using std::size_t;
-#endif
                 const size_t    localeLen = strlen(argv[i]);
 
                 if ( localeLen != 2 && localeLen !=5)
@@ -244,10 +242,8 @@ appendDirectory(
             const CmdLineParams&    p,
             char                    FileName[])
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strlen;
     using std::size_t;
-#endif
 
     const size_t    dirLength = strlen(p.outDir);
 

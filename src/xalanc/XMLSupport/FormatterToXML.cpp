@@ -40,6 +40,10 @@
 
 
 
+#include <cstring>
+
+
+
 namespace XALAN_CPP_NAMESPACE {
 
 
@@ -377,11 +381,7 @@ FormatterToXML::~FormatterToXML()
 void
 FormatterToXML::initAttrCharsMap()
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
-#else
-    memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
-#endif
 
     const XalanDOMString::size_type     nSpecials =
         m_attrSpecialChars.length();
@@ -415,11 +415,7 @@ FormatterToXML::initCharsMap()
 {
     initAttrCharsMap();
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(m_charsMap, 0, sizeof(m_charsMap));
-#else
-    memset(m_charsMap, 0, sizeof(m_charsMap));
-#endif
 
     m_charsMap[XalanUnicode::charLessThanSign] = 'S';
     m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';

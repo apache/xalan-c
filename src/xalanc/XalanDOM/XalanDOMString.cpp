@@ -248,11 +248,7 @@ XalanDOMString::assign(
         else
         {
             // Yuck.  We have to move data...
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
-#else
-            memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
-#endif
 
             resize(theCount);
         }
@@ -791,16 +787,9 @@ XalanDOMString::length(const char*  theString)
 {
     assert(theString != 0);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     assert(std::strlen(theString) < size_type(npos));
 
     return size_type(std::strlen(theString));
-#else
-    assert(strlen(theString) < size_type(npos));
-
-    return size_type(strlen(theString));
-#endif
-
 }
 
 

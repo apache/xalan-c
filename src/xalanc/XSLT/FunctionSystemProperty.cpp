@@ -179,11 +179,7 @@ FunctionSystemProperty::execute(
         TranscodeToLocalCodePage(fullName, theResultVect, true);
 
         const char* const   theEnvString =
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::getenv(c_str(theResultVect));
-#else
-            getenv(c_str(theResultVect));
-#endif
 
         if (theEnvString != 0)
         {

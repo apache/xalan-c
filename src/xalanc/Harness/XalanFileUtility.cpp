@@ -53,7 +53,6 @@
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::fclose;
 using std::feof;
 using std::ferror;
@@ -64,7 +63,6 @@ using std::sprintf;
 using std::strftime;
 using std::tm;
 using std::time;
-#endif
 
 
 

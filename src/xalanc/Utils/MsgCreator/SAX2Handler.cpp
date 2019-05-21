@@ -35,9 +35,7 @@
 
 namespace XALAN_CPP_NAMESPACE {
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-  using std::sprintf;
-#endif
+using std::sprintf;
 
 
 using xercesc::Attributes;

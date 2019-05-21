@@ -74,11 +74,7 @@ createCollator(
             XalanDOMString*     theLocaleName = 0)
 {
     const char*     theLang =
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::getenv("LANG");
-#else
-            getenv("LANG");
-#endif
 
     if (theLang == 0)
     {

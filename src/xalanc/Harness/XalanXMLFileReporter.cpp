@@ -37,14 +37,12 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::fclose;
 using std::fflush;
 using std::fopen;
 using std::fprintf;
 using std::fputs;
 using std::sprintf;
-#endif
 
 
 

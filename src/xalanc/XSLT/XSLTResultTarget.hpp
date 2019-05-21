@@ -48,9 +48,7 @@ public:
 
     typedef std::ostream    StreamType;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE   FILE;
-#endif
 
 
     explicit

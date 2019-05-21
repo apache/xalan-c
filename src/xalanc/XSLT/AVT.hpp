@@ -59,11 +59,7 @@ class AVT
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::size_t     size_type;
-#else
-    typedef size_t          size_type;
-#endif
 
     /**
      * Construct an Attribute Value Template(AVT) by parsing the string, and

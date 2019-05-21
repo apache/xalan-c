@@ -61,7 +61,7 @@
 #include <csignal>
 
 // This is a workaround for a Tru64 compiler bug...
-#if defined(XALAN_STRICT_ANSI_HEADERS) && defined(TRU64)
+#if defined(TRU64)
 #include <csetjmp>
 typedef long sigjmp_buf[_JBLEN];
 #endif
@@ -80,11 +80,9 @@ using std::endl;
 
 
     
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::atoi;
-    using std::signal;
-    using std::strcmp;
-#endif
+using std::atoi;
+using std::signal;
+using std::strcmp;
 
     
     

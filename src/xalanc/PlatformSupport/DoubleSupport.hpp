@@ -547,11 +547,7 @@ public:
     static double
     ceiling(double  theValue)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::ceil(theValue);
-#else
-        return ceil(theValue);
-#endif
     }
 
     /**
@@ -564,11 +560,7 @@ public:
     static double
     floor(double    theValue)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::floor(theValue);
-#else
-        return ::floor(theValue);
-#endif
     }
 
     union NumberUnion

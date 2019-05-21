@@ -170,9 +170,7 @@ FormatterToHTML::initCharsMap()
 {
     initAttrCharsMap();
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::memset;
-#endif
 
     memset(m_charsMap, 0, sizeof(m_charsMap));
 

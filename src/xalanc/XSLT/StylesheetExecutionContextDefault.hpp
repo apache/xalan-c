@@ -89,11 +89,7 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExe
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::clock_t    ClockType;
-#else
-    typedef clock_t         ClockType;
-#endif
 
     typedef XalanVector<FormatterListener*>             FormatterListenerVectorType;
     typedef XalanVector<PrintWriter*>                   PrintWriterVectorType;

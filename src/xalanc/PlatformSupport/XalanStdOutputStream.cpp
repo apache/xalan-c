@@ -133,9 +133,7 @@ XalanStdOutputStream::doFlush()
 
         if (!m_outputStream)
         {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             using namespace std;
-#endif
             XalanDOMString  thebuffer(getMemoryManager());
 
             throw XalanStdOutputStreamWriteException(errno, thebuffer);
@@ -156,9 +154,7 @@ XalanStdOutputStream::writeData(
 
     if (!m_outputStream)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using namespace std;
-#endif
         XalanDOMString  thebuffer(getMemoryManager());
 
         throw XalanStdOutputStreamWriteException(errno, thebuffer);

@@ -42,11 +42,7 @@ class  MsgFileOutputStream
 {
 public :
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE*  HandleType;
-#else
-    typedef FILE*       HandleType;
-#endif
 
     /**
      * Construct an MsgFileOutputStream object.

@@ -83,7 +83,6 @@ public:
 
         assert(args[0].null() == false);    
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::sqrt;
 #endif
 
@@ -170,9 +169,7 @@ public:
 
         assert(args[0].null() == false);    
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::pow;
-#endif
 
         return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
     }
@@ -253,13 +250,11 @@ public:
             generalError(executionContext, context, locator);
         }
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::time;
         using std::time_t;
         using std::localtime;
         using std::asctime;
         using std::strlen;
-#endif
 
         time_t  theTime;
 

@@ -53,9 +53,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined (XALAN_STRICT_ANSI_HEADERS)
-    using std::size_t;
-#endif
+using std::size_t;
 
 
 
@@ -1387,9 +1385,7 @@ PointerToDOMString(
 {
     char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::sprintf;;
-#endif
 
     const int   theCharsWritten = sprintf(theBuffer, "%p", theValue);
     assert(theCharsWritten != 0);
@@ -1445,11 +1441,9 @@ DOMStringHelper::NumberToCharacters(
     {
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::sprintf;
         using std::atof;
         using std::isdigit;
-#endif
 
         const char* const *     thePrintfString = thePrintfStrings;
 
@@ -1747,11 +1741,9 @@ NumberToDOMString(
     {
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::sprintf;
         using std::atof;
         using std::isdigit;
-#endif
 
         const char* const *     thePrintfString = thePrintfStrings;
 

@@ -30,13 +30,11 @@
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::FILE;
 using std::fclose;
 using std::fflush;
 using std::fopen;
 using std::fwrite;
-#endif
 
 
 

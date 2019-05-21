@@ -58,10 +58,8 @@
 #include "windows.h"
 #else
 #include <ctime>
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::clock;
 using std::clock_t;
-#endif
 #endif
 
 
@@ -72,11 +70,9 @@ using std::cout;
 using std::endl;
 using std::ostream;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
 using std::strcmp;
 using std::strlen;
-#endif
 
 
 
@@ -458,11 +454,7 @@ getArgs(
 #if defined(XALAN_USE_WINDOWS_TIMING)
 typedef LARGE_INTEGER   ClockType;
 #else
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 typedef std::clock_t    ClockType;
-#else
-typedef clock_t         ClockType;
-#endif
 #endif
 
 typedef ostream         OstreamType;
@@ -478,11 +470,7 @@ getClock()
 
     return theResult;
 #else
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     return std::clock();
-#else
-    return clock();
-#endif
 #endif
 }
 

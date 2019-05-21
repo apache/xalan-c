@@ -607,11 +607,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
         if (i != m_matchPatternCache.end())
         {
             // Update hit time...
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             (*i).second.second = std::clock();
-#else
-            (*i).second.second = clock();
-#endif
 
             theResult = (*i).second.first;
         }
@@ -2594,11 +2590,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 {
     assert(m_xsltProcessor != 0);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     ClockType   addClock = std::clock();
-#else
-    ClockType   addClock = clock();
-#endif
 
     if (m_matchPatternCache.size() == eXPathCacheMax)
     {

@@ -179,11 +179,7 @@ public:
     }
 
     Type&
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     operator[](std::size_t  index) const
-#else
-    operator[](size_t   index) const
-#endif
     {
         return m_pointer[index];
     }

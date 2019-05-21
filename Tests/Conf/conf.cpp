@@ -25,6 +25,7 @@
 #include <strstream>
 
 #include <cstdio>
+#include <cstring>
 
 
 
@@ -237,9 +238,7 @@ checkForExclusion(
             bool                    isICUIntegrated,
             MemoryManager&          theMemoryManager)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strcmp;
-#endif
 
     CharVectorType  theFileName(theMemoryManager);
 

@@ -279,11 +279,7 @@ DoubleSupport::modulus(
 
         double  theResult = divide(theLHS, theRHS);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::modf(theResult, &theDummy) * theRHS;
-#else
-        return modf(theResult, &theDummy) * theRHS;
-#endif
     }
 }
 
@@ -313,9 +309,7 @@ DoubleSupport::abs(double theDouble)
     }
     else
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::fabs;
-#endif
+        using std::fabs;
         return fabs(theDouble);
     }
 }
@@ -578,10 +572,8 @@ convertHelper(
     }
     else
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::localeconv;
         using std::atof;
-#endif
 
         const char  theDecimalPointChar =
             localeconv()->decimal_point[0];
@@ -711,11 +703,7 @@ modfRound(double  theValue)
 {
     double          intPart = 0;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         std::modf(theValue + 0.5, &intPart);
-#else
-        modf(theValue + 0.5, &intPart);
-#endif
 
     return intPart;
 }
@@ -762,11 +750,7 @@ DoubleSupport::round(double     theValue)
         double          intPart = 0;
 
         const double    fracPart = 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::modf(theValue, &intPart);
-#else
-            modf(theValue, &intPart);
-#endif
 
         const double    theAdjustedValue =
             fracPart == -0.5 ? theValue + 0.5 : theValue - 0.5;

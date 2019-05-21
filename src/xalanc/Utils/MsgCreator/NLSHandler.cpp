@@ -121,9 +121,7 @@ NLSHandler::printBeginOfDataLine()
 {
     char szNumb[20];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::sprintf;
-#endif
 
     sprintf(
         szNumb,
