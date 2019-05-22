@@ -148,7 +148,7 @@ XalanStdOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-    assert(static_cast<XALAN_UINT64>(static_cast<StreamSizeType>(theBufferLength)) == theBufferLength);
+    assert(static_cast<XMLUInt64>(static_cast<StreamSizeType>(theBufferLength)) == theBufferLength);
 
     m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 

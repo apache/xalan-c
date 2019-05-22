@@ -91,11 +91,6 @@ struct XalanCompileErrorBoolean
 }
 
 
-#if !defined(XALAN_NO_LONG_LONG)
-typedef unsigned long long XALAN_UINT64;
-typedef long long  XALAN_INT64;
-#endif
-
 #define XALAN_STATIC_ASSERT(expr) xalanc::XalanCompileErrorBoolean<bool(expr)>()
 
 

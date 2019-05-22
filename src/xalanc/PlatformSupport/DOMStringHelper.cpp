@@ -328,7 +328,7 @@ OutputString(
     if (theString.empty() == false)
     {
         assert(
-            static_cast<XALAN_UINT64>(static_cast<std::streamsize>(theString.size())) == theString.size());
+            static_cast<XMLUInt64>(static_cast<std::streamsize>(theString.size())) == theString.size());
 
         theStream.write(
             &*theString.begin(),
@@ -1433,9 +1433,9 @@ DOMStringHelper::NumberToCharacters(
             theZeroString,
             sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
     }
-    else if (static_cast<XALAN_INT64>(theValue) == theValue)
+    else if (static_cast<XMLInt64>(theValue) == theValue)
     {
-        NumberToCharacters(static_cast<XALAN_INT64>(theValue), formatterListener, function);
+        NumberToCharacters(static_cast<XMLInt64>(theValue), formatterListener, function);
     }
     else
     {
@@ -1649,7 +1649,7 @@ UnsignedScalarToHexadecimalString(
 
 void
 DOMStringHelper::NumberToCharacters(
-            long                theValue,
+            XMLInt32            theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function)
 {
@@ -1667,7 +1667,7 @@ DOMStringHelper::NumberToCharacters(
 
 void
 DOMStringHelper::NumberToCharacters(
-            XALAN_INT64     theValue,
+            XMLInt64     theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function)
 {
@@ -1685,7 +1685,7 @@ DOMStringHelper::NumberToCharacters(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult)
 {
     return ScalarToDecimalString(theValue, theResult);
@@ -1695,7 +1695,7 @@ NumberToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult)
 {
     return ScalarToDecimalString(theValue, theResult);
@@ -1733,9 +1733,9 @@ NumberToDOMString(
             theZeroString,
             sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
     }
-    else if (static_cast<XALAN_INT64>(theValue) == theValue)
+    else if (static_cast<XMLInt64>(theValue) == theValue)
     {
-        NumberToDOMString(static_cast<XALAN_INT64>(theValue), theResult);
+        NumberToDOMString(static_cast<XMLInt64>(theValue), theResult);
     }
     else
     {
@@ -1819,7 +1819,7 @@ NumberToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult)
 {
     return UnsignedScalarToHexadecimalString(theValue, theResult);
@@ -1829,7 +1829,7 @@ NumberToHexDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult)
 {
     return UnsignedScalarToHexadecimalString(theValue, theResult);

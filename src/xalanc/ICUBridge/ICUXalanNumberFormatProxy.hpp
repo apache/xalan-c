@@ -86,7 +86,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            XALAN_INT64         theValue,
+            XMLInt64            theValue,
             XalanDOMString&     theResult);
 
     /**
@@ -97,7 +97,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            XALAN_UINT64        theValue,
+            XMLUInt64           theValue,
             XalanDOMString&     theResult);
 
     virtual bool

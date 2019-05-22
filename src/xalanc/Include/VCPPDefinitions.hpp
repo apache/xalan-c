@@ -55,12 +55,6 @@
 #define XALAN_NEWLINE_IS_CRLF
 #define XALAN_NO_REENTRANT_TIME_FUNCTIONS
 
-// long long is not supported on all MS compilers.
-#define XALAN_NO_LONG_LONG
-
-typedef UINT64 XALAN_UINT64;
-typedef INT64  XALAN_INT64;
-
 #define XALAN_WINDOWS
 #define XALAN_WINDOWS_DIR_FUNCTIONS
 #define WINDOWS_THREAD_FUNCTIONS

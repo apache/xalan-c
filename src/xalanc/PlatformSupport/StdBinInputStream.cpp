@@ -66,7 +66,7 @@ StdBinInputStream::readBytes(
     {
         using std::streamsize;
 
-        assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
+        assert(static_cast<XMLUInt64>(static_cast<streamsize>(maxToRead)) == maxToRead);
 
         m_stream.read(
             reinterpret_cast<char*>(toFill),

@@ -79,7 +79,7 @@ public:
      * @return string representation of number
      */
     virtual XalanDOMString&
-    format(int  theValue,
+    format( XMLInt16            theValue,
             XalanDOMString&     theResult);
 
 
@@ -92,7 +92,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            unsigned int        theValue,
+            XMLUInt16           theValue,
             XalanDOMString&     theResult);
 
     /**
@@ -102,7 +102,7 @@ public:
      * @return string representation of number
      */
     virtual XalanDOMString&
-    format(long     theValue,
+    format( XMLInt32            theValue,
             XalanDOMString&     theResult);
 
 
@@ -114,7 +114,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            unsigned long       theValue,
+            XMLUInt32           theValue,
             XalanDOMString&     theResult);
 
     /**
@@ -125,7 +125,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            XALAN_INT64         theValue,
+            XMLInt64            theValue,
             XalanDOMString&     theResult);
 
     /**
@@ -136,7 +136,7 @@ public:
      */
     virtual XalanDOMString&
     format(
-            XALAN_UINT64        theValue,
+            XMLUInt64           theValue,
             XalanDOMString&     theResult);
 
     /**
