@@ -119,11 +119,7 @@ FunctionSubstringAfter::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionSubstringAfter*
-#endif
 FunctionSubstringAfter::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

@@ -96,11 +96,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionSquareRoot*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -181,11 +177,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionCube*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -277,11 +269,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionAsctime*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);

@@ -152,21 +152,13 @@ XercesElementBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesElementBridge*
-#endif
 XercesElementBridge::cloneNode(bool deep) const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    return m_navigator.cloneNode(this, m_xercesNode, deep);
-#else
     XercesElementBridge* const  theBridge =
         static_cast<XercesElementBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
     return theBridge;
-#endif
 }
 
 

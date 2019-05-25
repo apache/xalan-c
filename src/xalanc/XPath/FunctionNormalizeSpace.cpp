@@ -200,11 +200,7 @@ FunctionNormalizeSpace::normalize(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionNormalizeSpace*
-#endif
 FunctionNormalizeSpace::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

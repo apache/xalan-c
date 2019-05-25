@@ -54,11 +54,7 @@ public:
     {
     }
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionNodeSet*
-#endif
     clone(MemoryManager& theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -146,11 +142,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionObjectType*
-#endif
     clone(MemoryManager& theManager) const
     {
         typedef XalanEXSLTFunctionObjectType    ThisType;

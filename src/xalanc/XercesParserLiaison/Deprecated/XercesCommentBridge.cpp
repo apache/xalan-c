@@ -143,21 +143,13 @@ XercesCommentBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesCommentBridge*
-#endif
 XercesCommentBridge::cloneNode(bool deep) const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    return m_navigator.cloneNode(this, m_xercesNode, deep);
-#else
     XercesCommentBridge* const  theBridge =
         static_cast<XercesCommentBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
     return theBridge;
-#endif
 }
 
 

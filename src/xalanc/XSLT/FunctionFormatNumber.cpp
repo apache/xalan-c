@@ -99,11 +99,7 @@ FunctionFormatNumber::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionFormatNumber*
-#endif
 FunctionFormatNumber::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

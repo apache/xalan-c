@@ -107,13 +107,7 @@ public:
    *
    * @return pointer to the new object
    */
-// For compilers that do not support covariant return types,
-// clone() must be declared to return the base type.
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-  virtual Function*
-#else
   virtual FunctionSquareRoot*
-#endif
   clone() const
   {
     return new FunctionSquareRoot(*this);

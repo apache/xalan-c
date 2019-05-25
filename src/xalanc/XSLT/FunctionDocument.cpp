@@ -582,11 +582,7 @@ FunctionDocument::doExecute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionDocument*
-#endif
 FunctionDocument::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

@@ -175,11 +175,7 @@ FunctionNodeSet::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionNodeSet*
-#endif
 FunctionNodeSet::clone(MemoryManager&   theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

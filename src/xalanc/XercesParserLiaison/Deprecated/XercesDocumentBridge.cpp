@@ -862,11 +862,7 @@ XercesDocumentBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesDocumentBridge*
-#endif
 XercesDocumentBridge::cloneNode(bool    deep) const
 {
     XercesDocumentBridge*   theBridge = 0;

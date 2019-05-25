@@ -62,11 +62,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionAbs*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -115,11 +111,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionRandom*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -168,11 +160,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionAcos*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -221,11 +209,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionAsin*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -274,11 +258,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionAtan*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -327,11 +307,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionAtan2*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -380,11 +356,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionConstant*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -456,11 +428,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionCos*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -509,11 +477,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionExp*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -562,11 +526,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionHighest*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -615,11 +575,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionLog*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -668,11 +624,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionLowest*
-#endif
     clone(MemoryManager&  theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -721,11 +673,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionMax*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -774,11 +722,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionMin*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -827,11 +771,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionPower*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -880,11 +820,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionSin*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -933,11 +869,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionSqrt*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -986,11 +918,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionTan*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);

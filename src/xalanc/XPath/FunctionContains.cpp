@@ -81,11 +81,7 @@ FunctionContains::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionContains*
-#endif
 FunctionContains::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

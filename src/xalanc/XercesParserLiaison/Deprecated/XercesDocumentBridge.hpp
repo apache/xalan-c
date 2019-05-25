@@ -153,11 +153,7 @@ public:
     virtual XalanDocument*
     getOwnerDocument() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanNode*
-#else
     virtual XercesDocumentBridge*
-#endif
     cloneNode(bool deep) const;
 
     virtual XalanNode*

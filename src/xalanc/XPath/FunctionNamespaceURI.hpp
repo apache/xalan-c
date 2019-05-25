@@ -73,11 +73,7 @@ public:
             const XObjectPtr        arg1,
             const Locator*          locator) const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionNamespaceURI*
-#endif
     clone(MemoryManager& theManager) const;
 
 protected:

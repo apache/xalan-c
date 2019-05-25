@@ -191,11 +191,7 @@ public:
      *   its attributes, if it is an <code>Element</code>).
      * @return The duplicate node.
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanNode*
-#else
     virtual XercesElementBridge*
-#endif
     cloneNode(bool deep) const;
 
     //@}

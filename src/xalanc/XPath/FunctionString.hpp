@@ -73,11 +73,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionString*
-#endif
     clone(MemoryManager& theManager) const;
 
 protected:

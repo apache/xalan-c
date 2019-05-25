@@ -65,11 +65,7 @@ public:
             const XObjectArgVectorType&     args,
             const Locator*                  locator) const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual XalanEXSLTFunctionEvaluate*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);

@@ -35,18 +35,14 @@
 #define XALAN_PLATFORM_IMPORT_FUNCTION(T) XALAN_PLATFORM_IMPORT T
 
 
-#if _MSC_VER >= 1300
-  #if !defined(__INTEL_COMPILER)
-    #if _MSC_VER >= 1400
-      #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
-      #define XALAN_USE_WINDOWS_COLLATION
-    #endif
+#if !defined(__INTEL_COMPILER)
+  #if _MSC_VER >= 1400
+    #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
+    #define XALAN_USE_WINDOWS_COLLATION
   #endif
-  #if _MSC_VER == 1300
-    #define XALAN_VCPP_USE_PTRIT
-  #endif
-#else
-  #define XALAN_NO_COVARIANT_RETURN_TYPE
+#endif
+#if _MSC_VER == 1300
+  #define XALAN_VCPP_USE_PTRIT
 #endif
 
 #define XALAN_NEWLINE_IS_CRLF

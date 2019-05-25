@@ -30,9 +30,7 @@
 
 
 
-#if !defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 #include <xalanc/XalanSourceTree/XalanSourceTreeDocument.hpp>
-#endif
 
 
 
@@ -96,11 +94,7 @@ public:
     virtual const XalanNamedNodeMap*
     getAttributes() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanDocument*
-#else
     virtual XalanSourceTreeDocument*
-#endif
     getOwnerDocument() const;
 
     virtual const XalanDOMString&

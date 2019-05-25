@@ -114,11 +114,7 @@ FunctionConcat::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionConcat*
-#endif
 FunctionConcat::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

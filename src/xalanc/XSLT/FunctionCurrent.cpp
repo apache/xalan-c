@@ -56,11 +56,7 @@ FunctionCurrent::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionCurrent*
-#endif
 FunctionCurrent::clone(MemoryManager&   theManager) const
 {
     return XalanCopyConstruct(theManager, *this);

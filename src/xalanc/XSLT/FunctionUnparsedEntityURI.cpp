@@ -91,11 +91,7 @@ FunctionUnparsedEntityURI::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionUnparsedEntityURI*
-#endif
 FunctionUnparsedEntityURI::clone(MemoryManager&     theManager) const
 {
    return XalanCopyConstruct(theManager, *this);

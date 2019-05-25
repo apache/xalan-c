@@ -198,11 +198,7 @@ FunctionSystemProperty::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionSystemProperty*
-#endif
 FunctionSystemProperty::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this, theManager);
