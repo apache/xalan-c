@@ -84,7 +84,6 @@ public:
         assert(args[0].null() == false);    
 
         using std::sqrt;
-#endif
 
         return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
     }

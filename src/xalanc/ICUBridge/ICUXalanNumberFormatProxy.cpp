@@ -72,7 +72,7 @@ ICUXalanNumberFormatProxy::format(double    theValue,
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(int               theValue,
+ICUXalanNumberFormatProxy::format(XMLInt16          theValue,
                                   XalanDOMString&   theResult)
 {
     UnicodeString   theUnicodeResult;
@@ -86,7 +86,7 @@ ICUXalanNumberFormatProxy::format(int               theValue,
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(unsigned int  theValue, XalanDOMString& theResult)
+ICUXalanNumberFormatProxy::format(XMLUInt16 theValue, XalanDOMString& theResult)
 {
     UnicodeString   theUnicodeResult;
 
@@ -97,7 +97,7 @@ ICUXalanNumberFormatProxy::format(unsigned int  theValue, XalanDOMString& theRes
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(long            theValue,
+ICUXalanNumberFormatProxy::format(XMLInt32        theValue,
                                   XalanDOMString& theResult)
 {
     UnicodeString   theUnicodeResult;
@@ -112,7 +112,7 @@ ICUXalanNumberFormatProxy::format(long            theValue,
 
 
 XalanDOMString&
-ICUXalanNumberFormatProxy::format(unsigned long   theValue,
+ICUXalanNumberFormatProxy::format(XMLUInt32       theValue,
                                   XalanDOMString& theResult)
 {
     UnicodeString   theUnicodeResult;
