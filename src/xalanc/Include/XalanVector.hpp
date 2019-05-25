@@ -68,26 +68,8 @@ public:
     typedef size_t              size_type;
     typedef ptrdiff_t           difference_type;
 
-#if defined(XALAN_VCPP_USE_PTRIT)
-    typedef std::_Ptrit<
-                Type,
-                ptrdiff_t,
-                pointer,
-                reference,
-                pointer,
-                reference>          iterator;
-
-    typedef std::_Ptrit<
-                Type,
-                ptrdiff_t,
-                const_pointer,
-                const_reference,
-                pointer,
-                reference>          const_iterator;
-#else
     typedef value_type*             iterator;
     typedef const value_type*       const_iterator;
-#endif
 
     typedef std::reverse_iterator<iterator>          reverse_iterator_;
     typedef std::reverse_iterator<const_iterator>    const_reverse_iterator_;

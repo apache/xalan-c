@@ -41,9 +41,6 @@
     #define XALAN_USE_WINDOWS_COLLATION
   #endif
 #endif
-#if _MSC_VER == 1300
-  #define XALAN_VCPP_USE_PTRIT
-#endif
 
 #define XALAN_NEWLINE_IS_CRLF
 #define XALAN_NO_REENTRANT_TIME_FUNCTIONS
