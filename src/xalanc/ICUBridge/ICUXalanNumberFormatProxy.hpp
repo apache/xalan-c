@@ -57,25 +57,25 @@ public:
 
     virtual XalanDOMString&
     format(
-            int                 theValue,
+            XMLInt16            theValue,
             XalanDOMString&     theResult);
 
 
     virtual XalanDOMString&
     format(
-            unsigned int        theValue,
+            XMLUInt16           theValue,
             XalanDOMString&     theResult);
 
 
     virtual XalanDOMString&
     format(
-            long                theValue,
+            XMLInt32            theValue,
             XalanDOMString&     theResult);
 
 
     virtual XalanDOMString&
     format(
-            unsigned long       theValue,
+            XMLUInt32           theValue,
             XalanDOMString&     theResult);
 
     /**
