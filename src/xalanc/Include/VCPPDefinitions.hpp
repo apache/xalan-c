@@ -48,7 +48,6 @@
     #define XALAN_VCPP_USE_PTRIT
   #endif
 #else
-  #define XALAN_REQUIRES_QUALIFIED_DESTRUCTOR
   #define XALAN_NO_COVARIANT_RETURN_TYPE
 #endif
 

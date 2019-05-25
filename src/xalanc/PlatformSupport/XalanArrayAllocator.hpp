@@ -79,11 +79,7 @@ public:
         {
             if( (*iter).second != 0)
             {
-#if defined(XALAN_REQUIRES_QUALIFIED_DESTRUCTOR)
                 (*iter).second->VectorType::~VectorType();
-#else
-                (*iter).second->~VectorType();
-#endif               
                 theManager.deallocate((void*)(*iter).second);
             }
         }
