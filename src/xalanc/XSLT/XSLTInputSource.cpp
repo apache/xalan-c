@@ -22,9 +22,7 @@
 
 #include <cassert>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <istream>
-#endif
 
 
 
@@ -34,7 +32,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -257,7 +255,7 @@ XSLTInputSource::makeStream() const
 
         if (theSystemId != 0)
         {
-            XALAN_USING_XERCES(XMLURL)
+            using xercesc::XMLURL;
 
             XMLURL  theURL(theManager);
 
@@ -272,4 +270,4 @@ XSLTInputSource::makeStream() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

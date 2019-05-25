@@ -30,11 +30,14 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(XMLTranscoder)
+namespace XERCES_CPP_NAMESPACE
+{
+    class XMLTranscoder;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -42,7 +45,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanToXercesTranscoderWrapper : public Xalan
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLTranscoder    XMLTranscoderType;
+    typedef xercesc::XMLTranscoder    XMLTranscoderType;
 
     explicit
     XalanToXercesTranscoderWrapper(MemoryManager& theManager, XMLTranscoderType&    theTranscoder);
@@ -90,7 +93,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

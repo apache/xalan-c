@@ -37,7 +37,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -47,11 +47,7 @@ public:
 
 
 #if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    typedef deque<bool>         BoolVectorType;
-    #else
     typedef std::deque<bool>    BoolVectorType;
-    #endif
 #else
     typedef XalanVector<bool>       BoolVectorType;
 #endif
@@ -156,7 +152,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

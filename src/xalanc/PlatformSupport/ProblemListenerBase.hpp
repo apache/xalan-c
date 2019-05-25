@@ -29,15 +29,18 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(Locator)
+using xercesc::Locator;
 
 
 class XalanDOMString;
@@ -158,7 +161,7 @@ protected:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

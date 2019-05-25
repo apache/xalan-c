@@ -23,11 +23,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <sstream>
-#endif
 
 
 
@@ -66,8 +62,8 @@
 
 
 
-XALAN_USING_XERCES(DOMDocument);
-XALAN_CPP_NAMESPACE_USE
+using xercesc::DOMDocument;;
+using namespace xalanc;
 
 
 
@@ -351,11 +347,7 @@ protected:
 
         void reset() { stringstream.flush();}
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-        ostrstream                          stringstream;
-#else
-        XALAN_STD_QUALIFIER ostringstream   stringstream;
-#endif
+        std::ostringstream   stringstream;
     };
 
     StreamResult    m_streamResult;

@@ -35,11 +35,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -53,13 +49,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined (XALAN_STRICT_ANSI_HEADERS)
-    using std::size_t;
-#endif
+using std::size_t;
 
 
 
@@ -326,26 +320,19 @@ OutputString(XalanOutputStream&     theStream,
 
 
 
-XALAN_USING_STD(ostream)
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-typedef int     streamsize;
-#else
-XALAN_USING_STD(streamsize)
-#endif
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-            ostream&                theStream,
+            std::ostream&           theStream,
             const CharVectorType&   theString)
 {
     if (theString.empty() == false)
     {
         assert(
-            static_cast<XALAN_UINT64>(static_cast<streamsize>(theString.size())) == theString.size());
+            static_cast<XMLUInt64>(static_cast<std::streamsize>(theString.size())) == theString.size());
 
         theStream.write(
             &*theString.begin(),
-            static_cast<streamsize>(theString.size()));
+            static_cast<std::streamsize>(theString.size()));
     }
 }
 
@@ -365,7 +352,7 @@ OutputString(XalanOutputStream&     theStream,
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-            ostream&                theStream,
+            std::ostream&           theStream,
             const XalanDOMChar*     theString,
             MemoryManager&          theMemoryManager)
 {
@@ -456,7 +443,7 @@ TransformString(
             OutputIteratorType  theOutputIterator,
             FunctionType        theFunction)
 {
-    return XALAN_STD_QUALIFIER transform(
+    return std::transform(
             theInputBegin,
             theInputEnd,
             theOutputIterator,
@@ -478,7 +465,7 @@ TransformString(
     TransformString(
             theInputString,
             theInputString + theInputStringLength,
-            XALAN_STD_QUALIFIER back_inserter(theConvertedString),
+            std::back_inserter(theConvertedString),
             theFunction);
 
     return theConvertedString;
@@ -996,10 +983,10 @@ MakeXalanDOMCharVector(
 
         theResult.reserve(theLength);
 
-        XALAN_STD_QUALIFIER copy(
+        std::copy(
             data,
             data + theLength,
-            XALAN_STD_QUALIFIER back_inserter(theResult));
+            std::back_inserter(theResult));
     }
 
     return theResult;
@@ -1398,9 +1385,7 @@ PointerToDOMString(
 {
     char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    XALAN_USING_STD(sprintf);
-#endif
+    using std::sprintf;;
 
     const int   theCharsWritten = sprintf(theBuffer, "%p", theValue);
     assert(theCharsWritten != 0);
@@ -1410,7 +1395,7 @@ PointerToDOMString(
     TranscodeNumber(
             theBuffer,
             theBuffer + theCharsWritten,
-            XALAN_STD_QUALIFIER back_inserter(theResult));
+            std::back_inserter(theResult));
 
     return theResult;
 }
@@ -1448,19 +1433,17 @@ DOMStringHelper::NumberToCharacters(
             theZeroString,
             sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
     }
-    else if (static_cast<XALAN_INT64>(theValue) == theValue)
+    else if (static_cast<XMLInt64>(theValue) == theValue)
     {
-        NumberToCharacters(static_cast<XALAN_INT64>(theValue), formatterListener, function);
+        NumberToCharacters(static_cast<XMLInt64>(theValue), formatterListener, function);
     }
     else
     {
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(sprintf)
-        XALAN_USING_STD(atof)
-        XALAN_USING_STD(isdigit)
-#endif
+        using std::sprintf;
+        using std::atof;
+        using std::isdigit;
 
         const char* const *     thePrintfString = thePrintfStrings;
 
@@ -1666,7 +1649,7 @@ UnsignedScalarToHexadecimalString(
 
 void
 DOMStringHelper::NumberToCharacters(
-            long                theValue,
+            XMLInt32            theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function)
 {
@@ -1684,7 +1667,7 @@ DOMStringHelper::NumberToCharacters(
 
 void
 DOMStringHelper::NumberToCharacters(
-            XALAN_INT64     theValue,
+            XMLInt64     theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function)
 {
@@ -1702,7 +1685,7 @@ DOMStringHelper::NumberToCharacters(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult)
 {
     return ScalarToDecimalString(theValue, theResult);
@@ -1712,7 +1695,7 @@ NumberToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult)
 {
     return ScalarToDecimalString(theValue, theResult);
@@ -1750,19 +1733,17 @@ NumberToDOMString(
             theZeroString,
             sizeof(theZeroString) / sizeof(theZeroString[0]) - 1);
     }
-    else if (static_cast<XALAN_INT64>(theValue) == theValue)
+    else if (static_cast<XMLInt64>(theValue) == theValue)
     {
-        NumberToDOMString(static_cast<XALAN_INT64>(theValue), theResult);
+        NumberToDOMString(static_cast<XMLInt64>(theValue), theResult);
     }
     else
     {
         char            theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(sprintf)
-        XALAN_USING_STD(atof)
-        XALAN_USING_STD(isdigit)
-#endif
+        using std::sprintf;
+        using std::atof;
+        using std::isdigit;
 
         const char* const *     thePrintfString = thePrintfStrings;
 
@@ -1827,7 +1808,7 @@ NumberToDOMString(
         TranscodeNumber(
                 theBuffer,
                 theBuffer + theCharsWritten,
-                XALAN_STD_QUALIFIER back_inserter(theResult));
+                std::back_inserter(theResult));
     }
 
     return theResult;
@@ -1838,7 +1819,7 @@ NumberToDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult)
 {
     return UnsignedScalarToHexadecimalString(theValue, theResult);
@@ -1848,7 +1829,7 @@ NumberToHexDOMString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult)
 {
     return UnsignedScalarToHexadecimalString(theValue, theResult);
@@ -1917,4 +1898,4 @@ DOMStringHelper::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

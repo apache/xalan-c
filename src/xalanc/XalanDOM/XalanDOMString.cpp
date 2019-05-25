@@ -26,16 +26,13 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
 const XalanDOMChar  XalanDOMString::s_empty = 0;
 
-#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const XalanDOMString::size_type     XalanDOMString::npos;
-#endif
- 
+const XalanDOMString::size_type     XalanDOMString::npos = 0u; 
 
 
 XalanDOMString::XalanDOMString(MemoryManager&  theManager) :
@@ -248,11 +245,7 @@ XalanDOMString::assign(
         else
         {
             // Yuck.  We have to move data...
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
-#else
-            memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
-#endif
 
             resize(theCount);
         }
@@ -781,7 +774,7 @@ XalanDOMString::equals(
 XalanDOMString::size_type
 XalanDOMString::length(const XalanDOMChar*  theString)
 {
-    return XALAN_CPP_NAMESPACE :: length(theString);
+    return xalanc::length(theString);
 }
 
 
@@ -791,20 +784,13 @@ XalanDOMString::length(const char*  theString)
 {
     assert(theString != 0);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     assert(std::strlen(theString) < size_type(npos));
 
     return size_type(std::strlen(theString));
-#else
-    assert(strlen(theString) < size_type(npos));
-
-    return size_type(strlen(theString));
-#endif
-
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 
@@ -812,7 +798,7 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 const XalanDOMString::size_type     theOneTranslatedWbCharLen = 10;
@@ -860,7 +846,7 @@ doXercesTranscode(
 
     bool            fSuccess = false;
 
-    XALAN_USING_XERCES(XMLString)
+    using xercesc::XMLString;
 
     fSuccess = XMLString::transcode(
         theRealSourceString,
@@ -974,7 +960,7 @@ doXercesTranscode(
 
     do
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         fSuccess = XMLString::transcode(
                     theRealSourceString,
@@ -1297,4 +1283,4 @@ TranscodeFromLocalCodePage(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -22,11 +22,7 @@
 
 #include <cassert>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -70,25 +66,25 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
-XALAN_USING_XERCES(DOMDocument)
+using xercesc::DOMDocument;
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
 
 
 
 void
 serialize(const DOMDocument&    theDocument)
 {
-    XALAN_USING_XALAN(XalanStdOutputStream)
-    XALAN_USING_XALAN(XalanOutputStreamPrintWriter)
-    XALAN_USING_XALAN(FormatterToXML)
-    XALAN_USING_XALAN(XercesDOMFormatterWalker)
+    using xalanc::XalanStdOutputStream;
+    using xalanc::XalanOutputStreamPrintWriter;
+    using xalanc::FormatterToXML;
+    using xalanc::XercesDOMFormatterWalker;
 
     // Create an output stream and a PrintWriter for the
     // output
@@ -118,10 +114,10 @@ transformAndSerialize(
             const XalanParsedSource&        theParsedSource,
             const XalanCompiledStylesheet&  theStylesheet)
 {
-    XALAN_USING_XERCES(DOMDocument)
-    XALAN_USING_XERCES(DOMImplementation)
-    XALAN_USING_XALAN(FormatterToXercesDOM)
-    XALAN_USING_XALAN(XalanAutoPtr)
+    using xercesc::DOMDocument;
+    using xercesc::DOMImplementation;
+    using xalanc::FormatterToXercesDOM;
+    using xalanc::XalanAutoPtr;
 
     // This is the document which we'll build...
     const XalanAutoPtr<DOMDocument>     theDocument(DOMImplementation::getImplementation()->createDocument());
@@ -178,7 +174,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             XMLPlatformUtils::Initialize();
 

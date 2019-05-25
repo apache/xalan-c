@@ -24,57 +24,60 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOMAttr)
-XALAN_DECLARE_XERCES_CLASS(DOMCharacterData)
-XALAN_DECLARE_XERCES_CLASS(DOMComment)
-XALAN_DECLARE_XERCES_CLASS(DOMCDATASection)
-XALAN_DECLARE_XERCES_CLASS(DOMDocument)
-XALAN_DECLARE_XERCES_CLASS(DOMDocumentFragment)
-XALAN_DECLARE_XERCES_CLASS(DOMImplementation)
-XALAN_DECLARE_XERCES_CLASS(DOMElement)
-XALAN_DECLARE_XERCES_CLASS(DOMEntity)
-XALAN_DECLARE_XERCES_CLASS(DOMEntityReference)
-XALAN_DECLARE_XERCES_CLASS(DOMNode)
-XALAN_DECLARE_XERCES_CLASS(DOMText)
-XALAN_DECLARE_XERCES_CLASS(DOMNamedNodeMap)
-XALAN_DECLARE_XERCES_CLASS(DOMNodeList)
-XALAN_DECLARE_XERCES_CLASS(DOMNotation)
-XALAN_DECLARE_XERCES_CLASS(DOMProcessingInstruction)
-XALAN_DECLARE_XERCES_CLASS(DOMText)
-XALAN_DECLARE_XERCES_CLASS(DOMDocumentType)
-XALAN_DECLARE_XERCES_CLASS(DOMException)
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOMAttr;
+    class DOMCharacterData;
+    class DOMComment;
+    class DOMCDATASection;
+    class DOMDocument;
+    class DOMDocumentFragment;
+    class DOMImplementation;
+    class DOMElement;
+    class DOMEntity;
+    class DOMEntityReference;
+    class DOMNode;
+    class DOMText;
+    class DOMNamedNodeMap;
+    class DOMNodeList;
+    class DOMNotation;
+    class DOMProcessingInstruction;
+    class DOMText;
+    class DOMDocumentType;
+    class DOMException;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMAttr              DOMAttrType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMCharacterData DOMCharacterDataType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMComment           DOMCommentType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMCDATASection      DOMCDATASectionType;
+typedef xercesc::DOMAttr              DOMAttrType;
+typedef xercesc::DOMCharacterData DOMCharacterDataType;
+typedef xercesc::DOMComment           DOMCommentType;
+typedef xercesc::DOMCDATASection      DOMCDATASectionType;
 // These next two have an extra '_' because they collide without it...
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType      DOMDocumentType_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument          DOMDocument_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentFragment  DOMDocumentFragmentType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMImplementation    DOMImplementationType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMElement           DOMElementType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMEntity            DOMEntityType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMEntityReference   DOMEntityReferenceType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNode              DOMNodeType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMText              DOMTextType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNamedNodeMap      DOMNamedNodeMapType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNodeList          DOMNodeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNotation          DOMNotationType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMProcessingInstruction DOMProcessingInstructionType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMText              DOMTextType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMException         DOMExceptionType;
+typedef xercesc::DOMDocumentType      DOMDocumentType_Type;
+typedef xercesc::DOMDocument          DOMDocument_Type;
+typedef xercesc::DOMDocumentFragment  DOMDocumentFragmentType;
+typedef xercesc::DOMImplementation    DOMImplementationType;
+typedef xercesc::DOMElement           DOMElementType;
+typedef xercesc::DOMEntity            DOMEntityType;
+typedef xercesc::DOMEntityReference   DOMEntityReferenceType;
+typedef xercesc::DOMNode              DOMNodeType;
+typedef xercesc::DOMText              DOMTextType;
+typedef xercesc::DOMNamedNodeMap      DOMNamedNodeMapType;
+typedef xercesc::DOMNodeList          DOMNodeListType;
+typedef xercesc::DOMNotation          DOMNotationType;
+typedef xercesc::DOMProcessingInstruction DOMProcessingInstructionType;
+typedef xercesc::DOMText              DOMTextType;
+typedef xercesc::DOMException         DOMExceptionType;
 typedef XMLSize_t                                           XMLSizeType;
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

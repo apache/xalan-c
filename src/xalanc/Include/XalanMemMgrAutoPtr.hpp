@@ -35,11 +35,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 // An auto_ptr-like class that supports the MemoryManager class.
 template<class Type>
@@ -47,7 +47,7 @@ class XalanMemMgrAutoPtr
 {
 public:
 
-    typedef XALAN_STD_QUALIFIER pair<MemoryManager*, Type*> AutoPtrPairType;
+    typedef std::pair<MemoryManager*, Type*> AutoPtrPairType;
 
     class MemMgrAutoPtrData : public AutoPtrPairType
     {
@@ -218,11 +218,7 @@ class XalanMemMgrAutoPtrArray
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::size_t     size_type;
-#else
-    typedef size_t          size_type;
-#endif
 
     class MemMgrAutoPtrArrayData 
     {
@@ -444,7 +440,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

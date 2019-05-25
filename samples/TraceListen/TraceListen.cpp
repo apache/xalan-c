@@ -21,13 +21,8 @@
 
 
 #include <cstring>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#else
 #include <fstream>
 #include <iostream>
-#endif
 
 
 
@@ -54,12 +49,10 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strcmp;
-#endif
 
     // TraceListener flags...
     bool    traceTemplates = false;
@@ -103,9 +96,9 @@ main(
  
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Initialize Xerces...
         XMLPlatformUtils::Initialize();
@@ -114,12 +107,12 @@ main(
         XalanTransformer::initialize();
 
         {
-            XALAN_USING_XALAN(TraceListenerDefault)
-            XALAN_USING_XALAN(XalanDOMString)
-            XALAN_USING_XALAN(XalanOutputStreamPrintWriter)
-            XALAN_USING_XALAN(XalanStdOutputStream)
-            XALAN_USING_XALAN(XSLTInputSource)
-            XALAN_USING_XALAN(XSLTResultTarget)
+            using xalanc::TraceListenerDefault;
+            using xalanc::XalanDOMString;
+            using xalanc::XalanOutputStreamPrintWriter;
+            using xalanc::XalanStdOutputStream;
+            using xalanc::XSLTInputSource;
+            using xalanc::XSLTResultTarget;
 
             // Create a XalanTransformer.
             XalanTransformer    theXalanTransformer;

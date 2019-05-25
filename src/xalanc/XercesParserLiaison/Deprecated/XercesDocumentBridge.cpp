@@ -62,7 +62,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -224,7 +224,7 @@ XercesDocumentBridge::mapNode(const DOM_ElementType&    theXercesNode) const
 void
 XercesDocumentBridge::destroyBridge()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Set this to null, since it will be deleted
     // by the next for_each...
@@ -714,7 +714,7 @@ XercesDocumentBridge::createBridgeNode(
 void
 XercesDocumentBridge::destroyNode(XalanNode*    theNode)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const NodeVectorType::iterator  i =
         find(m_nodes.begin(), m_nodes.end(), theNode);
@@ -862,11 +862,7 @@ XercesDocumentBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesDocumentBridge*
-#endif
 XercesDocumentBridge::cloneNode(bool    deep) const
 {
     XercesDocumentBridge*   theBridge = 0;
@@ -1592,7 +1588,7 @@ XercesDocumentBridge::getPooledString(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 #endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 

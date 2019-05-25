@@ -21,21 +21,17 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 
 #include <cstdio>
+#include <cstring>
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
@@ -76,7 +72,7 @@ XALAN_USING_STD(endl)
 
 
 // Just hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 
@@ -87,7 +83,7 @@ XALAN_CPP_NAMESPACE_USE
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -242,9 +238,7 @@ checkForExclusion(
             bool                    isICUIntegrated,
             MemoryManager&          theMemoryManager)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strcmp;
-#endif
 
     CharVectorType  theFileName(theMemoryManager);
 
@@ -337,8 +331,8 @@ parseWithXerces(
             XalanXMLFileReporter&           logFile,
             XalanFileUtility&               h)
 {
-    XALAN_USING_XERCES(XercesDOMParser)
-    XALAN_USING_XERCES(DOMDocument)
+    using xercesc::XercesDOMParser;
+    using xercesc::DOMDocument;
 
     MemoryManager&  mgr = h.getMemoryManager();
 
@@ -515,7 +509,7 @@ runTests(
                         const XSLTInputSource   xmlInputSource(theXMLFile, theMemoryManager);
                         const XSLTResultTarget  resultFile(theOutputFile, theMemoryManager);
 
-                        XALAN_USING_STD(ostrstream)
+                        using std::ostrstream;
 
                         // Setting a warning stream will swallow output in non-verbose mode.
                         ostrstream  theDummyStream;
@@ -640,8 +634,8 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLUni)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLUni;
 
         XalanMemoryManagerDefault       theGlobalMemoryManager;
         XalanDiagnosticMemoryManager    theDiagnosticMemoryManager(theGlobalMemoryManager, true, &cerr);

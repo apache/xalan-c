@@ -38,7 +38,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 class ElemTemplate;
@@ -56,11 +56,7 @@ public:
 
     typedef XPath::eMatchScore  eMatchScore;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::size_t     size_type;
-#else
-    typedef size_t          size_type;
-#endif
 
 
     /**
@@ -178,7 +174,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

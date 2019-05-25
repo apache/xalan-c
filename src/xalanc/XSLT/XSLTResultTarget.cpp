@@ -23,15 +23,11 @@
 
 #include <cassert>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <ostream>
-#endif
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -170,4 +166,4 @@ XSLTResultTarget::~XSLTResultTarget()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

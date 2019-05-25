@@ -26,11 +26,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iosfwd>
-#endif
 
 
 
@@ -42,17 +38,20 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream   BinInputStreamType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
-XALAN_USING_XERCES(MemoryManager)
+typedef xercesc::BinInputStream   BinInputStreamType;
+typedef xercesc::InputSource      InputSourceType;
+using xercesc::MemoryManager;
 
 
 class XalanDOMString;
@@ -64,11 +63,7 @@ class XALAN_XSLT_EXPORT XSLTInputSource : public InputSourceType
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef istream         StreamType;
-#else
     typedef std::istream    StreamType;
-#endif
 
     explicit
     XSLTInputSource(MemoryManager&  theMemoryManager = XalanMemMgrs::getDefault());
@@ -274,7 +269,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

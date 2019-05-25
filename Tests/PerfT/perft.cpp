@@ -23,11 +23,7 @@
 #include <cstdio>
 #include <ctime>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -47,9 +43,9 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
@@ -63,11 +59,11 @@ const char* const   excludeStylesheets[] =
 
 
 inline bool
-checkForExclusion(const XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString&   currentFile)
+checkForExclusion(const xalanc::XalanDOMString&   currentFile)
 {
     for (int i=0; excludeStylesheets[i] != 0; i++)
     {   
-        if (currentFile == XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString(excludeStylesheets[i]))
+        if (currentFile == xalanc::XalanDOMString(excludeStylesheets[i]))
         {
             return true;
         }
@@ -97,7 +93,7 @@ calculateAvgTime(
 
 
 void
-setHelp(XALAN_CPP_NAMESPACE_QUALIFIER XalanFileUtility& h)
+setHelp(xalanc::XalanFileUtility& h)
 {
     h.args.getHelpStream() << endl
          << "Perft dir [-out -sub -i -iter]"
@@ -123,7 +119,7 @@ runTests(
             char*   argv[])
 {
     // Just hoist everything...
-    XALAN_CPP_NAMESPACE_USE
+    using namespace xalanc;
 
     MemoryManager& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
@@ -401,8 +397,8 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XALAN(XalanTransformer)
+        using xercesc::XMLPlatformUtils;
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

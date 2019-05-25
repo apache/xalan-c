@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -143,21 +143,13 @@ XercesProcessingInstructionBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesProcessingInstructionBridge*
-#endif
 XercesProcessingInstructionBridge::cloneNode(bool   deep) const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    return m_navigator.cloneNode(this, m_xercesNode, deep);
-#else
     XercesProcessingInstructionBridge* const    theBridge =
         static_cast<XercesProcessingInstructionBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
     return theBridge;
-#endif
 }
 
 
@@ -313,7 +305,7 @@ XercesProcessingInstructionBridge::setData(const XalanDOMString&    data)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 #endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 

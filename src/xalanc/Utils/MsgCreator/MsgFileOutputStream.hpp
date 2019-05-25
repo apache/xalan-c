@@ -29,11 +29,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 
 
@@ -42,11 +42,7 @@ class  MsgFileOutputStream
 {
 public :
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE*  HandleType;
-#else
-    typedef FILE*       HandleType;
-#endif
 
     /**
      * Construct an MsgFileOutputStream object.
@@ -153,7 +149,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

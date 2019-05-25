@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -305,4 +305,4 @@ XNodeSetBase::clearCachedValues()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

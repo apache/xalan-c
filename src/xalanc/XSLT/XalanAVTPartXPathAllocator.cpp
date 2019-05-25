@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -54,4 +54,4 @@ XalanAVTPartXPathAllocator::create(const XPath* xpath)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

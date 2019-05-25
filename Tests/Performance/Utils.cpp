@@ -25,9 +25,7 @@
 
 #include <stdio.h>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <sstream>
-#endif
 
 
 
@@ -52,10 +50,10 @@
 
 
 
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(CharVectorType)
-XALAN_USING_XALAN(TranscodeToLocalCodePage)
-XALAN_USING_XALAN(c_str)
+using xalanc::XalanMemMgrs;
+using xalanc::CharVectorType;
+using xalanc::TranscodeToLocalCodePage;
+using xalanc::c_str;
 
 
 
@@ -97,42 +95,26 @@ const XalanDOMChar* getPathSep()
 
 void fileToStream(
             const XalanDOMString&               fileName,
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-            CharVectorType&                     resultStream)
-#else
-            XALAN_STD_QUALIFIER istringstream&  resultStream)
-#endif
+            std::istringstream&  resultStream)
 {
     CharVectorType resultFileName;
     fileName.transcode(resultFileName);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::ifstream;
     using std::ostringstream;
-#endif
 
     ifstream resultFile(c_str(resultFileName));
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
     ostringstream fileOutputStream;
-#endif
 
     char ch; 
 
     while(resultFile.get(ch))
     {
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-        resultStream.push_back(ch);
-#else
         fileOutputStream.put(ch);
-#endif
     }
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-    resultStream.push_back('\0');
-#else
     resultStream.str(fileOutputStream.str());
-#endif
 }
 
 
@@ -144,10 +126,8 @@ void copyFile(
     CharVectorType sourceFileName;
     sourceFile.transcode(sourceFileName);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::ifstream;
     using std::ofstream;
-#endif
 
     ifstream sourceFileStream(c_str(sourceFileName));
 

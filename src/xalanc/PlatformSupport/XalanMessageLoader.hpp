@@ -36,11 +36,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -181,6 +181,6 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif  // XALANMESSAGELOADER_HEADER_GUARD_1357924680

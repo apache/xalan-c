@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -97,21 +97,8 @@ makeXalanDestroyFunctor(const Type*     /* theType */)
  * Functor to delete objects, used in STL iteration algorithms.
  */
 template <class Type>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DeleteFunctor : public unary_function<const Type*, void>
-#else
-struct DeleteFunctor : public std::unary_function<const Type*, void>
-#endif
+struct DeleteFunctor
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<const Type*, void>       BaseClassType;
-#else
-    typedef std::unary_function<const Type*, void>  BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
     DeleteFunctor(MemoryManager&    theManager) :
         m_memoryManager(theManager)
     {
@@ -122,8 +109,8 @@ struct DeleteFunctor : public std::unary_function<const Type*, void>
      *
      * @param thePointer pointer to object to be deleted
      */
-    result_type
-    operator()(argument_type    thePointer) const
+    void
+    operator()(const Type*    thePointer) const
     {
         return makeXalanDestroyFunctor(thePointer)(thePointer, m_memoryManager);
     }
@@ -134,114 +121,20 @@ private:
 };
 
 
-
-#if !defined(XALAN_SGI_BASED_STL)
-
-/**
- * Functor to retrieve the key of a key-value pair in a map, used in STL
- * iteration algorithms.
- */
-template <class PairType>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct select1st : public unary_function<PairType, PairType::first_type>
-#else
-struct select1st : public std::unary_function<PairType, typename PairType::first_type>
-#endif
-{
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<PairType, PairType::first_type>  BaseClassType;
-#else
-    typedef std::unary_function<PairType, typename PairType::first_type>    BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    typedef PairType                                value_type;
-
-    /**
-     * Retrieve the key of a key-value pair.
-     *
-     * @param thePair key-value pair
-     * @return key
-     */
-    result_type
-    operator()(const argument_type&     thePair) const
-    {
-        return thePair.first;
-    }
-};
-
-
-
-/**
- * Functor to retrieve the value of a key-value pair in a map, used in STL
- * iteration algorithms.
- */
-template <class PairType>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct select2nd : public unary_function<PairType, PairType::second_type>
-#else
-struct select2nd : public std::unary_function<PairType, typename PairType::second_type>
-#endif
-{
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<PairType, PairType::second_type> BaseClassType;
-#else
-    typedef std::unary_function<PairType, typename PairType::second_type>   BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    typedef PairType                                value_type;
-
-    /**
-     * Retrieve the value of a key-value pair.
-     *
-     * @param thePair key-value pair
-     * @return value
-     */
-    result_type
-    operator()(const argument_type&     thePair) const
-    {
-        return thePair.second;
-    }
-};
-
-#endif
-
-
-
 /**
  * Functor to call a clear() member function on its argument.
  */
 template <class Type>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct ClearFunctor : public unary_function<Type, void>
-#else
-struct ClearFunctor : public std::unary_function<Type, void>
-#endif
+struct ClearFunctor
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<Type, void>      BaseClassType;
-#else
-    typedef std::unary_function<Type, void> BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    typedef Type                                    value_type;
-
     /**
      * Retrieve the value of a key-value pair.
      *
      * @param thePair key-value pair
      * @return value
      */
-    result_type
-    operator()(argument_type&   theArg) const
+    void
+    operator()(Type&   theArg) const
     {
         return theArg.clear();
     }
@@ -253,21 +146,8 @@ struct ClearFunctor : public std::unary_function<Type, void>
  * Functor to delete value objects in maps, used in STL iteration algorithms.
  */
 template <class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct MapValueDeleteFunctor : public unary_function<const typename T::value_type&, void>
-#else
-struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
-#endif
+struct MapValueDeleteFunctor
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<const typename T::value_type&, void>         BaseClassType;
-#else
-    typedef std::unary_function<const typename T::value_type&, void>    BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
     MapValueDeleteFunctor(MemoryManager&    theManager) :
         m_memoryManager(theManager)
     {
@@ -279,8 +159,8 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
      *
      * @param thePair key-value pair
      */
-    result_type
-    operator()(argument_type    thePair) const
+    void
+    operator()(const typename T::value_type&    thePair) const
     {
         return makeXalanDestroyFunctor(thePair.second)(thePair.second, m_memoryManager);
     }
@@ -311,22 +191,8 @@ makeMapValueDeleteFunctor(MapType&   theMap)
  * the default will allow the map to work as expected.
  */
 template<class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct less_null_terminated_arrays : public binary_function<const T*, const T*, bool>
-#else
-struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
-#endif
+struct less_null_terminated_arrays
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
-#else
-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::first_argument_type     first_argument_type;
-    typedef typename BaseClassType::second_argument_type    second_argument_type;
-
     /**
      * Compare the values of two objects.
      *
@@ -335,10 +201,10 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
      * @param theRHS second object to compare
      * @return true if objects are the same
      */
-    result_type
+    bool
     operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const T*    theLHS,
+            const T*    theRHS) const
     {
         while(*theLHS && *theRHS)
         {
@@ -360,13 +226,8 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 
 
 template<class T>
-struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
+struct equal_null_terminated_arrays
 {
-    typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>       BaseClassType;
-
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::first_argument_type     first_argument_type;
-    typedef typename BaseClassType::second_argument_type    second_argument_type;
     /**
      * Compare the values of two objects.
      *
@@ -375,10 +236,10 @@ struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function
      * @param theRHS second object to compare
      * @return true if objects are the same
      */
-    result_type
+    bool
     operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const T*    theLHS,
+            const T*    theRHS) const
     {
         while(*theLHS && *theRHS)
         {
@@ -418,22 +279,17 @@ XalanScalarHash(
 
 
 template <class T>
-struct hash_non_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+struct hash_non_terminated_array
 {
-    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    result_type
+    size_t
     operator() (
-        argument_type   theKey,
-        result_type     theLength,
-        result_type     theInitialValue = 0) const
+        const T*    theKey,
+        size_t      theLength,
+        size_t      theInitialValue = 0) const
     {
-        result_type     theHashValue = theInitialValue; 
+        size_t      theHashValue = theInitialValue; 
 
-        const argument_type     theEnd =
+        const T*    theEnd =
                 theKey + theLength;
 
         while (theKey != theEnd)
@@ -450,19 +306,14 @@ struct hash_non_terminated_array : public XALAN_STD_QUALIFIER unary_function<con
 
 
 template <class T>
-struct hash_null_terminated_array : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
+struct hash_null_terminated_array
 {
-    typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>    BaseClassType;
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    result_type
+    size_t
     operator() (
-        argument_type   theKey,
-        result_type     theInitialValue = 0) const
+        const T*   theKey,
+        size_t     theInitialValue = 0) const
     {
-        result_type     theHashValue = theInitialValue; 
+        size_t     theHashValue = theInitialValue; 
 
         while (*theKey)
         {
@@ -538,9 +389,7 @@ public:
     {
         if (m_collection != 0)
         {
-#if !defined(XALAN_NO_STD_NAMESPACE)
             using std::for_each;
-#endif
 
             // Delete all of the objects in the temp vector.
             for_each(m_collection->begin(),
@@ -570,26 +419,12 @@ private:
 
 
 template<class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct pointer_equals : public binary_function<const T*, const T*, bool>
-#else
-struct pointer_equals : public std::binary_function<const T*, const T*, bool>
-#endif
+struct pointer_equals
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
-#else
-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::first_argument_type     first_argument_type;
-    typedef typename BaseClassType::second_argument_type    second_argument_type;
-
-    result_type
+    bool
     operator()(
-        first_argument_type     theLHS,
-        second_argument_type    theRHS) const
+        const T*    theLHS,
+        const T*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
 
@@ -600,29 +435,16 @@ struct pointer_equals : public std::binary_function<const T*, const T*, bool>
 
 
 template<class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct pointer_equals_predicate : public unary_function<const T*, bool>
-#else
-struct pointer_equals_predicate : public std::unary_function<const T*, bool>
-#endif
+struct pointer_equals_predicate
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<const T*, bool>          BaseClassType;
-#else
-    typedef std::unary_function<const T*, bool>     BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
-    pointer_equals_predicate(argument_type  theArg) :
+    pointer_equals_predicate(const T*    theArg) :
         m_arg(theArg)
     {
     }
 
-    result_type
+    bool
     operator()(
-        argument_type   theOther) const
+        const T*   theOther) const
     {
         assert(theOther != 0);
 
@@ -631,38 +453,22 @@ struct pointer_equals_predicate : public std::unary_function<const T*, bool>
 
 private:
 
-    const argument_type     m_arg;
+    const T*    m_arg;
 };
 
 
 
 template<class T>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct pointer_less : public binary_function<const T*, const T*, bool>
-#else
-struct pointer_less : public std::binary_function<const T*, const T*, bool>
-#endif
+struct pointer_less
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef binary_function<const T*, const T*, bool>           BaseClassType;
-#else
-    typedef std::binary_function<const T*, const T*, bool>      BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::first_argument_type     first_argument_type;
-    typedef typename BaseClassType::second_argument_type    second_argument_type;
-
-    result_type
+    bool
     operator()(
-        first_argument_type     theLHS,
-        second_argument_type    theRHS) const
+        const T*    theLHS,
+        const T*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::less;
-#endif
 
         return less<T>()(*theLHS, *theRHS);
     }
@@ -671,28 +477,22 @@ struct pointer_less : public std::binary_function<const T*, const T*, bool>
 
 
 template<class T>
-struct pointer_equal : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
+struct pointer_equal
 {
-    typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool> BaseClassType;
-
-    typedef typename BaseClassType::result_type             result_type;
-    typedef typename BaseClassType::first_argument_type     first_argument_type;
-    typedef typename BaseClassType::second_argument_type    second_argument_type;
-
-    result_type
+    bool
     operator()(
-        first_argument_type     theLHS,
-        second_argument_type    theRHS) const
+        const T*    theLHS,
+        const T*    theRHS) const
     {
         assert(theLHS != 0 && theRHS != 0);
-        return XALAN_STD_QUALIFIER equal_to<T>()(*theLHS, *theRHS);
+        return std::equal_to<T>()(*theLHS, *theRHS);
     }
 };
 
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

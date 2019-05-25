@@ -44,13 +44,8 @@
 #endif
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
@@ -58,7 +53,6 @@
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::fclose;
 using std::feof;
 using std::ferror;
@@ -69,7 +63,6 @@ using std::sprintf;
 using std::strftime;
 using std::tm;
 using std::time;
-#endif
 
 
 
@@ -111,7 +104,7 @@ using std::time;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -135,9 +128,9 @@ const char* const   xalanNodeTypes[] =
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 const XalanDOMString    XalanFileUtility::s_emptyString(XalanMemMgrs::getDummyMemMgr());
@@ -919,22 +912,22 @@ XalanFileUtility::checkDOMResults(
 
 
 
-class DummyErrorHandler : public XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler
+class DummyErrorHandler : public xercesc::ErrorHandler
 {
     virtual void
-    warning(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    warning(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
 
     virtual void
-    error(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    error(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
 
     virtual void
-    fatalError(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    fatalError(const xercesc::SAXParseException& exc)
     {
         throw exc;
     }
@@ -991,7 +984,7 @@ XalanFileUtility::compareSerializedResults(
     // This exception is being reported prior to this Catch, however, however, I clarify that it's a SAX exception.
     // It's a good indication that the Gold file is not a valid XML.  When this happens the transform result needs
     // to be compared with the Gold,  with a character by character basis,  not via the DOM compair. 
-    catch (const XERCES_CPP_NAMESPACE_QUALIFIER SAXException&)
+    catch (const xercesc::SAXException&)
     {
         if (m_verbose == true)
         {
@@ -2166,4 +2159,4 @@ const XalanDOMChar  XalanFileUtility::s_pathSep[] =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -70,7 +70,7 @@ NodeSorter::sort(StylesheetExecutionContext&    executionContext)
                     m_scratchVector,
                     m_keys);
 
-    XALAN_USING_STD(stable_sort)
+    using std::stable_sort;
 
     // Use the stl sort algorithm, which will use our compare functor,
     // which returns true if first less than second
@@ -153,9 +153,9 @@ doCollationCompare(
 
 int
 NodeSorter::NodeSortKeyCompare::compare(
-                first_argument_type     theLHS,
-                second_argument_type    theRHS,
-                XalanSize_t             theKeyIndex) const
+                const NodeVectorType::value_type&    theLHS,
+                const NodeVectorType::value_type&    theRHS,
+                XalanSize_t                          theKeyIndex) const
 {
     assert(theLHS.m_node != 0 && theRHS.m_node != 0);
     assert(theKeyIndex < m_nodeSortKeys.size());
@@ -265,9 +265,9 @@ getResult(
 
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const
 {
     assert(theKey.getPrefixResolver() != 0);
 
@@ -306,7 +306,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
     {
         theCache[theKeyIndex].resize(m_nodes.size(), 0);
 
-        XALAN_USING_STD(fill)
+        using std::fill;
 
         // Fill with the dummy value...
         fill(
@@ -423,9 +423,9 @@ cacheValue(const XalanDOMString&    theEntry)
 
 const XalanDOMString&
 NodeSorter::NodeSortKeyCompare::getStringResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const
 {
     assert(theKey.getPrefixResolver() != 0);
 
@@ -473,4 +473,4 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

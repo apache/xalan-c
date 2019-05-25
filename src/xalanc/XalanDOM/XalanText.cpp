@@ -19,7 +19,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -61,4 +61,4 @@ XalanText::operator==(const XalanText&  /* theRHS */) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

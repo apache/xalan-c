@@ -33,16 +33,19 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
-XALAN_USING_XERCES(Locator)
+typedef xercesc::Locator  LocatorType;
+using xercesc::Locator;
 
 
 
@@ -205,7 +208,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

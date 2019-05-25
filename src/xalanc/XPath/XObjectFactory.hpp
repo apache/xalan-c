@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -238,11 +238,7 @@ public:
      * A public functor for use with stl algorithms.
      *
      */
-#if defined(XALAN_NO_STD_NAMESPACE)
-    struct DeleteXObjectFunctor : public unary_function<XObject*, void>
-#else
-    struct DeleteXObjectFunctor : public std::unary_function<XObject*, bool>
-#endif
+    struct DeleteXObjectFunctor
     {
     public:
 
@@ -254,8 +250,8 @@ public:
         {
         }
 
-        result_type
-        operator()(argument_type    theXObject) const
+        bool
+        operator()(XObject*    theXObject) const
         {
             if (m_fInReset == true)
             {
@@ -338,7 +334,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

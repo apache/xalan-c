@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -374,7 +374,7 @@ XalanEXSLTFunctionEncodeURI::execute(
     const GetCachedString   theGuard1(executionContext);
     XalanDOMString&     theBuffer = theGuard1.get();
 
-    XALAN_USING_STD(find)
+    using std::find;
 
     for (XalanDOMString::size_type i = 0; i < theString.length(); ++i)
     {
@@ -810,4 +810,4 @@ XalanEXSLTStringFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

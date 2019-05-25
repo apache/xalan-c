@@ -72,7 +72,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -89,18 +89,14 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExe
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::clock_t    ClockType;
-#else
-    typedef clock_t         ClockType;
-#endif
 
     typedef XalanVector<FormatterListener*>             FormatterListenerVectorType;
     typedef XalanVector<PrintWriter*>                   PrintWriterVectorType;
     typedef XalanVector<XalanOutputStream*>             OutputStreamVectorType;
 
     typedef XalanVector<const ElemTemplateElement*> ElementTemplateElementStackType;
-    typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>       XPathCacheEntry;
+    typedef std::pair<const XPath*, ClockType>       XPathCacheEntry;
     typedef XalanMap <XalanDOMString, XPathCacheEntry>              XPathCacheMapType;
     typedef XalanVector<const ElemTemplate*>            CurrentTemplateStackType;
 
@@ -1267,7 +1263,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

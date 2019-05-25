@@ -46,11 +46,14 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+namespace XERCES_CPP_NAMESPACE
+{
+    class ErrorHandler;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -67,7 +70,7 @@ class XalanText;
 
 
 
-XALAN_USING_XERCES(ErrorHandler)
+using xercesc::ErrorHandler;
 
 
 
@@ -727,7 +730,7 @@ protected:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

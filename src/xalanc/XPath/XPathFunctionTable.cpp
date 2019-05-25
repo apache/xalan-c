@@ -44,7 +44,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -116,11 +116,7 @@ XPathFunctionTable::XPathFunctionTable( bool fCreateTable) :
 {
     assert(int(s_functionNamesSize) == TableSize);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(m_functionTable, 0, sizeof(m_functionTable));
-#else
-    memset(m_functionTable, 0, sizeof(m_functionTable));
-#endif
 
     if (fCreateTable == true)
     {
@@ -460,18 +456,14 @@ XPathFunctionTable::DestroyTable()
 {
     try
     {
-        XALAN_USING_STD(for_each)
+        using std::for_each;
 
         for_each(
             m_functionTable,
             m_functionTable + TableSize,
             DeleteFunctorType(*m_memoryManager));
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         std::memset(m_functionTable, 0, sizeof(m_functionTable));
-#else
-        memset(m_functionTable, 0, sizeof(m_functionTable));
-#endif
     }
     catch(...)
     {
@@ -1243,4 +1235,4 @@ const SizeType      XPathFunctionTable::s_functionNamesSize =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

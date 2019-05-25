@@ -28,11 +28,7 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 
 
 
@@ -53,11 +49,11 @@ class ostream;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -72,7 +68,7 @@ XalanCopy(
             InputIteratorType   end,
             OutputIteratorType  iterator)
 {
-    return XALAN_STD_QUALIFIER copy(begin, end, iterator);
+    return std::copy(begin, end, iterator);
 }
 
 
@@ -85,7 +81,7 @@ XalanTransform(
             OutputIteratorType  iterator,
             UnaryFunction       function)
 {
-    return XALAN_STD_QUALIFIER transform(begin, end, iterator);
+    return std::transform(begin, end, iterator);
 }
 
 
@@ -694,13 +690,13 @@ public:
 
     static void
     NumberToCharacters(
-            long                theValue,
+            XMLInt32            theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function);
 
     static void
     NumberToCharacters(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             FormatterListener&  formatterListener,
             MemberFunctionPtr   function);
 };
@@ -722,7 +718,7 @@ NumberToDOMString(
 
 
 /**
- * Converts an 64-bit unsigned value into a XalanDOMString
+ * Converts an 64-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -730,13 +726,13 @@ NumberToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts an 64-bit signed value into a XalanDOMString
+ * Converts an 64-bit signed int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -744,13 +740,13 @@ NumberToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts an unsigned long value into a XalanDOMString
+ * Converts a 32-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -758,18 +754,18 @@ NumberToDOMString(
  */
 inline XalanDOMString&
 NumberToDOMString(
-            unsigned long       theValue,
+            XMLUInt32           theValue,
             XalanDOMString&     theResult)
 {
     return NumberToDOMString(
-                static_cast<XALAN_UINT64>(theValue),
+                static_cast<XMLUInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts a XalanSSize_t value into a XalanDOMString
+ * Converts a 32-bit int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -777,18 +773,18 @@ NumberToDOMString(
  */
 inline XalanDOMString&
 NumberToDOMString(
-            long                theValue,
+            XMLInt32            theValue,
             XalanDOMString&     theResult)
 {
     return NumberToDOMString(
-                static_cast<XALAN_INT64>(theValue),
+                static_cast<XMLInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts an unsigned int value into a XalanDOMString
+ * Converts a 16-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -796,18 +792,18 @@ NumberToDOMString(
  */
 inline XalanDOMString&
 NumberToDOMString(
-            unsigned int        theValue,
+            XMLUInt16           theValue,
             XalanDOMString&     theResult)
 {
     return NumberToDOMString(
-                static_cast<XALAN_UINT64>(theValue),
+                static_cast<XMLUInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts an int value into a XalanDOMString
+ * Converts a 16-bit int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -815,56 +811,18 @@ NumberToDOMString(
  */
 inline XalanDOMString&
 NumberToDOMString(
-            int                 theValue,
+            XMLInt16            theValue,
             XalanDOMString&     theResult)
 {
     return NumberToDOMString(
-                static_cast<XALAN_INT64>(theValue),
+                static_cast<XMLInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts an unsigned short value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-inline XalanDOMString&
-NumberToDOMString(
-            unsigned short      theValue,
-            XalanDOMString&     theResult)
-{
-    return NumberToDOMString(
-                static_cast<XALAN_UINT64>(theValue),
-                theResult);
-}
-
-
-
-/**
- * Converts a short value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-inline XalanDOMString&
-NumberToDOMString(
-            short               theValue,
-            XalanDOMString&     theResult)
-{
-    return NumberToDOMString(
-                static_cast<XALAN_INT64>(theValue),
-                theResult);
-}
-
-
-
-/**
- * Converts an 64-bit unsigned value into a XalanDOMString
+ * Converts an 64-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -872,13 +830,13 @@ NumberToDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_UINT64        theValue,
+            XMLUInt64        theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts an 64-bit signed value into a XalanDOMString
+ * Converts an 64-bit signed int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -886,13 +844,13 @@ NumberToHexDOMString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString&)
 NumberToHexDOMString(
-            XALAN_INT64         theValue,
+            XMLInt64         theValue,
             XalanDOMString&     theResult);
 
 
 
 /**
- * Converts a XalanSSize_t value into a XalanDOMString
+ * Converts a 32-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -900,18 +858,18 @@ NumberToHexDOMString(
  */
 inline XalanDOMString&
 NumberToHexDOMString(
-            unsigned long       theValue,
+            XMLUInt32           theValue,
             XalanDOMString&     theResult)
 {
     return NumberToHexDOMString(
-                static_cast<XALAN_UINT64>(theValue),
+                static_cast<XMLUInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts a XalanSSize_t value into a XalanDOMString
+ * Converts a 32-bit signed int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -919,18 +877,18 @@ NumberToHexDOMString(
  */
 inline XalanDOMString&
 NumberToHexDOMString(
-            long                theValue,
+            XMLInt32            theValue,
             XalanDOMString&     theResult)
 {
     return NumberToHexDOMString(
-                static_cast<XALAN_INT64>(theValue),
+                static_cast<XMLInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts an unsigned int value into a XalanDOMString
+ * Converts a 16-bit unsigned int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -938,18 +896,18 @@ NumberToHexDOMString(
  */
 inline XalanDOMString&
 NumberToHexDOMString(
-            unsigned int        theValue,
+            XMLUInt16           theValue,
             XalanDOMString&     theResult)
 {
     return NumberToHexDOMString(
-                static_cast<XALAN_UINT64>(theValue),
+                static_cast<XMLUInt64>(theValue),
                 theResult);
 }
 
 
 
 /**
- * Converts an int value into a XalanDOMString
+ * Converts a 16-bit signed int value into a XalanDOMString
  * 
  * @param theValue number to be converted
  * @param theResult the string to append with the result
@@ -957,49 +915,11 @@ NumberToHexDOMString(
  */
 inline XalanDOMString&
 NumberToHexDOMString(
-            int                 theValue,
+            XMLInt16            theValue,
             XalanDOMString&     theResult)
 {
     return NumberToHexDOMString(
-                static_cast<XALAN_INT64>(theValue),
-                theResult);
-}
-
-
-
-/**
- * Converts an unsigned short value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-inline XalanDOMString&
-NumberToHexDOMString(
-            unsigned short      theValue,
-            XalanDOMString&     theResult)
-{
-    return NumberToHexDOMString(
-                static_cast<XALAN_UINT64>(theValue),
-                theResult);
-}
-
-
-
-/**
- * Converts a short value into a XalanDOMString
- * 
- * @param theValue number to be converted
- * @param theResult the string to append with the result
- * @return a reference to the passed string result.
- */
-inline XalanDOMString&
-NumberToHexDOMString(
-            short               theValue,
-            XalanDOMString&     theResult)
-{
-    return NumberToHexDOMString(
-                static_cast<XALAN_INT64>(theValue),
+                static_cast<XMLInt64>(theValue),
                 theResult);
 }
 
@@ -1136,11 +1056,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const CharVectorType&   theString);
 
 
@@ -1168,11 +1084,7 @@ OutputString(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const XalanDOMChar*     theString,
             MemoryManager&          theMemoryManager);
 
@@ -1210,11 +1122,7 @@ OutputString(
  */
 inline void
 OutputString(
-#if defined(XALAN_NO_STD_NAMESPACE)
-            ostream&                theStream,
-#else
             std::ostream&           theStream,
-#endif
             const XalanDOMString&   theString,
             MemoryManager&          theMemoryManager)
 {
@@ -1254,15 +1162,9 @@ operator<<(
  * @param theString the string to output
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const CharVectorType&   theString)
 {
     OutputString(
@@ -1302,15 +1204,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const XalanDOMChar*     theString)
 {
     OutputString(
@@ -1350,15 +1246,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&                theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&           theStream,
-#endif
             const XalanDOMString&   theString)
 {
     OutputString(
@@ -1378,15 +1268,9 @@ operator<<(
  * @param theString target string
  * @see OutputString
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-inline ostream&
-operator<<(
-            ostream&            theStream,
-#else
 inline std::ostream&
 operator<<(
             std::ostream&       theStream,
-#endif
             XalanDOMString&     theString)
 {
     OutputString(
@@ -2683,14 +2567,10 @@ MakeXalanDOMCharVector(const XalanDOMString&    data,
 
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct c_wstr_functor : public unary_function<XalanDOMString, const XalanDOMChar*>
-#else
-struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDOMChar*>
-#endif
+struct c_wstr_functor
 {
-    result_type
-    operator() (const argument_type&    theString) const
+    const XalanDOMChar*
+    operator() (const XalanDOMString&    theString) const
     {
         return theString.c_str();
     }
@@ -2705,15 +2585,11 @@ struct c_wstr_functor : public std::unary_function<XalanDOMString, const XalanDO
  * @param theRHS second string to compare
  * @return true if the theLHS is less than theRHS, without respect to case.
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringLessThanIgnoreCaseASCIIFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringLessThanIgnoreCaseASCIIFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
     }
@@ -2728,15 +2604,11 @@ struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<co
  * @param theRHS second string to compare
  * @return true if the theLHS is less than or equal to theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringLessThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringLessThanOrEqualFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) <= 0 ? true : false;
     }
@@ -2751,15 +2623,11 @@ struct DOMStringLessThanOrEqualFunction : public std::binary_function<const Xala
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringGreaterThanFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringGreaterThanFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) > 0 ? true : false;
     }
@@ -2774,15 +2642,11 @@ struct DOMStringGreaterThanFunction : public std::binary_function<const XalanDOM
  * @param theRHS second string to compare
  * @return true if the theLHS is greater than or equal to theRHS
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DOMStringGreaterThanOrEqualFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
+struct DOMStringGreaterThanOrEqualFunction
 {
-    result_type
-    operator() (first_argument_type     theLHS,
-                second_argument_type    theRHS) const
+    bool
+    operator() (const XalanDOMString&    theLHS,
+                const XalanDOMString&    theRHS) const
     {
         return compare(theLHS, theRHS) >= 0 ? true : false;
     }
@@ -2795,11 +2659,7 @@ struct DOMStringGreaterThanOrEqualFunction : public std::binary_function<const X
  * manner.  It substitutes for the default less<type*> so that the contents of wide strings
  * can be compared, rather than just the pointers.
  */
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct less_no_case_ascii_wide_string : public binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
-#else
-struct less_no_case_ascii_wide_string : public std::binary_function<const XalanDOMChar*, const XalanDOMChar*, bool>
-#endif
+struct less_no_case_ascii_wide_string
 {
     /**
      * Compare the values of two objects.
@@ -2809,10 +2669,10 @@ struct less_no_case_ascii_wide_string : public std::binary_function<const XalanD
      * @param theRHS second object to compare
      * @return true if objects are the same
      */
-    result_type
+    bool
     operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const XalanDOMChar*    theLHS,
+            const XalanDOMChar*    theRHS) const
     {
         return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
     }
@@ -2863,7 +2723,7 @@ isXMLWhitespace(const XalanDOMChar*     theString)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

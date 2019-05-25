@@ -23,11 +23,7 @@
 #include <cassert>
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -70,9 +66,9 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostream)
+using std::cerr;
+using std::endl;
+using std::ostream;
 
 
 
@@ -93,14 +89,12 @@ public:
         ostream&        errorStream,
         CharVectorTypeVectorType& theResultList)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::strlen;
-#endif
 
 
         {
             // Just hoist everything...
-            XALAN_CPP_NAMESPACE_USE
+            using namespace xalanc;
 
             typedef XPathConstructionContext::GetAndReleaseCachedString     GetAndReleaseCachedString;
 
@@ -116,11 +110,11 @@ public:
 
             XalanElement*   rootElem = 0;
 
-            XALAN_USING_XERCES(XMLException)
+            using xercesc::XMLException;
 
             try
             {
-                XALAN_USING_XERCES(MemBufInputSource)
+                using xercesc::MemBufInputSource;
 
                 // parse XML and get root element
                 MemBufInputSource   inStream((XMLByte*)xml, strlen(xml), "foo", false);

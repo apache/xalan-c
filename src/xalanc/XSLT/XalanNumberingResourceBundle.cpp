@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -170,4 +170,4 @@ XalanNumberingResourceBundle::swap(XalanNumberingResourceBundle&    theOther)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

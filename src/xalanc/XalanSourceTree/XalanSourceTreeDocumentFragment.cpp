@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -155,11 +155,7 @@ XalanSourceTreeDocumentFragment::getAttributes() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanDocument*
-#else
 XalanSourceTreeDocument*
-#endif
 XalanSourceTreeDocumentFragment::getOwnerDocument() const
 {
     return m_ownerDocument;
@@ -246,4 +242,4 @@ XalanSourceTreeDocumentFragment::clearChildren()
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}

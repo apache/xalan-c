@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -65,7 +65,7 @@ public:
     typedef typename Traits::const_reference    const_reference;
     typedef ptrdiff_t                           difference_type;
 
-    typedef XALAN_STD_QUALIFIER random_access_iterator_tag  iterator_category;
+    typedef std::random_access_iterator_tag  iterator_category;
 
     // The non-const iterator type.  In the case of the non-const instatiation, this
     // is the same type.
@@ -215,32 +215,8 @@ public:
     typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType>          iterator;
     typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, ThisType>     const_iterator;
 
-#if defined(XALAN_HAS_STD_ITERATORS)
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
-#elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
-    typedef typename iterator::iterator_category    iterator_category;
-
-    // This is a specific case for the Rogue Wave STL on Solaris.
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        iterator,
-        iterator_category,
-        value_type> reverse_iterator_;
-
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        const_iterator,
-        iterator_category,
-        const value_type> const_reverse_iterator_;
-#else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        iterator,
-        value_type>        reverse_iterator_;
-
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        const_iterator,
-        value_type,
-        const_reference>   const_reverse_iterator_;
-#endif
+    typedef std::reverse_iterator<iterator>          reverse_iterator_;
+    typedef std::reverse_iterator<const_iterator>    const_reverse_iterator_;
 
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;
@@ -260,8 +236,8 @@ public:
     {
         const ConstructableType     defaultValue(*m_memoryManager);
 
-        XALAN_USING_STD(fill_n)
-        XALAN_USING_STD(back_inserter)
+        using std::fill_n;
+        using std::back_inserter;
 
         fill_n(
             back_inserter(*this),
@@ -278,8 +254,8 @@ public:
                     theRHS.size() / theRHS.m_blockSize + (theRHS.size() % theRHS.m_blockSize == 0 ? 0 : 1)),
         m_freeBlockVector(theMemoryManager)
     {
-        XALAN_USING_STD(copy)
-        XALAN_USING_STD(back_inserter)
+        using std::copy;
+        using std::back_inserter;
 
         copy(
             theRHS.begin(),
@@ -469,8 +445,8 @@ public:
     {
         if (this != &theRHS)
         {
-            XALAN_USING_STD(copy)
-            XALAN_USING_STD(back_inserter)
+            using std::copy;
+            using std::back_inserter;
 
             clear();
 
@@ -559,7 +535,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

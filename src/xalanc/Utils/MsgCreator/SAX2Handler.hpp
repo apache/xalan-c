@@ -25,11 +25,11 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 
 
@@ -112,7 +112,7 @@ static const XMLCh s_textXMLCh[] =
 // For creation data file responsible subclasses
 
 
-class SAX2Handler : public XERCES_CPP_NAMESPACE_QUALIFIER DefaultHandler
+class SAX2Handler : public xercesc::DefaultHandler
 {
 public:
     // -----------------------------------------------------------------------
@@ -229,7 +229,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

@@ -29,15 +29,18 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(MemoryManager)
+namespace XERCES_CPP_NAMESPACE
+{
+    class MemoryManager;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -76,7 +79,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

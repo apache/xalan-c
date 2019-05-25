@@ -42,7 +42,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -55,11 +55,7 @@ public:
 
     typedef XalanMap<XalanDOMString, XalanDOMString>  Hashtable;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE   FileHandleType;
-#else
-    typedef FILE        FileHandleType;
-#endif
 
 public:
 
@@ -391,7 +387,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

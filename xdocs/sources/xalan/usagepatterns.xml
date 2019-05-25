@@ -79,8 +79,8 @@
 <p>In the following example, the <em>XALAN_USING_XERCES</em> and <em>XALAN_USING_XALAN</em> macros are used to declare that the 
    program is using <em>XMLPlatformUtils</em> and <em>XalanTransformer</em> from the &xml4c; and &xslt4c; namespaces respectively.</p>
 <source>
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XALAN(XalanTransformer)
+using xercesc::XMLPlatformUtils;
+using xalanc::XalanTransformer;
 </source>
 
 <p>These macros can be used immediately after the included header files (for global applicability in a given source file) or within 
@@ -274,11 +274,11 @@ theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
 #include &lt;xalanc/XMLSupport/FormatterToXML.hpp&gt;
 #include &lt;xalanc/XMLSupport/XalanTransformer.hpp&gt;
 
-XALAN_USING_XERCES(DOMDocument)
-XALAN_USING_XERCES(DOMImplementation)
+using xercesc::DOMDocument;
+using xercesc::DOMImplementation;
 
-XALAN_USING_XALAN(FormatterToXML)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::FormatterToXML;
+using xalanc::XalanTransformer;
 
 
     // If you want to produce DOM output, create an empty Xerces Document

@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -180,4 +180,4 @@ FormatterTreeWalker::endNode(XalanNode*     node)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

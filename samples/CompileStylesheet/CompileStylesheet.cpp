@@ -24,15 +24,9 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <fstream>
 #include <iostream>
 #include <strstream>
-#endif
 
 
 
@@ -48,9 +42,9 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(ostrstream)
+    using std::cerr;
+    using std::endl;
+    using std::ostrstream;
 
     int theResult = 0;
 
@@ -62,11 +56,11 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XalanCompiledStylesheet)
+        using xalanc::XalanTransformer;
+        using xalanc::XalanCompiledStylesheet;
 
         // Call the static initializer for Xerces.
         try

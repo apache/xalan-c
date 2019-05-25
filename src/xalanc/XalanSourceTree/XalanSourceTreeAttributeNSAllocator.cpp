@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -75,4 +75,4 @@ XalanSourceTreeAttributeNSAllocator::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

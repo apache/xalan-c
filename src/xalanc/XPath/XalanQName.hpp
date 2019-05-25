@@ -45,7 +45,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -437,7 +437,7 @@ template<>
 struct XalanMapKeyTraits<XalanQName>
 {
     typedef XalanHashMemberReference<XalanQName>        Hasher;
-    typedef XALAN_STD_QUALIFIER equal_to<XalanQName>    Comparator;
+    typedef std::equal_to<XalanQName>    Comparator;
 };
 
 template<>
@@ -448,7 +448,7 @@ struct XalanMapKeyTraits<const XalanQName*>
 };
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

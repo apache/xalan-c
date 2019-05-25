@@ -30,13 +30,11 @@
 
 
 
-#if !defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 #include <xalanc/XalanSourceTree/XalanSourceTreeDocument.hpp>
-#endif
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -96,11 +94,7 @@ public:
     virtual const XalanNamedNodeMap*
     getAttributes() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanDocument*
-#else
     virtual XalanSourceTreeDocument*
-#endif
     getOwnerDocument() const;
 
     virtual const XalanDOMString&
@@ -153,7 +147,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

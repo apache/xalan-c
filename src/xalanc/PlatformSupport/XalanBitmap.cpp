@@ -24,7 +24,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -51,9 +51,9 @@ XalanBitmap::~XalanBitmap()
 void
 XalanBitmap::clearAll()
 {
-    XALAN_STD_QUALIFIER fill(m_bitmap.begin(), m_bitmap.end(), '\0');
+    std::fill(m_bitmap.begin(), m_bitmap.end(), '\0');
 }
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

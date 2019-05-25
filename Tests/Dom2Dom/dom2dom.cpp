@@ -22,13 +22,8 @@
 
 #include <cstdio>
 #include <direct.h>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 #include <vector>
 
 
@@ -79,14 +74,14 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
 // Just hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 
@@ -311,8 +306,8 @@ runTests(
                 XalanDOMString  theOutputFile(theManager);
                 f.generateFileName(theOutput, "out", theOutputFile);
 
-                XALAN_USING_XERCES(DOMDocument)
-                XALAN_USING_XERCES(DOMImplementation)
+                using xercesc::DOMDocument;
+                using xercesc::DOMImplementation;
 
                 // Use a Xerces Dom document to create the XSLTResultTarget. 
                 const XalanAutoPtr<DOMDocument>     theDocument(DOMImplementation::getImplementation()->createDocument());
@@ -398,7 +393,7 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

@@ -21,7 +21,7 @@
 #include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -82,4 +82,4 @@ XalanSourceTreeElementNANS::getLocalName() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

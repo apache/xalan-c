@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -240,4 +240,4 @@ ElemMessage::ElemMessageTerminateException::~ElemMessageTerminateException()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

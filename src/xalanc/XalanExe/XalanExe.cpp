@@ -22,11 +22,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -62,36 +58,32 @@
 #include "windows.h"
 #else
 #include <ctime>
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::clock;
 using std::clock_t;
 #endif
-#endif
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cin)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostream)
+using std::cerr;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::ostream;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
 using std::strcmp;
 using std::strlen;
-#endif
 
 
 
 void
 Usage()
 {
-    XALAN_USING_XALAN(XalanDOMString)
-    XALAN_USING_XALAN(XalanMessageLoader)
-    XALAN_USING_XALAN(XalanMessages)
-    XALAN_USING_XALAN(XalanMemMgrs)
-    XALAN_USING_XERCES(MemoryManager)
+    using xalanc::XalanDOMString;
+    using xalanc::XalanMessageLoader;
+    using xalanc::XalanMessages;
+    using xalanc::XalanMemMgrs;
+    using xercesc::MemoryManager;
 
     MemoryManager&  theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
@@ -163,9 +155,9 @@ Usage()
 
 
 
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -279,7 +271,7 @@ private:
         const char*     m_expression;
     };
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanArrayAutoPtr<ParamPair>  ArrayAutoPtrType;
+    typedef xalanc::XalanArrayAutoPtr<ParamPair>  ArrayAutoPtrType;
 
     ArrayAutoPtrType        m_params;
 
@@ -462,11 +454,7 @@ getArgs(
 #if defined(XALAN_USE_WINDOWS_TIMING)
 typedef LARGE_INTEGER   ClockType;
 #else
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 typedef std::clock_t    ClockType;
-#else
-typedef clock_t         ClockType;
-#endif
 #endif
 
 typedef ostream         OstreamType;
@@ -482,11 +470,7 @@ getClock()
 
     return theResult;
 #else
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     return std::clock();
-#else
-    return clock();
-#endif
 #endif
 }
 
@@ -568,8 +552,8 @@ reportElapsedMilliseconds(
 
 
 
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanCompiledStylesheet)
+using xalanc::XalanParsedSource;
+using xalanc::XalanCompiledStylesheet;
 
 
 typedef XalanTransformer::EnsureDestroyParsedSource         SourceGuard;
@@ -721,9 +705,9 @@ transform(
             const XSLTInputSource&  theSource,
             const XSLTInputSource&  theStylesheetSource)
 {
-    XALAN_USING_XALAN(XalanDOMString)
-    XALAN_USING_XALAN(XSLTResultTarget)
-    XALAN_USING_XERCES(MemoryManager)
+    using xalanc::XalanDOMString;
+    using xalanc::XSLTResultTarget;
+    using xercesc::MemoryManager;
 
     MemoryManager&  theManager = theTransformer.getMemoryManager();
 
@@ -826,13 +810,13 @@ transform(
 
 #if defined(XALAN_WINDOWS)
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
-class WindowsMemoryManager : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class WindowsMemoryManager : public xalanc::XalanMemoryManager
 {
 public:
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+    typedef xalanc::XalanSize_t   XalanSize_t;
 
     WindowsMemoryManager() :
         XalanMemoryManager(),
@@ -862,7 +846,7 @@ public:
 
         if (value == 0)
         {
-            throw XERCES_CPP_NAMESPACE_QUALIFIER OutOfMemoryException();
+            throw xercesc::OutOfMemoryException();
         }
 
         return value;
@@ -910,14 +894,14 @@ xsltMain(
 {
     int theResult = -1;
 
-    XALAN_USING_XERCES(XMLPlatformUtils)
+    using xercesc::XMLPlatformUtils;
 
 #if defined(XALAN_WINDOWS) && defined(NDEBUG)
     WindowsMemoryManager  theMemoryManager;
 
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize(
-        XERCES_CPP_NAMESPACE_QUALIFIER XMLUni::fgXercescDefaultLocale,
+        xercesc::XMLUni::fgXercescDefaultLocale,
         0,
         0,
         &theMemoryManager);
@@ -925,7 +909,7 @@ xsltMain(
     // Call the static initializer for Xerces...
     XMLPlatformUtils::Initialize();
 
-    XALAN_USING_XERCES(MemoryManager)
+    using xercesc::MemoryManager;
  
     MemoryManager&  theMemoryManager =
             *XMLPlatformUtils::fgMemoryManager;

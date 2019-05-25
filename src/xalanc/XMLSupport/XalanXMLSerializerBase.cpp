@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 const size_t  XalanXMLSerializerBase::CharFunctor1_0::s_lastSpecial = 0x7fu;
 
@@ -151,7 +151,7 @@ XalanXMLSerializerBase::decodeUTF16SurrogatePair(
 
 
 
-XALAN_USING_XERCES(SAXException)
+using xercesc::SAXException;
 
 void
 XalanXMLSerializerBase::throwInvalidUTF16SurrogateException(
@@ -968,4 +968,4 @@ const XalanXMLSerializerBase::size_type     XalanXMLSerializerBase::UTF16::s_quo
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

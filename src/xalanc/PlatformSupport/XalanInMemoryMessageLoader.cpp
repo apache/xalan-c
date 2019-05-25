@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -87,7 +87,7 @@ XalanInMemoryMessageLoader::XalanInMemoryMessageLoader(MemoryManager& theManager
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

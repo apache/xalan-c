@@ -42,20 +42,23 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(EntityResolver)
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+namespace XERCES_CPP_NAMESPACE
+{
+    class EntityResolver;
+    class ErrorHandler;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
+typedef xercesc::EntityResolver   EntityResolverType;
+typedef xercesc::ErrorHandler     ErrorHandlerType;
 
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(ErrorHandler)
+using xercesc::EntityResolver;
+using xercesc::ErrorHandler;
 
 
 class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet
@@ -95,7 +98,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

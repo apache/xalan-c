@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -77,11 +77,7 @@ public:
 
     // Output functions
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const size_t     npos = ~0u;
-#else
     static const size_t     npos;
-#endif
 
     /**
      * Writes a string
@@ -144,7 +140,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

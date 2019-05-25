@@ -37,7 +37,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -309,4 +309,4 @@ XalanSourceTreeElement::appendChildNode(XalanSourceTreeText*    theChild)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -20,11 +20,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -76,8 +72,8 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = -1;
 
@@ -91,11 +87,11 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
             
-            XALAN_USING_XERCES(XMLUni)
+            using xercesc::XMLUni;
 
-            XALAN_USING_XALAN(XalanTransformer)
+            using xalanc::XalanTransformer;
 
             XalanMemoryManagerImpl memoryManager;
 

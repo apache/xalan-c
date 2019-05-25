@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -36,4 +36,4 @@ TraceListener::~TraceListener()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

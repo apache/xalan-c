@@ -51,11 +51,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -198,14 +198,10 @@ public:
 
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DirectoryFilterPredicate : public unary_function<FindFileStruct, bool>
-#else
-struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, bool>
-#endif
+struct DirectoryFilterPredicate
 {
-    result_type
-    operator()(const argument_type& theFindData) const
+    bool
+    operator()(const FindFileStruct& theFindData) const
     {
         return theFindData.isDirectory();
     }
@@ -213,14 +209,10 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct FilesOnlyFilterPredicate : public unary_function<FindFileStruct, bool>
-#else
-struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, bool>
-#endif
+struct FilesOnlyFilterPredicate
 {
-    result_type
-    operator()(const argument_type& theFindData) const
+    bool
+    operator()(const FindFileStruct& theFindData) const
     {
         DirectoryFilterPredicate        theDirectoryPredicate;
 
@@ -342,9 +334,7 @@ EnumerateDirectory(
         XalanDOMString      theSuffix(theMemoryManager);
         if ( !target_Dir )
         {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             using std::strlen;
-#endif
 
             int lenSpec = strlen(theSpec); 
             theFullSearchSpec.substr(theName, lenSpec, indexName); 
@@ -468,21 +458,8 @@ template<class CollectionType,
      class StringType = XalanDOMString,
      class FilterPredicateType = FilesOnlyFilterPredicate,
      class StringConversionFunction = c_wstr_functor>
-#if defined(XALAN_NO_STD_NAMESPACE)
-struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
-#else
-struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, CollectionType>
-#endif
+struct DirectoryEnumeratorFunctor
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef unary_function<StringType, CollectionType>  BaseClassType;
-#else
-    typedef std::unary_function<StringType, CollectionType> BaseClassType;
-#endif
-
-    typedef typename BaseClassType::result_type     result_type;
-    typedef typename BaseClassType::argument_type   argument_type;
-
     explicit
     DirectoryEnumeratorFunctor(
                 MemoryManager&  theMemoryManager,
@@ -494,24 +471,24 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
             
     void
     operator()(
-            const argument_type&    theFullSearchSpec,
-            CollectionType&         theCollection) const
+            const StringType&    theFullSearchSpec,
+            CollectionType&      theCollection) const
     {
-        XALAN_USING_STD(back_inserter)
+        using std::back_inserter;
 
         EnumerateDirectory(
             m_memoryManager,
             theFullSearchSpec,
-            XALAN_STD_QUALIFIER back_inserter(theCollection),
+            std::back_inserter(theCollection),
             m_filterPredicate,
             m_conversionFunction,
             m_includeSelfAndParent);
     }
 
-    result_type
-    operator()(const argument_type&     theFullSearchSpec) const
+    CollectionType
+    operator()(const StringType&     theFullSearchSpec) const
     {
-        result_type     theCollection;
+        CollectionType     theCollection;
 
         operator()(
                 theFullSearchSpec,
@@ -522,26 +499,26 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 
     void
     operator()(
-            const argument_type&    theDirectory,
-            const argument_type&    theSearchSpec,
-            CollectionType&         theCollection) const
+            const StringType&    theDirectory,
+            const StringType&    theSearchSpec,
+            CollectionType&      theCollection) const
     {
         EnumerateDirectory(
             m_memoryManager,
             theDirectory,
             theSearchSpec,
-            XALAN_STD_QUALIFIER back_inserter(theCollection),
+            std::back_inserter(theCollection),
             m_filterPredicate,
             m_conversionFunction,
             m_includeSelfAndParent);
     }
 
-    result_type
+    CollectionType
     operator()(
-            const argument_type&    theDirectory,
-            const argument_type&    theSearchSpec) const
+            const StringType&    theDirectory,
+            const StringType&    theSearchSpec) const
     {
-        result_type     theCollection;
+        CollectionType     theCollection;
 
         operator()(
                 theDirectory,
@@ -565,7 +542,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

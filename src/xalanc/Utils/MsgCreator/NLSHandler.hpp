@@ -25,11 +25,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 
 
@@ -90,7 +90,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

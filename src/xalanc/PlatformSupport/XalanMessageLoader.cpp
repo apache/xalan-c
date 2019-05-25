@@ -39,7 +39,7 @@
 #error You must provide a message loader
 #endif
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 static const size_t kMaxMessageLength = 1024;
 
@@ -207,7 +207,7 @@ XalanMessageLoader::load(
     if (!loadMsg(msgToLoad, toFill, maxChars))
         return false;
 
-    XALAN_USING_XERCES(XMLString)
+    using xercesc::XMLString;
 
     // And do the token replacement
     XMLString::replaceTokens(
@@ -328,4 +328,4 @@ XalanMessageLoader::load(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

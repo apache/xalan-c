@@ -59,70 +59,14 @@
 // ---------------------------------------------------------------------------
 // Define namespace symbols if the compiler supports it.
 // ---------------------------------------------------------------------------
-#if defined(XALAN_HAS_CPP_NAMESPACE)
-    #define XALAN_CPP_NAMESPACE_BEGIN namespace XALAN_CPP_NAMESPACE {
-    #define XALAN_CPP_NAMESPACE_END  }
-    #define XALAN_CPP_NAMESPACE_USE using namespace XALAN_CPP_NAMESPACE;
-    #define XALAN_CPP_NAMESPACE_QUALIFIER XALAN_CPP_NAMESPACE::
-    #define XALAN_USING(NAMESPACE,NAME) using NAMESPACE :: NAME;
-    #define XALAN_DECLARE_CLASS(NAMESPACE,NAME) namespace NAMESPACE { class NAME; }
-    #define XALAN_DECLARE_STRUCT(NAMESPACE,NAME) namespace NAMESPACE { struct NAME; }
-
-    namespace XALAN_CPP_NAMESPACE { }
-    namespace xalanc = XALAN_CPP_NAMESPACE;
-#else
-    #if defined(XALAN_CPP_NAMESPACE)
-    #undef XALAN_CPP_NAMESPACE
-    #endif
-
-    #define XALAN_CPP_NAMESPACE
-    #define XALAN_CPP_NAMESPACE_BEGIN
-    #define XALAN_CPP_NAMESPACE_END
-    #define XALAN_CPP_NAMESPACE_USE
-    #define XALAN_CPP_NAMESPACE_QUALIFIER
-    #define XALAN_USING(NAMESPACE,NAME)
-    #define XALAN_DECLARE_CLASS(NAMESPACE,NAME) class NAME;
-    #define XALAN_DECLARE_STRUCT(NAMESPACE,NAME) struct NAME;
-    #if !defined(XALAN_NO_STD_NAMESPACE)
-        #define XALAN_NO_STD_NAMESPACE
-    #endif
-#endif
-
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-    #define XALAN_USING_STD(NAME)
-    #define XALAN_STD_QUALIFIER 
-#else
-    #define XALAN_USING_STD(NAME) using std :: NAME;
-    #define XALAN_STD_QUALIFIER  std ::
-#endif
-
-#define XALAN_DECLARE_XALAN_CLASS(NAME) XALAN_DECLARE_CLASS(XALAN_CPP_NAMESPACE, NAME)
-#define XALAN_DECLARE_XALAN_STRUCT(NAME) XALAN_DECLARE_STRUCT(XALAN_CPP_NAMESPACE, NAME)
-#define XALAN_USING_XALAN(NAME) XALAN_USING(XALAN_CPP_NAMESPACE, NAME)
-
-
-#if defined(XERCES_HAS_CPP_NAMESPACE)
-    #define XALAN_USING_XERCES(NAME) XALAN_USING(XERCES_CPP_NAMESPACE, NAME)
-    #define XALAN_DECLARE_XERCES_CLASS(NAME) XALAN_DECLARE_CLASS(XERCES_CPP_NAMESPACE, NAME)
-    #define XALAN_DECLARE_XERCES_STRUCT(NAME) XALAN_DECLARE_STRUCT(XERCES_CPP_NAMESPACE, NAME)
-#else
-    #define XERCES_CPP_NAMESPACE_QUALIFIER
-    #define XERCES_CPP_NAMESPACE_BEGIN
-    #define XERCES_CPP_NAMESPACE_END
-    #define XERCES_CPP_NAMESPACE_USE
-    #define XALAN_USING_XERCES(NAME)
-    #define XALAN_DECLARE_XERCES_CLASS(NAME) class NAME;
-    #define XALAN_DECLARE_XERCES_STRUCT(NAME) struct NAME;
-#endif
-
+namespace XALAN_CPP_NAMESPACE { }
+namespace xalanc = XALAN_CPP_NAMESPACE;
 
 
 #include <cstddef>
 
 
-
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 #if XERCES_VERSION_MAJOR < 3
 typedef unsigned int    XalanSize_t;
@@ -144,15 +88,10 @@ struct XalanCompileErrorBoolean
     char    foo[value];
 };
  
-XALAN_CPP_NAMESPACE_END
+}
 
 
-#if !defined(XALAN_NO_LONG_LONG)
-typedef unsigned long long XALAN_UINT64;
-typedef long long  XALAN_INT64;
-#endif
-
-#define XALAN_STATIC_ASSERT(expr) XALAN_CPP_NAMESPACE_QUALIFIER XalanCompileErrorBoolean<bool(expr)>()
+#define XALAN_STATIC_ASSERT(expr) xalanc::XalanCompileErrorBoolean<bool(expr)>()
 
 
 

@@ -33,16 +33,14 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-  using std::sprintf;
-#endif
+using std::sprintf;
 
 
-XALAN_USING_XERCES(Attributes)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(XMLString)
+using xercesc::Attributes;
+using xercesc::SAXParseException;
+using xercesc::XMLString;
 
 // ---------------------------------------------------------------------------
 //  SAX2Handler: Constructors and Destructor
@@ -168,8 +166,8 @@ SAX2Handler::startElement(
 }
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::endl;
 
 
 // ---------------------------------------------------------------------------
@@ -243,4 +241,4 @@ SAX2Handler::endDocument()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

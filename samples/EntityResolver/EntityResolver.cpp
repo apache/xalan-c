@@ -21,11 +21,7 @@
 
 
 #include <cassert>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -41,14 +37,14 @@
 
 
 
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(MemBufInputSource)
-XALAN_USING_XALAN(MemoryManager)
-XALAN_USING_XERCES(XMLEntityResolver)
-XALAN_USING_XERCES(XMLResourceIdentifier)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
+using xercesc::EntityResolver;
+using xercesc::InputSource;
+using xercesc::MemBufInputSource;
+using xalanc::MemoryManager;
+using xercesc::XMLEntityResolver;
+using xercesc::XMLResourceIdentifier;
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
 
 
 
@@ -214,8 +210,8 @@ transform(
             const char*             theOutputFile,
             bool                    fUseDOM)
 {
-    XALAN_USING_XALAN(XalanCompiledStylesheet)
-    XALAN_USING_XALAN(XalanParsedSource)
+    using xalanc::XalanCompiledStylesheet;
+    using xalanc::XalanParsedSource;
 
     typedef XalanTransformer::EnsureDestroyCompiledStylesheet   EnsureDestroyCompiledStylesheet;
     typedef XalanTransformer::EnsureDestroyParsedSource         EnsureDestroyParsedSource;
@@ -302,8 +298,8 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = 0;
 
@@ -315,8 +311,8 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
         // Call the static initializer for Xerces.
         try

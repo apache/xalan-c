@@ -71,7 +71,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1652,4 +1652,4 @@ ElemTemplateElement::executeChildElement(
 }
 #endif
 
-XALAN_CPP_NAMESPACE_END
+}

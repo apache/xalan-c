@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -68,7 +68,7 @@ struct XalanListIteratorBase
     
     typedef ptrdiff_t       difference_type;
 
-    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+    typedef std::bidirectional_iterator_tag iterator_category;
 
     typedef XalanListIteratorBase<XalanListIteratorTraits<value_type>, Node> iterator;
 
@@ -186,32 +186,8 @@ public:
     typedef XalanListIteratorBase<XalanListIteratorTraits<value_type>, Node>        iterator;
     typedef XalanListIteratorBase<XalanListConstIteratorTraits<value_type>, Node>   const_iterator;
 
-#if defined(XALAN_HAS_STD_ITERATORS)
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
-    typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
-#elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
-    typedef typename iterator::iterator_category    iterator_category;
-
-    // This is a specific case for the Rogue Wave STL on Solaris.
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        iterator,
-        iterator_category,
-        value_type>         reverse_iterator_;
-
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        const_iterator,
-        iterator_category,
-        const value_type>   const_reverse_iterator_;
-#else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        iterator,
-        value_type>         reverse_iterator_;
-
-    typedef XALAN_STD_QUALIFIER reverse_iterator<
-        const_iterator,
-        value_type,
-        const_reference>    const_reverse_iterator_;
-#endif
+    typedef std::reverse_iterator<iterator>          reverse_iterator_;
+    typedef std::reverse_iterator<const_iterator>    const_reverse_iterator_;
 
     typedef reverse_iterator_           reverse_iterator;
     typedef const_reverse_iterator_     const_reverse_iterator;
@@ -450,15 +426,9 @@ public:
 
     void swap(ThisType& theRHS)
     {
-    #if defined(XALAN_NO_STD_NAMESPACE)
-        ::swap(m_memoryManager, theRHS.m_memoryManager);
-        ::swap(m_listHead, theRHS.m_listHead);
-        ::swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
-    #else
-        XALAN_STD_QUALIFIER swap(m_memoryManager, theRHS.m_memoryManager);
-        XALAN_STD_QUALIFIER swap(m_listHead, theRHS.m_listHead);
-        XALAN_STD_QUALIFIER swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
-    #endif
+        std::swap(m_memoryManager, theRHS.m_memoryManager);
+        std::swap(m_listHead, theRHS.m_listHead);
+        std::swap(m_freeListHeadPtr, theRHS.m_freeListHeadPtr);
     }
 
 
@@ -567,6 +537,6 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif  // XALANLIST_HEADER_GUARD_1357924680

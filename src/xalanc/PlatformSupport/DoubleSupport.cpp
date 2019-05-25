@@ -22,9 +22,7 @@
 #include <clocale>
 #include <cmath>
 #include <climits>
-#if !defined(XALAN_NO_STD_NUMERIC_LIMITS)
 #include <limits>
-#endif
 
 
 #include "DOMStringHelper.hpp"
@@ -32,22 +30,14 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-DoubleSupport::NumberUnion          DoubleSupport::s_NaN;
-#else
 const DoubleSupport::NumberUnion    DoubleSupport::s_NaN =
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    numeric_limits<double>::quiet_NaN()
-#else
     std::numeric_limits<double>::quiet_NaN()
-#endif
 };
-#endif
 
 const DoubleSupport::NumberUnion    DoubleSupport::s_positiveInfinity = { HUGE_VAL };
 
@@ -62,23 +52,11 @@ const DoubleSupport::NumberUnion    DoubleSupport::s_negativeZero = { -s_positiv
 void
 DoubleSupport::initialize()
 {
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-    // We initialize this at here because some
-    // platforms have had issues with signals
-    // if we call sqrt(-2.01) during static
-    // initialization.
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    s_NaN.d = std::sqrt(-2.01);
-#else
-    s_NaN.d = sqrt(-2.01);
-#endif
-#elif !defined(XALAN_NO_STD_NAMESPACE)
     // There seems to be problems with various standard libraries, so
     // this is disabled for now.  We need to revisit this when we
     // update our autoconf/automake system to detect the right value
     // for NaN at configuration time.
     // XALAN_STATIC_ASSERT(std::numeric_limits<double>::has_quiet_NaN);
-#endif
 }
 
 
@@ -86,9 +64,6 @@ DoubleSupport::initialize()
 void
 DoubleSupport::terminate()
 {
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-    s_NaN.d = 0.0L;
-#endif
 }
 
 
@@ -304,11 +279,7 @@ DoubleSupport::modulus(
 
         double  theResult = divide(theLHS, theRHS);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::modf(theResult, &theDummy) * theRHS;
-#else
-        return modf(theResult, &theDummy) * theRHS;
-#endif
     }
 }
 
@@ -338,9 +309,7 @@ DoubleSupport::abs(double theDouble)
     }
     else
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::fabs;
-#endif
+        using std::fabs;
         return fabs(theDouble);
     }
 }
@@ -603,10 +572,8 @@ convertHelper(
     }
     else
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-        XALAN_USING_STD(localeconv)
-        XALAN_USING_STD(atof)
-#endif
+        using std::localeconv;
+        using std::atof;
 
         const char  theDecimalPointChar =
             localeconv()->decimal_point[0];
@@ -736,11 +703,7 @@ modfRound(double  theValue)
 {
     double          intPart = 0;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         std::modf(theValue + 0.5, &intPart);
-#else
-        modf(theValue + 0.5, &intPart);
-#endif
 
     return intPart;
 }
@@ -787,11 +750,7 @@ DoubleSupport::round(double     theValue)
         double          intPart = 0;
 
         const double    fracPart = 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::modf(theValue, &intPart);
-#else
-            modf(theValue, &intPart);
-#endif
 
         const double    theAdjustedValue =
             fracPart == -0.5 ? theValue + 0.5 : theValue - 0.5;
@@ -811,4 +770,4 @@ DoubleSupport::round(double     theValue)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

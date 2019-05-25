@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 XALAN_USES_MEMORY_MANAGER(XalanDOMCharVectorType)
 
@@ -224,7 +224,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

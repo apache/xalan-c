@@ -33,17 +33,20 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOM_Document)
-XALAN_DECLARE_XERCES_CLASS(DOMDocument)
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOM_Document;
+    class DOMDocument;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document DOM_Document_Type;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument  DOMDocument_Type;
+typedef xercesc::DOM_Document DOM_Document_Type;
+typedef xercesc::DOMDocument  DOMDocument_Type;
 
 
 
@@ -123,7 +126,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

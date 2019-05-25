@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -108,11 +108,7 @@ public:
     /**
      * Return the results of a compare of two nodes.
      */
-#if defined(XALAN_NO_STD_NAMESPACE)
-    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
-#else
-    struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
-#endif
+    struct XALAN_XSLT_EXPORT NodeSortKeyCompare
     {
     public:
 
@@ -146,9 +142,9 @@ public:
          */
         int
         compare(
-                first_argument_type     theLHS,
-                second_argument_type    theRHS,
-                XalanSize_t             theKeyIndex = 0) const;
+                const NodeVectorType::value_type&    theLHS,
+                const NodeVectorType::value_type&    theRHS,
+                XalanSize_t                          theKeyIndex = 0) const;
 
         /**
          * Compare two nodes as a less predicate.
@@ -158,10 +154,10 @@ public:
          * @param theKeyIndex the index of the key to use
          * @return true if theLHS is less than theRHS
          */
-        result_type
+        bool
         operator()(
-                first_argument_type     theLHS,
-                second_argument_type    theRHS,
+                const NodeVectorType::value_type&    theLHS,
+                const NodeVectorType::value_type&    theRHS,
                 XalanSize_t             theKeyIndex = 0) const
         {
             return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
@@ -171,15 +167,15 @@ public:
 
         double
         getNumberResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const;
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const;
 
         const XalanDOMString&
         getStringResult(
-                const NodeSortKey&      theKey,
-                XalanSize_t             theKeyIndex,
-                first_argument_type     theEntry) const;
+                const NodeSortKey&                   theKey,
+                XalanSize_t                          theKeyIndex,
+                const NodeVectorType::value_type&    theEntry) const;
 
     private:
 
@@ -230,7 +226,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

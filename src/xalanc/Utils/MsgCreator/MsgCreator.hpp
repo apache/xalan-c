@@ -27,13 +27,9 @@
 #include <cstring>
 #include <cstdlib>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
-XERCES_CPP_NAMESPACE_USE
+using namespace xercesc;
 
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
@@ -47,7 +43,7 @@ public :
     // -----------------------------------------------------------------------
     StrX(const XMLCh* const toTranscode)
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         // Call the private transcoding method
         fLocalForm = XMLString::transcode(toTranscode);
@@ -55,7 +51,7 @@ public :
 
     ~StrX()
     {
-        XALAN_USING_XERCES(XMLString)
+        using xercesc::XMLString;
 
         XMLString::release(&fLocalForm);
     }
@@ -78,11 +74,7 @@ private :
     char*   fLocalForm;
 };
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-inline ostream& operator<<(ostream& target, const StrX& toDump)
-#else
-inline XALAN_STD_QUALIFIER ostream& operator<<(XALAN_STD_QUALIFIER ostream& target, const StrX& toDump)
-#endif
+inline std::ostream& operator<<(std::ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

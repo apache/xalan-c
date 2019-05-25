@@ -40,7 +40,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+#include <cstring>
+
+
+
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -377,11 +381,7 @@ FormatterToXML::~FormatterToXML()
 void
 FormatterToXML::initAttrCharsMap()
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
-#else
-    memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
-#endif
 
     const XalanDOMString::size_type     nSpecials =
         m_attrSpecialChars.length();
@@ -415,11 +415,7 @@ FormatterToXML::initCharsMap()
 {
     initAttrCharsMap();
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(m_charsMap, 0, sizeof(m_charsMap));
-#else
-    memset(m_charsMap, 0, sizeof(m_charsMap));
-#endif
 
     m_charsMap[XalanUnicode::charLessThanSign] = 'S';
     m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
@@ -795,7 +791,7 @@ FormatterToXML::accumDOMStringUTFDirect(const XalanDOMString&   str)
 
 
 
-XALAN_USING_XERCES(SAXException)
+using xercesc::SAXException;
 
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
@@ -829,7 +825,7 @@ FormatterToXML::throwInvalidCharacterException(
             XalanMessages::InvalidScalar_1Param,
             NumberToHexDOMString(ch, theBuffer));
 
-    XALAN_USING_XERCES(SAXException)
+    using xercesc::SAXException;
 
     throw SAXException(theMessage.c_str(), &theManager);
 }
@@ -2031,4 +2027,4 @@ const XalanDOMString::size_type     FormatterToXML::s_maxBufferSize = 512;
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

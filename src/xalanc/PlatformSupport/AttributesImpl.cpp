@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -92,7 +92,7 @@ void
 AttributesImpl::deleteEntries(AttributesVectorType&     theVector)
 {
     // Delete all of the objects in the vector.
-    XALAN_STD_QUALIFIER for_each(
+    std::for_each(
             theVector.begin(),
             theVector.end(),
             DeleteFunctor<AttributeVectorEntryExtended>(theVector.getMemoryManager()));
@@ -400,7 +400,7 @@ AttributesImpl::getIndex(
     assert(uri != 0 && localPart != 0);
 
     const AttributesVectorType::const_iterator  i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_attributesVector.begin(),
             m_attributesVector.end(),
             URIAndLocalNameCompareFunctor(uri, localPart));
@@ -447,7 +447,7 @@ AttributesImpl::getIndex(const XMLCh* const     qname) const
     assert(qname != 0);
 
     const AttributesVectorType::const_iterator  i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_attributesVector.begin(),
             m_attributesVector.end(),
             NameCompareFunctor(qname));
@@ -560,7 +560,7 @@ AttributesImpl::removeAttribute(const XMLCh*        name)
 
     // Update the attribute, if it's already there...
     const AttributesVectorType::iterator        i =
-        XALAN_STD_QUALIFIER find_if(
+        std::find_if(
             m_attributesVector.begin(),
             m_attributesVector.end(),
             NameCompareFunctor(name));
@@ -579,4 +579,4 @@ AttributesImpl::removeAttribute(const XMLCh*        name)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

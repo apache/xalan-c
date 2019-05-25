@@ -40,29 +40,32 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Attributes)
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
-XALAN_DECLARE_XERCES_CLASS(ContentHandler)
-XALAN_DECLARE_XERCES_CLASS(DTDHandler)
-XALAN_DECLARE_XERCES_CLASS(LexicalHandler)
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Attributes;
+    class AttributeList;
+    class ContentHandler;
+    class DTDHandler;
+    class LexicalHandler;
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(Locator)
+using xercesc::Locator;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes       AttributesType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler   ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler       DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler   LexicalHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator          LocatorType;
+typedef xercesc::Attributes       AttributesType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::ContentHandler   ContentHandlerType;
+typedef xercesc::DTDHandler       DTDHandlerType;
+typedef xercesc::LexicalHandler   LexicalHandlerType;
+typedef xercesc::Locator          LocatorType;
 
 
 
@@ -270,7 +273,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

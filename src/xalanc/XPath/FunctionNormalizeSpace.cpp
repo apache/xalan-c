@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -200,11 +200,7 @@ FunctionNormalizeSpace::normalize(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionNormalizeSpace*
-#endif
 FunctionNormalizeSpace::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -264,4 +260,4 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&    theString) c
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

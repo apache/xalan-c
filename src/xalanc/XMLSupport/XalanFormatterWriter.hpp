@@ -33,11 +33,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -259,7 +259,7 @@ public:
                     XalanMessages::InvalidScalar_1Param, 
                     NumberToHexDOMString(ch, theBuffer));
 
-        XALAN_USING_XERCES(SAXException)
+        using xercesc::SAXException;
 
         throw SAXException(theMessage.c_str(), &theManager);
     }
@@ -304,7 +304,7 @@ public:
                     chStr,
                     nextStr);
 
-        XALAN_USING_XERCES(SAXException)
+        using xercesc::SAXException;
 
         throw SAXException(theMessage.c_str(),&theManager);
     }
@@ -365,7 +365,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

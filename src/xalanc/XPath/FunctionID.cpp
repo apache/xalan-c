@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -124,11 +124,7 @@ FunctionID::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionID*
-#endif
 FunctionID::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -249,4 +245,4 @@ FunctionID::FunctionIDXObjectTypeCallback::Null(const XObject&      /* theObject
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

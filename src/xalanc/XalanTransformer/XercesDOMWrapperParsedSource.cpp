@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
@@ -115,4 +115,4 @@ XercesDOMWrapperParsedSource::getURI() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

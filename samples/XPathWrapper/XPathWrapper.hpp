@@ -45,10 +45,10 @@ class XPathWrapper
 
 public:
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER CharVectorType    ChVectorType;
+    typedef xalanc::CharVectorType    ChVectorType;
 
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanVector<ChVectorType>     CharVectorTypeVectorType;   
+    typedef xalanc::XalanVector<ChVectorType>     CharVectorTypeVectorType;   
 
 
     XPathWrapper();

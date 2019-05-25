@@ -29,13 +29,8 @@
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#else
 #include <fstream>
 #include <iostream>
-#endif
 
 
 
@@ -57,10 +52,10 @@ main(
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(ifstream)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
+    using std::ifstream;
 
     if (argc < 4)
     {
@@ -69,9 +64,9 @@ main(
     }
 
     
-    XALAN_USING_XERCES(XMLPlatformUtils)
-    XALAN_USING_XERCES(XMLException)
-    XALAN_USING_XALAN(XalanTransformer)
+    using xercesc::XMLPlatformUtils;
+    using xercesc::XMLException;
+    using xalanc::XalanTransformer;
 
         //initialize Xerces...
     try
@@ -119,7 +114,7 @@ main(
             for (size_t i=0; i<len; i++)
                 cout << "item " << (i+1) << "= \"" << &*result[i].begin() << "\"" << endl;
         }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        catch(const xercesc::XMLException&)
         {
             cerr << "Exception caught!  Exiting..." << endl;
         }

@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -303,4 +303,4 @@ XercesDOMWalker::endNode(DOMNodeType*   node)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

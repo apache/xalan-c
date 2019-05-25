@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -199,7 +199,7 @@ public:
     virtual void
     reset()
     {
-        XALAN_STD_QUALIFIER for_each(
+        std::for_each(
             m_blocks.begin(),
             m_blocks.end(),
             DeleteFunctor<ArenaBlockType>(m_blocks.getMemoryManager()));
@@ -228,7 +228,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

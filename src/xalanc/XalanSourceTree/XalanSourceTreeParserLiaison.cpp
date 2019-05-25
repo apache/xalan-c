@@ -44,7 +44,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -134,7 +134,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 void
 XalanSourceTreeParserLiaison::ensureReader()
 {
-    XALAN_USING_XERCES(XMLUni)
+    using xercesc::XMLUni;
 
     if (m_xmlReader == 0)
     {
@@ -508,7 +508,7 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 SAX2XMLReaderImpl*
 XalanSourceTreeParserLiaison::createReader()
 {
-    XALAN_USING_XERCES(XMLUni)
+    using xercesc::XMLUni;
 
     typedef XalanAutoPtr<SAX2XMLReaderImpl> AutoPtrType;
 
@@ -529,4 +529,4 @@ XalanSourceTreeParserLiaison::createReader()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

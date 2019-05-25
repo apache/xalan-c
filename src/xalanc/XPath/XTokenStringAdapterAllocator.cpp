@@ -21,7 +21,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -70,4 +70,4 @@ XTokenStringAdapterAllocator::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

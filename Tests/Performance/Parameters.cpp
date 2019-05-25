@@ -20,11 +20,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iomanip.h>
-#else
 #include <iomanip>
-#endif
 
 
 
@@ -56,26 +52,24 @@
 
 
 
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanDocument)
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XalanNamedNodeMap)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(WideStringToLong)
-XALAN_USING_XALAN(compareIgnoreCaseASCII)
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(MemoryManager)
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XSLTInputSource)
+using xalanc::XalanTransformer;
+using xalanc::XalanParsedSource;
+using xalanc::XalanDocument;
+using xalanc::XalanNode;
+using xalanc::XalanNamedNodeMap;
+using xalanc::XalanDOMString;
+using xalanc::WideStringToLong;
+using xalanc::compareIgnoreCaseASCII;
+using xalanc::XalanMemMgrs;
+using xalanc::MemoryManager;
+using xalanc::XalanFileUtility;
+using xalanc::XSLTInputSource;
 
 
 
 
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
 using std::endl;
-#endif
 
 
 

@@ -22,11 +22,7 @@
 
 #include <cstdio>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -57,14 +53,14 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanFileUtility;
+using xalanc::XalanDOMString;
 
 
 
@@ -93,7 +89,7 @@ getTestNumber(const XalanDOMString&     theFile)
 {
     assert(8 < theFile.length());
 
-    return theFile[7] - XALAN_CPP_NAMESPACE_QUALIFIER XalanUnicode::charDigit_0;
+    return theFile[7] - xalanc::XalanUnicode::charDigit_0;
 }
 
 
@@ -131,8 +127,8 @@ runTests(
         }
         else
         {
-            XALAN_USING_XALAN(XalanTransformer)
-            XALAN_USING_XALAN(XalanXMLFileReporter)
+            using xalanc::XalanTransformer;
+            using xalanc::XalanXMLFileReporter;
 
             XalanTransformer    xalan;
 
@@ -190,8 +186,8 @@ runTests(
                     theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + fileName;
                     theGoldFile = h.generateFileName(theGoldFile, "out");
 
-                    XALAN_USING_XALAN(XSLTResultTarget);
-                    XALAN_USING_XALAN(XSLTInputSource);
+                    using xalanc::XSLTResultTarget;;
+                    using xalanc::XSLTInputSource;;
 
                     const XSLTResultTarget  theResultTarget(theOutputFile);
                     const XSLTInputSource   xslInputSource(theXSLFile);
@@ -293,9 +289,9 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

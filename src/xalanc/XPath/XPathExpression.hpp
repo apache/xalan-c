@@ -29,11 +29,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iosfwd>
-#endif
 
 
 
@@ -51,11 +47,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -63,7 +59,7 @@ class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
 
-    typedef XALAN_STD_QUALIFIER ostream         OstreamType;
+    typedef std::ostream         OstreamType;
 
     typedef XalanVector<int>                    OpCodeMapType;
     typedef XalanVector<XToken>                 TokenQueueType;
@@ -713,14 +709,10 @@ public:
      * offset from the op code where the length is stored.  It will always
      * remain one.
      */
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const TokenQueueSizeType     s_opCodeMapLengthIndex = 1;
-#else
     enum eDummy
     {
         s_opCodeMapLengthIndex = 1
     };
-#endif
 
     explicit
     XPathExpression(MemoryManager& theManager);
@@ -1526,7 +1518,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

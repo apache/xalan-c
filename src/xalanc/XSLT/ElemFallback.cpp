@@ -37,7 +37,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -181,4 +181,4 @@ ElemFallback::execute(StylesheetExecutionContext&       executionContext) const
 #endif
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -40,7 +40,7 @@
 #include <xalanc/XPath/XObjectFactory.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -124,11 +124,7 @@ FunctionDistinct::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionDistinct*
-#endif
 FunctionDistinct::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -148,4 +144,4 @@ FunctionDistinct::getError(XalanDOMString&  theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

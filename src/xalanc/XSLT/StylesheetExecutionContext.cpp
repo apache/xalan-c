@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -90,4 +90,4 @@ StylesheetExecutionContext::BorrowReturnFormatterToText::BorrowReturnFormatterTo
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -63,7 +63,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1485,11 +1485,7 @@ ElemNumber::int2alphaCount(
 
     XalanDOMChar    buf[buflen + 1];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     std::memset(buf, 0, (buflen + 1) * sizeof(XalanDOMChar));
-#else
-    memset(buf, 0, (buflen + 1) * sizeof(XalanDOMChar));
-#endif
 
     // next character to set in the buffer
     XalanDOMString::size_type   charPos = buflen - 1 ;    // work backward through buf[]
@@ -2200,4 +2196,4 @@ ElemNumber::getXPath(XalanSize_t    index) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

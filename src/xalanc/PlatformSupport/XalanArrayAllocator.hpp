@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -46,7 +46,7 @@ public:
     typedef XalanVector<Type>               VectorType;
     typedef typename VectorType::size_type  size_type;
 
-    typedef XALAN_STD_QUALIFIER pair<size_type, VectorType * >      ListEntryType;
+    typedef std::pair<size_type, VectorType * >      ListEntryType;
     typedef XalanList<ListEntryType>                                ListType;
 
     typedef Type                            value_type;
@@ -79,11 +79,7 @@ public:
         {
             if( (*iter).second != 0)
             {
-#if defined(XALAN_REQUIRES_QUALIFIED_DESTRUCTOR)
                 (*iter).second->VectorType::~VectorType();
-#else
-                (*iter).second->~VectorType();
-#endif               
                 theManager.deallocate((void*)(*iter).second);
             }
         }
@@ -282,7 +278,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

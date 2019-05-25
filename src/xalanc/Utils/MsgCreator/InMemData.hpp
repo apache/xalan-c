@@ -32,7 +32,7 @@ static const char* szStartDataFile[]=
 "#define XALAN_MSG_LOADER_GUARD_1357924680 \n",
 "\n",
 "\n",
-"XALAN_CPP_NAMESPACE_BEGIN\n",
+"namespace XALAN_CPP_NAMESPACE {\n",
 "\n",
 "\n",
 0
@@ -43,7 +43,7 @@ static const char* szEndDataFile[]=
 {
 "\n",
 "\n",
-"XALAN_CPP_NAMESPACE_END \n",
+"} \n",
 "\n",
 "\n",
 "#endif //XALAN_MSG_LOADER_GUARD_1357924680  \n",

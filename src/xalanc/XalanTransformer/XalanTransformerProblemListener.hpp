@@ -26,11 +26,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 
 
 
@@ -43,7 +39,7 @@ class ostream;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -51,11 +47,7 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformerProblemListener : public ProblemL
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     XalanTransformerProblemListener(
             MemoryManager&  theManager,
@@ -111,7 +103,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

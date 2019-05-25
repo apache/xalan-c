@@ -34,9 +34,9 @@
 #endif
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 static const char* s_pathSeparator =
 #if defined(XALAN_WINDOWS)
@@ -147,9 +147,7 @@ getArgs(
             ++i;
             if( i < argc && argv[i][0] != '-' )
             {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
                 using std::size_t;
-#endif
                 const size_t    localeLen = strlen(argv[i]);
 
                 if ( localeLen != 2 && localeLen !=5)
@@ -244,10 +242,8 @@ appendDirectory(
             const CmdLineParams&    p,
             char                    FileName[])
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strlen;
     using std::size_t;
-#endif
 
     const size_t    dirLength = strlen(p.outDir);
 
@@ -338,7 +334,7 @@ int main(int argC, char* argV[])
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-    XALAN_CPP_NAMESPACE_USE
+    using namespace xalanc;
 
     CmdLineParams   theParams;
 

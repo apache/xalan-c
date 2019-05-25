@@ -64,7 +64,7 @@
 #include &lt;xalanc/XalanTransformer/XalanTransformer.hpp&gt;
 #include &lt;xalanc/XPath/XObjectFactory.hpp&gt;
 
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 // This class defines a function that will return the square root
 // of its argument.
@@ -107,13 +107,7 @@ public:
    *
    * @return pointer to the new object
    */
-// For compilers that do not support covariant return types,
-// clone() must be declared to return the base type.
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-  virtual Function*
-#else
   virtual FunctionSquareRoot*
-#endif
   clone() const
   {
     return new FunctionSquareRoot(*this);

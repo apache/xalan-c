@@ -20,11 +20,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 #include <cassert>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <strstream>
-#endif
 
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
@@ -32,20 +28,20 @@
 
 #include "xalanc/Include/XalanMemoryManagement.hpp"
 
-XALAN_USING_STD(istrstream)
+using std::istrstream;
 
-XALAN_USING_XALAN(XalanAllocationGuard)
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XERCES(MemoryManager)
+using xalanc::XalanAllocationGuard;
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
+using xercesc::XMLPlatformUtils;
+using xercesc::MemoryManager;
 
-XALAN_USING_XALAN(XalanMemMgrAutoPtr)
-XALAN_USING_XALAN(XalanMemMgrs)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanMemMgrAutoPtr;
+using xalanc::XalanMemMgrs;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 static bool fInitialized = false;
 
@@ -196,7 +192,7 @@ XalanTransformToData(
             char**          theOutput,
             XalanHandle     theXalanHandle)
 {
-    XALAN_USING_STD(ostrstream)
+    using std::ostrstream;
 
     int status = 0;     
 
@@ -243,7 +239,7 @@ XalanTransformToDataPrebuilt(
             char**          theOutput,
             XalanHandle     theXalanHandle)
 {
-    XALAN_USING_STD(ostrstream)
+    using std::ostrstream;
 
     ostrstream  theOutputStream;    
 

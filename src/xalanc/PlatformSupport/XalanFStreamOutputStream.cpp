@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -86,9 +86,7 @@ XalanFStreamOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::fwrite;
-#endif
 
     const size_t    theBytesWritten =
         fwrite(theBuffer,
@@ -172,4 +170,4 @@ XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::~XalanFStreamO
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

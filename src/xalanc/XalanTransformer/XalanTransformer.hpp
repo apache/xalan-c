@@ -25,11 +25,7 @@
 
 
 #include <cassert>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 #include <algorithm>
 
 
@@ -50,22 +46,25 @@ class ostream;
 
 
 
-XALAN_DECLARE_XERCES_CLASS(EntityResolver)
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
-XALAN_DECLARE_XERCES_CLASS(XMLEntityResolver)
+namespace XERCES_CPP_NAMESPACE
+{
+    class EntityResolver;
+    class ErrorHandler;
+    class XMLEntityResolver;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
+typedef xercesc::EntityResolver   EntityResolverType;
+typedef xercesc::ErrorHandler     ErrorHandlerType;
 
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(ErrorHandler)
-XALAN_USING_XERCES(XMLEntityResolver)
+using xercesc::EntityResolver;
+using xercesc::ErrorHandler;
+using xercesc::XMLEntityResolver;
 
 
 
@@ -93,11 +92,7 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformer
 
 public:
     
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
     typedef XalanVector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
     typedef XalanVector<const XalanParsedSource*>       ParsedSourcePtrVectorType;
@@ -1206,7 +1201,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

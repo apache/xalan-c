@@ -48,7 +48,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -170,9 +170,7 @@ FormatterToHTML::initCharsMap()
 {
     initAttrCharsMap();
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::memset;
-#endif
 
     memset(m_charsMap, 0, sizeof(m_charsMap));
 
@@ -1557,4 +1555,4 @@ const FormatterToHTML::size_type        FormatterToHTML::s_metaStringLength =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

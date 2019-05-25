@@ -30,7 +30,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -61,11 +61,7 @@ public:
 
     using ParentType::execute;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionTranslate*
-#endif
     clone(MemoryManager& theManager) const;
 
 protected:
@@ -84,7 +80,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

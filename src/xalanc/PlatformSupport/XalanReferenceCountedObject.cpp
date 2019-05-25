@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -79,4 +79,4 @@ XalanReferenceCountedObject::removeReference(XalanReferenceCountedObject*   theI
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

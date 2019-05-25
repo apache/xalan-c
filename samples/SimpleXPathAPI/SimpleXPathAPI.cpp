@@ -23,11 +23,7 @@
 #include <cassert>
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -60,9 +56,9 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
 
     int     theResult = 0;
 
@@ -74,13 +70,13 @@ main(
     }
     else
     {
-        XALAN_USING_XALAN(XSLException)
+        using xalanc::XSLException;
 
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
-            XALAN_USING_XALAN(XPathEvaluator)
+            using xalanc::XPathEvaluator;
 
 
             XMLPlatformUtils::Initialize();
@@ -88,16 +84,16 @@ main(
             XPathEvaluator::initialize();
 
             {
-                XALAN_USING_XERCES(LocalFileInputSource)
+                using xercesc::LocalFileInputSource;
 
-                XALAN_USING_XALAN(XalanDocument)
-                XALAN_USING_XALAN(XalanDocumentPrefixResolver)
-                XALAN_USING_XALAN(XalanDOMString)
-                XALAN_USING_XALAN(XalanNode)
-                XALAN_USING_XALAN(XalanSourceTreeInit)
-                XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-                XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-                XALAN_USING_XALAN(XObjectPtr)
+                using xalanc::XalanDocument;
+                using xalanc::XalanDocumentPrefixResolver;
+                using xalanc::XalanDOMString;
+                using xalanc::XalanNode;
+                using xalanc::XalanSourceTreeInit;
+                using xalanc::XalanSourceTreeDOMSupport;
+                using xalanc::XalanSourceTreeParserLiaison;
+                using xalanc::XObjectPtr;
 
                 // Initialize the XalanSourceTree subsystem...
                 XalanSourceTreeInit     theSourceTreeInit;
@@ -167,7 +163,7 @@ main(
         }
         catch(const XSLException&   theException)
         {
-            XALAN_USING_XALAN(XalanDOMString)
+            using xalanc::XalanDOMString;
 
             XalanDOMString  theError;
 

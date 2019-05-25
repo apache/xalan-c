@@ -21,13 +21,11 @@
 
 #include <cassert>
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
-#endif
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -66,17 +64,13 @@ StdBinInputStream::readBytes(
     }
     else
     {
-        XALAN_USING_STD(streamsize)
+        using std::streamsize;
 
-        assert(static_cast<XALAN_UINT64>(static_cast<streamsize>(maxToRead)) == maxToRead);
+        assert(static_cast<XMLUInt64>(static_cast<streamsize>(maxToRead)) == maxToRead);
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
         m_stream.read(
             reinterpret_cast<char*>(toFill),
             static_cast<streamsize>(maxToRead));
-#else
-        m_stream.read(toFill, maxToRead);
-#endif
 
         return m_stream.gcount();
     }
@@ -92,4 +86,4 @@ StdBinInputStream::getContentType() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

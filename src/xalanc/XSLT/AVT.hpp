@@ -27,16 +27,19 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
-XALAN_USING_XERCES(Locator)
+typedef xercesc::Locator  LocatorType;
+using xercesc::Locator;
 
 
 
@@ -56,11 +59,7 @@ class AVT
 {
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::size_t     size_type;
-#else
-    typedef size_t          size_type;
-#endif
 
     /**
      * Construct an Attribute Value Template(AVT) by parsing the string, and
@@ -190,7 +189,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -206,4 +206,4 @@ XercesWrapperNavigator::getPooledString(const XMLCh*    theString) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

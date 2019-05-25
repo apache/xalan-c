@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -206,7 +206,7 @@ private:
 
 XALAN_USES_MEMORY_MANAGER(NameSpace)
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

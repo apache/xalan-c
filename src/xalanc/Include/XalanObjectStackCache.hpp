@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 template<
@@ -67,9 +67,8 @@ public:
 
     ~XalanObjectStackCache()
     {
-#if !defined(XALAN_NO_STD_NAMESPACE)
         using std::for_each;
-#endif
+
         for_each(
                 m_stack.begin(),
                 m_stack.end(),
@@ -162,7 +161,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

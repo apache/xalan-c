@@ -78,20 +78,23 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(InputSource)
-XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
+namespace XERCES_CPP_NAMESPACE
+{
+    class InputSource;
+    class DocumentHandler;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
+typedef xercesc::InputSource      InputSourceType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
 
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(DocumentHandler)
+using xercesc::InputSource;
+using xercesc::DocumentHandler;
 
 
 
@@ -1700,7 +1703,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

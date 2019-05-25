@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -149,21 +149,13 @@ XercesTextBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesTextBridge*
-#endif
 XercesTextBridge::cloneNode(bool    deep) const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    return m_navigator.cloneNode(this, m_xercesNode, deep);
-#else
     XercesTextBridge* const theBridge =
         static_cast<XercesTextBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
     return theBridge;
-#endif
 }
 
 
@@ -376,7 +368,7 @@ XercesTextBridge::isWhitespace() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 #endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 

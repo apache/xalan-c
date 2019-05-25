@@ -32,7 +32,7 @@
 class Timer
 {
 public:
-    typedef XALAN_STD_QUALIFIER clock_t TimerType;
+    typedef std::clock_t TimerType;
 
     Timer() :
         m_startTime(0),
@@ -42,13 +42,13 @@ public:
 
   void start()
     {
-        m_startTime = XALAN_STD_QUALIFIER clock();
+        m_startTime = std::clock();
 
     }
 
     TimerType stop()
     {
-        TimerType stopTime = XALAN_STD_QUALIFIER clock();
+        TimerType stopTime = std::clock();
 
         m_totalTime = stopTime - m_startTime;
 

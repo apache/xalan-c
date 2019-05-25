@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -44,12 +44,6 @@ public:
 
     // Flags to say if a component is defined.  Note that each component may
     // be defined but empty, except for the path.
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const int d_scheme       = 1;
-    static const int d_authority    = 2;
-    static const int d_query        = 4;
-    static const int d_fragment     = 8;
-#else
     enum eComponent
     {
         d_scheme    = 1,
@@ -57,7 +51,6 @@ public:
         d_query     = 4,
         d_fragment  = 8
     };
-#endif
 
     /** 
      * Default constructor 
@@ -402,6 +395,6 @@ private:
     unsigned int    m_defined;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif // XALANPARSEDURI_HEADER_GUARD_1357924680

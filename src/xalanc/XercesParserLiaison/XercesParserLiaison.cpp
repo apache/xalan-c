@@ -19,11 +19,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -60,7 +56,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 XercesParserLiaison::XercesParserLiaison(
@@ -602,8 +598,8 @@ XercesParserLiaison::fatalError(const SAXParseExceptionType&    e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }
@@ -636,8 +632,8 @@ XercesParserLiaison::error(const SAXParseExceptionType&     e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }
@@ -671,8 +667,8 @@ XercesParserLiaison::warning(const SAXParseExceptionType&   e)
     }
     else
     {
-        XALAN_USING_STD(cerr)
-        XALAN_USING_STD(endl)
+        using std::cerr;
+        using std::endl;
 
         cerr << endl << theMessage << endl;
     }
@@ -796,4 +792,4 @@ XercesParserLiaison::doCreateDocument(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

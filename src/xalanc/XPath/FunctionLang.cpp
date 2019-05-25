@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -121,11 +121,7 @@ FunctionLang::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionLang*
-#endif
 FunctionLang::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -179,4 +175,4 @@ FunctionLang::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

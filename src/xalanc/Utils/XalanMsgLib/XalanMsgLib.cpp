@@ -24,7 +24,7 @@
 
 #include <LocalMsgData.hpp>
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 static const XalanDOMChar   s_errString[] =
@@ -77,6 +77,6 @@ XalanMsgContainer::getMessage(XalanSize_t   msgID)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 

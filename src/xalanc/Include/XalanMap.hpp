@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -46,7 +46,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 typedef size_t  size_type;
 
 template <class Key>
-class XalanHasher : public XALAN_STD_QUALIFIER unary_function<Key, size_type>
+class XalanHasher
 {
 public:
     size_type operator()(const Key& key) const
@@ -68,7 +68,7 @@ template <class Key>
 struct XalanMapKeyTraits
 {
     typedef XalanHasher<Key>                    Hasher;
-    typedef XALAN_STD_QUALIFIER equal_to<Key>   Comparator;
+    typedef std::equal_to<Key>   Comparator;
 };
 
 
@@ -119,7 +119,7 @@ struct XalanMapIterator
     typedef typename XalanMapTraits::pointer            pointer;
 
     typedef ptrdiff_t                           difference_type;
-    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+    typedef std::bidirectional_iterator_tag iterator_category;
 
     typedef XalanMapIterator<
         XalanMapIteratorTraits<value_type>, 
@@ -198,7 +198,7 @@ public:
     typedef Value               data_type;
     typedef size_t              size_type;
 
-    typedef XALAN_STD_QUALIFIER pair<const key_type, data_type>   value_type;
+    typedef std::pair<const key_type, data_type>   value_type;
 
     struct Entry
     {
@@ -748,7 +748,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

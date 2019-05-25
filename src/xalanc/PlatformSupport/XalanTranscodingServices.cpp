@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -212,7 +212,7 @@ const XalanDOMChar  XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 
 
 
-XALAN_USING_XERCES(XMLTransService)
+using xercesc::XMLTransService;
 
 
 static XalanTranscodingServices::eCode
@@ -263,7 +263,7 @@ XalanTranscodingServices::makeNewTranscoder(
             eCode&                  theResult,
             size_type               theBlockSize)
 {
-    XALAN_USING_XERCES(XMLPlatformUtils)
+    using xercesc::XMLPlatformUtils;
 
     assert(XMLPlatformUtils::fgTransService != 0);
 
@@ -279,7 +279,7 @@ XalanTranscodingServices::makeNewTranscoder(
     }
     else
     {
-        XALAN_USING_XERCES(XMLTranscoder)
+        using xercesc::XMLTranscoder;
 
         XMLTranscoder*  theXercesTranscoder = 
             XMLPlatformUtils::fgTransService->makeNewTranscoderFor(
@@ -615,4 +615,4 @@ XalanTranscodingServices::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -32,11 +32,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -90,7 +90,7 @@ XALAN_USES_MEMORY_MANAGER(XalanParamHolder)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

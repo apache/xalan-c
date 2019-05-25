@@ -25,11 +25,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <ostream>
-#endif
 
 
 
@@ -42,13 +38,9 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
-
-#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const XPathExpression::TokenQueueSizeType   XPathExpression::s_opCodeMapLengthIndex;
-#endif
 
 
 
@@ -996,4 +988,4 @@ XPathExpression::pushCurrentTokenOnOpCodeMap()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

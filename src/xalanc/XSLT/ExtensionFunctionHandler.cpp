@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -145,4 +145,4 @@ ExtensionFunctionHandler::startupComponent()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

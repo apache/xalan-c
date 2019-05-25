@@ -37,7 +37,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -180,7 +180,7 @@ MutableNodeRefList::insertNode(
 void
 MutableNodeRefList::removeNode(const XalanNode*     n)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     NodeListVectorType::iterator    i =
         find(m_nodeList.begin(),
@@ -299,9 +299,9 @@ MutableNodeRefList::addNodesInDocOrder(
             const MutableNodeRefList&   nodelist,
             XPathExecutionContext&      executionContext)
 {
-    XALAN_USING_STD(back_inserter);
-    XALAN_USING_STD(copy);
-    XALAN_USING_STD(for_each);
+    using std::back_inserter;;
+    using std::copy;;
+    using std::for_each;;
 
     const eOrder        theOtherOrder = nodelist.m_order;
 
@@ -690,7 +690,7 @@ MutableNodeRefList::addNodeInDocOrder(
 void
 MutableNodeRefList::clearNulls()
 {
-    XALAN_USING_STD(remove);
+    using std::remove;;
 
     m_nodeList.erase(
         remove(
@@ -712,11 +712,7 @@ MutableNodeRefList::clearNulls()
 void
 MutableNodeRefList::reverse()
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-    ::reverse(
-#else
     std::reverse(
-#endif
         m_nodeList.begin(),
         m_nodeList.end());
 
@@ -732,4 +728,4 @@ MutableNodeRefList::reverse()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

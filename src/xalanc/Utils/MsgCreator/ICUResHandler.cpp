@@ -30,7 +30,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -224,4 +224,4 @@ ICUResHandler::printToDataFile(const char*  sArrayOfStrings[])
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

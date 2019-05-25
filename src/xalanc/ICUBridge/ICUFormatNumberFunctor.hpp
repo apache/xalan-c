@@ -46,15 +46,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 typedef StylesheetExecutionContextDefault::FormatNumberFunctor FormatNumberFunctor;
 
-#if defined(XALAN_HAS_CPP_NAMESPACE)
     typedef U_ICU_NAMESPACE::DecimalFormat  DecimalFormatType;
-#else
-    typedef DecimalFormat                   DecimalFormatType;
-#endif
 
 struct DecimalFormatCacheStruct
 {
@@ -224,12 +220,12 @@ private:
         DecimalFormatType*                  theFormatter,
         const XalanDecimalFormatSymbols&    theDFS) const;
 
-    static DecimalFormat*
+    static DecimalFormatType*
     createDecimalFormat(
         const XalanDecimalFormatSymbols&    theXalanDFS,
         MemoryManager&                      theManager);
 
-    static DecimalFormat*
+    static DecimalFormatType*
     createDecimalFormat(MemoryManager&  theManager)
     {
         const XalanDecimalFormatSymbols     theDFS(theManager);
@@ -260,7 +256,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

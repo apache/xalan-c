@@ -24,11 +24,7 @@
 #include <cstring>
 #include <algorithm>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -141,13 +137,13 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cin)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(hex)
-XALAN_USING_STD(pair)
-XALAN_USING_STD(vector)
+using std::cerr;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::hex;
+using std::pair;
+using std::vector;
 
 
 
@@ -232,15 +228,15 @@ printArgOptions()
 
 
 // We only need a few things from the Xerces namespace...
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(SAXException)
-XALAN_USING_XERCES(XMLException)
+using xercesc::XMLPlatformUtils;
+using xercesc::SAXParseException;
+using xercesc::SAXException;
+using xercesc::XMLException;
 
 
 
 // We need lots of things from the Xalan namespace, so hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 
@@ -393,11 +389,7 @@ getArgs(
 
             if(i < argc && argv[i][0] != '-')
             {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
                 p.indentAmount = std::atoi(argv[i]);
-#else
-                p.indentAmount = atoi(argv[i]);
-#endif
             }
             else
             {

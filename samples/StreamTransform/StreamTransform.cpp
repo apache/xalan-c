@@ -21,15 +21,9 @@
 
 
 #include <cstring>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#include <fstream.h>
-#else
 #include <iostream>
 #include <strstream>
 #include <fstream>
-#endif
 
 
 
@@ -46,16 +40,14 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
-    XALAN_USING_STD(istrstream)
-    XALAN_USING_STD(ofstream)
-    XALAN_USING_STD(ostrstream)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
+    using std::istrstream;
+    using std::ofstream;
+    using std::ostrstream;
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::strlen;
-#endif
 
     int theResult = -1;
 
@@ -69,9 +61,9 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
-            XALAN_USING_XALAN(XalanTransformer)
+            using xalanc::XalanTransformer;
 
 
             // Call the static initializer for Xerces.
@@ -118,8 +110,8 @@ main(
                 istrstream  theXMLStream(theInputDocument, strlen(theInputDocument));
                 istrstream  theXSLStream(theStylesheet, strlen(theStylesheet));
 
-                XALAN_USING_XALAN(XalanDOMString)
-                XALAN_USING_XALAN(XSLTInputSource)
+                using xalanc::XalanDOMString;
+                using xalanc::XSLTInputSource;
 
                 XSLTInputSource     inputSource(&theXSLStream);
 

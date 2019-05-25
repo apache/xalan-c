@@ -26,7 +26,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -45,7 +45,7 @@ XalanMemoryManagerDefault::~XalanMemoryManagerDefault()
 void*
 XalanMemoryManagerDefault::allocate(size_type   size)
 {
-    XALAN_USING_XERCES(OutOfMemoryException)
+    using xercesc::OutOfMemoryException;
 
     void*   thePointer;
 
@@ -84,4 +84,4 @@ XalanMemoryManagerDefault::getExceptionMemoryManager()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -31,15 +31,18 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(Locator)
+using xercesc::Locator;
 
 
 
@@ -54,7 +57,7 @@ class XALAN_XPATH_EXPORT XPathProcessor
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator  LocatorType;
+    typedef xercesc::Locator  LocatorType;
 
     explicit
     XPathProcessor();
@@ -120,7 +123,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

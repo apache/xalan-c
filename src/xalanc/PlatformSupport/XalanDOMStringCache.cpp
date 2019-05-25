@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -81,7 +81,7 @@ XalanDOMStringCache::get()
 bool
 XalanDOMStringCache::release(XalanDOMString&    theString)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     StringListType::iterator    i =
         find(m_busyList.begin(),
@@ -152,4 +152,4 @@ XalanDOMStringCache::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

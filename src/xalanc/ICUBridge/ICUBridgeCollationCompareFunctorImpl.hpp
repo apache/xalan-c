@@ -38,14 +38,10 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
-#if defined(XALAN_HAS_CPP_NAMESPACE)
 typedef U_ICU_NAMESPACE::Collator   CollatorType;
-#else
-typedef Collator                    CollatorType;
-#endif
 
 struct CollationCacheStruct
 {
@@ -243,7 +239,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

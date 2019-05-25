@@ -38,7 +38,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -168,4 +168,4 @@ ElemForwardCompatible::execute(StylesheetExecutionContext&      executionContext
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

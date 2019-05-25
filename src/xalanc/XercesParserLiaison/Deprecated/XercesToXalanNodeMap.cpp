@@ -43,7 +43,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -85,7 +85,7 @@ XercesToXalanNodeMap::clear()
 XercesToXalanNodeMap::NodeImplType*
 XercesToXalanNodeMap::getNodeImpl(const XalanNode*  theXalanNode) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     const XercesNodeMapType::const_iterator     i =
         find_if(
@@ -105,7 +105,7 @@ XercesToXalanNodeMap::getNodeImpl(const XalanNode*  theXalanNode) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 #endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 

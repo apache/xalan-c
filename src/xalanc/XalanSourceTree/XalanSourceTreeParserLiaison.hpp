@@ -33,14 +33,17 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(ContentHandler)
-XALAN_DECLARE_XERCES_CLASS(DTDHandler)
-XALAN_DECLARE_XERCES_CLASS(LexicalHandler)
-XALAN_DECLARE_XERCES_CLASS(SAX2XMLReaderImpl)
+namespace XERCES_CPP_NAMESPACE
+{
+    class ContentHandler;
+    class DTDHandler;
+    class LexicalHandler;
+    class SAX2XMLReaderImpl;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -50,16 +53,16 @@ class XalanSourceTreeDocument;
 
 
 /*
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler       ContentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler           DTDHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler       LexicalHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader        SAX2XMLReaderType;
+typedef xercesc::ContentHandler       ContentHandlerType;
+typedef xercesc::DTDHandler           DTDHandlerType;
+typedef xercesc::LexicalHandler       LexicalHandlerType;
+typedef xercesc::SAX2XMLReader        SAX2XMLReaderType;
 */
 
-XALAN_USING_XERCES(ContentHandler)
-XALAN_USING_XERCES(DTDHandler)
-XALAN_USING_XERCES(LexicalHandler)
-XALAN_USING_XERCES(SAX2XMLReaderImpl)
+using xercesc::ContentHandler;
+using xercesc::DTDHandler;
+using xercesc::LexicalHandler;
+using xercesc::SAX2XMLReaderImpl;
 
 
 class XALAN_XALANSOURCETREE_EXPORT  XalanSourceTreeParserLiaison : public XMLParserLiaison
@@ -386,7 +389,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

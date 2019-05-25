@@ -49,7 +49,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -131,7 +131,7 @@ ElemForEach::ElemForEach(
 
 ElemForEach::~ElemForEach()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
      MemoryManager& theManager = m_sortElems.getMemoryManager();
 
@@ -835,4 +835,4 @@ ElemForEach::getXPath(XalanSize_t   index) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

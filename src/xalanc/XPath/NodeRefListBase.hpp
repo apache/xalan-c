@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -83,11 +83,7 @@ public:
     virtual size_type
     indexOf(const XalanNode*    theNode) const = 0;
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const size_type  npos = ~0u;
-#else
     static const size_type  npos;
-#endif
 
 protected:
 
@@ -104,7 +100,7 @@ protected:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -171,4 +171,4 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&   theCallbackObject) c
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

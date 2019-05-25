@@ -18,12 +18,8 @@
 #include "XalanTransformer.hpp"
 
 #include <algorithm>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
-
+#include <cstring>
 
 
 #include <xercesc/sax/SAXParseException.hpp>
@@ -91,7 +87,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 const XSLTInputSource*  XalanTransformer::s_emptyInputSource = 0;
@@ -119,11 +115,7 @@ XalanTransformer::XalanTransformer(MemoryManager&   theManager):
     m_externalNoNamespaceSchemaLocation(m_memoryManager),
     m_problemListener(0),
     m_errorStream(0),
-#if defined(XALAN_NO_STD_NAMESPACE)
-    m_warningStream(&cerr),
-#else
     m_warningStream(&std::cerr),
-#endif
     m_outputEncoding(m_memoryManager),
     m_topXObjectFactory(XObjectFactoryDefault::create(m_memoryManager)),
     m_stylesheetExecutionContext(StylesheetExecutionContextDefault::create(m_memoryManager))
@@ -150,7 +142,7 @@ XalanTransformer::~XalanTransformer()
     // Clean up Top-Level Parameters
     clearStylesheetParams();
 
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     // Clean up the XalanCompiledStylesheet vector.
     for_each(
@@ -431,9 +423,9 @@ XalanTransformer::transform(
 
 
 
-XALAN_USING_XERCES(XMLException)
-XALAN_USING_XERCES(SAXParseException)
-XALAN_USING_XERCES(SAXException)
+using xercesc::XMLException;
+using xercesc::SAXParseException;
+using xercesc::SAXException;
 
 
 
@@ -544,9 +536,7 @@ LoadErrorMessage(
 
         theMessage.resize(theLength + 1);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-            XALAN_USING_STD(strncpy);
-#endif
+            using std::strncpy;;
 
             strncpy(
                 &*theMessage.begin(),
@@ -709,7 +699,7 @@ XalanTransformer::compileStylesheet(
 int
 XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*  theStylesheet)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const CompiledStylesheetPtrVectorType::iterator     i =
         find(
@@ -836,7 +826,7 @@ XalanTransformer::parseSource(
 int
 XalanTransformer::destroyParsedSource(const XalanParsedSource*  theParsedSource)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const ParsedSourcePtrVectorType::iterator   i =
         find(
@@ -947,7 +937,7 @@ XalanTransformer::setStylesheetParam(
 bool
 XalanTransformer::removeTraceListener(TraceListener*    theTraceListener)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const TraceListenerVectorType::iterator     i =
         find(
@@ -1524,4 +1514,4 @@ XalanTransformer::EnsureFunctionsInstallation::~EnsureFunctionsInstallation()
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}

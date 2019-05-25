@@ -22,11 +22,7 @@
 
 #include <cstdio>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -69,14 +65,14 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
     
 // Just hoist everything...
-XALAN_CPP_NAMESPACE_USE
+using namespace xalanc;
 
 
 
@@ -292,8 +288,8 @@ testCase5(
             const XalanDOMString&   theGoldFile,
             XalanFileUtility&       h)
 {
-    XALAN_USING_XERCES(XercesDOMParser)
-    XALAN_USING_XERCES(DOMDocument)
+    using xercesc::XercesDOMParser;
+    using xercesc::DOMDocument;
 
     h.data.testOrFile = "InputSource-TestCase5";
     const XSLTInputSource   xmlInputSource(xml);
@@ -430,7 +426,7 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

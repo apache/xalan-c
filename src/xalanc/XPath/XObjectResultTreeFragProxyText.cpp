@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -211,7 +211,7 @@ XObjectResultTreeFragProxyText::isWhitespace() const
 
 
 
-static XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString     s_localNameString(XalanMemMgrs::getDummyMemMgr());
+static xalanc::XalanDOMString     s_localNameString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -237,4 +237,4 @@ XObjectResultTreeFragProxyText::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

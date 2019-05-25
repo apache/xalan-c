@@ -29,28 +29,31 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
-XALAN_DECLARE_XERCES_CLASS(EntityResolver)
-XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
-XALAN_DECLARE_XERCES_CLASS(InputSource)
-XALAN_DECLARE_XERCES_CLASS(XMLEntityResolver)
+namespace XERCES_CPP_NAMESPACE
+{
+    class DocumentHandler;
+    class EntityResolver;
+    class ErrorHandler;
+    class InputSource;
+    class XMLEntityResolver;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver   EntityResolverType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler     ErrorHandlerType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource      InputSourceType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
+typedef xercesc::EntityResolver   EntityResolverType;
+typedef xercesc::ErrorHandler     ErrorHandlerType;
+typedef xercesc::InputSource      InputSourceType;
 
-XALAN_USING_XERCES(DocumentHandler)
-XALAN_USING_XERCES(EntityResolver)
-XALAN_USING_XERCES(ErrorHandler)
-XALAN_USING_XERCES(InputSource)
-XALAN_USING_XERCES(XMLEntityResolver)
+using xercesc::DocumentHandler;
+using xercesc::EntityResolver;
+using xercesc::ErrorHandler;
+using xercesc::InputSource;
+using xercesc::XMLEntityResolver;
 
 
 
@@ -372,7 +375,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

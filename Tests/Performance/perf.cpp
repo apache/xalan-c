@@ -22,17 +22,11 @@
 
 
 #include <cstring>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::strcmp;
-#endif
 
 
 
@@ -61,19 +55,19 @@ using std::strcmp;
 
 
 
-XALAN_USING_STD(cout);
-XALAN_USING_STD(cerr);
-XALAN_USING_STD(endl);
+using std::cout;;
+using std::cerr;;
+using std::endl;;
 
 
-XALAN_USING_XERCES(XMLPlatformUtils)
+using xercesc::XMLPlatformUtils;
 
 
 
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanXMLFileReporter)
-XALAN_USING_XALAN(XalanFileUtility)
+using xalanc::XalanTransformer;
+using xalanc::XalanDOMString;
+using xalanc::XalanXMLFileReporter;
+using xalanc::XalanFileUtility;
 
 
 

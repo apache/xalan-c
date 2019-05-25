@@ -27,11 +27,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -94,8 +90,8 @@
 
 
 
-XALAN_CPP_NAMESPACE_USE
-XERCES_CPP_NAMESPACE_USE
+using namespace xalanc;
+using namespace xercesc;
 
 
 
@@ -1341,7 +1337,7 @@ main(
             int     /* argc */,
             char*   /* argv */ [])
 {
-    XALAN_USING_STD(cout)
+    using std::cout;
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);

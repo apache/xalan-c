@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -179,11 +179,7 @@ FunctionSystemProperty::execute(
         TranscodeToLocalCodePage(fullName, theResultVect, true);
 
         const char* const   theEnvString =
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::getenv(c_str(theResultVect));
-#else
-            getenv(c_str(theResultVect));
-#endif
 
         if (theEnvString != 0)
         {
@@ -202,11 +198,7 @@ FunctionSystemProperty::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionSystemProperty*
-#endif
 FunctionSystemProperty::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this, theManager);
@@ -225,4 +217,4 @@ FunctionSystemProperty::getError(XalanDOMString&    theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

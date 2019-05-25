@@ -41,11 +41,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER XMLURL   XMLURLType;
+typedef xercesc::XMLURL   XMLURLType;
 
 
 
@@ -306,7 +306,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

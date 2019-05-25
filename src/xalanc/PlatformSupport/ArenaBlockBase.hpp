@@ -32,7 +32,7 @@
 #endif
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
@@ -192,11 +192,7 @@ protected:
         m_allocator(theManager),
         m_objectCount(0),
         m_blockSize(theBlockSize),
-#if defined(XALAN_NEW_STD_ALLOCATOR)
         m_objectBlock(m_allocator.allocate(m_blockSize))
-#else
-        m_objectBlock(m_allocator.allocate(m_blockSize, 0))
-#endif
     {
         assert(theBlockSize > 0);
 
@@ -229,7 +225,7 @@ protected:
 
         // Use less<>, since it's guaranteed to do pointer
         // comparisons correctly...
-        XALAN_STD_QUALIFIER less<const ObjectType*>     functor;
+        std::less<const ObjectType*>     functor;
 
         if (functor(theObject, m_objectBlock) == false &&
             functor(theObject, m_objectBlock + rightBoundary) == true)
@@ -296,7 +292,7 @@ private:
     operator==(const ThisType&) const;
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

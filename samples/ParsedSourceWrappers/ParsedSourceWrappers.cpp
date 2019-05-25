@@ -21,11 +21,7 @@
 
 
 #include <cassert>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -59,11 +55,11 @@
 
 
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -74,11 +70,11 @@ transformXercesDOM(
             const XalanCompiledStylesheet*  theStylesheet,
             const XSLTResultTarget&         theResultTarget)
 {
-    XALAN_USING_XERCES(URLInputSource)
+    using xercesc::URLInputSource;
 
-    XALAN_USING_XALAN(XercesParserLiaison)
-    XALAN_USING_XALAN(XercesDOMSupport)
-    XALAN_USING_XALAN(XercesDOMWrapperParsedSource)
+    using xalanc::XercesParserLiaison;
+    using xalanc::XercesDOMSupport;
+    using xalanc::XercesDOMWrapperParsedSource;
 
 
     const URLInputSource    theInputSource(theURI.c_str());
@@ -111,13 +107,13 @@ transformXalanSourceTree(
             const XalanCompiledStylesheet*  theStylesheet,
             const XSLTResultTarget&         theResultTarget)
 {
-    XALAN_USING_XERCES(URLInputSource)
+    using xercesc::URLInputSource;
 
-    XALAN_USING_XALAN(XalanDocument)
-    XALAN_USING_XALAN(XalanSourceTreeDocument)
-    XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-    XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-    XALAN_USING_XALAN(XalanSourceTreeWrapperParsedSource)
+    using xalanc::XalanDocument;
+    using xalanc::XalanSourceTreeDocument;
+    using xalanc::XalanSourceTreeParserLiaison;
+    using xalanc::XalanSourceTreeDOMSupport;
+    using xalanc::XalanSourceTreeWrapperParsedSource;
 
 
     const URLInputSource            theInputSource(theURI.c_str());
@@ -143,9 +139,9 @@ transformXalanSourceTree(
 int
 transform()
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
 
     int     theResult = -1;
 
@@ -167,7 +163,7 @@ transform()
         }
         else
         {
-            XALAN_USING_XALAN(URISupport)
+            using xalanc::URISupport;
 
             assert(theStylesheet != 0);
 
@@ -210,8 +206,8 @@ main(
             int      argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int     theResult = -1;
 
@@ -223,7 +219,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             // Call the static initializer for Xerces.
             XMLPlatformUtils::Initialize();

@@ -40,11 +40,14 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(NodeImpl)
+namespace XERCES_CPP_NAMESPACE
+{
+    class NodeImpl;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -60,18 +63,12 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesToXalanNodeMap
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node     DOM_NodeType;
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl     NodeImplType;
+    typedef xercesc::DOM_Node     DOM_NodeType;
+    typedef xercesc::NodeImpl     NodeImplType;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef map<XalanNode*, NodeImplType*, less<XalanNode*> >   XalanNodeMapType;
-
-    typedef map<NodeImplType*, XalanNode*, less<NodeImplType*> >    XercesNodeMapType;
-#else
     typedef std::map<XalanNode*, NodeImplType*>     XalanNodeMapType;
 
     typedef std::map<NodeImplType*, XalanNode*>     XercesNodeMapType;
-#endif
 
     XercesToXalanNodeMap();
 
@@ -151,7 +148,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

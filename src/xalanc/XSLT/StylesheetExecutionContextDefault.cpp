@@ -80,7 +80,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -607,11 +607,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
         if (i != m_matchPatternCache.end())
         {
             // Update hit time...
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             (*i).second.second = std::clock();
-#else
-            (*i).second.second = clock();
-#endif
 
             theResult = (*i).second.first;
         }
@@ -1268,7 +1264,7 @@ StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplat
 {
     assert(theElement != 0);
 
-    XALAN_USING_STD(find)
+    using std::find;
 
     const ElementTemplateElementStackType::const_iterator   i =
                 find(m_elementRecursionStack.begin(),
@@ -1673,7 +1669,7 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
             const XalanDOMChar*                 theRHS,
             XalanCollationServices::eCaseOrder  /* theCaseOrder */) const
 {
-    return XALAN_CPP_NAMESPACE :: collationCompare(theLHS, theRHS);
+    return xalanc::collationCompare(theLHS, theRHS);
 }
 
 
@@ -2571,7 +2567,7 @@ StylesheetExecutionContextDefault::XPathCacheReturnFunctor::operator()(const XPa
 void
 StylesheetExecutionContextDefault::clearXPathCache()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     assert(m_matchPatternCache.empty() == true || m_xsltProcessor != 0);
 
@@ -2594,11 +2590,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 {
     assert(m_xsltProcessor != 0);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     ClockType   addClock = std::clock();
-#else
-    ClockType   addClock = clock();
-#endif
 
     if (m_matchPatternCache.size() == eXPathCacheMax)
     {
@@ -2651,7 +2643,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 void
 StylesheetExecutionContextDefault::cleanUpTransients()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     for_each(m_formatterListeners.begin(),
              m_formatterListeners.end(),
@@ -2980,4 +2972,4 @@ StylesheetExecutionContextDefault::FormatterToTextDOMString::~FormatterToTextDOM
 #endif
 
 
-XALAN_CPP_NAMESPACE_END
+}

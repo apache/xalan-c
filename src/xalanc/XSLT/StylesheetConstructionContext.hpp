@@ -39,22 +39,25 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
-XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class AttributeList;
+    class DocumentHandler;
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  DocumentHandlerType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::DocumentHandler  DocumentHandlerType;
 
-XALAN_USING_XERCES(AttributeList)
-XALAN_USING_XERCES(DocumentHandler)
-XALAN_USING_XERCES(Locator)
+using xercesc::AttributeList;
+using xercesc::DocumentHandler;
+using xercesc::Locator;
 
 
 
@@ -753,7 +756,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

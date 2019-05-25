@@ -36,7 +36,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -233,7 +233,7 @@ XObjectFactoryDefault::doReturnObject(
 
     default:
         {
-            XALAN_USING_STD(find)
+            using std::find;
 
             const XObjectCollectionType::iterator   i =
                     find(m_xobjects.begin(), m_xobjects.end(), theXObject);
@@ -501,9 +501,7 @@ XObjectFactoryDefault::reset()
 
     m_xtokenStringAdapterAllocator.reset();
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::for_each;
-#endif
 
     for_each(m_xobjects.begin(),
              m_xobjects.end(),
@@ -520,4 +518,4 @@ XObjectFactoryDefault::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

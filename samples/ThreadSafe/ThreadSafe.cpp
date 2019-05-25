@@ -24,15 +24,9 @@
 #include <ctime>
 #include <vector>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <fstream.h>
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <fstream>
 #include <iostream>
 #include <strstream>
-#endif
 
 
 
@@ -58,10 +52,8 @@ typedef   HANDLE     theThreadType;
 
 // This is a workaround for a Tru64 compiler bug...
 #if defined(TRU64)
-#if  defined(XALAN_STRICT_ANSI_HEADERS)
 #include <csetjmp>
 typedef long sigjmp_buf[_JBLEN];
-#endif
 extern "C" void  *theThread(void   *param);
 #endif
 
@@ -74,28 +66,26 @@ extern "C" void  *theThread(void   *param);
 //error Unsupported Platform!
 #endif
 
-#if  defined(XALAN_STRICT_ANSI_HEADERS)
-    using std::perror;
-#endif
+using std::perror;
 
 #define NUM_THREADS 10
 
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostrstream)
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ostrstream;
 
 
 
-XALAN_USING_XALAN(XalanCompiledStylesheet)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanParsedSource)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XSLTInputSource)
-XALAN_USING_XALAN(XSLTResultTarget)
+using xalanc::XalanCompiledStylesheet;
+using xalanc::XalanDOMString;
+using xalanc::XalanParsedSource;
+using xalanc::XalanTransformer;
+using xalanc::XSLTInputSource;
+using xalanc::XSLTResultTarget;
 
 
 
@@ -203,7 +193,7 @@ doThreads(size_t    nThreads)
     size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
-    XALAN_USING_STD(vector)
+    using std::vector;
 
     vector<theThreadType>   hThreads;
 
@@ -293,7 +283,7 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             // Call the static initializer for Xerces.
             XMLPlatformUtils::Initialize();

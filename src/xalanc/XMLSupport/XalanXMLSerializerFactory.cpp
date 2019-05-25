@@ -35,7 +35,7 @@
 #include "xalanc/XMLSupport/XalanUTF16Writer.hpp"
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -423,4 +423,4 @@ XalanXMLSerializerFactory::setEncoding(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

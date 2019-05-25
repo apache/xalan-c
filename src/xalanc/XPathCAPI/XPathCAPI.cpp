@@ -55,14 +55,14 @@ static bool fTerminated = false;
 
 
 
-XALAN_USING_XALAN(XalanDOMChar)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanOutputTranscoder)
-XALAN_USING_XALAN(XPath)
-XALAN_USING_XALAN(XPathEvaluator)
-XALAN_USING_XALAN(XalanSourceTreeInit)
-XALAN_USING_XALAN(XalanTranscodingServices)
-XALAN_USING_XALAN(XalanMemMgrs)
+using xalanc::XalanDOMChar;
+using xalanc::XalanDOMString;
+using xalanc::XalanOutputTranscoder;
+using xalanc::XPath;
+using xalanc::XPathEvaluator;
+using xalanc::XalanSourceTreeInit;
+using xalanc::XalanTranscodingServices;
+using xalanc::XalanMemMgrs;
 
 
 static XalanSourceTreeInit*     theSourceTreeInit = 0;
@@ -86,7 +86,7 @@ XalanXPathAPIInitialize()
 
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             XMLPlatformUtils::Initialize();
 
@@ -144,7 +144,7 @@ XalanXPathAPITerminate()
 
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
             delete theSourceTreeInit;
 
@@ -350,7 +350,7 @@ transcodeString(
 
             if (theLength >= maxStackArraySize)
             {
-                XALAN_USING_XALAN(XalanArrayAutoPtr)
+                using xalanc::XalanArrayAutoPtr;
 
                 XalanArrayAutoPtr<unsigned char>    theCharsCount(new unsigned char[theLength + 1]);
                 XalanArrayAutoPtr<XalanDOMChar>     theChars(new XalanDOMChar[theLength + 1]);
@@ -425,7 +425,7 @@ XalanCreateXPath(
             {
                 const XalanDOMChar* const   thePointer = theExpressionString.c_str();
 
-                XALAN_USING_XALAN(length)
+                using xalanc::length;
 
                 if (length(thePointer) == 0)
                 {
@@ -513,7 +513,7 @@ XalanEvaluateXPathAsBoolean(
     {
         int theError = XALAN_XPATH_API_SUCCESS;
 
-        XALAN_USING_XERCES(SAXException)
+        using xercesc::SAXException;
 
         try
         {
@@ -523,9 +523,9 @@ XalanEvaluateXPathAsBoolean(
             XPath* const    theXPath = getXPath(theXPathHandle);
             assert(theXPath != 0);
 
-            XALAN_USING_XALAN(XalanDocument)
-            XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-            XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+            using xalanc::XalanDocument;
+            using xalanc::XalanSourceTreeDOMSupport;
+            using xalanc::XalanSourceTreeParserLiaison;
 
             XalanSourceTreeDOMSupport       theDOMSupport;
             XalanSourceTreeParserLiaison    theLiaison(theDOMSupport, XalanMemMgrs::getDefaultXercesMemMgr());
@@ -533,7 +533,7 @@ XalanEvaluateXPathAsBoolean(
             // Hook the two together...
             theDOMSupport.setParserLiaison(&theLiaison);
 
-            XALAN_USING_XERCES(MemBufInputSource)
+            using xercesc::MemBufInputSource;
 
             // Create an input source...
             const MemBufInputSource     theInputSource(

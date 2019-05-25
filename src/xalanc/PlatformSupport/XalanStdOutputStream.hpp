@@ -25,12 +25,8 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iosfwd>
 #include <ios>
-#endif
 
 
 
@@ -39,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -48,21 +44,9 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanStdOutputStream : public XalanOutputStre
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-    typedef int                 StreamSizeType;
-#else
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef streamsize          StreamSizeType;
-#else
     typedef std::streamsize     StreamSizeType;
-#endif
-#endif
 
     /**
      * Construct a XalanStdOutputStream instance for output to the
@@ -141,7 +125,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

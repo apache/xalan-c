@@ -41,9 +41,9 @@
 #include <stdlib.h>
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class XalanMemoryManagerImpl : public xalanc::XalanMemoryManager
 {
 public:
 
@@ -58,7 +58,7 @@ public:
 
         if (m_heapHandle == NULL)
         {
-            XALAN_USING_STD(runtime_error)
+            using std::runtime_error;
 
             char buffer[20];
             buffer[0] = 0;
@@ -80,7 +80,7 @@ public:
 
         if (ptr == 0)
         {
-            XALAN_USING_XERCES(OutOfMemoryException)
+            using xercesc::OutOfMemoryException;
 
             throw OutOfMemoryException();
         }
@@ -96,7 +96,7 @@ public:
                         0,              //DWORD dwFlags,
                         pDataPointer ) )//*LPVOID lpMem 
         {
-            XALAN_USING_XERCES(OutOfMemoryException)
+            using xercesc::OutOfMemoryException;
 
             throw OutOfMemoryException();
         }
@@ -113,7 +113,7 @@ public:
     {
         if (0 == HeapDestroy(m_heapHandle))
         {
-            XALAN_USING_STD(runtime_error)
+            using std::runtime_error;
 
             char buffer[20];
             buffer[0] = 0;
@@ -138,11 +138,11 @@ private:
 
 #else
 
-class XalanMemoryManagerImpl : public XALAN_CPP_NAMESPACE_QUALIFIER XalanMemoryManager
+class XalanMemoryManagerImpl : public xalanc::XalanMemoryManager
 {
 public:
 
-    typedef XALAN_CPP_NAMESPACE_QUALIFIER XalanSize_t   XalanSize_t;
+    typedef xalanc::XalanSize_t   XalanSize_t;
 
     virtual
     ~XalanMemoryManagerImpl()
@@ -165,7 +165,7 @@ public:
         {
         }
 
-        XALAN_USING_XERCES(OutOfMemoryException)
+        using xercesc::OutOfMemoryException;
 
         throw OutOfMemoryException();
     }   

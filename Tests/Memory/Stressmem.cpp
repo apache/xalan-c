@@ -21,11 +21,7 @@
 
 #include <cstdio>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -47,9 +43,9 @@
 
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
+using std::cerr;
+using std::cout;
+using std::endl;
 
 
 
@@ -60,8 +56,8 @@ static const char* const    excludeStylesheets[] =
 
 
 
-XALAN_USING_XALAN(XalanFileUtility)
-XALAN_USING_XALAN(XalanDOMString)
+using xalanc::XalanFileUtility;
+using xalanc::XalanDOMString;
 
 
 
@@ -117,9 +113,9 @@ runTests(
         //
         if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
         {
-            //XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-            //XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
-            XALAN_USING_XALAN(XalanXMLFileReporter)
+            //using xalanc::XalanSourceTreeDOMSupport;
+            //using xalanc::XalanSourceTreeParserLiaison;
+            using xalanc::XalanXMLFileReporter;
 
             typedef XalanFileUtility::FileNameVectorType    FileNameVectorType;
 
@@ -140,7 +136,7 @@ runTests(
 
             try
             {
-                XALAN_USING_XALAN(XalanTransformer)
+                using xalanc::XalanTransformer;
 
                 bool foundDir = false;
 
@@ -166,8 +162,8 @@ runTests(
                     {
                         if (checkForExclusion(files[i]) == false)
                         {
-                            XALAN_USING_XALAN(XSLTInputSource)
-                            XALAN_USING_XALAN(XSLTResultTarget)
+                            using xalanc::XSLTInputSource;
+                            using xalanc::XSLTResultTarget;
 
                             // Output file name to result log and console.
                             logFile.logTestCaseInit(files[i]);
@@ -244,9 +240,9 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

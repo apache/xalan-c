@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -41,7 +41,7 @@ class AttributeVectorEntryExtended;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes   AttributesType;
+typedef xercesc::Attributes   AttributesType;
 
 
 
@@ -238,7 +238,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

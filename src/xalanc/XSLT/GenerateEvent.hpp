@@ -29,15 +29,18 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
+namespace XERCES_CPP_NAMESPACE
+{
+    class AttributeList;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
+typedef xercesc::AttributeList    AttributeListType;
 
 
 
@@ -225,7 +228,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

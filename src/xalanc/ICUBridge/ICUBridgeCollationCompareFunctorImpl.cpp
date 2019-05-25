@@ -35,7 +35,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -46,7 +46,7 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor     ICUB
 inline CollatorType*
 createCollator(
             UErrorCode&         theStatus,
-            const Locale&       theLocale,
+            const icu::Locale&  theLocale,
             XalanDOMString*     theLocaleName = 0)
 {
 
@@ -74,23 +74,19 @@ createCollator(
             XalanDOMString*     theLocaleName = 0)
 {
     const char*     theLang =
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             std::getenv("LANG");
-#else
-            getenv("LANG");
-#endif
 
     if (theLang == 0)
     {
 #if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
-        return createCollator(theStatus, Locale::US, theLocaleName);
+        return createCollator(theStatus, icu::Locale::US, theLocaleName);
 #else
-        return createCollator(theStatus, Locale::getDefault(), theLocaleName);
+        return createCollator(theStatus, icu::Locale::getDefault(), theLocaleName);
 #endif
     }
     else
     {
-        return createCollator(theStatus, Locale(theLang), theLocaleName);
+        return createCollator(theStatus, icu::Locale(theLang), theLocaleName);
     }
 }
 
@@ -134,7 +130,7 @@ ICUBridgeCollationCompareFunctorImpl::create(
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {
-    XALAN_USING_STD(for_each)
+    using std::for_each;
 
     delete m_defaultCollator;
 
@@ -250,7 +246,7 @@ createCollator(
         }
 #endif
         return CollatorType::createInstance(
-                    Locale::createFromName(theBuffer),
+                    icu::Locale::createFromName(theBuffer),
                     theStatus);
     }
 }
@@ -413,7 +409,7 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 CollatorType*
 ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*     theLocale) const
 {
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     CollatorCacheListType::iterator i =
         find_if(
@@ -483,4 +479,4 @@ ICUBridgeCollationCompareFunctorImpl::cacheCollator(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

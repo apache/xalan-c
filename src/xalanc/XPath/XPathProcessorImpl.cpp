@@ -48,7 +48,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -3495,4 +3495,4 @@ const XPathProcessorImpl::TableEntry    XPathProcessorImpl::s_dummyEntry =
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

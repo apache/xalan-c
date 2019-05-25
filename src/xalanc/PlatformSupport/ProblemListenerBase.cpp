@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -153,4 +153,4 @@ const XalanMessages::Codes  ProblemListenerBase::s_messageCodes[eSourceCount][eC
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

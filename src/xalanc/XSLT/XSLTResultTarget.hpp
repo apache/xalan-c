@@ -25,11 +25,7 @@
 
 
 #include <cstdio>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-class ostream;
-#else
 #include <iosfwd>
-#endif
 
 
 
@@ -37,7 +33,7 @@ class ostream;
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -50,15 +46,9 @@ class XALAN_XSLT_EXPORT XSLTResultTarget
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef ostream         StreamType;
-#else
     typedef std::ostream    StreamType;
-#endif
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE   FILE;
-#endif
 
 
     explicit
@@ -326,7 +316,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

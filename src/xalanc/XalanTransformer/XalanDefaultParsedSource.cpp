@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -194,7 +194,7 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
         {
             URISupport::getURLStringFromString(theSystemID, m_uri);
         }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+        catch(const xercesc::XMLException&)
         {
             // Assume that any exception here relates to get the url from
             // the system ID.  We'll assume that it's just a fake base identifier
@@ -274,4 +274,4 @@ XalanDefaultParsedSource::getURI() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

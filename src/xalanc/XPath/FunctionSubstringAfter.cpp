@@ -27,7 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -119,11 +119,7 @@ FunctionSubstringAfter::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionSubstringAfter*
-#endif
 FunctionSubstringAfter::clone(MemoryManager&    theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -142,4 +138,4 @@ FunctionSubstringAfter::getError(XalanDOMString&    theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

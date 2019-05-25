@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -404,4 +404,4 @@ XalanOutputStreamPrintWriter::println(const XalanDOMString&     s)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

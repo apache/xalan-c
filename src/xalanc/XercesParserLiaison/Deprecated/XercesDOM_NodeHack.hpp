@@ -43,7 +43,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 /**
@@ -54,11 +54,11 @@ XALAN_CPP_NAMESPACE_BEGIN
  * 
  * @deprecated This class is part of the deprecated Xerces DOM bridge.
  */
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_NodeHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_NodeHack : public xercesc::DOM_Node
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node     ParentType;
+    typedef xercesc::DOM_Node     ParentType;
 
     XercesDOM_NodeHack(NodeImplType*    theImpl = 0);
 
@@ -79,11 +79,11 @@ public:
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_AttrHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_AttrHack : public xercesc::DOM_Attr
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr     ParentType;
+    typedef xercesc::DOM_Attr     ParentType;
 
     XercesDOM_AttrHack(AttrImplType*    theImpl = 0);
 
@@ -94,11 +94,11 @@ public:
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_ElementHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_ElementHack : public xercesc::DOM_Element
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element  ParentType;
+    typedef xercesc::DOM_Element  ParentType;
 
     XercesDOM_ElementHack(ElementImplType*  theImpl = 0);
 
@@ -148,11 +148,11 @@ public:
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_TextHack : public XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOM_TextHack : public xercesc::DOM_Text
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Text     ParentType;
+    typedef xercesc::DOM_Text     ParentType;
 
     XercesDOM_TextHack(TextImplType*    theImpl = 0);
 
@@ -194,7 +194,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

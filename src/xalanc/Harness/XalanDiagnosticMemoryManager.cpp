@@ -19,9 +19,7 @@
 
 
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
-#endif
 
 
 
@@ -33,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -196,7 +194,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
             const void* const   thePointer = i->first;
             const Data&         theData = i->second;
 
-            XALAN_USING_STD(dec);
+            using std::dec;;
 
             *diagStream << "Block at address "
                         << thePointer
@@ -207,7 +205,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
                         << theData.m_size
                         << " bytes long.\n";
 
-            XALAN_USING_XERCES(XMLPlatformUtils);
+            using xercesc::XMLPlatformUtils;;
 
             const size_type     theHeaderSize =
                 XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));
@@ -221,7 +219,7 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
             if (theBytesToDump != 0)
             {
-                XALAN_USING_STD(hex);
+                using std::hex;;
 
                 const size_type     theCount =
                     theBytesToDump > theData.m_size ?
@@ -269,4 +267,4 @@ XalanDiagnosticMemoryManager::dumpStatistics(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -27,7 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -63,11 +63,7 @@ FunctionStartsWith::execute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionStartsWith*
-#endif
 FunctionStartsWith::clone(MemoryManager& theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -86,4 +82,4 @@ FunctionStartsWith::getError(XalanDOMString& theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

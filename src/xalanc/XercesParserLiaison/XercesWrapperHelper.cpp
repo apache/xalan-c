@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 XercesWrapperHelper&
@@ -39,4 +39,4 @@ XercesWrapperHelper::operator=(const XercesWrapperHelper&)
 }
 
 
-XALAN_CPP_NAMESPACE_END
+}

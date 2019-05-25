@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -47,7 +47,7 @@ class XalanOutputStream;
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -799,7 +799,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

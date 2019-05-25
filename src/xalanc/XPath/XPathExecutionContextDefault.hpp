@@ -48,7 +48,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -413,7 +413,7 @@ protected:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

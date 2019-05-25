@@ -26,7 +26,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -121,9 +121,7 @@ NLSHandler::printBeginOfDataLine()
 {
     char szNumb[20];
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::sprintf;
-#endif
 
     sprintf(
         szNumb,
@@ -174,4 +172,4 @@ NLSHandler::printEndOfDataLine()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

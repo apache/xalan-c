@@ -36,7 +36,7 @@
 #include "XalanParsedURI.hpp"
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -124,11 +124,11 @@ URISupport::getURLStringFromString(
         }
         else
         {
-            XALAN_USING_XERCES(ArrayJanitor)
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::ArrayJanitor;
+            using xercesc::XMLPlatformUtils;
 
             // Assume it's a file specification...
-            XALAN_USING_XERCES(MemoryManager)
+            using xercesc::MemoryManager;
 
             MemoryManager&  theMemoryManager = theNormalizedURI.getMemoryManager();
 
@@ -209,7 +209,7 @@ URISupport::NormalizeURIText(XalanDOMString&    uriString)
     {
         // Start replacing at the index point, since that's the
         // first one...
-        XALAN_STD_QUALIFIER replace(
+        std::replace(
                 uriString.begin() + index,
                 uriString.end(),
                 XalanUnicode::charReverseSolidus,
@@ -285,4 +285,4 @@ URISupport::InvalidURIException::getType() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -35,7 +35,7 @@ U_NAMESPACE_USE
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -126,7 +126,7 @@ ICUXalanNumberFormatProxy::format(unsigned long   theValue,
 
 XalanDOMString&
 ICUXalanNumberFormatProxy::format(
-            XALAN_UINT64        theValue,
+            XMLUInt64           theValue,
             XalanDOMString&     theResult)
 
 {
@@ -138,7 +138,7 @@ ICUXalanNumberFormatProxy::format(
 
 XalanDOMString&
 ICUXalanNumberFormatProxy::format(
-            XALAN_INT64         theValue,
+            XMLInt64            theValue,
             XalanDOMString&     theResult)
 
 {
@@ -191,4 +191,4 @@ ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&   s)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -23,7 +23,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -478,7 +478,7 @@ private:
             flushBuffer();
         }
 
-        XALAN_USING_STD(copy)
+        using std::copy;
 
         assert(theString.size() <= m_bufferRemaining);
 
@@ -518,7 +518,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

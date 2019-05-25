@@ -33,13 +33,14 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
 class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
+    typedef icu::UnicodeString UnicodeString;
 
     static const UnicodeString
     XalanDOMCharStringToUnicodeString(MemoryManager&    theManager, 
@@ -63,7 +64,7 @@ public:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

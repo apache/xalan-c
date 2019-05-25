@@ -63,7 +63,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -1747,7 +1747,7 @@ StylesheetHandler::processAccumulatedText()
 bool
 StylesheetHandler::inExtensionElement() const
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     if (!(find(
             m_inExtensionElementStack.begin(),
@@ -1998,4 +1998,4 @@ StylesheetHandler::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

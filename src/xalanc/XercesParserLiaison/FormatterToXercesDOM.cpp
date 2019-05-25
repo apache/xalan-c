@@ -56,7 +56,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -130,7 +130,7 @@ FormatterToXercesDOM::endDocument()
         // appending to a DOMDocumentFragment.
         processAccumulatedText();
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -156,7 +156,7 @@ FormatterToXercesDOM::startElement(
 
         m_currentElem = elem;
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -182,7 +182,7 @@ FormatterToXercesDOM::endElement(const  XMLCh* const    /* name */)
             m_currentElem = 0;
         }
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -211,7 +211,7 @@ FormatterToXercesDOM::charactersRaw(
 
         cdata(chars, length);
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -228,7 +228,7 @@ FormatterToXercesDOM::entityReference(const XMLCh* const    name)
 
         append(m_doc->createEntityReference(name));
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -249,7 +249,7 @@ FormatterToXercesDOM::ignorableWhitespace(
 
         append(m_doc->createTextNode(m_buffer.c_str()));
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -268,7 +268,7 @@ FormatterToXercesDOM::processingInstruction(
 
         append(m_doc->createProcessingInstruction(target, data));
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -292,7 +292,7 @@ FormatterToXercesDOM::comment(const XMLCh* const    data)
 
         append(m_doc->createComment(data));
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -313,7 +313,7 @@ FormatterToXercesDOM::cdata(
 
         append(m_doc->createCDATASection(m_buffer.c_str()));
     }
-    catch(const XERCES_CPP_NAMESPACE_QUALIFIER DOMException&    theException)
+    catch(const xercesc::DOMException&    theException)
     {
         throw XercesDOMException(theException);
     }
@@ -430,4 +430,4 @@ FormatterToXercesDOM::processAccumulatedText()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

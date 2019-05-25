@@ -40,7 +40,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -507,4 +507,4 @@ ElemLiteralResult::isAttrOK(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

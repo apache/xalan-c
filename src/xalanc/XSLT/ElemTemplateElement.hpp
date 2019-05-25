@@ -48,21 +48,24 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(AttributeList)
-XALAN_DECLARE_XERCES_CLASS(Locator)
+namespace XERCES_CPP_NAMESPACE
+{
+    class AttributeList;
+    class Locator;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator          LocatorType;
+typedef xercesc::AttributeList    AttributeListType;
+typedef xercesc::Locator          LocatorType;
 
 
-XALAN_USING_XERCES(AttributeList)
-XALAN_USING_XERCES(Locator)
+using xercesc::AttributeList;
+using xercesc::Locator;
 class ElemTemplate;
 class ElemTextLiteral;
 class NamespacesHandler;
@@ -1208,7 +1211,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

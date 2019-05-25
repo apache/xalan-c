@@ -43,7 +43,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -139,7 +139,7 @@ public:
     }
 
     virtual void
-    warning(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    warning(const xercesc::SAXParseException& exc)
     {
         const GetCachedString   theGuard(m_executionContext);
 
@@ -156,13 +156,13 @@ public:
     }
 
     virtual void
-    error(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    error(const xercesc::SAXParseException& exc)
     {
         warning(exc);
     }
 
     virtual void
-    fatalError(const XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException& exc)
+    fatalError(const xercesc::SAXParseException& exc)
     {
         m_fatal = true;
 
@@ -582,11 +582,7 @@ FunctionDocument::doExecute(
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
 FunctionDocument*
-#endif
 FunctionDocument::clone(MemoryManager&  theManager) const
 {
     return XalanCopyConstruct(theManager, *this);
@@ -605,4 +601,4 @@ FunctionDocument::getError(XalanDOMString&  theResult) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

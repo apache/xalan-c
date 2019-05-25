@@ -33,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -42,22 +42,22 @@ class Writer;
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator          LocatorType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    AttributeListType;
+typedef xercesc::Locator          LocatorType;
+typedef xercesc::AttributeList    AttributeListType;
 
-XALAN_USING_XERCES(Locator)
-XALAN_USING_XERCES(AttributeList)
+using xercesc::Locator;
+using xercesc::AttributeList;
 
 
 /**
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
  */
-class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler
+class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public xercesc::DocumentHandler
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler  ParentType;
+    typedef xercesc::DocumentHandler  ParentType;
 
     // A handy typedef...  Must match DocumentHandler's type for characters(), etc...
     typedef XalanSize_t     size_type;
@@ -260,13 +260,8 @@ public:
 
     static const XalanDOMChar   s_piData[];
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const XalanDOMString::size_type  s_piTargetLength = 5;
-    static const XalanDOMString::size_type  s_piDataLength = 3;
-#else
     static const XalanDOMString::size_type  s_piTargetLength;
     static const XalanDOMString::size_type  s_piDataLength;
-#endif
 
 
 protected:
@@ -306,7 +301,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

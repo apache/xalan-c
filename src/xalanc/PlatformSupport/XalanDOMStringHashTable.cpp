@@ -29,7 +29,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -150,7 +150,7 @@ XalanDOMStringHashTable::find(
         *theBucketIndex = theLocalBucketIndex;
     }
 
-    XALAN_USING_STD(find_if)
+    using std::find_if;
 
     const BucketType::const_iterator    i =
         find_if(
@@ -223,4 +223,4 @@ XalanDOMStringHashTable::insert(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

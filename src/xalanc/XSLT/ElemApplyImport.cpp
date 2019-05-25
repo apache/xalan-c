@@ -42,7 +42,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -182,4 +182,4 @@ ElemApplyImport::appendChildElem(ElemTemplateElement*   /* newChild */)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

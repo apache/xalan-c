@@ -29,11 +29,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(Locator)
+using xercesc::Locator;
 
 
 
@@ -159,7 +159,7 @@ private:
     }
 };
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

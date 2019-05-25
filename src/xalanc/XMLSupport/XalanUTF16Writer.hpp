@@ -22,7 +22,7 @@
 #include <xalanc/XMLSupport/XalanFormatterWriter.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 class XalanUTF16Writer : public XalanFormatterWriter
@@ -220,7 +220,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

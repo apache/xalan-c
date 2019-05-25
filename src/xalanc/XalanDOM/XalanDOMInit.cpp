@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -66,4 +66,4 @@ XalanDOMInit::terminate()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

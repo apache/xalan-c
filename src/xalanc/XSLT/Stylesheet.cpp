@@ -69,7 +69,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -138,7 +138,7 @@ Stylesheet::Stylesheet(
                 m_baseIdent = urlString;
             }
         }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtilsException&)
+        catch(const xercesc::XMLPlatformUtilsException&)
         {
             // Assume that any exception here relates to get the urlString from
             // m_baseIdent.  We'll assume that it's just a fake base identifier
@@ -172,9 +172,7 @@ Stylesheet::create(
 
 Stylesheet::~Stylesheet()
 {
-#if !defined(XALAN_NO_STD_NAMESPACE)
     using std::for_each;
-#endif
 
     // Clean up all entries in the imports vector.
     for_each(
@@ -967,7 +965,7 @@ Stylesheet::addObjectIfNotFound(
             const XalanMatchPatternData*    thePattern,
             PatternTableVectorType&         theVector)
 {
-    XALAN_USING_STD(find)
+    using std::find;
 
     const PatternTableVectorType::const_iterator    theResult =
         find(
@@ -1683,4 +1681,4 @@ Stylesheet::getURI() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

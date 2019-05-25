@@ -20,11 +20,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -37,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -125,7 +121,7 @@ XPathConstructionContextDefault::problem(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    XALAN_USING_STD(cerr)
+    using std::cerr;
 
     XalanStdOutputStream            theStream(cerr, theManager);
     XalanOutputStreamPrintWriter    thePrintWriter(theStream);
@@ -155,7 +151,7 @@ XPathConstructionContextDefault::problem(
 {
     MemoryManager&  theManager = getMemoryManager();
 
-    XALAN_USING_STD(cerr)
+    using std::cerr;
 
     XalanStdOutputStream            theStream(cerr, theManager);
     XalanOutputStreamPrintWriter    thePrintWriter(theStream);
@@ -175,4 +171,4 @@ XPathConstructionContextDefault::problem(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -37,19 +37,14 @@
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#include <strstream.h>
-#else
 #include <iostream>
 #include <strstream>
-#endif
 
 
-XALAN_USING_STD(cerr)
-XALAN_USING_STD(cout)
-XALAN_USING_STD(endl)
-XALAN_USING_STD(ostrstream)
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ostrstream;
 
 #else
 
@@ -96,8 +91,8 @@ runTests()
 
 #if defined(TEST_XALAN_CPP)
 
-    XALAN_USING_XALAN(XalanTransformer)
-    XALAN_USING_XALAN(XalanCompiledStylesheet)
+    using xalanc::XalanTransformer;
+    using xalanc::XalanCompiledStylesheet;
 
     XalanTransformer    xalan;
 
@@ -322,9 +317,9 @@ main(
 #if defined(TEST_XALAN_CPP)
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializers for xerces and xalan, and create a transformer
         //

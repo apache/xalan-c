@@ -31,7 +31,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -44,7 +44,7 @@ struct XalanSetIterator
     typedef Value*  pointer;
 
     typedef ptrdiff_t                                       difference_type;
-    typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag  iterator_category;
+    typedef std::bidirectional_iterator_tag  iterator_category;
 
     XalanSetIterator(const MapIterator&     iter) :
         m_mapIterator(iter)
@@ -180,6 +180,6 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif  // XALANSET_HEADER_GUARD_1357924680

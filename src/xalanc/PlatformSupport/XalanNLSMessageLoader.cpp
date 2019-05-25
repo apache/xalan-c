@@ -27,16 +27,19 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
+#include <locale.h>
+
 #include <cstring>
+#include <cstdlib>
 
 #include <cerrno>
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
-XALAN_USING_XERCES(XMLMsgLoader)
+using xercesc::XMLMsgLoader;
 
-static const char* const    MSG_FILE_NAME = "XalanMsg_";
+static const char* const    MSG_FILE_NAME = "Xalan.cat";
 
 #define MAX_LOCALTION_NAME 1024
 
@@ -44,21 +47,16 @@ static const char* const    s_errorMessage = "Message can't be located in the NL
 
 XalanNLSMessageLoader::~XalanNLSMessageLoader()
 {
-    if ((int)m_catalogHandle != -1)
+    if (m_catalogHandle != reinterpret_cast<nl_catd>(-1))
     {
         catclose(m_catalogHandle);
     }
 }
 
 XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
-    m_catalogHandle(nl_catd(-1)),
+    m_catalogHandle(reinterpret_cast<nl_catd>(-1)),
     m_memoryManager(theManager)
 {
-
-    char fileName[50];
-    fileName[0] = 0;
-    
-    sprintf(fileName,"%s", MSG_FILE_NAME);
 
     const char* Locale = XMLMsgLoader::getLocale();
 
@@ -67,17 +65,28 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
         Locale = "en_US";
     }
 
-    strcat(fileName, Locale);
-
-    strcat(fileName, ".cat");
+    const char* msg = setlocale(LC_MESSAGES, 0);
+    char *saved_msg = 0;
+    if (msg)
+    {
+        saved_msg = new char[strlen(msg) + 1];
+        strcpy(saved_msg, msg);
+    }
+    setlocale(LC_MESSAGES, Locale);
 
    /**
     * To open user-specified locale specific cat file
     * and default cat file if necessary
     */
-    m_catalogHandle = catopen(fileName, 0);
+    m_catalogHandle = catopen(MSG_FILE_NAME, 0);
 
-    if (reinterpret_cast<int>(m_catalogHandle) == -1)
+    if(saved_msg)
+      {
+        setlocale(LC_MESSAGES, saved_msg);
+        delete[] saved_msg;
+      }
+
+    if (m_catalogHandle == reinterpret_cast<nl_catd>(-1))
     {
         // Probably have to call panic here
         // the user will get an error with retrieving messages
@@ -87,8 +96,8 @@ XalanNLSMessageLoader::XalanNLSMessageLoader(MemoryManager& theManager) :
 
 bool
 XalanNLSMessageLoader::loadMsg(
-            XalanMessages::Codes    msgToLoad
-            XalanDOMChar*           toFill
+            XalanMessages::Codes    msgToLoad,
+            XalanDOMChar*           toFill,
             XalanSize_t             maxChars)
 {
     
@@ -99,7 +108,7 @@ XalanNLSMessageLoader::loadMsg(
         return bRetValue;
     }
 
-    if (static_cast<int>(m_catalogHandle) == -1)
+    if (m_catalogHandle == reinterpret_cast<nl_catd>(-1))
     {
         // for transcoding to Unicode
         const XalanDOMString    errorMsg("Message can't be retrieved: the message catalog is not open.", m_memoryManager );
@@ -138,7 +147,7 @@ XalanNLSMessageLoader::loadMsg(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

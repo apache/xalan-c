@@ -26,11 +26,7 @@
 #include "xalanc/Include/XalanVector.hpp"
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <strstream.h>
-#else
 #include <strstream>
-#endif
 
 
 
@@ -38,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -54,7 +50,7 @@ class XalanXMLFileReporter;
 class XSLTInputSource;
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -98,11 +94,7 @@ public:
     {
     private:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-        typedef ostrstream          StreamType;
-#else
         typedef std::ostrstream     StreamType;
-#endif
 
         StreamType  help;
 
@@ -467,7 +459,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

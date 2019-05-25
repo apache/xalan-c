@@ -28,7 +28,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -37,8 +37,8 @@ appendBtoFList(
             CountersTable::NodeVectorType&          flist,
             const CountersTable::NodeVectorType&    blist)
 {
-    XALAN_USING_STD(back_inserter)
-    XALAN_USING_STD(copy)
+    using std::back_inserter;
+    using std::copy;
 
     flist.reserve(flist.size() + blist.size());
 
@@ -178,4 +178,4 @@ Counter::getPreviouslyCounted(
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

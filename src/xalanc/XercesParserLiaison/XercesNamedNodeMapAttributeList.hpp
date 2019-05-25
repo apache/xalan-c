@@ -33,15 +33,15 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapAttributeList : public XERCES_CPP_NAMESPACE_QUALIFIER AttributeList
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapAttributeList : public xercesc::AttributeList
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList    ParentType;
+    typedef xercesc::AttributeList    ParentType;
 
     explicit
     XercesNamedNodeMapAttributeList(const DOMNamedNodeMapType*  theMap);
@@ -90,7 +90,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

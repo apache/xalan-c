@@ -27,16 +27,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
-
-
-#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const int   XalanParsedURI::d_scheme;
-const int   XalanParsedURI::d_authority;
-const int   XalanParsedURI::d_query;
-const int   XalanParsedURI::d_fragment;
-#endif
-
+namespace XALAN_CPP_NAMESPACE {
 
 
 /* Merge the components back into a complete URI string */
@@ -325,4 +316,4 @@ XalanDOMString& XalanParsedURI::resolve(
     return relativeURI.make(theResult);
 }
 
-XALAN_CPP_NAMESPACE_END
+}

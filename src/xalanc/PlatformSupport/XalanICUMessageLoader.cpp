@@ -94,11 +94,11 @@ static const char* const    sPackageName=INVK_MAKE_STRING(PACKAGE_NAME);
 extern "C" const char U_IMPORT  ICUDLL_ENTRYPOINT_NAME [];
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
-XALAN_USING_XERCES(XMLMsgLoader)
+using xercesc::XMLMsgLoader;
 
-XALAN_USING_XERCES(XMLString)
+using xercesc::XMLString;
 
 
 
@@ -190,7 +190,7 @@ bool XalanICUMessageLoader::loadMsg(
    return bResult;
 }
 
-XALAN_CPP_NAMESPACE_END
+}
 
 #endif // defined (XALAN_ICU_MSG_LOADER)
 

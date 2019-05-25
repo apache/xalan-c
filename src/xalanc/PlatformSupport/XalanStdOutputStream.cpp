@@ -24,9 +24,7 @@
 
 
 
-#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
-#endif
 
 
 
@@ -35,7 +33,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -51,7 +49,7 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 #endif
 {
     // This will make sure that cerr is not buffered...
-    if (&m_outputStream == &XALAN_STD_QUALIFIER cerr)
+    if (&m_outputStream == &std::cerr)
     {
         setBufferSize(0);
 
@@ -61,7 +59,7 @@ XalanStdOutputStream::XalanStdOutputStream(StreamType&  theOutputStream,
 #endif
     }
 #if defined(XALAN_NEWLINE_IS_CRLF)
-    else if (&m_outputStream == &XALAN_STD_QUALIFIER cout)
+    else if (&m_outputStream == &std::cout)
     {
         m_newlineString = s_nlString;
         m_newlineStringLength = s_nlStringLength;
@@ -135,9 +133,7 @@ XalanStdOutputStream::doFlush()
 
         if (!m_outputStream)
         {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
             using namespace std;
-#endif
             XalanDOMString  thebuffer(getMemoryManager());
 
             throw XalanStdOutputStreamWriteException(errno, thebuffer);
@@ -152,15 +148,13 @@ XalanStdOutputStream::writeData(
             const char*     theBuffer,
             size_type       theBufferLength)
 {
-    assert(static_cast<XALAN_UINT64>(static_cast<StreamSizeType>(theBufferLength)) == theBufferLength);
+    assert(static_cast<XMLUInt64>(static_cast<StreamSizeType>(theBufferLength)) == theBufferLength);
 
     m_outputStream.write(theBuffer, StreamSizeType(theBufferLength));
 
     if (!m_outputStream)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using namespace std;
-#endif
         XalanDOMString  thebuffer(getMemoryManager());
 
         throw XalanStdOutputStreamWriteException(errno, thebuffer);
@@ -258,4 +252,4 @@ XalanStdOutputStream::XalanStdOutputStreamWriteException::~XalanStdOutputStreamW
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

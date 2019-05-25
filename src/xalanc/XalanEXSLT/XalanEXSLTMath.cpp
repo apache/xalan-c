@@ -39,7 +39,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -426,9 +426,7 @@ XalanEXSLTFunctionRandom::execute(
             locator);
     }
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::rand;
-#endif
 
     const int   value = rand();
 
@@ -484,9 +482,7 @@ XalanEXSLTFunctionAcos::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::acos;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(acos(args[0]->num(executionContext)));
 }
@@ -533,9 +529,7 @@ XalanEXSLTFunctionAsin::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::asin;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(asin(args[0]->num(executionContext)));
 }
@@ -581,9 +575,7 @@ XalanEXSLTFunctionAtan::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::atan;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(atan(args[0]->num(executionContext)));
 }
@@ -630,9 +622,7 @@ XalanEXSLTFunctionAtan2::execute(
 
     assert(args[0].null() == false && args[1].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::atan2;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(
                 atan2(args[0]->num(executionContext), args[1]->num(executionContext)));
@@ -1139,9 +1129,7 @@ XalanEXSLTFunctionCos::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::cos;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(cos(args[0]->num(executionContext)));
 }
@@ -1186,9 +1174,7 @@ XalanEXSLTFunctionExp::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::exp;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(exp(args[0]->num(executionContext)));
 }
@@ -1233,9 +1219,7 @@ XalanEXSLTFunctionLog::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::log;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(log(args[0]->num(executionContext)));
 }
@@ -1282,9 +1266,7 @@ XalanEXSLTFunctionPower::execute(
 
     assert(args[0].null() == false && args[1].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::pow;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(
                 pow(
@@ -1332,9 +1314,7 @@ XalanEXSLTFunctionSin::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::sin;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(sin(args[0]->num(executionContext)));
 }
@@ -1381,9 +1361,7 @@ XalanEXSLTFunctionSqrt::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::sqrt;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num(executionContext)));
 }
@@ -1428,9 +1406,7 @@ XalanEXSLTFunctionTan::execute(
 
     assert(args[0].null() == false);
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::tan;
-#endif
 
     return executionContext.getXObjectFactory().createNumber(tan(args[0]->num(executionContext)));
 }
@@ -1552,10 +1528,8 @@ XalanEXSLTMathFunctionsInstaller::installGlobal(MemoryManager& theManager)
 
     // Sets the starting point for generating a series of pseudorandom integers,
     // we need it for random() EXSLT function
-#if defined(XALAN_STRICT_ANSI_HEADERS)
     using std::srand;
     using std::time;
-#endif
     srand( (unsigned)time( NULL ) );
 }
 
@@ -1577,4 +1551,4 @@ XalanEXSLTMathFunctionsInstaller::uninstallGlobal(MemoryManager& theManager)
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

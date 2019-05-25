@@ -34,7 +34,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -147,24 +147,16 @@ XercesDocumentTypeBridge::getOwnerDocument() const
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
 XercesDocumentTypeBridge*
-#endif
 XercesDocumentTypeBridge::cloneNode(bool    deep) const
 {
     // $$$ ToDo: Fix this!! XercesDocumentType nodes can't be cloned yet...
     assert(false);
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    return m_navigator.cloneNode(this, m_xercesNode, deep);
-#else
     XercesDocumentTypeBridge* const     theBridge =
         static_cast<XercesDocumentTypeBridge*>(m_navigator.cloneNode(this, m_xercesNode, deep));
 
     return theBridge;
-#endif
 }
 
 
@@ -345,7 +337,7 @@ XercesDocumentTypeBridge::getInternalSubset() const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 #endif //XALAN_BUILD_DEPRECATED_DOM_BRIDGE 

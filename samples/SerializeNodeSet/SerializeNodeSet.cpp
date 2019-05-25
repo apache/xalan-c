@@ -22,11 +22,7 @@
 
 #include <cassert>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -68,9 +64,9 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
 
     int     theResult = 0;
 
@@ -84,9 +80,9 @@ main(
     {
         try
         {
-            XALAN_USING_XERCES(XMLPlatformUtils)
+            using xercesc::XMLPlatformUtils;
 
-            XALAN_USING_XALAN(XPathEvaluator)
+            using xalanc::XPathEvaluator;
 
 
             XMLPlatformUtils::Initialize();
@@ -94,16 +90,16 @@ main(
             XPathEvaluator::initialize();
 
             {
-                XALAN_USING_XERCES(LocalFileInputSource)
+                using xercesc::LocalFileInputSource;
 
-                XALAN_USING_XALAN(NodeRefList)
-                XALAN_USING_XALAN(XalanDocument)
-                XALAN_USING_XALAN(XalanDOMString)
-                XALAN_USING_XALAN(XalanNode)
-                XALAN_USING_XALAN(XalanSourceTreeInit)
-                XALAN_USING_XALAN(XMLSupportInit)
-                XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
-                XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+                using xalanc::NodeRefList;
+                using xalanc::XalanDocument;
+                using xalanc::XalanDOMString;
+                using xalanc::XalanNode;
+                using xalanc::XalanSourceTreeInit;
+                using xalanc::XMLSupportInit;
+                using xalanc::XalanSourceTreeDOMSupport;
+                using xalanc::XalanSourceTreeParserLiaison;
 
 
                 // Initialize the XalanSourceTree subsystem...
@@ -173,10 +169,10 @@ main(
                     }
                     else
                     {
-                        XALAN_USING_XALAN(XalanStdOutputStream)
-                        XALAN_USING_XALAN(XalanOutputStreamPrintWriter)
-                        XALAN_USING_XALAN(FormatterToXML)
-                        XALAN_USING_XALAN(FormatterTreeWalker)
+                        using xalanc::XalanStdOutputStream;
+                        using xalanc::XalanOutputStreamPrintWriter;
+                        using xalanc::FormatterToXML;
+                        using xalanc::FormatterTreeWalker;
 
                         // OK, we're going to serialize the nodes that were
                         // found.  We should really check to make sure the

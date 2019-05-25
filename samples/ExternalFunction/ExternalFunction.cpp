@@ -23,11 +23,7 @@
 #include <cmath>
 #include <cstring>
 #include <ctime>
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -44,14 +40,14 @@
 
 
 
-XALAN_USING_XALAN(Function)
-XALAN_USING_XALAN(Locator)
-XALAN_USING_XALAN(XPathExecutionContext)
-XALAN_USING_XALAN(XalanDOMString)
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XObjectPtr)
-XALAN_USING_XALAN(MemoryManager)
-XALAN_USING_XALAN(XalanCopyConstruct)
+using xalanc::Function;
+using xalanc::Locator;
+using xalanc::XPathExecutionContext;
+using xalanc::XalanDOMString;
+using xalanc::XalanNode;
+using xalanc::XObjectPtr;
+using xalanc::MemoryManager;
+using xalanc::XalanCopyConstruct;
 
 // This class defines a function that will return the square root
 // of its argument.
@@ -87,7 +83,6 @@ public:
 
         assert(args[0].null() == false);    
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::sqrt;
 #endif
 
@@ -101,11 +96,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionSquareRoot*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -174,9 +165,7 @@ public:
 
         assert(args[0].null() == false);    
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::pow;
-#endif
 
         return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(executionContext), 3));
     }
@@ -188,11 +177,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionCube*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -257,13 +242,11 @@ public:
             generalError(executionContext, context, locator);
         }
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         using std::time;
         using std::time_t;
         using std::localtime;
         using std::asctime;
         using std::strlen;
-#endif
 
         time_t  theTime;
 
@@ -286,11 +269,7 @@ public:
      *
      * @return pointer to the new object
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual Function*
-#else
     virtual FunctionAsctime*
-#endif
     clone(MemoryManager&    theManager) const
     {
         return XalanCopyConstruct(theManager, *this);
@@ -330,8 +309,8 @@ main(
             int     argc,
             char*   /* argv */[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = 0;
 
@@ -343,10 +322,10 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializer for Xerces.
         try

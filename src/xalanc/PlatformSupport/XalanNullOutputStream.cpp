@@ -20,7 +20,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -53,4 +53,4 @@ XalanNullOutputStream::doFlush()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

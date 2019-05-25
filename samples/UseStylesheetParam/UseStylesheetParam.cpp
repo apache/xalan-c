@@ -18,11 +18,7 @@
 
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 // for 'C' strcmp function used in parsing main() parameters
 #include <string.h>
@@ -44,7 +40,7 @@ struct {
 } Parameter[15];
 
 // The Parsed Document Nodesets
-XALAN_USING_XALAN(XalanParsedSource)
+using xalanc::XalanParsedSource;
 const XalanParsedSource * NodesetParam[15] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
@@ -53,8 +49,8 @@ const XalanParsedSource * NodesetParam[15] = {
 
 int Usage()
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
     cerr << "Usage: UseStylesheetParam xmlFile xslFile outFile [parameters]" <<endl
          << "   Parameters are:" <<endl
          << "   -s name \"'String Value'\"" <<endl
@@ -70,8 +66,8 @@ main(
           int       argc,
           char*     argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = 0;
     int i, j;
@@ -97,11 +93,11 @@ main(
     }
 
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
-        XALAN_USING_XALAN(XalanTransformer)
-        XALAN_USING_XALAN(XSLTInputSource)
+        using xalanc::XalanTransformer;
+        using xalanc::XSLTInputSource;
 
         // Call the static initializer for Xerces.
         try
@@ -125,7 +121,7 @@ main(
             XalanTransformer::initialize();
 
             {
-                XALAN_USING_XALAN(XalanDOMString)
+                using xalanc::XalanDOMString;
 
                 // Create a XalanTransformer.
                 XalanTransformer    theXalanTransformer;

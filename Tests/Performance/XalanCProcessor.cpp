@@ -21,11 +21,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -38,9 +34,9 @@
 
 
 
-XALAN_USING_XERCES(XMLPlatformUtils)
-XALAN_USING_XALAN(XalanTransformer)
-XALAN_USING_XALAN(XalanMemMgrs)
+using xercesc::XMLPlatformUtils;
+using xalanc::XalanTransformer;
+using xalanc::XalanMemMgrs;
 
 
 typedef XalanCProcessor::CompiledStylesheetType CompiledStylesheetType;

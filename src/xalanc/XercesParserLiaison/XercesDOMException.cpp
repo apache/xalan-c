@@ -23,7 +23,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -143,4 +143,4 @@ XercesDOMException::~XercesDOMException()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

@@ -26,21 +26,15 @@
 
 #include <cstdio>
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::FILE;
 using std::fclose;
 using std::fflush;
 using std::fopen;
 using std::fwrite;
-#endif
 
 
 
@@ -113,10 +107,10 @@ doTransform(
             const char*     theXSLFile,
             FILE*           theOutputFile)
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
-    XALAN_USING_XALAN(XalanTransformer)
+    using xalanc::XalanTransformer;
 
     // Create a XalanTransformer...
     XalanTransformer    theXalanTransformer;
@@ -148,9 +142,9 @@ main(
             int     argc,
             char*   argv[])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(cout)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::cout;
+    using std::endl;
 
     if (argc < 3 || argc > 4)
     {
@@ -163,9 +157,9 @@ main(
 
     try
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
+        using xercesc::XMLPlatformUtils;
 
-        XALAN_USING_XALAN(XalanTransformer)
+        using xalanc::XalanTransformer;
 
         // Call the static initializer for Xerces.
         XMLPlatformUtils::Initialize();

@@ -20,11 +20,7 @@
 
 
 
-#if defined(XALAN_CLASSIC_IOSTREAMS)
-#include <iostream.h>
-#else
 #include <iostream>
-#endif
 
 
 
@@ -42,18 +38,18 @@
 
 
 
-XALAN_USING_XALAN(XalanDocumentBuilder)
-XALAN_USING_XALAN(XalanTransformer)
+using xalanc::XalanDocumentBuilder;
+using xalanc::XalanTransformer;
 
 
 
 void
 BuildDocument(XalanDocumentBuilder*     theBuilder)
 {
-    XALAN_USING_XERCES(ContentHandler)
-    XALAN_USING_XALAN(AttributesImpl)
-    XALAN_USING_XALAN(XalanDOMChar)
-    XALAN_USING_XALAN(XalanDOMString)
+    using xercesc::ContentHandler;
+    using xalanc::AttributesImpl;
+    using xalanc::XalanDOMChar;
+    using xalanc::XalanDOMString;
 
     // Get the SAX2 ContentHandler from the builder...
     ContentHandler* const   theContentHandler = theBuilder->getContentHandler();
@@ -182,8 +178,8 @@ main(
           int       argc,
           char*     /* argv */ [])
 {
-    XALAN_USING_STD(cerr)
-    XALAN_USING_STD(endl)
+    using std::cerr;
+    using std::endl;
 
     int theResult = 0;
 
@@ -195,8 +191,8 @@ main(
     }
     else
     {
-        XALAN_USING_XERCES(XMLPlatformUtils)
-        XALAN_USING_XERCES(XMLException)
+        using xercesc::XMLPlatformUtils;
+        using xercesc::XMLException;
 
         // Call the static initializer for Xerces.
         try

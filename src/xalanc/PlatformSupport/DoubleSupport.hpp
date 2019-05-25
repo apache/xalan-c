@@ -40,11 +40,11 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
-XALAN_USING_XERCES(MemoryManager)
+using xercesc::MemoryManager;
 
 
 
@@ -83,14 +83,10 @@ public:
 #if defined(_MSC_VER)
         return _isnan(theNumber) != 0;
 #elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
-#if defined(XALAN_NO_STD_NAMESPACE)
-        return isnan(theNumber) != 0;
-#else
 #if defined(SOLARIS)
         return isnan(theNumber) != 0;
 #else
         return std::isnan(theNumber) != 0;
-#endif
 #endif
 #else
         return s_NaN == theNumber;
@@ -353,179 +349,131 @@ public:
 
     // Some functors to do the same thing.  This is for
     // STL integration...
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct equalFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct equalFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct equalFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return equal(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct notEqualFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct notEqualFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct notEqualFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return notEqual(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct lessThanFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct lessThanFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct lessThanFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return lessThan(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct lessThanOrEqualFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct lessThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct lessThanOrEqualFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return lessThanOrEqual(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct greaterThanFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct greaterThanFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct greaterThanFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return greaterThan(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct greaterThanOrEqualFunction : public binary_function<const double&, const double&, bool>
-    #else
-    struct greaterThanOrEqualFunction : public std::binary_function<const double&, const double&, bool>
-    #endif
+    struct greaterThanOrEqualFunction
     {
-        result_type
+        bool
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return greaterThanOrEqual(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct addFunction : public binary_function<const double&, const double&, double>
-    #else
-    struct addFunction : public std::binary_function<const double&, const double&, double>
-    #endif
+    struct addFunction
     {
-        result_type
+        double
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return add(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct subtractFunction : public binary_function<const double&, const double&, double>
-    #else
-    struct subtractFunction : public std::binary_function<const double&, const double&, double>
-    #endif
+    struct subtractFunction
     {
-        result_type
+        double
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return subtract(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct multiplyFunction : public binary_function<const double&, const double&, double>
-    #else
-    struct multiplyFunction : public std::binary_function<const double&, const double&, double>
-    #endif
+    struct multiplyFunction
     {
-        result_type
+        double
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return multiply(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct divideFunction : public binary_function<const double&, const double&, double>
-    #else
-    struct divideFunction : public std::binary_function<const double&, const double&, double>
-    #endif
+    struct divideFunction
     {
-        result_type
+        double
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return divide(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct modulusFunction : public binary_function<const double&, const double&, double>
-    #else
-    struct modulusFunction : public std::binary_function<const double&, const double&, double>
-    #endif
+    struct modulusFunction
     {
-        result_type
+        double
         operator()(
-            first_argument_type     theLHS,
-            second_argument_type    theRHS) const
+            const double&    theLHS,
+            const double&    theRHS) const
         {
             return modulus(theLHS, theRHS);
         }
     };
 
-    #if defined(XALAN_NO_STD_NAMESPACE)
-    struct negativeFunction : public unary_function<const double&, double>
-    #else
-    struct negativeFunction : public std::unary_function<const double&, double>
-    #endif
+    struct negativeFunction
     {
-        result_type
-        operator()(argument_type    theDouble) const
+        double
+        operator()(const double&        theDouble) const
         {
             return negative(theDouble);
         }
@@ -599,11 +547,7 @@ public:
     static double
     ceiling(double  theValue)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::ceil(theValue);
-#else
-        return ceil(theValue);
-#endif
     }
 
     /**
@@ -616,11 +560,7 @@ public:
     static double
     floor(double    theValue)
     {
-#if defined(XALAN_STRICT_ANSI_HEADERS)
         return std::floor(theValue);
-#else
-        return ::floor(theValue);
-#endif
     }
 
     union NumberUnion
@@ -658,7 +598,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

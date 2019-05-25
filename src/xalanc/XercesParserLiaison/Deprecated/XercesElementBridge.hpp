@@ -46,7 +46,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -62,7 +62,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridge : public XalanElement
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element  DOM_ElementType;
+    typedef xercesc::DOM_Element  DOM_ElementType;
 
     XercesElementBridge(
             const DOM_ElementType&          theXercesElement,
@@ -191,11 +191,7 @@ public:
      *   its attributes, if it is an <code>Element</code>).
      * @return The duplicate node.
      */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-    virtual XalanNode*
-#else
     virtual XercesElementBridge*
-#endif
     cloneNode(bool deep) const;
 
     //@}
@@ -727,7 +723,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 

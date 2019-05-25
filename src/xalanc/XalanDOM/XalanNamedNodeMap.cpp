@@ -19,7 +19,7 @@
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -57,4 +57,4 @@ XalanNamedNodeMap::operator==(const XalanNamedNodeMap&  /* theRHS */) const
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

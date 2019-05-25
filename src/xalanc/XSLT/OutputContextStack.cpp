@@ -24,7 +24,7 @@
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 
@@ -112,4 +112,4 @@ OutputContextStack::reset()
 
 
 
-XALAN_CPP_NAMESPACE_END
+}

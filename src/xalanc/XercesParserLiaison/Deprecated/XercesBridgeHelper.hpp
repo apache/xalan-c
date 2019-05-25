@@ -45,11 +45,14 @@
 
 
 
-XALAN_DECLARE_XERCES_CLASS(DOM_CharacterData)
+namespace XERCES_CPP_NAMESPACE
+{
+    class DOM_CharacterData;
+}
 
 
 
-XALAN_CPP_NAMESPACE_BEGIN
+namespace XALAN_CPP_NAMESPACE {
 
 
 /**
@@ -129,7 +132,7 @@ private:
 
 
 
-XALAN_CPP_NAMESPACE_END
+}
 
 
 
