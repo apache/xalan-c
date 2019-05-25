@@ -37,7 +37,6 @@
 #if defined(RWSTD_MULTI_THREAD) && !defined(__HPACC_THREAD_SAFE_RB_TREE)
 #define __HPACC_THREAD_SAFE_RB_TREE
 #endif
-#define XALAN_NO_STD_ALLOCATORS
 #endif
 
 #define XALAN_POSIX2_AVAILABLE
