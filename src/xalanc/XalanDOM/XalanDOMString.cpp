@@ -32,10 +32,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 const XalanDOMChar  XalanDOMString::s_empty = 0;
 
-#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const XalanDOMString::size_type     XalanDOMString::npos;
-#endif
- 
+const XalanDOMString::size_type     XalanDOMString::npos = 0u; 
 
 
 XalanDOMString::XalanDOMString(MemoryManager&  theManager) :

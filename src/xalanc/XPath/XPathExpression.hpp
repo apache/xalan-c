@@ -709,14 +709,10 @@ public:
      * offset from the op code where the length is stored.  It will always
      * remain one.
      */
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const TokenQueueSizeType     s_opCodeMapLengthIndex = 1;
-#else
     enum eDummy
     {
         s_opCodeMapLengthIndex = 1
     };
-#endif
 
     explicit
     XPathExpression(MemoryManager& theManager);

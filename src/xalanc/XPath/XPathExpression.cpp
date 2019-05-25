@@ -42,10 +42,6 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const XPathExpression::TokenQueueSizeType   XPathExpression::s_opCodeMapLengthIndex;
-#endif
-
 
 
 // This is an array which indicates which of the value defined by

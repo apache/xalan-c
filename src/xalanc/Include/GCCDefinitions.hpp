@@ -33,8 +33,6 @@
 
 
 
-#define XALAN_INLINE_INITIALIZATION
-
 #if defined(CYGWIN)
 #if defined(WIN32)
 #undef WIN32

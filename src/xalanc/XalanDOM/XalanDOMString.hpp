@@ -61,11 +61,7 @@ public:
     typedef XalanDOMCharVectorType::reverse_iterator        reverse_iterator;
     typedef XalanDOMCharVectorType::const_reverse_iterator  const_reverse_iterator;
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-    static const size_type  npos = ~0u;
-#else
-    enum { npos = ~0u };
-#endif
+    static const size_type  npos;
 
     XalanDOMString(MemoryManager&  theManager XALAN_DEFAULT_CONSTRUCTOR_MEMMGR);
 

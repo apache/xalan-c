@@ -40,7 +40,6 @@
 #endif
 
 #define XALAN_POSIX2_AVAILABLE
-#define XALAN_INLINE_INITIALIZATION
 
 
 

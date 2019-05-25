@@ -121,13 +121,8 @@ const XalanDOMChar  FormatterListener::s_piData[] =
     0
 };
 
-#if !defined(XALAN_INLINE_INITIALIZATION)
 const XalanDOMString::size_type     FormatterListener::s_piTargetLength = 5;
 const XalanDOMString::size_type     FormatterListener::s_piDataLength = 3;
-#elif !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
-const XalanDOMString::size_type     FormatterListener::s_piTargetLength;
-const XalanDOMString::size_type     FormatterListener::s_piDataLength;
-#endif
 
 
 
