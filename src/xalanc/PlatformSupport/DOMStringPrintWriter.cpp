@@ -190,7 +190,7 @@ DOMStringPrintWriter::print(double  d)
 
 
 void
-DOMStringPrintWriter::print(int i)
+DOMStringPrintWriter::print(XMLInt32 i)
 {
     assert ( m_outputString != 0 );
 
@@ -204,7 +204,7 @@ DOMStringPrintWriter::print(int i)
 
 
 void
-DOMStringPrintWriter::print(long    l)
+DOMStringPrintWriter::print(XMLInt64 l)
 {
     assert ( m_outputString != 0 );
 
@@ -290,7 +290,7 @@ DOMStringPrintWriter::println(double    d)
 
 
 void
-DOMStringPrintWriter::println(int   i)
+DOMStringPrintWriter::println(XMLInt32   i)
 {
     print(i);
 
@@ -300,7 +300,7 @@ DOMStringPrintWriter::println(int   i)
 
 
 void
-DOMStringPrintWriter::println(long  l)
+DOMStringPrintWriter::println(XMLInt64  l)
 {
     print(l);
 

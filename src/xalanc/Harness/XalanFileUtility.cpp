@@ -1659,8 +1659,8 @@ XalanFileUtility::diffElement(
         collectData(
             "Wrong number of attributes. ",
             docNodeName,
-            NumberToDOMString(numGoldAttr, numGoldStr),
-            NumberToDOMString(numDomAttr, numDOMStr));
+            NumberToDOMString(static_cast<XMLUInt64>(numGoldAttr), numGoldStr),
+            NumberToDOMString(static_cast<XMLUInt64>(numDomAttr), numDOMStr));
 
         return false;
     }
@@ -1805,8 +1805,8 @@ XalanFileUtility::diffElement2(
         collectData(
             "Wrong number of attributes. ",
             docNodeName,
-            NumberToDOMString(numGoldAttr, numGoldStr),
-            NumberToDOMString(numDomAttr, numDOMStr));
+            NumberToDOMString(static_cast<XMLUInt64>(numGoldAttr), numGoldStr),
+            NumberToDOMString(static_cast<XMLUInt64>(numDomAttr), numDOMStr));
 
         return false;
     }

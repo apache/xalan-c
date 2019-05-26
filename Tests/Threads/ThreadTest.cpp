@@ -176,7 +176,7 @@ struct
 ThreadInfo
 {
     ThreadInfo(
-            long                    theThreadNumber = 0L,
+            XMLInt32                theThreadNumber = 0L,
             SynchronizedCounter*    theCounter = 0) :
         m_threadNumber(theThreadNumber),
         m_counter(theCounter),
@@ -184,7 +184,7 @@ ThreadInfo
     {
     }
 
-    long                    m_threadNumber;
+    XMLInt32                m_threadNumber;
 
     SynchronizedCounter*    m_counter;
 
@@ -414,7 +414,7 @@ createThread(
 
 #if defined(WINDOWS_THREAD_FUNCTIONS)
 
-    const unsigned long     theThreadID =
+    const XMLInt32     theThreadID =
             _beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
 
     if (theThreadID == unsigned(-1))
@@ -490,7 +490,7 @@ doCountedThreads(
 void
 startThread(
             ThreadInfo                  theThreadInfo[],
-            long                        theThreadNumber)
+            XMLInt32                    theThreadNumber)
 {
     bool    fResult = false;
 
@@ -530,14 +530,14 @@ void
 doContinuousThreads(
             const SynchronizedCounter&  theCounter,
             ThreadInfo                  theThreadInfo[],
-            long                        theThreadCount,
+            XMLInt32                    theThreadCount,
             clock_t&                    theClock)
 {
     while(fContinue == true)
     {
         if (theCounter.getCounter() < theThreadCount)
         {
-            for (long i = 0; i < theThreadCount && fContinue == true; ++i)
+            for (XMLInt32 i = 0; i < theThreadCount && fContinue == true; ++i)
             {
                 if (theThreadInfo[i].m_done == true)
                 {
@@ -554,8 +554,8 @@ doContinuousThreads(
 
 void
 doThreads(
-            long    theThreadCount,
-            bool    fContinuous)
+            XMLInt32 theThreadCount,
+            bool     fContinuous)
 {
     if (fContinuous == true)
     {
@@ -584,7 +584,7 @@ doThreads(
 
         SynchronizedCounter     theCounter;
 
-        long    i = 0;
+        XMLInt32    i = 0;
 
         while (i < theThreadCount && fContinue == true)
         {

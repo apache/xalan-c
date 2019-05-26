@@ -1414,7 +1414,7 @@ ElemNumber::getFormattedNumber(
                         executionContext.getMemoryManager(),
                         getNumberFormatter(executionContext));
 
-                formatter->format(listElement, theResult);
+                formatter->format(static_cast<XMLUInt64>(listElement), theResult);
 
                 const XalanDOMString::size_type     lengthNumString = theResult.length();
 

@@ -131,7 +131,7 @@ ICUXalanNumberFormatProxy::format(
 
 {
     // $$$ ToDo: Fix this!
-    return format(static_cast<unsigned long>(theValue), theResult);
+    return format(theValue, theResult);
 }
 
 
@@ -143,7 +143,7 @@ ICUXalanNumberFormatProxy::format(
 
 {
     // $$$ ToDo: Fix this!
-    return format(static_cast<long>(theValue), theResult);
+    return format(theValue, theResult);
 }
 
 
