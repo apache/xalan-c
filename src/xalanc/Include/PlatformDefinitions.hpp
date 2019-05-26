@@ -68,15 +68,9 @@ namespace xalanc = XALAN_CPP_NAMESPACE;
 
 namespace XALAN_CPP_NAMESPACE {
 
-#if XERCES_VERSION_MAJOR < 3
-typedef unsigned int    XalanSize_t;
-typedef unsigned int    XalanFilePos;
-typedef XMLSSize_t      XalanFileLoc;
-#else
 typedef XMLSize_t       XalanSize_t;
 typedef XMLFilePos      XalanFilePos;
 typedef XMLFileLoc      XalanFileLoc;
-#endif
 
 typedef XMLCh           XalanDOMChar;
 typedef unsigned int    XalanUnicodeChar;
