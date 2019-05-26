@@ -476,7 +476,7 @@ XalanTranscodingServices::MakeTranscoderException::MakeTranscoderException(
             theBuffer,
             XalanMessages::CreateTranscoderError_2Param,
             NumberToDOMString(
-                static_cast<long>(theCode),
+                static_cast<XMLInt64>(theCode),
                 theBuffer).c_str(),
             theEncoding),
         theBuffer.getMemoryManager(),

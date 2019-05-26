@@ -664,7 +664,7 @@ protected:
     }
 
     void
-    writeNumericCharacterReference(unsigned long  theNumber)
+    writeNumericCharacterReference(XMLUInt32  theNumber)
     {
         m_writer.write(value_type(XalanUnicode::charAmpersand));
         m_writer.write(value_type(XalanUnicode::charNumberSign));

@@ -1148,7 +1148,7 @@ XSLTEngineImpl::traceSelect(
         const ECGetCachedString     theGuard1(executionContext);
 
         XalanDOMString& theBuffer = theGuard1.get();
-        NumberToDOMString(nl.getLength(), theBuffer);
+        NumberToDOMString(static_cast<XMLUInt64>(nl.getLength()), theBuffer);
 
         msg += theBuffer;
             

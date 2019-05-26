@@ -277,7 +277,7 @@ XalanOutputStreamPrintWriter::print(double  d)
 
 
 void
-XalanOutputStreamPrintWriter::print(int     i)
+XalanOutputStreamPrintWriter::print(XMLInt32     i)
 {
     m_buffer.clear();
 
@@ -289,7 +289,7 @@ XalanOutputStreamPrintWriter::print(int     i)
 
 
 void
-XalanOutputStreamPrintWriter::print(long    l)
+XalanOutputStreamPrintWriter::print(XMLInt64    l)
 {
     m_buffer.clear();
 
@@ -375,7 +375,7 @@ XalanOutputStreamPrintWriter::println(double    d)
 
 
 void
-XalanOutputStreamPrintWriter::println(int   i)
+XalanOutputStreamPrintWriter::println(XMLInt32   i)
 {
     print(i);
 
@@ -385,7 +385,7 @@ XalanOutputStreamPrintWriter::println(int   i)
 
 
 void
-XalanOutputStreamPrintWriter::println(long  l)
+XalanOutputStreamPrintWriter::println(XMLInt64  l)
 {
     print(l);
 

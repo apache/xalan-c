@@ -118,10 +118,10 @@ public:
     print(double    d) = 0;
 
     virtual void
-    print(int   i) = 0;
+    print(XMLInt32   i) = 0;
 
     virtual void
-    print(long  l) = 0;
+    print(XMLInt64  l) = 0;
 
     virtual void
     print(const XalanDOMString&     s) = 0;
@@ -151,10 +151,10 @@ public:
     println(double  x) = 0;
 
     virtual void
-    println(int     x) = 0;
+    println(XMLInt32     x) = 0;
 
     virtual void
-    println(long    x) = 0;
+    println(XMLInt64    x) = 0;
 
     virtual void
     println(const XalanDOMString&   s) = 0;

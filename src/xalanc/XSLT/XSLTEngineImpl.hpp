@@ -1541,7 +1541,7 @@ private:
     /**
      * This is used whenever a unique namespace is needed.
      */
-    unsigned long       m_uniqueNSValue;
+    XMLUInt32       m_uniqueNSValue;
 
     ParamVectorType     m_topLevelParams;
 
