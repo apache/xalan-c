@@ -584,11 +584,7 @@ public:
 
 private:
 
-#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
-    static NumberUnion          s_NaN;
-#else
     static const NumberUnion    s_NaN;
-#endif
 
     static const NumberUnion    s_positiveInfinity;
     static const NumberUnion    s_negativeInfinity;
