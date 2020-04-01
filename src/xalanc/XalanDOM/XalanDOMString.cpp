@@ -32,7 +32,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 const XalanDOMChar  XalanDOMString::s_empty = 0;
 
-const XalanDOMString::size_type  XalanDOMString::npos = ~0u;
+const XalanDOMString::size_type  XalanDOMString::npos = static_cast<XalanDOMString::size_type>(-1);
 
 
 XalanDOMString::XalanDOMString(MemoryManager&  theManager) :

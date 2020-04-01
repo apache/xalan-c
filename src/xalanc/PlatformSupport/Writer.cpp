@@ -24,7 +24,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-const size_t    Writer::npos = ~0u;
+const size_t    Writer::npos = static_cast<size_t>(-1);
 
 
 
