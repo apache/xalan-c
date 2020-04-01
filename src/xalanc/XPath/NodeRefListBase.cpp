@@ -24,7 +24,7 @@ namespace XALAN_CPP_NAMESPACE {
 
 
 
-const NodeRefListBase::size_type    NodeRefListBase::npos = ~0u;
+const NodeRefListBase::size_type    NodeRefListBase::npos = static_cast<NodeRefListBase::size_type>(-1);
 
 
 
