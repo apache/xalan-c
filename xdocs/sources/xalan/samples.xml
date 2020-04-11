@@ -69,18 +69,6 @@
 <s2 title="Rebuilding a Sample application">
 <p>Instructions for rebuilding the samples differ depending on whether you are using the binary package or the source 
 package. </p>
-<p>For Windows users, the Xalan Visual C++ workspace contains project configurations for building 
-   each of the samples.  Users who have downloaded the source package, can find the XalanICU.dsw workspace
-   file under:<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&xslt4c-dist;-src\src\xalanc\Projects\Win32\VC6</code>
-   <br/><br/>  and XalanICU.sln solution file under:<br/><br/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&xslt4c-dist;-src\src\xalanc\Projects\Win32\VC7.1</code>
-
-   <br/><br/>  Users who have downloaded the binary package, should use the Samples.dsw workspace file 
-   located under: <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <code>&xslt4c-dist;-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC6</code><br/><br/>
-   or the Samples.sln solution file for .NET V7.1 users, located under: <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <code>&xslt4c-dist;-&lt;my_Win32_distribution&gt;\Samples\Projects\Win32\VC7.1</code><br/><br/>
-</p>
 <p>The Makefile that comes with the UNIX distributions include targets for rebuilding one or all of 
    the sample applications.  To rebuild one or more sample applications from the UNIX source package, 
    go to the &xslt4c-dist;-src directory and run<br/><br/>

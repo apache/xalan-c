@@ -1,6 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-CFBundleName = "XalanLib";
-CFBundleShortVersionString = "XalanLib version 1.7.0";
-CFBundleGetInfoString = "XalanLib version 1.7.0";
-NSHumanReadableCopyright = "Copyright (c) 1999-2004 The Apache Software Foundation. All rights reserved.";
