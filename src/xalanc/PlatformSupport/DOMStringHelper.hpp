@@ -81,7 +81,7 @@ XalanTransform(
             OutputIteratorType  iterator,
             UnaryFunction       function)
 {
-    return std::transform(begin, end, iterator);
+    return std::transform(begin, end, iterator, function);
 }
 
 
