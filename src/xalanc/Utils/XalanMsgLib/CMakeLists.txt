@@ -26,7 +26,10 @@ if(msgloader STREQUAL "inmemory")
     XalanMsgLib.hpp
     XalanMsgLibDefinitions.hpp)
 
-  add_library(xalanMsg ${msglib_sources} ${msglib_headers})
+  set(msglib_resources
+    XalanMsgLib.rc)
+
+  add_library(xalanMsg ${msglib_sources} ${msglib_headers} ${msglib_resources})
   add_dependencies(xalanMsg locale)
   target_compile_definitions(xalanMsg PRIVATE "${MSGLOADER_DEF}=1")
   if(BUILD_SHARED_LIBS)

@@ -952,6 +952,9 @@ set(libxalan_c_HEADERS
   ${include_headers}
 )
 
+set(libxalan_c_RESOURCES
+  XalanC.rc)
+
 if(transcoder STREQUAL "icu")
   list(APPEND libxalan_c_SOURCES ${icubridge_sources})
   list(APPEND libxalan_c_HEADERS ${icubridge_headers})
