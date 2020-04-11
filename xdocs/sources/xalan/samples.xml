@@ -65,33 +65,6 @@
 
 </s2>
 
-<anchor name="rebuilding"/>
-<s2 title="Rebuilding a Sample application">
-<p>Instructions for rebuilding the samples differ depending on whether you are using the binary package or the source 
-package. </p>
-<p>The Makefile that comes with the UNIX distributions include targets for rebuilding one or all of 
-   the sample applications.  To rebuild one or more sample applications from the UNIX source package, 
-   go to the &xslt4c-dist;-src directory and run<br/><br/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>Target</ref></code><br/><br/>
-   where <ref>Target</ref> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, 
-   <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, 
-   <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  
-   <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, 
-   <code>ThreadSafe</code>, <code>TraceListen</code>, <code>TransformToXercesDOM</code>, 
-   <code>UseStylesheetParam</code>, <code>XalanTransform</code>, or 
-   <code>XalanTransformerCallback</code>.</p>
-<p>To rebuild the samples from the UNIX binary package, go to the ../samples directory of your installation,
-   run the runConfigure utility for your target platform, and then run gmake.  For example, AIX users would 
-   issue the following command:<br/><br/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r</code><br/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>cd samples</code><br/><br/>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>Target</ref></code><br/><br/>
-   where <ref>Target</ref> can be Samples (for building all samples), or the individual sample name as 
-   listed above.</p>
-<note>For information on building Apache Module, see <link idref="samples" 
-      anchor="apachemodulexslt">ApacheModuleXSLT</link></note>
-</s2>
-
 <anchor name="apachemodulexslt"/>
 <s2 title="ApacheModuleXSLT">
 <note>This sample must be built with the Apache Web server, and the &xslt4c; distribution files do not include a binary
@@ -108,8 +81,7 @@ package. </p>
 <note>You may need to adjust the Visual C++ or Makefile settings to locate the required Apache header files. As shipped, the Visual C++ 
       project file looks in \Apache Group\Apache\src\include, and the UNIX Makefile looks in usr/lib.</note>
 <p>To build the Apache module, follow the instructions in <link idref="buildlibs" anchor="winbldenv">Steps for doing a Windows 
-   build</link> or <link idref="buildlibs" anchor="unixbldenv">Steps for doing a UNIX build</link>. For UNIX platforms, you do the build with<br/> 
-   <code>gmake ApacheModuleXSLT</code>.</p>
+   build</link> or <link idref="buildlibs" anchor="unixbldenv">.</p>
   
 <s3 title="Setting up and using ApacheModuleXSLT">
 <p>To use ApacheModuleXSLT, do the following:</p>

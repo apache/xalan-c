@@ -62,87 +62,8 @@ See: <jump href="BUILD-LIBS.html">BUILD-LIBS.html</jump></p>
 
 <anchor name="unix"/>
 <s3 title="Steps for doing a UNIX build">
-<p>For users who want to build in the UNIX environment,</p>
-<ol>
-  <li>The Xalan build files are written for GNU make, and will not work with other make utilities.<br/><br/></li>    
-  <li>Set the XERCESCROOT environment variable to the path to the root directory of &xml4c;.<br/><br/></li>    
-  <li>Set the XALANCROOT environment variable to the path to the c directory in the root directory of the &xslt4c;
-      distribution.  For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to 
-      "/home/mydir/&xslt4c-unix_root;". <br/><br/></li>
-  <li>(Optional) If you decide to build with ICU, integrate the build with ICU by installing the ICU (see <link 
-      idref="usagepatterns" anchor="icu">Using the ICU</link>) and defining XALAN_USE_ICU to a value, for example:
-      export XALAN_USE_ICU=true.  Set the ICUROOT environment variable to the path to the root directory of ICU.  
-      Note that building Xalan with ICU requires that Xerces must also be built with ICU.<br/><br/></li>
-  <li>Change directory to XALANCROOT. You can also build Xalan-C outside of the source tree, but you will need to adjust the path to the
-      runConfigure script in the next step.<br/><br/></li>      
-  <li>Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as 
-      indicated below.  The runConfigure utility is used to generate the appropriate Makefile for 
-      the desired build platform based on the options specified by the user. Valid options for the 
-      runConfigure utility are:<br/><br/>
-      <code>./runConfigure -p &lt;value&gt; -c &lt;value&gt; -x &lt;value&gt; [-[flag] &lt;value&gt;]</code><br/><br/>
-      <table>
-        <tr><th>flag</th><th>Description</th></tr>
-        <tr><td>p</td><td>Build platform. Option must be provided by user. Valid values <br/>include: 
-                          aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,<br/> 
-                          tru64, macosx, cygwin. </td></tr>
-        <tr><td>c</td><td>C compiler name. Example: gcc, cc, c89, xlc_r, etc.</td></tr>
-        <tr><td>x</td><td>C++ compiler name. Example: g++, xlC_r, CC, etc.</td></tr>
-        <tr><td>d</td><td>Indicates build is a debug build. Takes no values. Default is no <br/>debug.</td></tr>
-        <tr><td>t</td><td>Transcoder to use. Valid value is 'icu'. Default is null.</td></tr>
-        <tr><td>m</td><td>Type of localization support method. Valid values include: inmem, <br/>icu, and nls. 
-                          Default is inmem.</td></tr>
-        <tr><td>M</td><td>Locale for Message Localization Support. Default is "en_US"</td></tr>
-        <tr><td>r</td><td>Threads option. Valid values include: pthread or dce. Default is <br/>pthread. 
-                          (valid on HP-UX only)</td></tr>
-        <tr><td>b</td><td>Specify whether it is a 32-bit or 64-bit build. Valid values are 32 <br/>and 64. 
-                          Default is 32-bit</td></tr>
-        <tr><td>P</td><td>Install root directory. Used if invoking build with gmake install or <br/>gmake 
-                          install-package. Default install root directory is /usr/local</td></tr>
-        <tr><td>l</td><td>Extra link options other than the default. Default is null</td></tr>
-        <tr><td>z</td><td>Extra compiler options other than the default. Default is null</td></tr>
-        <tr><td>C</td><td>Extra configuration options.</td></tr>
-        <tr><td>h</td><td>To get help on the above commands. Default is no help.</td></tr>
-      </table><br/>
-      <ref>Linux using GCC:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c gcc -x g++</code><br/>
-      <ref>Linux using the Intel compiler:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c icc -x icc</code><br/>
-      <ref>AIX (32-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
-      <ref>AIX (64-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64</code><br/><br/>
-      <ref>Cygwin (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p cygwin -c gcc -x g++</code><br/><br/>
-      <ref>HP-UX 11 (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
-      <ref>HP-UX 11 (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
-      <ref>HP-UX 11 for Itanium (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC</code><br/><br/>
-      <ref>HP-UX 11 for Itanium (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC -b 64</code><br/><br/>
-      <ref>Solaris (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC</code><br/><br/>
-      <ref>Solaris (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC -b 64</code><br/><br/>
-      if you choose to install the distribution after building the libraries and executables, 
-      then you will need to indicate where you would like the distribution to be installed. 
-      To specify the install directory for your distribution, specify the flag -P &lt;install directory&gt;. 
-      for example, building and installing on the AIX platform:<br/><br/>
-      <code>./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan</code><br/><br/>
-      <note>The standard binary directories bin, lib, and include are created in the specified directory only if the install or 
-            install-package option is specified in the build process.<br/><br/></note>
-      To see the other runConfigure flags you may include, use the help flag:<br/><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -h</code><br/><br/></li>
-  <li>Purge the previous build:<br/><br/>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make clean</code><br/><br/></li>
-  <li>Run the new build:<br/><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
-      or<br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
-      where <ref>targ</ref> can be one of:
-      <table>
-        <tr><th>targ</th><th>Description</th></tr>
-        <tr><td>all</td><td>Build the libraries and Xalan executable. This is the default target <br/>if no targ 
-                            is specified.</td></tr>
-        <tr><td>clean</td><td>Deletes existing binaries, executables, libraries, tests, and <br/>samples.</td></tr>
-        <tr><td>install</td><td>Build the library, executables, and samples, and copy them (along with <br/>the header files) 
-                                the specified install location.</td></tr>
-        <tr><td>install-package</td><td>Installs the library, executables, and samples to the <br/>specified location.</td></tr>
-        <tr><td>Samples</td><td>Builds the samples.</td></tr>
-        <tr><td>Tests</td><td>Builds the tests.</td></tr>
-      </table>
-      </li>
-</ol>
+<p>For users who want to build in the UNIX environment, please use the provided
+CMake build</p>
 </s3>
 
 </s1>
