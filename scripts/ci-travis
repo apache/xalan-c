@@ -5,37 +5,6 @@
 set -e
 set -x
 
-# Test autoconf build
-autoconf_build()
-{
-    opts=""
-    if [ -n "$3" ]; then
-        opts="$opts -m $3"
-    fi
-    if [ -n "$4" ]; then
-        opts="$opts -t $4"
-    fi
-    case $(uname -s) in
-        Linux) opts="$opts -p linux";;
-        Darwin) opts="$opts -p macosx";;
-    esac
-
-    autoreconf -ivf
-
-    export XALANCROOT=$(pwd)
-    export CXXFLAGS=-std=c++11
-
-    mkdir autoconf-build
-    cd autoconf-build
-    echo "Running ../runConfigure -P $(pwd)/../autoconf-install) ${opts}"
-    ../runConfigure -P $(pwd)/../autoconf-install ${opts}
-    make
-    make samples
-    make install
-    make install-package
-    make tests
-}
-
 # Install needed tools
 cmake_deps()
 {
@@ -111,23 +80,8 @@ cmake_build()
     ctest -V
 }
 
-build=$1
-shift
-
-case $build in
-    autoconf)
-        echo "Testing Autoconf build"
-        autoconf_build "$@"
-        ;;
-    cmake)
-        echo "Testing CMake build"
-        cmake_deps "$@"
-        cmake_build "$@"
-        ;;
-    *)
-        echo "Invalid argument: \"$arg\"" >&2
-        exit 1
-        ;;
-esac
+echo "Testing CMake build"
+cmake_deps "$@"
+cmake_build "$@"
 
 exit 0
