@@ -107,8 +107,8 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_11.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_12.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC11\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -144,8 +144,8 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_11.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <AdditionalDependencies>xerces-c_3D.lib;XalanMessages_1_12.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC11\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -178,8 +178,8 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_11.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_12.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC11\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -217,8 +217,8 @@
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_11.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <AdditionalDependencies>xerces-c_3.lib;XalanMessages_1_12.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC11\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

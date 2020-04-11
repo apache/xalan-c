@@ -69,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12D.dll"
 				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12D.dll"
 				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
@@ -229,7 +229,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 			/>
@@ -311,7 +311,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				TargetMachine="17"
@@ -390,7 +390,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12D.dll"
 				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
@@ -468,7 +468,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11D.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12D.dll"
 				LinkTimeCodeGeneration="0"
 				TargetMachine="17"
 			/>
@@ -550,7 +550,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 			/>
@@ -632,7 +632,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\XalanMessages_1_11.dll"
+				OutputFile="$(OutDir)\XalanMessages_1_12.dll"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				TargetMachine="17"

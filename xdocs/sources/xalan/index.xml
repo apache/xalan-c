@@ -30,7 +30,7 @@
 <li><link anchor="getstarted">Getting Started</link></li>
 <li><link anchor="getWhatNeeded">Getting What You Need</link></li>
 </ul>
-<p>The old Xalan-C/C++ 1.10 release can be found at 
+<p>The old Xalan-C/C++ 1.11 release can be found at 
 <jump href="../old/xalan-c/index.html">xml.apache.org/xalan-c</jump>.</p>
 
 <anchor name="whatisxalan"/>
@@ -43,7 +43,7 @@ The engine also supports the entry of top-level stylesheet parameters.
 Documentation exists on how to extend the library with 
 your own custom XPath functions.
 </p>
-<p>Xalan-C++ version 1.11 is a robust implementation of the 
+<p>Xalan-C++ version 1.12 is a robust implementation of the 
 W3C Recommendations for 
 <jump href="http://www.w3.org/TR/xslt">XSL Transformations (XSLT)</jump> 
 and the 
@@ -236,8 +236,8 @@ Binary packages comprise the compiled libraries, the Xalan command line utility,
 The documentation package contains the pre-built documentation. 
 The source package contains the sources to build everything.
 </p>
-<p>The current Xalan-C/C++ Version 1.11 is compatible with the stable releases of 
-<jump href="http://xerces.apache.org/xerces-c">Xerces-C/C++</jump> Version 3.0 and newer. The current stable release for Xerces-C/C++ is 3.1.1.
+<p>The current Xalan-C/C++ Version 1.12 is compatible with the stable releases of 
+<jump href="http://xerces.apache.org/xerces-c">Xerces-C/C++</jump> Version 3.0 and newer. The current stable release for Xerces-C/C++ is 3.2.3.
 </p>
 <p>The previous Xalan-C/C++ Version 1.10 works with Xerces-C/C++ Versions 2.7.0 and 2.8.0.
 </p>
@@ -248,7 +248,7 @@ send your comments to the <jump href="mailto:c-users@xalan.apache.org">xalan-c-u
 send your comments to the <jump href="mailto:dev@xalan.apache.org">xalan-dev</jump> mail list.
 </p>
 <p>Binary releases are not yet available. 
-We would like to distribute Xalan-C/C++ Version 1.11 binary releases 
+We would like to distribute Xalan-C/C++ Version 1.12 binary releases 
 using the same platforms specified for the compatible Xerces-C binary packages.
 </p>
 </s2>
@@ -280,9 +280,9 @@ Use your favorite subversion 'svn' utility for download.
 <jump href="http://xerces.apache.org/xerces-c/download.cgi">Xerces-C/C++ (XML) packages</jump> 
 are available for download.
 </p>
-<note>The sources from the Xalan-C repository are current for Version 1.11 
+<note>The sources from the Xalan-C repository are current for Version 1.12 
 until released packages are available. 
-You can help us prepare for a Version 1.11 release 
+You can help us prepare for a Version 1.12 release 
 by providing packages for your platforms 
 and let us know of your building issues.
 </note><br/>

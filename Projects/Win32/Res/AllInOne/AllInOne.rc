@@ -28,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,11,0,0
- PRODUCTVERSION 1,11,0,0
+ FILEVERSION 1,12,0,0
+ PRODUCTVERSION 1,12,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -46,13 +46,13 @@ BEGIN
         BEGIN
             VALUE "Comments", "Dynamic linked library for Xalan-C++"
             VALUE "CompanyName", "Apache Software Foundation"
-            VALUE "FileDescription", "Dynamic Link Library for Xalan-C++ Version 1.11.0"
-            VALUE "FileVersion", "1, 11, 0, 0"
-            VALUE "InternalName", "Xalan-C_1_11_0.dll"
+            VALUE "FileDescription", "Dynamic Link Library for Xalan-C++ Version 1.12.0"
+            VALUE "FileVersion", "1, 12, 0, 0"
+            VALUE "InternalName", "Xalan-C_1_12_0.dll"
             VALUE "LegalCopyright", "Copyright © Apache Software Foundation 1999-2008. Subject to licensing terms"
-            VALUE "OriginalFilename", "Xalan-C_1_11_0.dll"
-            VALUE "ProductName", "Xalan-C++ Version 1.11.0"
-            VALUE "ProductVersion", "1, 11, 0, 0"
+            VALUE "OriginalFilename", "Xalan-C_1_12_0.dll"
+            VALUE "ProductName", "Xalan-C++ Version 1.12.0"
+            VALUE "ProductVersion", "1, 12, 0, 0"
         END
     END
     BLOCK "VarFileInfo"

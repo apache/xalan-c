@@ -48,8 +48,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_11.lib"
-				OutputFile="$(OutDir)/Xalan-C_1_11.dll"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_12.lib"
+				OutputFile="$(OutDir)/Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(OutDir)"
@@ -122,8 +122,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_11D.lib"
-				OutputFile="$(OutDir)/Xalan-C_1_11D.dll"
+				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_12D.lib"
+				OutputFile="$(OutDir)/Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug;$(OutDir)"
@@ -194,8 +194,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_11D.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)/Xalan-C_1_11D.dll"
+				AdditionalDependencies="xerces-c_3D.lib XalanMessages_1_12D.lib icuucd.lib icuind.lib"
+				OutputFile="$(OutDir)/Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug,$(OutDir);$(ICUROOT)\lib"
@@ -268,8 +268,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_11.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)/Xalan-C_1_11.dll"
+				AdditionalDependencies="xerces-c_3.lib XalanMessages_1_12.lib icuuc.lib icuin.lib"
+				OutputFile="$(OutDir)/Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(OutDir);$(ICUROOT)\lib"

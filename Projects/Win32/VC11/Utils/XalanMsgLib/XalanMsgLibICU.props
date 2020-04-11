@@ -27,8 +27,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <TXT_rule>
-      <CommandLineTemplate>$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_11 --destdir $(IntDir)  $(OutDir)Nls\Include\en_US.txt</CommandLineTemplate>
-      <Outputs>$(IntDir)XalanMessages_1_11_en_US.res</Outputs>
+      <CommandLineTemplate>$(ICUROOT)\bin\genrb --verbose --package-name XalanMessages_1_12 --destdir $(IntDir)  $(OutDir)Nls\Include\en_US.txt</CommandLineTemplate>
+      <Outputs>$(IntDir)XalanMessages_1_12_en_US.res</Outputs>
       <ExecutionDescription>Processing ICU resource file</ExecutionDescription>
     </TXT_rule>
   </ItemDefinitionGroup>
@@ -59,8 +59,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <LST_rule>
-      <CommandLineTemplate>$(ICUROOT)\bin\pkgdata --name XalanMessages_1_11 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(IntDir)%(Filename).lst</CommandLineTemplate>
-      <Outputs>$(OutDir)XalanMessages_1_11.dll,$(OutDir)XalanMessages_1_11.lib,$(OutDir)XalanMessages_1_11.dat,$(OutDir)XalanMessages_1_11.exp</Outputs>
+      <CommandLineTemplate>$(ICUROOT)\bin\pkgdata --name XalanMessages_1_12 -T $(IntDir) -v -O R:$(ICUROOT) --mode dll -d $(OutDir) $(IntDir)%(Filename).lst</CommandLineTemplate>
+      <Outputs>$(OutDir)XalanMessages_1_12.dll,$(OutDir)XalanMessages_1_12.lib,$(OutDir)XalanMessages_1_12.dat,$(OutDir)XalanMessages_1_12.exp</Outputs>
       <ExecutionDescription>Building resource DLL</ExecutionDescription>
     </LST_rule>
   </ItemDefinitionGroup>
