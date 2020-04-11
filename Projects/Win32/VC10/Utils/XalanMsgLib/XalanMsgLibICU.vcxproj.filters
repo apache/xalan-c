@@ -30,30 +30,30 @@
     </TXT_rule>
   </ItemGroup>
   <ItemGroup>
-    <LST_rule Include="..\..\..\..\..\Build\Win32\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win32\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <Filter>Source Files</Filter>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win32\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win32\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <Filter>Source Files</Filter>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win64\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win64\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <Filter>Source Files</Filter>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win64\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win64\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <Filter>Source Files</Filter>
     </LST_rule>
   </ItemGroup>
   <ItemGroup>
-    <RES_rule Include="..\..\..\..\..\Build\Win64\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win64\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <Filter>Source Files</Filter>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win64\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win64\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <Filter>Source Files</Filter>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win32\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win32\VC10\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <Filter>Source Files</Filter>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win32\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win32\VC10\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <Filter>Source Files</Filter>
     </RES_rule>
   </ItemGroup>

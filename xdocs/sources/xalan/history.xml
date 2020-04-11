@@ -16,6 +16,17 @@
  * limitations under the License.
 -->
 
+<s3 title="Changes for &xslt4c; version 1.12">
+<p>This is a general bug fix release with added compatibility and stability features.</p>
+<p>Major updates since version 1.11 include:</p>
+<ul>
+  <li>CMake build for all supported platforms</li>
+  <li>C++11, C++14 and C++17 compatibility fixes</li>
+  <li><link anchor="bugfix12">Bugs fixed in this release</link>.</li>
+</ul>
+</s3>
+
+
 <s3 title="Changes for &xslt4c; version 1.11">
 <p>This is a general bug fix release with added stability features.
    Many null pointer references have been fixed.</p>

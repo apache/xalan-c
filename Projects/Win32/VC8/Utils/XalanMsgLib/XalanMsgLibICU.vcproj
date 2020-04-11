@@ -292,7 +292,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -312,7 +312,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -340,7 +340,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -368,7 +368,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win32\VC8\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
@@ -396,7 +396,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res"
+				RelativePath="..\..\..\..\..\Build\Win64\VC8\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -424,7 +424,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\build\win32\vc8\debug\utils\xalanmsglibicu\XalanMessages_1_11_en_US.lst"
+				RelativePath="..\..\..\..\..\build\win32\vc8\debug\utils\xalanmsglibicu\XalanMessages_1_12_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|x64"
@@ -452,7 +452,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_11_en_US.lst"
+				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_12_en_US.lst"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -472,7 +472,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_11_en_US.res"
+				RelativePath="..\..\..\..\..\build\win32\vc8\release\utils\xalanmsglibicu\XalanMessages_1_12_en_US.res"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

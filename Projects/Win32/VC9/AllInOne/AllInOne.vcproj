@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3D.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -160,7 +160,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3D.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -248,7 +248,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -339,7 +339,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir)"
 				GenerateDebugInformation="true"
@@ -429,7 +429,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Release;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -520,7 +520,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3.lib icuuc.lib icuin.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Release;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -608,7 +608,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3D.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC9\Debug;$(OutDir);$(ICUROOT)\lib"
 				GenerateDebugInformation="true"
@@ -695,7 +695,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_3D.lib icuucd.lib icuind.lib"
-				OutputFile="$(OutDir)\Xalan-C_1_11D.dll"
+				OutputFile="$(OutDir)\Xalan-C_1_12D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win64\VC9\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC9\Debug;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib"
 				GenerateDebugInformation="true"

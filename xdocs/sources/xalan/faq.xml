@@ -100,9 +100,9 @@
 <li>The Xerces-C/C++ source distribution package or a compatible binary distribution package.</li>
 <li>A compatible Microsoft Visual Studio .NET (2003, 2005, 2008, 2010) software development platform.</li>
 </ul>
-<p>The Xalan-C/C++ Version 1.11 (pre-release) is available from the Apache Subversion
+<p>The Xalan-C/C++ Version 1.12 (pre-release) is available from the Apache Subversion
    repository at <em>http://svn.apache.org/repos/asf/xalan/c/trunk/.</em></p>
-<p>After Xalan-C/C++ Version 1.11 is released, it can be downloaded from:
+<p>After Xalan-C/C++ Version 1.12 is released, it can be downloaded from:
    <jump href="http://www.apache.org/dyn/closer.cgi/xalan/xalan-c">Xalan Distributions</jump>.</p>
 <p>The Xerces-C/C++ Version 3.1.1 is can be downloaded from:
    <jump href="http://www.apache.org/dyn/closer.cgi/xerces/c/3">Xerces Distributions</jump>.</p>
@@ -135,7 +135,7 @@
    <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">
       http://oss.software.ibm.com/icu/index.html</jump>.</p>
    <p>Xalan release 1.10 was tested with &icu-current;. The curent Xalan
-      release 1.11 is not fully tested with IBM-ICU.</p>
+      release 1.12 is not fully tested with IBM-ICU.</p>
    <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
    <!--icuNote-->
 </a>

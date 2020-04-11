@@ -51,7 +51,7 @@ browser.  Some selected platforms also have binary packages.
 </table>
 
 <p><em>Download Xerces-C/C++ XML Parser Library</em></p>
-<p>The Xalan-C/C++ 1.11 library requires the
+<p>The Xalan-C/C++ 1.12 library requires the
 <jump href="http://www.apache.org/dyn/mirrors/mirrors.cgi/xerces/c">Xerces-C/C++ XML</jump> 
 Parser 3.0 or newer, version 3.1.1 is preferred.
 </p>
@@ -108,8 +108,8 @@ and the
 <s3 title="Source Packages">
 <p><em>Xalan-C/C++ <jump href="http://www.apache.org/dist/xalan/xalan-c/KEYS">KEYS</jump></em></p>
 <ul>
- <li>xalan-c-1.11-src.tar.gz</li>
- <li>xalan-c-1.11-src.zip</li>
+ <li>xalan-c-1.12-src.tar.gz</li>
+ <li>xalan-c-1.12-src.zip</li>
 </ul>
 <p>You can download the Xalan-C/C++ source packages from the 
    <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/sources">
@@ -132,10 +132,10 @@ interactive API (Application Program Interface) pages.
 </p>
 <p><em>Xalan-C/C++ <jump href="http://www.apache.org/dist/xalan/xalan-c/KEYS">KEYS</jump></em></p>
 <ul>
- <li>xalan-c-1.11-docs-html-full.tar.gz</li>
- <li>xalan-c-1.11-docs-html-full.zip</li>
- <li>xalan-c-1.11-docs-html-nograf.tar.gz</li>
- <li>xalan-c-1.11-docs-html-nograf.zip</li>
+ <li>xalan-c-1.12-docs-html-full.tar.gz</li>
+ <li>xalan-c-1.12-docs-html-full.zip</li>
+ <li>xalan-c-1.12-docs-html-nograf.tar.gz</li>
+ <li>xalan-c-1.12-docs-html-nograf.zip</li>
 </ul>
 <p>You can download the Xalan-C/C++ documentation packages from the 
    <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/docs">
@@ -168,39 +168,39 @@ separately managed.  There is no synchronization of product distribution.</note>
 
 <p><em>Windows Packages - 32 BIT</em></p>
 <ul>
- <li>xalan_c-1.11-x86-windows-vc71.zip for MS VS 2003</li>
- <li>xalan_c-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
- <li>xalan_c-1.11-x86-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_c-1.11-x86-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_c-1.12-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan_c-1.12-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan_c-1.12-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_c-1.12-x86-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p>Combined with Xerces Parser</p>
 <ul>
- <li>xalan_comb-1.11-x86-windows-vc71.zip for MS VS 2003</li>
- <li>xalan_comb-1.11-x86-windows-vc8.zip for MS VS 2005 </li>
- <li>xalan_comb-1.11-x86-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_comb-1.11-x86-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_comb-1.12-x86-windows-vc71.zip for MS VS 2003</li>
+ <li>xalan_comb-1.12-x86-windows-vc8.zip for MS VS 2005 </li>
+ <li>xalan_comb-1.12-x86-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_comb-1.12-x86-windows-vc10.zip for MS VS 2010</li>
 </ul> 
 <p><em>Windows Packages - 64 BIT</em></p>
 <ul>
- <li>xalan_c-1.11-amd64-windows-vc8.zip for MS VS 2005</li>
- <li>xalan_c-1.11-amd64-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_c-1.11-amd64-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_c-1.12-amd64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan_c-1.12-amd64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_c-1.12-amd64-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p>Combined with Xerces Parser</p>
 <ul>
- <li>xalan_comb-1.11-amd64-windows-vc8.zip for MS VS 2005</li>
- <li>xalan_comb-1.11-amd64-windows-vc9.zip for MS VS 2008</li>
- <li>xalan_comb-1.11-amd64-windows-vc10.zip for MS VS 2010</li>
+ <li>xalan_comb-1.12-amd64-windows-vc8.zip for MS VS 2005</li>
+ <li>xalan_comb-1.12-amd64-windows-vc9.zip for MS VS 2008</li>
+ <li>xalan_comb-1.12-amd64-windows-vc10.zip for MS VS 2010</li>
 </ul>
 <p><em>BSD Packages - 64 BIT</em></p>
 <ul>
- <li>xalan-c-1.11-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
- <li>xalan_combined-c-1.11-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
+ <li>xalan-c-1.12-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
+ <li>xalan_combined-c-1.12-x86_64-freebsd_9-gcc_4_2.tar.gz</li>
 </ul>
 <p><em>Linux Packages</em></p>
 <ul>
- <li>xalan-c-1.11-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
- <li>xalan_combined-c-1.11-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
+ <li>xalan-c-1.12-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
+ <li>xalan_combined-c-1.12-x86_64-linux_2_6_32-gcc_4_4.tar.gz</li>
 </ul>
 <p>You can download the Xalan-C/C++ compiled binary packages from the 
    <jump href="http:///www.apache.org/dyn/mirrors/mirrors.cgi/xalan/xalan-c/binaries">

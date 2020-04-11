@@ -113,42 +113,42 @@
     </TXT_rule>
   </ItemGroup>
   <ItemGroup>
-    <LST_rule Include="..\..\..\..\..\Build\Win32\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win32\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win32\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win32\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win64\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win64\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </LST_rule>
-    <LST_rule Include="..\..\..\..\..\Build\Win64\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.lst">
+    <LST_rule Include="..\..\..\..\..\Build\Win64\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.lst">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </LST_rule>
   </ItemGroup>
   <ItemGroup>
-    <RES_rule Include="..\..\..\..\..\Build\Win64\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win64\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win64\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win64\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win32\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win32\VC11\Debug\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </RES_rule>
-    <RES_rule Include="..\..\..\..\..\Build\Win32\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_11_en_US.res">
+    <RES_rule Include="..\..\..\..\..\Build\Win32\VC11\Release\Utils\XalanMsgLibICU\XalanMessages_1_12_en_US.res">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

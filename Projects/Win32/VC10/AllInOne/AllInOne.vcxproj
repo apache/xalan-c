@@ -178,7 +178,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -216,7 +216,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -251,7 +251,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -291,7 +291,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -328,7 +328,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -368,7 +368,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3.lib;icuuc.lib;icuin.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Release;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -405,7 +405,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win32\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -443,7 +443,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>xerces-c_3D.lib;icuucd.lib;icuind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)Xalan-C_1_11D.dll</OutputFile>
+      <OutputFile>$(OutDir)Xalan-C_1_12D.dll</OutputFile>
       <AdditionalLibraryDirectories>$(XERCESCROOT)\Build\Win64\VC10\Debug;$(XERCESCROOT)\lib;$(OutDir);$(ICUROOT64)\lib;$(ICUROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

@@ -55,7 +55,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_3.lib XalanMessages_1_11.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_11.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_3.lib XalanMessages_1_12.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1_12.dll" /implib:"..\..\..\..\Build\Win32\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release" /libpath:"..\..\..\..\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release" /libpath:"$(XERCESCROOT)\lib"
 
 !ELSEIF  "$(CFG)" == "AllInOne - Win32 Debug"
 
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_3D.lib XalanMessages_1_11D.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_11D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_3D.lib XalanMessages_1_12D.lib /nologo /dll /debug /machine:I386 /out:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1_12D.dll" /implib:"..\..\..\..\Build\Win32\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug" /libpath:"..\..\..\..\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug" /libpath:"$(XERCESCROOT)\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "AllInOne - Win64 Release"
@@ -109,7 +109,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_3.lib XalanMessages_1_11.lib /nologo /dll /pdb:none /machine:IX86 /nodefaultlib:"libmmd.lib" /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_11.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
+# ADD LINK32 xerces-c_3.lib XalanMessages_1_12.lib /nologo /dll /pdb:none /machine:IX86 /nodefaultlib:"libmmd.lib" /out:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1_12.dll" /implib:"..\..\..\..\Build\Win64\VC6\Release/Xalan-C_1.lib" /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /libpath:"..\..\..\..\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Release" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "AllInOne - Win64 Debug"
 
@@ -135,7 +135,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_3D.lib XalanMessages_1_11D.lib /nologo /dll /debug /machine:IX86 /nodefaultlib:"libmmdd.lib" /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_11D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
+# ADD LINK32 xerces-c_3D.lib XalanMessages_1_12D.lib /nologo /dll /debug /machine:IX86 /nodefaultlib:"libmmdd.lib" /out:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1_12D.dll" /implib:"..\..\..\..\Build\Win64\VC6\Debug/Xalan-C_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /libpath:"..\..\..\..\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\Build\Win64\VC6\Debug" /libpath:"$(XERCESCROOT)\lib" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

@@ -50,7 +50,7 @@ Xalan-C sources to be found in a directory named <code><em>xalan-src</em></code>
 The Xerces-C sources are expected to be found in a directory named <code><em>xerces-src</em></code>.</p>
 
 <p>The supplemental package building scripts for Windows look for the Xalan-C 
-sources to be found in a directory named <code><em>xalan-src-11</em></code> 
+sources to be found in a directory named <code><em>xalan-src-12</em></code> 
 and the Xerces-C sources to be found in a directory named <code><em>xerces-src-31</em></code>.</p>
 
 <p>When building the Xalan-C library and sample programs, 
@@ -87,7 +87,7 @@ Binary packages for Linux and UNIX systems have the following directory structur
 <tr><td>./bin/</td><td>Contains the Xalan.exe command line and DLLs</td></tr>
 <tr><td>./lib/</td><td>Contains the linker libraries</td></tr>
 <tr><td>./include/xalanc/</td><td>Contains the Xalan-C header files</td></tr>
-<tr><td>./doc/xalanc-1.11/</td><td>Contains license and other information</td></tr>
+<tr><td>./doc/xalanc-1.12/</td><td>Contains license and other information</td></tr>
 </table>
 
 <p>Supplemental scripts for Linux and UNIX builds are available in the 
@@ -138,13 +138,13 @@ are subdirectories of the platform directory.
 Libraries for several Visual Studio development systems 
 can be installed on the same Windows computer.</p>
 <table>
-<tr><td>XALANCPKG-11-31-VC71</td><td>for Visual Studio 2003 (Win32)</td></tr>
-<tr><td>XALANCPKG-11-31-VC80</td><td>for Visual Studio 2005 (Win32)</td></tr>
-<tr><td>XALANCPKG-11-31-VC90</td><td>for Visual Studio 2008 (Win32)</td></tr>
-<tr><td>XALANCPKG-11-31-VC100</td><td>for Visual Studio 2010 (Win32)</td></tr>
-<tr><td>XALANCPKG-11-31-X64-VC80</td><td>for Visual Studio 2005 (amd64)</td></tr>
-<tr><td>XALANCPKG-11-31-X64-VC90</td><td>for Visual Studio 2008 (amd64)</td></tr>
-<tr><td>XALANCPKG-11-31-X64-VC100</td><td>for Visual Studio 2010 (amd64)</td></tr>
+<tr><td>XALANCPKG-12-31-VC71</td><td>for Visual Studio 2003 (Win32)</td></tr>
+<tr><td>XALANCPKG-12-31-VC80</td><td>for Visual Studio 2005 (Win32)</td></tr>
+<tr><td>XALANCPKG-12-31-VC90</td><td>for Visual Studio 2008 (Win32)</td></tr>
+<tr><td>XALANCPKG-12-31-VC100</td><td>for Visual Studio 2010 (Win32)</td></tr>
+<tr><td>XALANCPKG-12-31-X64-VC80</td><td>for Visual Studio 2005 (amd64)</td></tr>
+<tr><td>XALANCPKG-12-31-X64-VC90</td><td>for Visual Studio 2008 (amd64)</td></tr>
+<tr><td>XALANCPKG-12-31-X64-VC100</td><td>for Visual Studio 2010 (amd64)</td></tr>
 </table>
 
 <p>Supplemental scripts for Windows builds are available in the source distribution 

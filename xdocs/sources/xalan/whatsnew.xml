@@ -28,6 +28,7 @@
   <li><link anchor="status">Status</link></li>
   <li><link anchor="contact">Getting in Touch</link></li>
   <li><link anchor="history">History of Software Changes</link></li>
+  <li><link anchor="bugfix12">Bug Fixes in Release 1.12</link></li>
   <li><link anchor="bugfix11">Bug Fixes in Release 1.11</link></li>
   <li><link anchor="bugfix10">Bug Fixes in Release 1.10</link></li>
   <li><link anchor="bugs">Bug reporting</link></li>    
@@ -36,6 +37,21 @@
 
 <anchor name="status"/>
 <s2 title="Status">
+
+<p><em>Release notes for Xalan-C/C++ Version 1.12</em>
+</p>
+<p>This is primarily a bug-fix release of version 1.11.  Xerces-C/C++
+versions 3.0 and newer are supported. Xerces-C/C++ Version 3.2.3 is the
+preferred stable release.
+</p>
+<p>Binary packages are not provided.  Please use Microsoft vcpkg, MacOS X homebrew,
+FreeBSD ports or your distribution's package manager to install Xalan-C.  If your
+system's package manager does not yet provide a packaged version of Xalan-C,
+please consider contributing support.
+</p>
+<p>Xalan-C/C++ supports Microsoft Visual Studio 2019 and earlier via the new
+CMake build, which replaces the old version-specific project and solution files.
+</p>
 
 <p><em>Release notes for Xalan-C/C++ Version 1.11</em>
 </p>

@@ -16,17 +16,17 @@
  -->
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_11_0">
-<!ENTITY xslt4c-current "Xalan-C++ Version 1.11">
-<!ENTITY xslt4c-windll "Xalan-C_1_11.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c.so.111">
-<!ENTITY xslt4c-aixlib "libxalan-c111.so">
-<!ENTITY xslt4c-hplib "libxalan-c.sl.111.0">
-<!ENTITY xslt4c-solarislib "libxalan-c1_11.so">
-<!ENTITY xslt4c-msgdll "XalanMessages_1_11.dll">
-<!ENTITY xslt4c-msglib "XalanMessages_1_11.lib">
-<!ENTITY xslt4c-msgsho "libxalanMsg111.so">
-<!ENTITY xslt4c-msgcat "xalanMsg1_11.cat">
+<!ENTITY xslt4c-dist "Xalan-C_1_12_0">
+<!ENTITY xslt4c-current "Xalan-C++ Version 1.12">
+<!ENTITY xslt4c-windll "Xalan-C_1_12.dll">
+<!ENTITY xslt4c-linuxlib "libxalan-c.so.112">
+<!ENTITY xslt4c-aixlib "libxalan-c112.so">
+<!ENTITY xslt4c-hplib "libxalan-c.sl.112.0">
+<!ENTITY xslt4c-solarislib "libxalan-c1_12.so">
+<!ENTITY xslt4c-msgdll "XalanMessages_1_12.dll">
+<!ENTITY xslt4c-msglib "XalanMessages_1_12.lib">
+<!ENTITY xslt4c-msgsho "libxalanMsg112.so">
+<!ENTITY xslt4c-msgcat "xalanMsg1_12.cat">
 <!ENTITY xslt4c-win_root "xml-xalan\c">
 <!ENTITY xslt4c-unix_root "xml-xalan/c">
 
@@ -38,12 +38,12 @@
 <!ENTITY redhat_72_icc-dist "-redhat_72-icc_71">
 <!ENTITY redhat_72_ecc-dist "-redhat_72_64-ecc_71">
 <!ENTITY redhat_AS4_gcc-dist "-redhat_AS4-gcc_343">
-<!ENTITY hpux11a-dist "-hpux_11-acc_a03">
-<!ENTITY hpux11a_64-dist "-hpux_11_64-acc_a03">
-<!ENTITY hpux11c-dist "-hpux_11-acc_c03">
-<!ENTITY hpux11c_64-dist "-hpux_11_64-acc_c03">
-<!ENTITY hpux11i-dist "-hpux_11i-acc_c03">
-<!ENTITY hpux11i_64-dist "-hpux_11i_64-acc_c03">
+<!ENTITY hpux11a-dist "-hpux_12-acc_a03">
+<!ENTITY hpux11a_64-dist "-hpux_12_64-acc_a03">
+<!ENTITY hpux11c-dist "-hpux_12-acc_c03">
+<!ENTITY hpux11c_64-dist "-hpux_12_64-acc_c03">
+<!ENTITY hpux11i-dist "-hpux_12i-acc_c03">
+<!ENTITY hpux11i_64-dist "-hpux_12i_64-acc_c03">
 <!ENTITY solaris_28-dist "-solaris_28-cc_62">
 <!ENTITY solaris_28_64-dist "-solaris_28_64-cc_62">
 <!ENTITY suse_72_zOS-dist "-suse_72_zOS-gcc_29">

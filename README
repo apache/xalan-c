@@ -1,5 +1,5 @@
 
-Apache Xalan-C/C++ XSLT Library Version 1.11
+Apache Xalan-C/C++ XSLT Library Version 1.12
 
 Project Description:
     The Apache Xalan C/C++ Project provides a library and a 
@@ -38,7 +38,7 @@ Prerequisite:
 
 UNIX PACKAGE INSTALL PROJECTS:
 
-(prefix)/share/doc/xalan-c-1.11/
+(prefix)/share/doc/xalan-c-1.12/
     README        - This Document
     LICENSE       - The Software License
     NOTICE        - The Software Attributions
@@ -51,16 +51,16 @@ UNIX PACKAGE INSTALL PROJECTS:
     - directory containing library header files
 
 (prefix)/lib/
-    libxalan-c.so             -> libxalan-c.so.111.0
-    lib/libxalan-c.so.111     -> libxalan-c.so.111.0
-    libxalan-c.so.111.0
-    libxalanMsg.so            -> libxalanMsg.so.111.0
-    libxalanMsg.so.111        -> libxalanMsg.so.111.0
-    libxalanMsg.so.111.0
+    libxalan-c.so             -> libxalan-c.so.112.0
+    lib/libxalan-c.so.112     -> libxalan-c.so.112.0
+    libxalan-c.so.112.0
+    libxalanMsg.so            -> libxalanMsg.so.112.0
+    libxalanMsg.so.111        -> libxalanMsg.so.112.0
+    libxalanMsg.so.112.0
 
 WINDOWS PACKAGE INSTALL PRODUCTS:
 
-(prefix)/doc/xalan-c-1.11/
+(prefix)/doc/xalan-c-1.12/
     README        - This Document
     LICENSE       - The Software License
     NOTICE        - The Software Attributions
@@ -68,10 +68,10 @@ WINDOWS PACKAGE INSTALL PRODUCTS:
 
 (prefix)/bin/
     Xalan.exe     - command line XSLT stylesheet transform utility
-    Xalan-C_1_11.dll         - Release build library
-    Xalan-C_1_11D.dll        - Debug build library
-    XalanMessages_1_11.dll   - Release build messages
-    XalanMessages_1_11D.dll  - Debug build messages
+    Xalan-C_1_12.dll         - Release build library
+    Xalan-C_1_12D.dll        - Debug build library
+    XalanMessages_1_12.dll   - Release build messages
+    XalanMessages_1_12D.dll  - Debug build messages
 
 (prefix)/include/xalanc/
     - directory containing library header files
@@ -81,10 +81,10 @@ WINDOWS PACKAGE INSTALL PRODUCTS:
     Xalan-C_1.lib            - Windows DLL library definitions
     Xalan-C_1D.exp           - Windows DLL export definitions
     Xalan-C_1D.lib           - Windows DLL library definitions
-    XalanMessages_1_11.exp   - Windows DLL export definitions
-    XalanMessages_1_11.lib   - Windows DLL library definitions
-    XalanMessages_1_11D.exp  - Windows DLL export definitions
-    XalanMessages_1_11D.lib  - Windows DLL library definitions
+    XalanMessages_1_12.exp   - Windows DLL export definitions
+    XalanMessages_1_12.lib   - Windows DLL library definitions
+    XalanMessages_1_12D.exp  - Windows DLL export definitions
+    XalanMessages_1_12D.lib  - Windows DLL library definitions
 
 SUPPORTED PLATFORMS:
     - This is only a partial list
