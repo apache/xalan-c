@@ -1,7 +1,6 @@
 language: c
 
-sudo: false
-dist: trusty
+dist: bionic
 
 cache:
   directories:
@@ -15,26 +14,23 @@ addons:
     - autoconf
     - automake
     - libtool
+    - cmake
+    - ninja-build
 
 before_install:
-  - if test "$(uname -s)" = Darwin; then brew update; fi
-  - if test "$(uname -s)" = Darwin; then brew install xerces-c; fi
+  - if test "$(uname -s)" = Darwin; then brew update ; fi
+  - if test "$(uname -s)" = Darwin; then brew install xerces-c icu4c ninja ; fi
 
 os:
   - linux
   - osx
 
 env:
-  matrix:
-    - BUILD=autoconf TYPE=Release MSGLOADER=inmem TRANSCODER=default
-    - BUILD=cmake TOOL="Unix Makefiles" TYPE=Debug MSGLOADER=inmemory TRANSCODER=default
-    - BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
+  - TOOL="Unix Makefiles" TYPE=Debug MSGLOADER=inmemory TRANSCODER=default
+  - TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
 
-matrix:
+jobs:
   fast_finish: true
-  exclude:
-    - os: osx
-      env: BUILD=cmake TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
 
 script:
-  - ./scripts/ci-travis "$BUILD" "$TOOL" "$TYPE" "$MSGLOADER" "$TRANSCODER"
+  - ./scripts/ci-travis "$TOOL" "$TYPE" "$MSGLOADER" "$TRANSCODER"
