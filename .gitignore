@@ -1,7 +1,4 @@
 **/Makefile
-Makefile.incl
-config.log
-config.status
 bin/
 lib/
 nls/
@@ -10,6 +7,8 @@ CMakeCache.txt
 **/cmake_install.cmake
 **/CTestTestfile.cmake
 **/CMakeFiles/
+cmake-build*
+.idea/
 xalan-c.pc
 src/xalanc/NLS/gen/
 src/xalanc/NLS/include/

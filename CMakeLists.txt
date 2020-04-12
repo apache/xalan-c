@@ -63,7 +63,8 @@ set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_BUGREPORT "dev@xalan.apache.org")
 set(PACKAGE_URL "https://xalan.apache.org/xalan-c/")
 
-find_package(Threads)
+find_package(Threads REQUIRED)
+include(Doxygen)
 include(GNUInstallDirs)
 include(XalanWarnings)
 include(XalanICU)
@@ -98,6 +99,7 @@ add_subdirectory(src/xalanc/TestXSLT)
 add_subdirectory(src/xalanc/TestXPath)
 add_subdirectory(samples)
 add_subdirectory(Tests)
+add_subdirectory(docs/doxygen)
 
 # Display configuration summary
 message(STATUS "")
