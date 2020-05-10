@@ -52,7 +52,7 @@
 #error Unknown compiler!
 #endif
 
-#include "XalanVersion.hpp"
+#include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)
 
