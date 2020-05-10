@@ -1,0 +1,11 @@
+<map id="xalanc::VariablesStack::ParamsVectorEntry" name="xalanc::VariablesStack::ParamsVectorEntry">
+<area shape="rect" id="node1" title=" " alt="" coords="106,273,262,315"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XObjectPtr.html" title="Class to hold XObjectPtr return types." alt="" coords="5,184,136,211"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanQName.html" title="Class to represent a qualified name." alt="" coords="241,95,383,121"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1ElemVariable.html" title=" " alt="" coords="270,184,415,211"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="255,5,417,32"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="425,95,623,121"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="439,184,598,211"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="622,184,773,211"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="466,5,617,32"/>
+</map>

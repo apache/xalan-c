@@ -1,0 +1,5 @@
+<map id="xalanc::Stylesheet" name="xalanc::Stylesheet">
+<area shape="rect" id="node1" title="This class represents the base stylesheet or an &quot;import&quot; stylesheet." alt="" coords="19,80,149,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1StylesheetRoot.html" title="This acts as the stylesheet root of the stylesheet tree, and holds values that are shared by all styl..." alt="" coords="5,155,163,181"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="9,5,159,32"/>
+</map>

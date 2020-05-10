@@ -1,0 +1,12 @@
+<map id="xalanc::Counter" name="xalanc::Counter">
+<area shape="rect" id="node1" title="&lt;meta name=&quot;usage&quot; content=&quot;internal&quot;&gt; A class that does incremental counting for support of xsl:numb..." alt="" coords="964,56,1077,83"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="676,5,805,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ElemNumber.html" title=" " alt="" coords="669,56,812,83"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="305,119,504,145"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="661,115,820,141"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="665,169,816,196"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="11,93,162,120"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,144,168,171"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="672,227,809,269"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="311,235,498,277"/>
+</map>

@@ -1,0 +1,44 @@
+<map id="xalanc::PrefixResolver" name="xalanc::PrefixResolver">
+<area shape="rect" id="node1" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="5,781,156,808"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ElementPrefixResolverProxy.html" title=" " alt="" coords="209,573,408,614"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="209,639,408,665"/>
+<area shape="rect" id="node36" href="$classxalanc_1_1Stylesheet.html" title="This class represents the base stylesheet or an &quot;import&quot; stylesheet." alt="" coords="243,689,374,716"/>
+<area shape="rect" id="node38" href="$classxalanc_1_1XalanDocumentPrefixResolver.html" title=" " alt="" coords="213,741,404,782"/>
+<area shape="rect" id="node39" href="$classxalanc_1_1XalanNamespacesStack_1_1PrefixResolverProxy.html" title=" " alt="" coords="204,806,413,847"/>
+<area shape="rect" id="node40" href="$classxalanc_1_1XalanQName_1_1PrefixResolverProxy.html" title=" " alt="" coords="235,871,382,913"/>
+<area shape="rect" id="node41" href="$classxalanc_1_1XalanSimplePrefixResolver.html" title=" " alt="" coords="223,937,395,978"/>
+<area shape="rect" id="node42" href="$classxalanc_1_1XSLTEngineImpl.html" title="It&#39;s the responsibility of the XSLTEngineImpl class, collaborating with the XML parser liaison,..." alt="" coords="227,1003,390,1029"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1ElemApplyImport.html" title=" " alt="" coords="483,5,649,32"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1ElemAttribute.html" title=" " alt="" coords="493,56,639,83"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1ElemCallTemplate.html" title=" " alt="" coords="479,107,653,133"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1ElemChoose.html" title=" " alt="" coords="495,157,637,184"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1ElemComment.html" title=" " alt="" coords="489,208,643,235"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1ElemCopyOf.html" title=" " alt="" coords="495,259,637,285"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1ElemDecimalFormat.html" title=" " alt="" coords="473,309,659,336"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1ElemEmpty.html" title=" " alt="" coords="498,360,634,387"/>
+<area shape="rect" id="node12" href="$classxalanc_1_1ElemFallback.html" title=" " alt="" coords="493,411,639,437"/>
+<area shape="rect" id="node13" href="$classxalanc_1_1ElemForEach.html" title=" " alt="" coords="493,461,639,488"/>
+<area shape="rect" id="node15" href="$classxalanc_1_1ElemForwardCompatible.html" title=" " alt="" coords="461,512,671,539"/>
+<area shape="rect" id="node16" href="$classxalanc_1_1ElemIf.html" title=" " alt="" coords="514,563,618,589"/>
+<area shape="rect" id="node17" href="$classxalanc_1_1ElemMessage.html" title=" " alt="" coords="491,613,641,640"/>
+<area shape="rect" id="node18" href="$classxalanc_1_1ElemNumber.html" title=" " alt="" coords="495,664,637,691"/>
+<area shape="rect" id="node19" href="$classxalanc_1_1ElemOtherwise.html" title=" " alt="" coords="488,715,644,741"/>
+<area shape="rect" id="node20" href="$classxalanc_1_1ElemPI.html" title=" " alt="" coords="511,765,621,792"/>
+<area shape="rect" id="node21" href="$classxalanc_1_1ElemSort.html" title=" " alt="" coords="505,816,627,843"/>
+<area shape="rect" id="node22" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="491,867,641,893"/>
+<area shape="rect" id="node23" href="$classxalanc_1_1ElemText.html" title="This primarily acts as a marker on the element stack to signal that whitespace should be preserved." alt="" coords="505,917,627,944"/>
+<area shape="rect" id="node24" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="487,968,645,995"/>
+<area shape="rect" id="node25" href="$classxalanc_1_1ElemUse.html" title=" " alt="" coords="505,1019,627,1045"/>
+<area shape="rect" id="node31" href="$classxalanc_1_1ElemValueOf.html" title=" " alt="" coords="494,1069,638,1096"/>
+<area shape="rect" id="node32" href="$classxalanc_1_1ElemVariable.html" title=" " alt="" coords="493,1120,639,1147"/>
+<area shape="rect" id="node34" href="$classxalanc_1_1ElemWhen.html" title=" " alt="" coords="500,1171,632,1197"/>
+<area shape="rect" id="node35" href="$classxalanc_1_1ElemWithParam.html" title=" " alt="" coords="485,1221,647,1248"/>
+<area shape="rect" id="node14" href="$classxalanc_1_1ElemApplyTemplates.html" title=" " alt="" coords="719,461,909,488"/>
+<area shape="rect" id="node26" href="$classxalanc_1_1ElemAttributeSet.html" title=" " alt="" coords="731,917,897,944"/>
+<area shape="rect" id="node27" href="$classxalanc_1_1ElemCopy.html" title=" " alt="" coords="750,968,878,995"/>
+<area shape="rect" id="node28" href="$classxalanc_1_1ElemElement.html" title=" " alt="" coords="741,1019,887,1045"/>
+<area shape="rect" id="node29" href="$classxalanc_1_1ElemLiteralResult.html" title=" " alt="" coords="729,1069,899,1096"/>
+<area shape="rect" id="node30" href="$classxalanc_1_1ElemExtensionCall.html" title=" " alt="" coords="957,1069,1136,1096"/>
+<area shape="rect" id="node33" href="$classxalanc_1_1ElemParam.html" title=" " alt="" coords="746,1120,882,1147"/>
+<area shape="rect" id="node37" href="$classxalanc_1_1StylesheetRoot.html" title="This acts as the stylesheet root of the stylesheet tree, and holds values that are shared by all styl..." alt="" coords="487,1272,645,1299"/>
+</map>

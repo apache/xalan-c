@@ -1,0 +1,9 @@
+<map id="xalanc::XalanParsedSource" name="xalanc::XalanParsedSource">
+<area shape="rect" id="node1" title="This is abstract base class designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="5,130,187,157"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanDefaultParsedSource.html" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="254,5,434,47"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanDocumentBuilder.html" title="This is abstract base class designed to allow a XalanTranfomer object to use a document that is build..." alt="" coords="245,71,443,98"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanSourceTreeWrapperParsedSource.html" title="This is designed to allow a XalanTranfomer object to wrap a parsed Xerces document." alt="" coords="237,123,451,164"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XercesDOMParsedSource.html" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="235,189,453,215"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XercesDOMWrapperParsedSource.html" title="This is designed to allow a XalanTranfomer object to wrap a parsed Xerces document." alt="" coords="251,240,437,281"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDefaultDocumentBuilder.html" title="This is class is designed to allow a XalanTranfomer object to use a document that is build dynamicall..." alt="" coords="501,64,700,105"/>
+</map>

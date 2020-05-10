@@ -1,0 +1,4 @@
+<map id="xalanc::XalanSourceTreeWrapperParsedSource" name="xalanc::XalanSourceTreeWrapperParsedSource">
+<area shape="rect" id="node1" title="This is designed to allow a XalanTranfomer object to wrap a parsed Xerces document." alt="" coords="5,80,220,121"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanParsedSource.html" title="This is abstract base class designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="22,5,203,32"/>
+</map>

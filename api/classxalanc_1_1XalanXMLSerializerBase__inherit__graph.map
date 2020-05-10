@@ -1,0 +1,6 @@
+<map id="xalanc::XalanXMLSerializerBase" name="xalanc::XalanXMLSerializerBase">
+<area shape="rect" id="node1" title="XalanXMLSerializerBase serves as a base class for XML serializers based on FormatterListener events." alt="" coords="451,27,659,54"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1FormatterToXMLUnicode.html" title="FormatterToXMLUnicode formats SAX&#45;style events into XML." alt="" coords="707,5,921,76"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1FormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="232,27,403,54"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,27,184,54"/>
+</map>

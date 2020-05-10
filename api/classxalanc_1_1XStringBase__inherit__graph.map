@@ -1,0 +1,10 @@
+<map id="xalanc::XStringBase" name="xalanc::XStringBase">
+<area shape="rect" id="node1" title=" " alt="" coords="420,107,559,133"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XString.html" title=" " alt="" coords="647,5,756,32"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XStringAdapter.html" title=" " alt="" coords="624,56,779,83"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XStringCached.html" title=" " alt="" coords="625,107,778,133"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XStringReference.html" title=" " alt="" coords="618,157,785,184"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XTokenStringAdapter.html" title=" " alt="" coords="607,208,796,235"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="259,107,372,133"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,99,211,141"/>
+</map>

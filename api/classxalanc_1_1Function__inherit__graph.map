@@ -1,0 +1,63 @@
+<map id="xalanc::Function" name="xalanc::Function">
+<area shape="rect" id="node1" title=" " alt="" coords="5,1452,124,1479"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1FunctionConcat.html" title="XPath implementation of &quot;concat&quot; function." alt="" coords="202,5,361,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1FunctionContains.html" title="XPath implementation of &quot;contains&quot; function." alt="" coords="197,56,366,83"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1FunctionCurrent.html" title=" " alt="" coords="201,107,361,133"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1FunctionDifference.html" title="XPath implementation of &quot;difference&quot; function." alt="" coords="194,157,369,184"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1FunctionDistinct.html" title="XPath implementation of &quot;difference&quot; function." alt="" coords="200,208,363,235"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1FunctionDocument.html" title=" " alt="" coords="193,259,370,285"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1FunctionElementAvailable.html" title=" " alt="" coords="173,309,390,336"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1FunctionEvaluate.html" title="XPath implementation of &quot;node&#45;set&quot; function." alt="" coords="198,360,365,387"/>
+<area shape="rect" id="node13" href="$classxalanc_1_1FunctionFormatNumber.html" title=" " alt="" coords="179,411,383,437"/>
+<area shape="rect" id="node14" href="$classxalanc_1_1FunctionFunctionAvailable.html" title=" " alt="" coords="197,462,365,503"/>
+<area shape="rect" id="node15" href="$classxalanc_1_1FunctionGenerateID.html" title=" " alt="" coords="190,528,373,555"/>
+<area shape="rect" id="node16" href="$classxalanc_1_1FunctionHasSameNodes.html" title="XPath implementation of &quot;has&#45;same&#45;nodes&quot; function for NodeSets." alt="" coords="175,579,387,605"/>
+<area shape="rect" id="node17" href="$classxalanc_1_1FunctionID.html" title="XPath implementation of &quot;id&quot; function." alt="" coords="216,629,347,656"/>
+<area shape="rect" id="node18" href="$classxalanc_1_1FunctionIntersection.html" title="XPath implementation of &quot;intersection&quot; function for NodeSets." alt="" coords="189,680,374,707"/>
+<area shape="rect" id="node20" href="$classxalanc_1_1FunctionKey.html" title=" " alt="" coords="211,731,352,757"/>
+<area shape="rect" id="node21" href="$classxalanc_1_1FunctionLang.html" title="XPath implementation of &quot;lang&quot; function." alt="" coords="208,781,355,808"/>
+<area shape="rect" id="node22" href="$classxalanc_1_1FunctionNamespaceURI.html" title="XPath implementation of &quot;namespace&#45;uri&quot; function." alt="" coords="177,832,385,859"/>
+<area shape="rect" id="node23" href="$classxalanc_1_1FunctionNodeSet.html" title="XPath implementation of &quot;node&#45;set&quot; function." alt="" coords="197,883,365,909"/>
+<area shape="rect" id="node25" href="$classxalanc_1_1FunctionNormalizeSpace.html" title="XPath implementation of &quot;normalize&#45;space&quot; function." alt="" coords="193,934,369,975"/>
+<area shape="rect" id="node26" href="$classxalanc_1_1FunctionStartsWith.html" title="XPath implementation of &quot;starts&#45;with&quot; function." alt="" coords="191,1000,371,1027"/>
+<area shape="rect" id="node27" href="$classxalanc_1_1FunctionString.html" title="XPath implementation of &quot;string&quot; function." alt="" coords="205,1051,357,1077"/>
+<area shape="rect" id="node28" href="$classxalanc_1_1FunctionSubstring.html" title="XPath implementation of &quot;substring&quot; function." alt="" coords="195,1101,368,1128"/>
+<area shape="rect" id="node29" href="$classxalanc_1_1FunctionSubstringAfter.html" title="XPath implementation of &quot;substring&#45;after&quot; function." alt="" coords="195,1153,368,1194"/>
+<area shape="rect" id="node30" href="$classxalanc_1_1FunctionSubstringBefore.html" title="XPath implementation of &quot;substring&#45;before&quot; function." alt="" coords="195,1218,368,1259"/>
+<area shape="rect" id="node31" href="$classxalanc_1_1FunctionSystemProperty.html" title=" " alt="" coords="175,1284,387,1311"/>
+<area shape="rect" id="node32" href="$classxalanc_1_1FunctionTranslate.html" title="XPath implementation of &quot;translate&quot; function." alt="" coords="196,1335,367,1361"/>
+<area shape="rect" id="node33" href="$classxalanc_1_1FunctionUnparsedEntityURI.html" title=" " alt="" coords="195,1386,368,1427"/>
+<area shape="rect" id="node34" href="$classxalanc_1_1XalanEXSLTFunctionAbs.html" title=" " alt="" coords="176,1452,387,1479"/>
+<area shape="rect" id="node35" href="$classxalanc_1_1XalanEXSLTFunctionAcos.html" title=" " alt="" coords="172,1503,391,1529"/>
+<area shape="rect" id="node36" href="$classxalanc_1_1XalanEXSLTFunctionAlign.html" title=" " alt="" coords="187,1554,375,1595"/>
+<area shape="rect" id="node37" href="$classxalanc_1_1XalanEXSLTFunctionAsin.html" title=" " alt="" coords="174,1620,389,1647"/>
+<area shape="rect" id="node38" href="$classxalanc_1_1XalanEXSLTFunctionAtan.html" title=" " alt="" coords="174,1671,389,1697"/>
+<area shape="rect" id="node39" href="$classxalanc_1_1XalanEXSLTFunctionAtan2.html" title=" " alt="" coords="187,1722,375,1763"/>
+<area shape="rect" id="node40" href="$classxalanc_1_1XalanEXSLTFunctionConcat.html" title=" " alt="" coords="187,1787,375,1829"/>
+<area shape="rect" id="node41" href="$classxalanc_1_1XalanEXSLTFunctionConstant.html" title=" " alt="" coords="187,1853,375,1894"/>
+<area shape="rect" id="node42" href="$classxalanc_1_1XalanEXSLTFunctionCos.html" title=" " alt="" coords="176,1919,387,1945"/>
+<area shape="rect" id="node43" href="$classxalanc_1_1XalanEXSLTFunctionDateTime.html" title=" " alt="" coords="187,1970,375,2011"/>
+<area shape="rect" id="node44" href="$classxalanc_1_1XalanEXSLTFunctionDecodeURI.html" title=" " alt="" coords="187,2035,375,2077"/>
+<area shape="rect" id="node45" href="$classxalanc_1_1XalanEXSLTFunctionEncodeURI.html" title=" " alt="" coords="187,2101,375,2142"/>
+<area shape="rect" id="node46" href="$classxalanc_1_1XalanEXSLTFunctionExp.html" title=" " alt="" coords="176,2167,387,2193"/>
+<area shape="rect" id="node47" href="$classxalanc_1_1XalanEXSLTFunctionHasSameNode.html" title=" " alt="" coords="187,2218,375,2259"/>
+<area shape="rect" id="node48" href="$classxalanc_1_1XalanEXSLTFunctionHighest.html" title=" " alt="" coords="187,2283,375,2325"/>
+<area shape="rect" id="node49" href="$classxalanc_1_1XalanEXSLTFunctionLeading.html" title=" " alt="" coords="187,2349,375,2390"/>
+<area shape="rect" id="node50" href="$classxalanc_1_1XalanEXSLTFunctionLog.html" title=" " alt="" coords="177,2415,386,2441"/>
+<area shape="rect" id="node51" href="$classxalanc_1_1XalanEXSLTFunctionLowest.html" title=" " alt="" coords="187,2466,375,2507"/>
+<area shape="rect" id="node52" href="$classxalanc_1_1XalanEXSLTFunctionMax.html" title=" " alt="" coords="175,2532,388,2559"/>
+<area shape="rect" id="node53" href="$classxalanc_1_1XalanEXSLTFunctionMin.html" title=" " alt="" coords="177,2583,386,2609"/>
+<area shape="rect" id="node54" href="$classxalanc_1_1XalanEXSLTFunctionObjectType.html" title=" " alt="" coords="187,2634,375,2675"/>
+<area shape="rect" id="node55" href="$classxalanc_1_1XalanEXSLTFunctionPadding.html" title=" " alt="" coords="187,2699,375,2741"/>
+<area shape="rect" id="node56" href="$classxalanc_1_1XalanEXSLTFunctionPower.html" title=" " alt="" coords="187,2765,375,2806"/>
+<area shape="rect" id="node57" href="$classxalanc_1_1XalanEXSLTFunctionRandom.html" title=" " alt="" coords="187,2830,375,2871"/>
+<area shape="rect" id="node58" href="$classxalanc_1_1XalanEXSLTFunctionSin.html" title=" " alt="" coords="178,2896,385,2923"/>
+<area shape="rect" id="node59" href="$classxalanc_1_1XalanEXSLTFunctionSqrt.html" title=" " alt="" coords="175,2947,387,2973"/>
+<area shape="rect" id="node60" href="$classxalanc_1_1XalanEXSLTFunctionTan.html" title=" " alt="" coords="177,2997,386,3024"/>
+<area shape="rect" id="node61" href="$classxalanc_1_1XalanEXSLTFunctionTrailing.html" title=" " alt="" coords="187,3049,375,3090"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanEXSLTFunctionDifference.html" title=" " alt="" coords="439,143,627,185"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanEXSLTFunctionDistinct.html" title=" " alt="" coords="439,209,627,250"/>
+<area shape="rect" id="node12" href="$classxalanc_1_1XalanEXSLTFunctionEvaluate.html" title=" " alt="" coords="439,353,627,394"/>
+<area shape="rect" id="node19" href="$classxalanc_1_1XalanEXSLTFunctionIntersection.html" title=" " alt="" coords="439,673,627,714"/>
+<area shape="rect" id="node24" href="$classxalanc_1_1XalanEXSLTFunctionNodeSet.html" title=" " alt="" coords="439,875,627,917"/>
+</map>

@@ -1,0 +1,25 @@
+<map id="xalanc/ICUBridge" name="xalanc/ICUBridge">
+<area shape="rect" id="node1" href="dir_2b905b8b39cf407945c0c5e85a4e6b9d.html" title="ICUBridge" alt="" coords="132,52,212,100"/>
+<area shape="rect" id="node2" href="dir_bd626f48b2f751fd24704cf98093773c.html" title="PlatformSupport" alt="" coords="93,340,208,388"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000003_000005.html" title="3" alt="" coords="137,312,145,327"/>
+<area shape="rect" id="node3" href="dir_31d1584d1b1bd63f85633ff943c76478.html" title="Include" alt="" coords="115,532,187,580"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000003_000004.html" title="4" alt="" coords="103,507,111,521"/>
+<area shape="rect" id="node4" href="dir_83a3b5b40a6f9adf8910408980761211.html" title="XPath" alt="" coords="136,244,208,292"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000003_000018.html" title="1" alt="" coords="176,218,184,233"/>
+<area shape="rect" id="node5" href="dir_f7433f2121216d9de9e3e02d65931268.html" title="XalanDOM" alt="" coords="204,436,287,484"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000003_000010.html" title="1" alt="" coords="270,416,278,431"/>
+<area shape="rect" id="node6" href="dir_d3b8d1cf05e3711a482edb511285ea9d.html" title="XSLT" alt="" coords="209,148,281,196"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000003_000020.html" title="3" alt="" coords="219,121,227,136"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000005_000004.html" title="25" alt="" coords="144,506,159,520"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000005_000010.html" title="21" alt="" coords="208,410,223,424"/>
+<area shape="rect" id="edge8-headlabel" href="dir_000004_000005.html" title="2" alt="" coords="146,400,154,414"/>
+<area shape="rect" id="edge9-headlabel" href="dir_000018_000005.html" title="35" alt="" coords="161,317,175,331"/>
+<area shape="rect" id="edge10-headlabel" href="dir_000018_000004.html" title="22" alt="" coords="121,505,136,520"/>
+<area shape="rect" id="edge11-headlabel" href="dir_000018_000010.html" title="27" alt="" coords="242,409,256,424"/>
+<area shape="rect" id="edge12-headlabel" href="dir_000010_000004.html" title="5" alt="" coords="189,518,197,532"/>
+<area shape="rect" id="edge13-headlabel" href="dir_000020_000005.html" title="52" alt="" coords="192,326,206,341"/>
+<area shape="rect" id="edge14-headlabel" href="dir_000020_000004.html" title="34" alt="" coords="200,545,214,560"/>
+<area shape="rect" id="edge15-headlabel" href="dir_000020_000018.html" title="51" alt="" coords="200,227,215,242"/>
+<area shape="rect" id="edge16-headlabel" href="dir_000020_000010.html" title="31" alt="" coords="248,410,262,425"/>
+<area shape="rect" id="clust1" href="dir_4fe86e58e6df1a0cd67cae514a3234ec.html" title="xalanc" alt="" coords="121,16,223,111"/>
+</map>

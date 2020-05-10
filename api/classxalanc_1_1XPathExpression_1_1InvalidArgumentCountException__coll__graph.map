@@ -1,0 +1,7 @@
+<map id="xalanc::XPathExpression::InvalidArgumentCountException" name="xalanc::XPathExpression::InvalidArgumentCountException">
+<area shape="rect" id="node1" title="Exception class thrown when an invalid number of XPath arguments is encountered." alt="" coords="5,337,219,379"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XPathExpression_1_1XPathExpressionException.html" title="Exception class thrown when an invalid XPath expression is encountered." alt="" coords="19,247,205,288"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanXPathException.html" title=" " alt="" coords="17,171,207,197"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XSLException.html" title=" " alt="" coords="37,95,187,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="53,5,171,32"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,201,211,242"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="259,208,372,235"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XBoolean.html" title=" " alt="" coords="440,31,563,57"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XNodeSetBase.html" title="Class to hold XPath return types." alt="" coords="424,81,579,108"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XNumberBase.html" title=" " alt="" coords="426,157,577,184"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1XResultTreeFrag.html" title=" " alt="" coords="420,208,583,235"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1XStringBase.html" title=" " alt="" coords="432,259,571,285"/>
+<area shape="rect" id="node17" href="$classxalanc_1_1XToken.html" title=" " alt="" coords="446,309,557,336"/>
+<area shape="rect" id="node18" href="$classxalanc_1_1XUnknown.html" title=" " alt="" coords="437,360,565,387"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XNodeSet.html" title="Class to hold XPath return types." alt="" coords="668,5,793,32"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XNodeSetNodeProxy.html" title="Class to hold XPath return types." alt="" coords="636,56,825,83"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XNumber.html" title=" " alt="" coords="671,107,791,133"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XTokenNumberAdapter.html" title=" " alt="" coords="631,157,831,184"/>
+<area shape="rect" id="node12" href="$classxalanc_1_1XString.html" title=" " alt="" coords="676,208,785,235"/>
+<area shape="rect" id="node13" href="$classxalanc_1_1XStringAdapter.html" title=" " alt="" coords="653,259,808,285"/>
+<area shape="rect" id="node14" href="$classxalanc_1_1XStringCached.html" title=" " alt="" coords="654,309,807,336"/>
+<area shape="rect" id="node15" href="$classxalanc_1_1XStringReference.html" title=" " alt="" coords="647,360,814,387"/>
+<area shape="rect" id="node16" href="$classxalanc_1_1XTokenStringAdapter.html" title=" " alt="" coords="636,411,825,437"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="xalanc::ElemExtensionCall" name="xalanc::ElemExtensionCall">
+<area shape="rect" id="node1" title=" " alt="" coords="15,304,194,331"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ElemLiteralResult.html" title=" " alt="" coords="19,229,190,256"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ElemUse.html" title=" " alt="" coords="44,155,165,181"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="5,80,204,107"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="29,5,180,32"/>
+</map>
