@@ -19,7 +19,8 @@ addons:
 
 before_install:
   - if test "$(uname -s)" = Darwin; then brew update ; fi
-  - if test "$(uname -s)" = Darwin; then brew install xerces-c icu4c ninja ; fi
+  - if test "$(uname -s)" = Darwin; then brew install xerces-c icu4c || true; fi
+  - if test "$(uname -s)" = Darwin; then brew install ninja ; fi
 
 os:
   - linux
