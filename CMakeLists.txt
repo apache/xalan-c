@@ -43,8 +43,16 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 list(APPEND CMAKE_MODULE_PATH
      "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-# Read version information from version.incl.
-include(XalanDLL)
+# Versioning information
+set(XALAN_META_PROJECT_NAME xalan-c)
+set(XALAN_META_LIB_MAJOR_VER 112)
+set(XALAN_META_LIB_MAJOR_DOT_VER 1.12)
+set(XALAN_META_LIB_MINOR_VER 0)
+set(XALAN_META_VER 1_12_0)
+set(XALAN_META_MS_VER 1_12)
+set(XALAN_META_MS_LIB_MAJOR_VER 1)
+set(XALAN_META_MS_LIB_MINOR_VER 12)
+
 string(REGEX REPLACE "([^_]+)_([^_]+)_([^_]+)" "\\1.\\2.\\3" xalan_c_version "${XALAN_META_VER}")
 message(STATUS "Configuring Apache Xalan-C++ version ${xalan_c_version}")
 
@@ -56,6 +64,7 @@ enable_testing()
 
 find_package(Threads)
 include(GNUInstallDirs)
+include(XalanDLL)
 include(XalanWarnings)
 include(XalanICU)
 include(XalanXerces)

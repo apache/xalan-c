@@ -34,25 +34,3 @@ endif()
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS=1 -D_SCL_SECURE_NO_WARNINGS=1)
 endif()
-
-# Versioning information
-
-file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/../version.incl" xalan_verinfo
-  REGEX "^[^#].*=.*")
-
-foreach(item IN LISTS xalan_verinfo)
-  string(REGEX REPLACE "^([^= ]+) *= *(.*)"
-    "\\1" meta_key "${item}")
-  string(REGEX REPLACE "^([^= ]+) *= *(.*)"
-    "\\2" meta_value "${item}")
-  set(XALAN_META_${meta_key} "${meta_value}")
-endforeach()
-
-string(REGEX REPLACE "^([0-9]+)_(.*)"
-  "\\1"
-  XALAN_META_MS_LIB_MAJOR_VER
-  "${XALAN_META_MS_VER}")
-string(REGEX REPLACE "^([0-9]+)_(.*)"
-  "\\2"
-  XALAN_META_MS_LIB_MINOR_VER
-  "${XALAN_META_MS_VER}")
