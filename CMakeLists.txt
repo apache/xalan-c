@@ -43,25 +43,20 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 list(APPEND CMAKE_MODULE_PATH
      "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-# Versioning information
-set(XALAN_PROJECT_NAME xalan-c)
+# Project version
+project(xalan-c
+        VERSION 1.12.0
+        LANGUAGES C CXX)
+
+# Library version
 set(XALAN_LIB_MAJOR_VER 112)
-set(XALAN_LIB_MAJOR_DOT_VER 1.12)
 set(XALAN_LIB_MINOR_VER 0)
-set(XALAN_VER 1_12_0)
-set(XALAN_MS_VER 1_12)
 set(XALAN_MS_LIB_MAJOR_VER 1)
 set(XALAN_MS_LIB_MINOR_VER 12)
 
-string(REGEX REPLACE "([^_]+)_([^_]+)_([^_]+)" "\\1.\\2.\\3" xalan_c_version "${XALAN_VER}")
-message(STATUS "Configuring Apache Xalan-C++ version ${xalan_c_version}")
+message(STATUS "Configuring Apache Xalan-C++ version ${xalan-c_VERSION}")
 
-# Project version
-project(${XALAN_PROJECT_NAME}
-        VERSION "${xalan_c_version}"
-        LANGUAGES C CXX)
 enable_testing()
-
 find_package(Threads)
 include(GNUInstallDirs)
 include(XalanDLL)
@@ -105,7 +100,6 @@ message(STATUS "Xalan-C++ configuration summary")
 message(STATUS "-------------------------------")
 message(STATUS "")
 message(STATUS "  Version:                     ${xalan-c_VERSION}")
-message(STATUS "  Library version:             ${XALAN_VER}")
 if(MSVC)
 message(STATUS "  Library major version:       ${XALAN_MS_LIB_MAJOR_VER}")
 message(STATUS "  Library minor version:       ${XALAN_MS_LIB_MINOR_VER}")
