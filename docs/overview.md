@@ -26,16 +26,17 @@ transformation result).
 Note: The XSL stylesheet may generate and refer to cascading style
 sheets ([CSS](http://www.w3.org/Style/CSS/)) as part of its output.
 
-In the following example, the foo.xsl stylesheet is used to transform `foo.xml` into `foo.out`:
+In the following example, the *foo.xsl* stylesheet is used to transform
+*foo.xml* into *foo.out*:
 
-`foo.xml`:
+*foo.xml*:
 
 ```xml
 <?xml version="1.0"?>
 <doc>Hello</doc>
 ```
 
-`foo.xsl`:
+*foo.xsl*:
 
 ```xml
 <?xml version="1.0"?> 
@@ -46,7 +47,7 @@ In the following example, the foo.xsl stylesheet is used to transform `foo.xml` 
 </xsl:stylesheet>
 ```
 
-`foo.out`:
+*foo.out*:
 
 ```xml
 <out>Hello</out>

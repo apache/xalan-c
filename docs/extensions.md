@@ -15,9 +15,9 @@ five XSLT data types: `node-set`, `result-tree-fragment`, `string`,
 `boolean` or `number`. 
 
 You can send arguments to an extension function in the form of XPath
-expressions, literals (for string, boolean, and number), the values
-returned by other functions, and XSL variables or parameters set to any
-of the preceding.
+expressions, literals (for `string`, `boolean`, and `number`), the
+values returned by other functions, and XSL variables or parameters set
+to any of the preceding.
 
 For an example that implements, installs, and uses three extension
 functions, see the [External Functions](samples.md#externalfunctions)
@@ -114,18 +114,21 @@ private:
 
 ## Installing an extension function
 
-`XalanTransformer` provides methods for installing and uninstalling
-external functions:
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+provides methods for installing and uninstalling external functions:
 
-* `installExternalFunction()` makes the function available in the
-  current instance of `XalanTransformer`. Use
-  `uninstallExternalFunction()` to remove the function.
-* `installExternalFunctionGlobal()` makes the function available
-  globally. `Use uninstallExternalFunctionGlobal()` to remove the
-  function. The global install and uninstall operations are not
-  thread-safe.  However, all global functions should be thread-safe,
-  because multiple threads could call a particular function instance at
-  the same time.
+* [`installExternalFunction()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a7d932d74897e12629afd62bba2735456)
+  makes the function available in the current instance of `XalanTransformer`. Use
+  [`uninstallExternalFunction()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a8dbb4538357ab2909925dd16a449dbac)
+  to remove the function.
+* [`installExternalFunctionGlobal()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a7d4f49b03739feaa01cdbffd5668e736)
+  makes the function available globally.
+  Use
+  [`uninstallExternalFunctionGlobal()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ab5c8f39bcf0bf84b6bbe0607bbe4afde)
+  to remove the function. The global install and uninstall operations
+  are not thread-safe.  However, all global functions should be
+  thread-safe, because multiple threads could call a particular
+  function instance at the same time.
 
 These methods include arguments for the namespace, the function name,
 and the function implementation.
@@ -187,9 +190,9 @@ To use the extension function in a stylesheet, you must do the following:
    Qualified Name (QName) made up of the prefix you declared in step 1
    and the function name you specified when you installed the function.
    <br>
-   You can use XPath expressions, literals (for string, boolean, and
-   number), and values returned by other functions to specify function
-   arguments.
+   You can use XPath expressions, literals (for `string`, `boolean`,
+   and `number`), and values returned by other functions to specify
+   function arguments.
 
 Suppose, for example, you are working with XML documents containing
 area elements like `<area value="397"/>`, where the value attribute
@@ -277,6 +280,7 @@ syntactically possible:
 ```
 
 The `NodeRefListBase` is in fact a list of references into the XML
-document, so keep in mind that `getNextSibling()`, for example, gets
-you the next sibling in the document, which may not be the next `Node`
-in the `node-set`.
+document, so keep in mind that
+[`getNextSibling()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanNode.html#a9b4a7333371ffee9a6fd851203f4c98a),
+for example, gets you the next sibling in the document, which may not
+be the next `Node` in the `node-set`.

@@ -11,6 +11,8 @@ The focus of this release is stability and compatibility.
 * Xerces-C++ versions 3.0 and newer are supported. Xerces-C++
   Version 3.2.3 is the preferred stable release.
 * Addition of a CMake build for all supported platforms.
+* Rewrite of StyleBook XML documentation in Markdown, hosted at
+  [https://apache.github.io/xalan-c/](https://apache.github.io/xalan-c/).
 * Removal of MacOS and Windows project files for old IDE versions
 * Xalan-C++ new supports Microsoft Visual Studio 2019 and earlier
   via the new CMake build, which replaces the old version-specific

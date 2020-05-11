@@ -2,28 +2,39 @@
   
 ## Introduction
 
-To perform a transformation, use one of the `XalanTransformer`
-`transform()` methods.  The transformation requires an XML source
-document and an XSL stylesheet. Both of these objects may be
-represented by instances of `XSLTInputSource`. You can construct an
-`XSLTInputSource` with a string (the system ID for a file or URI), an
-input stream, or a DOM.
+To perform a transformation, use one of the
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4)
+methods.  The transformation requires an XML source document and an XSL
+stylesheet. Both of these objects may be represented by instances of
+[`XSLTInputSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html).
+You can construct an `XSLTInputSource` with a
+[string](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#ab3f2b4a5da76309980d5c041ea19d285)
+(the system ID for a file or URI), an
+[input stream](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a2acff554b429f9a60216cdf27eced1c4),
+or a
+[DOM](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a96deb7a8eba28cb78cc6521f37fbdebb).
 
 If you are using an XSL stylesheet to perform a series of
-transformations, you can improve performance by calling `transform()` 
-with a compiled stylesheet, an instance of `XalanCompiledStylesheet`. 
+transformations, you can improve performance by calling
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa) 
+with a compiled stylesheet, an instance of
+[`XalanCompiledStylesheet`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanCompiledStylesheet.html).
 If you are transforming an XML source more than once, you should call
-`transform()` with a parsed XML source, an instance of
-`XalanParsedSource`. See
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa) 
+with a parsed XML source, an instance of
+[`XalanParsedSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanParsedSource.html).
+See
 [Performing a series of transformations](#performing-a-series-of-transformations)
 
 If you XML source document contains a stylesheet Processing Instruction
 (PI), you do not need to include a stylesheet object when you call
-`transform()`.
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a4adf2164af0f66831931ee104e383560).
 
-The transformation output is represented by an `XSLTResultTarget`, which
-you can set up to refer to an output stream, the system ID for a file
-or URI, or a Formatter for one of the various styles of DOM output.
+The transformation output is represented by an
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html),
+which you can set up to refer to an output stream, the system ID for a
+file or URI, or a Formatter for one of the various styles of DOM output.
 
 For detailed API documentation, see the Xalan-C++ API (doxygen).  For
 an overview of the command-line utility, see
@@ -31,18 +42,21 @@ an overview of the command-line utility, see
 
 ## Basic usage pattern with the XalanTransformer C++ API
 
-Using `XalanTransformer` and the C++ API, you can perform one or more
-transformations as described in the following steps.
+Using
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+and the C++ API, you can perform one or more transformations as
+described in the following steps.
 
 Note: For a working sample that illustrates these steps, see the
 [XalanTransform](samples.md#xalantransform) sample.
       
 ### 1. Include the required header files
 
-Always start with `xalanc/Include/PlatformDefinitions.hpp`, the
-Xalan-C++ base header file.  Also include
-`xercesc/util/PlatformUtils.hpp`,
-`xalanc/XalanTransformer/XalanTransformer.hpp`, and any other header
+Always start with
+[*xalanc/Include/PlatformDefinitions.hpp*](https://apache.github.io/xalan-c/api/PlatformDefinitions_8hpp.html),
+the Xalan-C++ base header file.  Also include
+*xercesc/util/PlatformUtils.hpp* and
+[*xalanc/XalanTransformer/XalanTransformer.hpp*](https://apache.github.io/xalan-c/api/XalanTransformer_8hpp.html), and any other header
 files your particular application requires.
 
 ```c++
@@ -86,10 +100,14 @@ XalanTransformer theXalanTransformer;
 
 ### 5. Perform each transformation
 
-You can explicitly instantiate `XSLTInputSource` objects for the XML
-source document and XSL stylesheet, and an `XSLTResultTarget` object
-for the output, and then call `XalanTransformer` `transform()` with
-those objects as parameters.  For example:
+You can explicitly instantiate
+[`XSLTInputSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html)
+objects for the XML source document and XSL stylesheet, and an
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html)
+object for the output, and then call
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4)
+with those objects as parameters.  For example:
 
 ```c++
 XSLTInputSource xmlIn("foo.xml");
@@ -112,26 +130,28 @@ int theResult =
     theXalanTransformer.transform(xmlIn,xslIn,xmlOut)
 ```
 
-Keep in mind that `XSLTInputSource` and `XSLTResultTarget` provide a
-variety of single-argument constructors that you can use in this manner:
+Keep in mind that
+[`XSLTInputSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html)
+and
+`XSLTResultTarget`
+provide a variety of single-argument constructors that you can use in
+this manner:
 
-* XSLTInputSource(const char* systemID)
-* XSLTInputSource(const XMLCh* systemID) (Unicode characters)
-* XSLTInputSource(istream* stream)
-* XSLTInputSource(XalanNode* node)
-* XSLTResultTarget(char* fileName)
-* XSLTResultTarget(XalanDOMString& fileName)
-* XSLTResultTarget(ostream* stream)
-* XSLTResultTarget(ostream& stream)  
-* XSLTResultTarget(Writer* characterStream)
-* XSLTResultTarget(XalanDocument* document)
-* XSLTResultTarget(XalanDocumentFragment* documentFragment)
-* XSLTResultTarget(XalanElement* element)
-* XSLTResultTarget(FormatterListener& flistener)
+* [`XSLTInputSource(const char* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a4f64b6ad613e97df373a08560edcbde0)
+* [`XSLTInputSource(const XMLCh* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a1d0c961ce39ef40a9e4d11ecb4bcfe28) (Unicode characters)
+* [`XSLTInputSource(istream* stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a15252c4b7551019fde32c809a925a2e0)
+* [`XSLTInputSource(XalanNode* node)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a96deb7a8eba28cb78cc6521f37fbdebb)
+* [`XSLTResultTarget(char* fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a856d29060f2ec11af6487803b57c9127)
+* [`XSLTResultTarget(XalanDOMString& fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a856d29060f2ec11af6487803b57c9127)
+* [`XSLTResultTarget(ostream* stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#aed57158ea3eabcc3dda8164b8f9afd38)
+* [`XSLTResultTarget(ostream& stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a1dc8e4ec1b6817fcba5463292342e363)  
+* [`XSLTResultTarget(Writer* characterStream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#af1a6f0f49f60232ae5b57c839c35aca0)
+* [`XSLTResultTarget(FormatterListener& flistener)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a931414334729593141383f5c26e0d50d)
 
 Note: Each `transform()` method returns an integer code, 0 for success.
-If an error occurs, you can use the `getLastError()` method to return a
-pointer to the error message.
+If an error occurs, you can use the
+[`getLastError()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a79d2edb51363413a1faa575d0e180c36)
+method to return a pointer to the error message.
 
 ### 6. Shut down Xalan
 
@@ -181,12 +201,15 @@ type double.  The third is a nodeset (`XalanNode *`) parameter, usually
 implemented as a parsed document.
 
 Any XObject that is created outside of the transformation can be
-associated with a top-level parameter.  The `XalanTransformer` has an
-XObject factory whereby top-level parameters can be owned by the
+associated with a top-level parameter.  The
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+has an XObject factory whereby top-level parameters can be owned by the
 `XalanTransformer` object.
 
-To set a stylesheet parameter, use the `XalanTransformer`
-`setStylesheetParam()` method.  The `setStylesheetParam()` method takes
+To set a stylesheet parameter, use the
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+[`setStylesheetParam()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a4d634fc758724facf8ac3b880a783cd1)
+method.  The `setStylesheetParam()` method takes
 two arguments: the parameter name and the value.  The value can be a
 string type, a number double type, an (`XalanNode *`) pointer to a
 nodeset or parsed document, or any XObjectPtr returned from an
@@ -194,10 +217,10 @@ XObject factory.
 
 Top level parameters are sticky.  Once set to an instance of an
 `XalanTransformer` object, they can be used for multiple
-transformations.  The `XalanTransformer` `reset()` method prepares a
-transformer for a new transformation.  Use the
-`clearStylesheetParams()` method to release the top-level stylesheet
-parameters.
+transformations.  The `XalanTransformer` `reset()` private method
+prepares a transformer for a new transformation.  Use the
+[`clearStylesheetParams()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a40a4246572036efcb4b5d373229ecba1)
+method to release the top-level stylesheet parameters.
 
 The `Xalan` command line utility currently supports only a text string
 value for a top-level stylesheet parameter.  The single quotes are
@@ -217,9 +240,11 @@ The [UseStylesheetParam](samples.md#usestylesheetparam) sample
 application supports all three types of top-level stylesheet
 parameters.
 
-The 'C' language interface `XalanCAPI` also supports the three types of
-top-level parameters.  The sample program `TestCAPIparms.c` shows how
-to use top-level parameters with 'C' language programs.
+The 'C' language interface
+[`XalanCAPI`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html)
+also supports the three types of top-level parameters.  The sample
+program *TestCAPIparms.c* shows how to use top-level parameters with
+'C' language programs.
 
 Note: The `Xalan` command line utility should be revised to accommodate
 the number and nodeset types of top-level stylesheet parameters. Only
@@ -230,9 +255,12 @@ useful for the merging of multiple XML documents.
 
 ## Processing output incrementally
 
-`XalanTransformer` provides a `transform()` method that sends the
-output in blocks to a callback function, which enables you to begin
-processing the output while the transformation is still in process:
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+provides a
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a960ea8a2459658b8926db69d3b338814)
+method that sends the output in blocks to a callback function, which
+enables you to begin processing the output while the transformation is
+still in process:
 
 ```c++
 int
@@ -253,17 +281,25 @@ document and compile the XSL stylesheet into binary representations. If
 you plan to use the same XML document or stylesheet in a series of
 transformations, you can improve performance by parsing the XML
 document or compiling the stylesheet once and using the binary
-representation when you call `transform()`.
+representation when you call
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4).
 
-`XalanTransformer` includes methods for creating compiled stylesheets
-and  parsed XML documents: the `compileStylesheet()` method returns a
-`XalanCompiledStylesheet`; the `parseSource()` method returns a pointer
-`XalanParsedSource`.
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+includes methods for creating compiled stylesheets and  parsed XML
+documents: the
+[`compileStylesheet()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a9d31d4b43de86a6077f2df2a5a42c9d5)
+method returns a
+[`XalanCompiledStylesheet`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanCompiledStylesheet.html);
+the
+[`parseSource()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ac03dba7386d874e22bf774ecb8dbd212)
+method returns a pointer
+[`XalanParsedSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanParsedSource.html).
 
 Note: In the case of failure, both methods return 0.
 
-Example using a `XalanCompiledStylesheet` to perform multiple
-transformations:
+Example using a
+[`XalanCompiledStylesheet`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanCompiledStylesheet.html)
+to perform multiple transformations:
 
 ```c++
 XalanCompiledStylesheet* compiledStylesheet = 0;
@@ -277,7 +313,9 @@ theXalanTransformer.transform("foo2.xml", *compiledStylesheet, "foo2.out");
 For a working sample, see the
 [CompileStylesheet](samples.md#compilestylesheet) sample.
 
-Example using a `XalanParsedSource` for multiple transformations:
+Example using a
+[`XalanParsedSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanParsedSource.html)
+for multiple transformations:
 
 ```c++
 XalanParsedSource* parsedXML = 0;
@@ -293,8 +331,10 @@ stylesheet, see [ThreadSafe](samples.md#threadsafe).
 
 ## Working with DOM input and output
 
-You can set up an `XSLTResultTarget` to produce a DOM when you perform
-a transformation. You can also use a DOM as input for a transformation.
+You can set up an
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html)
+to produce a DOM when you perform a transformation. You can also use a
+DOM as input for a transformation.
 
 The following code fragment illustrates the procedures for working with
 DOM output:
@@ -340,9 +380,10 @@ using xalanc::XalanTransformer;
 ```
 
 Note: You can also follow the same process but use a
-`FormatterToDeprecatedXercesDOM` if you require a `DOM_Document`
-output.  However this is discouraged, as support for the deprecated DOM
-may be removed in future releases of Xalan-C++.
+[`FormatterToDeprecatedXercesDOM`](https://apache.github.io/xalan-c/api/classxalanc_1_1FormatterToDeprecatedXercesDOM.html)
+if you require a `DOM_Document` output.  However this is discouraged,
+as support for the deprecated DOM may be removed in future releases of
+Xalan-C++.
 
 If you want to use a Xerces DOM object as input for a transformation
 without wrapping the DOM in a `XercesParserLiaison`, see
@@ -364,9 +405,10 @@ crash.
 ### Passing in a Xerces DOM to a transformation
 
 You may want to use a Xerces DOM that was created without using the
-`XalanTransformer` class.  As the following code snippet illustrates,
-`XercesDOMWrapperParsedSource` to pass in a Xerces DOM as the source
-for an XSL transformation.
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+class.  As the following code snippet illustrates,
+[`XercesDOMWrapperParsedSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XercesDOMWrapperParsedSource.html)
+to pass in a Xerces DOM as the source for an XSL transformation.
 
 ```c++
 #include <xercesc/parsers/DOMParser.hpp>
@@ -419,18 +461,21 @@ XSL stylesheets use XPath expressions to select nodes, specify
 conditions, and generate text for the result tree.  XPath provides an
 API that you can call directly.  For example, you may want to select
 nodes programmatically and do your own processing without a stylesheet.
-Xalan-C++ provides an `XPathEvaluator` interface to simplify the
-process of executing XPath expressions.
+Xalan-C++ provides an
+[`XPathEvaluator`](https://apache.github.io/xalan-c/api/classxalanc_1_1XPathEvaluator.html)
+interface to simplify the process of executing XPath expressions.
 
 For an example that executes XPath expressions against XML source
-files, see [SimpleXPathAPI](samples.md#simplexpathapi) (takes
-advantage of the `XPathEvaluator` interface) and `XPathWrapper`.
+files, see the [SimpleXPathAPI](samples.md#simplexpathapi) sample
+(which takes advantage of the `XPathEvaluator` interface) and the
+`XPathWrapper` sample.
 
 ## Using TraceListener
 
-`TraceListener` is a debugging abstract base class implemented by
-`TraceListenerDefault`. You can use `TraceListener` to trace any
-combination of the following:
+[`TraceListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1TraceListener.html)
+is a debugging abstract base class implemented by
+[`TraceListenerDefault`](https://apache.github.io/xalan-c/api/classxalanc_1_1TraceListenerDefault.html).
+You can use `TraceListener` to trace any combination of the following:
 
 * Calls to templates
 * Calls to template children
@@ -438,14 +483,18 @@ combination of the following:
 * Result tree generation events
 
 To construct a `TraceListener` with `TraceListenerDefault`, you need a
-`PrintWriter` and a boolean for each of these four tracing options. You
-can then use the `XSLTEngineImpl` `setTraceSelects()` and
-`addTraceListener()` methods to add the `TraceListener` to an
-`XSLTProcessor`.
+[`PrintWriter`](https://apache.github.io/xalan-c/api/classxalanc_1_1PrintWriter.html)
+and a boolean for each of these four tracing options. You can then use
+the
+[`XSLTEngineImpl`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html)
+[`setTraceSelects()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html#a166e1275b28edc1102a1ec3cb83f7e70)
+and
+[`addTraceListener()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html#aaf85408a01bdd47b10f3e53e38f547a4)
+methods to add the `TraceListener` to an `XSLTProcessor`.
  
 See the [TraceListen](samples.md#tracelisten) sample
-application. The `TraceListen` sample uses `TraceListenerDefault` to
-write events to the screen.
+application. The [TraceListen](samples.md#tracelisten) sample uses
+`TraceListenerDefault` to write events to the screen.
 
 ## Using the ICU
 
@@ -461,7 +510,7 @@ extend support for encoding, number formatting, and sorting.
   arguments (the third is optional): number, format pattern, and
   decimal-format name.  Xalan-C++ ignores the format pattern and
   optional decimal-format name. If you install ICU support for
-  format-number(), this function is fully supported with all its
+  `format-number()`, this function is fully supported with all its
   arguments.
 * *`xsl:sort`*.  If you install ICU support for `xml:sort`, Xalan-C++
   implements Unicode-style collation.
@@ -488,11 +537,13 @@ support:
 * Define the environment variable `ICUROOT`.
 * Substitute ICU support for `format-number()`, `xsl:number`, and/or
   `xsl:sort`.
-* Rebuild the Xalan-C++ library to include the `ICUBridge`.
+* Rebuild the Xalan-C++ library to include the
+  [*ICUBridge*](https://apache.github.io/xalan-c/api/dir_2b905b8b39cf407945c0c5e85a4e6b9d.html).
 
 *ICUBridge*
 
-All Xalan-C++ references to ICU are centralized in the ICUBridge
+All Xalan-C++ references to ICU are centralized in the
+[*ICUBridge*](https://apache.github.io/xalan-c/api/dir_2b905b8b39cf407945c0c5e85a4e6b9d.html)
 module, which supplies the infrastructure for enabling ICU support for
 number formatting and sorting.
 
@@ -571,8 +622,9 @@ theResult = XalanTransformToFile(xmlfilename,
 ```
 
 Note: If the XML input file contains a stylesheet processing
-instruction that you want to use, use an empty `XSLTInputSource` for
-the stylesheet argument.
+instruction that you want to use, use an empty
+[`XSLTInputSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html)
+for the stylesheet argument.
 
 ### 5. Shut down Xalan
 
@@ -587,17 +639,25 @@ C++ API.  In particular, you can
 
 * Use stylesheet processing instructions (PI) to indicate the URI of
   the stylesheet. Supply `NULL` for the stylesheet argument.
-* Set stylesheet parameters. Use the `SetStylesheetParam()` function.
-* Compile stylesheets. Use the `CompileStylesheet()` method to compile
-  a stylesheet, and the `TransformToFileCSS()` or
-  `TransformToDataCSS()` function to use the compiled stylesheet in a
-  transformation.
-* Parse XML sources. Use the `XalanParseSource()` or
-  `XalanParseSouceUseXalan()` method.
+* Set stylesheet parameters. Use the
+  [`SetStylesheetParam()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#af076f4ff44907f720bbfe859ae763271)
+  function.
+* Compile stylesheets. Use the
+  [`CompileStylesheet()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#a051cb11b9652d45700d46a07f2dfeb51)
+  method to compile a stylesheet, and the
+  [`TransformToFile()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#a7c4c4cb77cd7ea68b460d525b4d06dff)
+  or
+  [`TransformToData()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#ad2cf845c20c6b40ee1d558314a81de32)
+  function to use the compiled stylesheet in a transformation.
+* Parse XML sources. Use the
+  [`XalanParseSource()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#a9a376f062779b8e01bbaad16eaf826b4)
+  method.
 * Place the transformation output in a character array. Use the
-  `TransformToData()` or `TransformToDataCSS()` function. After you
-  perform the transformation, use the `XalanFreeData()` function to
-  free memory allocated for the output data.
+  [`TransformToData()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#ad2cf845c20c6b40ee1d558314a81de32)
+  function.  After you
+  perform the transformation, use the
+  [`XalanFreeData()`](https://apache.github.io/xalan-c/api/XalanCAPI_8h.html#a95ef1a205f372f95d320f53739417653)
+  function to free memory allocated for the output data.
 * Send the output to a callback function to process blocks of output
   data as they arrive.
 
