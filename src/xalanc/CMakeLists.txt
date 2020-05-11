@@ -1019,19 +1019,19 @@ if(MSVC)
   target_compile_definitions(xalan-c PRIVATE "XALAN_DLL_NAME=\"$<TARGET_FILE_NAME:xalan-c>\\0\"")
   # Different naming for Windows than for Unix builds for backward
   # compatibility with the existing project files.
-  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
-  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}_${XALAN_META_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
+  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
+  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}_${XALAN_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
   set_target_properties(xalan-c PROPERTIES DEBUG_POSTFIX "D")
 else()
   # Not used for the common cases, though this would be the default if
   # not for libtool compatibility.
-  set_target_properties(xalan-c PROPERTIES SOVERSION ${XALAN_META_LIB_MAJOR_VER})
+  set_target_properties(xalan-c PROPERTIES SOVERSION ${XALAN_LIB_MAJOR_VER})
   if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full
     # version encoded into their final filename.  We disable this on
     # Cygwin because it causes xalan-c-${XALAN_C_FULL_VERSION}.dll
     # to be created when xalan-c.dll seems to be the default.
-    set_target_properties(xalan-c PROPERTIES VERSION ${XALAN_META_LIB_MAJOR_VER}.${XALAN_META_LIB_MINOR_VER})
+    set_target_properties(xalan-c PROPERTIES VERSION ${XALAN_LIB_MAJOR_VER}.${XALAN_LIB_MINOR_VER})
   endif()
 endif()
 set_target_properties(xalan-c PROPERTIES FOLDER "Library")
