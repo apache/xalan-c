@@ -54,15 +54,6 @@ project(${XALAN_META_PROJECT_NAME}
         LANGUAGES C CXX)
 enable_testing()
 
-# For autotools header compatibility
-set(PACKAGE "${PROJECT_NAME}")
-set(PACKAGE_NAME "${PROJECT_NAME}")
-set(PACKAGE_TARNAME "${PROJECT_NAME}")
-set(PACKAGE_VERSION "${PROJECT_VERSION}")
-set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
-set(PACKAGE_BUGREPORT "dev@xalan.apache.org")
-set(PACKAGE_URL "https://xalan.apache.org/xalan-c/")
-
 find_package(Threads)
 include(GNUInstallDirs)
 include(XalanWarnings)
