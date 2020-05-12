@@ -66,9 +66,9 @@ To use `ApacheModuleXSLT`, do the following:
    UNIX: `AddModule mod_xslt.c` and
       `LoadModule xslt_module /usr/lib/apache/mod_xslt.<ref>xx</ref>`
       where `<ref>xx</ref>` is the appropriate library suffix for the
-      UNIX platform (*.so* or *.a*).
+      UNIX platform ("*.so*" or "*.a*").
 3. Add a `<Location>` entry to `httpd.conf` that indicates where
-   xml/xsl file pairs are to be found, and what target file
+   *.xml* and *.xsl* file pairs are to be found, and what target file
    extensions to recognize. We suggest the following:
    ```xml
    <Location /xslt>
@@ -86,12 +86,13 @@ To use `ApacheModuleXSLT`, do the following:
     Note: It is up to the stylesheet to apply the appropriate
     `xsl:output` method to the output. Whether the user specifies
     `html` or `txt` is, of itself, immaterial.
-4. Put xml/xsl file pairs in the `<Location>` subdirectory (xslt in the
-   example)) under the document root directory specified in
-   *httpd.conf* by the `DocumentRoot` and `<Directory>` settings.
+4. Put *.xml* and *.xsl* file pairs in the `<Location>` subdirectory
+   (*xslt* in the example) under the document root directory specified
+   in *httpd.conf* by the `DocumentRoot` and `<Directory>` settings.
    Alternatively, you can modify these settings to point to 
    *samples/ApacheModuleXSLT*, which includes an *xslt* subdirectory
-   with xml/xsl file pairs (*foo.xml/xsl*, *apachemod.xml/xsl*).
+   with *.xml* and *.xsl* file pairs (*foo.xml* and *foo.xsl*,
+   *apachemod.xml* and *apachemod.xsl*).
 5. Start the Apache server.
 6. From a Web browser, call the module with a URL as follows:
    `http://serverName/xslt/xxx.html`

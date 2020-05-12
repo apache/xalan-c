@@ -349,7 +349,8 @@ underneath) but W3C DOM functions like
 
 No, you aren't going crazy.  Xalan's default source tree is read-only
 for efficiency. If you need a DOM that supports modifications, use the
-Xerces DOM instead.  See the `TransformToXercesDOM` sample for more
+Xerces DOM instead.  See the
+[TransformToXercesDOM](samples.md#transformtoxercesdom) sample for more
 information.
 
 ## Changing Where Error Output is Sent

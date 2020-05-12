@@ -133,16 +133,16 @@ int theResult =
 Keep in mind that
 [`XSLTInputSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html)
 and
-`XSLTResultTarget`
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html)
 provide a variety of single-argument constructors that you can use in
 this manner:
 
-* [`XSLTInputSource(const char* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a4f64b6ad613e97df373a08560edcbde0)
-* [`XSLTInputSource(const XMLCh* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a1d0c961ce39ef40a9e4d11ecb4bcfe28) (Unicode characters)
+* [`XSLTInputSource(const char* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#ab3f2b4a5da76309980d5c041ea19d285)
+* [`XSLTInputSource(const XMLCh* systemID)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a4f64b6ad613e97df373a08560edcbde0) (Unicode characters)
 * [`XSLTInputSource(istream* stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a15252c4b7551019fde32c809a925a2e0)
 * [`XSLTInputSource(XalanNode* node)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTInputSource.html#a96deb7a8eba28cb78cc6521f37fbdebb)
-* [`XSLTResultTarget(char* fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a856d29060f2ec11af6487803b57c9127)
-* [`XSLTResultTarget(XalanDOMString& fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a856d29060f2ec11af6487803b57c9127)
+* [`XSLTResultTarget(char* fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a5ad1a1cc659c8b321acfdb088d2012d3)
+* [`XSLTResultTarget(XalanDOMString& fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a81dfd0938ce7f8b81512cba2fce5f9b2)
 * [`XSLTResultTarget(ostream* stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#aed57158ea3eabcc3dda8164b8f9afd38)
 * [`XSLTResultTarget(ostream& stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a1dc8e4ec1b6817fcba5463292342e363)  
 * [`XSLTResultTarget(Writer* characterStream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#af1a6f0f49f60232ae5b57c839c35aca0)
@@ -490,11 +490,12 @@ the
 [`setTraceSelects()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html#a166e1275b28edc1102a1ec3cb83f7e70)
 and
 [`addTraceListener()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html#aaf85408a01bdd47b10f3e53e38f547a4)
-methods to add the `TraceListener` to an `XSLTProcessor`.
+methods to add the `TraceListener` to an
+[`XSLTProcessor`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTProcessor.html).
  
 See the [TraceListen](samples.md#tracelisten) sample
-application. The [TraceListen](samples.md#tracelisten) sample uses
-`TraceListenerDefault` to write events to the screen.
+application. The `TraceListen` sample uses `TraceListenerDefault` to
+write events to the screen.
 
 ## Using the ICU
 
