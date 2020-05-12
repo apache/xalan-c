@@ -57,7 +57,8 @@ set(XALAN_MS_LIB_MINOR_VER 12)
 message(STATUS "Configuring Apache Xalan-C++ version ${xalan-c_VERSION}")
 
 enable_testing()
-find_package(Threads)
+find_package(Threads REQUIRED)
+include(Doxygen)
 include(GNUInstallDirs)
 include(XalanDLL)
 include(XalanWarnings)
@@ -93,6 +94,7 @@ add_subdirectory(src/xalanc/TestXSLT)
 add_subdirectory(src/xalanc/TestXPath)
 add_subdirectory(samples)
 add_subdirectory(Tests)
+add_subdirectory(docs/doxygen)
 
 # Display configuration summary
 message(STATUS "")
