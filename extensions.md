@@ -12,12 +12,12 @@ You can think of extension functions as extending the core library of
 functions that XPath provides. Like the XPath functions, an extension
 function returns an XObject, which may contain a value of any of the
 five XSLT data types: `node-set`, `result-tree-fragment`, `string`,
-`boolean` or `number`. 
+`boolean` or `number`.
 
 You can send arguments to an extension function in the form of XPath
-expressions, literals (for string, boolean, and number), the values
-returned by other functions, and XSL variables or parameters set to any
-of the preceding.
+expressions, literals (for `string`, `boolean`, and `number`), the
+values returned by other functions, and XSL variables or parameters set
+to any of the preceding.
 
 For an example that implements, installs, and uses three extension
 functions, see the [External Functions](samples.md#externalfunctions)
@@ -36,7 +36,7 @@ follows:
    in the example below -- to create an `XObject` corresponding to the
    XSLT data type the function returns.
 2. Implement a `clone()` method to enable Xalan to create and maintain
-    a copy of the extension function. 
+    a copy of the extension function.
 3. (Optional) As Xalan does for the XPath functions, you may want to
    prevent the compiler from generating an assignment or equality
    operator for this function.
@@ -81,11 +81,11 @@ public:
   {
     if (args.size() != 1)
     {
-      executionContext.error("The square-root() function takes one argument!", 
+      executionContext.error("The square-root() function takes one argument!",
                               context);
     }
     assert(args[0] != 0);
-    // Use the XObjectFactory createNumber() method to create an XObject 
+    // Use the XObjectFactory createNumber() method to create an XObject
     // corresponding to the XSLT number data type.
     return executionContext.getXObjectFactory().createNumber(
                                                         sqrt(args[0]->num()));
@@ -114,18 +114,21 @@ private:
 
 ## Installing an extension function
 
-`XalanTransformer` provides methods for installing and uninstalling
-external functions:
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+provides methods for installing and uninstalling external functions:
 
-* `installExternalFunction()` makes the function available in the
-  current instance of `XalanTransformer`. Use
-  `uninstallExternalFunction()` to remove the function.
-* `installExternalFunctionGlobal()` makes the function available
-  globally. `Use uninstallExternalFunctionGlobal()` to remove the
-  function. The global install and uninstall operations are not
-  thread-safe.  However, all global functions should be thread-safe,
-  because multiple threads could call a particular function instance at
-  the same time.
+* [`installExternalFunction()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a7d932d74897e12629afd62bba2735456)
+  makes the function available in the current instance of `XalanTransformer`. Use
+  [`uninstallExternalFunction()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a8dbb4538357ab2909925dd16a449dbac)
+  to remove the function.
+* [`installExternalFunctionGlobal()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a7d4f49b03739feaa01cdbffd5668e736)
+  makes the function available globally.
+  Use
+  [`uninstallExternalFunctionGlobal()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ab5c8f39bcf0bf84b6bbe0607bbe4afde)
+  to remove the function. The global install and uninstall operations
+  are not thread-safe.  However, all global functions should be
+  thread-safe, because multiple threads could call a particular
+  function instance at the same time.
 
 These methods include arguments for the namespace, the function name,
 and the function implementation.
@@ -151,7 +154,7 @@ is installed in a different namespace.
 // The namespace…
 const XalanDOMString	
     theNamespace("http://MyExternalFunction.mycompany.org");
-    
+
 theXalanTransformer.installExternalFunction(theNamespace,
                                             XalanDOMString("square-root"),
                                             FunctionSquareRoot());
@@ -172,7 +175,7 @@ To use the extension function in a stylesheet, you must do the following:
    namespace specified when the function is installed.
    <br>
    By default, namespace declarations are included in the
-   transformation output. To exclude namespaces from the output, 
+   transformation output. To exclude namespaces from the output,
    use
    <br>
    `exclude-result-prefixes="prefix-1 prefix-2 …"`
@@ -187,9 +190,9 @@ To use the extension function in a stylesheet, you must do the following:
    Qualified Name (QName) made up of the prefix you declared in step 1
    and the function name you specified when you installed the function.
    <br>
-   You can use XPath expressions, literals (for string, boolean, and
-   number), and values returned by other functions to specify function
-   arguments.
+   You can use XPath expressions, literals (for `string`, `boolean`,
+   and `number`), and values returned by other functions to specify
+   function arguments.
 
 Suppose, for example, you are working with XML documents containing
 area elements like `<area value="397"/>`, where the value attribute
@@ -201,17 +204,17 @@ namespace declaration to the result tree, and uses the square-root
 function to return the square root of `//area/@value:`
 
 ```xml
-<?xml version="1.0"?> 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
 	xmlns:external="http://ExternalFunction.xalan-c.xml.apache.org"
   exclude-result-prefixes="external">
-  
+
     <xsl:template match="//area">
     <out>
       The area of the square is
       <xsl:value-of select="@value"/> square units.
-      The length of each side is 
+      The length of each side is
       <xsl:value-of select="external:square-root(@value)"/> units
     </out>
     </xsl:template>
@@ -223,15 +226,15 @@ output:
 
 ```xml
 <out>
-  The area of the square is 
+  The area of the square is
   397 square units.
-  The length of each side is 
+  The length of each side is
   19.9249 units.
 </out>
 ```
 
 For a slightly more complex variation on this example, see the
-[External Functions](samples.md#externalfunctions) sample 
+[External Functions](samples.md#externalfunctions) sample
 
 ### Passing Nodes to a function
 
@@ -277,6 +280,7 @@ syntactically possible:
 ```
 
 The `NodeRefListBase` is in fact a list of references into the XML
-document, so keep in mind that `getNextSibling()`, for example, gets
-you the next sibling in the document, which may not be the next `Node`
-in the `node-set`.
+document, so keep in mind that
+[`getNextSibling()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanNode.html#a9b4a7333371ffee9a6fd851203f4c98a),
+for example, gets you the next sibling in the document, which may not
+be the next `Node` in the `node-set`.

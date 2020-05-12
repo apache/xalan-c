@@ -13,12 +13,12 @@ For a brief listing of tutorials, discussion forums, and other
 materials, see
 [Getting up to speed with XSLT](overview.md#getting-up-to-speed-with-xslt).
 
-  
+
 ## Asking questions about Xalan-C++
 
 *Where can I ask a question?*
 
-For specific questions on Xalan-C++, see list archives: 
+For specific questions on Xalan-C++, see list archives:
 [xalan-c-users](http://marc.info/?l=xalan-c-users) and
 [xalan-dev](http://marc.info/?l=xalan-dev).
 You must subscribe to these Apache mailing lists before posting your
@@ -41,7 +41,7 @@ Again, please review the archives before posting a new question.
 *What is Xerces-C++ and why do I need it?*
 
 Xerces-C++ is a validating XML parser written in a portable subset of
-C++.  Xerces-C++ makes it easy to give your application the ability to 
+C++.  Xerces-C++ makes it easy to give your application the ability to
 read and write XML data.  Like Xalan-C++, Xerces-C++ is available from
 the Apache XML site:
 [http://xerces.apache.org](http://xerces.apache.org).
@@ -70,76 +70,59 @@ using the internal DOM implementation is the best approach.
 In cases where you want to modify the DOM document on the fly, you
 should use the Xerces DOM as the base document.  You can wrap the
 Xerces DOM in a wrapper (see
-[Passing in a Xerces DOM](usagepatterns.md#passing-in-a-xerces-dom-to-a-transformation)) 
+[Passing in a Xerces DOM](usagepatterns.md#passing-in-a-xerces-dom-to-a-transformation))
 to then use as an input to a Xalan transformation.  Alternatively you
 can output the result of a transformation to a Xerces DOM document (see
 [Working with DOM input and output](usagepatterns.md#working-with-dom-input-and-output)).  In either
 case, the Xerces document can be freely modified.  However, after you
 modify the document, you need to re-build the wrapper so that any
 changes are replicated in the Xalan wrappers.
-  
+
 ## Problems with samples in Windows
 
 *I have encountered problem executing the Xalan-C++ sample applications
 after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
-When I tried to execute the sample, I receive the error message 
+When I tried to execute the sample, I receive the error message
 `Debug Assertion Failed! …  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)`.*
 
 You may be mixing debug and release versions of executables and
-libraries.  In other words, if you are compiling the sample for debug, 
+libraries.  In other words, if you are compiling the sample for debug,
 then you should link with the debug version of the Xalan-C++ and
 Xerces-C++ libraries and run with the debug version of the dynamic link
 libraries.
 
-You must also make sure your application is linking with the Debug
-multithreaded DLL run-time library or the Multithreaded DLL run-time
+You must also make sure your application is linking with the "Debug
+Multithreaded DLL" run-time library or the "Multithreaded DLL" run-time
 library.  To check this setting do the following in Visual C++:
 
-1. Select Settings from the Project menu.
-2. Click the C/C++ tab.
-3. In the Category drop-down list, select Code Generation.
-4. In the Use run-time library drop-down list, select Multithreaded DLL
-   for the Win32 Release configuration, or select Debug Multithreaded
-   DLL for the Win32 Debug configuration.
+1. Select "Settings" from the "Project" menu.
+2. Click the "C/C++" tab.
+3. In the Category drop-down list, select "Code Generation".
+4. In the "Use run-time library" drop-down list, select "Multithreaded
+   DLL" for the "Win32 Release" configuration, or select "Debug
+   Multithreaded DLL" for the "Win32 Debug" configuration.
 
 Once you have changed this setting, you must rebuild your project.
+
+Note: This FAQ entry is largely historical.  While mixing Release and
+Debug builds and different runtimes is still inadvisable, the CMake
+build system should link the correct versions of the libraries and
+prevent this happening by accident.
 
 ## Building on Windows
 
 *What do I need to rebuild Xalan-C++ on Windows?*
 
-In order to build Xalan-C++ on Windows, you will need the following:
-
-* The Xalan-C/C++ source distribution package.
-* The Xerces-C/C++ source distribution package or a compatible binary
-  distribution package.
-* A compatible Microsoft Visual Studio version (e.g. VS2019)
-
-The Xalan-C/C++ source code for all versions is available from the Git
-repository at
-[https://github.com/apache/xalan-c](https://github.com/apache/xalan-c).
-
-Xalan-C++ releases may be downloaded from:
-[Xalan Distributions](http://www.apache.org/dyn/closer.cgi/xalan/xalan-c).
-
-Xerces-C++ may be downloaded from:
-[Xerces Distributions](http://www.apache.org/dyn/closer.cgi/xerces/c/3).
-
-If you are building with the
-[IBM-ICU](http://www.ibm.com/software/globalization/icu/)
-International Components for Unicode library, you will need to rebuild
-both the Xerces and Xalan libraries.
-
 For more details, see
+[Downloading Xalan-C++](download.md) and
 [Building Xalan-C++](build.md).
 
 ## Building on UNIX
 
 *What do I need to rebuild Xalan-C++ on UNIX?*
 
-To build Xalan-C++ on supported UNIX platforms, you need Xerces-C++,
-CMake, a build tool such as `make` or `ninja`, and a supported C++
-compiler.  For more details, see
+For more details, see
+[Downloading Xalan-C++](download.md) and
 [Building Xalan-C++](build.md).
 
 ## What is ICU
@@ -150,7 +133,7 @@ The
 [International Components for Unicode (ICU)](http://icu-project.org/)
 is a C and C++ library that provides robust and full-featured Unicode
 support on a wide variety of platforms.  Xalan-C++ uses the ICU to
-extend support for encoding, number formatting, and sorting. 
+extend support for encoding, number formatting, and sorting.
 
 Xalan should work with any release of ICU from the past decade.
 
@@ -172,7 +155,7 @@ For additional background information on this problem, see the online
 manual
 [GNU tar and POSIX tar](http://www.gnu.org/manual/tar/html_chapter/tar_8.html#SEC112)
 for the utility.
-   
+
 ## Xalan-C++ in Apache
 
 *Is it possible to run Xalan-C++ from an Apache server?*
@@ -181,30 +164,33 @@ A simple Apache module called
 [ApacheModuleXSLT](samples.md#apachemodulexslt)
 is provided as a sample.  It demonstrates how to integrate Xalan-C++
 with Apache.
-    
+
 ## Is Xalan-C++ thread-safe?
 
 *Is Xalan-C++ thread-safe?*
 
-Instances of `XalanTransformer` are not thread-safe; each thread should
-use its own instance.
+Instances of
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+are not thread-safe; each thread should use its own instance.
 
 In order to support very efficient use in multi-threaded applications,
 Xalan-C++ is designed to avoid synchronization as much as possible.
 Each thread of execution is required to have its own set of "support"
 objects that contain the state of the transformation.  Accordingly, no
-synchronization is required when multiple threads are executing.     
+synchronization is required when multiple threads are executing.
 
 Parsed ("compiled") stylesheets (see
 [Performing a series of transformations](usagepatterns.md#performing-a-series-of-transformations))
 and parsed source documents may be freely shared by multiple threads of
 execution without worrying about providing synchronized access to them.
-The *only* exception to this rule: You use `XercesParserLiaison` to
-parse a document after calling
-`XercesParserLiaison::setBuildBridgeNodes(false)` or
-`XercesParserLiaison::setThreadSafe(false)`.  In this case, the
-document *cannot* be shared by multiple threads of execution.  For
-reasons of performance, we do not recommend the use of
+The *only* exception to this rule: You use
+[`XercesParserLiaison`](https://apache.github.io/xalan-c/api/classxalanc_1_1XercesParserLiaison.html)
+to parse a document after calling
+[`XercesParserLiaison::setBuildBridgeNodes(false)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XercesParserLiaison.html#a01a4d6c3abaeb09738d555814ef7194c)
+or
+[`XercesParserLiaison::setThreadSafe(false)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XercesParserLiaison.html#af8dc3b5cfae5dd9a1cbdf446e369b9c9).
+In this case, the document *cannot* be shared by multiple threads of
+execution.  For reasons of performance, we do not recommend the use of
 `XercesParserLiaison`, so this should not be an issue for most
 applications.
 
@@ -222,7 +208,7 @@ To maximize performance, here are some suggestions for you to keep in
 mind as you set up your applications:
 
 * Use a compiled stylesheet when you expect to use the stylesheet more
-  than once.     
+  than once.
 * Set up your stylesheets to function efficiently.
   * Don't use `//` (descendant axes) patterns near the root of a large
     document.
@@ -257,10 +243,13 @@ literal result elements and produce output that is not valid XML.
 
 You can use the `xsl:stylesheet` doctype defined in `xsl-html40s.dtd`
 for stylesheets that generate HTML.
-    
+
 ## What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?
 
-*What does the `XalanDOMException` `HIERARCHY_REQUEST_ERR` mean?*
+*What does the
+[`XalanDOMException`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDOMException.html)
+[`HIERARCHY_REQUEST_ERR`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDOMException.html#a7ace065fde4b86526306d2c9ca3ab074a1333e25db8de187d2caee6513cc9dcc4)
+mean?*
 
 It means that an attempt was made to add a node to a DOM that would
 create an invalid structure.  For example, text nodes are not allowed
@@ -272,15 +261,16 @@ might not produce a valid DOM.  The usual suspect is text nodes being
 generated before the document element is generated.
 
 If you think you have seen this error because of a bug in Xalan-C++'s
-source tree implementation, please post a bug report on Jira, and
+source tree implementation, please post a bug report on
+[Jira](https://issues.apache.org/jira/browse/XALANC), and
 attach a minimal source document and stylesheet that produce the
 problem to the bug report.
-    
+
 ## Submitting Patches
 
 *Who do I submit patches to?*
 
-Your contributions are much appreciated! You can e-mail your patches to 
+Your contributions are much appreciated! You can e-mail your patches to
 the Xalan Development Mailing List or raise an issue on the
 [Jira issue tracking system](https://issues.apache.org/jira/browse/XALANC).
 
@@ -301,18 +291,23 @@ manual intervention or may be dropped.
 ## Transformation Output Methods
 
 *How do I output a transformation to a DOM, a file, an in-memory
-buffer, or as input to another transformation?  Since the C++ 
-language can automatically construct an `XSLTResultTarget` from any
-of its constructor's argument types, you usually don't need to create
-one explicitly.*
+buffer, or as input to another transformation?*
 
-The output parameter of `XalanTransformer::transform()` is an
-`XSLTResultTarget` which has many constructors.
+Since the C++ language can automatically construct an
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html)
+from any of its constructor's argument types, you usually don't need to
+create one explicitly.
+
+The output parameter of
+[`XalanTransformer::transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4)
+is an
+[`XSLTResultTarget`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html)
+which has many constructors.
 
 Output to a file:
 
 * The easiest way is to use a null-terminated string containing the
-  file name to create an XSLTResultTarget.  Or, use an instance of
+  file name to create an `XSLTResultTarget`.  Or, use an instance of
   `std::ofstream`.  The command line executables, and many of the
   sample applications use file names, so take a look through the
   source code for more information.
@@ -326,9 +321,10 @@ Output to an in-memory buffer:
 Input to another transformation:
 
 * Any of the previous output targets could be used as the input to
-  another transformation, but the `FormatterToSourceTree` is probably
-  the best for efficiency reasons.  See the source code for the
-  `TestXSLT` command line program for more information.
+  another transformation, but the
+  [`FormatterToSourceTree`](https://apache.github.io/xalan-c/api/classxalanc_1_1FormatterToSourceTree.html)
+  is probably the best for efficiency reasons.  See the source code for
+  the `TestXSLT` command line program for more information.
 
 ## Problems Using Sun's Forte/Workshop Compiler with code containing std::istrstream
 
@@ -344,13 +340,17 @@ development.  The Solaris SunStudio is now available from Oracle.
 
 ## Modifying an instance of XalanDocument
 
-*My transformation outputs to a `XalanDocument` (actually
-`XalanSourceTreeDocument` underneath) but W3C DOM functions like 
+*My transformation outputs to a
+[`XalanDocument`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDocument.html)
+(actually
+[`XalanSourceTreeDocument`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanSourceTreeDocument.html)
+underneath) but W3C DOM functions like
 `DOMElement::setAttribute` don't work! Am I going crazy or what?*
 
 No, you aren't going crazy.  Xalan's default source tree is read-only
 for efficiency. If you need a DOM that supports modifications, use the
-Xerces DOM instead.  See the `TransformToXercesDOM` sample for more
+Xerces DOM instead.  See the
+[TransformToXercesDOM](samples.md#transformtoxercesdom) sample for more
 information.
 
 ## Changing Where Error Output is Sent
@@ -358,22 +358,32 @@ information.
 *XalanTransformer outputs errors to the console. How do I, for example,
 output error to a file?*
 
-By default, `XalanTransformer` creates a
-`XalanTransformerProblemListener` (a subclass of `ProblemListener`)
+By default,
+[`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+creates a
+[`XalanTransformerProblemListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformerProblemListener.html)
+(a subclass of
+[`ProblemListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1ProblemListener.html))
 that writes output to `std::cerr`. To change this you can:
 
 * Redirect `std::cerr` from the command line.
-* Call `XalanTranformer::setWarningStream` with a different
-  `std::ostream` before calling `XalanTransformer::transform`.
-* Instantiate your own `XalanTransformerProblemListener` with a
-  different output stream and call
-  `XalanTransformer::setProblemListener()` before calling
-  `XalanTransformer::transform()`.
-* Subclass some `ProblemListener` type and do custom handling of errors
-  (you still then need to tell `XalanTransformer` instances to use your
-  ProblemListener).
+* Call
+  [`XalanTranformer::setWarningStream`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a1c7826710c68a6311329ef7be65253e6)
+  with a different `std::ostream` before calling
+  [`XalanTransformer::transform`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4).
+* Instantiate your own
+  [`XalanTransformerProblemListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformerProblemListener.html)
+  with a different output stream and call
+  [`XalanTransformer::setProblemListener()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3dda165f568b89e02bcbf2f56508ec7a)
+  before calling
+  [`XalanTransformer::transform`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4).
+* Subclass some
+  [`ProblemListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1ProblemListener.html)
+  type and do custom handling of errors (you still then need to tell
+  [`XalanTransformer`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html)
+  instances to use your `ProblemListener`).
 
-In most case you probably want to do one of the first two.
+In most cases you probably want to do one of the first two.
 
 ## Programmatic Error Information
 
@@ -381,16 +391,21 @@ In most case you probably want to do one of the first two.
 number for an error in an XML file?*
 
 Create a custom `ErrorHandler` (a Xerces-C++ class) and call
-`XalanTransformer::setErrorHandler` before parsing any sources.
+[`XalanTransformer::setErrorHandler`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#af3eff73a57f2998a2b440c2c4f105371)
+before parsing any sources.
 
 ## String Transcoding
 
-*How do I make a `char*` out of `XalanDOMString` (or vice-versa)?*
+*How do I make a `char*` out of
+[`XalanDOMString`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDOMString.html)
+(or vice-versa)?*
 
-See the static method `XalanDOMString::transcode`, or the functions
-`TranscodeToLocalCodePage` in the API documentation.  However, you
-should be very careful when transcoding Unicode characters to the
-local code page, because not all Unicode characters can be
+See the static method
+[`XalanDOMString::transcode`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDOMString.html#a0b7ab1c0f2ea4615962437b8837e11d7),
+or the functions
+[`TranscodeToLocalCodePage`](https://apache.github.io/xalan-c/api/namespacexalanc.html#ada7c55659cbbc92271ac1fa128afa07b).
+However, you should be very careful when transcoding Unicode characters
+to the local code page, because not all Unicode characters can be
 represented.
 
 ## Error Code/Exception Summary
@@ -402,11 +417,11 @@ There isn't, but we're working on it.
 
 ## Extension Functions
 
-*The Xalan extension functions (xalan:node-set, etc.) don't work for
+*The Xalan extension functions (`xalan:node-set()`, etc.) don't work for
 me. Help!*
 
 Did you declare the namespace on the `xsl:stylesheet` or
-`xsl:transform` element?  It should look like this: 
+`xsl:transform` element?  It should look like this:
 
 ```xml
    <xsl:stylesheet version="1.0" xmlns:xalan="http://xml.apache.org/xalan"> …rest of stylesheet
@@ -430,14 +445,13 @@ Did you build with ICU support? See
 There is no Apache Perl wrapper, however Edwin Pratomo has written a
 wrapper for Xalan-C++ version 1.4 that can be found on CPAN.
 
-## Missing LocalMsgIndex.hpp file
+## Missing *LocalMsgIndex.hpp* file
 
-*Why can't I find the `LocalMsgIndex.hpp` file?*
+*Why can't I find the *LocalMsgIndex.hpp* file?*
 
-The `LocalMsgIndex.hpp` file is not shipped with the distributions
-because this file is generated during compile time.  This file is
-created at the start of the build process and customized for the locale
-and message set you are using.
+The *LocalMsgIndex.hpp* file is not shipped with the source
+distributions because this file is generated during the build process,
+customized for the locale and message set you are using.
 
-The LocalMsgIndex.hpp file is a member of the
-`include/xalanc/PlatformSupport` directory.
+The *LocalMsgIndex.hpp* file is a member of the
+*include/xalanc/PlatformSupport* directory.

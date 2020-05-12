@@ -38,7 +38,7 @@
 
 [XML Security Overview](secureweb.md)
 
-[API reference](api/index.html)
+[API reference](http://xalan.apache.org/xalan-c/apiDocs/index.html) [TODO: use new URI]
 
 ### Obtaining Xalan-C++
 
