@@ -17,6 +17,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Include/XalanVersion.hpp.in
+               ${CMAKE_CURRENT_BINARY_DIR}/Include/XalanVersion.hpp)
+
 set(xalandom_sources
   XalanDOM/XalanAttr.cpp
   XalanDOM/XalanCDataSection.cpp
@@ -863,6 +866,9 @@ set(xalanexslt_headers
   XalanEXSLT/XalanEXSLTString.hpp
   XalanEXSLT/XalanEXSLTStringImpl.hpp)
 
+set(include_sources
+  Include/XalanVersion.cpp)
+
 set(harness_sources
   Harness/XalanDiagnosticMemoryManager.cpp
   Harness/XalanFileUtility.cpp
@@ -895,8 +901,10 @@ set(include_headers
   Include/XalanObjectCache.hpp
   Include/XalanObjectStackCache.hpp
   Include/XalanSet.hpp
-  Include/XalanVector.hpp
-  Include/XalanVersion.hpp)
+  Include/XalanVector.hpp)
+
+set(generated_include_headers
+  ${CMAKE_CURRENT_BINARY_DIR}/Include/XalanVersion.hpp)
 
 set(icubridge_sources
   ICUBridge/ICUBridgeCleanup.cpp
@@ -932,6 +940,7 @@ set(libxalan_c_SOURCES
   ${xalantransformer_sources}
   ${xalanexslt_sources}
   ${harness_sources}
+  ${include_sources}
 )
 
 set(libxalan_c_HEADERS
@@ -952,6 +961,12 @@ set(libxalan_c_HEADERS
   ${include_headers}
 )
 
+set(libxalan_c_GENERATED_HEADERS
+  ${generated_include_headers})
+
+set(libxalan_c_RESOURCES
+  XalanC.rc)
+
 if(transcoder STREQUAL "icu")
   list(APPEND libxalan_c_SOURCES ${icubridge_sources})
   list(APPEND libxalan_c_HEADERS ${icubridge_headers})
@@ -971,11 +986,13 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-add_custom_target(xalan-c-headers SOURCES ${libxalan_c_HEADERS})
+add_custom_target(xalan-c-headers SOURCES ${libxalan_c_HEADERS} ${libxalan_c_GENERATED_HEADERS})
 set_target_properties(xalan-c-headers PROPERTIES FOLDER "Library")
 
 add_library(xalan-c
   ${libxalan_c_SOURCES}
+  ${libxalan_c_HEADERS}
+  ${libxalan_c_GENERATED_HEADERS}
   ${libxalan_c_RESOURCES})
 target_compile_definitions(xalan-c PRIVATE "${MSGLOADER_DEF}=1")
 if(BUILD_SHARED_LIBS)
@@ -1002,19 +1019,19 @@ if(MSVC)
   target_compile_definitions(xalan-c PRIVATE "XALAN_DLL_NAME=\"$<TARGET_FILE_NAME:xalan-c>\\0\"")
   # Different naming for Windows than for Unix builds for backward
   # compatibility with the existing project files.
-  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
-  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_META_MS_LIB_MAJOR_VER}_${XALAN_META_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
+  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
+  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}_${XALAN_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
   set_target_properties(xalan-c PROPERTIES DEBUG_POSTFIX "D")
 else()
   # Not used for the common cases, though this would be the default if
   # not for libtool compatibility.
-  set_target_properties(xalan-c PROPERTIES SOVERSION ${XALAN_META_LIB_MAJOR_VER})
+  set_target_properties(xalan-c PROPERTIES SOVERSION ${XALAN_LIB_MAJOR_VER})
   if(NOT CYGWIN)
     # This property causes shared libraries on Linux to have the full
     # version encoded into their final filename.  We disable this on
     # Cygwin because it causes xalan-c-${XALAN_C_FULL_VERSION}.dll
     # to be created when xalan-c.dll seems to be the default.
-    set_target_properties(xalan-c PROPERTIES VERSION ${XALAN_META_LIB_MAJOR_VER}.${XALAN_META_LIB_MINOR_VER})
+    set_target_properties(xalan-c PROPERTIES VERSION ${XALAN_LIB_MAJOR_VER}.${XALAN_LIB_MINOR_VER})
   endif()
 endif()
 set_target_properties(xalan-c PROPERTIES FOLDER "Library")
@@ -1056,6 +1073,15 @@ foreach(hdr IN LISTS libxalan_c_HEADERS)
     FILES "${hdr}"
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xalanc/${hdrdir}"
     COMPONENT "development")
+endforeach()
+
+foreach(hdr IN LISTS libxalan_c_GENERATED_HEADERS)
+    get_filename_component(hdrdir "${hdr}" DIRECTORY)
+    file(RELATIVE_PATH relhdrdir "${CMAKE_CURRENT_BINARY_DIR}" "${hdrdir}")
+    install(
+            FILES "${hdr}"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/xalanc/${relhdrdir}"
+            COMPONENT "development")
 endforeach()
 
 # Source file grouping (for IDE project layout)
