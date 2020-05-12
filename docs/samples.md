@@ -34,7 +34,7 @@ of the processor with memory manager.
 ## ApacheModuleXSLT
 
 Note: This sample must be built with the Apache Web server.
-    
+
 What it does: runs as an Apache module on an Apache Web server;
 performs transformations and returns the output to a Web browser. You
 configure Apache to respond to a given URL request for an output file
@@ -53,7 +53,7 @@ transformation has been completed.
 
 Note: You may need to configure CMake to locate the required Apache
 header files.
-  
+
 ### Setting up and using ApacheModuleXSLT
 
 To use `ApacheModuleXSLT`, do the following:
@@ -89,7 +89,7 @@ To use `ApacheModuleXSLT`, do the following:
 4. Put *.xml* and *.xsl* file pairs in the `<Location>` subdirectory
    (*xslt* in the example) under the document root directory specified
    in *httpd.conf* by the `DocumentRoot` and `<Directory>` settings.
-   Alternatively, you can modify these settings to point to 
+   Alternatively, you can modify these settings to point to
    *samples/ApacheModuleXSLT*, which includes an *xslt* subdirectory
    with *.xml* and *.xsl* file pairs (*foo.xml* and *foo.xsl*,
    *apachemod.xml* and *apachemod.xsl*).
@@ -105,7 +105,7 @@ To use `ApacheModuleXSLT`, do the following:
    to the *apachemod.xml* XML document (both files in the *xslt*
    directory under the Apache `DocumentRoot` directory) and return the
    transformation result to the browser.
-  
+
 ## CompileStylesheet
 
 What it does: Use a compiled stylesheet to perform a series of
@@ -140,7 +140,7 @@ Run this sample from the *ExternalFunctions* subdirectory with
 `ExternalFunctions`.
 
 See also: [Extension Functions](faq.md#extension-functions).
-  
+
 ## ParsedSourceWrappers
 
 What it does: performs a transformation with input in the form of a
@@ -181,7 +181,7 @@ You can run it from the *SimpleTransform* subdirectory with
 
 See also:
 [Basic procedures for performing XSL transformations](usagepatterns.md#xalan-c-basic-usage-patterns).
-  
+
 ## SimpleXPathAPI
 
 What it does: Use the `XPathEvaluator` interface to evaluate an XPath
@@ -246,7 +246,7 @@ C interface to evaluate an XPath expression and display the string
 value returned by the expression.
 
 Note: Keep in mind that the string value returned by an XPath
-expression is the string value of the first node in the nodeset 
+expression is the string value of the first node in the nodeset
 returned by the expresssion.
 
 Run this sample from the *SimpleXPathCAPI* subdirectory with:
@@ -265,7 +265,7 @@ You can try command lines like:
 ```sh
 SimpleXPathCAPI foo.xml /doc/name[3]
 ```
-  
+
 ## StreamTransform
 
 What it does: The `StreamTransform` class processes character input
@@ -275,7 +275,7 @@ illustrates the process for working with stylesheets and documents
 that you assemble in memory.
 
 You can run it from the *SimpleTransform* subdirectory with `StreamTransform`.
-  
+
 ## ThreadSafe
 
 What it does: Multiple threads use a single compiled stylesheet
@@ -288,7 +288,7 @@ clients who happen to request the same transformation.
 You can run it from the *ThreadSafe* subdirectory with `ThreadSafe`.
 
 See also:
-[Performing a series of transformations](usagepatterns.md#performing-a-series-of-transformations).  
+[Performing a series of transformations](usagepatterns.md#performing-a-series-of-transformations).
 
 ## TraceListen
 
@@ -318,10 +318,10 @@ The core of this example is the following fragment:
 // Set up a diagnostic writer to be used by the TraceListener…
 XalanStdOutputStream  theStdErr(cerr);
 XalanOutputStreamPrintWriter  diagnosticsWriter(theStdErr);
-// Make sure that error reporting, which includes any TraceListener 
-// output does not throw exceptions when transcoding, since that could 
+// Make sure that error reporting, which includes any TraceListener
+// output does not throw exceptions when transcoding, since that could
 // result in an exception being thrown while another exception is active.
-// In particular, characters that the TraceListener writes might not be 
+// In particular, characters that the TraceListener writes might not be
 // representable in the local code page.
 theStdErr.setThrowTranscodeException(false);
 
@@ -342,7 +342,7 @@ theProcessor.addTraceListener(&theTraceListener);
 // Perform the transformation
 …
 ```
-    
+
 ## TransformToXercesDOM
 
 What it does: Performs a simple transformation but puts the result in a
@@ -413,7 +413,7 @@ XML document file and write the transformation output to either an
 output file or to a stream.
 
 `XalanTransform` takes command-line arguments for the XML document to
-be transformed, the XSL stylesheet to apply, and an optional output 
+be transformed, the XSL stylesheet to apply, and an optional output
 file argument. If you omit the third argument, `XalanTransform` writes
 the transformation output to a stream that is sent to standard out (the
 console).

@@ -1,5 +1,5 @@
 # Xalan-C++ basic usage patterns
-  
+
 ## Introduction
 
 To perform a transformation, use one of the
@@ -17,11 +17,11 @@ or a
 
 If you are using an XSL stylesheet to perform a series of
 transformations, you can improve performance by calling
-[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa) 
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa)
 with a compiled stylesheet, an instance of
 [`XalanCompiledStylesheet`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanCompiledStylesheet.html).
 If you are transforming an XML source more than once, you should call
-[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa) 
+[`transform()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#ad3ea23f954aaadd99a984da3a3c549aa)
 with a parsed XML source, an instance of
 [`XalanParsedSource`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanParsedSource.html).
 See
@@ -49,7 +49,7 @@ described in the following steps.
 
 Note: For a working sample that illustrates these steps, see the
 [XalanTransform](samples.md#xalantransform) sample.
-      
+
 ### 1. Include the required header files
 
 Always start with
@@ -144,7 +144,7 @@ this manner:
 * [`XSLTResultTarget(char* fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a5ad1a1cc659c8b321acfdb088d2012d3)
 * [`XSLTResultTarget(XalanDOMString& fileName)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a81dfd0938ce7f8b81512cba2fce5f9b2)
 * [`XSLTResultTarget(ostream* stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#aed57158ea3eabcc3dda8164b8f9afd38)
-* [`XSLTResultTarget(ostream& stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a1dc8e4ec1b6817fcba5463292342e363)  
+* [`XSLTResultTarget(ostream& stream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a1dc8e4ec1b6817fcba5463292342e363)
 * [`XSLTResultTarget(Writer* characterStream)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#af1a6f0f49f60232ae5b57c839c35aca0)
 * [`XSLTResultTarget(FormatterListener& flistener)`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTResultTarget.html#a931414334729593141383f5c26e0d50d)
 
@@ -357,9 +357,9 @@ using xalanc::XalanTransformer;
 
     // If you want to produce DOM output, create an empty Xerces Document
     // to contain the transformation output.
-    
-    DOMDocument * theDOM = 
-        DOMImplementation::getImplementation()->createDocument();    
+
+    DOMDocument * theDOM =
+        DOMImplementation::getImplementation()->createDocument();
 
     // Now create a FormatterListener which can be used by the transformer
     // to send each output node to the new Xerces document
@@ -369,8 +369,8 @@ using xalanc::XalanTransformer;
     // Now do the transform as normal
     XalanTransformer theXalanTransformer
     int theResult = theXalanTransformer.transform(
-        "foo.xml", 
-        "foo.xsl", 
+        "foo.xml",
+        "foo.xsl",
         theFormatter);
 …
 
@@ -414,28 +414,28 @@ to pass in a Xerces DOM as the source for an XSL transformation.
 #include <xercesc/parsers/DOMParser.hpp>
 #include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
-void parseWithXerces(XalanTransformer &xalan, 
+void parseWithXerces(XalanTransformer &xalan,
                      const XSLTInputSource &xmlInput,
                      const XalanCompiledStylesheet* styleSheet,
                      const XSLTResultTarget &output,
                      XMLFileReporter &logFile)
 {
     XercesDOMParser theParser;
-  
+
     // Turn on validation and namespace support.
     theParser.setDoValidation(true);
     theParser.setDoNamespaces(true);
 
     // Parse the document
-  
+
     theParser.parse(xmlInput);
     DOMDocument *theDOM = theParser.getDocument();
     theDOM->normalize();
 
     XercesDOMSupport theDOMSupport;
     XercesParserLiaison theParserLiaison;
-  
-    // Use the DOM to create a XercesDOMWrapperParsedSource, 
+
+    // Use the DOM to create a XercesDOMWrapperParsedSource,
     // which you can pass to the transform method.
     try
     {
@@ -452,7 +452,7 @@ void parseWithXerces(XalanTransformer &xalan,
     {
       …
     }
-}  
+}
 ```
 
 ## Working with XPath expressions
@@ -492,7 +492,7 @@ and
 [`addTraceListener()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTEngineImpl.html#aaf85408a01bdd47b10f3e53e38f547a4)
 methods to add the `TraceListener` to an
 [`XSLTProcessor`](https://apache.github.io/xalan-c/api/classxalanc_1_1XSLTProcessor.html).
- 
+
 See the [TraceListen](samples.md#tracelisten) sample
 application. The `TraceListen` sample uses `TraceListenerDefault` to
 write events to the screen.
@@ -504,7 +504,7 @@ You can use the
 extend support for encoding, number formatting, and sorting.
 
 * *Encoding*.  Xerces-C++ and Xalan-C++ use UTF-16 encoding to work
-  with Unicode data.  If you integrate the ICU with Xerces-C++, both 
+  with Unicode data.  If you integrate the ICU with Xerces-C++, both
   Xerces-C++ and Xalan-C++ use ICU support for input and output
   transcoding.
 * *`format-number()`*.  This XSLT function includes two or three
@@ -528,7 +528,7 @@ encoding. See the
 With ICU support enabled in Xerces-C++, Xalan-C++ automatically uses
 ICU support for output encoding (the `xsl:output` encoding attribute).
 
-### Enabling ICU support for number formatting and sorting 
+### Enabling ICU support for number formatting and sorting
 
 If you only want to use the ICU to support number formatting and
 sorting, you do not need to enable ICU support in Xalan-C++, but you
@@ -568,7 +568,7 @@ following:
 FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;
 ```
 
-*Sorting* 
+*Sorting*
 
 To enable ICU support for `xsl:sort`, do the following:
 
@@ -583,7 +583,7 @@ theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
 ## Basic XalanTransformer usage pattern with the C API
 
 We also include a simple C interface for using the `XalanTransformer`
-class. The [ApacheModuleXSLT](samples.md#apachemodulexslt) sample 
+class. The [ApacheModuleXSLT](samples.md#apachemodulexslt) sample
 illustrates the use of this C API.
 
 Basic strategy:

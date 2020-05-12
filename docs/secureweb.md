@@ -7,7 +7,7 @@ XML architecture.  I will try to identify some of the most common
 issues and threats  and describe some mitigation strategies.
 
 The biggest threat issue is a matter of trust.
-How well do you trust your sources of XML data? 
+How well do you trust your sources of XML data?
 What are the tools that can help increase the trust?
 
 Most Web Service communications uses HTTP over standard TCP ports.
@@ -15,9 +15,9 @@ The HTTP protocol on standard TCP ports has free access through
 business firewalls.  How well do your proxy servers handle the Web
 Service security issues  required for your applications?
 
-How well are your resource identifiers protected? 
-How well do your applications cope with resource identifier spoofing? 
-Can your resource identifiers be trusted by outside clients? 
+How well are your resource identifiers protected?
+How well do your applications cope with resource identifier spoofing?
+Can your resource identifiers be trusted by outside clients?
 Can you trust the credentials of your clients?
 
 Will the SOAP interface for your Web Service send error messages to an
@@ -105,7 +105,7 @@ from an outside source, these entity reference locations may be
 unreachable, unreliable, or untrusted.
 
 Web Service SOAP XML documents MUST NOT have `DOCTYPE` definitions.
-SOAP processors should not process `DOCTYPE` definitions. 
+SOAP processors should not process `DOCTYPE` definitions.
 The conformance is implementation dependent.
 
 [http://www.w3.org/TR/soap](http://www.w3.org/TR/soap)
@@ -122,15 +122,15 @@ resources cannot be localized and secured.
 
 A similar method can be designed specifically for each application.
 
-A trusted application may need to pre-screen any entity definitions in XML 
+A trusted application may need to pre-screen any entity definitions in XML
 before passing the information into the core of the application.
 
-A trusted application should install some type of entity resolving catalog 
+A trusted application should install some type of entity resolving catalog
 or database that can be trusted.
 
 ## Processing Instruction (PI) Threats
 
-Processing instructions are a mechanism to send specific information 
+Processing instructions are a mechanism to send specific information
 into an application.  A common processing instruction is a stylesheet
 declaration.  This information is part of an XML document and comes
 usually after the XML header and before the root element.
@@ -142,7 +142,7 @@ documents.
 
 [http://www.w3.org/TR/xml-stylesheet](http://www.w3.org/TR/xml-stylesheet)
 
-Examples in the *xml-stylesheet* recommendation describe how to use the 
+Examples in the *xml-stylesheet* recommendation describe how to use the
 processing instruction to associate CSS stylesheets for XHTML.
 Applications that use XSLT transformations will interpret the
 xml-stylesheet processing instruction as the location of a XSLT
@@ -169,7 +169,7 @@ based on specifications that predate the adoption by the
 [World Wide Web Consortium (W3C)](http://www.w3.org).
 SOAP is not based on Microsoft technology.  It is an open standard
 drafted by UserLand, Ariba, Commerce One, Compaq, Developmentor, HP,
-IBM, IONA, Lotus, Microsoft, and SAP. 
+IBM, IONA, Lotus, Microsoft, and SAP.
 [SOAP 1.1](http://www.w3.org/TR/2000/NOTE-SOAP-20000508)
 was presented to the W3C in May 2000 as an official Internet standard.
 
@@ -177,9 +177,9 @@ The original [SOAP 1.1](http://www.w3.org/TR/soap11) standard is
 associated with this URI namespace prefix:
 `http://schemas.xmlsoap.org/soap/`
 
-There are significant changes in naming conventions since SOAP 1.1 
-was adopted by W3C as a recommended standard. 
-The current iteration is [SOAP 1.2](http://www.w3.org/TR/soap12) 
+There are significant changes in naming conventions since SOAP 1.1
+was adopted by W3C as a recommended standard.
+The current iteration is [SOAP 1.2](http://www.w3.org/TR/soap12)
 and is associated with this URI namespace prefix:
 `http://www.w3.org/2003/05`
 

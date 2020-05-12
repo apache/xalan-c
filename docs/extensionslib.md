@@ -15,7 +15,7 @@ Development Mailing List.
 Xalan-C++ supports the [EXSLT](http://exslt.org/) initiative to provide
 a set of standard extension functions to XSLT users. Xalan-C++ includes
 beta implementations for functions in four of the EXSLT namespaces
-(some are calls to extension already in the Xalan namespace). 
+(some are calls to extension already in the Xalan namespace).
 
 The source files for the implementations are in the XalanEXSLT
 subdirectory of the source tree. See
@@ -57,7 +57,7 @@ For an example that uses this namespace, see
 
 ## nodeset
 
-Implemented in `FunctionNodeSet`, `nodeset (result-tree-fragment)` 
+Implemented in `FunctionNodeSet`, `nodeset (result-tree-fragment)`
 casts a result tree fragment into a `node-set`.
 
 Note: When you bind a variable to a template, rather than to the value
@@ -75,7 +75,7 @@ namespace to provide access to the `nodeset()` method in
 
 ```xml
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                    version="1.0"
                    xmlns:xalan="http://xml.apache.org/xalan"
                    exclude-result-prefixes="xalan">
@@ -91,12 +91,12 @@ namespace to provide access to the `nodeset()` method in
           <elem2a>ELEMENT2A</elem2a>
         </elem2>
       </docelem>
-    </xsl:variable>     
+    </xsl:variable>
       <xsl:for-each select="xalan:nodeset($rtf)/docelem//*">
         <xsl:value-of select="name(.)"/><xsl:text>,</xsl:text>
       </xsl:for-each>
   </out>
-</xsl:template> 
+</xsl:template>
 </xsl:stylesheet>
 ```
 
@@ -108,7 +108,7 @@ comma-delimited list of the element names in the `node-set`
 ```
 
 Note: For illustration purposes, the preceding stylesheet pays no
-attention to the structure and content of the XML input document. 
+attention to the structure and content of the XML input document.
 Instead, it processes the template (in the stylesheet) bound to the
 variable named *rtf*.
 
@@ -129,7 +129,7 @@ returns a `node-set` with the nodes in *node-set1* and not in
 
 Implemented in `FunctionDistinct`, `distinct (node-set)` returns a
 `node-set` containing nodes with distinct string values. If more than
-one node in the *node-set* contains the same text node value, distinct 
+one node in the *node-set* contains the same text node value, distinct
 only returns the first of these nodes that it finds.
 
 ## evaluate

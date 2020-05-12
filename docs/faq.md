@@ -13,12 +13,12 @@ For a brief listing of tutorials, discussion forums, and other
 materials, see
 [Getting up to speed with XSLT](overview.md#getting-up-to-speed-with-xslt).
 
-  
+
 ## Asking questions about Xalan-C++
 
 *Where can I ask a question?*
 
-For specific questions on Xalan-C++, see list archives: 
+For specific questions on Xalan-C++, see list archives:
 [xalan-c-users](http://marc.info/?l=xalan-c-users) and
 [xalan-dev](http://marc.info/?l=xalan-dev).
 You must subscribe to these Apache mailing lists before posting your
@@ -41,7 +41,7 @@ Again, please review the archives before posting a new question.
 *What is Xerces-C++ and why do I need it?*
 
 Xerces-C++ is a validating XML parser written in a portable subset of
-C++.  Xerces-C++ makes it easy to give your application the ability to 
+C++.  Xerces-C++ makes it easy to give your application the ability to
 read and write XML data.  Like Xalan-C++, Xerces-C++ is available from
 the Apache XML site:
 [http://xerces.apache.org](http://xerces.apache.org).
@@ -70,23 +70,23 @@ using the internal DOM implementation is the best approach.
 In cases where you want to modify the DOM document on the fly, you
 should use the Xerces DOM as the base document.  You can wrap the
 Xerces DOM in a wrapper (see
-[Passing in a Xerces DOM](usagepatterns.md#passing-in-a-xerces-dom-to-a-transformation)) 
+[Passing in a Xerces DOM](usagepatterns.md#passing-in-a-xerces-dom-to-a-transformation))
 to then use as an input to a Xalan transformation.  Alternatively you
 can output the result of a transformation to a Xerces DOM document (see
 [Working with DOM input and output](usagepatterns.md#working-with-dom-input-and-output)).  In either
 case, the Xerces document can be freely modified.  However, after you
 modify the document, you need to re-build the wrapper so that any
 changes are replicated in the Xalan wrappers.
-  
+
 ## Problems with samples in Windows
 
 *I have encountered problem executing the Xalan-C++ sample applications
 after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
-When I tried to execute the sample, I receive the error message 
+When I tried to execute the sample, I receive the error message
 `Debug Assertion Failed! …  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)`.*
 
 You may be mixing debug and release versions of executables and
-libraries.  In other words, if you are compiling the sample for debug, 
+libraries.  In other words, if you are compiling the sample for debug,
 then you should link with the debug version of the Xalan-C++ and
 Xerces-C++ libraries and run with the debug version of the dynamic link
 libraries.
@@ -133,7 +133,7 @@ The
 [International Components for Unicode (ICU)](http://icu-project.org/)
 is a C and C++ library that provides robust and full-featured Unicode
 support on a wide variety of platforms.  Xalan-C++ uses the ICU to
-extend support for encoding, number formatting, and sorting. 
+extend support for encoding, number formatting, and sorting.
 
 Xalan should work with any release of ICU from the past decade.
 
@@ -155,7 +155,7 @@ For additional background information on this problem, see the online
 manual
 [GNU tar and POSIX tar](http://www.gnu.org/manual/tar/html_chapter/tar_8.html#SEC112)
 for the utility.
-   
+
 ## Xalan-C++ in Apache
 
 *Is it possible to run Xalan-C++ from an Apache server?*
@@ -164,7 +164,7 @@ A simple Apache module called
 [ApacheModuleXSLT](samples.md#apachemodulexslt)
 is provided as a sample.  It demonstrates how to integrate Xalan-C++
 with Apache.
-    
+
 ## Is Xalan-C++ thread-safe?
 
 *Is Xalan-C++ thread-safe?*
@@ -177,7 +177,7 @@ In order to support very efficient use in multi-threaded applications,
 Xalan-C++ is designed to avoid synchronization as much as possible.
 Each thread of execution is required to have its own set of "support"
 objects that contain the state of the transformation.  Accordingly, no
-synchronization is required when multiple threads are executing.     
+synchronization is required when multiple threads are executing.
 
 Parsed ("compiled") stylesheets (see
 [Performing a series of transformations](usagepatterns.md#performing-a-series-of-transformations))
@@ -208,7 +208,7 @@ To maximize performance, here are some suggestions for you to keep in
 mind as you set up your applications:
 
 * Use a compiled stylesheet when you expect to use the stylesheet more
-  than once.     
+  than once.
 * Set up your stylesheets to function efficiently.
   * Don't use `//` (descendant axes) patterns near the root of a large
     document.
@@ -243,7 +243,7 @@ literal result elements and produce output that is not valid XML.
 
 You can use the `xsl:stylesheet` doctype defined in `xsl-html40s.dtd`
 for stylesheets that generate HTML.
-    
+
 ## What does the XalanDOMException HIERARCHY_REQUEST_ERR mean?
 
 *What does the
@@ -265,12 +265,12 @@ source tree implementation, please post a bug report on
 [Jira](https://issues.apache.org/jira/browse/XALANC), and
 attach a minimal source document and stylesheet that produce the
 problem to the bug report.
-    
+
 ## Submitting Patches
 
 *Who do I submit patches to?*
 
-Your contributions are much appreciated! You can e-mail your patches to 
+Your contributions are much appreciated! You can e-mail your patches to
 the Xalan Development Mailing List or raise an issue on the
 [Jira issue tracking system](https://issues.apache.org/jira/browse/XALANC).
 
@@ -344,7 +344,7 @@ development.  The Solaris SunStudio is now available from Oracle.
 [`XalanDocument`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanDocument.html)
 (actually
 [`XalanSourceTreeDocument`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanSourceTreeDocument.html)
-underneath) but W3C DOM functions like 
+underneath) but W3C DOM functions like
 `DOMElement::setAttribute` don't work! Am I going crazy or what?*
 
 No, you aren't going crazy.  Xalan's default source tree is read-only
@@ -371,7 +371,7 @@ that writes output to `std::cerr`. To change this you can:
   [`XalanTranformer::setWarningStream`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a1c7826710c68a6311329ef7be65253e6)
   with a different `std::ostream` before calling
   [`XalanTransformer::transform`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3162d8129224a1a6ed67d8752f3447b4).
-* Instantiate your own 
+* Instantiate your own
   [`XalanTransformerProblemListener`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformerProblemListener.html)
   with a different output stream and call
   [`XalanTransformer::setProblemListener()`](https://apache.github.io/xalan-c/api/classxalanc_1_1XalanTransformer.html#a3dda165f568b89e02bcbf2f56508ec7a)
@@ -421,7 +421,7 @@ There isn't, but we're working on it.
 me. Help!*
 
 Did you declare the namespace on the `xsl:stylesheet` or
-`xsl:transform` element?  It should look like this: 
+`xsl:transform` element?  It should look like this:
 
 ```xml
    <xsl:stylesheet version="1.0" xmlns:xalan="http://xml.apache.org/xalan"> …rest of stylesheet

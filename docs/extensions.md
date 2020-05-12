@@ -12,7 +12,7 @@ You can think of extension functions as extending the core library of
 functions that XPath provides. Like the XPath functions, an extension
 function returns an XObject, which may contain a value of any of the
 five XSLT data types: `node-set`, `result-tree-fragment`, `string`,
-`boolean` or `number`. 
+`boolean` or `number`.
 
 You can send arguments to an extension function in the form of XPath
 expressions, literals (for `string`, `boolean`, and `number`), the
@@ -36,7 +36,7 @@ follows:
    in the example below -- to create an `XObject` corresponding to the
    XSLT data type the function returns.
 2. Implement a `clone()` method to enable Xalan to create and maintain
-    a copy of the extension function. 
+    a copy of the extension function.
 3. (Optional) As Xalan does for the XPath functions, you may want to
    prevent the compiler from generating an assignment or equality
    operator for this function.
@@ -81,11 +81,11 @@ public:
   {
     if (args.size() != 1)
     {
-      executionContext.error("The square-root() function takes one argument!", 
+      executionContext.error("The square-root() function takes one argument!",
                               context);
     }
     assert(args[0] != 0);
-    // Use the XObjectFactory createNumber() method to create an XObject 
+    // Use the XObjectFactory createNumber() method to create an XObject
     // corresponding to the XSLT number data type.
     return executionContext.getXObjectFactory().createNumber(
                                                         sqrt(args[0]->num()));
@@ -154,7 +154,7 @@ is installed in a different namespace.
 // The namespace…
 const XalanDOMString	
     theNamespace("http://MyExternalFunction.mycompany.org");
-    
+
 theXalanTransformer.installExternalFunction(theNamespace,
                                             XalanDOMString("square-root"),
                                             FunctionSquareRoot());
@@ -175,7 +175,7 @@ To use the extension function in a stylesheet, you must do the following:
    namespace specified when the function is installed.
    <br>
    By default, namespace declarations are included in the
-   transformation output. To exclude namespaces from the output, 
+   transformation output. To exclude namespaces from the output,
    use
    <br>
    `exclude-result-prefixes="prefix-1 prefix-2 …"`
@@ -204,17 +204,17 @@ namespace declaration to the result tree, and uses the square-root
 function to return the square root of `//area/@value:`
 
 ```xml
-<?xml version="1.0"?> 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
 	xmlns:external="http://ExternalFunction.xalan-c.xml.apache.org"
   exclude-result-prefixes="external">
-  
+
     <xsl:template match="//area">
     <out>
       The area of the square is
       <xsl:value-of select="@value"/> square units.
-      The length of each side is 
+      The length of each side is
       <xsl:value-of select="external:square-root(@value)"/> units
     </out>
     </xsl:template>
@@ -226,15 +226,15 @@ output:
 
 ```xml
 <out>
-  The area of the square is 
+  The area of the square is
   397 square units.
-  The length of each side is 
+  The length of each side is
   19.9249 units.
 </out>
 ```
 
 For a slightly more complex variation on this example, see the
-[External Functions](samples.md#externalfunctions) sample 
+[External Functions](samples.md#externalfunctions) sample
 
 ### Passing Nodes to a function
 

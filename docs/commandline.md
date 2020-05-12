@@ -17,7 +17,7 @@ To perform a transformation from the command line or a script, do the following:
 
 ## Using the `Xalan` executable
 
-Call the `Xalan` executable as follows: 
+Call the `Xalan` executable as follows:
 
 ```sh
 Xalan [options] xmlSource xslStylesheet
@@ -33,11 +33,11 @@ stylesheet to apply, and *options* are any (or none) of the following:
 | *-i integer*   | Indent the specified amount.                                           |
 | *-m*           | Omit the META tag in HTML output.                                      |
 | *-o filename*  | Write transformation result to this file (rather than to the console). |
-| *-p name expr* | Set a stylesheet parameter with this expression.                       | 
+| *-p name expr* | Set a stylesheet parameter with this expression.                       |
 | *-t name expr* | Display timing information.                                            |
-| *-u name expr* | Disable escaping of URLs in HTML output.                               | 
-| *-v*           | Validate the XML source document.                                      | 
-| *-*            | A dash as the *xmlSource* argument reads from stdin.<br>A dash as the *xmlStylesheet* argument reads from stdin.<br/>("-" cannot be used for both arguments.) | 
+| *-u name expr* | Disable escaping of URLs in HTML output.                               |
+| *-v*           | Validate the XML source document.                                      |
+| *-*            | A dash as the *xmlSource* argument reads from stdin.<br>A dash as the *xmlStylesheet* argument reads from stdin.<br/>("-" cannot be used for both arguments.) |
 
 To display a list of the options call the Xalan executable as follows:
 

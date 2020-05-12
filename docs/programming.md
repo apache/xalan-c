@@ -16,7 +16,7 @@ Version 1.8.  This feature introduces an object called `MemoryManager`
 which allows applications with stricter memory management requirements
 to utilize a more efficient allocation method.  This `MemoryManager`
 object can be applied to each processor instance, thus recovery
-procedures from memory leaks or processor crashes will be applied to 
+procedures from memory leaks or processor crashes will be applied to
 the associated instance only.
 
 The memory management model is similar to the memory management feature
@@ -45,7 +45,7 @@ static void XalanTransformer::initialize(MemoryManager* initMemoryManager=0);
 ```c++
 // Create instance of XalanTransformer
 MemoryManager      memMgrA;                // memory manager object
-XalanTransformer   transformerA(&memMgrA); 
+XalanTransformer   transformerA(&memMgrA);
 
 MemoryManager      memMgrB;
 XalanTransformer   transformerB(&memMgrB);
@@ -55,7 +55,7 @@ XalanTransformer   transformerD;           // Uses default static memory manager
 
 The above method demonstrates how users can apply the basic pluggable
 memory management feature.  Users also have the option of implementing
-their own memory manager.  This can be done by simply writing methods 
+their own memory manager.  This can be done by simply writing methods
 for:
 
 ```c++

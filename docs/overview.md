@@ -7,12 +7,12 @@ Xalan-C++ (named after a rare musical instrument) implements the
 and the
 [XML Path Language (XPath) Version 1.0](http://www.w3.org/TR/xpath).
 XSLT is the first part of the XSL stylesheet language for XML. It includes the XSL
-Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials, 
+Transformation vocabulary and XPath, a language for addressing parts of XML documents. For links to background materials,
 discussion groups, frequently asked questions, and tutorials on XSLT, see
-[Getting up to speed with XSLT](#getting-up-to-speed-with-xslt). 
+[Getting up to speed with XSLT](#getting-up-to-speed-with-xslt).
 
 Note: XSL also includes a vocabulary for formatting documents, which is
-not part of Xalan-C++.  For more information, see 
+not part of Xalan-C++.  For more information, see
 [Extensible Stylesheet Language (XSL) Version 1.0 W3C Recommendation](http://www.w3.org/TR/xsl)
 and the [Apache XML FOP (Formatting Objects Project)](http://xmlgraphics.apache.org/fop).
 
@@ -39,7 +39,7 @@ In the following example, the *foo.xsl* stylesheet is used to transform
 *foo.xsl*:
 
 ```xml
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 <xsl:template match="doc">
 <out><xsl:value-of select="."/></out>
@@ -61,7 +61,7 @@ In the following example, the *foo.xsl* stylesheet is used to transform
   [XML Path Language (XPath) Version 1.0](http://www.w3.org/TR/xpath).
 * Xalan-C++ uses [Xerces-C++](http://xerces.apache.org/xerces-c/index.html)
   to parse XML documents and XSL stylesheets.  The input may appear in
-  the form of a file or URL, a stream, or a [DOM](http://www.w3.org/DOM). 
+  the form of a file or URL, a stream, or a [DOM](http://www.w3.org/DOM).
   Xalan-C++ performs the transformations specified in the XSL
   stylesheet and produces a file, a stream, or a DOM as you
   specify when you set up the transformation.
@@ -87,14 +87,14 @@ following:
 * Doug Tidwell's [XSLT](http://www.oreilly.com/catalog/xslt/),
   O'Reilly, 2001
 * Bob DuCharme's [XSLT Quickly](http://www.manning.com/ducharme/index.html),
-  Manning Publications, 2001                 
-* John Robert Gardner and Zarella Rendon's 
+  Manning Publications, 2001
+* John Robert Gardner and Zarella Rendon's
   [XSLT and XPath: A Guide to Transformations](http://vig.prenhall.com/catalog/academic/product/1,4096,0130404462,00.html),
-  Prentice-Hall, 2001                 
+  Prentice-Hall, 2001
 * Elliotte Rusty Harold's
   [Chapter 17 of the XML Bible: XSL Transformations](http://www.ibiblio.org/xml/books/bible2/chapters/ch17.html)
 * The Mulberry
-  [XSL-List -- Open Forum on XSL](http://www.mulberrytech.com/xsl/xsl-list/) 
+  [XSL-List -- Open Forum on XSL](http://www.mulberrytech.com/xsl/xsl-list/)
   (of interest to XSL users at all levels)
 * Objects by Design's
   [Transforming XMI to HTML](http://www.objectsbydesign.com/projects/xmi_to_html.html)
@@ -102,15 +102,15 @@ following:
   model," but also covers "generic" XML transformations) and their
   related
   [XSLT by Example](http://objectsbydesign.com/projects/xslt/xslt_by_example.html)
-* OASIS (the Organization for the Advancement of Structured Information Standards): 
+* OASIS (the Organization for the Advancement of Structured Information Standards):
   [Extensible Stylesheet Language (XSL)](http://www.oasis-open.org/cover/xsl.html)
   by Robin Cover
-* Aaron Skonnard and Martin Gudgin's 
-  [Essential 
+* Aaron Skonnard and Martin Gudgin's
+  [Essential
    XML Quick Reference](http://www.theserverside.net/tt/books/addisonwesley/EssentialXML/index.tss"):
    A Programmer's Reference to XML, XPath, XSLT, XML Schema, SOAP and
    More. This reference is published by Addison Wesley, 2003, ISBN/0201740958.
-        
+
 When you come across other useful introductory or background materials,
 please email the Xalan Development Mailing List, so we can add them to
 this list.
@@ -133,7 +133,7 @@ this list.
  <br>
  <dt><strong>XSL Instruction</strong></dt>
  <dd>Any tag associated with the XSLT namespace.</dd>
- <br>        
+ <br>
  <dt><strong>Template</strong></dt>
  <dd>An element, usually with child elements, that specifies a "rule"
      or set of instructions to perform when a  particular kind of

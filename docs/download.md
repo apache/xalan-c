@@ -28,7 +28,7 @@ Note: You must [verify the integrity](#verify-the-integrity-of-the-files)
 of the downloaded files using signatures downloaded from the Apache
 master distribution directory.
 
-Note: To access previous releases of Xalan-C++, visit the 
+Note: To access previous releases of Xalan-C++, visit the
 [Apache Xalan-C++ archives](http://archive.apache.org/dist/xml/xalan-c/).
 To access previous releases of Xerces-C++, visit the
 [Apache Xerces-C++ archives](http://archive.apache.org/dist/xerces/c/)
@@ -71,4 +71,4 @@ signatures using:
    % gpg --verify <archive-name>.tar.gz.asc
 ```
 
-Alternatively, you can verify the MD5 signature on the files. 
+Alternatively, you can verify the MD5 signature on the files.
