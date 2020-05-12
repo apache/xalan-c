@@ -4,6 +4,10 @@
 
 ## Table of Contents
 
+### Introduction
+
+[Introduction](introduction.md)
+
 ### Xalan project information
 
 [Main Xalan website](http://xalan.apache.org/)
