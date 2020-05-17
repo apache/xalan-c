@@ -257,8 +257,8 @@ SimpleXPathCAPI XMLFile XPathExpression
 
 where *XMLFile* is an XML source file, and *XPathExpression* is an
 XPath expression to apply to the XML source file. The
-*SimpleXPathCAPI* subdirectory contains an XML file named *xml.foo*
-identical to *foo.xml* in the preceding example.
+*SimpleXPathCAPI* subdirectory contains an XML file named *foo.xml*
+similar to the *foo.xml* in the preceding example.
 
 You can try command lines like:
 
