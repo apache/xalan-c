@@ -126,7 +126,7 @@ write the ouput to *foo.out*.
 You can run it from the *DocumentBuilder* subdirectory with
 `DocumentBuilder`.
 
-## ExternalFunctions
+## ExternalFunction
 
 What it does: implement, install, and illustrate the usage of three
 extension functions.  The functions return a square root, a cube, and a
@@ -136,8 +136,8 @@ XML document (*foo.xml*), computes the length of each side of a cube
 and the volume of the cube, and enters the date and time of the
 transformation. The output appears in *foo.out*.
 
-Run this sample from the *ExternalFunctions* subdirectory with
-`ExternalFunctions`.
+Run this sample from the *ExternalFunction* subdirectory with
+`ExternalFunction`.
 
 See also: [Extension Functions](faq.md#extension-functions).
 
