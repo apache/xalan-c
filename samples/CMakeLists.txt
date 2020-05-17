@@ -55,8 +55,13 @@ add_test(NAME CompileStylesheet
         COMMAND $<TARGET_FILE:CompileStylesheet>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/CompileStylesheet")
 
+add_test(NAME DocumentBuilder
+        COMMAND $<TARGET_FILE:DocumentBuilder>
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/DocumentBuilder")
+
 foreach(sample
-        CompileStylesheet)
+        CompileStylesheet
+        DocumentBuilder)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
