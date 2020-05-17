@@ -109,6 +109,10 @@ add_test(NAME XalanTransform
         COMMAND $<TARGET_FILE:XalanTransform> "foo.xml" "foo.xsl"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/XalanTransform")
 
+add_test(NAME XalanTransformerCallback
+        COMMAND $<TARGET_FILE:XalanTransformerCallback> "foo.xml" "foo.xsl"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/XalanTransformerCallback")
+
 foreach(sample
         CompileStylesheet
         DocumentBuilder
@@ -126,7 +130,8 @@ foreach(sample
         TraceListen-4
         TransformToXercesDOM
         UseStylesheetParam
-        XalanTransform)
+        XalanTransform
+        XalanTransformerCallback)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
