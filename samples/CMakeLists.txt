@@ -57,7 +57,8 @@ foreach(sample
         EntityResolver
         ExternalFunction
         ParsedSourceWrappers
-        SimpleTransform)
+        SimpleTransform
+        StreamTransform)
   add_test(NAME ${sample}
            COMMAND $<TARGET_FILE:${sample}>
            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${sample}")
@@ -82,6 +83,7 @@ foreach(sample
         ExternalFunction
         ParsedSourceWrappers
         SimpleTransform
+        StreamTransform
         SerializeNodeSet
         SimpleXPathAPI-1
         SimpleXPathAPI-2)
