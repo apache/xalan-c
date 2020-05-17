@@ -222,13 +222,13 @@ The *XPathWrapper* subdirectory contains an XML file named *xml.foo*
 You can try command lines like
 
 ```sh
-SimpleXPathAPI foo.xml /doc name/@last
+SimpleXPathAPI foo.xml /foo:doc foo:name/@last
 ```
 
 and
 
 ```sh
-SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'
+SimpleXPathAPI foo.xml / '//foo:name[position()="4"]/@first'
 ```
 
 Note: If a `SimpleXPathAPI` argument includes characters (such as `*`)
