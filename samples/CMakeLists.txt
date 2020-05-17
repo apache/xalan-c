@@ -92,6 +92,10 @@ add_test(NAME TraceListen-4
         COMMAND $<TARGET_FILE:TraceListen> "-ttc"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TraceListen")
 
+add_test(NAME TransformToXercesDOM
+        COMMAND $<TARGET_FILE:TransformToXercesDOM> "birds.xml" "birds.xsl"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TransformToXercesDOM")
+
 foreach(sample
         CompileStylesheet
         DocumentBuilder
@@ -106,7 +110,8 @@ foreach(sample
         TraceListen-1
         TraceListen-2
         TraceListen-3
-        TraceListen-4)
+        TraceListen-4
+        TransformToXercesDOM)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
