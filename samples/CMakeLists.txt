@@ -55,7 +55,8 @@ foreach(sample
         CompileStylesheet
         DocumentBuilder
         EntityResolver
-        ExternalFunction)
+        ExternalFunction
+        ParsedSourceWrappers)
   add_test(NAME ${sample}
           COMMAND $<TARGET_FILE:${sample}>
           WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${sample}")
@@ -65,7 +66,8 @@ foreach(sample
         CompileStylesheet
         DocumentBuilder
         EntityResolver
-        ExternalFunction)
+        ExternalFunction
+        ParsedSourceWrappers)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
