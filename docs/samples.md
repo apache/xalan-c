@@ -160,7 +160,7 @@ XPath expression to an XML document.
 Run this sample from the *SerializeNodeSet* subdirectory with
 
 ```sh
-SerializeNodeSet XMLFile ContextNode XPathExpression`
+SerializeNodeSet XMLFile ContextNode XPathExpression
 ```
 
 where *XMLFile* is an XML source file, *ContextNode* is the location

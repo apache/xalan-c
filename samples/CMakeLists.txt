@@ -58,16 +58,21 @@ foreach(sample
         ExternalFunction
         ParsedSourceWrappers)
   add_test(NAME ${sample}
-          COMMAND $<TARGET_FILE:${sample}>
-          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${sample}")
+           COMMAND $<TARGET_FILE:${sample}>
+           WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${sample}")
 endforeach()
+
+add_test(NAME SerializeNodeSet
+         COMMAND $<TARGET_FILE:SerializeNodeSet> "foo.xml" "/doc" "name[@first='David']"
+         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/SerializeNodeSet")
 
 foreach(sample
         CompileStylesheet
         DocumentBuilder
         EntityResolver
         ExternalFunction
-        ParsedSourceWrappers)
+        ParsedSourceWrappers
+        SerializeNodeSet)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
