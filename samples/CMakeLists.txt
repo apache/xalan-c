@@ -67,6 +67,14 @@ add_test(NAME SerializeNodeSet
          COMMAND $<TARGET_FILE:SerializeNodeSet> "foo.xml" "/doc" "name[@first='David']"
          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/SerializeNodeSet")
 
+add_test(NAME SimpleXPathAPI-1
+        COMMAND $<TARGET_FILE:SimpleXPathAPI> "foo.xml" "/foo:doc" "foo:name/@last"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/SimpleXPathAPI")
+
+add_test(NAME SimpleXPathAPI-2
+        COMMAND $<TARGET_FILE:SimpleXPathAPI> "foo.xml" "/" "//foo:name[position()=\"4\"]/@first"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/SimpleXPathAPI")
+
 foreach(sample
         CompileStylesheet
         DocumentBuilder
@@ -74,7 +82,9 @@ foreach(sample
         ExternalFunction
         ParsedSourceWrappers
         SimpleTransform
-        SerializeNodeSet)
+        SerializeNodeSet
+        SimpleXPathAPI-1
+        SimpleXPathAPI-2)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
