@@ -50,3 +50,18 @@ foreach(sample
   set_target_properties(${sample} PROPERTIES FOLDER "Samples")
   add_dependencies(samples ${sample})
 endforeach()
+
+add_test(NAME CompileStylesheet
+        COMMAND $<TARGET_FILE:CompileStylesheet>
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/CompileStylesheet")
+
+foreach(sample
+        CompileStylesheet)
+  if(msgloader STREQUAL "nls")
+    set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
+  endif()
+  if(WIN32)
+    string(REPLACE ";" "\\;" OLDPATH "$ENV{PATH}")
+    set_tests_properties(${sample} PROPERTIES ENVIRONMENT "PATH=$<SHELL_PATH:$<TARGET_FILE_DIR:xalan-c>>\;$<SHELL_PATH:$<TARGET_FILE_DIR:xalanMsg>>\;${OLDPATH}")
+  endif()
+endforeach()
