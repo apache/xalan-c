@@ -96,6 +96,15 @@ add_test(NAME TransformToXercesDOM
         COMMAND $<TARGET_FILE:TransformToXercesDOM> "birds.xml" "birds.xsl"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TransformToXercesDOM")
 
+add_test(NAME UseStylesheetParam
+        COMMAND $<TARGET_FILE:UseStylesheetParam>
+          "foo.xml" "foo.xslt" "foo.out"
+          "-s" "stringA" "'This is a test string value'"
+          "-n" "numberA"  "123.012345"
+          "-d" "parmA" "parmA.xml"
+          "-d" "parmB" "parmB.xml"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/UseStylesheetParam")
+
 foreach(sample
         CompileStylesheet
         DocumentBuilder
@@ -111,7 +120,8 @@ foreach(sample
         TraceListen-2
         TraceListen-3
         TraceListen-4
-        TransformToXercesDOM)
+        TransformToXercesDOM
+        UseStylesheetParam)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
