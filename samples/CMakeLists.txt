@@ -58,7 +58,8 @@ foreach(sample
         ExternalFunction
         ParsedSourceWrappers
         SimpleTransform
-        StreamTransform)
+        StreamTransform
+        ThreadSafe)
   add_test(NAME ${sample}
            COMMAND $<TARGET_FILE:${sample}>
            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${sample}")
@@ -121,6 +122,7 @@ foreach(sample
         ParsedSourceWrappers
         SimpleTransform
         StreamTransform
+        ThreadSafe
         SerializeNodeSet
         SimpleXPathAPI-1
         SimpleXPathAPI-2
