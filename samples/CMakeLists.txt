@@ -76,6 +76,22 @@ add_test(NAME SimpleXPathAPI-2
         COMMAND $<TARGET_FILE:SimpleXPathAPI> "foo.xml" "/" "//foo:name[position()=\"4\"]/@first"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/SimpleXPathAPI")
 
+add_test(NAME TraceListen-1
+        COMMAND $<TARGET_FILE:TraceListen> "-tt"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TraceListen")
+
+add_test(NAME TraceListen-2
+        COMMAND $<TARGET_FILE:TraceListen> "-tg"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TraceListen")
+
+add_test(NAME TraceListen-3
+        COMMAND $<TARGET_FILE:TraceListen> "-ts"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TraceListen")
+
+add_test(NAME TraceListen-4
+        COMMAND $<TARGET_FILE:TraceListen> "-ttc"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/TraceListen")
+
 foreach(sample
         CompileStylesheet
         DocumentBuilder
@@ -86,7 +102,11 @@ foreach(sample
         StreamTransform
         SerializeNodeSet
         SimpleXPathAPI-1
-        SimpleXPathAPI-2)
+        SimpleXPathAPI-2
+        TraceListen-1
+        TraceListen-2
+        TraceListen-3
+        TraceListen-4)
   if(msgloader STREQUAL "nls")
     set_tests_properties(${sample} PROPERTIES ENVIRONMENT "NLSPATH=${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen/Xalan.cat")
   endif()
