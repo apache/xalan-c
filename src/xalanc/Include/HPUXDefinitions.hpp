@@ -39,9 +39,6 @@
 #endif
 #endif
 
-#define XALAN_POSIX2_AVAILABLE
-
-
 
 #endif  // HPUXDEFINITIONS_HEADER_GUARD_1357924680
 

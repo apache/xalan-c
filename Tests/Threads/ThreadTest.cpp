@@ -56,7 +56,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 #include <csignal>
 
@@ -225,7 +225,7 @@ signalHandler(DWORD     theSignalType)
         return FALSE;
     }
 }
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 extern "C"
 {
 static void
@@ -250,7 +250,7 @@ extern "C"
 }
 
 void
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 extern "C"
 {
@@ -312,7 +312,7 @@ thePreparsedThreadRoutine(void*     param)
 
     theInfo->m_done = true;
 
-#if defined(XALAN_POSIX2_AVAILABLE)
+#if defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
@@ -324,7 +324,7 @@ thePreparsedThreadRoutine(void*     param)
 extern "C" void theUnparsedThreadRoutine(void* param);
 
 void
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 extern "C" void* theUnparsedThreadRoutine(void* param);
 
@@ -384,7 +384,7 @@ theUnparsedThreadRoutine(void*      param)
 
     theInfo->m_done = true;
 
-#if defined(XALAN_POSIX2_AVAILABLE)
+#if defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
@@ -396,7 +396,7 @@ doSleep(unsigned int    theMilliseconds)
 {
 #if defined(WINDOWS_THREAD_FUNCTIONS)
     Sleep(theMilliseconds);
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
     usleep(theMilliseconds * 10);
 #else
 #error Unsupported platform!
@@ -428,7 +428,7 @@ createThread(
         return true;
     }
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
     pthread_t   theThread;
 
@@ -563,7 +563,7 @@ doThreads(
         SetConsoleCtrlHandler(
                 signalHandler,
                 TRUE);
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
         signal(SIGINT, signalHandler);
 #else
 #error Unsupported platform!

@@ -48,7 +48,7 @@ typedef   DWORD      theThreadIDType;
 typedef   HANDLE     theThreadType;
 
 //This is here for Unix threads
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 // This is a workaround for a Tru64 compiler bug...
 #if defined(TRU64)
@@ -120,7 +120,7 @@ outputMessage(
 #if defined(WINDOWS_THREAD_FUNCTIONS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
   void  *theThread(void   *param)
 #endif
 {
@@ -135,7 +135,7 @@ theThread(LPVOID    param)
 #if defined(WINDOWS_THREAD_FUNCTIONS)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
     const theThreadIDType         theThreadID = pthread_self();
 
 #endif
@@ -177,7 +177,7 @@ theThread(LPVOID    param)
 
 #if defined(WINDOWS_THREAD_FUNCTIONS)
     return theResult;
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
@@ -225,7 +225,7 @@ doThreads(size_t    nThreads)
         CloseHandle(hThreads[i]);
     }
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
     int     result;
     void*   thread_result;
