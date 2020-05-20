@@ -52,6 +52,12 @@
 #error Unknown compiler!
 #endif
 
+#cmakedefine XALAN_HAVE_GMTIME_R 1
+#cmakedefine XALAN_HAVE_LOCALTIME_R 1
+#cmakedefine XALAN_HAVE_ISNAN 1
+#cmakedefine XALAN_HAVE__ISNAN 1
+#cmakedefine XALAN_HAVE_STD_ISNAN 1
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)
