@@ -41,8 +41,6 @@
 #include <xalanc/Include/OS390Definitions.hpp>
 #elif defined(OS400)
 #include <xalanc/Include/OS400Definitions.hpp>
-#elif defined(__DECCXX)
-#include <xalanc/Include/TRU64Definitions.hpp>
 #elif defined(__INTEL_COMPILER)
 #include <xalanc/Include/IntelDefinitions.hpp>
 #elif defined(__IBMCPP__) && defined(__TOS_LINUX__)

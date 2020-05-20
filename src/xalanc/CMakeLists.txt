@@ -892,7 +892,6 @@ set(include_headers
   Include/OS400Definitions.hpp
   Include/SolarisDefinitions.hpp
   Include/STLHelper.hpp
-  Include/TRU64Definitions.hpp
   Include/VCPPDefinitions.hpp
   Include/XalanAutoPtr.hpp
   Include/XalanDeque.hpp
