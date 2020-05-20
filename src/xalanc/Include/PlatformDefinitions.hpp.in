@@ -20,34 +20,34 @@
 #define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
 
 #if defined(__cplusplus)
-# include "xercesc/util/XercesDefs.hpp"
+# include <xercesc/util/XercesDefs.hpp>
 #else
 /* Include xercesc autoconf to define XMLCh when using a 'C' compiler. */
-# include "xercesc/util/Xerces_autoconf_config.hpp"
-# include "xercesc/util/XercesVersion.hpp"
+# include <xercesc/util/Xerces_autoconf_config.hpp>
+# include <xercesc/util/XercesVersion.hpp>
 #endif
 
 #if defined(_MSC_VER)
-#include "VCPPDefinitions.hpp"
+#include <xalanc/Include/VCPPDefinitions.hpp>
 #elif defined(__GNUC__)
-#include "GCCDefinitions.hpp"
+#include <xalanc/Include/GCCDefinitions.hpp>
 #elif defined(_AIX)
-#include "AIXDefinitions.hpp"
+#include <xalanc/Include/AIXDefinitions.hpp>
 #elif defined(__hpux)
-#include "HPUXDefinitions.hpp"
+#include <xalanc/Include/HPUXDefinitions.hpp>
 #elif defined(SOLARIS)
-#include "SolarisDefinitions.hpp"
+#include <xalanc/Include/SolarisDefinitions.hpp>
 #elif defined(OS390)
-#include "OS390Definitions.hpp"
+#include <xalanc/Include/OS390Definitions.hpp>
 #elif defined(OS400)
-#include "OS400Definitions.hpp"
+#include <xalanc/Include/OS400Definitions.hpp>
 #elif defined(__DECCXX)
-#include "TRU64Definitions.hpp"
+#include <xalanc/Include/TRU64Definitions.hpp>
 #elif defined(__INTEL_COMPILER)
-#include "IntelDefinitions.hpp"
+#include <xalanc/Include/IntelDefinitions.hpp>
 #elif defined(__IBMCPP__) && defined(__TOS_LINUX__)
 // This is for Linux PPC using the IBM xlC compiler.
-#include "AIXDefinitions.hpp"
+#include <xalanc/Include/AIXDefinitions.hpp>
 #else
 #error Unknown compiler!
 #endif
