@@ -56,6 +56,10 @@
 #cmakedefine XALAN_HAVE__ISNAN 1
 #cmakedefine XALAN_HAVE_STD_ISNAN 1
 
+#cmakedefine XALAN_USE_THREAD_STD 1
+#cmakedefine XALAN_USE_THREAD_POSIX 1
+#cmakedefine XALAN_USE_THREAD_WINDOWS 1
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)
