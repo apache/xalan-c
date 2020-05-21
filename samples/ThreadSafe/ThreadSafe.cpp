@@ -39,7 +39,7 @@
 
 
 //This is here for the Windows threads.
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
@@ -117,7 +117,7 @@ outputMessage(
 }
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
 #elif defined(XALAN_USE_THREAD_POSIX)
@@ -132,7 +132,7 @@ theThread(LPVOID    param)
   
     const size_t    number = reinterpret_cast<size_t>(param);
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
 
 #elif defined(XALAN_USE_THREAD_POSIX)
@@ -175,7 +175,7 @@ theThread(LPVOID    param)
 
     outputMessage(theThreadID, "Finishing");
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
     return theResult;
 #elif defined(XALAN_USE_THREAD_POSIX)
     return 0;
@@ -199,7 +199,7 @@ doThreads(size_t    nThreads)
 
     hThreads.reserve(nThreads);
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 
     for (; i < nThreads; ++i)
     {

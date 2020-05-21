@@ -49,7 +49,7 @@
 
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 
 #include <csignal>
 #include <process.h>
@@ -209,7 +209,7 @@ const XalanDOMChar*             theStylesheetFileName = 0;
 const XalanDOMChar*             theSourceFileName = 0;
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 static BOOL __stdcall
 signalHandler(DWORD     theSignalType)
 {
@@ -240,7 +240,7 @@ signalHandler(int)
 
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 
 extern "C"
 {
@@ -319,7 +319,7 @@ thePreparsedThreadRoutine(void*     param)
 
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 
 extern "C" void theUnparsedThreadRoutine(void* param);
 
@@ -394,7 +394,7 @@ theUnparsedThreadRoutine(void*      param)
 inline void
 doSleep(unsigned int    theMilliseconds)
 {
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
     Sleep(theMilliseconds);
 #elif defined(XALAN_USE_THREAD_POSIX)
     usleep(theMilliseconds * 10);
@@ -412,7 +412,7 @@ createThread(
 {
     theThreadInfo.m_done = false;
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
 
     const XMLInt32     theThreadID =
             _beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
@@ -559,7 +559,7 @@ doThreads(
 {
     if (fContinuous == true)
     {
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
         SetConsoleCtrlHandler(
                 signalHandler,
                 TRUE);
