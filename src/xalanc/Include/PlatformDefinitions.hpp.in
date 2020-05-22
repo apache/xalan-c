@@ -69,6 +69,9 @@
 #cmakedefine XALAN_HAVE_UNISTD_H 1
 #cmakedefine XALAN_HAVE_WIN32_DIRECT_H 1
 
+#cmakedefine XALAN_WINDOWS 1
+#cmakedefine XALAN_WINDOWS_DIR_FUNCTIONS 1
+#cmakedefine XALAN_NEWLINE_IS_CRLF 1
 
 #include <xalanc/Include/XalanVersion.hpp>
 

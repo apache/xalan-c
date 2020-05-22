@@ -42,11 +42,6 @@
   #endif
 #endif
 
-#define XALAN_NEWLINE_IS_CRLF
-
-#define XALAN_WINDOWS
-#define XALAN_WINDOWS_DIR_FUNCTIONS
-
 #if defined(_DEBUG) && defined(NDEBUG)
 #error NDEBUG must not be defined when _DEBUG is defined.
 #elif !defined(_DEBUG) && !defined(NDEBUG)

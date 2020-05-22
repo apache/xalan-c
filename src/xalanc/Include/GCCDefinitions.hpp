@@ -32,15 +32,4 @@
 #define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
 
 
-
-#if defined(CYGWIN)
-#if defined(WIN32)
-#undef WIN32
-#endif
-#endif
-
-#if defined(__MINGW32__)
-#define XALAN_WINDOWS_DIR_FUNCTIONS
-#endif
-
 #endif  // GCCDEFINITIONS_HEADER_GUARD_1357924680
