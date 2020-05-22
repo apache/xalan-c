@@ -26,13 +26,13 @@
 #include <climits>
 #include <cstring>
 
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_HAVE_WIN32_DIRECT_H)
 #include <direct.h>
 #define PATH_MAX _MAX_PATH
 #define chdir _chdir
 #define getcwd _getcwd
 #define mkdir _mkdir
-#else
+#elif XALAN_HAVE_UNISTD_H
 #if !defined(PATH_MAX)
 #define PATH_MAX 2000
 #endif

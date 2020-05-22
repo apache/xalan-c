@@ -66,6 +66,10 @@
 #cmakedefine XALAN_HAVE_USLEEP 1
 #cmakedefine XALAN_HAVE_WIN32_SLEEP 1
 
+#cmakedefine XALAN_HAVE_UNISTD_H 1
+#cmakedefine XALAN_HAVE_WIN32_DIRECT_H 1
+
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)

@@ -29,10 +29,10 @@
 
 
 
-#if defined(XALAN_WINDOWS)
+#if defined(XALAN_HAVE_WIN32_DIRECT_H)
 #include <direct.h>
 #define getcwd _getcwd
-#else
+#elif XALAN_HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
