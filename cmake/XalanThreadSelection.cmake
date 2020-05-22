@@ -20,10 +20,10 @@
 # thread selection
 
 set(xalan_thread_default std)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+add_definitions(-D_THREAD_SAFE=1)
 find_package(Threads)
-if(NOT TARGET Threads::Threads)
-  set(xalan_thread_default ON)
-endif()
 
 include(CheckCXXSourceCompiles)
 
@@ -61,10 +61,6 @@ ${outvar})
 
   set(${outvar} ${${outvar}} PARENT_SCOPE)
 endfunction(thread_test)
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-add_definitions(-D_THREAD_SAFE=1)
-find_package(Threads)
 
 thread_test(XALAN_HAVE_STD_THREAD)
 if(XALAN_HAVE_STD_THREAD)

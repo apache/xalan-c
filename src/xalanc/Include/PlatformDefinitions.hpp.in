@@ -60,6 +60,12 @@
 #cmakedefine XALAN_USE_THREAD_POSIX 1
 #cmakedefine XALAN_USE_THREAD_WINDOWS 1
 
+#cmakedefine XALAN_HAVE_SIGNAL 1
+#cmakedefine XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER 1
+
+#cmakedefine XALAN_HAVE_USLEEP 1
+#cmakedefine XALAN_HAVE_WIN32_SLEEP 1
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)

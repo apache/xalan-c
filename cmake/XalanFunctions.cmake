@@ -22,11 +22,17 @@
 include(CheckFunctionExists)
 include(CheckCXXSourceCompiles)
 
+check_function_exists(signal XALAN_HAVE_SIGNAL)
+check_function_exists(SetConsoleCtrlHandler XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
+
+check_function_exists(usleep XALAN_HAVE_USLEEP)
+check_function_exists(Sleep XALAN_HAVE_WIN32_SLEEP)
+
 check_function_exists(gmtime_r XALAN_HAVE_GMTIME_R)
 check_function_exists(localtime_r XALAN_HAVE_LOCALTIME_R)
+
 check_function_exists(isnan XALAN_HAVE_ISNAN)
 check_function_exists(_isnan XALAN_HAVE__ISNAN)
-
 
 check_cxx_source_compiles("
 #include <cmath>

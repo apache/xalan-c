@@ -38,8 +38,13 @@
 
 
 
+//This is here for the standard library threads.
+#if defined(XALAN_USE_THREAD_STD)
+#include <thread>
+typedef   std::thread::id theThreadIDType;
+typedef   std::thread     theThreadType;
 //This is here for the Windows threads.
-#if defined(XALAN_USE_THREAD_WINDOWS)
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
@@ -51,11 +56,6 @@ typedef   HANDLE     theThreadType;
 #elif defined(XALAN_USE_THREAD_POSIX)
 
 // This is a workaround for a Tru64 compiler bug...
-#if defined(TRU64)
-#include <csetjmp>
-typedef long sigjmp_buf[_JBLEN];
-extern "C" void  *theThread(void   *param);
-#endif
 
 #include <pthread.h>
 #include <unistd.h>
@@ -104,7 +104,7 @@ outputMessage(
             const char         msg[])
 {
     ostrstream threadMsg;
-    
+
     threadMsg << "\n" << msg << " Thread: " << id << '\0';
 
     cout << threadMsg.str();
@@ -117,7 +117,9 @@ outputMessage(
 }
 
 
-#if defined(XALAN_USE_THREAD_WINDOWS)
+#if defined(XALAN_USE_THREAD_STD)
+void theThread(void   *param)
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
 #elif defined(XALAN_USE_THREAD_POSIX)
@@ -132,7 +134,9 @@ theThread(LPVOID    param)
   
     const size_t    number = reinterpret_cast<size_t>(param);
 
-#if defined(XALAN_USE_THREAD_WINDOWS)
+#if defined(XALAN_USE_THREAD_STD)
+    const theThreadIDType         theThreadID = std::this_thread::get_id();
+#elif defined(XALAN_USE_THREAD_WINDOWS)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
 
 #elif defined(XALAN_USE_THREAD_POSIX)
@@ -199,7 +203,38 @@ doThreads(size_t    nThreads)
 
     hThreads.reserve(nThreads);
 
-#if defined(XALAN_USE_THREAD_WINDOWS)
+#if defined(XALAN_USE_THREAD_STD)
+
+  for (; i < nThreads; ++i)
+  {
+    try
+    {
+      hThreads.emplace_back(std::thread(theThread,       //thread function
+                                        (void *)&i));     //thread function argument
+    }
+    catch(const std::system_error&)
+    {
+      perror ("Thread creation failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  cout << endl << "Waiting for threads to finish..." << endl << endl;
+
+  for (i = nThreads; i > 0; --i)
+  {
+    try
+    {
+      hThreads[i - 1].join();
+    }
+    catch(const std::system_error&)
+    {
+      perror ("Thread join failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 
     for (; i < nThreads; ++i)
     {
