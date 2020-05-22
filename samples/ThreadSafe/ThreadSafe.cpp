@@ -118,7 +118,7 @@ outputMessage(
 
 
 #if defined(XALAN_USE_THREAD_STD)
-void theThread(void   *param)
+void theThread(size_t   number)
 #elif defined(XALAN_USE_THREAD_WINDOWS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
@@ -131,8 +131,10 @@ theThread(LPVOID    param)
 // transformation.
 
     int theResult = 0;
-  
+
+#if defined(XALAN_USE_THREAD_WINDOWS) || defined(XALAN_USE_THREAD_POSIX)
     const size_t    number = reinterpret_cast<size_t>(param);
+#endif
 
 #if defined(XALAN_USE_THREAD_STD)
     const theThreadIDType         theThreadID = std::this_thread::get_id();
@@ -144,7 +146,7 @@ theThread(LPVOID    param)
 
 #endif
 
-    outputMessage(theThreadID, "Starting ");
+    outputMessage(theThreadID, "Starting");
 
     // Create a XalanTransformer.
     XalanTransformer    theXalanTransformer;
@@ -197,20 +199,17 @@ doThreads(size_t    nThreads)
     size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
-    using std::vector;
-
-    vector<theThreadType>   hThreads;
-
+    std::vector<theThreadType> hThreads;
     hThreads.reserve(nThreads);
 
 #if defined(XALAN_USE_THREAD_STD)
 
-  for (; i < nThreads; ++i)
+  for (i = 0; i < nThreads; ++i)
   {
     try
     {
       hThreads.emplace_back(std::thread(theThread,       //thread function
-                                        (void *)&i));     //thread function argument
+                                        i));     //thread function argument
     }
     catch(const std::system_error&)
     {
