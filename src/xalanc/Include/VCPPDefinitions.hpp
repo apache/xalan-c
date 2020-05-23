@@ -38,7 +38,6 @@
 #if !defined(__INTEL_COMPILER)
   #if _MSC_VER >= 1400
     #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
-    #define XALAN_USE_WINDOWS_COLLATION
   #endif
 #endif
 

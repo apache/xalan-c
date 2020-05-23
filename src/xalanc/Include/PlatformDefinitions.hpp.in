@@ -72,6 +72,7 @@
 #cmakedefine XALAN_WINDOWS 1
 #cmakedefine XALAN_WINDOWS_DIR_FUNCTIONS 1
 #cmakedefine XALAN_NEWLINE_IS_CRLF 1
+#cmakedefine XALAN_USE_WINDOWS_COLLATION 1
 
 #include <xalanc/Include/XalanVersion.hpp>
 

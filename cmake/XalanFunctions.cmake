@@ -31,6 +31,8 @@ check_function_exists(Sleep XALAN_HAVE_WIN32_SLEEP)
 check_function_exists(gmtime_r XALAN_HAVE_GMTIME_R)
 check_function_exists(localtime_r XALAN_HAVE_LOCALTIME_R)
 
+check_function_exists(_create_locale XALAN_USE_WINDOWS_COLLATION)
+
 check_function_exists(isnan XALAN_HAVE_ISNAN)
 check_function_exists(_isnan XALAN_HAVE__ISNAN)
 
@@ -43,4 +45,3 @@ int main() {
   std::isnan(NAN);
 }"
 XALAN_HAVE_STD_ISNAN)
-
