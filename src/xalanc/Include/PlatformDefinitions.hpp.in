@@ -28,26 +28,47 @@
 #endif
 
 #if defined(_MSC_VER)
-#include <xalanc/Include/VCPPDefinitions.hpp>
-#elif defined(__GNUC__)
-#include <xalanc/Include/GCCDefinitions.hpp>
-#elif defined(_AIX)
-#include <xalanc/Include/AIXDefinitions.hpp>
-#elif defined(__hpux)
-#include <xalanc/Include/HPUXDefinitions.hpp>
-#elif defined(SOLARIS)
-#include <xalanc/Include/SolarisDefinitions.hpp>
-#elif defined(OS390)
-#include <xalanc/Include/OS390Definitions.hpp>
-#elif defined(OS400)
-#include <xalanc/Include/OS400Definitions.hpp>
-#elif defined(__INTEL_COMPILER)
-#include <xalanc/Include/IntelDefinitions.hpp>
-#elif defined(__IBMCPP__) && defined(__TOS_LINUX__)
-// This is for Linux PPC using the IBM xlC compiler.
-#include <xalanc/Include/AIXDefinitions.hpp>
+
+#pragma warning(disable: 4127 4146 4251 4284 4345 4351 4355 4511 4512 4514 4521 4702 4710 4711 4786 4097 4503 4786; error: 4150 4172 4238 4239 4715)
+#include <basetsd.h>
+
+// Note: this no longer seems necessary with current MSVC
+#if !defined(__INTEL_COMPILER) && _MSC_VER >= 1400
+#define XALAN_AUTO_PTR_REQUIRES_DEFINITION
+#endif
+
+#if defined(_DEBUG) && defined(NDEBUG)
+#error NDEBUG must not be defined when _DEBUG is defined.
+#elif !defined(_DEBUG) && !defined(NDEBUG)
+#error NDEBUG must be defined when _DEBUG is not defined.
+#endif
+
+#endif // _MSC_VER
+
+#if defined(__hpux)
+
+#if !defined(_HP_NAMESPACE_STD) && defined(RWSTD_MULTI_THREAD) && !defined(__HPACC_THREAD_SAFE_RB_TREE)
+#define __HPACC_THREAD_SAFE_RB_TREE
+#endif
+
+#endif // __hpux
+
+// ---------------------------------------------------------------------------
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's.
+//  These defines provide the platform specific keywords that they need
+//  to do this.
+// ---------------------------------------------------------------------------
+#if defined(_MSC_VER)
+#define XALAN_PLATFORM_EXPORT     __declspec(dllexport)
+#define XALAN_PLATFORM_IMPORT     __declspec(dllimport)
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) XALAN_PLATFORM_EXPORT T
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) XALAN_PLATFORM_IMPORT T
 #else
-#error Unknown compiler!
+#define XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
 #endif
 
 #cmakedefine XALAN_HAVE_GMTIME_R 1

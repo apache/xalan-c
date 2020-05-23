@@ -884,15 +884,7 @@ set(harness_headers
   Harness/XalanXMLFileReporter.hpp)
 
 set(include_headers
-  Include/AIXDefinitions.hpp
-  Include/GCCDefinitions.hpp
-  Include/HPUXDefinitions.hpp
-  Include/IntelDefinitions.hpp
-  Include/OS390Definitions.hpp
-  Include/OS400Definitions.hpp
-  Include/SolarisDefinitions.hpp
   Include/STLHelper.hpp
-  Include/VCPPDefinitions.hpp
   Include/XalanAutoPtr.hpp
   Include/XalanDeque.hpp
   Include/XalanList.hpp
