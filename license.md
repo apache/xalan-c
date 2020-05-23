@@ -2,8 +2,8 @@
 
 ## Xalan Software License Notice
 
-See [notice](../NOTICE)
+See [notice](NOTICE)
 
 ## Apache Software License Text
 
-See [license](../LICENSE)
+See [license](LICENSE)

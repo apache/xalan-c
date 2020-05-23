@@ -126,7 +126,7 @@ write the ouput to *foo.out*.
 You can run it from the *DocumentBuilder* subdirectory with
 `DocumentBuilder`.
 
-## ExternalFunctions
+## ExternalFunction
 
 What it does: implement, install, and illustrate the usage of three
 extension functions.  The functions return a square root, a cube, and a
@@ -136,8 +136,8 @@ XML document (*foo.xml*), computes the length of each side of a cube
 and the volume of the cube, and enters the date and time of the
 transformation. The output appears in *foo.out*.
 
-Run this sample from the *ExternalFunctions* subdirectory with
-`ExternalFunctions`.
+Run this sample from the *ExternalFunction* subdirectory with
+`ExternalFunction`.
 
 See also: [Extension Functions](faq.md#extension-functions).
 
@@ -160,7 +160,7 @@ XPath expression to an XML document.
 Run this sample from the *SerializeNodeSet* subdirectory with
 
 ```sh
-SerializeNodeSet XMLFile ContextNode XPathExpression`
+SerializeNodeSet XMLFile ContextNode XPathExpression
 ```
 
 where *XMLFile* is an XML source file, *ContextNode* is the location
@@ -222,13 +222,13 @@ The *XPathWrapper* subdirectory contains an XML file named *xml.foo*
 You can try command lines like
 
 ```sh
-SimpleXPathAPI foo.xml /doc name/@last
+SimpleXPathAPI foo.xml /foo:doc foo:name/@last
 ```
 
 and
 
 ```sh
-SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'
+SimpleXPathAPI foo.xml / '//foo:name[position()="4"]/@first'
 ```
 
 Note: If a `SimpleXPathAPI` argument includes characters (such as `*`)
@@ -257,8 +257,8 @@ SimpleXPathCAPI XMLFile XPathExpression
 
 where *XMLFile* is an XML source file, and *XPathExpression* is an
 XPath expression to apply to the XML source file. The
-*SimpleXPathCAPI* subdirectory contains an XML file named *xml.foo*
-identical to *foo.xml* in the preceding example.
+*SimpleXPathCAPI* subdirectory contains an XML file named *foo.xml*
+similar to the *foo.xml* in the preceding example.
 
 You can try command lines like:
 
