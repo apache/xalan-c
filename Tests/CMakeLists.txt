@@ -44,7 +44,7 @@ add_executable(Conf
 target_link_libraries(Conf XalanC::XalanC)
 set_target_properties(Conf PROPERTIES FOLDER "Tests")
 
-foreach(test Performance Threads Conf)
+foreach(test Threads)
   add_test(
     NAME ${test}
     COMMAND $<TARGET_FILE:${test}>
