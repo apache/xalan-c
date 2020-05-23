@@ -17,6 +17,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Include/PlatformDefinitions.hpp.in
+        ${CMAKE_CURRENT_BINARY_DIR}/Include/PlatformDefinitions.hpp)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Include/XalanVersion.hpp.in
                ${CMAKE_CURRENT_BINARY_DIR}/Include/XalanVersion.hpp)
 
@@ -881,17 +884,7 @@ set(harness_headers
   Harness/XalanXMLFileReporter.hpp)
 
 set(include_headers
-  Include/AIXDefinitions.hpp
-  Include/GCCDefinitions.hpp
-  Include/HPUXDefinitions.hpp
-  Include/IntelDefinitions.hpp
-  Include/OS390Definitions.hpp
-  Include/OS400Definitions.hpp
-  Include/PlatformDefinitions.hpp
-  Include/SolarisDefinitions.hpp
   Include/STLHelper.hpp
-  Include/TRU64Definitions.hpp
-  Include/VCPPDefinitions.hpp
   Include/XalanAutoPtr.hpp
   Include/XalanDeque.hpp
   Include/XalanList.hpp
@@ -904,6 +897,7 @@ set(include_headers
   Include/XalanVector.hpp)
 
 set(generated_include_headers
+  ${CMAKE_CURRENT_BINARY_DIR}/Include/PlatformDefinitions.hpp
   ${CMAKE_CURRENT_BINARY_DIR}/Include/XalanVersion.hpp)
 
 set(icubridge_sources

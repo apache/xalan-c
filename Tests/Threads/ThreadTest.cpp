@@ -47,24 +47,14 @@
 
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
+#if defined(XALAN_USE_THREAD_STD)
+#include <thread>
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 
-
-#if defined(WINDOWS_THREAD_FUNCTIONS)
-
-#include <csignal>
 #include <process.h>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
-#include <csignal>
-
-// This is a workaround for a Tru64 compiler bug...
-#if defined(TRU64)
-#include <csetjmp>
-typedef long sigjmp_buf[_JBLEN];
-#endif
 #include <pthread.h>
 #include <unistd.h>
 
@@ -72,6 +62,19 @@ typedef long sigjmp_buf[_JBLEN];
 #error Unsupported platform!
 #endif
 
+#if defined(XALAN_USE_THREAD_WINDOWS) || defined(XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+#if defined(XALAN_HAVE_SIGNAL) && !defined(XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER) || defined(XALAN_HAVE_WIN32_SLEEP)
+#include <csignal>
+using std::signal;
+#endif
+
+#if defined(XALAN_HAVE_USLEEP)
+#include <unistd.h>
+#endif
 
 
 using std::cerr;
@@ -81,7 +84,6 @@ using std::endl;
 
     
 using std::atoi;
-using std::signal;
 using std::strcmp;
 
     
@@ -209,7 +211,7 @@ const XalanDOMChar*             theStylesheetFileName = 0;
 const XalanDOMChar*             theSourceFileName = 0;
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
 static BOOL __stdcall
 signalHandler(DWORD     theSignalType)
 {
@@ -225,7 +227,7 @@ signalHandler(DWORD     theSignalType)
         return FALSE;
     }
 }
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_HAVE_SIGNAL)
 extern "C"
 {
 static void
@@ -234,13 +236,11 @@ signalHandler(int)
     fContinue = false;
 }
 }
-#else
-#error Unsupported platform!
 #endif
 
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS) || defined(XALAN_USE_THREAD_STD)
 
 extern "C"
 {
@@ -249,8 +249,7 @@ extern "C"
     typedef void (*ThreadRoutineType)(void* param);
 }
 
-void
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 extern "C"
 {
@@ -258,10 +257,12 @@ extern "C"
 
     typedef void* (*ThreadRoutineType)(void* param);
 }
+#endif
 
+#if defined(XALAN_USE_THREAD_POSIX)
 void*
 #else
-#error Unsupported platform!
+void
 #endif
 thePreparsedThreadRoutine(void*     param)
 {
@@ -312,25 +313,26 @@ thePreparsedThreadRoutine(void*     param)
 
     theInfo->m_done = true;
 
-#if defined(XALAN_POSIX2_AVAILABLE)
+#if defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
 
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS) || defined (XALAN_USE_THREAD_STD)
 
 extern "C" void theUnparsedThreadRoutine(void* param);
 
-void
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 extern "C" void* theUnparsedThreadRoutine(void* param);
+#endif
 
+#if defined(XALAN_USE_THREAD_POSIX)
 void*
 #else
-#error Unsupported platform!
+void
 #endif
 theUnparsedThreadRoutine(void*      param)
 {
@@ -384,7 +386,7 @@ theUnparsedThreadRoutine(void*      param)
 
     theInfo->m_done = true;
 
-#if defined(XALAN_POSIX2_AVAILABLE)
+#if defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
@@ -394,9 +396,9 @@ theUnparsedThreadRoutine(void*      param)
 inline void
 doSleep(unsigned int    theMilliseconds)
 {
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_HAVE_WIN32_SLEEP)
     Sleep(theMilliseconds);
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_HAVE_USLEEP)
     usleep(theMilliseconds * 10);
 #else
 #error Unsupported platform!
@@ -412,7 +414,21 @@ createThread(
 {
     theThreadInfo.m_done = false;
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_STD)
+
+    try
+    {
+        std::thread   theThread = std::thread(theThreadRoutine, (void*)&theThreadInfo);
+        theThread.detach();
+    }
+    catch (const std::system_error&)
+    {
+        theThreadInfo.m_done = true;
+        return false;
+    }
+
+    return true;
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 
     const XMLInt32     theThreadID =
             _beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
@@ -428,7 +444,7 @@ createThread(
         return true;
     }
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
     pthread_t   theThread;
 
@@ -559,11 +575,11 @@ doThreads(
 {
     if (fContinuous == true)
     {
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
         SetConsoleCtrlHandler(
                 signalHandler,
                 TRUE);
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_HAVE_SIGNAL)
         signal(SIGINT, signalHandler);
 #else
 #error Unsupported platform!

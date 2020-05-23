@@ -108,11 +108,9 @@ using std::tm;
 
 
 
-#if defined(XALAN_NO_REENTRANT_TIME_FUNCTIONS)
-
 namespace
 {
-    using std::gmtime;
+#ifndef XALAN_HAVE_LOCALTIME_R
     using std::localtime;
 
     static struct tm*
@@ -133,6 +131,10 @@ namespace
             return res;
         }
     }
+#endif // XALAN_HAVE_LOCALTIME_R
+
+#ifndef XALAN_HAVE_GMTIME_R
+    using std::gmtime;
 
     static struct tm *
     gmtime_r(const time_t *clock, struct tm *res)
@@ -152,8 +154,8 @@ namespace
             return res;
         }
     }
+#endif // XALAN_HAVE_GMTIME_R
 }
-#endif
 
 
 XObjectPtr

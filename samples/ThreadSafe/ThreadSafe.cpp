@@ -38,8 +38,13 @@
 
 
 
+//This is here for the standard library threads.
+#if defined(XALAN_USE_THREAD_STD)
+#include <thread>
+typedef   std::thread::id theThreadIDType;
+typedef   std::thread     theThreadType;
 //This is here for the Windows threads.
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
@@ -48,14 +53,9 @@ typedef   DWORD      theThreadIDType;
 typedef   HANDLE     theThreadType;
 
 //This is here for Unix threads
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
 // This is a workaround for a Tru64 compiler bug...
-#if defined(TRU64)
-#include <csetjmp>
-typedef long sigjmp_buf[_JBLEN];
-extern "C" void  *theThread(void   *param);
-#endif
 
 #include <pthread.h>
 #include <unistd.h>
@@ -104,7 +104,7 @@ outputMessage(
             const char         msg[])
 {
     ostrstream threadMsg;
-    
+
     threadMsg << "\n" << msg << " Thread: " << id << '\0';
 
     cout << threadMsg.str();
@@ -117,10 +117,12 @@ outputMessage(
 }
 
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_STD)
+void theThread(size_t   number)
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 THREADFUNCTIONRETURN
 theThread(LPVOID    param)
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
   void  *theThread(void   *param)
 #endif
 {
@@ -129,18 +131,22 @@ theThread(LPVOID    param)
 // transformation.
 
     int theResult = 0;
-  
-    const size_t    number = reinterpret_cast<size_t>(param);
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS) || defined(XALAN_USE_THREAD_POSIX)
+    const size_t    number = reinterpret_cast<size_t>(param);
+#endif
+
+#if defined(XALAN_USE_THREAD_STD)
+    const theThreadIDType         theThreadID = std::this_thread::get_id();
+#elif defined(XALAN_USE_THREAD_WINDOWS)
     const theThreadIDType         theThreadID = GetCurrentThreadId();
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
     const theThreadIDType         theThreadID = pthread_self();
 
 #endif
 
-    outputMessage(theThreadID, "Starting ");
+    outputMessage(theThreadID, "Starting");
 
     // Create a XalanTransformer.
     XalanTransformer    theXalanTransformer;
@@ -175,9 +181,9 @@ theThread(LPVOID    param)
 
     outputMessage(theThreadID, "Finishing");
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_WINDOWS)
     return theResult;
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
     return 0;
 #endif
 }
@@ -193,13 +199,41 @@ doThreads(size_t    nThreads)
     size_t   i = 0;
     cout << endl << "Clock before starting threads: " << clock() << endl;
 
-    using std::vector;
-
-    vector<theThreadType>   hThreads;
-
+    std::vector<theThreadType> hThreads;
     hThreads.reserve(nThreads);
 
-#if defined(WINDOWS_THREAD_FUNCTIONS)
+#if defined(XALAN_USE_THREAD_STD)
+
+  for (i = 0; i < nThreads; ++i)
+  {
+    try
+    {
+      hThreads.emplace_back(std::thread(theThread,       //thread function
+                                        i));     //thread function argument
+    }
+    catch(const std::system_error&)
+    {
+      perror ("Thread creation failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  cout << endl << "Waiting for threads to finish..." << endl << endl;
+
+  for (i = nThreads; i > 0; --i)
+  {
+    try
+    {
+      hThreads[i - 1].join();
+    }
+    catch(const std::system_error&)
+    {
+      perror ("Thread join failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+#elif defined(XALAN_USE_THREAD_WINDOWS)
 
     for (; i < nThreads; ++i)
     {
@@ -225,7 +259,7 @@ doThreads(size_t    nThreads)
         CloseHandle(hThreads[i]);
     }
 
-#elif defined(XALAN_POSIX2_AVAILABLE)
+#elif defined(XALAN_USE_THREAD_POSIX)
 
     int     result;
     void*   thread_result;

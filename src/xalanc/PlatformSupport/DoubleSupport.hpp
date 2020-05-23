@@ -31,7 +31,9 @@
 #include <cmath>
 #include <functional>
 
-#if defined(SOLARIS)
+#ifdef XALAN_HAVE_STD_ISNAN
+#include <cmath>
+#else
 #include <math.h>
 #endif
 
@@ -80,16 +82,14 @@ public:
     static bool
     isNaN(double    theNumber)
     {
-#if defined(_MSC_VER)
-        return _isnan(theNumber) != 0;
-#elif defined(XALAN_POSIX2_AVAILABLE) && !defined(CYGWIN) && !defined(MINGW)
-#if defined(SOLARIS)
-        return isnan(theNumber) != 0;
+#ifdef XALAN_HAVE_STD_ISNAN
+      return std::isnan(theNumber) != 0;
+#elif XALAN_HAVE_ISNAN
+      return isnan(theNumber) != 0;
+#elif XALAN_HAVE__ISNAN
+      return _isnan(theNumber) != 0;
 #else
-        return std::isnan(theNumber) != 0;
-#endif
-#else
-        return s_NaN == theNumber;
+      return s_NaN == theNumber;
 #endif
     }
 

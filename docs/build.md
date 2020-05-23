@@ -70,6 +70,13 @@ Message Loader (used to access diagnostics messages):
 |`-Dmessage-loader=icu-broken`|store the messages using the ICU resource bundles (broken, do not use)|
 |`-Dmessage-loader=nls-broken`|store the messages in the NLS message catalog using catopen/catgets (broken, do not use)|
 
+System character-set encoding:
+
+|Option|Description|
+|---|---|
+|`-Dsystem-encoding=ascii`|use ASCII system encoding (default for most platforms)|
+|`-Dsystem-encoding=ebcdic`|use EBCDIC system encoding (default for OS390)|
+
 Thread support is required and can not be disabled.
 
 Shared libraries are built by default. You can use the

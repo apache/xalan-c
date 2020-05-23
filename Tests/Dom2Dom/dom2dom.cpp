@@ -21,12 +21,16 @@
 
 
 #include <cstdio>
-#include <direct.h>
 #include <iostream>
 #include <strstream>
 #include <vector>
 
-
+#if defined(XALAN_HAVE_WIN32_DIRECT_H)
+#include <direct.h>
+#define getcwd _getcwd
+#elif XALAN_HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 // This is here for memory leak testing. 
 #if !defined(NDEBUG) && defined(_MSC_VER)

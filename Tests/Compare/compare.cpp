@@ -26,8 +26,11 @@
 
 #include <cstdio>
 
-#if defined(_MSC_VER)
+#if defined(XALAN_HAVE_WIN32_DIRECT_H)
 #include <direct.h>
+#define getcwd _getcwd
+#elif XALAN_HAVE_UNISTD_H
+#include <unistd.h>
 #endif
 
 
