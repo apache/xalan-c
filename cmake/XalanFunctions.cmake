@@ -19,22 +19,23 @@
 
 # function checks
 
-include(CheckFunctionExists)
+include(CheckSymbolExists)
+
 include(CheckCXXSourceCompiles)
 
-check_function_exists(signal XALAN_HAVE_SIGNAL)
-check_function_exists(SetConsoleCtrlHandler XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
+check_symbol_exists(signal "signal.h" XALAN_HAVE_SIGNAL)
+check_symbol_exists(SetConsoleCtrlHandler "windows.h" XALAN_HAVE_WIN32_SET_CONSOLE_CTRL_HANDLER)
 
-check_function_exists(usleep XALAN_HAVE_USLEEP)
-check_function_exists(Sleep XALAN_HAVE_WIN32_SLEEP)
+check_symbol_exists(usleep "unistd.h" XALAN_HAVE_USLEEP)
+check_symbol_exists(Sleep "windows.h" XALAN_HAVE_WIN32_SLEEP)
 
-check_function_exists(gmtime_r XALAN_HAVE_GMTIME_R)
-check_function_exists(localtime_r XALAN_HAVE_LOCALTIME_R)
+check_symbol_exists(gmtime_r "time.h" XALAN_HAVE_GMTIME_R)
+check_symbol_exists(localtime_r "time.h" XALAN_HAVE_LOCALTIME_R)
 
-check_function_exists(_create_locale XALAN_USE_WINDOWS_COLLATION)
+check_symbol_exists(_create_locale "windows.h" XALAN_USE_WINDOWS_COLLATION)
 
-check_function_exists(isnan XALAN_HAVE_ISNAN)
-check_function_exists(_isnan XALAN_HAVE__ISNAN)
+check_symbol_exists(isnan "math.h" XALAN_HAVE_ISNAN)
+check_symbol_exists(_isnan "math.h" XALAN_HAVE__ISNAN)
 
 check_cxx_source_compiles("
 #include <cmath>
