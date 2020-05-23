@@ -74,6 +74,8 @@
 #cmakedefine XALAN_NEWLINE_IS_CRLF 1
 #cmakedefine XALAN_USE_WINDOWS_COLLATION 1
 
+#cmakedefine XALAN_NON_ASCII_PLATFORM 1
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)
