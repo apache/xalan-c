@@ -14,7 +14,7 @@
 
 [Release history](releases.md)
 
-[Licensing](license.md)
+[Licensing](licensing.md)
 
 [Charter](charter.md)
 
