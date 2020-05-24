@@ -1,0 +1,53 @@
+#!c:/cygwin64/bin/bash
+
+set -e
+set -x
+
+PATH="/cygdrive/c/cygwin64/bin:$PATH"
+
+download_file()
+(
+    url="$1"
+    file="$2"
+    hash="$3"
+    hash_output="${hash} *$file"
+
+  if [ ! -f "$file" ]; then
+    echo "Downloading $file"
+  else
+    if [ "$(sha512sum "$file")" != "$hash_output" ]; then
+      echo "$file sha512sum mismatch"
+    fi
+  fi
+
+  if [ ! -f "$file" ] || [ "$(sha512sum "$file")" != "$hash_output" ]; then
+    rm -f "$file"
+    curl -L -o "$file" "$url"
+  fi
+  [ "$(sha512sum "$file")" = "$hash_output" ]
+)
+
+xerces_git_uri="https://github.com/apache/xerces-c.git"
+xerces_git_branch="v3.2.3"
+
+if [ "$compiler" = "vc15" ]; then
+(
+  if [ ! -f /cygdrive/c/tools/vcpkg/installed/x64-windows/bin/xerces-c_3_2.dll ]; then
+    cd "$(cygpath -u "c:\\tools\\vcpkg")"
+    git pull
+    ./bootstrap-vcpkg.bat
+    ./vcpkg install xerces-c:x64-windows
+
+    if [ "$transcoder" = "icu" ]; then
+      vcpkg install icu:x64-windows
+    fi
+  fi
+)
+else
+(
+    cd "$AV_PROJECTS"
+    echo "AV_XERCES_SOURCE=$AV_XERCES_SOURCE"
+    echo "cygpath AV_XERCES_SOURCE=$(cygpath -u "${AV_XERCES_SOURCE}")"
+    git clone -b "$xerces_git_branch" "$xerces_git_uri" "$(cygpath -u "${AV_XERCES_SOURCE}")"
+)
+fi
