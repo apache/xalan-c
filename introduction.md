@@ -33,7 +33,7 @@ available for you to write your own custom
 ## Licenses
 
 The Xalan-C++ software conforms to The [Apache Software Foundation
-License, Version 2.0](license.md).
+License, Version 2.0](licensing.md).
 
 ## Getting Involved
 
