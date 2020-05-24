@@ -6,18 +6,55 @@ Unreleased.
 
 ## Major changes
 
-The focus of this release is stability and compatibility.
+The focus of this release is stability and compatibility.  The majority
+of changes are bugfixes or portability improvements.
 
 * Xerces-C++ versions 3.0 and newer are supported. Xerces-C++
   Version 3.2.3 is the preferred stable release.
 * Addition of a CMake build for all supported platforms.
 * Rewrite of StyleBook XML documentation in Markdown, hosted at
   [https://apache.github.io/xalan-c/](https://apache.github.io/xalan-c/).
-* Removal of MacOS and Windows project files for old IDE versions
+* Removal of MacOS and Windows project files for old IDE versions.
+* Removal of Autoconf build.
 * Xalan-C++ new supports Microsoft Visual Studio 2019 and earlier
   via the new CMake build, which replaces the old version-specific
   project and solution files.
 * Xalan-C++ now supports building with C++11, C++14 and C++17.
+* Cygwin and MinGW are known to be nonfunctional in this release.
+  Restoring full support will be a goal for 1.13.
+
+## Issues resolved
+
+### Bug
+
+* [XALANC-751](https://issues.apache.org/jira/browse/XALANC-751): Segmentation fault in TestXSLT
+* [XALANC-773](https://issues.apache.org/jira/browse/XALANC-773): Build failure with Xerces-C++ 3.2.0 and VS2015
+* [XALANC-787](https://issues.apache.org/jira/browse/XALANC-787): Drop MacOS and Windows project files
+* [XALANC-788](https://issues.apache.org/jira/browse/XALANC-788): Drop Autoconf build
+* [XALANC-789](https://issues.apache.org/jira/browse/XALANC-789): Check CMake build correctly versions libraries on all platforms
+* [XALANC-790](https://issues.apache.org/jira/browse/XALANC-790): Ensure CMake is using the library rc files for both libraries
+* [XALANC-792](https://issues.apache.org/jira/browse/XALANC-792): Replace StyleBook documentation with a supported equivalent
+* [XALANC-793](https://issues.apache.org/jira/browse/XALANC-793): CMake build should install pkg-config file
+* [XALANC-794](https://issues.apache.org/jira/browse/XALANC-794): XalanTransform does not transform anything
+* [XALANC-795](https://issues.apache.org/jira/browse/XALANC-795): CMake CTest should run all samples as well as unit tests
+* [XALANC-797](https://issues.apache.org/jira/browse/XALANC-797): Generate XalanVersion.hpp
+* [XALANC-798](https://issues.apache.org/jira/browse/XALANC-798): Remove use of version.incl
+* [XALANC-800](https://issues.apache.org/jira/browse/XALANC-800): Add CMake feature tests to replace specific platform definitions
+* [XALANC-801](https://issues.apache.org/jira/browse/XALANC-801): Enable AppVeyor CI for Windows
+* [XALANC-805](https://issues.apache.org/jira/browse/XALANC-805): Apply outstanding critical fixes
+* [XALANC-806](https://issues.apache.org/jira/browse/XALANC-806): C++98 and C++11 support
+
+### Improvement
+
+* [XALANC-776](https://issues.apache.org/jira/browse/XALANC-776): Add CMake build system
+* [XALANC-777](https://issues.apache.org/jira/browse/XALANC-777): Remove redundant XALAN_SGI_BASED_STL macro
+* [XALANC-778](https://issues.apache.org/jira/browse/XALANC-778): Use anonymous namespace for private time compatibility functions
+* [XALANC-779](https://issues.apache.org/jira/browse/XALANC-779): Use xercesc namespace unconditionally
+* [XALANC-780](https://issues.apache.org/jira/browse/XALANC-780): Use xalanc namespace unconditionally
+
+### Wish
+
+* [XALANC-771](https://issues.apache.org/jira/browse/XALANC-771):  Support for Parallel Builds
 
 # 1.11
 
