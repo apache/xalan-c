@@ -16,10 +16,10 @@ of changes are bugfixes or portability improvements.
   [https://apache.github.io/xalan-c/](https://apache.github.io/xalan-c/).
 * Removal of MacOS and Windows project files for old IDE versions.
 * Removal of Autoconf build.
-* Xalan-C++ new supports Microsoft Visual Studio 2019 and earlier
+* Xalan-C++ now supports Microsoft Visual Studio 2019 and earlier
   via the new CMake build, which replaces the old version-specific
   project and solution files.
-* Xalan-C++ now supports building with C++11, C++14 and C++17.
+* Xalan-C++ now also supports building with C++11, C++14 and C++17.
 * Cygwin and MinGW are known to be nonfunctional in this release.
   Restoring full support will be a goal for 1.13.
 
