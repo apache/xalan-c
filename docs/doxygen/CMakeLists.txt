@@ -47,11 +47,17 @@ if(BUILD_DOXYGEN)
                     DEPENDS ${DOXYGEN_LOG})
   add_dependencies(doc-check ${PROJECT_NAME}-doc-check)
 
+  set_target_properties(${PROJECT_NAME}-doc-check PROPERTIES FOLDER "Documentation")
+  set_target_properties(doc-check PROPERTIES FOLDER "Documentation")
+
   if(NOT TARGET doc-api)
     add_custom_target(doc-api)
   endif()
   add_custom_target(${PROJECT_NAME}-doc-api ALL DEPENDS ${DOXYGEN_LOG} ${PROJECT_NAME}-doc-check)
   add_dependencies(doc-api ${PROJECT_NAME}-doc-api)
+
+  set_target_properties(${PROJECT_NAME}-doc-api PROPERTIES FOLDER "Documentation")
+  set_target_properties(doc-api PROPERTIES FOLDER "Documentation")
 
   install(DIRECTORY "${DOXYGEN_OUTPUT_DIR}/"
           DESTINATION "${CMAKE_INSTALL_DOCDIR}/api"
