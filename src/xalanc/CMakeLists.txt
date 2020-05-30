@@ -1013,8 +1013,8 @@ if(MSVC)
   target_compile_definitions(xalan-c PRIVATE "XALAN_DLL_NAME=\"$<TARGET_FILE_NAME:xalan-c>\\0\"")
   # Different naming for Windows than for Unix builds for backward
   # compatibility with the existing project files.
-  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}${CMAKE_DEBUG_POSTFIX}")
-  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}_${XALAN_MS_LIB_MINOR_VER}${CMAKE_DEBUG_POSTFIX}")
+  set_target_properties(xalan-c PROPERTIES OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}")
+  set_target_properties(xalan-c PROPERTIES RUNTIME_OUTPUT_NAME "Xalan-C_${XALAN_MS_LIB_MAJOR_VER}_${XALAN_MS_LIB_MINOR_VER}")
   set_target_properties(xalan-c PROPERTIES DEBUG_POSTFIX "D")
 else()
   # Not used for the common cases, though this would be the default if

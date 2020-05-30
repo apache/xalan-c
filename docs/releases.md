@@ -39,10 +39,12 @@ of changes are bugfixes or portability improvements.
 * [XALANC-795](https://issues.apache.org/jira/browse/XALANC-795): CMake CTest should run all samples as well as unit tests
 * [XALANC-797](https://issues.apache.org/jira/browse/XALANC-797): Generate XalanVersion.hpp
 * [XALANC-798](https://issues.apache.org/jira/browse/XALANC-798): Remove use of version.incl
+* [XALANC-799](https://issues.apache.org/jira/browse/XALANC-799): Remove use of winres.h in XalanMsgLib.rc
 * [XALANC-800](https://issues.apache.org/jira/browse/XALANC-800): Add CMake feature tests to replace specific platform definitions
 * [XALANC-801](https://issues.apache.org/jira/browse/XALANC-801): Enable AppVeyor CI for Windows
 * [XALANC-805](https://issues.apache.org/jira/browse/XALANC-805): Apply outstanding critical fixes
 * [XALANC-806](https://issues.apache.org/jira/browse/XALANC-806): C++98 and C++11 support
+* [XALANC-807](https://issues.apache.org/jira/browse/XALANC-807): CMake build unconditionally adds debug postfix with MSVC
 
 ### Improvement
 
