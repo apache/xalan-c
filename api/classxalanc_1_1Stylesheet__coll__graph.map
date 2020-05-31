@@ -1,11 +1,11 @@
 <map id="xalanc::Stylesheet" name="xalanc::Stylesheet">
-<area shape="rect" id="node1" title="This class represents the base stylesheet or an &quot;import&quot; stylesheet." alt="" coords="1111,107,1241,133"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1StylesheetRoot.html" title="This acts as the stylesheet root of the stylesheet tree, and holds values that are shared by all styl..." alt="" coords="1399,107,1556,133"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="736,5,887,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanQNameByReference.html" title=" " alt="" coords="703,107,920,133"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanQName.html" title="Class to represent a qualified name." alt="" coords="327,107,470,133"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,77,168,104"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="721,158,901,199"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="305,185,492,226"/>
-<area shape="rect" id="node9" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="743,223,880,265"/>
+<area shape="rect" id="node1" title="This class represents the base stylesheet or an &quot;import&quot; stylesheet." alt="" coords="1221,107,1364,133"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1StylesheetRoot.html" title="This acts as the stylesheet root of the stylesheet tree, and holds values that are shared by all styl..." alt="" coords="1535,107,1707,133"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="809,5,975,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanQNameByReference.html" title=" " alt="" coords="771,107,1013,133"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanQName.html" title="Class to represent a qualified name." alt="" coords="356,107,515,133"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,81,185,108"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="791,158,993,199"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="332,181,539,222"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="817,223,967,265"/>
 </map>

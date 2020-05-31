@@ -1,6 +1,6 @@
 <map id="xalanc::XNumberBase" name="xalanc::XNumberBase">
-<area shape="rect" id="node1" title=" " alt="" coords="137,288,287,315"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="155,212,269,239"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,5,211,47"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="235,13,397,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="152,288,319,315"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="174,212,297,239"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="5,5,236,47"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="260,13,440,39"/>
 </map>

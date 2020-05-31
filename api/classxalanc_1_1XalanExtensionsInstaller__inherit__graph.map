@@ -1,9 +1,9 @@
 <map id="xalanc::XalanExtensionsInstaller" name="xalanc::XalanExtensionsInstaller">
-<area shape="rect" id="node1" title=" " alt="" coords="5,177,215,203"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanEXSLTCommonFunctionsInstaller.html" title=" " alt="" coords="279,5,470,47"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanEXSLTDateTimeFunctionsInstaller.html" title=" " alt="" coords="278,71,471,112"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanEXSLTDynamicFunctionsInstaller.html" title=" " alt="" coords="280,136,469,177"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanEXSLTMathFunctionsInstaller.html" title=" " alt="" coords="263,201,487,243"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XalanEXSLTSetFunctionsInstaller.html" title=" " alt="" coords="267,267,482,308"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanEXSLTStringFunctionsInstaller.html" title=" " alt="" coords="289,332,461,373"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,177,240,203"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanEXSLTCommonFunctionsInstaller.html" title=" " alt="" coords="307,5,513,47"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanEXSLTDateTimeFunctionsInstaller.html" title=" " alt="" coords="303,71,517,112"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanEXSLTDynamicFunctionsInstaller.html" title=" " alt="" coords="307,136,513,177"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanEXSLTMathFunctionsInstaller.html" title=" " alt="" coords="288,201,532,243"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanEXSLTSetFunctionsInstaller.html" title=" " alt="" coords="294,267,526,308"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanEXSLTStringFunctionsInstaller.html" title=" " alt="" coords="317,332,503,373"/>
 </map>

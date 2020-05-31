@@ -1,6 +1,6 @@
 <map id="xalanc::XPathExpression::InvalidOpCodeException" name="xalanc::XPathExpression::InvalidOpCodeException">
-<area shape="rect" id="node1" title="Exception class thrown when an invalid XPath operation code is encountered." alt="" coords="15,244,186,285"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XPathExpression_1_1XPathExpressionException.html" title="Exception class thrown when an invalid XPath expression is encountered." alt="" coords="7,155,194,196"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanXPathException.html" title=" " alt="" coords="5,80,196,107"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XSLException.html" title=" " alt="" coords="26,5,175,32"/>
+<area shape="rect" id="node1" title="Exception class thrown when an invalid XPath operation code is encountered." alt="" coords="16,244,205,285"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XPathExpression_1_1XPathExpressionException.html" title="Exception class thrown when an invalid XPath expression is encountered." alt="" coords="9,155,212,196"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanXPathException.html" title=" " alt="" coords="5,80,216,107"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XSLException.html" title=" " alt="" coords="30,5,191,32"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="xalanc::XalanNodeList" name="xalanc::XalanNodeList">
-<area shape="rect" id="node1" title=" " alt="" coords="5,107,156,133"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanNodeListDummy.html" title=" " alt="" coords="210,5,405,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanNodeListSurrogate.html" title=" " alt="" coords="204,56,411,83"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XercesElementWrapper.html" title=" " alt="" coords="205,107,409,133"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XercesNodeListBridge.html" title="This class is deprecated." alt="" coords="210,157,405,184"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XercesNodeListWrapper.html" title=" " alt="" coords="204,208,411,235"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,107,172,133"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanNodeListDummy.html" title=" " alt="" coords="226,5,445,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanNodeListSurrogate.html" title=" " alt="" coords="220,56,451,83"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XercesElementWrapper.html" title=" " alt="" coords="222,107,449,133"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XercesNodeListBridge.html" title="This class is deprecated." alt="" coords="227,157,443,184"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XercesNodeListWrapper.html" title=" " alt="" coords="221,208,450,235"/>
 </map>

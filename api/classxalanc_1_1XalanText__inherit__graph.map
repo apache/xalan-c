@@ -1,13 +1,13 @@
 <map id="xalanc::XalanText" name="xalanc::XalanText">
-<area shape="rect" id="node1" title=" " alt="" coords="413,183,537,210"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanCDATASection.html" title=" " alt="" coords="587,78,774,105"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanSourceTreeText.html" title=" " alt="" coords="585,133,776,159"/>
-<area shape="rect" id="node9" href="$classxalanc_1_1XercesTextBridge.html" title="This class is deprecated." alt="" coords="596,183,765,210"/>
-<area shape="rect" id="node10" href="$classxalanc_1_1XercesTextWrapper.html" title=" " alt="" coords="590,234,771,261"/>
-<area shape="rect" id="node11" href="$classxalanc_1_1XObjectResultTreeFragProxyText.html" title=" " alt="" coords="593,285,768,327"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanCharacterData.html" title=" " alt="" coords="183,183,365,210"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="5,183,135,210"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XercesCDATASectionBridge.html" title="This class is deprecated." alt="" coords="834,5,1029,47"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XercesCDATASectionWrapper.html" title=" " alt="" coords="834,71,1029,112"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XalanSourceTreeTextIWS.html" title=" " alt="" coords="824,137,1039,163"/>
+<area shape="rect" id="node1" title=" " alt="" coords="449,183,587,210"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanCDATASection.html" title=" " alt="" coords="638,78,839,105"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanSourceTreeText.html" title=" " alt="" coords="635,133,843,159"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XercesTextBridge.html" title="This class is deprecated." alt="" coords="645,183,832,210"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1XercesTextWrapper.html" title=" " alt="" coords="639,234,838,261"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1XObjectResultTreeFragProxyText.html" title=" " alt="" coords="643,285,834,327"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanCharacterData.html" title=" " alt="" coords="197,183,401,210"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="5,183,149,210"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XercesCDATASectionBridge.html" title="This class is deprecated." alt="" coords="903,5,1111,47"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XercesCDATASectionWrapper.html" title=" " alt="" coords="903,71,1111,112"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanSourceTreeTextIWS.html" title=" " alt="" coords="891,137,1124,163"/>
 </map>

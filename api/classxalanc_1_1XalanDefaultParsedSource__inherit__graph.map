@@ -1,4 +1,4 @@
 <map id="xalanc::XalanDefaultParsedSource" name="xalanc::XalanDefaultParsedSource">
-<area shape="rect" id="node1" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="6,80,186,121"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanParsedSource.html" title="This is abstract base class designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="5,5,187,32"/>
+<area shape="rect" id="node1" title="This is designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="5,80,207,121"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanParsedSource.html" title="This is abstract base class designed to allow a XalanTranfomer object to reuse a parsed document." alt="" coords="7,5,205,32"/>
 </map>

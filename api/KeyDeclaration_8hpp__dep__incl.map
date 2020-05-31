@@ -1,11 +1,11 @@
 <map id="xalanc/XSLT/KeyDeclaration.hpp" name="xalanc/XSLT/KeyDeclaration.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="483,5,694,32"/>
-<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="496,80,681,107"/>
-<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="231,155,450,196"/>
-<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="474,162,703,189"/>
-<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="728,162,940,189"/>
-<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,244,223,285"/>
-<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="247,244,435,285"/>
-<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="459,244,638,285"/>
-<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="688,244,927,285"/>
+<area shape="rect" id="node1" title=" " alt="" coords="529,5,760,32"/>
+<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="544,80,745,107"/>
+<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="259,155,495,196"/>
+<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="519,162,770,189"/>
+<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="795,162,1025,189"/>
+<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,244,249,285"/>
+<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="273,244,480,285"/>
+<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="504,244,703,285"/>
+<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="751,244,1021,285"/>
 </map>

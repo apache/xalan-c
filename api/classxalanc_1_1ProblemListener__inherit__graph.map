@@ -1,6 +1,6 @@
 <map id="xalanc::ProblemListener" name="xalanc::ProblemListener">
-<area shape="rect" id="node1" title="This is the abstract class that the XSL processor uses when it has a problem of some kind,..." alt="" coords="129,80,292,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerDefault.html" title="The implementation of the default error handling for Xalan." alt="" coords="5,162,208,189"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanTransformerProblemListener.html" title=" " alt="" coords="233,155,399,196"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="115,5,307,32"/>
+<area shape="rect" id="node1" title="This is the abstract class that the XSL processor uses when it has a problem of some kind,..." alt="" coords="145,80,324,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerDefault.html" title="The implementation of the default error handling for Xalan." alt="" coords="5,162,232,189"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanTransformerProblemListener.html" title=" " alt="" coords="257,155,445,196"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="129,5,340,32"/>
 </map>

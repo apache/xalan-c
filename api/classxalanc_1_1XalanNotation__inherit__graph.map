@@ -1,6 +1,6 @@
 <map id="xalanc::XalanNotation" name="xalanc::XalanNotation">
-<area shape="rect" id="node1" title=" " alt="" coords="139,80,285,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XercesNotationBridge.html" title="This class is deprecated." alt="" coords="5,155,197,181"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XercesNotationWrapper.html" title=" " alt="" coords="222,155,426,181"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="147,5,277,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="152,80,319,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XercesNotationBridge.html" title="This class is deprecated." alt="" coords="5,155,220,181"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XercesNotationWrapper.html" title=" " alt="" coords="244,155,472,181"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="163,5,307,32"/>
 </map>

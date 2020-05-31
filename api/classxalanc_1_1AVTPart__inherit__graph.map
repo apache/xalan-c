@@ -1,5 +1,5 @@
 <map id="xalanc::AVTPart" name="xalanc::AVTPart">
-<area shape="rect" id="node1" title="Class to hold a part, either a string or XPath, of an Attribute Value Template." alt="" coords="115,5,232,32"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1AVTPartSimple.html" title="Simple string part of a complex AVT." alt="" coords="5,80,163,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1AVTPartXPath.html" title="Simple string part of a complex AVT." alt="" coords="187,80,338,107"/>
+<area shape="rect" id="node1" title="Class to hold a part, either a string or XPath, of an Attribute Value Template." alt="" coords="121,5,244,32"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1AVTPartSimple.html" title="Simple string part of a complex AVT." alt="" coords="5,80,173,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1AVTPartXPath.html" title="Simple string part of a complex AVT." alt="" coords="197,80,357,107"/>
 </map>

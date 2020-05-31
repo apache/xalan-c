@@ -1,6 +1,6 @@
 <map id="xalanc::ExtensionFunctionHandler" name="xalanc::ExtensionFunctionHandler">
-<area shape="rect" id="node1" title="Class handling an extension namespace for XPath." alt="" coords="88,228,264,269"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,95,168,121"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanSet.html" title=" " alt="" coords="193,95,431,121"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanSet.html" title="Xalan set implementation." alt="" coords="224,5,400,32"/>
+<area shape="rect" id="node1" title="Class handling an extension namespace for XPath." alt="" coords="97,228,289,269"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,95,185,121"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanSet.html" title=" " alt="" coords="209,95,477,121"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanSet.html" title="Xalan set implementation." alt="" coords="245,5,442,32"/>
 </map>

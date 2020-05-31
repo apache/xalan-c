@@ -1,21 +1,21 @@
 <map id="xalanc/XalanSourceTree/XalanSourceTreeElement.hpp" name="xalanc/XalanSourceTree/XalanSourceTreeElement.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="401,5,597,47"/>
-<area shape="rect" id="node2" href="$XalanSourceTreeElementA_8hpp.html" title=" " alt="" coords="263,95,469,136"/>
-<area shape="rect" id="node16" href="$XalanSourceTreeElementNA_8hpp.html" title=" " alt="" coords="527,95,741,136"/>
-<area shape="rect" id="node3" href="$XalanSourceTreeElementAAllocator_8hpp.html" title=" " alt="" coords="54,273,310,315"/>
-<area shape="rect" id="node14" href="$XalanSourceTreeElementANS_8hpp.html" title=" " alt="" coords="255,184,477,225"/>
-<area shape="rect" id="node4" href="$XalanSourceTreeDocument_8hpp.html" title=" " alt="" coords="455,363,661,404"/>
-<area shape="rect" id="node5" href="$XalanSourceTreeDocumentFragment_8hpp.html" title=" " alt="" coords="169,452,432,493"/>
-<area shape="rect" id="node12" href="$XalanDefaultParsedSource_8hpp.html" title=" " alt="" coords="456,452,660,493"/>
-<area shape="rect" id="node13" href="$XalanSourceTreeDocumentAllocator_8hpp.html" title=" " alt="" coords="587,541,782,583"/>
-<area shape="rect" id="node6" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="335,631,554,672"/>
-<area shape="rect" id="node11" href="$XalanSourceTreeDocumentFragmentAllocator_8hpp.html" title=" " alt="" coords="339,541,551,583"/>
-<area shape="rect" id="node7" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,720,223,761"/>
-<area shape="rect" id="node8" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="247,720,435,761"/>
-<area shape="rect" id="node9" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="459,720,638,761"/>
-<area shape="rect" id="node10" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="663,720,901,761"/>
-<area shape="rect" id="node15" href="$XalanSourceTreeElementANSAllocator_8hpp.html" title=" " alt="" coords="334,273,609,315"/>
-<area shape="rect" id="node17" href="$XalanSourceTreeElementNAAllocator_8hpp.html" title=" " alt="" coords="501,184,767,225"/>
-<area shape="rect" id="node18" href="$XalanSourceTreeElementNANS_8hpp.html" title=" " alt="" coords="791,184,1023,225"/>
-<area shape="rect" id="node19" href="$XalanSourceTreeElementNANSAllocator_8hpp.html" title=" " alt="" coords="707,273,990,315"/>
+<area shape="rect" id="node1" title=" " alt="" coords="445,5,661,47"/>
+<area shape="rect" id="node2" href="$XalanSourceTreeElementA_8hpp.html" title=" " alt="" coords="295,95,520,136"/>
+<area shape="rect" id="node16" href="$XalanSourceTreeElementNA_8hpp.html" title=" " alt="" coords="582,95,817,136"/>
+<area shape="rect" id="node3" href="$XalanSourceTreeElementAAllocator_8hpp.html" title=" " alt="" coords="67,273,350,315"/>
+<area shape="rect" id="node14" href="$XalanSourceTreeElementANS_8hpp.html" title=" " alt="" coords="286,184,529,225"/>
+<area shape="rect" id="node4" href="$XalanSourceTreeDocument_8hpp.html" title=" " alt="" coords="503,363,733,404"/>
+<area shape="rect" id="node5" href="$XalanSourceTreeDocumentFragment_8hpp.html" title=" " alt="" coords="190,452,481,493"/>
+<area shape="rect" id="node12" href="$XalanDefaultParsedSource_8hpp.html" title=" " alt="" coords="505,452,731,493"/>
+<area shape="rect" id="node13" href="$XalanSourceTreeDocumentAllocator_8hpp.html" title=" " alt="" coords="647,541,859,583"/>
+<area shape="rect" id="node6" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="372,631,608,672"/>
+<area shape="rect" id="node11" href="$XalanSourceTreeDocumentFragmentAllocator_8hpp.html" title=" " alt="" coords="372,541,608,583"/>
+<area shape="rect" id="node7" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,720,249,761"/>
+<area shape="rect" id="node8" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="273,720,480,761"/>
+<area shape="rect" id="node9" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="504,720,703,761"/>
+<area shape="rect" id="node10" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="727,720,997,761"/>
+<area shape="rect" id="node15" href="$XalanSourceTreeElementANSAllocator_8hpp.html" title=" " alt="" coords="374,273,675,315"/>
+<area shape="rect" id="node17" href="$XalanSourceTreeElementNAAllocator_8hpp.html" title=" " alt="" coords="553,184,845,225"/>
+<area shape="rect" id="node18" href="$XalanSourceTreeElementNANS_8hpp.html" title=" " alt="" coords="870,184,1123,225"/>
+<area shape="rect" id="node19" href="$XalanSourceTreeElementNANSAllocator_8hpp.html" title=" " alt="" coords="796,273,1107,315"/>
 </map>

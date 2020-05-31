@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classxalanc_1_1AVTPart.html" title="Class to hold a part, either a string or XPath, of an Attribute Value Template." alt="" coords="5,31,123,57"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1AVTPartSimple.html" title="Simple string part of a complex AVT." alt="" coords="171,5,328,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1AVTPartXPath.html" title="Simple string part of a complex AVT." alt="" coords="174,56,325,83"/>
+<area shape="rect" id="node1" href="$classxalanc_1_1AVTPart.html" title="Class to hold a part, either a string or XPath, of an Attribute Value Template." alt="" coords="5,31,128,57"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1AVTPartSimple.html" title="Simple string part of a complex AVT." alt="" coords="176,5,344,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1AVTPartXPath.html" title="Simple string part of a complex AVT." alt="" coords="180,56,340,83"/>
 </map>

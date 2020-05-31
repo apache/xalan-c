@@ -1,46 +1,46 @@
 <map id="xalanc/XSLT/ElemTemplateElement.hpp" name="xalanc/XSLT/ElemTemplateElement.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="1844,5,2025,47"/>
-<area shape="rect" id="node2" href="$XSLTDefinitions_8hpp.html" title=" " alt="" coords="2204,184,2417,211"/>
-<area shape="rect" id="node7" href="$XalanDOMString_8hpp.html" title=" " alt="" coords="1163,623,1413,650"/>
-<area shape="rect" id="node24" href="$XalanNode_8hpp.html" title=" " alt="" coords="2089,355,2303,382"/>
-<area shape="rect" id="node25" href="$DOMStringHelper_8hpp.html" title=" " alt="" coords="732,437,889,479"/>
-<area shape="rect" id="node32" href="$PrefixResolver_8hpp.html" title=" " alt="" coords="1972,259,2129,300"/>
-<area shape="rect" id="node33" href="$XalanLocator_8hpp.html" title=" " alt="" coords="1825,437,1983,479"/>
-<area shape="rect" id="node35" href="$XalanQNameByReference_8hpp.html" title=" " alt="" coords="1245,95,1438,136"/>
-<area shape="rect" id="node43" href="$NamespacesHandler_8hpp.html" title=" " alt="" coords="531,102,773,129"/>
-<area shape="rect" id="node44" title=" " alt="" coords="2255,102,2390,129"/>
-<area shape="rect" id="node3" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="1257,1026,1500,1053"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1109,1108,1253,1149"/>
-<area shape="rect" id="node5" title=" " alt="" coords="1278,1115,1479,1142"/>
-<area shape="rect" id="node6" href="$XalanVersion_8hpp.html" title=" " alt="" coords="1504,1115,1627,1142"/>
-<area shape="rect" id="node8" href="$XalanDOMDefinitions_8hpp.html" title=" " alt="" coords="1471,780,1745,807"/>
-<area shape="rect" id="node9" title=" " alt="" coords="293,1026,358,1053"/>
-<area shape="rect" id="node10" href="$STLHelper_8hpp.html" title=" " alt="" coords="549,705,744,732"/>
-<area shape="rect" id="node16" href="$XalanVector_8hpp.html" title=" " alt="" coords="815,855,1017,881"/>
-<area shape="rect" id="node20" href="$XalanMemoryManagement_8hpp.html" title=" " alt="" coords="1036,929,1223,971"/>
-<area shape="rect" id="node23" href="$XalanDOMException_8hpp.html" title=" " alt="" coords="1471,705,1745,732"/>
-<area shape="rect" id="node11" title=" " alt="" coords="392,937,467,963"/>
-<area shape="rect" id="node12" title=" " alt="" coords="713,855,791,881"/>
-<area shape="rect" id="node13" href="$XalanMap_8hpp.html" title=" " alt="" coords="325,780,515,807"/>
-<area shape="rect" id="node14" title=" " alt="" coords="523,1026,587,1053"/>
-<area shape="rect" id="node15" title=" " alt="" coords="273,855,327,881"/>
-<area shape="rect" id="node22" href="$XalanList_8hpp.html" title=" " alt="" coords="503,855,689,881"/>
-<area shape="rect" id="node17" title=" " alt="" coords="972,1026,1017,1053"/>
-<area shape="rect" id="node18" title=" " alt="" coords="694,937,757,963"/>
-<area shape="rect" id="node19" title=" " alt="" coords="781,937,859,963"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1042,1019,1225,1060"/>
-<area shape="rect" id="node26" href="$PlatformSupportDefinitions_8hpp.html" title=" " alt="" coords="1491,616,1695,657"/>
-<area shape="rect" id="node27" title=" " alt="" coords="664,534,723,561"/>
-<area shape="rect" id="node28" href="$FormatterListener_8hpp.html" title=" " alt="" coords="949,527,1107,568"/>
-<area shape="rect" id="node30" href="$XalanUnicode_8hpp.html" title=" " alt="" coords="1181,527,1339,568"/>
-<area shape="rect" id="node31" href="$XalanXMLChar_8hpp.html" title=" " alt="" coords="1515,527,1672,568"/>
-<area shape="rect" id="node29" title=" " alt="" coords="914,623,1139,650"/>
-<area shape="rect" id="node34" title=" " alt="" coords="1848,534,2013,561"/>
-<area shape="rect" id="node36" href="$XPathDefinitions_8hpp.html" title=" " alt="" coords="1741,355,1963,382"/>
-<area shape="rect" id="node37" href="$XalanQName_8hpp.html" title=" " alt="" coords="1236,184,1439,211"/>
-<area shape="rect" id="node38" href="$XalanDeque_8hpp.html" title=" " alt="" coords="1193,780,1396,807"/>
-<area shape="rect" id="node39" href="$NameSpace_8hpp.html" title=" " alt="" coords="574,266,773,293"/>
-<area shape="rect" id="node41" href="$XalanXPathException_8hpp.html" title=" " alt="" coords="1513,266,1764,293"/>
-<area shape="rect" id="node40" href="$XalanMemMgrAutoPtr_8hpp.html" title=" " alt="" coords="297,527,487,568"/>
-<area shape="rect" id="node42" href="$XSLException_8hpp.html" title=" " alt="" coords="1560,348,1717,389"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1925,5,2123,47"/>
+<area shape="rect" id="node2" href="$XSLTDefinitions_8hpp.html" title=" " alt="" coords="2313,184,2546,211"/>
+<area shape="rect" id="node7" href="$XalanDOMString_8hpp.html" title=" " alt="" coords="1209,623,1487,650"/>
+<area shape="rect" id="node24" href="$XalanNode_8hpp.html" title=" " alt="" coords="2187,355,2429,382"/>
+<area shape="rect" id="node25" href="$DOMStringHelper_8hpp.html" title=" " alt="" coords="753,437,927,479"/>
+<area shape="rect" id="node32" href="$PrefixResolver_8hpp.html" title=" " alt="" coords="2062,259,2237,300"/>
+<area shape="rect" id="node33" href="$XalanLocator_8hpp.html" title=" " alt="" coords="1909,437,2083,479"/>
+<area shape="rect" id="node35" href="$XalanQNameByReference_8hpp.html" title=" " alt="" coords="1285,95,1499,136"/>
+<area shape="rect" id="node43" href="$NamespacesHandler_8hpp.html" title=" " alt="" coords="536,102,803,129"/>
+<area shape="rect" id="node44" title=" " alt="" coords="2363,102,2509,129"/>
+<area shape="rect" id="node3" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="1323,1026,1597,1053"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1165,1108,1325,1149"/>
+<area shape="rect" id="node5" title=" " alt="" coords="1350,1115,1570,1142"/>
+<area shape="rect" id="node6" href="$XalanVersion_8hpp.html" title=" " alt="" coords="1594,1115,1827,1142"/>
+<area shape="rect" id="node8" href="$XalanDOMDefinitions_8hpp.html" title=" " alt="" coords="1556,780,1865,807"/>
+<area shape="rect" id="node9" title=" " alt="" coords="300,1026,369,1053"/>
+<area shape="rect" id="node10" href="$STLHelper_8hpp.html" title=" " alt="" coords="549,705,763,732"/>
+<area shape="rect" id="node16" href="$XalanVector_8hpp.html" title=" " alt="" coords="854,855,1079,881"/>
+<area shape="rect" id="node20" href="$XalanMemoryManagement_8hpp.html" title=" " alt="" coords="1068,929,1279,971"/>
+<area shape="rect" id="node23" href="$XalanDOMException_8hpp.html" title=" " alt="" coords="1562,705,1865,732"/>
+<area shape="rect" id="node11" title=" " alt="" coords="397,937,483,963"/>
+<area shape="rect" id="node12" title=" " alt="" coords="743,855,830,881"/>
+<area shape="rect" id="node13" href="$XalanMap_8hpp.html" title=" " alt="" coords="324,780,537,807"/>
+<area shape="rect" id="node14" title=" " alt="" coords="535,1026,606,1053"/>
+<area shape="rect" id="node15" title=" " alt="" coords="274,855,334,881"/>
+<area shape="rect" id="node22" href="$XalanList_8hpp.html" title=" " alt="" coords="511,855,719,881"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1002,1026,1051,1053"/>
+<area shape="rect" id="node18" title=" " alt="" coords="710,937,781,963"/>
+<area shape="rect" id="node19" title=" " alt="" coords="805,937,891,963"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1075,1019,1279,1060"/>
+<area shape="rect" id="node26" href="$PlatformSupportDefinitions_8hpp.html" title=" " alt="" coords="1554,616,1785,657"/>
+<area shape="rect" id="node27" title=" " alt="" coords="688,534,752,561"/>
+<area shape="rect" id="node28" href="$FormatterListener_8hpp.html" title=" " alt="" coords="979,527,1154,568"/>
+<area shape="rect" id="node30" href="$XalanUnicode_8hpp.html" title=" " alt="" coords="1230,527,1405,568"/>
+<area shape="rect" id="node31" href="$XalanXMLChar_8hpp.html" title=" " alt="" coords="1582,527,1757,568"/>
+<area shape="rect" id="node29" title=" " alt="" coords="938,623,1185,650"/>
+<area shape="rect" id="node34" title=" " alt="" coords="1934,534,2111,561"/>
+<area shape="rect" id="node36" href="$XPathDefinitions_8hpp.html" title=" " alt="" coords="1816,355,2061,382"/>
+<area shape="rect" id="node37" href="$XalanQName_8hpp.html" title=" " alt="" coords="1275,184,1499,211"/>
+<area shape="rect" id="node38" href="$XalanDeque_8hpp.html" title=" " alt="" coords="1255,780,1481,807"/>
+<area shape="rect" id="node39" href="$NameSpace_8hpp.html" title=" " alt="" coords="587,266,803,293"/>
+<area shape="rect" id="node41" href="$XalanXPathException_8hpp.html" title=" " alt="" coords="1574,266,1850,293"/>
+<area shape="rect" id="node40" href="$XalanMemMgrAutoPtr_8hpp.html" title=" " alt="" coords="297,527,511,568"/>
+<area shape="rect" id="node42" href="$XSLException_8hpp.html" title=" " alt="" coords="1617,348,1791,389"/>
 </map>

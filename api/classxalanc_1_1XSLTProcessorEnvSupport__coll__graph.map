@@ -1,5 +1,5 @@
 <map id="xalanc::XSLTProcessorEnvSupport" name="xalanc::XSLTProcessorEnvSupport">
-<area shape="rect" id="node1" title=" " alt="" coords="12,155,191,196"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XPathEnvSupport.html" title=" " alt="" coords="17,80,185,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="5,5,197,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="15,155,206,196"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XPathEnvSupport.html" title=" " alt="" coords="19,80,203,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="5,5,216,32"/>
 </map>

@@ -1,13 +1,13 @@
 <map id="xalanc::ArenaAllocator&lt; ObjectType, ArenaBlockType &gt;" name="xalanc::ArenaAllocator&lt; ObjectType, ArenaBlockType &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="1979,81,2193,123"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ArenaBlock.html" title=" " alt="" coords="1681,40,1816,81"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1ArenaBlockBase.html" title=" " alt="" coords="929,5,1095,47"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1ArenaBlock.html" title=" " alt="" coords="1263,40,1437,81"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanAllocator.html" title=" " alt="" coords="299,15,449,56"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1ArenaBlockBase.html" title=" " alt="" coords="569,57,744,99"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanAllocator.html" title=" " alt="" coords="5,15,156,56"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XalanList.html" title=" " alt="" coords="1647,149,1851,191"/>
-<area shape="rect" id="node9" title=" " alt="" coords="953,123,1071,150"/>
-<area shape="rect" id="node11" href="$classxalanc_1_1XalanList.html" title="Xalan implementation of a doubly linked list." alt="" coords="1286,169,1414,211"/>
-<area shape="rect" id="node10" href="$structxalanc_1_1XalanList_1_1Node.html" title=" " alt="" coords="948,236,1076,277"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2161,114,2397,155"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ArenaBlock.html" title=" " alt="" coords="1839,49,1986,90"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ArenaBlockBase.html" title=" " alt="" coords="1016,7,1195,49"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1ArenaBlock.html" title=" " alt="" coords="1380,49,1569,90"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanAllocator.html" title=" " alt="" coords="328,17,496,58"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1ArenaBlockBase.html" title=" " alt="" coords="625,51,815,93"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanAllocator.html" title=" " alt="" coords="5,17,173,58"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanList.html" title=" " alt="" coords="1799,146,2027,187"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1039,132,1172,159"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1XalanList.html" title="Xalan implementation of a doubly linked list." alt="" coords="1403,178,1547,219"/>
+<area shape="rect" id="node10" href="$structxalanc_1_1XalanList_1_1Node.html" title=" " alt="" coords="1033,245,1177,286"/>
 </map>

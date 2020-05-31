@@ -1,30 +1,30 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classxalanc_1_1XSLException.html" title=" " alt="" coords="5,457,155,483"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1DOMSupportException.html" title=" " alt="" coords="219,199,420,226"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1URISupport_1_1InvalidURIException.html" title="Normalizes the string passed in, replacing \ with /." alt="" coords="247,251,391,292"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanOutputStream_1_1XalanOutputStreamException.html" title=" " alt="" coords="219,316,419,357"/>
-<area shape="rect" id="node12" href="$classxalanc_1_1XalanTranscodingServices_1_1MakeTranscoderException.html" title=" " alt="" coords="203,412,436,453"/>
-<area shape="rect" id="node13" href="$classxalanc_1_1XalanTranscodingServices_1_1UnrepresentableCharacterException.html" title=" " alt="" coords="205,478,434,534"/>
-<area shape="rect" id="node14" href="$classxalanc_1_1XalanXPathException.html" title=" " alt="" coords="224,586,415,613"/>
-<area shape="rect" id="node25" href="$classxalanc_1_1XMLSupportException.html" title=" " alt="" coords="221,637,417,663"/>
-<area shape="rect" id="node26" href="$classxalanc_1_1XSLTProcessorException.html" title=" " alt="" coords="212,865,427,891"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanFileOutputStream_1_1XalanFileOutputStreamOpenException.html" title=" " alt="" coords="484,5,736,47"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XalanFileOutputStream_1_1XalanFileOutputStreamWriteException.html" title=" " alt="" coords="484,71,736,112"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanFStreamOutputStream_1_1XalanFStreamOutputStreamWriteException.html" title=" " alt="" coords="493,137,727,193"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XalanOutputStream_1_1TranscoderInternalFailureException.html" title=" " alt="" coords="493,217,727,259"/>
-<area shape="rect" id="node9" href="$classxalanc_1_1XalanOutputStream_1_1TranscodingException.html" title=" " alt="" coords="520,283,700,324"/>
-<area shape="rect" id="node10" href="$classxalanc_1_1XalanOutputStream_1_1UnsupportedEncodingException.html" title=" " alt="" coords="503,348,717,389"/>
-<area shape="rect" id="node11" href="$classxalanc_1_1XalanStdOutputStream_1_1XalanStdOutputStreamWriteException.html" title=" " alt="" coords="485,413,735,455"/>
-<area shape="rect" id="node15" href="$classxalanc_1_1XalanQName_1_1InvalidQNameException.html" title=" " alt="" coords="527,479,693,520"/>
-<area shape="rect" id="node16" href="$classxalanc_1_1XObject_1_1XObjectException.html" title=" " alt="" coords="527,544,693,585"/>
-<area shape="rect" id="node18" href="$classxalanc_1_1XPathExceptionFunctionNotAvailable.html" title="Exception class thrown when an unknown function is encountered." alt="" coords="505,609,715,651"/>
-<area shape="rect" id="node19" href="$classxalanc_1_1XPathExceptionFunctionNotSupported.html" title="Exception class thrown when an installFunction() is called with a function name that is not supported..." alt="" coords="505,675,715,716"/>
-<area shape="rect" id="node20" href="$classxalanc_1_1XPathExpression_1_1XPathExpressionException.html" title="Exception class thrown when an invalid XPath expression is encountered." alt="" coords="517,740,703,781"/>
-<area shape="rect" id="node24" href="$classxalanc_1_1XPathParserException.html" title="Exception class thrown when a problem parsing an XPath is encountered." alt="" coords="511,806,709,833"/>
-<area shape="rect" id="node17" href="$classxalanc_1_1XObject_1_1XObjectInvalidConversionException.html" title=" " alt="" coords="801,544,980,585"/>
-<area shape="rect" id="node21" href="$classxalanc_1_1XPathExpression_1_1InvalidArgumentCountException.html" title="Exception class thrown when an invalid number of XPath arguments is encountered." alt="" coords="784,675,997,716"/>
-<area shape="rect" id="node22" href="$classxalanc_1_1XPathExpression_1_1InvalidArgumentException.html" title="Exception class thrown when an invalid XPath argument is encountered." alt="" coords="801,740,980,781"/>
-<area shape="rect" id="node23" href="$classxalanc_1_1XPathExpression_1_1InvalidOpCodeException.html" title="Exception class thrown when an invalid XPath operation code is encountered." alt="" coords="805,805,976,847"/>
-<area shape="rect" id="node27" href="$classxalanc_1_1ElemMessage_1_1ElemMessageTerminateException.html" title=" " alt="" coords="496,857,724,899"/>
-<area shape="rect" id="node28" href="$classxalanc_1_1VariablesStack_1_1InvalidStackContextException.html" title=" " alt="" coords="509,923,711,964"/>
+<area shape="rect" id="node1" href="$classxalanc_1_1XSLException.html" title=" " alt="" coords="5,454,167,481"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1DOMSupportException.html" title=" " alt="" coords="233,199,452,226"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1URISupport_1_1InvalidURIException.html" title="Normalizes the string passed in, replacing \ with /." alt="" coords="262,251,423,292"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanOutputStream_1_1XalanOutputStreamException.html" title=" " alt="" coords="231,316,454,357"/>
+<area shape="rect" id="node12" href="$classxalanc_1_1XalanTranscodingServices_1_1MakeTranscoderException.html" title=" " alt="" coords="215,409,470,451"/>
+<area shape="rect" id="node13" href="$classxalanc_1_1XalanTranscodingServices_1_1UnrepresentableCharacterException.html" title=" " alt="" coords="215,475,471,531"/>
+<area shape="rect" id="node14" href="$classxalanc_1_1XalanXPathException.html" title=" " alt="" coords="237,586,448,613"/>
+<area shape="rect" id="node25" href="$classxalanc_1_1XMLSupportException.html" title=" " alt="" coords="235,637,450,663"/>
+<area shape="rect" id="node26" href="$classxalanc_1_1XSLTProcessorException.html" title=" " alt="" coords="227,865,458,891"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanFileOutputStream_1_1XalanFileOutputStreamOpenException.html" title=" " alt="" coords="519,5,798,47"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanFileOutputStream_1_1XalanFileOutputStreamWriteException.html" title=" " alt="" coords="519,71,799,112"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanFStreamOutputStream_1_1XalanFStreamOutputStreamWriteException.html" title=" " alt="" coords="529,137,788,193"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanOutputStream_1_1TranscoderInternalFailureException.html" title=" " alt="" coords="530,217,787,259"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XalanOutputStream_1_1TranscodingException.html" title=" " alt="" coords="558,283,759,324"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1XalanOutputStream_1_1UnsupportedEncodingException.html" title=" " alt="" coords="541,348,777,389"/>
+<area shape="rect" id="node11" href="$classxalanc_1_1XalanStdOutputStream_1_1XalanStdOutputStreamWriteException.html" title=" " alt="" coords="519,413,798,455"/>
+<area shape="rect" id="node15" href="$classxalanc_1_1XalanQName_1_1InvalidQNameException.html" title=" " alt="" coords="565,479,752,520"/>
+<area shape="rect" id="node16" href="$classxalanc_1_1XObject_1_1XObjectException.html" title=" " alt="" coords="568,544,749,585"/>
+<area shape="rect" id="node18" href="$classxalanc_1_1XPathExceptionFunctionNotAvailable.html" title="Exception class thrown when an unknown function is encountered." alt="" coords="544,609,773,651"/>
+<area shape="rect" id="node19" href="$classxalanc_1_1XPathExceptionFunctionNotSupported.html" title="Exception class thrown when an installFunction() is called with a function name that is not supported..." alt="" coords="544,675,773,716"/>
+<area shape="rect" id="node20" href="$classxalanc_1_1XPathExpression_1_1XPathExpressionException.html" title="Exception class thrown when an invalid XPath expression is encountered." alt="" coords="557,740,760,781"/>
+<area shape="rect" id="node24" href="$classxalanc_1_1XPathParserException.html" title="Exception class thrown when a problem parsing an XPath is encountered." alt="" coords="551,806,766,833"/>
+<area shape="rect" id="node17" href="$classxalanc_1_1XObject_1_1XObjectInvalidConversionException.html" title=" " alt="" coords="865,544,1068,585"/>
+<area shape="rect" id="node21" href="$classxalanc_1_1XPathExpression_1_1InvalidArgumentCountException.html" title="Exception class thrown when an invalid number of XPath arguments is encountered." alt="" coords="847,675,1087,716"/>
+<area shape="rect" id="node22" href="$classxalanc_1_1XPathExpression_1_1InvalidArgumentException.html" title="Exception class thrown when an invalid XPath argument is encountered." alt="" coords="865,740,1068,781"/>
+<area shape="rect" id="node23" href="$classxalanc_1_1XPathExpression_1_1InvalidOpCodeException.html" title="Exception class thrown when an invalid XPath operation code is encountered." alt="" coords="872,805,1061,847"/>
+<area shape="rect" id="node27" href="$classxalanc_1_1ElemMessage_1_1ElemMessageTerminateException.html" title=" " alt="" coords="533,857,784,899"/>
+<area shape="rect" id="node28" href="$classxalanc_1_1VariablesStack_1_1InvalidStackContextException.html" title=" " alt="" coords="546,923,771,964"/>
 </map>

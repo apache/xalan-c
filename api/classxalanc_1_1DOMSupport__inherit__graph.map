@@ -1,7 +1,7 @@
 <map id="xalanc::DOMSupport" name="xalanc::DOMSupport">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,148,83"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1DOMSupportDefault.html" title=" " alt="" coords="225,5,407,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanSourceTreeDOMSupport.html" title=" " alt="" coords="196,56,436,83"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XercesDOMSupport.html" title=" " alt="" coords="225,107,407,133"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanDefaultParsedSourceDOMSupport.html" title=" " alt="" coords="484,49,664,90"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,160,83"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1DOMSupportDefault.html" title=" " alt="" coords="238,5,441,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanSourceTreeDOMSupport.html" title=" " alt="" coords="208,56,471,83"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XercesDOMSupport.html" title=" " alt="" coords="240,107,439,133"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDefaultParsedSourceDOMSupport.html" title=" " alt="" coords="519,49,720,90"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="xalanc::NodeRefList" name="xalanc::NodeRefList">
-<area shape="rect" id="node1" title="Local implementation of NodeRefList." alt="" coords="28,80,167,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1MutableNodeRefList.html" title="Local implementation of MutableNodeRefList." alt="" coords="5,155,189,181"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1NodeRefListBase.html" title="Local implementation of NodeRefList." alt="" coords="13,5,181,32"/>
+<area shape="rect" id="node1" title="Local implementation of NodeRefList." alt="" coords="32,80,184,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1MutableNodeRefList.html" title="Local implementation of MutableNodeRefList." alt="" coords="5,155,211,181"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1NodeRefListBase.html" title="Local implementation of NodeRefList." alt="" coords="16,5,200,32"/>
 </map>

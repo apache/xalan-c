@@ -1,8 +1,8 @@
 <map id="xalanc::ElemDecimalFormat" name="xalanc::ElemDecimalFormat">
-<area shape="rect" id="node1" title=" " alt="" coords="661,5,848,32"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="305,73,504,100"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="675,65,834,92"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="679,129,830,156"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="11,48,162,75"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,99,168,125"/>
+<area shape="rect" id="node1" title=" " alt="" coords="725,5,932,32"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="332,73,552,100"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="741,64,916,91"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="745,135,912,161"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="12,48,179,75"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,99,185,125"/>
 </map>

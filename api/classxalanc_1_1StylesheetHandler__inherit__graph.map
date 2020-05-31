@@ -1,5 +1,5 @@
 <map id="xalanc::StylesheetHandler" name="xalanc::StylesheetHandler">
-<area shape="rect" id="node1" title="This class processes a stylesheet via SAX events, and inits the given stylesheet." alt="" coords="7,155,182,181"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1FormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="9,80,180,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,184,32"/>
+<area shape="rect" id="node1" title="This class processes a stylesheet via SAX events, and inits the given stylesheet." alt="" coords="7,155,201,181"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1FormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="9,80,199,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,203,32"/>
 </map>

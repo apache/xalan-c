@@ -1,7 +1,7 @@
 <map id="xalanc::NodeRefListBase" name="xalanc::NodeRefListBase">
-<area shape="rect" id="node1" title="Local implementation of NodeRefList." alt="" coords="5,64,173,91"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1NodeRefList.html" title="Local implementation of NodeRefList." alt="" coords="259,5,397,32"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanDocumentFragmentNodeRefListBaseProxy.html" title=" " alt="" coords="221,57,435,98"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XNodeSetNodeProxy_1_1Proxy.html" title=" " alt="" coords="233,122,423,163"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1MutableNodeRefList.html" title="Local implementation of MutableNodeRefList." alt="" coords="483,5,667,32"/>
+<area shape="rect" id="node1" title="Local implementation of NodeRefList." alt="" coords="5,64,189,91"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1NodeRefList.html" title="Local implementation of NodeRefList." alt="" coords="281,5,433,32"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDocumentFragmentNodeRefListBaseProxy.html" title=" " alt="" coords="237,57,476,98"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XNodeSetNodeProxy_1_1Proxy.html" title=" " alt="" coords="253,122,461,163"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1MutableNodeRefList.html" title="Local implementation of MutableNodeRefList." alt="" coords="524,5,729,32"/>
 </map>

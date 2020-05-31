@@ -1,11 +1,11 @@
 <map id="xalanc::XalanElement" name="xalanc::XalanElement">
-<area shape="rect" id="node1" title=" " alt="" coords="183,81,329,108"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanSourceTreeElement.html" title=" " alt="" coords="377,31,591,57"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XercesElementBridge.html" title="This class is deprecated." alt="" coords="388,81,580,108"/>
-<area shape="rect" id="node9" href="$classxalanc_1_1XercesElementWrapper.html" title=" " alt="" coords="382,132,586,159"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="5,81,135,108"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanSourceTreeElementA.html" title=" " alt="" coords="643,5,865,32"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XalanSourceTreeElementNA.html" title=" " alt="" coords="639,56,869,83"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanSourceTreeElementANS.html" title=" " alt="" coords="922,5,1162,32"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanSourceTreeElementNANS.html" title=" " alt="" coords="917,56,1167,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="197,81,361,108"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanSourceTreeElement.html" title=" " alt="" coords="409,31,644,57"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XercesElementBridge.html" title="This class is deprecated." alt="" coords="420,81,633,108"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XercesElementWrapper.html" title=" " alt="" coords="413,132,640,159"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanNode.html" title=" " alt="" coords="5,81,149,108"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanSourceTreeElementA.html" title=" " alt="" coords="697,5,941,32"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanSourceTreeElementNA.html" title=" " alt="" coords="692,56,947,83"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanSourceTreeElementANS.html" title=" " alt="" coords="999,5,1262,32"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanSourceTreeElementNANS.html" title=" " alt="" coords="995,56,1267,83"/>
 </map>

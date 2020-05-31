@@ -1,6 +1,6 @@
 <map id="xalanc::FormatterToXMLUnicode&lt; UnicodeWriter, ConstantsType, CharPredicate, IndentHandler, XMLVersion &gt;" name="xalanc::FormatterToXMLUnicode&lt; UnicodeWriter, ConstantsType, CharPredicate, IndentHandler, XMLVersion &gt;">
-<area shape="rect" id="node1" title="FormatterToXMLUnicode formats SAX&#45;style events into XML." alt="" coords="5,229,220,300"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XalanXMLSerializerBase.html" title="XalanXMLSerializerBase serves as a base class for XML serializers based on FormatterListener events." alt="" coords="9,155,217,181"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1FormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="27,80,198,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="23,5,202,32"/>
+<area shape="rect" id="node1" title="FormatterToXMLUnicode formats SAX&#45;style events into XML." alt="" coords="5,229,243,300"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XalanXMLSerializerBase.html" title="XalanXMLSerializerBase serves as a base class for XML serializers based on FormatterListener events." alt="" coords="9,155,239,181"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1FormatterListener.html" title="A SAX&#45;based formatter interface for the XSL processor." alt="" coords="29,80,219,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="25,5,223,32"/>
 </map>

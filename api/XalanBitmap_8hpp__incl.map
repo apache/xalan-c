@@ -1,17 +1,17 @@
 <map id="xalanc/PlatformSupport/XalanBitmap.hpp" name="xalanc/PlatformSupport/XalanBitmap.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="291,5,448,47"/>
-<area shape="rect" id="node2" href="$PlatformSupportDefinitions_8hpp.html" title=" " alt="" coords="143,95,347,136"/>
-<area shape="rect" id="node7" href="$XalanVector_8hpp.html" title=" " alt="" coords="392,102,595,129"/>
-<area shape="rect" id="node3" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="153,281,396,307"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,363,149,404"/>
-<area shape="rect" id="node5" title=" " alt="" coords="174,370,375,397"/>
-<area shape="rect" id="node6" href="$XalanVersion_8hpp.html" title=" " alt="" coords="400,370,523,397"/>
-<area shape="rect" id="node8" title=" " alt="" coords="469,281,533,307"/>
-<area shape="rect" id="node9" title=" " alt="" coords="363,191,437,218"/>
-<area shape="rect" id="node10" title=" " alt="" coords="814,281,879,307"/>
-<area shape="rect" id="node11" title=" " alt="" coords="904,281,949,307"/>
-<area shape="rect" id="node12" title=" " alt="" coords="462,191,525,218"/>
-<area shape="rect" id="node13" title=" " alt="" coords="549,191,627,218"/>
-<area shape="rect" id="node14" href="$XalanMemoryManagement_8hpp.html" title=" " alt="" coords="652,184,839,225"/>
-<area shape="rect" id="node15" title=" " alt="" coords="607,273,790,315"/>
+<area shape="rect" id="node1" title=" " alt="" coords="303,5,478,47"/>
+<area shape="rect" id="node2" href="$PlatformSupportDefinitions_8hpp.html" title=" " alt="" coords="150,95,381,136"/>
+<area shape="rect" id="node7" href="$XalanVector_8hpp.html" title=" " alt="" coords="421,102,646,129"/>
+<area shape="rect" id="node3" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="163,281,437,307"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,363,165,404"/>
+<area shape="rect" id="node5" title=" " alt="" coords="190,370,410,397"/>
+<area shape="rect" id="node6" href="$XalanVersion_8hpp.html" title=" " alt="" coords="434,370,667,397"/>
+<area shape="rect" id="node8" title=" " alt="" coords="511,281,582,307"/>
+<area shape="rect" id="node9" title=" " alt="" coords="388,191,473,218"/>
+<area shape="rect" id="node10" title=" " alt="" coords="884,281,953,307"/>
+<area shape="rect" id="node11" title=" " alt="" coords="978,281,1027,307"/>
+<area shape="rect" id="node12" title=" " alt="" coords="498,191,569,218"/>
+<area shape="rect" id="node13" title=" " alt="" coords="593,191,679,218"/>
+<area shape="rect" id="node14" href="$XalanMemoryManagement_8hpp.html" title=" " alt="" coords="704,184,915,225"/>
+<area shape="rect" id="node15" title=" " alt="" coords="655,273,859,315"/>
 </map>

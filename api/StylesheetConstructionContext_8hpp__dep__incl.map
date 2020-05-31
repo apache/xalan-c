@@ -1,12 +1,12 @@
 <map id="xalanc/XSLT/StylesheetConstructionContext.hpp" name="xalanc/XSLT/StylesheetConstructionContext.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="665,5,899,47"/>
-<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="535,102,720,129"/>
-<area shape="rect" id="node10" href="$StylesheetConstructionContextDefault_8hpp.html" title=" " alt="" coords="821,95,1055,136"/>
-<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="231,184,450,225"/>
-<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="474,191,703,218"/>
-<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="728,191,940,218"/>
-<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,273,223,315"/>
-<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="247,273,435,315"/>
-<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="459,273,638,315"/>
-<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="715,273,953,315"/>
+<area shape="rect" id="node1" title=" " alt="" coords="725,5,980,47"/>
+<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="627,102,828,129"/>
+<area shape="rect" id="node10" href="$StylesheetConstructionContextDefault_8hpp.html" title=" " alt="" coords="893,95,1148,136"/>
+<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="259,184,495,225"/>
+<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="519,191,770,218"/>
+<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="795,191,1025,218"/>
+<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,273,249,315"/>
+<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="273,273,480,315"/>
+<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="504,273,703,315"/>
+<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="775,273,1045,315"/>
 </map>

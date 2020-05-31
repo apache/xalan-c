@@ -1,5 +1,5 @@
 <map id="xalanc::ElemDecimalFormat" name="xalanc::ElemDecimalFormat">
-<area shape="rect" id="node1" title=" " alt="" coords="11,155,198,181"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="5,80,204,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="29,5,180,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="12,155,219,181"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="5,80,225,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="32,5,199,32"/>
 </map>

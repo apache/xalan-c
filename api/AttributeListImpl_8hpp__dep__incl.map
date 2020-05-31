@@ -1,18 +1,18 @@
 <map id="xalanc/PlatformSupport/AttributeListImpl.hpp" name="xalanc/PlatformSupport/AttributeListImpl.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="157,5,314,47"/>
-<area shape="rect" id="node2" href="$OutputContextStack_8hpp.html" title=" " alt="" coords="144,95,327,136"/>
-<area shape="rect" id="node3" href="$XSLTEngineImpl_8hpp.html" title=" " alt="" coords="62,184,279,211"/>
-<area shape="rect" id="node5" href="$StylesheetExecutionContext_8hpp.html" title=" " alt="" coords="352,95,570,136"/>
-<area shape="rect" id="node4" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="11,437,250,479"/>
-<area shape="rect" id="node6" href="$Stylesheet_8hpp.html" title=" " alt="" coords="283,266,468,293"/>
-<area shape="rect" id="node7" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="514,348,733,389"/>
-<area shape="rect" id="node13" href="$XResultTreeFrag_8hpp.html" title=" " alt="" coords="544,184,762,211"/>
-<area shape="rect" id="node11" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="261,355,490,382"/>
-<area shape="rect" id="node12" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="24,355,236,382"/>
-<area shape="rect" id="node8" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="738,437,955,479"/>
-<area shape="rect" id="node9" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="322,437,510,479"/>
-<area shape="rect" id="node10" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="534,437,713,479"/>
-<area shape="rect" id="node14" href="$FunctionNodeSet_8hpp.html" title=" " alt="" coords="788,259,948,300"/>
-<area shape="rect" id="node16" href="$XResultTreeFragAllocator_8hpp.html" title=" " alt="" coords="550,259,743,300"/>
-<area shape="rect" id="node15" href="$XalanEXSLTCommonImpl_8hpp.html" title=" " alt="" coords="758,348,1018,389"/>
+<area shape="rect" id="node1" title=" " alt="" coords="169,5,344,47"/>
+<area shape="rect" id="node2" href="$OutputContextStack_8hpp.html" title=" " alt="" coords="157,95,356,136"/>
+<area shape="rect" id="node3" href="$XSLTEngineImpl_8hpp.html" title=" " alt="" coords="71,184,307,211"/>
+<area shape="rect" id="node5" href="$StylesheetExecutionContext_8hpp.html" title=" " alt="" coords="380,95,616,136"/>
+<area shape="rect" id="node4" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="5,437,276,479"/>
+<area shape="rect" id="node6" href="$Stylesheet_8hpp.html" title=" " alt="" coords="305,266,507,293"/>
+<area shape="rect" id="node7" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="556,348,792,389"/>
+<area shape="rect" id="node13" href="$XResultTreeFrag_8hpp.html" title=" " alt="" coords="582,184,819,211"/>
+<area shape="rect" id="node11" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="281,355,531,382"/>
+<area shape="rect" id="node12" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="25,355,256,382"/>
+<area shape="rect" id="node8" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="797,437,1041,479"/>
+<area shape="rect" id="node9" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="344,437,551,479"/>
+<area shape="rect" id="node10" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="575,437,773,479"/>
+<area shape="rect" id="node14" href="$FunctionNodeSet_8hpp.html" title=" " alt="" coords="848,259,1025,300"/>
+<area shape="rect" id="node16" href="$XResultTreeFragAllocator_8hpp.html" title=" " alt="" coords="589,259,799,300"/>
+<area shape="rect" id="node15" href="$XalanEXSLTCommonImpl_8hpp.html" title=" " alt="" coords="815,348,1098,389"/>
 </map>

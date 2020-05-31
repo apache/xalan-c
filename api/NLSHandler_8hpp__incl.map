@@ -1,13 +1,13 @@
 <map id="xalanc/Utils/MsgCreator/NLSHandler.hpp" name="xalanc/Utils/MsgCreator/NLSHandler.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="221,5,382,47"/>
-<area shape="rect" id="node2" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="153,319,396,345"/>
-<area shape="rect" id="node6" href="$ICUResHandler_8hpp.html" title=" " alt="" coords="287,95,422,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,393,149,435"/>
-<area shape="rect" id="node4" title=" " alt="" coords="174,401,375,427"/>
-<area shape="rect" id="node5" href="$XalanVersion_8hpp.html" title=" " alt="" coords="400,401,523,427"/>
-<area shape="rect" id="node7" href="$SAX2Handler_8hpp.html" title=" " alt="" coords="473,169,596,196"/>
-<area shape="rect" id="node8" href="$MsgFileOutputStream_8hpp.html" title=" " alt="" coords="338,244,513,271"/>
-<area shape="rect" id="node10" title=" " alt="" coords="537,244,751,271"/>
-<area shape="rect" id="node11" title=" " alt="" coords="775,244,963,271"/>
-<area shape="rect" id="node9" title=" " alt="" coords="421,319,478,345"/>
+<area shape="rect" id="node1" title=" " alt="" coords="240,5,419,47"/>
+<area shape="rect" id="node2" href="$PlatformDefinitions_8hpp.html" title=" " alt="" coords="163,319,437,345"/>
+<area shape="rect" id="node6" href="$ICUResHandler_8hpp.html" title=" " alt="" coords="312,95,459,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,393,165,435"/>
+<area shape="rect" id="node4" title=" " alt="" coords="190,401,410,427"/>
+<area shape="rect" id="node5" href="$XalanVersion_8hpp.html" title=" " alt="" coords="434,401,667,427"/>
+<area shape="rect" id="node7" href="$SAX2Handler_8hpp.html" title=" " alt="" coords="510,169,645,196"/>
+<area shape="rect" id="node8" href="$MsgFileOutputStream_8hpp.html" title=" " alt="" coords="363,244,554,271"/>
+<area shape="rect" id="node10" title=" " alt="" coords="578,244,814,271"/>
+<area shape="rect" id="node11" title=" " alt="" coords="839,244,1047,271"/>
+<area shape="rect" id="node9" title=" " alt="" coords="461,319,523,345"/>
 </map>

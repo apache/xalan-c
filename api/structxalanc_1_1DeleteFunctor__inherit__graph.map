@@ -1,8 +1,8 @@
 <map id="xalanc::DeleteFunctor&lt; Type &gt;" name="xalanc::DeleteFunctor&lt; Type &gt;">
-<area shape="rect" id="node1" title="Functor to delete objects, used in STL iteration algorithms." alt="" coords="5,136,155,177"/>
-<area shape="rect" id="node2" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="419,5,568,47"/>
-<area shape="rect" id="node3" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="402,71,585,112"/>
-<area shape="rect" id="node4" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="419,136,568,177"/>
-<area shape="rect" id="node5" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="412,201,575,243"/>
-<area shape="rect" id="node6" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="391,267,596,308"/>
+<area shape="rect" id="node1" title="Functor to delete objects, used in STL iteration algorithms." alt="" coords="5,136,169,177"/>
+<area shape="rect" id="node2" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="458,5,622,47"/>
+<area shape="rect" id="node3" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="439,71,641,112"/>
+<area shape="rect" id="node4" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="458,136,622,177"/>
+<area shape="rect" id="node5" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="448,201,632,243"/>
+<area shape="rect" id="node6" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="427,267,653,308"/>
 </map>

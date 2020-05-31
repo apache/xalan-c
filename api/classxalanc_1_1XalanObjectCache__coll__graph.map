@@ -1,5 +1,5 @@
 <map id="xalanc::XalanObjectCache&lt; ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType &gt;" name="xalanc::XalanObjectCache&lt; ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,213,267,269"/>
-<area shape="rect" id="node2" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="61,109,211,151"/>
-<area shape="rect" id="node3" href="$structxalanc_1_1DeleteFunctor.html" title="Functor to delete objects, used in STL iteration algorithms." alt="" coords="61,5,211,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,213,291,269"/>
+<area shape="rect" id="node2" href="$structxalanc_1_1DeleteFunctor.html" title=" " alt="" coords="66,109,230,151"/>
+<area shape="rect" id="node3" href="$structxalanc_1_1DeleteFunctor.html" title="Functor to delete objects, used in STL iteration algorithms." alt="" coords="66,5,230,47"/>
 </map>

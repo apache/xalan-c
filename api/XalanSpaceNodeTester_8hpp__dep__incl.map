@@ -1,11 +1,11 @@
 <map id="xalanc/XSLT/XalanSpaceNodeTester.hpp" name="xalanc/XSLT/XalanSpaceNodeTester.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="491,5,687,47"/>
-<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="496,95,681,121"/>
-<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="231,169,450,211"/>
-<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="474,177,703,203"/>
-<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="728,177,940,203"/>
-<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,259,223,300"/>
-<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="247,259,435,300"/>
-<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="459,259,638,300"/>
-<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="688,259,927,300"/>
+<area shape="rect" id="node1" title=" " alt="" coords="537,5,752,47"/>
+<area shape="rect" id="node2" href="$Stylesheet_8hpp.html" title=" " alt="" coords="544,95,745,121"/>
+<area shape="rect" id="node3" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="259,169,495,211"/>
+<area shape="rect" id="node8" href="$StylesheetHandler_8hpp.html" title=" " alt="" coords="519,177,770,203"/>
+<area shape="rect" id="node9" href="$StylesheetRoot_8hpp.html" title=" " alt="" coords="795,177,1025,203"/>
+<area shape="rect" id="node4" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,259,249,300"/>
+<area shape="rect" id="node5" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="273,259,480,300"/>
+<area shape="rect" id="node6" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="504,259,703,300"/>
+<area shape="rect" id="node7" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="751,259,1021,300"/>
 </map>

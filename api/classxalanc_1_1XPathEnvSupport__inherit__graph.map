@@ -1,7 +1,7 @@
 <map id="xalanc::XPathEnvSupport" name="xalanc::XPathEnvSupport">
-<area shape="rect" id="node1" title=" " alt="" coords="133,80,301,107"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XPathEnvSupportDefault.html" title=" " alt="" coords="5,162,213,189"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XSLTProcessorEnvSupport.html" title=" " alt="" coords="237,155,416,196"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="121,5,313,32"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XSLTProcessorEnvSupportDefault.html" title=" " alt="" coords="237,244,416,285"/>
+<area shape="rect" id="node1" title=" " alt="" coords="147,80,331,107"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XPathEnvSupportDefault.html" title=" " alt="" coords="5,162,237,189"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XSLTProcessorEnvSupport.html" title=" " alt="" coords="262,155,453,196"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="133,5,344,32"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XSLTProcessorEnvSupportDefault.html" title=" " alt="" coords="262,244,453,285"/>
 </map>

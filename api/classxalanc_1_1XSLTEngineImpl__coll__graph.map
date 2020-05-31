@@ -1,12 +1,12 @@
 <map id="xalanc::XSLTEngineImpl" name="xalanc::XSLTEngineImpl">
-<area shape="rect" id="node1" title="It&#39;s the responsibility of the XSLTEngineImpl class, collaborating with the XML parser liaison,..." alt="" coords="696,157,859,184"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XSLTProcessor.html" title="This is an interface for an XSLT Processor engine." alt="" coords="317,5,475,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="5,5,197,32"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="321,56,471,83"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="315,107,477,133"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="317,157,475,184"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1XalanMemMgrAutoPtr.html" title=" " alt="" coords="299,209,493,250"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="327,274,465,315"/>
-<area shape="rect" id="node9" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="8,274,195,315"/>
-<area shape="rect" id="node10" href="$classxalanc_1_1XPathFactory.html" title=" " alt="" coords="323,340,469,367"/>
+<area shape="rect" id="node1" title="It&#39;s the responsibility of the XSLTEngineImpl class, collaborating with the XML parser liaison,..." alt="" coords="764,157,941,184"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XSLTProcessor.html" title="This is an interface for an XSLT Processor engine." alt="" coords="351,5,518,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ProblemListenerBase.html" title="This is the abstract class that is used when reporting a problem some kind, that requires a message,..." alt="" coords="5,5,216,32"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="351,56,518,83"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="345,107,525,133"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XObjectFactory.html" title="This class handles the creation of XObjects and manages their lifetime." alt="" coords="349,157,520,184"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1XalanMemMgrAutoPtr.html" title=" " alt="" coords="327,209,543,250"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="359,274,510,315"/>
+<area shape="rect" id="node9" href="$classxalanc_1_1XalanVector.html" title=" " alt="" coords="7,274,214,315"/>
+<area shape="rect" id="node10" href="$classxalanc_1_1XPathFactory.html" title=" " alt="" coords="356,340,513,367"/>
 </map>

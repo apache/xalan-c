@@ -1,11 +1,11 @@
 <map id="xalanc/XSLT/XResultTreeFrag.hpp" name="xalanc/XSLT/XResultTreeFrag.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="210,5,429,32"/>
-<area shape="rect" id="node2" href="$FunctionNodeSet_8hpp.html" title=" " alt="" coords="131,80,291,121"/>
-<area shape="rect" id="node4" href="$XResultTreeFragAllocator_8hpp.html" title=" " alt="" coords="332,80,525,121"/>
-<area shape="rect" id="node3" href="$XalanEXSLTCommonImpl_8hpp.html" title=" " alt="" coords="51,169,311,211"/>
-<area shape="rect" id="node5" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="335,169,554,211"/>
-<area shape="rect" id="node6" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,259,223,300"/>
-<area shape="rect" id="node7" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="247,259,435,300"/>
-<area shape="rect" id="node8" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="459,259,638,300"/>
-<area shape="rect" id="node9" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="663,259,901,300"/>
+<area shape="rect" id="node1" title=" " alt="" coords="229,5,466,32"/>
+<area shape="rect" id="node2" href="$FunctionNodeSet_8hpp.html" title=" " alt="" coords="151,80,328,121"/>
+<area shape="rect" id="node4" href="$XResultTreeFragAllocator_8hpp.html" title=" " alt="" coords="368,80,577,121"/>
+<area shape="rect" id="node3" href="$XalanEXSLTCommonImpl_8hpp.html" title=" " alt="" coords="66,169,349,211"/>
+<area shape="rect" id="node5" href="$StylesheetExecutionContextDefault_8hpp.html" title=" " alt="" coords="372,169,608,211"/>
+<area shape="rect" id="node6" href="$ICUBridgeCollationCompareFunctorImpl_8hpp.html" title=" " alt="" coords="5,259,249,300"/>
+<area shape="rect" id="node7" href="$ICUFormatNumberFunctor_8hpp.html" title=" " alt="" coords="273,259,480,300"/>
+<area shape="rect" id="node8" href="$ICUXalanNumberFormatFactory_8hpp.html" title=" " alt="" coords="504,259,703,300"/>
+<area shape="rect" id="node9" href="$XalanCompiledStylesheetDefault_8hpp.html" title=" " alt="" coords="727,259,997,300"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="xalanc::TreeWalker" name="xalanc::TreeWalker">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,140,83"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1FormatterTreeWalker.html" title=" " alt="" coords="218,5,409,32"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1NodeNameTreeWalker.html" title=" " alt="" coords="214,56,413,83"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XalanDocumentPrefixResolver_1_1NamespaceNodesTreeWalker.html" title="A utility class to walk the XalanDocument instance and look for attribute nodes that declare namespac..." alt="" coords="188,107,439,149"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,149,83"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1FormatterTreeWalker.html" title=" " alt="" coords="231,5,439,32"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1NodeNameTreeWalker.html" title=" " alt="" coords="227,56,444,83"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XalanDocumentPrefixResolver_1_1NamespaceNodesTreeWalker.html" title="A utility class to walk the XalanDocument instance and look for attribute nodes that declare namespac..." alt="" coords="197,107,473,149"/>
 </map>

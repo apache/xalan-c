@@ -1,7 +1,7 @@
 <map id="xalanc::XNodeSetBase" name="xalanc::XNodeSetBase">
-<area shape="rect" id="node1" title="Class to hold XPath return types." alt="" coords="81,169,236,196"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1XNodeSet.html" title="Class to hold XPath return types." alt="" coords="5,244,131,271"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1XNodeSetNodeProxy.html" title="Class to hold XPath return types." alt="" coords="155,244,344,271"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="102,95,215,121"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="56,5,261,47"/>
+<area shape="rect" id="node1" title="Class to hold XPath return types." alt="" coords="88,169,257,196"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1XNodeSet.html" title="Class to hold XPath return types." alt="" coords="5,244,143,271"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1XNodeSetNodeProxy.html" title="Class to hold XPath return types." alt="" coords="167,244,375,271"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1XObject.html" title="Class to hold XPath return types." alt="" coords="111,95,234,121"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1XalanReferenceCountedObject.html" title="Class to hold reference count information." alt="" coords="57,5,288,47"/>
 </map>

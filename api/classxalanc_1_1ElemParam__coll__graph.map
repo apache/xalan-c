@@ -1,10 +1,10 @@
 <map id="xalanc::ElemParam" name="xalanc::ElemParam">
-<area shape="rect" id="node1" title=" " alt="" coords="869,155,1005,181"/>
-<area shape="rect" id="node2" href="$classxalanc_1_1ElemVariable.html" title=" " alt="" coords="668,155,813,181"/>
-<area shape="rect" id="node3" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="305,68,504,95"/>
-<area shape="rect" id="node5" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="661,91,820,117"/>
-<area shape="rect" id="node7" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="665,11,816,37"/>
-<area shape="rect" id="node4" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="11,68,162,95"/>
-<area shape="rect" id="node6" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,136,168,163"/>
-<area shape="rect" id="node8" href="$classxalanc_1_1XalanQName.html" title="Class to represent a qualified name." alt="" coords="333,163,476,189"/>
+<area shape="rect" id="node1" title=" " alt="" coords="949,157,1096,184"/>
+<area shape="rect" id="node2" href="$classxalanc_1_1ElemVariable.html" title=" " alt="" coords="733,157,892,184"/>
+<area shape="rect" id="node3" href="$classxalanc_1_1ElemTemplateElement.html" title=" " alt="" coords="332,64,552,91"/>
+<area shape="rect" id="node5" href="$classxalanc_1_1ElemTextLiteral.html" title=" " alt="" coords="725,75,900,101"/>
+<area shape="rect" id="node7" href="$classxalanc_1_1ElemTemplate.html" title=" " alt="" coords="729,16,896,43"/>
+<area shape="rect" id="node4" href="$classxalanc_1_1PrefixResolver.html" title="This class defines an interface for classes that resolve namespace prefixes to their URIs." alt="" coords="12,64,179,91"/>
+<area shape="rect" id="node6" href="$classxalanc_1_1XalanDOMString.html" title=" " alt="" coords="5,129,185,156"/>
+<area shape="rect" id="node8" href="$classxalanc_1_1XalanQName.html" title="Class to represent a qualified name." alt="" coords="363,159,521,185"/>
 </map>
