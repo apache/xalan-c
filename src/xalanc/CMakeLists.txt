@@ -832,6 +832,7 @@ set(xalantransformer_sources
   XalanTransformer/XercesDOMWrapperParsedSource.cpp)
 
 set(xalantransformer_headers
+  XalanTransformer/XalanCAPI.h
   XalanTransformer/XalanCompiledStylesheetDefault.hpp
   XalanTransformer/XalanCompiledStylesheet.hpp
   XalanTransformer/XalanDefaultDocumentBuilder.hpp
