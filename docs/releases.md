@@ -2,7 +2,7 @@
 
 # 1.12
 
-Released on the 7th July 2020.
+Released on the 7th June 2020.
 
 ## Major changes
 
