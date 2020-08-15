@@ -37,12 +37,6 @@
 #define XALAN_AUTO_PTR_REQUIRES_DEFINITION
 #endif
 
-#if defined(_DEBUG) && defined(NDEBUG)
-#error NDEBUG must not be defined when _DEBUG is defined.
-#elif !defined(_DEBUG) && !defined(NDEBUG)
-#error NDEBUG must be defined when _DEBUG is not defined.
-#endif
-
 #endif // _MSC_VER
 
 #if defined(__hpux)
