@@ -111,14 +111,11 @@ public:
      * @param theBlock the address that was returned by allocateBlock()
      */
     void
-#if defined (NDEBUG)
-    commitAllocation(ObjectType*    /* theBlock */)
-#else
     commitAllocation(ObjectType*    theBlock)
-#endif
     {
         assert(theBlock == this->m_objectBlock + this->m_objectCount);
         assert(this->m_objectCount < this->m_blockSize);
+        (void) theBlock; // unused if assert is disabled
 
         ++this->m_objectCount;
     }

@@ -23,11 +23,6 @@
 #define TEST_XALAN_CPP
 
 
-// This is here for memory leak testing.
-#if defined(_DEBUG)
-#include <crtdbg.h>
-#endif
-
 
 
 #include <xercesc/util/PlatformUtils.hpp>
@@ -306,7 +301,7 @@ main(
             int     /* argc */,
             char*   /* argv */ [])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(XALAN_CRT_DEBUG)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);

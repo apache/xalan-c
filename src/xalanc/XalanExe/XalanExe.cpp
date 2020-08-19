@@ -26,12 +26,6 @@
 
 
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
-
-
-
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
@@ -896,7 +890,7 @@ xsltMain(
 
     using xercesc::XMLPlatformUtils;
 
-#if defined(XALAN_WINDOWS) && defined(NDEBUG)
+#if defined(XALAN_WINDOWS) && !defined(XALAN_DEBUG)
     WindowsMemoryManager  theMemoryManager;
 
     // Call the static initializer for Xerces...
@@ -969,7 +963,7 @@ main(
             int     argc,
             char*   argv[])
  {
-#if defined(_DEBUG) && defined(_MSC_VER)
+#if defined(XALAN_CRT_DEBUG)
     _CrtSetDbgFlag(
         _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 

@@ -99,7 +99,7 @@ public:
     virtual size_type
     indexOf(const XalanNode*    theNode) const;
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
     bool
     checkForDuplicates(MemoryManager& theManager) const;
 #endif

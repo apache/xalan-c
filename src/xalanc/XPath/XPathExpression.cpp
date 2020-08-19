@@ -629,11 +629,7 @@ XPathExpression::insertOpCode(
 void
 XPathExpression::updateShiftedOpCodeLength(
             OpCodeMapValueType  theOpCode,
-#if defined(NDEBUG)
-            OpCodeMapSizeType   /* theOriginalIndex */,
-#else
             OpCodeMapSizeType   theOriginalIndex,
-#endif
             OpCodeMapSizeType   theNewIndex)
 {
     // There must be some other expressions in
@@ -641,6 +637,7 @@ XPathExpression::updateShiftedOpCodeLength(
     assert(opCodeMapSize() > theNewIndex + 1);
 
     assert(theNewIndex > theOriginalIndex);
+    (void) theOriginalIndex; // unused if assert is disabled
 
     const OpCodeMapValueType    theOpCodeLength = getOpCodeLength(theOpCode);
 

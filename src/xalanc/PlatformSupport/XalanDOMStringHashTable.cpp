@@ -57,7 +57,7 @@ XalanDOMStringHashTable::clear()
         m_buckets[i].clear();
     }
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
     m_collisions = 0;
 #endif
     m_count = 0;
@@ -181,7 +181,7 @@ XalanDOMStringHashTable::insert(const XalanDOMString&   theString)
 
     BucketType& theBucket = m_buckets[theBucketIndex];
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
     if (theBucket.empty() == false)
     {
         ++m_collisions;
@@ -207,7 +207,7 @@ XalanDOMStringHashTable::insert(
 
     BucketType&     theBucket = m_buckets[theBucketIndex];
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
     if (theBucket.empty() == false)
     {
         ++m_collisions;

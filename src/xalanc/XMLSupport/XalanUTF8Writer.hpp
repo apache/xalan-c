@@ -201,7 +201,7 @@ public:
             const value_type*   theChars,
             size_type           theLength)
     {
-    #if defined(NDEBUG)
+    #if !defined(XALAN_DEBUG)
         if (theLength > sizeof(m_buffer))
         {
             flushBuffer();

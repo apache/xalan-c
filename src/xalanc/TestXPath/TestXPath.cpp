@@ -31,12 +31,6 @@
 
 
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
-
-
-
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -1339,7 +1333,7 @@ main(
 {
     using std::cout;
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(XALAN_CRT_DEBUG)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);

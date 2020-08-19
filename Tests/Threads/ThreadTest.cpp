@@ -86,12 +86,6 @@ using std::endl;
 using std::atoi;
 using std::strcmp;
 
-    
-    
-    // This is here for memory leak testing.
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
 
 
 
@@ -661,7 +655,7 @@ main(
             int     argc,
             char*   argv[])
 {
-#if !defined(NDEBUG) && defined(_MSC_VER)
+#if defined(XALAN_CRT_DEBUG)
     _CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);

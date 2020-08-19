@@ -187,12 +187,6 @@ protected:
 
     bool
     operator==(const XalanNode&     theRHS) const;
-
-private:
-
-#if !defined(NDEBUG)
-    static size_t   s_instanceCount;
-#endif
 };
 
 

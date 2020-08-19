@@ -868,12 +868,6 @@ public:
 
 private:
 
-#if defined(NDEBUG)
-    void
-    invariants() const
-    {
-    }
-#else
     void
     invariants() const
     {
@@ -882,7 +876,6 @@ private:
             (m_data == 0 && m_allocation == 0) ||
             (m_data != 0 && m_allocation != 0));
     }
-#endif
 
     size_type
     local_distance(
