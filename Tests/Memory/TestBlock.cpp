@@ -17,15 +17,7 @@
  */
 
 #if defined(_MSC_VER)
-
 #pragma warning(disable: 4127 4251 4511 4512 4514 4702 4710 4711 4786 4097; error: 4150 4172 4238 4239 4715)
-
-#if defined(_DEBUG)
-
-#include <crtdbg.h>
-
-#endif
-
 #endif
 
 
@@ -118,7 +110,7 @@ main(
 
             clock_t theStartClock = 0;
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
             // Send all reports to STDOUT
             _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
             _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -132,7 +124,7 @@ main(
             {
                 theStartClock = clock();
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theStartState;
 
                 _CrtMemCheckpoint(&theStartState);
@@ -145,7 +137,7 @@ main(
                     theStringVector.push_back(m_allocator.create("Test string"));
                 }
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theEndState;
 
                 _CrtMemCheckpoint(&theEndState);
@@ -180,7 +172,7 @@ main(
             theStringVector.clear();
 
             {
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theStartState;
 
                 _CrtMemCheckpoint(&theStartState);
@@ -195,7 +187,7 @@ main(
                     theStringVector.push_back(m_allocator.create("Test string"));
                 }
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theEndState;
 
                 _CrtMemCheckpoint(&theEndState);
@@ -237,7 +229,7 @@ main(
             {
                 theStartClock = clock();
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theStartState;
 
                 _CrtMemCheckpoint(&theStartState);
@@ -248,7 +240,7 @@ main(
                     theStringVector.push_back(new string("Test string"));
                 }
 
-#if defined(_MSC_VER) && defined(_DEBUG)
+#if defined(XALAN_CRT_DEBUG)
                 _CrtMemState    theEndState;
 
                 _CrtMemCheckpoint(&theEndState);

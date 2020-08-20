@@ -49,29 +49,8 @@
 
 #if defined(XALAN_WINDOWS)
 
-#if _MSC_VER >= 1400
-
 #define ENTRY_POINT_SUFFIX _dat
 #define PACKAGE_NAME_SUFFIX
-
-#else
-#ifdef  NDEBUG_SYMBOLS // release with symbols
-
-#define ENTRY_POINT_SUFFIX S_dat
-#define PACKAGE_NAME_SUFFIX S
-
-#elif NDEBUG // release
-
-#define ENTRY_POINT_SUFFIX _dat
-#define PACKAGE_NAME_SUFFIX
-
-#elif _DEBUG // debug only 
-
-#define ENTRY_POINT_SUFFIX D_dat
-#define PACKAGE_NAME_SUFFIX D
-
-#endif // NDEBUG_SYMBOLS
-#endif // _MSC_VER >= 1400
 
 #define PACKAGE_NAME INVK_CAT3_RAW_NUMERIC(XALAN_MESSAGES_NAME_W_UNDERSCORE,\
                                     INVK_CAT2_RAW_NUMERIC_SEP_UNDERSCORE(XALAN_VERSION_MAJOR,XALAN_VERSION_MINOR),\

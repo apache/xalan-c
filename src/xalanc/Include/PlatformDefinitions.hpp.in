@@ -91,6 +91,13 @@
 
 #cmakedefine XALAN_NON_ASCII_PLATFORM 1
 
+#cmakedefine XALAN_DEBUG 1
+#cmakedefine XALAN_CRT_DEBUG 1
+
+#if defined(XALAN_CRT_DEBUG)
+#include <crtdbg.h>
+#endif
+
 #include <xalanc/Include/XalanVersion.hpp>
 
 #if defined(__cplusplus)

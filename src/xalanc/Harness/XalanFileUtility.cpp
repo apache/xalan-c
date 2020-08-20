@@ -47,10 +47,6 @@
 #include <iostream>
 #include <strstream>
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
-
 
 
 using std::fclose;

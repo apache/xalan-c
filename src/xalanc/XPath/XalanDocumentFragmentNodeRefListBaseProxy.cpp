@@ -56,13 +56,10 @@ XalanDocumentFragmentNodeRefListBaseProxy::~XalanDocumentFragmentNodeRefListBase
 
 
 XalanNode*
-#if defined(NDEBUG)
-XalanDocumentFragmentNodeRefListBaseProxy::item(size_type) const
-#else
 XalanDocumentFragmentNodeRefListBaseProxy::item(size_type   index) const
-#endif
 {
     assert(index == 0);
+    (void) index; // unused if assert is disabled
 
     return const_cast<XalanDocumentFragment*>(&m_value);
 }

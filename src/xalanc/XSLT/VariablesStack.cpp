@@ -523,7 +523,7 @@ VariablesStack::pushElementFrame(const ElemTemplateElement* elem)
 {
     push(StackEntry(elem));
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
     m_elementFrameStack.push_back(elem);
 #endif
 }
@@ -575,7 +575,7 @@ VariablesStack::popElementFrame()
         }
         else if (theEntry.getType() == StackEntry::eElementFrameMarker)
         {
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
             const ElemTemplateElement* const    theElement =
                 theEntry.getElement();
 

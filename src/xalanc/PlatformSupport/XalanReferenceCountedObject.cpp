@@ -22,10 +22,7 @@
 
 
 #include <cassert>
-
-#if !defined(NDEBUG)
 #include <climits>
-#endif
 
 
 

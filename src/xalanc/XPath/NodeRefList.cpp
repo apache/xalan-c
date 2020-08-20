@@ -23,9 +23,7 @@
 #include <cassert>
 #include <algorithm>
 
-#if !defined(NDEBUG)
 #include <xalanc/Include/XalanSet.hpp>
-#endif
 
 
 
@@ -151,7 +149,7 @@ NodeRefList::indexOf(const XalanNode*   theNode) const
 
 
 
-#if !defined(NDEBUG)
+#if defined(XALAN_DEBUG)
 bool
 NodeRefList::checkForDuplicates(MemoryManager& theManager) const
 {

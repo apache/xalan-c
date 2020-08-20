@@ -772,10 +772,8 @@ protected:
     void
     invariants() const
     {
-#if !defined(NDEBUG)
         assert((m_data.empty() == true && m_size == 0) || m_size == m_data.size() - 1);
         assert(m_data.empty() == true || m_data.back() == 0);
-#endif
     }
 
     /*
