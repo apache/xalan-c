@@ -2115,7 +2115,7 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
 
     if (result == 0)
     {
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
         CharVectorType theBuffer(getMemoryManager());
         TranscodeToLocalCodePage(theHTMLFile, theBuffer, true);
 
