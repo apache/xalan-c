@@ -53,7 +53,7 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
 #define XALAN_PLATFORM_EXPORT     __declspec(dllexport)
 #define XALAN_PLATFORM_IMPORT     __declspec(dllimport)
 #define XALAN_PLATFORM_EXPORT_FUNCTION(T) XALAN_PLATFORM_EXPORT T

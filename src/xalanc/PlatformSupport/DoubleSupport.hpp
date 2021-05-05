@@ -25,7 +25,7 @@
 
 
 
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
 #include <float.h>
 #endif
 #include <cmath>

@@ -20,7 +20,7 @@
 
 
 
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
 
 #if defined(XALAN_BUILD_DLL)
 

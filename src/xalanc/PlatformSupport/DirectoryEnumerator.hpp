@@ -26,7 +26,7 @@
 
 
 #include <cstring>
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
 #include <io.h>
 #else
 #include <dirent.h>
@@ -59,7 +59,7 @@ using xercesc::MemoryManager;
 
 
 
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
 
 struct FindFileStruct : public _wfinddata_t
 {
@@ -240,7 +240,7 @@ EnumerateDirectory(
             bool                        fIncludeSelfAndParent = false)
 #endif
 {
-#if defined(_MSC_VER)
+#if defined(XALAN_WINDOWS)
     FindFileStruct      theFindData;
     
     #ifdef _WIN64
@@ -249,13 +249,17 @@ EnumerateDirectory(
         typedef long    theHandleType;
     #endif
 
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable: 4244)
+#endif
     theHandleType   theSearchHandle =
         _wfindfirst(
             reinterpret_cast<wchar_t*>(const_cast<XalanDOMChar*>(theConversionFunction(theFullSearchSpec))),
             &theFindData);
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
 
     if (theSearchHandle != -1)
     {
