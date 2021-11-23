@@ -3537,6 +3537,12 @@ XPath::findRoot(
             }
             else
             {
+                if (DOMServices::getParentOfNode(*docContext) == 0 &&
+                    nodeType == XalanNode::ELEMENT_NODE)
+                {
+                    // docContext is root node
+                    break;
+                }
                 docContext =
                     DOMServices::getParentOfNode(*docContext);
                 assert(docContext != 0);
