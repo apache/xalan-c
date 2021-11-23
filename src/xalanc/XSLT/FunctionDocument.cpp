@@ -573,7 +573,9 @@ FunctionDocument::doExecute(
         }
     }
 
+#if defined(XALAN_DEBUG)
     assert(mnl->checkForDuplicates(executionContext.getMemoryManager()) == false);
+#endif
 
     mnl->setDocumentOrder();
 
