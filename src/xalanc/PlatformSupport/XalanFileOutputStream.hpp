@@ -40,8 +40,9 @@
 
 namespace XALAN_CPP_NAMESPACE {
 
-
+#if !defined(XALAN_WINDOWS)
 using std::FILE;
+#endif
 
 class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStream : public XalanOutputStream
 {
