@@ -704,7 +704,9 @@ MutableNodeRefList::clearNulls()
         m_order = eUnknownOrder;
     }
 
+#if defined(XALAN_DEBUG)
     assert(checkForDuplicates(getMemoryManager()) == false);
+#endif
 }
 
 
