@@ -253,6 +253,9 @@ AttributesImpl::getValue(const XalanSize_t  index) const
 
 
 
+namespace
+{
+
 struct NameCompareFunctor
 {
     NameCompareFunctor(const XMLCh*     theQName) :
@@ -270,6 +273,8 @@ private:
 
     const XMLCh* const  m_qname;
 };
+
+}	// --- namespace
 
 
 

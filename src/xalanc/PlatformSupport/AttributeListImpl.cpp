@@ -242,6 +242,9 @@ AttributeListImpl:: getValue(const char* const /*name*/) const
 
 
 
+namespace
+{
+
 struct NameCompareFunctor
 {
     NameCompareFunctor(const XMLCh*     theName) :
@@ -259,6 +262,8 @@ private:
 
     const XMLCh* const  m_name;
 };
+
+}	// --- namespace
 
 
 
