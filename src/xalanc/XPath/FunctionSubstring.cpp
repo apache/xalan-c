@@ -198,6 +198,19 @@ createEmptyString(XPathExecutionContext&    executionContext)
 }
 
 
+inline bool
+isUTF16HighSurrogate(XalanDOMChar   theChar)
+{
+    return 0xD800u <= theChar && theChar <= 0xDBFFu ? true : false;
+}
+
+
+inline bool
+isUTF16LowSurrogate(XalanDOMChar    theChar)
+{
+    return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
+}
+
 
 XObjectPtr
 FunctionSubstring::execute(
@@ -269,9 +282,47 @@ FunctionSubstring::execute(
 
                 XalanDOMString&     theString = theResult.get();
 
+                // XPath counts surrogate pair counts as one character, not two...
+                //
+                // Here we need to count the length of the buffer that describes the surrogate pair.
+                XalanDOMString::size_type     theSubstringDataStartIndex = 0;
+                XalanDOMString::size_type     theSubstringDataLength = 0;
+
+                for (XalanDOMString::size_type theCharacterCounts = 0, index = 0;
+                               theCharacterCounts <= theStartIndex && index < theSourceStringLength; ++index)
+                {
+                    theSubstringDataStartIndex = index;
+
+                    if (isUTF16LowSurrogate(theSourceString[index]))
+                    {
+                        ++theSubstringDataStartIndex;
+                        continue;
+                    }
+                    ++theCharacterCounts;
+                }
+
+                for (XalanDOMString::size_type theCharacterCounts = 0, index = theSubstringDataStartIndex;
+                               theCharacterCounts < theSubstringLength && index < theSourceStringLength; ++index)
+                {
+                    if (isUTF16HighSurrogate(theSourceString[index]))
+                    {
+                        ++theCharacterCounts;
+                        theSubstringDataLength += 2;
+                    }
+                    else if (isUTF16LowSurrogate(theSourceString[index]))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        ++theCharacterCounts;
+                        ++theSubstringDataLength;
+                    }
+                }
+
                 theString.assign(
-                        theSourceString.c_str() + theStartIndex,
-                        theSubstringLength);
+                        theSourceString.c_str() + theSubstringDataStartIndex,
+                        theSubstringDataLength);
 
                 return executionContext.getXObjectFactory().createString(theResult);
             }
