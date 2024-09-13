@@ -128,6 +128,9 @@ public:
     virtual void
     ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const;
 
+    virtual void
+    ClearCachedNumber();
+
 private:
 
     friend class XObjectResultTreeFragProxyText;

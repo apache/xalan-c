@@ -89,6 +89,7 @@ public:
     set(const XalanDOMString&   theString)
     {
         m_value = theString;
+        ClearCachedNumber();
     }
 
     // These methods are inherited from XObject ...
