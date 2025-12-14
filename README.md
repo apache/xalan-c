@@ -2,6 +2,10 @@
 
 ![Xalan-C++-logo](docs/images/xalan-small.svg)
 
+[![Windows CI](https://github.com/djberg96/xalan-c/actions/workflows/windows.yml/badge.svg)](https://github.com/djberg96/xalan-c/actions/workflows/windows.yml)
+[![Linux CI](https://github.com/djberg96/xalan-c/actions/workflows/linux.yml/badge.svg)](https://github.com/djberg96/xalan-c/actions/workflows/linux.yml)
+[![macOS CI](https://github.com/djberg96/xalan-c/actions/workflows/macos.yml/badge.svg)](https://github.com/djberg96/xalan-c/actions/workflows/macos.yml)
+
 ## Overview
 
 The Apache Xalan-C++ Project provides a library and a command line

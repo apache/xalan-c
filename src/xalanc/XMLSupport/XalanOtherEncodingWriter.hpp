@@ -119,7 +119,7 @@ public:
     }
 
     /**
-     * Writes CDATA chars , if not presentable, fixes it 
+     * Writes CDATA chars , if not presentable, fixes it
      * with addition CDATA sections
      */
     size_type
@@ -142,11 +142,11 @@ public:
             if (start + 1 >= length)
             {
                 throwInvalidUTF16SurrogateException(
-                    theChar, 
+                    theChar,
                     0,
                     getMemoryManager());
             }
-            else 
+            else
             {
                 value = decodeUTF16SurrogatePair(theChar, chars[start+1],  getMemoryManager());
 
@@ -180,7 +180,7 @@ public:
         {
             if(outsideCDATA == false)
             {
-                // we have a non-representable char in the normal state - 
+                // we have a non-representable char in the normal state -
                 // close the CDATA section and print the value
                 write(
                     m_constants.s_cdataCloseString,
@@ -188,13 +188,13 @@ public:
 
                 writeNumericCharacterReference(value);
 
-                outsideCDATA = true;   
+                outsideCDATA = true;
             }
             else
             {
                 writeNumericCharacterReference(value);
             }
-        }        
+        }
 
         return result;
     }
@@ -209,8 +209,8 @@ public:
             size_type               theLength)
     {
         for( size_type i = 0; i < theLength; ++i)
-        { 
-            i = write(data, i , theLength, m_exceptionFunctor); 
+        {
+            i = write(data, i , theLength, m_exceptionFunctor);
         }
     }
 
@@ -224,8 +224,8 @@ public:
             size_type               theLength)
     {
         for( size_type i = 0; i < theLength; )
-        { 
-            i = write(data, i , theLength, m_exceptionFunctor); 
+        {
+            i = write(data, i , theLength, m_exceptionFunctor);
         }
     }
 
@@ -240,8 +240,8 @@ public:
             size_type               theLength)
     {
         for( size_type i = 0; i < theLength; )
-        { 
-            i = write(data, i , theLength, m_exceptionFunctor); 
+        {
+            i = write(data, i , theLength, m_exceptionFunctor);
         }
     }
 
@@ -263,8 +263,8 @@ public:
     }
 
     /**
-     * Writes writes a UTF-16 code unit that isn't 
-     * part of the surrogate pair 
+     * Writes writes a UTF-16 code unit that isn't
+     * part of the surrogate pair
      */
     void
     write(XalanDOMChar    theChar)
@@ -316,17 +316,17 @@ public:
                 {
                     throwInvalidUTF16SurrogateException(ch, 0,  getMemoryManager());
                 }
-                else 
+                else
                 {
                     XalanUnicodeChar    value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
 
-                    if (this->m_isPresentable(value))
+                    if (m_predicate(value))
                     {
                         write(value);
                     }
                     else
                     {
-                        this->writeNumberedEntityReference(value);
+                        writeNumericCharacterReference(value);
                     }
 
                     ++i;
@@ -349,7 +349,7 @@ public:
     flushWriter()
     {
         m_writer.flush();
-    }    
+    }
 
     void
     flushBuffer()
@@ -366,13 +366,13 @@ private:
      * Writes a representable code point
      *
      * @param chars        Array of the characters for transcoding
-     *    
+     *
      * @param start        Place int the array the transcoding should start
-     *    
+     *
      * @param length       The length of the array
-     *    
+     *
      * @param failureHandler  The functor handles the non-representable characters
-     *    
+     *
      * @return              Place int the array of the next character
      */
 
@@ -398,11 +398,11 @@ private:
             if (start + 1 >= length)
             {
                 throwInvalidUTF16SurrogateException(
-                    ch, 
+                    ch,
                     0,
                     getMemoryManager());
             }
-            else 
+            else
             {
                 value = decodeUTF16SurrogatePair(ch, chars[start+1],  getMemoryManager());
 
@@ -425,13 +425,13 @@ private:
     /**
      * Writes a representable code point
      *
-     * @param theChar        UTF-32 code point . For passing it to the Xerces 
-     *                       transcoder, we convert it back to UTF-16                         
+     * @param theChar        UTF-32 code point . For passing it to the Xerces
+     *                       transcoder, we convert it back to UTF-16
      */
     void
     write(XalanUnicodeChar  theChar)
     {
-        // encode back UTF-32 into UTF-16 
+        // encode back UTF-32 into UTF-16
 
         if (theChar > 0xFFFF)
         {
@@ -449,7 +449,7 @@ private:
             ++m_bufferPosition;
 
             m_bufferRemaining = m_bufferRemaining - size_type(2);
-        }   
+        }
         else
         {
             if (m_bufferRemaining == 0)
@@ -461,7 +461,7 @@ private:
 
             ++m_bufferPosition;
             --m_bufferRemaining;
-        }  
+        }
     }
 
     void

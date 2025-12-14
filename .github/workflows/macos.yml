@@ -1,0 +1,69 @@
+name: macOS CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "macOS Clang - Release - Shared"
+            os: macos-latest
+            config: Release
+            shared: ON
+
+          - name: "macOS Clang - Debug - Static"
+            os: macos-latest
+            config: Debug
+            shared: OFF
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 5
+
+    - name: Install Dependencies
+      run: |
+        brew install cmake ninja xerces-c
+
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake -G Ninja \
+          -DCMAKE_BUILD_TYPE=${{ matrix.config.config }} \
+          -DBUILD_SHARED_LIBS:BOOL=${{ matrix.config.shared }} \
+          ..
+
+    - name: Build
+      run: |
+        cd build
+        cmake --build . --parallel
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V
+
+    - name: Package
+      if: matrix.config.config == 'Release'
+      run: |
+        cd build
+        cpack -G TGZ
+
+    - name: Upload Artifacts
+      if: matrix.config.config == 'Release'
+      uses: actions/upload-artifact@v4
+      with:
+        name: xalan-c-macos-${{ matrix.config.config }}
+        path: build/*.tar.gz

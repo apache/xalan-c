@@ -1,0 +1,88 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: ${{ matrix.config.name }}
+    runs-on: windows-2019
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Windows MSVC 2019 - Release - Static"
+            generator: "Visual Studio 16 2019"
+            arch: "x64"
+            config: Release
+            shared: OFF
+
+          - name: "Windows MSVC 2019 - Debug - Static"
+            generator: "Visual Studio 16 2019"
+            arch: "x64"
+            config: Debug
+            shared: OFF
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 5
+
+    - name: Setup vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+      shell: pwsh
+
+    - name: Install Xerces-C
+      run: |
+        .\vcpkg\vcpkg install xerces-c:x64-windows
+      shell: pwsh
+
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake -G "${{ matrix.config.generator }}" -A ${{ matrix.config.arch }} `
+          -DCMAKE_CONFIGURATION_TYPES="${{ matrix.config.config }}" `
+          -DBUILD_SHARED_LIBS:BOOL=${{ matrix.config.shared }} `
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+          -DCMAKE_VERBOSE_MAKEFILE=ON `
+          ..
+      shell: pwsh
+
+    - name: Build
+      run: |
+        cd build
+        cmake --build . --config ${{ matrix.config.config }} --target xalanMsg --verbose
+        echo "Checking for xalanMsg library files:"
+        Get-ChildItem -Recurse -Filter "XalanMsgLib*.lib" | Select-Object FullName
+        Get-ChildItem -Recurse -Filter "XalanMessages*.dll" | Select-Object FullName
+        cmake --build . --config ${{ matrix.config.config }}
+      shell: pwsh
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V -C ${{ matrix.config.config }}
+      shell: pwsh
+
+    - name: Package
+      if: matrix.config.config == 'Release'
+      run: |
+        cd build
+        cpack -G ZIP -C ${{ matrix.config.config }}
+      shell: pwsh
+
+    - name: Upload Artifacts
+      if: matrix.config.config == 'Release'
+      uses: actions/upload-artifact@v4
+      with:
+        name: xalan-c-windows-${{ matrix.config.arch }}-${{ matrix.config.config }}
+        path: build/*.zip

@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    branches: [ master, main ]
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:
+
+jobs:
+  check-workflows:
+    name: Check All CI Workflows
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Check Status
+        run: echo "All CI workflows completed"

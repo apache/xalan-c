@@ -1,0 +1,81 @@
+name: Linux CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Ubuntu GCC - Release - Shared"
+            cc: gcc
+            cxx: g++
+            config: Release
+            shared: ON
+
+          - name: "Ubuntu GCC - Debug - Static"
+            cc: gcc
+            cxx: g++
+            config: Debug
+            shared: OFF
+
+          - name: "Ubuntu Clang - Release - Shared"
+            cc: clang
+            cxx: clang++
+            config: Release
+            shared: ON
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 5
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build libxerces-c-dev
+
+    - name: Configure CMake
+      env:
+        CC: ${{ matrix.config.cc }}
+        CXX: ${{ matrix.config.cxx }}
+      run: |
+        mkdir build
+        cd build
+        cmake -G Ninja \
+          -DCMAKE_BUILD_TYPE=${{ matrix.config.config }} \
+          -DBUILD_SHARED_LIBS:BOOL=${{ matrix.config.shared }} \
+          ..
+
+    - name: Build
+      run: |
+        cd build
+        cmake --build . --parallel
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V
+
+    - name: Package
+      if: matrix.config.config == 'Release' && matrix.config.cc == 'gcc'
+      run: |
+        cd build
+        cpack -G TGZ
+
+    - name: Upload Artifacts
+      if: matrix.config.config == 'Release' && matrix.config.cc == 'gcc'
+      uses: actions/upload-artifact@v4
+      with:
+        name: xalan-c-linux-${{ matrix.config.config }}
+        path: build/*.tar.gz
