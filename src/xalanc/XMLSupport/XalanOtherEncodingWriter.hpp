@@ -320,13 +320,13 @@ public:
                 {
                     XalanUnicodeChar    value = decodeUTF16SurrogatePair(ch, theChars[i+1],  getMemoryManager());
 
-                    if (this->m_isPresentable(value))
+                    if (m_predicate(value))
                     {
                         write(value);
                     }
                     else
                     {
-                        this->writeNumberedEntityReference(value);
+                        writeNumericCharacterReference(value);
                     }
 
                     ++i;
